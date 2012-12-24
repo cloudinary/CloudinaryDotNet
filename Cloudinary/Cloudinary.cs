@@ -1,0 +1,476 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net;
+using CloudinaryDotNet.Actions;
+using System.IO;
+
+namespace CloudinaryDotNet
+{
+    /// <summary>
+    /// Main class of cloudinary .NET API
+    /// </summary>
+    public class Cloudinary
+    {
+        Api m_api;
+
+        /// <summary>
+        /// Default parameterless constructor.
+        /// Assumes that environment variable CLOUDINARY_URL is set.
+        /// </summary>
+        public Cloudinary()
+        {
+            m_api = new Api();
+        }
+
+        /// <summary>
+        /// Parameterized constructor
+        /// </summary>
+        /// <param name="cloudinaryUrl">Cloudinary URL</param>
+        /// <param name="useSsl">
+        /// Whether to use secured connection or not.
+        /// Please use unsecured connections only for debugging purposes.
+        /// </param>
+        public Cloudinary(string cloudinaryUrl, bool useSsl = true)
+        {
+            m_api = new Api(cloudinaryUrl, useSsl);
+        }
+
+        /// <summary>
+        /// Parameterized constructor
+        /// </summary>
+        /// <param name="account">Cloudinary account</param>
+        /// <param name="useSsl">
+        /// Whether to use secured connection or not.
+        /// Please use unsecured connections only for debugging purposes.
+        /// </param>
+        public Cloudinary(Account account, bool useSsl = true)
+        {
+            m_api = new Api(account, useSsl);
+        }
+
+        /// <summary>
+        /// API object that used by this instance
+        /// </summary>
+        public Api Api
+        {
+            get { return m_api; }
+        }
+
+        public ExplicitResult Explicit(ExplicitParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.Action("explicit").BuildUrl();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
+            {
+                return ExplicitResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        /// Upload an image file to cloudinary
+        /// </summary>
+        /// <param name="parameters">Parameters for uploading image to cloudinary</param>
+        /// <returns>Results of image uploading</returns>
+        public ImageUploadResult Upload(ImageUploadParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.BuildUrl();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File))
+            {
+                return ImageUploadResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        /// Upload a raw file to cloudinary
+        /// </summary>
+        /// <param name="parameters">Parameters of uploading a file to cloudinary</param>
+        /// <returns>Results of file uploading</returns>
+        public RawUploadResult Upload(RawUploadParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.ResourceType("raw").BuildUrl();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File))
+            {
+                return RawUploadResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        /// Delete file from cloudinary
+        /// </summary>
+        /// <param name="parameters">Parameters for deletion of resource from cloudinary</param>
+        /// <returns>Results of deletion</returns>
+        public DeletionResult Destroy(DeletionParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.ResourceType(
+                Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
+                Action("destroy").BuildUrl();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
+            {
+                DeletionResult result = DeletionResult.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Generate an image of a given textual string
+        /// </summary>
+        /// <param name="parameters">Parameters of generating an image of a given textual string</param>
+        /// <returns>Results of generating an image of a given textual string</returns>
+        public TextResult Text(TextParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.Action("text").BuildUrl();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
+            {
+                TextResult result = TextResult.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Manage tag assignments
+        /// </summary>
+        /// <param name="parameters">Parameters of tag management</param>
+        /// <returns>Results of tags management</returns>
+        public TagResult Tag(TagParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.Action("tags").BuildUrl();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
+            {
+                TagResult result = TagResult.Parse(response);
+                return result;
+            }
+        }
+
+        public ListResourceTypesResult ListResourceTypes()
+        {
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.GET, m_api.ApiUrlV.Add("resources").BuildUrl(), null, null))
+            {
+                ListResourceTypesResult result = ListResourceTypesResult.Parse(response);
+                return result;
+            }
+        }
+
+        public ListResourcesResult ListResources()
+        {
+            return ListResources(new ListResourcesParams());
+        }
+
+        public ListResourcesResult ListResources(string nextCursor)
+        {
+            return ListResources(new ListResourcesParams() { NextCursor = nextCursor });
+        }
+
+        public ListResourcesResult ListResourcesByType(string type, string nextCursor)
+        {
+            return ListResources(new ListResourcesParams() { Type = type, NextCursor = nextCursor });
+        }
+
+        public ListResourcesResult ListResourcesByPrefix(string type, string prefix, string nextCursor)
+        {
+            return ListResources(new ListResourcesParams()
+            {
+                Type = type,
+                Prefix = prefix,
+                NextCursor = nextCursor
+            });
+        }
+
+        public ListResourcesResult ListResourcesByTag(string tag, string nextCursor)
+        {
+            return ListResources(new ListResourcesParams()
+            {
+                Tag = tag,
+                NextCursor = nextCursor
+            });
+        }
+
+        public ListResourcesResult ListResources(ListResourcesParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("resources").
+                Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
+                Add(!String.IsNullOrEmpty(parameters.Tag) ? String.Format("tags/{0}", parameters.Tag) : String.Empty).
+                BuildUrl());
+
+            foreach (var param in parameters.ToParamsDictionary())
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.GET, urlBuilder.ToString(), null, null))
+            {
+                ListResourcesResult result = ListResourcesResult.Parse(response);
+                return result;
+            }
+        }
+
+        public ListTagsResult ListTags()
+        {
+            return ListTags(new ListTagsParams());
+        }
+
+        public ListTagsResult ListTagsByPrefix(string prefix)
+        {
+            return ListTags(new ListTagsParams() { Prefix = prefix });
+        }
+
+        public ListTagsResult ListTags(ListTagsParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("tags").
+                Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
+                BuildUrl());
+
+            foreach (var param in parameters.ToParamsDictionary())
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.GET, urlBuilder.ToString(), null, null))
+            {
+                ListTagsResult result = ListTagsResult.Parse(response);
+                return result;
+            }
+        }
+
+        public ListTransformsResult ListTransformations()
+        {
+            return ListTransformations(new ListTransformsParams());
+        }
+
+        public ListTransformsResult ListTransformations(ListTransformsParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("transformations").
+                BuildUrl());
+
+            foreach (var param in parameters.ToParamsDictionary())
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.GET, urlBuilder.ToString(), null, null))
+            {
+                ListTransformsResult result = ListTransformsResult.Parse(response);
+                return result;
+            }
+        }
+
+        public GetTransformResult GetTransform(string transform)
+        {
+            return GetTransform(new GetTransformParams() { Transformation = transform });
+        }
+
+        public GetTransformResult GetTransform(GetTransformParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("transformations").
+                Add(parameters.Transformation).
+                BuildUrl());
+
+            foreach (var param in parameters.ToParamsDictionary())
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.GET, urlBuilder.ToString(), null, null))
+            {
+                GetTransformResult result = GetTransformResult.Parse(response);
+                return result;
+            }
+        }
+
+        public GetResourceResult GetResource(string publicId)
+        {
+            return GetResource(new GetResourceParams(publicId));
+        }
+
+        public GetResourceResult GetResource(GetResourceParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("resources").
+                Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
+                Add(parameters.Type).Add(parameters.PublicId).
+                BuildUrl());
+
+            foreach (var param in parameters.ToParamsDictionary())
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.GET, urlBuilder.ToString(), null, null))
+            {
+                GetResourceResult result = GetResourceResult.Parse(response);
+                return result;
+            }
+        }
+
+        public DelDerivedResResult DeleteDerivedResources(params string[] ids)
+        {
+            DelDerivedResParams p = new DelDerivedResParams();
+            p.DerivedResources.AddRange(ids);
+            return DeleteDerivedResources(p);
+        }
+
+        public DelDerivedResResult DeleteDerivedResources(DelDerivedResParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                Add("derived_resources").
+                BuildUrl());
+
+            foreach (var param in parameters.ToParamsDictionary())
+            {
+                if (param.Value is IEnumerable<string>)
+                {
+                    foreach (var item in (IEnumerable)param.Value)
+                    {
+                        urlBuilder.QueryString.Add(String.Format("{0}[]", param.Key), item.ToString());
+                    }
+                }
+                else
+                {
+                    urlBuilder.QueryString[param.Key] = param.Value.ToString();
+                }
+            }
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.DELETE, urlBuilder.ToString(), null, null))
+            {
+                DelDerivedResResult result = DelDerivedResResult.Parse(response);
+                return result;
+            }
+        }
+
+        public DelResResult DeleteResources(params string[] publicIds)
+        {
+            DelResParams p = new DelResParams();
+            p.PublicIds.AddRange(publicIds);
+            return DeleteResources(p);
+        }
+
+        public DelResResult DeleteResourcesByPrefix(string prefix)
+        {
+            DelResParams p = new DelResParams() { Prefix = prefix };
+            return DeleteResources(p);
+        }
+
+        public DelResResult DeleteResourcesByTag(string tag)
+        {
+            DelResParams p = new DelResParams() { Tag = tag };
+            return DeleteResources(p);
+        }
+
+        public DelResResult DeleteResources(DelResParams parameters)
+        {
+            Url url = m_api.ApiUrlV.
+                Add("resources").
+                Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType));
+
+            if (String.IsNullOrEmpty(parameters.Tag))
+            {
+                url = url.Add(parameters.Type);
+            }
+            else
+            {
+                url = url.Add("tags").Add(parameters.Tag);
+            }
+
+            UrlBuilder urlBuilder = new UrlBuilder(url.BuildUrl());
+
+            foreach (var param in parameters.ToParamsDictionary())
+            {
+                if (param.Value is IEnumerable<string>)
+                {
+                    foreach (var item in (IEnumerable)param.Value)
+                    {
+                        urlBuilder.QueryString.Add(String.Format("{0}[]", param.Key), item.ToString());
+                    }
+                }
+                else
+                {
+                    urlBuilder.QueryString[param.Key] = param.Value.ToString();
+                }
+            }
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.DELETE, urlBuilder.ToString(), null, null))
+            {
+                DelResResult result = DelResResult.Parse(response);
+                return result;
+            }
+        }
+
+        public UpdateTransformResult UpdateTransform(UpdateTransformParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("transformations").
+                Add(parameters.Transformation).
+                BuildUrl());
+
+            foreach (var param in parameters.ToParamsDictionary())
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.PUT, urlBuilder.ToString(), null, null))
+            {
+                UpdateTransformResult result = UpdateTransformResult.Parse(response);
+                return result;
+            }
+        }
+
+        public TransformResult CreateTransform(CreateTransformParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("transformations").
+                Add(parameters.Name).
+                BuildUrl());
+
+            urlBuilder.QueryString["transformation"] = parameters.Transform.Generate();
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.POST, urlBuilder.ToString(), null, null))
+            {
+                TransformResult result = TransformResult.Parse(response);
+                return result;
+            }
+        }
+
+        public TransformResult DeleteTransform(string transformName)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("transformations").
+                Add(transformName).
+                BuildUrl());
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.DELETE, urlBuilder.ToString(), null, null))
+            {
+                TransformResult result = TransformResult.Parse(response);
+                return result;
+            }
+        }
+    }
+}
