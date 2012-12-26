@@ -472,5 +472,25 @@ namespace CloudinaryDotNet
                 return result;
             }
         }
+
+        /// <summary>
+        /// Eagerly generate sprites
+        /// </summary>
+        /// <param name="parameters">Parameters for sprite genetation</param>
+        /// <returns>Result of sprite generation</returns>
+        public SpriteResult MakeSprite(SpriteParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlImgUpV.
+                Action("sprite").
+                BuildUrl());
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.POST, urlBuilder.ToString(), parameters.ToParamsDictionary(), null))
+            {
+                SpriteResult result = SpriteResult.Parse(response);
+                return result;
+            }
+        }
     }
 }

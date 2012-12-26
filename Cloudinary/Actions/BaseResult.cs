@@ -94,8 +94,10 @@ namespace CloudinaryDotNet.Actions
                 {
                     string s = reader.ReadToEnd();
 
-                    Console.WriteLine(String.Format("Response body of {0}:", typeof(T).Name));
+#if DEBUG
+                    Console.WriteLine(String.Format("RESPONSE ({0}):", typeof(T).Name));
                     Console.WriteLine(s);
+#endif
 
                     result = JsonConvert.DeserializeObject<T>(s);
                 }

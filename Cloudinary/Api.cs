@@ -138,7 +138,7 @@ namespace CloudinaryDotNet
 
             return sign.ToString();
         }
-        
+
         /// <summary>
         /// Default URL for working with resources
         /// </summary>
@@ -262,12 +262,18 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Custom call to cloudinary API
         /// </summary>
+        /// <param name="method">HTTP method of call</param>
         /// <param name="url">URL to call</param>
         /// <param name="parameters">Dictionary of call parameters (can be null)</param>
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
         public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
         {
+#if DEBUG
+            Console.WriteLine(String.Format("{0} REQUEST:", method));
+            Console.WriteLine(url);
+#endif
+
             HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
             request.Method = Enum.GetName(typeof(HttpMethod), method);
 
@@ -318,8 +324,11 @@ namespace CloudinaryDotNet
             parameters.Add("api_key", m_account.ApiKey);
         }
 
-        private static void WriteParam(StreamWriter writer, string key, string value)
+        private void WriteParam(StreamWriter writer, string key, string value)
         {
+#if DEBUG
+            Console.WriteLine(String.Format("{0}: {1}", key, value));
+#endif
             writer.WriteLine("--{0}", HTTP_BOUNDARY);
             writer.WriteLine("Content-Disposition: form-data; name=\"{1}\"{0}{0}{2}",
                 Environment.NewLine,
@@ -327,7 +336,7 @@ namespace CloudinaryDotNet
                 value);
         }
 
-        private static void WriteFile(StreamWriter writer, FileDescription file)
+        private void WriteFile(StreamWriter writer, FileDescription file)
         {
             if (file.IsRemote)
             {
@@ -339,7 +348,7 @@ namespace CloudinaryDotNet
             }
         }
 
-        private static void WriteFile(StreamWriter writer, Stream stream, string fileName)
+        private void WriteFile(StreamWriter writer, Stream stream, string fileName)
         {
             writer.WriteLine("--{0}", HTTP_BOUNDARY);
             writer.WriteLine("Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
@@ -353,8 +362,6 @@ namespace CloudinaryDotNet
             {
                 writer.BaseStream.Write(buf, 0, cnt);
             }
-
-            writer.WriteLine();
         }
 
         /// <summary>

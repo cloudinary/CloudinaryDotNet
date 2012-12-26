@@ -426,5 +426,39 @@ namespace CloudinaryDotNet.Test
 
             Assert.IsTrue(s.Contains("class='cloudinary-fileupload myclass'"));
         }
+
+        [Test]
+        public void TestSprite()
+        {
+            // should build urls to get sprite css and picture by tag (with transformations and prefix)
+
+            string uri = m_api.UrlImgUp.Action("sprite").BuildUrl("teslistresourcesbytag1.png");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/teslistresourcesbytag1.png", uri);
+
+            uri = m_api.UrlImgUp.Action("sprite").BuildUrl("teslistresourcesbytag1.css");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/teslistresourcesbytag1.css", uri);
+
+            uri = m_api.ApiUrlImgUpV.Action("sprite").BuildUrl();
+            Assert.AreEqual("http://api.cloudinary.com/v1_1/testcloud/image/sprite", uri);
+        }
+
+        [Test]
+        public void TestSpriteTransform()
+        {
+            // should build urls to get sprite css and picture by tag with transformations
+
+            Transformation t = new Transformation().Crop("fit").Height(60).Width(150);
+            string uri = m_api.UrlImgUp.Action("sprite").Transform(t).BuildUrl("logo.png");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/c_fit,h_60,w_150/logo.png", uri);
+        }
+
+        [Test]
+        public void TestSpriteCssPrefix()
+        {
+            // should build urls to get sprite css and picture by tag with prefix
+
+            string uri = m_api.UrlImgUp.Action("sprite").Add("p_home_thing_").BuildUrl("logo.css");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/p_home_thing_/logo.css", uri);
+        }
     }
 }

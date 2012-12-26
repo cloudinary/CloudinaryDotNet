@@ -63,8 +63,6 @@ namespace CloudinaryDotNet.Actions
         }
 
         #endregion
-
-        ~RawUploadParams() { Dispose(); }
     }
 
     /// <summary>
@@ -140,7 +138,5 @@ namespace CloudinaryDotNet.Actions
         }
 
         #endregion
-
-        ~FileDescription() { Dispose(); }
     }
 }
