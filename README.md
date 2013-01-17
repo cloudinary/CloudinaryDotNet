@@ -22,12 +22,12 @@ Please see NuGet Documentation at http://docs.nuget.org/ for instructions of how
 ### Using Visual Studio
 
 1. Download NuGet Package Manager at http://visualstudiogallery.msdn.microsoft.com/27077b70-9dad-4c64-adcf-c7cf6bc9970c
-2. Use Visual Studio to create a new project and choose .NET 3.5 as target framework.
+2. Use Visual Studio to create a new project and choose .NET 3.5 as the target framework.
 3. Right click on the project in Solution Explorer and click on Manage NuGet packages...
-4. Type CloudinaryDotNet in search box at upper right corner.
-5. When CloudinaryDotNet package will appears click Install button.
-6. After the package will be installed click Close button.
-7. You are done setup and able to use CloudinaryDotNet.
+4. Type CloudinaryDotNet in the search box at the upper right corner.
+5. When CloudinaryDotNet package appears, click on the Install button.
+6. After the package is installed click Close button.
+7. Setup is done and you can now use CloudinaryDotNet.
 
 ### Manual setup
 
@@ -87,7 +87,7 @@ The main entry point of the library is the Cloudinary object.
 NOTE: This call assumes that CLOUDINARY_URL environment variable is set. If not, please use parameterized constructor:
 
 	CloudinaryDotNet.Account account =
-		new CloudinaryDotNet.Account("cloud_name", "api_key", "api_secret");
+		new CloudinaryDotNet.Account("my_cloud_name", "my_api_key", "my_api_secret");
 	
 	CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary(account);
 
