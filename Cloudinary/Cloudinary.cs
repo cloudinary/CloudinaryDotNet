@@ -29,7 +29,6 @@ namespace CloudinaryDotNet
         /// <param name="cloudinaryUrl">Cloudinary URL</param>
         /// <param name="useSsl">
         /// Whether to use secured connection or not.
-        /// Please use unsecured connections only for debugging purposes.
         /// </param>
         public Cloudinary(string cloudinaryUrl, bool useSsl = true)
         {
@@ -42,7 +41,6 @@ namespace CloudinaryDotNet
         /// <param name="account">Cloudinary account</param>
         /// <param name="useSsl">
         /// Whether to use secured connection or not.
-        /// Please use unsecured connections only for debugging purposes.
         /// </param>
         public Cloudinary(Account account, bool useSsl = true)
         {

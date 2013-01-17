@@ -610,9 +610,10 @@ namespace CloudinaryDotNet.Test
             Assert.IsTrue(result.Tags.Contains("api_test_custom"));
         }
 
-        [Test]
+        // Test disabled because it deletes all images in the remote account.
         public void DeleteAllInLoop()
         {
+            return;
             string nextCursor = String.Empty;
 
             while (true)

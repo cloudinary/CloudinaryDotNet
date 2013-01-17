@@ -42,7 +42,6 @@ namespace CloudinaryDotNet
         /// <param name="cloudinaryUrl">Cloudinary URL</param>
         /// <param name="useSsl">
         /// Whether to use secured connection or not.
-        /// Please use unsecured connections only for debugging purposes.
         /// </param>
         public Api(string cloudinaryUrl, bool useSsl)
         {
@@ -77,7 +76,6 @@ namespace CloudinaryDotNet
         /// <param name="account">Cloudinary account</param>
         /// <param name="useSsl">
         /// Whether to use secured connection or not.
-        /// Please use unsecured connections only for debugging purposes.
         /// </param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network</param>
         /// <param name="privateCdn">Private Content Delivery Network</param>
@@ -94,7 +92,6 @@ namespace CloudinaryDotNet
         /// <param name="account">Cloudinary account</param>
         /// <param name="useSsl">
         /// Whether to use secured connection or not.
-        /// Please use unsecured connections only for debugging purposes.
         /// </param>
         public Api(Account account, bool useSsl)
         {

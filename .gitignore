@@ -1,0 +1,6 @@
+bin
+obj
+packages
+*.nupkg
+Cloudinary.v11.suo
+*.csproj.user
