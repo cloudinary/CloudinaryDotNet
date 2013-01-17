@@ -6,6 +6,7 @@
         <title>Cloudinary DotNet Library</title>
         <authors>Cloudinary</authors>
         <owners>Cloudinary</owners>
+        <iconUrl>http://res.cloudinary.com/cloudinary/image/upload/w_128/cloudinary_logo_square.png</iconUrl>
         <projectUrl>http://cloudinary.com/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Official client library for easily integrating with the Cloudinary service</description>
