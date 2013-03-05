@@ -8,6 +8,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -73,6 +74,11 @@ namespace CloudinaryDotNet.Actions
         public HttpStatusCode StatusCode { get; protected set; }
 
         /// <summary>
+        /// Raw JSON as received from server
+        /// </summary>
+        public JToken JsonObj { get; protected set; }
+
+        /// <summary>
         /// Description of server-side error (if one has occured)
         /// </summary>
         [DataMember(Name = "error")]
@@ -100,6 +106,7 @@ namespace CloudinaryDotNet.Actions
 #endif
 
                     result = JsonConvert.DeserializeObject<T>(s);
+                    result.JsonObj = JToken.Parse(s);
                 }
 
                 result.StatusCode = response.StatusCode;

@@ -14,7 +14,7 @@ namespace CloudinaryDotNet.Actions
             Tags = String.Empty;
         }
 
-        public EagerTransformation Eager { get; set; }
+        public List<Transformation> EagerTransforms { get; set; }
 
         public string Type { get; set; }
 
@@ -45,8 +45,11 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "tags", Tags);
             AddParam(dict, "type", Type);
 
-            if (Eager != null)
-                AddParam(dict, "eager", Eager.Generate());
+            if (EagerTransforms != null)
+            {
+                AddParam(dict, "eager",
+                    String.Join("|", EagerTransforms.Select(t => t.Generate()).ToArray()));
+            }
 
             if (Headers != null && Headers.Count > 0)
             {

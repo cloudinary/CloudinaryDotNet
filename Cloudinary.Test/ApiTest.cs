@@ -14,7 +14,7 @@ namespace CloudinaryDotNet.Test
         public void Init()
         {
             Account account = new Account("testcloud", "1234", "abcd");
-            m_api = new Api(account, false);
+            m_api = new Api(account);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace CloudinaryDotNet.Test
         {
             // should allow overwriting secure distribution if secure=TRUE
 
-            string uri = m_api.UrlImgUp.Secure(true).SecureDistribution("something.else.com").BuildUrl("test");
+            string uri = m_api.UrlImgUp.Secure().SecureDistribution("something.else.com").BuildUrl("test");
             Assert.AreEqual("https://something.else.com/testcloud/image/upload/test", uri);
         }
 
@@ -138,6 +138,25 @@ namespace CloudinaryDotNet.Test
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
             Assert.AreEqual("100", transformation.HtmlWidth);
             Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_fill,x_100,y_100/c_crop,w_100/test", uri);
+        }
+
+        [Test]
+        public void TestEagerTransformationList()
+        {
+            List<Transformation> list = new List<Transformation>(){
+                new EagerTransformation().SetFormat("jpg").Crop("scale").Width(2.0),
+                new EagerTransformation(new Transformation().Width(10),new Transformation().Angle(10)),
+                new Transformation().Width(20).Height(20)
+            };
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                EagerTransforms = list
+            };
+
+            SortedDictionary<string, object> dict = uploadParams.ToParamsDictionary();
+
+            Assert.AreEqual("c_scale,w_2/jpg|w_10/a_10/|h_20,w_20", dict["eager"]);
         }
 
         [Test]
@@ -389,9 +408,9 @@ namespace CloudinaryDotNet.Test
             // secure_distribution
 
             Account acc = new Account("test123", "a", "b");
-            Api api = new Api(acc, true, true, null);
+            Api api = new Api(acc, true, null);
 
-            api.ApiUrl.Secure(true).BuildUrl("test");
+            api.ApiUrl.Secure().BuildUrl("test");
         }
 
         [Test]
@@ -438,7 +457,7 @@ namespace CloudinaryDotNet.Test
             uri = m_api.UrlImgUp.Action("sprite").BuildUrl("teslistresourcesbytag1.css");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/teslistresourcesbytag1.css", uri);
 
-            uri = m_api.ApiUrlImgUpV.Action("sprite").BuildUrl();
+            uri = m_api.ApiUrlImgUpV.CloudinaryAddr("http://api.cloudinary.com").Action("sprite").BuildUrl();
             Assert.AreEqual("http://api.cloudinary.com/v1_1/testcloud/image/sprite", uri);
         }
 

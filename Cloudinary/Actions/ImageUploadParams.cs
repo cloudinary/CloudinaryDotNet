@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CloudinaryDotNet.Actions
@@ -26,7 +28,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// A list of transformations to create for the uploaded image during the upload process, instead of lazily creating them when being accessed by your site's visitors.
         /// </summary>
-        public EagerTransformation Eager { get; set; }
+        public List<Transformation> EagerTransforms { get; set; }
 
         public Dictionary<string, string> Headers { get; set; }
 
@@ -44,8 +46,11 @@ namespace CloudinaryDotNet.Actions
             if (Transformation != null)
                 AddParam(dict, "transformation", Transformation.Generate());
 
-            if (Eager != null)
-                AddParam(dict, "eager", Eager.Generate());
+            if (EagerTransforms != null && EagerTransforms.Count > 0)
+            {
+                AddParam(dict, "eager",
+                    String.Join("|", EagerTransforms.Select(t => t.Generate()).ToArray()));
+            }
 
             if (Headers != null && Headers.Count > 0)
             {

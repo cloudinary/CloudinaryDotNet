@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
-using Cloudinary.Test.Properties;
 
 namespace CloudinaryDotNet.Test
 {
@@ -38,7 +38,7 @@ namespace CloudinaryDotNet.Test
             Assert.IsFalse(String.IsNullOrEmpty(m_account.ApiKey));
             Assert.IsFalse(String.IsNullOrEmpty(m_account.ApiSecret));
 
-            m_cloudinary = new Cloudinary(m_account, true);
+            m_cloudinary = new Cloudinary(m_account);
 
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
 
@@ -66,7 +66,7 @@ namespace CloudinaryDotNet.Test
                 checkParams.Add("public_id", uploadResult.PublicId);
                 checkParams.Add("version", uploadResult.Version);
 
-                Api api = new Api(m_account, false);
+                Api api = new Api(m_account);
                 string expectedSign = api.GetSign(checkParams);
 
                 Assert.AreEqual(expectedSign, uploadResult.Signature);
@@ -85,10 +85,9 @@ namespace CloudinaryDotNet.Test
                 Tags = "transformation"
             })
             {
-
                 ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
 
-                Assert.AreEqual(191141, uploadResult.Length);
+                Assert.AreEqual(176110, uploadResult.Length);
                 Assert.AreEqual(512, uploadResult.Width);
                 Assert.AreEqual(512, uploadResult.Height);
                 Assert.AreEqual("jpg", uploadResult.Format);
@@ -429,7 +428,12 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImage.jpg")),
-                Eager = new EagerTransformation(new Transformation().Crop("scale").Width(2.0)),
+                EagerTransforms = new List<Transformation>() {
+                    new Transformation().Width(100),
+                    new EagerTransformation(
+                        new Transformation().Width(10),
+                        new Transformation().Angle(10)).SetFormat("png")
+                },
                 Tags = "eager,transformation"
             })
             {
@@ -447,7 +451,7 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImage.jpg")),
-                Eager = new EagerTransformation(new Transformation().Crop("scale").Width(2.0)),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
                 PublicId = "testgetresource"
             })
             {
@@ -475,7 +479,7 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImage.jpg")),
-                Eager = new EagerTransformation(new Transformation().Width(101).Crop("scale")),
+                EagerTransforms = new List<Transformation>() { new Transformation().Width(101).Crop("scale") },
                 PublicId = "testdeletederived"
             })
             {
@@ -697,7 +701,7 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImage.jpg")),
-                Eager = new EagerTransformation(new Transformation().Crop("scale").Width(100)),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(100) },
                 Tags = "transformation"
             })
             {
@@ -724,7 +728,7 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImage.jpg")),
-                Eager = new EagerTransformation(t),
+                EagerTransforms = new List<Transformation>() { t },
                 Tags = "transformation"
             })
             {
@@ -749,7 +753,7 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImage.jpg")),
-                Eager = new EagerTransformation(t),
+                EagerTransforms = new List<Transformation>() { t },
                 Tags = "transformation"
             })
             {
@@ -842,7 +846,7 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "TestImage.jpg")),
-                Eager = new EagerTransformation(new Transformation().Crop("scale").Width(100))
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(100) }
             })
             {
                 m_cloudinary.Upload(uploadParams);
@@ -888,13 +892,13 @@ namespace CloudinaryDotNet.Test
         {
             ExplicitParams exp = new ExplicitParams("cloudinary")
             {
-                Eager = new EagerTransformation(new Transformation().Crop("scale").Width(2.0)),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
                 Type = "twitter_name"
             };
 
             ExplicitResult expResult = m_cloudinary.Explicit(exp);
 
-            string url = new Url(m_account.Cloud, false).ResourceType("image").Add("twitter_name").
+            string url = new Url(m_account.Cloud).ResourceType("image").Add("twitter_name").
                 Transform(new Transformation().Crop("scale").Width(2.0)).
                 Format("png").Version(expResult.Version).BuildUrl("cloudinary");
 
@@ -1009,6 +1013,23 @@ namespace CloudinaryDotNet.Test
                 Assert.AreEqual(100, item.Value.Width);
                 Assert.AreEqual(100, item.Value.Height);
             }
+        }
+
+        [Test]
+        public void TestJsonObject()
+        {
+            ExplicitParams exp = new ExplicitParams("cloudinary")
+             {
+
+                 EagerTransforms = new List<Transformation>() {
+                    new EagerTransformation().Crop("scale").Width(2.0) },
+                 Type = "twitter_name"
+             };
+
+            var result = m_cloudinary.Explicit(exp);
+
+            Assert.NotNull(result.JsonObj);
+            Assert.AreEqual(result.PublicId, result.JsonObj["public_id"].ToString());
         }
     }
 }

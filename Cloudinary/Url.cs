@@ -14,7 +14,6 @@ namespace CloudinaryDotNet
         string m_cloudName;
         string m_cloudinaryAddr = Api.ADDR_RES;
         string m_apiVersion;
-        bool m_useSsl;
 
         bool m_secure;
         bool m_usePrivateCdn;
@@ -32,10 +31,9 @@ namespace CloudinaryDotNet
 
         Transformation m_transformation = null;
 
-        public Url(string cloudName, bool useSsl)
+        public Url(string cloudName)
         {
             m_cloudName = cloudName;
-            m_useSsl = useSsl;
         }
 
         public Url CloudinaryAddr(string cloudinaryAddr)
@@ -106,7 +104,7 @@ namespace CloudinaryDotNet
             return this;
         }
 
-        public Url Secure(bool secure)
+        public Url Secure(bool secure = true)
         {
             m_secure = secure;
             return this;
@@ -214,16 +212,18 @@ namespace CloudinaryDotNet
             }
             else
             {
-                uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(source));
-                string subDomain = m_cSubDomain ? "a" + ((hash % 5 + 5) % 5 + 1) + "." : String.Empty;
-                string host = m_cName != null ? m_cName : (m_usePrivateCdn ? m_cloudName + "-" : String.Empty) + m_cloudinaryAddr;
-
-                if (m_useSsl)
-                    prefix = "https://";
+                if (Regex.IsMatch(m_cloudinaryAddr.ToLower(), "^https?:/.*"))
+                {
+                    prefix = m_cloudinaryAddr;
+                }
                 else
-                    prefix = "http://";
+                {
+                    uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(source));
+                    string subDomain = m_cSubDomain ? "a" + ((hash % 5 + 5) % 5 + 1) + "." : String.Empty;
+                    string host = m_cName != null ? m_cName : (m_usePrivateCdn ? m_cloudName + "-" : String.Empty) + m_cloudinaryAddr;
 
-                prefix += subDomain + host;
+                    prefix = "http://" + subDomain + host;
+                }
             }
 
             List<string> urlParts = new List<string>(new string[] { 

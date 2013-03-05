@@ -23,9 +23,9 @@ namespace CloudinaryDotNet
         public const string API_VERSION = "v1_1";
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
 
-        bool m_useSsl;
         bool m_usePrivateCdn;
         string m_privateCdn;
+        string m_apiAddr = "https://" + ADDR_API;
         SHA1 m_hasher;
         Account m_account;
 
@@ -34,16 +34,13 @@ namespace CloudinaryDotNet
         /// Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public Api()
-            : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL"), true) { }
+            : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL")) { }
 
         /// <summary>
         /// Parameterized constructor
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL</param>
-        /// <param name="useSsl">
-        /// Whether to use secured connection or not.
-        /// </param>
-        public Api(string cloudinaryUrl, bool useSsl)
+        public Api(string cloudinaryUrl)
         {
             if (String.IsNullOrEmpty(cloudinaryUrl))
                 throw new ArgumentException("Valid cloudinary init string must be provided!");
@@ -66,7 +63,6 @@ namespace CloudinaryDotNet
                 m_privateCdn = cloudinaryUri.AbsolutePath;
             }
 
-            m_useSsl = useSsl;
             m_hasher = SHA1.Create();
         }
 
@@ -74,13 +70,10 @@ namespace CloudinaryDotNet
         /// Parametrized constructor
         /// </summary>
         /// <param name="account">Cloudinary account</param>
-        /// <param name="useSsl">
-        /// Whether to use secured connection or not.
-        /// </param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network</param>
         /// <param name="privateCdn">Private Content Delivery Network</param>
-        public Api(Account account, bool useSsl, bool usePrivateCdn, string privateCdn)
-            : this(account, useSsl)
+        public Api(Account account, bool usePrivateCdn, string privateCdn)
+            : this(account)
         {
             m_usePrivateCdn = usePrivateCdn;
             m_privateCdn = privateCdn;
@@ -90,10 +83,7 @@ namespace CloudinaryDotNet
         /// Parametrized constructor
         /// </summary>
         /// <param name="account">Cloudinary account</param>
-        /// <param name="useSsl">
-        /// Whether to use secured connection or not.
-        /// </param>
-        public Api(Account account, bool useSsl)
+        public Api(Account account)
         {
             if (account == null)
                 throw new ArgumentException("Account can't be null!");
@@ -101,19 +91,9 @@ namespace CloudinaryDotNet
             if (String.IsNullOrEmpty(account.Cloud))
                 throw new ArgumentException("Cloud name must be specified in Account!");
 
-            m_useSsl = useSsl;
             m_usePrivateCdn = false;
             m_hasher = SHA1.Create();
             m_account = account;
-        }
-
-        /// <summary>
-        /// Calculates current UNIX time
-        /// </summary>
-        /// <returns>Amount of seconds from 1 january 1970</returns>
-        public string GetTime()
-        {
-            return Convert.ToInt64(((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
         }
 
         /// <summary>
@@ -137,13 +117,22 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Gets or sets API base address (https://api.cloudinary.com by default) which is used to build ApiUrl*
+        /// </summary>
+        public string ApiBaseAddress
+        {
+            get { return m_apiAddr; }
+            set { m_apiAddr = value; }
+        }
+
+        /// <summary>
         /// Default URL for working with resources
         /// </summary>
         public Url Url
         {
             get
             {
-                return new Url(m_account.Cloud, m_useSsl).
+                return new Url(m_account.Cloud).
                     PrivateCdn(m_usePrivateCdn).
                     Secure(m_usePrivateCdn).
                     SecureDistribution(m_privateCdn);
@@ -171,7 +160,7 @@ namespace CloudinaryDotNet
             get
             {
                 return Url.
-                    CloudinaryAddr(Api.ADDR_API);
+                    CloudinaryAddr(m_apiAddr);
             }
         }
 
@@ -314,53 +303,6 @@ namespace CloudinaryDotNet
             }
         }
 
-        private void FinalizeUploadParameters(SortedDictionary<string, object> parameters)
-        {
-            parameters.Add("timestamp", GetTime());
-            parameters.Add("signature", GetSign(parameters));
-            parameters.Add("api_key", m_account.ApiKey);
-        }
-
-        private void WriteParam(StreamWriter writer, string key, string value)
-        {
-#if DEBUG
-            Console.WriteLine(String.Format("{0}: {1}", key, value));
-#endif
-            writer.WriteLine("--{0}", HTTP_BOUNDARY);
-            writer.WriteLine("Content-Disposition: form-data; name=\"{1}\"{0}{0}{2}",
-                Environment.NewLine,
-                key,
-                value);
-        }
-
-        private void WriteFile(StreamWriter writer, FileDescription file)
-        {
-            if (file.IsRemote)
-            {
-                WriteParam(writer, "file", file.Name);
-            }
-            else
-            {
-                WriteFile(writer, file.Stream, file.Name);
-            }
-        }
-
-        private void WriteFile(StreamWriter writer, Stream stream, string fileName)
-        {
-            writer.WriteLine("--{0}", HTTP_BOUNDARY);
-            writer.WriteLine("Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
-            writer.WriteLine("Content-Type: application/octet-stream");
-            writer.WriteLine();
-
-            byte[] buf = new byte[4096];
-            int cnt, pos = 0;
-
-            while ((cnt = stream.Read(buf, pos, buf.Length)) > 0)
-            {
-                writer.BaseStream.Write(buf, 0, cnt);
-            }
-        }
-
         /// <summary>
         /// Builds HTML form
         /// </summary>
@@ -408,6 +350,62 @@ namespace CloudinaryDotNet
             builder.Append("'/>");
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Calculates current UNIX time
+        /// </summary>
+        /// <returns>Amount of seconds from 1 january 1970</returns>
+        private string GetTime()
+        {
+            return Convert.ToInt64(((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
+        }
+
+        private void FinalizeUploadParameters(SortedDictionary<string, object> parameters)
+        {
+            parameters.Add("timestamp", GetTime());
+            parameters.Add("signature", GetSign(parameters));
+            parameters.Add("api_key", m_account.ApiKey);
+        }
+
+        private void WriteParam(StreamWriter writer, string key, string value)
+        {
+#if DEBUG
+            Console.WriteLine(String.Format("{0}: {1}", key, value));
+#endif
+            writer.WriteLine("--{0}", HTTP_BOUNDARY);
+            writer.WriteLine("Content-Disposition: form-data; name=\"{1}\"{0}{0}{2}",
+                Environment.NewLine,
+                key,
+                value);
+        }
+
+        private void WriteFile(StreamWriter writer, FileDescription file)
+        {
+            if (file.IsRemote)
+            {
+                WriteParam(writer, "file", file.Name);
+            }
+            else
+            {
+                WriteFile(writer, file.Stream, file.Name);
+            }
+        }
+
+        private void WriteFile(StreamWriter writer, Stream stream, string fileName)
+        {
+            writer.WriteLine("--{0}", HTTP_BOUNDARY);
+            writer.WriteLine("Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
+            writer.WriteLine("Content-Type: application/octet-stream");
+            writer.WriteLine();
+
+            byte[] buf = new byte[4096];
+            int cnt, pos = 0;
+
+            while ((cnt = stream.Read(buf, pos, buf.Length)) > 0)
+            {
+                writer.BaseStream.Write(buf, 0, cnt);
+            }
         }
     }
 

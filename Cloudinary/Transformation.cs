@@ -77,24 +77,109 @@ namespace CloudinaryDotNet
             return this;
         }
 
-        public string Generate()
+        public virtual string Generate()
         {
-            List<Transformation> transforms = new List<Transformation>();
-            transforms.AddRange(m_nestedTransforms);
-            transforms.Add(this);
-            return Generate(transforms);
-        }
+            List<string> parts =
+                m_nestedTransforms.Select(t => t.GenerateThis()).ToList();
 
-        public string Generate(List<Transformation> transforms)
-        {
-            List<string> parts = new List<string>();
-
-            foreach (var t in transforms)
-            {
-                parts.Add(Generate(t.Params));
-            }
+            parts.Add(GenerateThis());
 
             return String.Join("/", parts.ToArray());
+        }
+
+        public string GenerateThis()
+        {
+            string size = GetString(m_transformParams, "size");
+            if (size != null)
+            {
+                string[] sizeComponents = size.Split("x".ToArray());
+                m_transformParams.Add("width", sizeComponents[0]);
+                m_transformParams.Add("height", sizeComponents[1]);
+            }
+
+            string width = m_htmlWidth = GetString(m_transformParams, "width");
+            string height = m_htmlHeight = GetString(m_transformParams, "height");
+
+            bool hasLayer = !String.IsNullOrEmpty(GetString(m_transformParams, "overlay")) ||
+                !String.IsNullOrEmpty(GetString(m_transformParams, "underlay"));
+
+            string crop = GetString(m_transformParams, "crop");
+            String angle = String.Join(".", GetStringArray(m_transformParams, "angle"));
+
+            bool no_html_sizes = hasLayer || !String.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
+            if (width != null && (Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes))
+            {
+                this.m_htmlWidth = null;
+            }
+            if (height != null && (Single.Parse(height, CultureInfo.InvariantCulture) < 1 || no_html_sizes))
+            {
+                this.m_htmlHeight = null;
+            }
+
+            string background = GetString(m_transformParams, "background");
+            if (background != null)
+            {
+                background = background.Replace("^#", "rgb:");
+            }
+
+            List<string> transformations = GetStringArray(m_transformParams, "transformation").ToList();
+
+            string namedTransformation = String.Join(".", transformations.ToArray());
+
+            transformations = new List<string>();
+
+            string flags = String.Join(".", GetStringArray(m_transformParams, "flags"));
+
+            SortedDictionary<string, string> parameters = new SortedDictionary<string, string>();
+            parameters.Add("w", width);
+            parameters.Add("h", height);
+            parameters.Add("t", namedTransformation);
+            parameters.Add("c", crop);
+            parameters.Add("b", background);
+            parameters.Add("a", angle);
+            parameters.Add("fl", flags);
+
+            string[] simpleParams = new string[]{
+                "x", "x", "y", "y", "r", "radius", "d", "default_image", "g", "gravity", "cs", "color_space",
+                "p", "prefix", "l", "overlay", "u", "underlay", "f", "fetch_format", "dn", "density",
+                "pg", "page", "dl", "delay", "e", "effect", "bo", "border", "q", "quality"
+            };
+
+            for (int i = 0; i < simpleParams.Length; i += 2)
+            {
+                if (m_transformParams.ContainsKey(simpleParams[i + 1]))
+                    parameters.Add(simpleParams[i], GetString(m_transformParams, simpleParams[i + 1]));
+            }
+
+            List<string> components = new List<string>();
+            foreach (var param in parameters)
+            {
+                if (!String.IsNullOrEmpty(param.Value))
+                    components.Add(String.Format("{0}_{1}", param.Key, param.Value));
+            }
+
+            string rawTransformation = GetString(m_transformParams, "raw_transformation");
+            if (rawTransformation != null)
+            {
+                components.Add(rawTransformation);
+            }
+
+            if (components.Count > 0)
+            {
+                transformations.Add(String.Join(",", components.ToArray()));
+            }
+
+            return String.Join("/", transformations.ToArray());
+        }
+
+        public string HtmlWidth
+        {
+            get { return m_htmlWidth; }
+        }
+
+        public string HtmlHeight
+        {
+            get { return m_htmlHeight; }
         }
 
         private string[] GetStringArray(Dictionary<string, object> options, string key)
@@ -131,107 +216,6 @@ namespace CloudinaryDotNet
             else
                 return null;
         }
-
-        public string Generate(Dictionary<string, object> transformParams)
-        {
-            string size = GetString(transformParams, "size");
-            if (size != null)
-            {
-                string[] sizeComponents = size.Split("x".ToArray());
-                transformParams.Add("width", sizeComponents[0]);
-                transformParams.Add("height", sizeComponents[1]);
-            }
-
-            string width = this.m_htmlWidth = GetString(transformParams, "width");
-            string height = this.m_htmlHeight = GetString(transformParams, "height");
-
-            bool hasLayer = !String.IsNullOrEmpty(GetString(transformParams, "overlay")) ||
-                !String.IsNullOrEmpty(GetString(transformParams, "underlay"));
-
-            string crop = GetString(transformParams, "crop");
-            String angle = String.Join(".", GetStringArray(transformParams, "angle"));
-
-            bool no_html_sizes = hasLayer || !String.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
-            if (width != null && (Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes))
-            {
-                this.m_htmlWidth = null;
-            }
-            if (height != null && (Single.Parse(height, CultureInfo.InvariantCulture) < 1 || no_html_sizes))
-            {
-                this.m_htmlHeight = null;
-            }
-
-            string background = GetString(transformParams, "background");
-            if (background != null)
-            {
-                background = background.Replace("^#", "rgb:");
-            }
-
-            List<string> transformations = GetStringArray(transformParams, "transformation").ToList();
-
-            string namedTransformation = String.Join(".", transformations.ToArray());
-
-            transformations = new List<string>();
-
-            string flags = String.Join(".", GetStringArray(transformParams, "flags"));
-
-            SortedDictionary<string, string> parameters = new SortedDictionary<string, string>();
-            parameters.Add("w", width);
-            parameters.Add("h", height);
-            parameters.Add("t", namedTransformation);
-            parameters.Add("c", crop);
-            parameters.Add("b", background);
-            parameters.Add("a", angle);
-            parameters.Add("fl", flags);
-
-            string[] simpleParams = new string[]{
-                "x", "x", "y", "y", "r", "radius", "d", "default_image", "g", "gravity", "cs", "color_space",
-                "p", "prefix", "l", "overlay", "u", "underlay", "f", "fetch_format", "dn", "density",
-                "pg", "page", "dl", "delay", "e", "effect", "bo", "border", "q", "quality"
-            };
-
-            for (int i = 0; i < simpleParams.Length; i += 2)
-            {
-                if (transformParams.ContainsKey(simpleParams[i + 1]))
-                    parameters.Add(simpleParams[i], GetString(transformParams, simpleParams[i + 1]));
-            }
-
-            List<string> components = new List<string>();
-            foreach (var param in parameters)
-            {
-                if (!String.IsNullOrEmpty(param.Value))
-                    components.Add(String.Format("{0}_{1}", param.Key, param.Value));
-            }
-
-            string rawTransformation = GetString(transformParams, "raw_transformation");
-            if (rawTransformation != null)
-            {
-                components.Add(rawTransformation);
-            }
-
-            if (components.Count > 0)
-            {
-                transformations.Add(String.Join(",", components.ToArray()));
-            }
-
-            return String.Join("/", transformations.ToArray());
-        }
-
-        public string HtmlWidth
-        {
-            get
-            {
-                return m_htmlWidth;
-            }
-        }
-
-        public string HtmlHeight
-        {
-            get
-            {
-                return m_htmlHeight;
-            }
-        }
     }
 
     public class EagerTransformation : Transformation
@@ -251,5 +235,15 @@ namespace CloudinaryDotNet
         }
 
         public string Format { get; set; }
+
+        public override string Generate()
+        {
+            string s = base.Generate();
+
+            if (!String.IsNullOrEmpty(Format))
+                s += "/" + Format;
+
+            return s;
+        }
     }
 }

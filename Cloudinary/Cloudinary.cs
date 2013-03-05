@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using CloudinaryDotNet.Actions;
-using System.IO;
 
 namespace CloudinaryDotNet
 {
@@ -27,24 +26,18 @@ namespace CloudinaryDotNet
         /// Parameterized constructor
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL</param>
-        /// <param name="useSsl">
-        /// Whether to use secured connection or not.
-        /// </param>
-        public Cloudinary(string cloudinaryUrl, bool useSsl = true)
+        public Cloudinary(string cloudinaryUrl)
         {
-            m_api = new Api(cloudinaryUrl, useSsl);
+            m_api = new Api(cloudinaryUrl);
         }
 
         /// <summary>
         /// Parameterized constructor
         /// </summary>
         /// <param name="account">Cloudinary account</param>
-        /// <param name="useSsl">
-        /// Whether to use secured connection or not.
-        /// </param>
-        public Cloudinary(Account account, bool useSsl = true)
+        public Cloudinary(Account account)
         {
-            m_api = new Api(account, useSsl);
+            m_api = new Api(account);
         }
 
         /// <summary>
