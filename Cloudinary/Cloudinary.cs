@@ -73,6 +73,16 @@ namespace CloudinaryDotNet
             }
         }
 
+        public UsageResult GetUsage()
+        {
+            string uri = m_api.ApiUrlV.Action("usage").BuildUrl();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.GET, uri, null, null))
+            {
+                return UsageResult.Parse(response);
+            }
+        }
+
         /// <summary>
         /// Upload a raw file to cloudinary
         /// </summary>

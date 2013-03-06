@@ -1081,5 +1081,18 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(result.JsonObj);
             Assert.AreEqual(result.PublicId, result.JsonObj["public_id"].ToString());
         }
+
+        [Test]
+        public void TestUsage()
+        {
+            var result = m_cloudinary.GetUsage();
+
+            Assert.NotNull(result);
+            Assert.AreEqual("Free", result.Plan);
+            Assert.True(result.Resources > 0);
+            Assert.True(result.Objects.Used < result.Objects.Limit);
+            Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
+            Assert.True(result.Storage.Used < result.Storage.Limit);
+        }
     }
 }
