@@ -112,6 +112,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\multipage.pdf" />
     <None Include="Resources\TestImage.jpg" />
   </ItemGroup>
   <ItemGroup>

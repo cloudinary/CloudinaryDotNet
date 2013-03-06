@@ -7,13 +7,13 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Parameters of tag management
     /// </summary>
-    public class SpriteParams : BaseParams
+    public class MultiParams : BaseParams
     {
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="tag">The tag name assigned to images that we should merge into the sprite.</param>
-        public SpriteParams(string tag)
+        public MultiParams(string tag)
         {
             Tag = tag;
         }
@@ -28,6 +28,8 @@ namespace CloudinaryDotNet.Actions
         public string NotificationUrl { get; set; }
 
         public bool Async { get; set; }
+
+        public string Format { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -48,7 +50,7 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "tag", Tag);
             AddParam(dict, "notification_url", NotificationUrl);
-
+            AddParam(dict, "format", Format);
             AddParam(dict, "async", Async);
 
             if (Transformation != null)

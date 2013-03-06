@@ -7,35 +7,39 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Parameters of tag management
     /// </summary>
-    public class SpriteParams : BaseParams
+    public class ExplodeParams : BaseParams
     {
         /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="tag">The tag name assigned to images that we should merge into the sprite.</param>
-        public SpriteParams(string tag)
+        public ExplodeParams(string publicId, Transformation transformation)
         {
-            Tag = tag;
+            PublicId = publicId;
+            Transformation = transformation;
         }
 
         /// <summary>
         /// The tag name assigned to images that we should merge into the sprite.
         /// </summary>
-        public string Tag { get; set; }
+        public string PublicId { get; set; }
 
         public Transformation Transformation { get; set; }
 
         public string NotificationUrl { get; set; }
 
-        public bool Async { get; set; }
+        public string Format { get; set; }
 
         /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(Tag))
-                throw new ArgumentException("Tag must be set!");
+            if (String.IsNullOrEmpty(PublicId))
+                throw new ArgumentException("PublicId must be set!");
+
+            if (Transformation == null)
+                throw new ArgumentException("Transformation must be set!");
         }
 
         /// <summary>
@@ -46,10 +50,9 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
 
-            AddParam(dict, "tag", Tag);
+            AddParam(dict, "public_id", PublicId);
             AddParam(dict, "notification_url", NotificationUrl);
-
-            AddParam(dict, "async", Async);
+            AddParam(dict, "format", Format);
 
             if (Transformation != null)
                 AddParam(dict, "transformation", Transformation.Generate());

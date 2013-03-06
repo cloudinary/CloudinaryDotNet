@@ -32,13 +32,30 @@ namespace CloudinaryDotNet.Actions
 
         public Dictionary<string, string> Headers { get; set; }
 
+        /// <summary>
+        /// Whether to include EXIF in the response
+        /// </summary>
         public bool Exif { get; set; }
 
         public bool Colors { get; set; }
 
         public bool Faces { get; set; }
 
+        /// <summary>
+        /// Whether to include metadata in the response
+        /// </summary>
         public bool Metadata { get; set; }
+
+        /// <summary>
+        /// Whether to use file name as ID
+        /// </summary>
+        public bool UseFilename { get; set; }
+
+        public bool EagerAsync { get; set; }
+
+        public string NotificationUrl { get; set; }
+
+        public string EagerNotificationUrl { get; set; }
 
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
@@ -55,6 +72,11 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "faces", Faces);
             AddParam(dict, "colors", Colors);
             AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "use_filename", UseFilename);
+            AddParam(dict, "eager_async", EagerAsync);
+
+            AddParam(dict, "notification_url", NotificationUrl);
+            AddParam(dict, "eager_notification_url", EagerNotificationUrl);
 
             if (Transformation != null)
                 AddParam(dict, "transformation", Transformation.Generate());

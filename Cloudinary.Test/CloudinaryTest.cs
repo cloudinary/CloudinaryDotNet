@@ -16,6 +16,7 @@ namespace CloudinaryDotNet.Test
         Account m_account;
         Cloudinary m_cloudinary;
         string m_testImagePath;
+        string m_testPdfPath;
 
         [SetUp]
         public void Initialize()
@@ -41,8 +42,10 @@ namespace CloudinaryDotNet.Test
             m_cloudinary = new Cloudinary(m_account);
 
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
+            m_testPdfPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "multipage.pdf");
 
             Resources.TestImage.Save(m_testImagePath);
+            File.WriteAllBytes(m_testPdfPath, Resources.multipage);
         }
 
         [Test]
@@ -93,6 +96,26 @@ namespace CloudinaryDotNet.Test
                 Assert.NotNull(result.Metadata);
                 Assert.NotNull(result.Exif);
                 Assert.NotNull(result.Colors);
+            }
+        }
+
+        [Test]
+        public void TestUploadLocalImageUseFilename()
+        {
+            using (ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "TestImage.jpg")),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                EagerAsync = true,
+                UseFilename = true,
+                NotificationUrl = "http://www.google.com"
+            })
+            {
+                ImageUploadResult result = m_cloudinary.Upload(uploadParams);
+
+                Assert.True(result.PublicId.StartsWith("TestImage"));
             }
         }
 
@@ -1093,6 +1116,68 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
             Assert.True(result.Storage.Used < result.Storage.Limit);
+        }
+
+        [Test]
+        public void TestMultiTransformation()
+        {
+            using (ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "TestImage.jpg")),
+                Tags = "test--5",
+                PublicId = "test--5-1"
+            })
+            {
+                m_cloudinary.Upload(uploadParams);
+            }
+
+            using (ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "TestImage.jpg")),
+                Tags = "test--5",
+                PublicId = "test--5-2"
+            })
+            {
+                m_cloudinary.Upload(uploadParams);
+            }
+
+            MultiParams multi = new MultiParams("test--5");
+            MultiResult result = m_cloudinary.Multi(multi);
+            Assert.True(result.Uri.AbsoluteUri.EndsWith(".gif"));
+
+            multi.Transformation = new Transformation().Width(100);
+            result = m_cloudinary.Multi(multi);
+            Assert.True(result.Uri.AbsoluteUri.Contains("w_100"));
+
+            multi.Transformation = new Transformation().Width(111);
+            multi.Format = "pdf";
+            result = m_cloudinary.Multi(multi);
+            Assert.True(result.Uri.AbsoluteUri.Contains("w_111"));
+            Assert.True(result.Uri.AbsoluteUri.EndsWith(".pdf"));
+        }
+
+        [Test]
+        public void TestExplode()
+        {
+            using (ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testPdfPath),
+                PublicId = "testexplode"
+            })
+            {
+                m_cloudinary.Upload(uploadParams);
+            }
+
+            var result = m_cloudinary.Explode(new ExplodeParams(
+                "testexplode",
+                new Transformation().Page("all")));
+
+            Assert.NotNull(result);
+            Assert.AreEqual("processing", result.Status);
         }
     }
 }

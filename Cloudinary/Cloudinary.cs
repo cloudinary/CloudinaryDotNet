@@ -477,7 +477,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Eagerly generate sprites
         /// </summary>
-        /// <param name="parameters">Parameters for sprite genetation</param>
+        /// <param name="parameters">Parameters for sprite generation</param>
         /// <returns>Result of sprite generation</returns>
         public SpriteResult MakeSprite(SpriteParams parameters)
         {
@@ -490,6 +490,46 @@ namespace CloudinaryDotNet
                 HttpMethod.POST, urlBuilder.ToString(), parameters.ToParamsDictionary(), null))
             {
                 SpriteResult result = SpriteResult.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Allows multi transformation
+        /// </summary>
+        /// <param name="parameters">Parameters of operation</param>
+        /// <returns>Result of operation</returns>
+        public MultiResult Multi(MultiParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlImgUpV.
+                Action("multi").
+                BuildUrl());
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.POST, urlBuilder.ToString(), parameters.ToParamsDictionary(), null))
+            {
+                MultiResult result = MultiResult.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Explode multipage document to single pages
+        /// </summary>
+        /// <param name="parameters">Parameters of explosion</param>
+        /// <returns>Result of operation</returns>
+        public ExplodeResult Explode(ExplodeParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlImgUpV.
+                Action("explode").
+                BuildUrl());
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.POST, urlBuilder.ToString(), parameters.ToParamsDictionary(), null))
+            {
+                ExplodeResult result = ExplodeResult.Parse(response);
                 return result;
             }
         }
