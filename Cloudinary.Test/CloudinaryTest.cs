@@ -74,6 +74,29 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUploadLocalImageGetMetadata()
+        {
+            using (ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "TestImage.jpg")),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                PublicId = "test--3",
+                Metadata = true,
+                Exif = true,
+                Colors = true
+            })
+            {
+                ImageUploadResult result = m_cloudinary.Upload(uploadParams);
+
+                Assert.NotNull(result.Metadata);
+                Assert.NotNull(result.Exif);
+                Assert.NotNull(result.Colors);
+            }
+        }
+
+        [Test]
         public void TestUploadTransformationResize()
         {
             using (ImageUploadParams uploadParams = new ImageUploadParams()
@@ -467,6 +490,33 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(1200, getResult.Height);
             Assert.AreEqual("jpg", getResult.Format);
             Assert.AreEqual(1, getResult.Derived.Length);
+            Assert.Null(getResult.Metadata);
+        }
+
+        [Test]
+        public void TestGetResourceWithMetadata()
+        {
+            using (ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "TestImage.jpg")),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                PublicId = "testgetresource2"
+            })
+            {
+                m_cloudinary.Upload(uploadParams);
+            }
+
+            GetResourceResult getResult = m_cloudinary.GetResource(
+                new GetResourceParams("testgetresource2")
+                {
+                    Metadata = true
+                });
+
+            Assert.IsNotNull(getResult);
+            Assert.AreEqual("testgetresource2", getResult.PublicId);
+            Assert.NotNull(getResult.Metadata);
         }
 
         [Test]

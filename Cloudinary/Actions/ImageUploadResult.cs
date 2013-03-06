@@ -1,7 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -28,6 +27,18 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
+
+        [DataMember(Name = "exif")]
+        public Dictionary<string, string> Exif { get; protected set; }
+
+        [DataMember(Name = "image_metadata")]
+        public Dictionary<string, string> Metadata { get; protected set; }
+
+        [DataMember(Name = "faces")]
+        public int[][] Faces { get; protected set; }
+
+        [DataMember(Name = "colors")]
+        public string[][] Colors { get; protected set; }
 
         /// <summary>
         /// Parses HTTP response and creates new instance of this class

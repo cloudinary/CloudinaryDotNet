@@ -53,8 +53,14 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "exif")]
         public Dictionary<string, string> Exif { get; protected set; }
 
+        [DataMember(Name = "image_metadata")]
+        public Dictionary<string, string> Metadata { get; protected set; }
+
         [DataMember(Name = "faces")]
         public int[][] Faces { get; protected set; }
+
+        [DataMember(Name = "colors")]
+        public string[][] Colors { get; protected set; }
 
         [DataMember(Name = "derived")]
         public Derived[] Derived { get; protected set; }

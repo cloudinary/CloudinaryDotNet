@@ -9,9 +9,9 @@ namespace CloudinaryDotNet.Actions
         {
             PublicId = publicId;
             Type = "upload";
-            Exif = String.Empty;
-            Colors = String.Empty;
-            Faces = String.Empty;
+            Exif = false;
+            Colors = false;
+            Faces = false;
         }
 
         public string PublicId { get; set; }
@@ -20,11 +20,13 @@ namespace CloudinaryDotNet.Actions
 
         public string Type { get; set; }
 
-        public string Exif { get; set; }
+        public bool Exif { get; set; }
 
-        public string Colors { get; set; }
+        public bool Colors { get; set; }
 
-        public string Faces { get; set; }
+        public bool Faces { get; set; }
+
+        public bool Metadata { get; set; }
 
         public int MaxResults { get; set; }
 
@@ -51,6 +53,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "exif", Exif);
             AddParam(dict, "colors", Colors);
             AddParam(dict, "faces", Faces);
+            AddParam(dict, "image_metadata", Metadata);
 
             return dict;
         }

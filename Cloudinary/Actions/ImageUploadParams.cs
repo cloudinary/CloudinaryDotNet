@@ -32,6 +32,14 @@ namespace CloudinaryDotNet.Actions
 
         public Dictionary<string, string> Headers { get; set; }
 
+        public bool Exif { get; set; }
+
+        public bool Colors { get; set; }
+
+        public bool Faces { get; set; }
+
+        public bool Metadata { get; set; }
+
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
         /// </summary>
@@ -42,6 +50,11 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "tags", Tags);
             AddParam(dict, "format", Format);
+
+            AddParam(dict, "exif", Exif);
+            AddParam(dict, "faces", Faces);
+            AddParam(dict, "colors", Colors);
+            AddParam(dict, "image_metadata", Metadata);
 
             if (Transformation != null)
                 AddParam(dict, "transformation", Transformation.Generate());
