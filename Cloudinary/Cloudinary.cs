@@ -119,6 +119,16 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Generate an image of a given textual string
         /// </summary>
+        /// <param name="text">Text to draw</param>
+        /// <returns>Results of generating an image of a given textual string</returns>
+        public TextResult Text(string text)
+        {
+            return Text(new TextParams(text));
+        }
+
+        /// <summary>
+        /// Generate an image of a given textual string
+        /// </summary>
         /// <param name="parameters">Parameters of generating an image of a given textual string</param>
         /// <returns>Results of generating an image of a given textual string</returns>
         public TextResult Text(TextParams parameters)

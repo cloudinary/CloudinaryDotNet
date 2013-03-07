@@ -8,7 +8,7 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Parameters of uploading a file to cloudinary
     /// </summary>
-    public class RawUploadParams : BaseParams, IDisposable
+    public class RawUploadParams : BaseParams
     {
         /// <summary>
         /// Either the actual data of the image or an HTTP URL of a public image on the Internet.
@@ -31,7 +31,7 @@ namespace CloudinaryDotNet.Actions
             if (!File.IsRemote && File.Stream == null || !File.Stream.CanRead)
                 throw new ArgumentException("File is not ready!");
 
-            if (String.IsNullOrEmpty(File.Name))
+            if (String.IsNullOrEmpty(File.FileName))
                 throw new ArgumentException("File name must be specified in UploadParams!");
         }
 
@@ -47,30 +47,15 @@ namespace CloudinaryDotNet.Actions
 
             return dict;
         }
-
-        #region IDisposable
-
-        /// <summary>
-        /// Clear resources associated with this instance
-        /// </summary>
-        public void Dispose()
-        {
-            if (File != null)
-            {
-                File.Dispose();
-                File = null;
-            }
-        }
-
-        #endregion
     }
 
     /// <summary>
     /// Represents a file to upload to cloudinary
     /// </summary>
-    public class FileDescription : IDisposable
+    public class FileDescription
     {
         string m_name;
+        string m_path;
         Stream m_stream;
         bool m_isRemote;
 
@@ -93,16 +78,12 @@ namespace CloudinaryDotNet.Actions
         {
             Regex regex = new Regex("^https?:");
             m_isRemote = regex.IsMatch(filePath);
+            m_path = filePath;
 
-            if (m_isRemote)
-            {
-                m_name = filePath;
-            }
+            if (!m_isRemote)
+                m_name = Path.GetFileNameWithoutExtension(m_path);
             else
-            {
-                m_stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                m_name = Path.GetFileNameWithoutExtension(filePath);
-            }
+                m_name = m_path;
         }
 
         /// <summary>
@@ -112,31 +93,21 @@ namespace CloudinaryDotNet.Actions
         { get { return m_stream; } }
 
         /// <summary>
-        /// Name of file to upload
+        /// Name of the file to upload
         /// </summary>
-        public string Name
+        public string FileName
         { get { return m_name; } }
+
+        /// <summary>
+        /// Filesystem path to the file to upload
+        /// </summary>
+        public string FilePath
+        { get { return m_path; } }
 
         /// <summary>
         /// Whether it is remote (by URL) or local file
         /// </summary>
         public bool IsRemote
         { get { return m_isRemote; } }
-
-        #region IDisposable
-
-        /// <summary>
-        /// Clear resources associated with this instance
-        /// </summary>
-        public void Dispose()
-        {
-            if (m_stream != null)
-            {
-                m_stream.Dispose();
-                m_stream = null;
-            }
-        }
-
-        #endregion
     }
 }

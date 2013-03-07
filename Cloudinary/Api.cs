@@ -384,11 +384,21 @@ namespace CloudinaryDotNet
         {
             if (file.IsRemote)
             {
-                WriteParam(writer, "file", file.Name);
+                WriteParam(writer, "file", file.FilePath);
             }
             else
             {
-                WriteFile(writer, file.Stream, file.Name);
+                if (file.Stream == null)
+                {
+                    using (FileStream stream = new FileStream(file.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        WriteFile(writer, stream, file.FileName);
+                    }
+                }
+                else
+                {
+                    WriteFile(writer, file.Stream, file.FileName);
+                }
             }
         }
 

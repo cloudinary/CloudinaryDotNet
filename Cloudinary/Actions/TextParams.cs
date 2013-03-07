@@ -17,6 +17,16 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
+        /// Parameterized constructor
+        /// </summary>
+        /// <param name="text">Text to draw</param>
+        public TextParams(string text)
+            : this()
+        {
+            Text = text;
+        }
+
+        /// <summary>
         /// The text to generate an image for.
         /// </summary>
         public string Text { get; set; }

@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloudinary", "Cloudinary\Cloudinary.csproj", "{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloudinary.Test", "Cloudinary.Test\Cloudinary.Test.csproj", "{16C07542-4726-4AE7-9FDD-62DB823B449E}"
