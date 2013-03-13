@@ -9,8 +9,6 @@ namespace CloudinaryDotNet
 {
     public class Url
     {
-        private const string SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
-
         string m_cloudName;
         string m_cloudinaryAddr = Api.ADDR_RES;
         string m_apiVersion;
@@ -195,14 +193,7 @@ namespace CloudinaryDotNet
 
             if (m_secure && String.IsNullOrEmpty(m_privateCdn))
             {
-                if (m_usePrivateCdn)
-                {
-                    throw new ArgumentException("SecureDistribution is not defined!");
-                }
-                else
-                {
-                    m_privateCdn = SHARED_CDN;
-                }
+                m_privateCdn = Cloudinary.SHARED_CDN;
             }
 
             string prefix;
@@ -226,11 +217,13 @@ namespace CloudinaryDotNet
                 }
             }
 
-            List<string> urlParts = new List<string>(new string[] { 
-                prefix, 
-                m_usePrivateCdn ? m_cloudName : String.Empty,
-                m_apiVersion,
-                m_usePrivateCdn ? String.Empty : m_cloudName });
+            List<string> urlParts = new List<string>(new string[] {prefix}); 
+            if (!String.IsNullOrEmpty(m_apiVersion)) {
+                urlParts.Add(m_apiVersion);
+                urlParts.Add(m_cloudName);
+            } else if (!m_usePrivateCdn || (m_secure && Cloudinary.AKAMAI_SHARED_CDN.Equals(m_privateCdn))) {
+                urlParts.Add(m_cloudName);
+            }
 
             urlParts.Add(m_resourceType);
             urlParts.Add(m_action);

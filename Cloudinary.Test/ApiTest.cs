@@ -62,7 +62,34 @@ namespace CloudinaryDotNet.Test
             // should use default secure distribution if secure=TRUE
 
             string uri = m_api.UrlImgUp.Secure(true).BuildUrl("test");
-            Assert.AreEqual("https://d3jpl91pxevbkh.cloudfront.net/testcloud/image/upload/test", uri);
+            Assert.AreEqual("https://cloudinary-a.akamaihd.net/testcloud/image/upload/test", uri);
+        }
+
+        [Test]
+        public void TestSecureAkamai()
+        {
+            // should default to akamai if secure is given with private_cdn and no secure_distribution
+
+            string uri = m_api.UrlImgUp.Secure(true).PrivateCdn(true).BuildUrl("test");
+            Assert.AreEqual("https://cloudinary-a.akamaihd.net/testcloud/image/upload/test", uri);
+        }
+
+        [Test]
+        public void testSecureNonAkamai()
+        {
+            // should not add cloud_name if private_cdn and secure non akamai secure_distribution
+
+            string uri = m_api.UrlImgUp.Secure(true).PrivateCdn(true).SecureDistribution("something.cloudfront.net").BuildUrl("test");
+            Assert.AreEqual("https://something.cloudfront.net/image/upload/test", uri);
+        }
+
+        [Test]
+        public void TestHttpPrivateCdn()
+        {
+            // should not add cloud_name if private_cdn and not secure
+
+            string uri = m_api.UrlImgUp.PrivateCdn(true).BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/image/upload/test", uri);
         }
 
         [Test]
@@ -397,20 +424,7 @@ namespace CloudinaryDotNet.Test
             Cloudinary cloudinary = new Cloudinary("cloudinary://a:b@test123/config.secure.distribution.com");
             string url = cloudinary.Api.UrlImgUp.BuildUrl("test");
 
-            Assert.AreEqual("https://config.secure.distribution.com/test123/image/upload/test", url);
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void TestMissingSecureDistribution()
-        {
-            // should raise exception if secure is given with private_cdn and no
-            // secure_distribution
-
-            Account acc = new Account("test123", "a", "b");
-            Api api = new Api(acc, true, null);
-
-            api.ApiUrl.Secure().BuildUrl("test");
+            Assert.AreEqual("https://config.secure.distribution.com/image/upload/test", url);
         }
 
         [Test]
