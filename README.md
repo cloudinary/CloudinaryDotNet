@@ -130,7 +130,7 @@ The uploaded image is assigned a randomly generated public ID. The image is imme
 
     string url = cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format));
         
-    https://res.cloudinary.com/cloud_name/image/upload/biricaezlhduexarhzsb.jpg
+    http://res.cloudinary.com/cloud_name/image/upload/biricaezlhduexarhzsb.jpg
 
 You can also specify your own public ID:    
     
@@ -144,7 +144,7 @@ You can also specify your own public ID:
 
     string url = cloudinary.Api.UrlImgUp.BuildUrl("sample_remote_file.jpg");
 
-    https://res.cloudinary.com/cloud_name/image/upload/sample_remote_file.jpg
+    http://res.cloudinary.com/cloud_name/image/upload/sample_remote_file.jpg
         
 ### imageTag
 
@@ -154,7 +154,7 @@ Usage:
 
     string tag = cloudinary.Api.UrlImgUp.Format("png").Transform(new CloudinaryDotNet.Transformation().Width(100).Height(100).Crop("fill")).BuildImageTag("sample");
 
-	# <img src='https://res.cloudinary.com/cloud_name/image/upload/c_fill,h_100,w_100/sample.png' width='100' height='100'/>
+	# <img src='http://res.cloudinary.com/cloud_name/image/upload/c_fill,h_100,w_100/sample.png' width='100' height='100'/>
   
 ## Additional resources ##########################################################
 
