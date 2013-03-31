@@ -27,7 +27,6 @@ namespace CloudinaryDotNet
         string m_privateCdn;
         string m_apiAddr = "https://" + ADDR_API;
         SHA1 m_hasher;
-        Account m_account;
 
         /// <summary>
         /// Default parameterless constructor.
@@ -51,7 +50,7 @@ namespace CloudinaryDotNet
                 throw new ArgumentException("Cloud name must be specified as host name in URL!");
 
             string[] creds = cloudinaryUri.UserInfo.Split(':');
-            m_account = new Account(cloudinaryUri.Host, creds[0], creds[1]);
+            Account = new Account(cloudinaryUri.Host, creds[0], creds[1]);
 
             m_usePrivateCdn = !String.IsNullOrEmpty(cloudinaryUri.AbsolutePath) &&
                 cloudinaryUri.AbsolutePath != "/";
@@ -93,7 +92,7 @@ namespace CloudinaryDotNet
 
             m_usePrivateCdn = false;
             m_hasher = SHA1.Create();
-            m_account = account;
+            Account = account;
         }
 
         /// <summary>
@@ -106,7 +105,7 @@ namespace CloudinaryDotNet
             StringBuilder signBase = new StringBuilder(String.Join("&",
                 parameters.Where(pair => !String.IsNullOrEmpty(pair.Value.ToString())).
                 Select(pair => String.Format("{0}={1}", pair.Key, pair.Value)).ToArray()));
-            signBase.Append(m_account.ApiSecret);
+            signBase.Append(Account.ApiSecret);
 
             byte[] hash = m_hasher.ComputeHash(Encoding.UTF8.GetBytes(signBase.ToString()));
 
@@ -115,6 +114,8 @@ namespace CloudinaryDotNet
 
             return sign.ToString();
         }
+
+        public Account Account { get; private set; }
 
         /// <summary>
         /// Gets or sets API base address (https://api.cloudinary.com by default) which is used to build ApiUrl*
@@ -132,7 +133,7 @@ namespace CloudinaryDotNet
         {
             get
             {
-                return new Url(m_account.Cloud).
+                return new Url(Account.Cloud).
                     PrivateCdn(m_usePrivateCdn).
                     Secure(m_usePrivateCdn).
                     SecureDistribution(m_privateCdn);
@@ -289,7 +290,7 @@ namespace CloudinaryDotNet
             }
             else
             {
-                byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", m_account.ApiKey, m_account.ApiSecret));
+                byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
                 request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
             }
 
@@ -306,15 +307,23 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Builds HTML form
         /// </summary>
-        /// <param name="field"></param>
-        /// <param name="resourceType"></param>
-        /// <param name="parameters"></param>
-        /// <param name="htmlOptions"></param>
+        /// <returns>HTML form</returns>
+        public string BuildUploadForm(string field, string resourceType)
+        {
+            return BuildUploadForm(field, resourceType, null, null);
+        }
+
+        /// <summary>
+        /// Builds HTML form
+        /// </summary>
         /// <returns>HTML form</returns>
         public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters, Dictionary<string, string> htmlOptions)
         {
             if (parameters == null)
                 parameters = new SortedDictionary<string, object>();
+
+            if (htmlOptions == null)
+                htmlOptions = new Dictionary<string, string>();
 
             string url = ApiUrlImgUpV.ResourceType(resourceType).BuildUrl();
 
@@ -365,7 +374,7 @@ namespace CloudinaryDotNet
         {
             parameters.Add("timestamp", GetTime());
             parameters.Add("signature", GetSign(parameters));
-            parameters.Add("api_key", m_account.ApiKey);
+            parameters.Add("api_key", Account.ApiKey);
         }
 
         private void WriteParam(StreamWriter writer, string key, string value)

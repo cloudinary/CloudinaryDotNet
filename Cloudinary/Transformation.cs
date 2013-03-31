@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
 {
-    public class Transformation
+    public class Transformation : ICloneable
     {
         protected Dictionary<string, object> m_transformParams = new Dictionary<string, object>();
         protected List<Transformation> m_nestedTransforms = new List<Transformation>();
@@ -30,15 +30,33 @@ namespace CloudinaryDotNet
             }
         }
 
+        public Transformation(params string[] transformParams)
+        {
+            foreach (var pair in transformParams)
+            {
+                string[] splittedPair = pair.Split('=');
+                if (splittedPair.Length != 2)
+                    throw new ArgumentException(String.Format("Couldn't parse '{0}'!", pair));
+
+                Add(splittedPair[0], splittedPair[1]);
+            }
+        }
+
         public Dictionary<string, object> Params
         {
             get { return m_transformParams; }
-            private set { m_transformParams = value; }
+        }
+
+        public List<Transformation> NestedTransforms
+        {
+            get { return m_nestedTransforms; }
         }
 
         public Transformation Chain()
         {
-            m_nestedTransforms.Add(this);
+            Transformation nested = this.Clone();
+            nested.m_nestedTransforms = null;
+            m_nestedTransforms.Add(nested);
             Transformation transform = new Transformation(m_nestedTransforms);
             return transform;
         }
@@ -73,7 +91,11 @@ namespace CloudinaryDotNet
 
         public Transformation Add(string key, object value)
         {
-            m_transformParams.Add(key, value);
+            if (m_transformParams.ContainsKey(key))
+                m_transformParams[key] = value;
+            else
+                m_transformParams.Add(key, value);
+
             return this;
         }
 
@@ -216,6 +238,49 @@ namespace CloudinaryDotNet
             else
                 return null;
         }
+
+        #region ICloneable
+
+        public Transformation Clone()
+        {
+            Transformation t = (Transformation)this.MemberwiseClone();
+
+            t.m_transformParams = new Dictionary<string, object>();
+
+            foreach (var key in m_transformParams.Keys)
+            {
+                if (m_transformParams[key] is Array)
+                {
+                    t.Add(key, ((Array)m_transformParams[key]).Clone());
+                }
+                else if (m_transformParams[key] is String || m_transformParams[key] is ValueType)
+                {
+                    t.Add(key, m_transformParams[key]);
+                }
+                else
+                {
+                    throw new ApplicationException(String.Format("Couldn't clone parameter '{0}'!", key));
+                }
+            }
+
+            if (m_nestedTransforms != null)
+            {
+                t.m_nestedTransforms = new List<Transformation>();
+                foreach (var nestedTransform in m_nestedTransforms)
+                {
+                    t.m_nestedTransforms.Add(nestedTransform.Clone());
+                }
+            }
+
+            return t;
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        #endregion
     }
 
     public class EagerTransformation : Transformation

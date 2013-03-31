@@ -404,6 +404,34 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestTransformationClone()
+        {
+            // transformation should be cloneable
+            Transformation transform1 = new Transformation().X(100).Y(100).Width(200).Crop("fill").Chain().Radius(10).Chain().Crop("crop").Width(100).Angle("12", "13", "14");
+            Transformation transform2 = transform1.Clone();
+            transform1 = transform1.Angle("22", "23").Chain().Crop("fill");
+
+            Assert.AreEqual(3, transform1.NestedTransforms.Count);
+            Assert.AreEqual(1, transform1.Params.Count);
+            Assert.AreEqual(2, transform2.NestedTransforms.Count);
+            Assert.AreEqual(3, transform2.Params.Count);
+        }
+
+        [Test]
+        public void TestUrlClone()
+        {
+            // url should be cloneable
+            Transformation t1 = new Transformation().Angle(12);
+            Transformation t2 = new Transformation().Crop("fill");
+            Url url1 = m_api.UrlImgUp.Transform(t1);
+            Url url2 = url1.Clone().Action("go").Transform(t2);
+            string result1 = url1.BuildUrl("test");
+            string result2 = url2.BuildUrl("test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/a_12/test", result1);
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/go/c_fill/test", result2);
+        }
+
+        [Test]
         public void TestInitFromUri()
         {
             Cloudinary cloudinary = new Cloudinary("cloudinary://a:b@test123");

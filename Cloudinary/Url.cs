@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Web;
 
 namespace CloudinaryDotNet
 {
-    public class Url
+    public class Url : ICloneable
     {
         string m_cloudName;
         string m_cloudinaryAddr = Api.ADDR_RES;
@@ -25,14 +26,14 @@ namespace CloudinaryDotNet
         string m_action = String.Empty;
         string m_resourceType = String.Empty;
 
-        string m_format;
-
         Transformation m_transformation = null;
 
         public Url(string cloudName)
         {
             m_cloudName = cloudName;
         }
+
+        public string FormatValue { get; set; }
 
         public Url CloudinaryAddr(string cloudinaryAddr)
         {
@@ -80,7 +81,7 @@ namespace CloudinaryDotNet
 
         public Url Format(string format)
         {
-            m_format = format;
+            FormatValue = format;
             return this;
         }
 
@@ -167,10 +168,10 @@ namespace CloudinaryDotNet
 
             if (source == null) return null;
 
-            if (m_action == "fetch" && !String.IsNullOrEmpty(m_format))
+            if (m_action == "fetch" && !String.IsNullOrEmpty(FormatValue))
             {
-                Transformation.FetchFormat(m_format);
-                m_format = null;
+                Transformation.FetchFormat(FormatValue);
+                FormatValue = null;
             }
 
             string transformationStr = Transformation.Generate();
@@ -186,9 +187,9 @@ namespace CloudinaryDotNet
 
                 source = Encode(source);
             }
-            else if (m_format != null)
+            else if (!String.IsNullOrEmpty(FormatValue))
             {
-                source += "." + m_format;
+                source += "." + FormatValue;
             }
 
             if (m_secure && String.IsNullOrEmpty(m_privateCdn))
@@ -217,11 +218,14 @@ namespace CloudinaryDotNet
                 }
             }
 
-            List<string> urlParts = new List<string>(new string[] {prefix}); 
-            if (!String.IsNullOrEmpty(m_apiVersion)) {
+            List<string> urlParts = new List<string>(new string[] { prefix });
+            if (!String.IsNullOrEmpty(m_apiVersion))
+            {
                 urlParts.Add(m_apiVersion);
                 urlParts.Add(m_cloudName);
-            } else if (!m_usePrivateCdn || (m_secure && Cloudinary.AKAMAI_SHARED_CDN.Equals(m_privateCdn))) {
+            }
+            else if (!m_usePrivateCdn || (m_secure && Cloudinary.AKAMAI_SHARED_CDN.Equals(m_privateCdn)))
+            {
                 urlParts.Add(m_cloudName);
             }
 
@@ -271,11 +275,55 @@ namespace CloudinaryDotNet
 
             return " %$&+,;=?@<>#%".IndexOf(ch) >= 0;
         }
+
+        #region ICloneable
+
+        public Url Clone()
+        {
+            Url newUrl = (Url)this.MemberwiseClone();
+
+            if (m_transformation != null)
+                newUrl.m_transformation = this.m_transformation.Clone();
+            else
+                newUrl.m_transformation = null;
+
+            newUrl.m_customParts = new List<string>();
+            foreach (var part in m_customParts)
+            {
+                newUrl.m_customParts.Add(part);
+            }
+
+            return newUrl;
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        #endregion
     }
 
+    /// <summary>
+    /// This dictionary is based on list so is not very fast but preserves keys order
+    /// </summary>
     public class StringDictionary : IEnumerable<KeyValuePair<string, string>>
     {
         List<KeyValuePair<string, string>> m_list = new List<KeyValuePair<string, string>>();
+
+        public StringDictionary() { }
+
+        public StringDictionary(params string[] keyValuePairs)
+        {
+            foreach (var pair in keyValuePairs)
+            {
+                string[] splittedPair = pair.Split('=');
+                if (splittedPair.Length != 2)
+                    throw new ArgumentException(String.Format("Couldn't parse '{0}'!", pair));
+
+                Add(splittedPair[0], splittedPair[1]);
+            }
+        }
 
         public void Add(string key, string value)
         {
@@ -347,7 +395,7 @@ namespace CloudinaryDotNet
             return m_list.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return m_list.GetEnumerator();
         }
