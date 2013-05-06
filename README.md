@@ -155,8 +155,13 @@ Usage:
     string tag = cloudinary.Api.UrlImgUp.Format("png").Transform(new CloudinaryDotNet.Transformation().Width(100).Height(100).Crop("fill")).BuildImageTag("sample");
 
 	# <img src='http://res.cloudinary.com/cloud_name/image/upload/c_fill,h_100,w_100/sample.png' width='100' height='100'/>
+
+## Code Samples
+
+You can find our simple and ready-to-use samples projects, along with documentations in the [samples folder](https://github.com/cloudinary/CloudinaryDotNet/tree/master/samples). Please consult with the [README file](https://github.com/cloudinary/CloudinaryDotNet/blob/master/samples/README.md), for usage and explanations.
+
   
-## Additional resources ##########################################################
+## Additional resources
 
 Additional resources are available at:
 
@@ -171,6 +176,6 @@ Contact us at [info@cloudinary.com](mailto:info@cloudinary.com)
 
 Or via Twitter: [@cloudinary](https://twitter.com/#!/cloudinary)
 
-## License #######################################################################
+## License
 
 Released under the MIT license. 

@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "PhotoAlbum - Upload page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- A standard form for sending the image data to your server -->
+<div id='backend_upload'>
+    <h1>Upload through your server</h1>
+
+    @using (Html.BeginForm("UploadServer", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <input id="fileupload" type="file" name="files" multiple accept="image/gif, image/jpeg, image/png">
+        <input type="submit" value="Upload">
+    }
+</div>
+
+<!-- A form for direct uploading using a jQuery plug-in. 
+          The BuildUploadForm method generates the required HTML and JavaScript to
+          allow uploading directly from the browser to your Cloudinary account -->
+<div id='direct_upload'>
+    <h1>Direct upload from the browser</h1>
+    <form>
+        @Html.Raw(Model.Cloudinary.Api.BuildUploadForm("test-field", "auto",
+        new SortedDictionary<string, object>() { { "tags", (object)"direct_photo_album" } },
+        new Dictionary<string, string>() { { "multiple", "true" } }))
+    </form>
+
+    <!-- status box -->
+    <div class="status">
+        <h2>Status</h2>
+        <span class="status_value">Idle</span>
+    </div>
+
+    <div class="uploaded_info_holder">
+    </div>
+</div>
+
+<a href="~/Home/Index" class="back_link">Back to list...</a>
+
+@section scripts
+{
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.ui.widget.js"></script>
+    <script src="~/Scripts/jquery.iframe-transport.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/jquery.cloudinary.js"></script>
+
+    <script>
+        $.cloudinary.config("cloud_name", "@Model.Cloudinary.Api.Account.Cloud");
+    </script>
+
+    <script>
+        function prettydump(obj) {
+            ret = ""
+            $.each(obj, function (key, value) {
+                ret += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+            });
+            return ret;
+        }
+
+        $('.cloudinary-fileupload')
+        .fileupload({
+            dropZone: '#direct_upload',
+            start: function () {
+                $('.status_value').text('Starting direct upload...');
+            },
+            progress: function () {
+                $('.status_value').text('Uploading...');
+            },
+        })
+        .on('cloudinarydone', function (e, data) {
+            $('.status_value').text('Idle');
+            $.post('/Home/UploadDirect', data.result);
+            var info = $('<div class="uploaded_info"/>');
+            $(info).append($('<div class="data"/>').append(prettydump(data.result)));
+            $(info).append($('<div class="image"/>').append(
+              $.cloudinary.image(data.result.public_id, {
+                  format: data.result.format, width: 150, height: 150, crop: "fill"
+              })
+            ));
+            $('.uploaded_info_holder').append(info);
+
+        });
+    </script>
+}
