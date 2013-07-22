@@ -103,6 +103,21 @@ namespace CloudinaryDotNet
             }
         }
 
+        public RenameResult Rename(string fromPublicId, string toPublicId, bool overwrite = false)
+        {
+            return Rename(new RenameParams(fromPublicId, toPublicId) { Overwrite = overwrite });
+        }
+
+        public RenameResult Rename(RenameParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.Action("rename").BuildUrl();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
+            {
+                return RenameResult.Parse(response);
+            }
+        }
+
         /// <summary>
         /// Delete file from cloudinary
         /// </summary>

@@ -56,6 +56,8 @@
     <Compile Include="Actions\ExplodeResult.cs" />
     <Compile Include="Actions\MultiParams.cs" />
     <Compile Include="Actions\MultiResult.cs" />
+    <Compile Include="Actions\RenameParams.cs" />
+    <Compile Include="Actions\RenameResult.cs" />
     <Compile Include="Actions\SpriteResult.cs" />
     <Compile Include="Actions\SpriteParams.cs" />
     <Compile Include="Actions\ExplicitParams.cs" />

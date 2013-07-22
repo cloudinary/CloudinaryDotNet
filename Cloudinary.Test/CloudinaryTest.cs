@@ -17,6 +17,7 @@ namespace CloudinaryDotNet.Test
         Cloudinary m_cloudinary;
         string m_testImagePath;
         string m_testPdfPath;
+        string m_testIconPath;
 
         [SetUp]
         public void Initialize()
@@ -43,9 +44,15 @@ namespace CloudinaryDotNet.Test
 
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
             m_testPdfPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "multipage.pdf");
+            m_testIconPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "favicon.ico");
 
             Resources.TestImage.Save(m_testImagePath);
             File.WriteAllBytes(m_testPdfPath, Resources.multipage);
+
+            using (Stream s = new FileStream(m_testIconPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                Resources.favicon.Save(s);
+            }
 
             m_cloudinary.DeleteTransform("api_test_transformation3");
         }
@@ -463,6 +470,34 @@ namespace CloudinaryDotNet.Test
             };
 
             m_cloudinary.Upload(uploadParams);
+        }
+
+        [Test]
+        public void TestRename()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            };
+
+            var uploadResult1 = m_cloudinary.Upload(uploadParams);
+
+            uploadParams.File = new FileDescription(m_testIconPath);
+            var uploadResult2 = m_cloudinary.Upload(uploadParams);
+
+            var renameResult = m_cloudinary.Rename(uploadResult1.PublicId, uploadResult1.PublicId + "2");
+
+            var getResult = m_cloudinary.GetResource(uploadResult1.PublicId + "2");
+            Assert.NotNull(getResult);
+
+            renameResult = m_cloudinary.Rename(uploadResult2.PublicId, uploadResult1.PublicId + "2");
+            Assert.True(renameResult.StatusCode == HttpStatusCode.BadRequest);
+
+            m_cloudinary.Rename(uploadResult2.PublicId, uploadResult1.PublicId + "2", true);
+
+            getResult = m_cloudinary.GetResource(uploadResult1.PublicId + "2");
+            Assert.NotNull(getResult);
+            Assert.AreEqual("ico", getResult.Format);
         }
 
         [Test]
