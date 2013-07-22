@@ -46,6 +46,8 @@ namespace CloudinaryDotNet.Test
 
             Resources.TestImage.Save(m_testImagePath);
             File.WriteAllBytes(m_testPdfPath, Resources.multipage);
+
+            m_cloudinary.DeleteTransform("api_test_transformation3");
         }
 
         [Test]
@@ -122,7 +124,7 @@ namespace CloudinaryDotNet.Test
 
             ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(176110, uploadResult.Length);
+            Assert.AreEqual(176007, uploadResult.Length);
             Assert.AreEqual(512, uploadResult.Width);
             Assert.AreEqual(512, uploadResult.Height);
             Assert.AreEqual("jpg", uploadResult.Format);
@@ -229,6 +231,62 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(1, tagResult.PublicIds.Length);
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
+        }
+
+        [Test]
+        public void TestTagMultiple()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            };
+
+            var uploadResult1 = m_cloudinary.Upload(uploadParams);
+            var uploadResult2 = m_cloudinary.Upload(uploadParams);
+
+            var tagParams = new TagParams()
+            {
+                PublicIds = new List<string>() { 
+                    uploadResult1.PublicId,
+                    uploadResult2.PublicId
+                },
+                Tag = "tag1"
+            };
+
+            m_cloudinary.Tag(tagParams);
+
+            // remove second ID
+            tagParams.PublicIds.RemoveAt(1);
+            tagParams.Tag = "tag2";
+
+            m_cloudinary.Tag(tagParams);
+
+            var r = m_cloudinary.GetResource(uploadResult1.PublicId);
+            Assert.NotNull(r.Tags);
+            Assert.True(r.Tags.SequenceEqual(new string[] { "tag1", "tag2" }));
+
+            r = m_cloudinary.GetResource(uploadResult2.PublicId);
+            Assert.NotNull(r.Tags);
+            Assert.True(r.Tags.SequenceEqual(new string[] { "tag1" }));
+
+            tagParams.Command = TagCommand.Remove;
+            tagParams.Tag = "tag1";
+            tagParams.PublicIds = new List<string>() { uploadResult1.PublicId };
+
+            m_cloudinary.Tag(tagParams);
+
+            r = m_cloudinary.GetResource(uploadResult1.PublicId);
+            Assert.NotNull(r.Tags);
+            Assert.True(r.Tags.SequenceEqual(new string[] { "tag2" }));
+
+            tagParams.Command = TagCommand.Replace;
+            tagParams.Tag = "tag3";
+
+            m_cloudinary.Tag(tagParams);
+
+            r = m_cloudinary.GetResource(uploadResult1.PublicId);
+            Assert.NotNull(r.Tags);
+            Assert.True(r.Tags.SequenceEqual(new string[] { "tag3" }));
         }
 
         [Test]
@@ -702,7 +760,7 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestUpdateTransform()
+        public void TestUpdateTransformStrict()
         {
             // should allow updating transformation allowed_for_strict
 
@@ -737,6 +795,33 @@ namespace CloudinaryDotNet.Test
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual(false, getResult.Strict);
+        }
+
+        [Test]
+        public void TestUpdateTransformUnsafe()
+        {
+            // should allow unsafe update of named transformation
+
+            var r = m_cloudinary.CreateTransform(
+                new CreateTransformParams()
+                {
+                    Name = "api_test_transformation3",
+                    Transform = new Transformation().Crop("scale").Width(102)
+                });
+
+            var updateParams = new UpdateTransformParams()
+            {
+                Transformation = "api_test_transformation3",
+                UnsafeTransform = new Transformation().Crop("scale").Width(103)
+            };
+
+            var result = m_cloudinary.UpdateTransform(updateParams);
+
+            var getResult = m_cloudinary.GetTransform("api_test_transformation3");
+
+            Assert.IsNotNull(getResult);
+            Assert.AreEqual(updateParams.UnsafeTransform.Generate(), new Transformation(getResult.Info).Generate());
+            Assert.IsFalse(getResult.Used);
         }
 
         [Test]

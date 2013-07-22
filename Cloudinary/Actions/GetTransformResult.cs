@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.Actions
         public bool Used { get; protected set; }
 
         [DataMember(Name = "info")]
-        public Dictionary<string, string>[] Info { get; protected set; }
+        public Dictionary<string, object>[] Info { get; protected set; }
 
         [DataMember(Name = "derived")]
         public TransformDerived[] Derived { get; protected set; }

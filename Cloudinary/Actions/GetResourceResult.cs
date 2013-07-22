@@ -65,6 +65,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "derived")]
         public Derived[] Derived { get; protected set; }
 
+        [DataMember(Name = "tags")]
+        public string[] Tags { get; protected set; }
+
         /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>

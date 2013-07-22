@@ -52,7 +52,7 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
 
             AddParam(dict, "tag", Tag);
-            AddParam(dict, "public_ids", String.Join("/", PublicIds.ToArray()));
+            AddParam(dict, "public_ids", PublicIds);
             AddParam(dict, "command", Api.GetCloudinaryParam<TagCommand>(Command));
 
             return dict;

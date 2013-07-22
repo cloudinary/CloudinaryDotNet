@@ -102,9 +102,14 @@ namespace CloudinaryDotNet
         /// <returns>Signature of parameters</returns>
         public string GetSign(SortedDictionary<string, object> parameters)
         {
-            StringBuilder signBase = new StringBuilder(String.Join("&",
-                parameters.Where(pair => !String.IsNullOrEmpty(pair.Value.ToString())).
-                Select(pair => String.Format("{0}={1}", pair.Key, pair.Value)).ToArray()));
+            StringBuilder signBase = new StringBuilder(String.Join("&", parameters
+                .Where(pair => pair.Value != null)
+                .Select(pair => String.Format("{0}={1}", pair.Key,
+                    pair.Value is IEnumerable<string>
+                    ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
+                    : pair.Value.ToString()))
+                .ToArray()));
+
             signBase.Append(Account.ApiSecret);
 
             byte[] hash = m_hasher.ComputeHash(Encoding.UTF8.GetBytes(signBase.ToString()));
@@ -275,8 +280,20 @@ namespace CloudinaryDotNet
                     {
                         foreach (var param in parameters)
                         {
-                            if (!String.IsNullOrEmpty(param.Value.ToString()))
-                                WriteParam(writer, param.Key, param.Value.ToString());
+                            if (param.Value != null)
+                            {
+                                if (param.Value is IEnumerable<string>)
+                                {
+                                    foreach (var item in (IEnumerable<string>)param.Value)
+                                    {
+                                        WriteParam(writer, param.Key + "[]", item);
+                                    }
+                                }
+                                else
+                                {
+                                    WriteParam(writer, param.Key, param.Value.ToString());
+                                }
+                            }
                         }
 
                         if (file != null)

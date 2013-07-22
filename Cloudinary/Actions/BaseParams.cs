@@ -25,6 +25,12 @@ namespace CloudinaryDotNet.Actions
                 dict.Add(key, value);
         }
 
+        protected void AddParam(SortedDictionary<string, object> dict, string key, IEnumerable<string> value)
+        {
+            if (value != null)
+                dict.Add(key, value);
+        }
+
         protected void AddParam(SortedDictionary<string, object> dict, string key, bool value)
         {
             dict.Add(key, value ? "true" : "false");

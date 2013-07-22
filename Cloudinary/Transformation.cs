@@ -22,7 +22,7 @@ namespace CloudinaryDotNet
                 m_nestedTransforms = transforms;
         }
 
-        public Transformation(Dictionary<string, string> transformParams)
+        public Transformation(Dictionary<string, object> transformParams)
         {
             foreach (var key in transformParams.Keys)
             {
@@ -39,6 +39,21 @@ namespace CloudinaryDotNet
                     throw new ArgumentException(String.Format("Couldn't parse '{0}'!", pair));
 
                 Add(splittedPair[0], splittedPair[1]);
+            }
+        }
+
+        public Transformation(Dictionary<string, object>[] dictionary)
+        {
+            for (int i = 0; i < dictionary.Length; i++)
+            {
+                if (i == dictionary.Length - 1)
+                {
+                    m_transformParams = dictionary[i];
+                }
+                else
+                {
+                    m_nestedTransforms.Add(new Transformation(dictionary[i]));
+                }
             }
         }
 

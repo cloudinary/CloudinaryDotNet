@@ -13,6 +13,14 @@ namespace CloudinaryDotNet.Actions
         public string Transformation { get; set; }
 
         /// <summary>
+        /// Gets or sets the transformation for unsafe updating.
+        /// </summary>
+        /// <value>
+        /// New transformation.
+        /// </value>
+        public Transformation UnsafeTransform { get; set; }
+
+        /// <summary>
         /// Whether this transformation is allowed when Strict Transformations are enabled.
         /// </summary>
         public bool Strict { get; set; }
@@ -35,6 +43,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
 
             AddParam(dict, "allowed_for_strict", Strict ? "true" : "false");
+
+            if (UnsafeTransform != null)
+                AddParam(dict, "unsafe_update", UnsafeTransform.Generate());
 
             return dict;
         }
