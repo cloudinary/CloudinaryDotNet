@@ -14,6 +14,7 @@ namespace CloudinaryDotNet
         string m_cloudinaryAddr = Api.ADDR_RES;
         string m_apiVersion;
 
+        bool m_shorten;
         bool m_secure;
         bool m_usePrivateCdn;
         string m_privateCdn;
@@ -34,6 +35,12 @@ namespace CloudinaryDotNet
         }
 
         public string FormatValue { get; set; }
+
+        public Url Shorten(bool shorten)
+        {
+            m_shorten = shorten;
+            return this;
+        }
 
         public Url CloudinaryAddr(string cloudinaryAddr)
         {
@@ -227,6 +234,12 @@ namespace CloudinaryDotNet
             else if (!m_usePrivateCdn || (m_secure && Cloudinary.AKAMAI_SHARED_CDN.Equals(m_privateCdn)))
             {
                 urlParts.Add(m_cloudName);
+            }
+
+            if (m_shorten && m_resourceType == "image" && m_action == "upload")
+            {
+                m_resourceType = String.Empty;
+                m_action = "iu";
             }
 
             urlParts.Add(m_resourceType);

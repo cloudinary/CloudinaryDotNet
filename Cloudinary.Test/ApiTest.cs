@@ -541,5 +541,13 @@ namespace CloudinaryDotNet.Test
             string result = m_api.UrlImgUp.BuildUrl("v1234/test");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v1234/test", result);
         }
+
+        [Test]
+        public void TestShortenUrl()
+        {
+            // should allow to shorted image/upload urls
+            string result = m_api.UrlImgUp.Shorten(true).BuildUrl("test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/iu/test", result);
+        }
     }
 }

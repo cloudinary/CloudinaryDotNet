@@ -23,6 +23,7 @@ namespace CloudinaryDotNet
         public const string API_VERSION = "v1_1";
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
 
+        bool m_shortenUrl;
         bool m_usePrivateCdn;
         string m_privateCdn;
         string m_apiAddr = "https://" + ADDR_API;
@@ -71,11 +72,13 @@ namespace CloudinaryDotNet
         /// <param name="account">Cloudinary account</param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network</param>
         /// <param name="privateCdn">Private Content Delivery Network</param>
-        public Api(Account account, bool usePrivateCdn, string privateCdn)
+        /// <param name="shortenUrl">Whether to use shorten url when possible.</param>
+        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl)
             : this(account)
         {
             m_usePrivateCdn = usePrivateCdn;
             m_privateCdn = privateCdn;
+            m_shortenUrl = shortenUrl;
         }
 
         /// <summary>
@@ -138,10 +141,11 @@ namespace CloudinaryDotNet
         {
             get
             {
-                return new Url(Account.Cloud).
-                    PrivateCdn(m_usePrivateCdn).
-                    Secure(m_usePrivateCdn).
-                    SecureDistribution(m_privateCdn);
+                return new Url(Account.Cloud)
+                    .Shorten(m_shortenUrl)
+                    .PrivateCdn(m_usePrivateCdn)
+                    .Secure(m_usePrivateCdn)
+                    .SecureDistribution(m_privateCdn);
             }
         }
 
