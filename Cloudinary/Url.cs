@@ -234,6 +234,11 @@ namespace CloudinaryDotNet
             urlParts.AddRange(m_customParts);
             urlParts.Add(transformationStr);
 
+            if (source.Contains("/") && !Regex.IsMatch(source, "v[0-9]+.*") && !Regex.IsMatch(source, "https?:/.*") && String.IsNullOrEmpty(m_version))
+            {
+                m_version = "1";
+            }
+
             if (!String.IsNullOrEmpty(m_version))
                 urlParts.Add(String.Format("v{0}", m_version));
 

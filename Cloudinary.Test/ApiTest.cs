@@ -521,5 +521,25 @@ namespace CloudinaryDotNet.Test
             string uri = m_api.UrlImgUp.Action("sprite").Add("p_home_thing_").BuildUrl("logo.css");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/p_home_thing_/logo.css", uri);
         }
+
+        [Test]
+        public void TestFolders()
+        {
+            // should add version if public_id contains /
+
+            string result = m_api.UrlImgUp.BuildUrl("folder/test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v1/folder/test", result);
+            result = m_api.UrlImgUp.Version("123").BuildUrl("folder/test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v123/folder/test", result);
+        }
+
+        [Test]
+        public void TestFoldersWithVersion()
+        {
+            // should not add version if public_id contains version already
+
+            string result = m_api.UrlImgUp.BuildUrl("v1234/test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v1234/test", result);
+        }
     }
 }
