@@ -195,6 +195,20 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUploadDataUri()
+        {
+            var upload = new ImageUploadParams()
+            {
+                File = new FileDescription("data:image/png;base64,iVBORw0KGgoAA\nAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAAD///+l2Z/dAAAAM0l\nEQVR4nGP4/5/h/1+G/58ZDrAz3D/McH8yw83NDDeNGe4Ug9C9zwz3gVLMDA/A6\nP9/AFGGFyjOXZtQAAAAAElFTkSuQmCC")
+            };
+
+            var result = m_cloudinary.Upload(upload);
+
+            Assert.AreEqual(16, result.Width);
+            Assert.AreEqual(16, result.Height);
+        }
+
+        [Test]
         public void TestUploadStream()
         {
             byte[] bytes = File.ReadAllBytes(m_testImagePath);
@@ -680,9 +694,10 @@ namespace CloudinaryDotNet.Test
         }
 
         // Test disabled because it deletes all images in the remote account.
+        [Test]
         public void DeleteAllInLoop()
         {
-            return;
+            //return;
             string nextCursor = String.Empty;
 
             while (true)

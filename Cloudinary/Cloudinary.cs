@@ -78,6 +78,15 @@ namespace CloudinaryDotNet
             }
         }
 
+        /// <summary>
+        /// Gets URL to download private image
+        /// </summary>
+        /// <param name="publicId">The image public ID.</param>
+        public string PrivateDownload(string publicId)
+        {
+            return Api.PrivateDownload(publicId);
+        }
+
         public UsageResult GetUsage()
         {
             string uri = m_api.ApiUrlV.Action("usage").BuildUrl();
