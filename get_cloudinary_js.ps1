@@ -1,22 +1,26 @@
 $root = $pwd
 
 $tmp = "$root\cloudinary_temp"
-
 if (test-path $tmp)
 {
   remove-item $tmp -recurse
 }
 
-$dest = "$root\Scripts"
+write-host "This script will download cloudinary-js files"
 
-write-host "This script will download cloudinary JS files to following directory:"
-write-host $dest
-
-if (test-path $dest)
+if ($args.count -ne 1)
 {
-  write-host "Seems that JS files already exist, exiting..."
+  write-host "Please, use get_cloudinary_js.ps1 directory_to_download"
   exit
 }
+
+if ($args.count -eq 1)
+{ $dest = "$args\Scripts" }
+else
+{ $dest = "$root\Scripts" }
+
+write-host "Files will be downloaded to the following directory:"
+write-host $dest
 
 new-item -itemtype directory -path $tmp | out-null
 
@@ -34,11 +38,11 @@ foreach($item in $zipPackage.items())
   $tmpDir.copyhere($item)
 }
 
-$src = "$tmp\cloudinary_js-master\js\*"
+if (-not (test-path $dest))
+{ new-item -itemtype directory -path $dest | out-null }
 
-new-item -itemtype directory -path $dest | out-null
-
-copy-item $src -destination $dest -recurse
+copy-item $tmp\cloudinary_js-master\js\* -destination $dest -recurse
+copy-item $tmp\cloudinary_js-master\html\* -destination $dest -recurse
 
 remove-item $tmp -recurse
 
