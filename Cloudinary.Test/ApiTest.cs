@@ -550,5 +550,14 @@ namespace CloudinaryDotNet.Test
             string result = m_api.UrlImgUp.Shorten(true).BuildUrl("test");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/iu/test", result);
         }
+
+        [Test]
+        public void TestSpriteCss()
+        {
+            var result = m_api.UrlImgUp.BuildSpriteCss("test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/test.css", result);
+            result = m_api.UrlImgUp.BuildSpriteCss("test.css");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/test.css", result);
+        }
     }
 }

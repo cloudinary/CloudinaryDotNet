@@ -137,12 +137,19 @@ namespace CloudinaryDotNet
             }
         }
 
-        public string BuildImageTag(String source)
+        public string BuildSpriteCss(string source)
+        {
+            m_action = "sprite";
+            if (!source.EndsWith(".css")) FormatValue = "css";
+            return BuildUrl(source);
+        }
+
+        public string BuildImageTag(string source)
         {
             return BuildImageTag(source, new StringDictionary());
         }
 
-        public string BuildImageTag(String source, StringDictionary dict)
+        public string BuildImageTag(string source, StringDictionary dict)
         {
             string url = BuildUrl(source);
 
