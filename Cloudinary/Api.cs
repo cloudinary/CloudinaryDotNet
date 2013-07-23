@@ -382,6 +382,40 @@ namespace CloudinaryDotNet
             return builder.ToString();
         }
 
+        public string PrivateDownload(string publicId, bool? attachment = null, string format = "", string type = "")
+        {
+            if (String.IsNullOrEmpty(publicId))
+                throw new ArgumentException("publicId");
+
+            UrlBuilder urlBuilder = new UrlBuilder(
+               ApiUrlV
+               .ResourceType("image")
+               .Action("download")
+               .BuildUrl());
+
+            var parameters = new SortedDictionary<string, object>();
+
+            parameters.Add("public_id", publicId);
+
+            if (!String.IsNullOrEmpty(format))
+                parameters.Add("format", format);
+
+            if (attachment != null)
+                parameters.Add("attachment", (bool)attachment ? "true" : "false");
+
+            if (!String.IsNullOrEmpty(type))
+                parameters.Add("type", type);
+
+            FinalizeUploadParameters(parameters);
+
+            foreach (var param in parameters)
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            return urlBuilder.ToString();
+        }
+
         /// <summary>
         /// Calculates current UNIX time
         /// </summary>

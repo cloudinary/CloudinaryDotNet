@@ -29,6 +29,14 @@ namespace CloudinaryDotNet.Actions
         public string Type { get; set; }
 
         /// <summary>
+        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
+        /// </value>
+        public bool Invalidate { get; set; }
+
+        /// <summary>
         /// The type of resource to delete
         /// </summary>
         public ResourceType ResourceType { get; set; }
@@ -52,6 +60,7 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "type", Type);
+            AddParam(dict, "invalidate", Invalidate);
 
             return dict;
         }
