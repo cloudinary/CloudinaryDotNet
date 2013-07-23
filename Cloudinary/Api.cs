@@ -103,7 +103,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters to sign</param>
         /// <returns>Signature of parameters</returns>
-        public string GetSign(SortedDictionary<string, object> parameters)
+        public string GetSign(IDictionary<string, object> parameters)
         {
             StringBuilder signBase = new StringBuilder(String.Join("&", parameters
                 .Where(pair => pair.Value != null)
@@ -391,7 +391,7 @@ namespace CloudinaryDotNet
             return Convert.ToInt64(((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
         }
 
-        internal void FinalizeUploadParameters(SortedDictionary<string, object> parameters)
+        internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
         {
             parameters.Add("timestamp", GetTime());
             parameters.Add("signature", GetSign(parameters));

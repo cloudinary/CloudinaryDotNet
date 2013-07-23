@@ -111,14 +111,7 @@ namespace CloudinaryDotNet
             if (!String.IsNullOrEmpty(type))
                 parameters.Add("type", type);
 
-            m_api.FinalizeUploadParameters(parameters);
-
-            foreach (var param in parameters)
-            {
-                urlBuilder.QueryString[param.Key] = param.Value.ToString();
-            }
-
-            return urlBuilder.ToString();
+            return GetDownloadUrl(urlBuilder, parameters);
         }
 
         /// <summary>
@@ -145,14 +138,7 @@ namespace CloudinaryDotNet
             if (transform != null)
                 parameters.Add("transformation", transform.Generate());
 
-            m_api.FinalizeUploadParameters(parameters);
-
-            foreach (var param in parameters)
-            {
-                urlBuilder.QueryString[param.Key] = param.Value.ToString();
-            }
-
-            return urlBuilder.ToString();
+            return GetDownloadUrl(urlBuilder, parameters);
         }
 
         public UsageResult GetUsage()
@@ -639,6 +625,18 @@ namespace CloudinaryDotNet
                 ExplodeResult result = ExplodeResult.Parse(response);
                 return result;
             }
+        }
+
+        private string GetDownloadUrl(UrlBuilder builder, IDictionary<string, object> parameters)
+        {
+            m_api.FinalizeUploadParameters(parameters);
+
+            foreach (var param in parameters)
+            {
+                builder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            return builder.ToString();
         }
     }
 }
