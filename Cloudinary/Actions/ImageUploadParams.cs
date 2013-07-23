@@ -43,31 +43,54 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public List<Transformation> EagerTransforms { get; set; }
 
+        /// <summary>
+        /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'. For example 'X-Robots-Tag: noindex'.
+        /// </summary>
         public Dictionary<string, string> Headers { get; set; }
 
         /// <summary>
-        /// Whether to include EXIF in the response
+        /// Whether to retrieve the Exif metadata of the uploaded photo. Default: false.
         /// </summary>
         public bool Exif { get; set; }
 
+        /// <summary>
+        /// Whether to retrieve predominant colors & color histogram of the uploaded image. Default: false.
+        /// </summary>
         public bool Colors { get; set; }
 
+        /// <summary>
+        /// Whether to retrieve a list of coordinates of automatically detected faces in the uploaded photo. Default: false.
+        /// </summary>
         public bool Faces { get; set; }
 
         /// <summary>
-        /// Whether to include metadata in the response
+        /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
         public bool Metadata { get; set; }
 
         /// <summary>
-        /// Whether to use file name as ID
+        /// Whether to use the original file name of the uploaded image if available for the public ID. The file name is normalized and random characters are appended to ensure uniqueness. Default: false.
         /// </summary>
         public bool UseFilename { get; set; }
 
+        /// <summary>
+        /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments (setting the 'flags' transformation parameter to 'attachment'). Default: false.
+        /// </summary>
+        public bool DiscardOriginalFilename { get; set; }
+
+        /// <summary>
+        /// Whether to generate the eager transformations asynchronously in the background after the upload request is completed rather than online as part of the upload call. Default: false.
+        /// </summary>
         public bool EagerAsync { get; set; }
 
+        /// <summary>
+        /// An HTTP URL to send notification to (a webhook) when the upload is completed.
+        /// </summary>
         public string NotificationUrl { get; set; }
 
+        /// <summary>
+        /// An HTTP URL to send notification to (a webhook) when the generation of eager transformations is completed.
+        /// </summary>
         public string EagerNotificationUrl { get; set; }
 
         /// <summary>
@@ -89,6 +112,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "use_filename", UseFilename);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "invalidate", Invalidate);
+            AddParam(dict, "discard_original_filename", DiscardOriginalFilename);
 
             AddParam(dict, "notification_url", NotificationUrl);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
