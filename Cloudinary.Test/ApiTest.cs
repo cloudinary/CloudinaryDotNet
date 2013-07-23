@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -550,13 +549,6 @@ namespace CloudinaryDotNet.Test
 
             string result = m_api.UrlImgUp.Shorten(true).BuildUrl("test");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/iu/test", result);
-        }
-
-        [Test]
-        public void TestPrivateDownload()
-        {
-            string result = m_api.PrivateDownload("zihltjwsyczm700kqj1z");
-            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/testcloud/image/download\?api_key=1234&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}"));
         }
     }
 }

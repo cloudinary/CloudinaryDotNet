@@ -76,7 +76,7 @@ namespace CloudinaryDotNet.Actions
         /// <param name="filePath">Either URL (http/https/s3/data) or local path to file</param>
         public FileDescription(string filePath)
         {
-            m_isRemote = Regex.IsMatch(filePath, "^https?:.*|s3:.*|data:image/\\w*;base64,([a-zA-Z0-9/+\n=]+)");
+            m_isRemote = Regex.IsMatch(filePath, "^https?:.*|s3:.*|data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
             m_path = filePath;
 
             if (!m_isRemote)

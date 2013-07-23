@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -694,10 +695,9 @@ namespace CloudinaryDotNet.Test
         }
 
         // Test disabled because it deletes all images in the remote account.
-        [Test]
         public void DeleteAllInLoop()
         {
-            //return;
+            return;
             string nextCursor = String.Empty;
 
             while (true)
@@ -1142,6 +1142,20 @@ namespace CloudinaryDotNet.Test
 
             Assert.NotNull(result);
             Assert.AreEqual("processing", result.Status);
+        }
+
+        [Test]
+        public void TestDownloadPrivate()
+        {
+            string result = m_cloudinary.DownloadPrivate("zihltjwsyczm700kqj1z");
+            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/\w*/image/download\?api_key=\d*&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}"));
+        }
+
+        [Test]
+        public void TestDownloadZip()
+        {
+            string result = m_cloudinary.DownloadZip("api_test_custom1", null);
+            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/\w*/image/download_tag\.zip\?api_key=\d*&signature=\w{40}&tag=api_test_custom1&timestamp=\d{10}"));
         }
     }
 }

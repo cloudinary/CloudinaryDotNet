@@ -82,9 +82,77 @@ namespace CloudinaryDotNet
         /// Gets URL to download private image
         /// </summary>
         /// <param name="publicId">The image public ID.</param>
-        public string PrivateDownload(string publicId)
+        /// <param name="attachment">Whether to download image as attachment (optional).</param>
+        /// <param name="format">Format to download (optional).</param>
+        /// <param name="type">The type (optional).</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">publicId can't be null</exception>
+        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "")
         {
-            return Api.PrivateDownload(publicId);
+            if (String.IsNullOrEmpty(publicId))
+                throw new ArgumentException("publicId");
+
+            UrlBuilder urlBuilder = new UrlBuilder(
+               m_api.ApiUrlV
+               .ResourceType("image")
+               .Action("download")
+               .BuildUrl());
+
+            var parameters = new SortedDictionary<string, object>();
+
+            parameters.Add("public_id", publicId);
+
+            if (!String.IsNullOrEmpty(format))
+                parameters.Add("format", format);
+
+            if (attachment != null)
+                parameters.Add("attachment", (bool)attachment ? "true" : "false");
+
+            if (!String.IsNullOrEmpty(type))
+                parameters.Add("type", type);
+
+            m_api.FinalizeUploadParameters(parameters);
+
+            foreach (var param in parameters)
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            return urlBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Gets URL to download tag cloud as ZIP package
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">tag should be specified</exception>
+        public string DownloadZip(string tag, Transformation transform)
+        {
+            if (String.IsNullOrEmpty(tag))
+                throw new ArgumentException("tag should be specified");
+
+            UrlBuilder urlBuilder = new UrlBuilder(
+               m_api.ApiUrlV
+               .ResourceType("image")
+               .Action("download_tag.zip")
+               .BuildUrl());
+
+            var parameters = new SortedDictionary<string, object>();
+
+            parameters.Add("tag", tag);
+
+            if (transform != null)
+                parameters.Add("transformation", transform.Generate());
+
+            m_api.FinalizeUploadParameters(parameters);
+
+            foreach (var param in parameters)
+            {
+                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+            }
+
+            return urlBuilder.ToString();
         }
 
         public UsageResult GetUsage()
