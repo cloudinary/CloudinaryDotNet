@@ -68,7 +68,6 @@ namespace CloudinaryDotNet.Test
 
             ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(759100, uploadResult.Length);
             Assert.AreEqual(1920, uploadResult.Width);
             Assert.AreEqual(1200, uploadResult.Height);
             Assert.AreEqual("jpg", uploadResult.Format);
@@ -132,7 +131,6 @@ namespace CloudinaryDotNet.Test
 
             ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(176007, uploadResult.Length);
             Assert.AreEqual(512, uploadResult.Width);
             Assert.AreEqual(512, uploadResult.Height);
             Assert.AreEqual("jpg", uploadResult.Format);
@@ -164,7 +162,7 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(m_testImagePath)
             };
 
-            RawUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
+            RawUploadResult uploadResult = m_cloudinary.Upload(uploadParams, "raw");
 
             Assert.NotNull(uploadResult);
 
@@ -224,7 +222,6 @@ namespace CloudinaryDotNet.Test
 
                 ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
 
-                Assert.AreEqual(759100, uploadResult.Length);
                 Assert.AreEqual(1920, uploadResult.Width);
                 Assert.AreEqual(1200, uploadResult.Height);
                 Assert.AreEqual("jpg", uploadResult.Format);
@@ -533,7 +530,6 @@ namespace CloudinaryDotNet.Test
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual("testgetresource", getResult.PublicId);
-            Assert.AreEqual(759100, getResult.Length);
             Assert.AreEqual(1920, getResult.Width);
             Assert.AreEqual(1200, getResult.Height);
             Assert.AreEqual("jpg", getResult.Format);

@@ -152,13 +152,16 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Upload a raw file to cloudinary
+        /// Upload a file to cloudinary
         /// </summary>
         /// <param name="parameters">Parameters of uploading a file to cloudinary</param>
-        /// <returns>Results of file uploading</returns>
-        public RawUploadResult Upload(RawUploadParams parameters)
+        /// <param name="type">The type ("raw" or "auto", last by default).</param>
+        /// <returns>
+        /// Results of file uploading
+        /// </returns>
+        public RawUploadResult Upload(RawUploadParams parameters, string type = "auto")
         {
-            string uri = m_api.ApiUrlImgUpV.ResourceType("raw").BuildUrl();
+            string uri = m_api.ApiUrlImgUpV.ResourceType(type).BuildUrl();
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File))
             {
