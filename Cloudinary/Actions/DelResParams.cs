@@ -24,6 +24,11 @@ namespace CloudinaryDotNet.Actions
         public bool KeepOriginal { get; set; }
 
         /// <summary>
+        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// </summary>
+        public bool Invalidate { get; set; }
+
+        /// <summary>
         /// Delete all resources with the given public IDs
         /// </summary>
         public List<string> PublicIds
@@ -71,7 +76,8 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
 
-            dict.Add("keep_original", KeepOriginal ? "true" : "false");
+            AddParam(dict, "keep_original", KeepOriginal);
+            AddParam(dict, "invalidate", Invalidate);
 
             if (!String.IsNullOrEmpty(Tag))
             {
