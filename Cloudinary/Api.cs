@@ -23,9 +23,11 @@ namespace CloudinaryDotNet
         public const string API_VERSION = "v1_1";
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
 
-        bool m_shortenUrl;
-        bool m_usePrivateCdn;
-        string m_privateCdn;
+        public bool CSubDomain;
+        public bool ShortenUrl;
+        public bool UsePrivateCdn;
+        public string PrivateCdn;
+
         string m_apiAddr = "https://" + ADDR_API;
         SHA1 m_hasher;
 
@@ -53,14 +55,14 @@ namespace CloudinaryDotNet
             string[] creds = cloudinaryUri.UserInfo.Split(':');
             Account = new Account(cloudinaryUri.Host, creds[0], creds[1]);
 
-            m_usePrivateCdn = !String.IsNullOrEmpty(cloudinaryUri.AbsolutePath) &&
+            UsePrivateCdn = !String.IsNullOrEmpty(cloudinaryUri.AbsolutePath) &&
                 cloudinaryUri.AbsolutePath != "/";
 
-            m_privateCdn = String.Empty;
+            PrivateCdn = String.Empty;
 
-            if (m_usePrivateCdn)
+            if (UsePrivateCdn)
             {
-                m_privateCdn = cloudinaryUri.AbsolutePath;
+                PrivateCdn = cloudinaryUri.AbsolutePath;
             }
 
             m_hasher = SHA1.Create();
@@ -73,12 +75,14 @@ namespace CloudinaryDotNet
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network</param>
         /// <param name="privateCdn">Private Content Delivery Network</param>
         /// <param name="shortenUrl">Whether to use shorten url when possible.</param>
-        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl)
+        /// <param name="cSubDomain">if set to <c>true</c> [c sub domain].</param>
+        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain)
             : this(account)
         {
-            m_usePrivateCdn = usePrivateCdn;
-            m_privateCdn = privateCdn;
-            m_shortenUrl = shortenUrl;
+            UsePrivateCdn = usePrivateCdn;
+            PrivateCdn = privateCdn;
+            ShortenUrl = shortenUrl;
+            CSubDomain = cSubDomain;
         }
 
         /// <summary>
@@ -93,7 +97,7 @@ namespace CloudinaryDotNet
             if (String.IsNullOrEmpty(account.Cloud))
                 throw new ArgumentException("Cloud name must be specified in Account!");
 
-            m_usePrivateCdn = false;
+            UsePrivateCdn = false;
             m_hasher = SHA1.Create();
             Account = account;
         }
@@ -142,10 +146,11 @@ namespace CloudinaryDotNet
             get
             {
                 return new Url(Account.Cloud)
-                    .Shorten(m_shortenUrl)
-                    .PrivateCdn(m_usePrivateCdn)
-                    .Secure(m_usePrivateCdn)
-                    .SecureDistribution(m_privateCdn);
+                    .CSubDomain(CSubDomain)
+                    .Shorten(ShortenUrl)
+                    .PrivateCdn(UsePrivateCdn)
+                    .Secure(UsePrivateCdn)
+                    .SecureDistribution(PrivateCdn);
             }
         }
 
