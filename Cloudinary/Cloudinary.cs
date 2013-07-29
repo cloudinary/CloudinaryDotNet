@@ -51,7 +51,6 @@ namespace CloudinaryDotNet
         public Api Api
         {
             get { return m_api; }
-            set { m_api = value; }
         }
 
         public ExplicitResult Explicit(ExplicitParams parameters)
