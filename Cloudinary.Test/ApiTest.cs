@@ -127,6 +127,14 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestDifferentHtmlDimensions()
+        {
+            var trans = new Transformation().Width(100).Height(101).SetHtmlWidth(50).SetHtmlHeight(51);
+            string tag = m_api.UrlImgUp.Transform(trans).BuildImageTag("test");
+            Assert.AreEqual("<img src='http://res.cloudinary.com/testcloud/image/upload/h_101,w_100/test' width='50' height='51'/>", tag);
+        }
+
+        [Test]
         public void TestTransformations()
         {
             // should use x, y, radius, prefix, gravity and quality from options

@@ -11,8 +11,8 @@ namespace CloudinaryDotNet
         protected Dictionary<string, object> m_transformParams = new Dictionary<string, object>();
         protected List<Transformation> m_nestedTransforms = new List<Transformation>();
 
-        protected string m_htmlWidth;
-        protected string m_htmlHeight;
+        protected string m_htmlWidth = null;
+        protected string m_htmlHeight = null;
 
         public Transformation() { }
 
@@ -78,6 +78,8 @@ namespace CloudinaryDotNet
 
         public Transformation Width(object value) { return Add("width", value); }
         public Transformation Height(object value) { return Add("height", value); }
+        public Transformation SetHtmlWidth(object value) { m_htmlWidth = value.ToString(); return this; }
+        public Transformation SetHtmlHeight(object value) { m_htmlHeight = value.ToString(); return this; }
         public Transformation Named(params string[] value) { return Add("transformation", value); }
         public Transformation Crop(string value) { return Add("crop", value); }
         public Transformation Background(string value) { return Add("background", Regex.Replace(value, "^#", "rgb:")); }
@@ -134,8 +136,14 @@ namespace CloudinaryDotNet
                 m_transformParams.Add("height", sizeComponents[1]);
             }
 
-            string width = m_htmlWidth = GetString(m_transformParams, "width");
-            string height = m_htmlHeight = GetString(m_transformParams, "height");
+            string width = GetString(m_transformParams, "width");
+            string height = GetString(m_transformParams, "height");
+
+            if (m_htmlWidth == null)
+                m_htmlWidth = width;
+
+            if (m_htmlHeight == null)
+                m_htmlHeight = height;
 
             bool hasLayer = !String.IsNullOrEmpty(GetString(m_transformParams, "overlay")) ||
                 !String.IsNullOrEmpty(GetString(m_transformParams, "underlay"));
