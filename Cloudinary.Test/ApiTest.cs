@@ -62,7 +62,7 @@ namespace CloudinaryDotNet.Test
             // should use default secure distribution if secure=TRUE
 
             string uri = m_api.UrlImgUp.Secure(true).BuildUrl("test");
-            Assert.AreEqual("https://cloudinary-a.akamaihd.net/testcloud/image/upload/test", uri);
+            Assert.AreEqual("https://res.cloudinary.com/testcloud/image/upload/test", uri);
         }
 
         [Test]
@@ -71,11 +71,11 @@ namespace CloudinaryDotNet.Test
             // should default to akamai if secure is given with private_cdn and no secure_distribution
 
             string uri = m_api.UrlImgUp.Secure(true).PrivateCdn(true).BuildUrl("test");
-            Assert.AreEqual("https://cloudinary-a.akamaihd.net/testcloud/image/upload/test", uri);
+            Assert.AreEqual("https://testcloud-res.cloudinary.com/image/upload/test", uri);
         }
 
         [Test]
-        public void testSecureNonAkamai()
+        public void TestSecureNonAkamai()
         {
             // should not add cloud_name if private_cdn and secure non akamai secure_distribution
 
@@ -108,6 +108,14 @@ namespace CloudinaryDotNet.Test
 
             string uri = m_api.UrlImgUp.Format("jpg").BuildUrl("test");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/test.jpg", uri);
+        }
+
+        [Test]
+        public void TestOpacity()
+        {
+            var trans = new Transformation().Overlay("overlay.png").Opacity(40);
+            var uri = m_api.UrlImgUp.Transform(trans).BuildUrl("test.jpg");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/l_overlay.png,o_40/test.jpg", uri);
         }
 
         [Test]

@@ -12,7 +12,8 @@ namespace CloudinaryDotNet
     public class Cloudinary
     {
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
-        public const string AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
+        public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
+        public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
         public const string SHARED_CDN = AKAMAI_SHARED_CDN;
 
 

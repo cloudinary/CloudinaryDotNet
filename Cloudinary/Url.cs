@@ -206,15 +206,17 @@ namespace CloudinaryDotNet
                 source += "." + FormatValue;
             }
 
-            if (m_secure && String.IsNullOrEmpty(m_privateCdn))
-            {
-                m_privateCdn = Cloudinary.SHARED_CDN;
-            }
-
             string prefix;
+            bool sharedDomain = !m_usePrivateCdn;
+            string privateCdn = m_privateCdn;
             if (m_secure)
             {
-                prefix = String.Format("https://{0}", m_privateCdn);
+                if (String.IsNullOrEmpty(privateCdn) || Cloudinary.OLD_AKAMAI_SHARED_CDN == privateCdn)
+                {
+                    privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Cloudinary.SHARED_CDN;
+                }
+                sharedDomain |= privateCdn == Cloudinary.SHARED_CDN;
+                prefix = String.Format("https://{0}", privateCdn);
             }
             else
             {
@@ -238,7 +240,7 @@ namespace CloudinaryDotNet
                 urlParts.Add(m_apiVersion);
                 urlParts.Add(m_cloudName);
             }
-            else if (!m_usePrivateCdn || (m_secure && Cloudinary.AKAMAI_SHARED_CDN.Equals(m_privateCdn)))
+            else if (sharedDomain)
             {
                 urlParts.Add(m_cloudName);
             }

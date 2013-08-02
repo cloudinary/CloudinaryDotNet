@@ -8,6 +8,26 @@ namespace CloudinaryDotNet
 {
     public class Transformation : ICloneable
     {
+        static readonly string[] SimpleParams = new string[] {
+            "x", "x",
+            "y", "y",
+            "r", "radius",
+            "d", "default_image", 
+            "g", "gravity",
+            "cs", "color_space",
+            "p", "prefix",
+            "l", "overlay",
+            "u", "underlay",
+            "f", "fetch_format",
+            "dn", "density",
+            "pg", "page",
+            "dl", "delay",
+            "e", "effect",
+            "bo", "border",
+            "q", "quality",
+            "o","opacity"
+        };
+
         protected Dictionary<string, object> m_transformParams = new Dictionary<string, object>();
         protected List<Transformation> m_nestedTransforms = new List<Transformation>();
 
@@ -97,6 +117,7 @@ namespace CloudinaryDotNet
         public Transformation Gravity(string value) { return Add("gravity", value); }
         public Transformation ColorSpace(string value) { return Add("color_space", value); }
         public Transformation Prefix(string value) { return Add("prefix", value); }
+        public Transformation Opacity(int value) { return Add("opacity", value); }
         public Transformation Overlay(string value) { return Add("overlay", value); }
         public Transformation Underlay(string value) { return Add("underlay", value); }
         public Transformation FetchFormat(string value) { return Add("fetch_format", value); }
@@ -184,16 +205,10 @@ namespace CloudinaryDotNet
             parameters.Add("a", angle);
             parameters.Add("fl", flags);
 
-            string[] simpleParams = new string[]{
-                "x", "x", "y", "y", "r", "radius", "d", "default_image", "g", "gravity", "cs", "color_space",
-                "p", "prefix", "l", "overlay", "u", "underlay", "f", "fetch_format", "dn", "density",
-                "pg", "page", "dl", "delay", "e", "effect", "bo", "border", "q", "quality"
-            };
-
-            for (int i = 0; i < simpleParams.Length; i += 2)
+            for (int i = 0; i < SimpleParams.Length; i += 2)
             {
-                if (m_transformParams.ContainsKey(simpleParams[i + 1]))
-                    parameters.Add(simpleParams[i], GetString(m_transformParams, simpleParams[i + 1]));
+                if (m_transformParams.ContainsKey(SimpleParams[i + 1]))
+                    parameters.Add(SimpleParams[i], GetString(m_transformParams, SimpleParams[i + 1]));
             }
 
             List<string> components = new List<string>();
