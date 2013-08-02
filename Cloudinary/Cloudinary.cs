@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using CloudinaryDotNet.Actions;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet
 {
@@ -629,6 +631,67 @@ namespace CloudinaryDotNet
                 ExplodeResult result = ExplodeResult.Parse(response);
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Gets java script that configures Cloudinary JS.
+        /// </summary>
+        /// <param name="directUpload">Whether to reference additional scripts that are necessary for uploading files directly from browser.</param>
+        /// <param name="dir">Override location of js files (default: ~/Scripts).</param>
+        /// <returns></returns>
+        public string GetCloudinaryJsConcig(bool directUpload = false, string dir = "")
+        {
+            if (String.IsNullOrEmpty(dir))
+                dir = "~/Scripts";
+
+            StringBuilder sb = new StringBuilder(1000);
+
+            AppendScriptLine(sb, dir, "jquery.ui.widget.js");
+            AppendScriptLine(sb, dir, "jquery.iframe-transport.js");
+            AppendScriptLine(sb, dir, "jquery.fileupload.js");
+            AppendScriptLine(sb, dir, "jquery.cloudinary.js");
+
+            if (directUpload)
+            {
+                AppendScriptLine(sb, dir, "canvas-to-blob.min.js");
+                AppendScriptLine(sb, dir, "jquery.fileupload-image.js");
+                AppendScriptLine(sb, dir, "jquery.fileupload-process.js");
+                AppendScriptLine(sb, dir, "jquery.fileupload-validate.js");
+                AppendScriptLine(sb, dir, "load-image.min.js");
+            }
+
+            var cloudinaryParams = new JObject(
+                new JProperty[]
+                {
+                    new JProperty("cloud_name",m_api.Account.Cloud),
+                    new JProperty("api_key",m_api.Account.ApiKey),
+                    new JProperty("private_cdn",m_api.UsePrivateCdn),
+                    new JProperty("cdn_subdomain",m_api.CSubDomain)
+                });
+
+            if (!String.IsNullOrEmpty(m_api.PrivateCdn))
+                cloudinaryParams.Add("secure_distribution", m_api.PrivateCdn);
+
+            sb.AppendLine("<script type='text/javascript'>");
+            sb.Append("$.cloudinary.config(");
+            sb.Append(cloudinaryParams.ToString());
+            sb.AppendLine(");");
+            sb.AppendLine("</script>");
+
+            return sb.ToString();
+        }
+
+        private static void AppendScriptLine(StringBuilder sb, string dir, string script)
+        {
+            sb.Append("<script src=\"");
+            sb.Append(dir);
+
+            if (!dir.EndsWith("/") && !dir.EndsWith("\\"))
+                sb.Append("/");
+
+            sb.Append(script);
+
+            sb.AppendLine("\"></script>");
         }
 
         private string GetDownloadUrl(UrlBuilder builder, IDictionary<string, object> parameters)

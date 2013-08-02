@@ -1122,6 +1122,50 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestJsConfig()
+        {
+            string config = m_cloudinary.GetCloudinaryJsConcig();
+
+            Assert.AreEqual(
+                "<script src=\"~/Scripts/jquery.ui.widget.js\"></script>\r\n" +
+                "<script src=\"~/Scripts/jquery.iframe-transport.js\"></script>\r\n" +
+                "<script src=\"~/Scripts/jquery.fileupload.js\"></script>\r\n" +
+                "<script src=\"~/Scripts/jquery.cloudinary.js\"></script>\r\n" +
+                "<script type='text/javascript'>\r\n" +
+                "$.cloudinary.config({\r\n" +
+                "  \"cloud_name\": \"nmakarov\",\r\n" +
+                "  \"api_key\": \"646462946575521\",\r\n" +
+                "  \"private_cdn\": false,\r\n" +
+                "  \"cdn_subdomain\": false\r\n" +
+                "});\r\n" +
+                "</script>\r\n", config);
+        }
+
+        [Test]
+        public void TestJsConfigFull()
+        {
+            string config = m_cloudinary.GetCloudinaryJsConcig(true, @"https://raw.github.com/cloudinary/cloudinary_js/master/js");
+            Assert.AreEqual(
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.ui.widget.js\"></script>\r\n" +
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.iframe-transport.js\"></script>\r\n" +
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload.js\"></script>\r\n" +
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.cloudinary.js\"></script>\r\n" +
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/canvas-to-blob.min.js\"></script>\r\n" +
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-image.js\"></script>\r\n" +
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-process.js\"></script>\r\n" +
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-validate.js\"></script>\r\n" +
+                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/load-image.min.js\"></script>\r\n" +
+                "<script type='text/javascript'>\r\n" +
+                "$.cloudinary.config({\r\n" +
+                "  \"cloud_name\": \"nmakarov\",\r\n" +
+                "  \"api_key\": \"646462946575521\",\r\n" +
+                "  \"private_cdn\": false,\r\n" +
+                "  \"cdn_subdomain\": false\r\n" +
+                "});\r\n" +
+                "</script>\r\n", config);
+        }
+
+        [Test]
         public void TestExplode()
         {
             var uploadParams = new ImageUploadParams()
