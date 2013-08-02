@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet.Actions
@@ -19,6 +20,44 @@ namespace CloudinaryDotNet.Actions
         /// The identifier that is used for accessing the uploaded resource. A randomly generated ID is assigned if not specified.
         /// </summary>
         public string PublicId { get; set; }
+
+        /// <summary>
+        /// A comma-separated list of tag names to assign to the uploaded image for later group reference.
+        /// </summary>
+        public string Tags { get; set; }
+
+        /// <summary>
+        /// Gets or sets privacy mode of the file. Valid values: 'upload' and 'authenticated'. Default: 'upload'.
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
+        /// </value>
+        public bool Invalidate { get; set; }
+
+        /// <summary>
+        /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'. For example 'X-Robots-Tag: noindex'.
+        /// </summary>
+        public Dictionary<string, string> Headers { get; set; }
+
+        /// <summary>
+        /// Whether to use the original file name of the uploaded image if available for the public ID. The file name is normalized and random characters are appended to ensure uniqueness. Default: false.
+        /// </summary>
+        public bool UseFilename { get; set; }
+
+        /// <summary>
+        /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments (setting the 'flags' transformation parameter to 'attachment'). Default: false.
+        /// </summary>
+        public bool DiscardOriginalFilename { get; set; }
+
+        /// <summary>
+        /// An HTTP URL to send notification to (a webhook) when the upload is completed.
+        /// </summary>
+        public string NotificationUrl { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -44,6 +83,23 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
 
             AddParam(dict, "public_id", PublicId);
+            AddParam(dict, "tags", Tags);
+            AddParam(dict, "type", Type);
+            AddParam(dict, "use_filename", UseFilename);
+            AddParam(dict, "invalidate", Invalidate);
+            AddParam(dict, "discard_original_filename", DiscardOriginalFilename);
+            AddParam(dict, "notification_url", NotificationUrl);
+
+            if (Headers != null && Headers.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var item in Headers)
+                {
+                    sb.AppendFormat("{0}: {1}\n", item.Key, item.Value);
+                }
+
+                dict.Add("headers", sb.ToString());
+            }
 
             return dict;
         }
