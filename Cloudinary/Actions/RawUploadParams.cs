@@ -60,6 +60,16 @@ namespace CloudinaryDotNet.Actions
         public string NotificationUrl { get; set; }
 
         /// <summary>
+        /// Proxy to use when Cloudinary accesses remote folders
+        /// </summary>
+        public string Proxy { get; set; }
+
+        /// <summary>
+        /// Base Folder to use when building the Cloudinary public_id
+        /// </summary>
+        public string Folder { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -89,6 +99,8 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "discard_original_filename", DiscardOriginalFilename);
             AddParam(dict, "notification_url", NotificationUrl);
+            AddParam(dict, "proxy", Proxy);
+            AddParam(dict, "folder", Folder);
 
             if (Headers != null && Headers.Count > 0)
             {
