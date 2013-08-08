@@ -1124,7 +1124,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestJsConfig()
         {
-            string config = m_cloudinary.GetCloudinaryJsConcig();
+            string config = m_cloudinary.GetCloudinaryJsConfig();
 
             Assert.AreEqual(
                 "<script src=\"~/Scripts/jquery.ui.widget.js\"></script>\r\n" +
@@ -1133,8 +1133,8 @@ namespace CloudinaryDotNet.Test
                 "<script src=\"~/Scripts/jquery.cloudinary.js\"></script>\r\n" +
                 "<script type='text/javascript'>\r\n" +
                 "$.cloudinary.config({\r\n" +
-                "  \"cloud_name\": \"nmakarov\",\r\n" +
-                "  \"api_key\": \"646462946575521\",\r\n" +
+                "  \"cloud_name\": \"" + m_account.Cloud + "\",\r\n" +
+                "  \"api_key\": \"" + m_account.ApiKey + "\",\r\n" +
                 "  \"private_cdn\": false,\r\n" +
                 "  \"cdn_subdomain\": false\r\n" +
                 "});\r\n" +
@@ -1144,7 +1144,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestJsConfigFull()
         {
-            string config = m_cloudinary.GetCloudinaryJsConcig(true, @"https://raw.github.com/cloudinary/cloudinary_js/master/js");
+            string config = m_cloudinary.GetCloudinaryJsConfig(true, @"https://raw.github.com/cloudinary/cloudinary_js/master/js");
             Assert.AreEqual(
                 "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.ui.widget.js\"></script>\r\n" +
                 "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.iframe-transport.js\"></script>\r\n" +
@@ -1157,8 +1157,8 @@ namespace CloudinaryDotNet.Test
                 "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/load-image.min.js\"></script>\r\n" +
                 "<script type='text/javascript'>\r\n" +
                 "$.cloudinary.config({\r\n" +
-                "  \"cloud_name\": \"nmakarov\",\r\n" +
-                "  \"api_key\": \"646462946575521\",\r\n" +
+                "  \"cloud_name\": \"" + m_account.Cloud + "\",\r\n" +
+                "  \"api_key\": \"" + m_account.ApiKey + "\",\r\n" +
                 "  \"private_cdn\": false,\r\n" +
                 "  \"cdn_subdomain\": false\r\n" +
                 "});\r\n" +

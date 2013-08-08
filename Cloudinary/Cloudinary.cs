@@ -639,7 +639,7 @@ namespace CloudinaryDotNet
         /// <param name="directUpload">Whether to reference additional scripts that are necessary for uploading files directly from browser.</param>
         /// <param name="dir">Override location of js files (default: ~/Scripts).</param>
         /// <returns></returns>
-        public string GetCloudinaryJsConcig(bool directUpload = false, string dir = "")
+        public string GetCloudinaryJsConfig(bool directUpload = false, string dir = "")
         {
             if (String.IsNullOrEmpty(dir))
                 dir = "~/Scripts";
