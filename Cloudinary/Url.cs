@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -190,21 +191,19 @@ namespace CloudinaryDotNet
 
             string transformationStr = Transformation.Generate();
 
-            string original_source = source;
-
             if (Regex.IsMatch(source.ToLower(), "^https?:/.*"))
             {
                 if (m_action == "upload" || m_action == "asset")
                 {
-                    return original_source;
+                    return source;
                 }
-
-                source = Encode(source);
             }
             else if (!String.IsNullOrEmpty(FormatValue))
             {
                 source += "." + FormatValue;
             }
+
+            source = Encode(Decode(source));
 
             string prefix;
             bool sharedDomain = !m_usePrivateCdn;
@@ -271,6 +270,32 @@ namespace CloudinaryDotNet
             return Regex.Replace(uriStr, "/$", String.Empty);
         }
 
+        private static string Decode(string input)
+        {
+            StringBuilder resultStr = new StringBuilder();
+
+            int pos = 0;
+
+            while (pos < input.Length)
+            {
+                int ppos = input.IndexOf('%', pos);
+                if (ppos == -1)
+                {
+                    resultStr.Append(input.Substring(pos));
+                    pos = input.Length;
+                }
+                else
+                {
+                    resultStr.Append(input.Substring(pos, ppos - pos));
+                    char ch = (char)Int16.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
+                    resultStr.Append(ch);
+                    pos = ppos + 3;
+                }
+            }
+
+            return resultStr.ToString();
+        }
+
         private static string Encode(string input)
         {
             StringBuilder resultStr = new StringBuilder();
@@ -279,8 +304,7 @@ namespace CloudinaryDotNet
                 if (IsUnsafe(ch))
                 {
                     resultStr.Append('%');
-                    resultStr.Append(ToHex(ch / 16));
-                    resultStr.Append(ToHex(ch % 16));
+                    resultStr.Append(String.Format("{0:x2}", (short)ch));
                 }
                 else
                 {
@@ -290,17 +314,12 @@ namespace CloudinaryDotNet
             return resultStr.ToString();
         }
 
-        private static char ToHex(int ch)
-        {
-            return (char)(ch < 10 ? '0' + ch : 'A' + ch - 10);
-        }
-
         private static bool IsUnsafe(char ch)
         {
             if (ch > 128 || ch < 0)
                 return true;
 
-            return " %$&+,;=?@<>#%".IndexOf(ch) >= 0;
+            return " $&+,;=?@<>#%".IndexOf(ch) >= 0;
         }
 
         #region ICloneable

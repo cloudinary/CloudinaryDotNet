@@ -258,7 +258,7 @@ namespace CloudinaryDotNet.Test
             // should escape fetch urls
 
             string uri = m_api.Url.ResourceType("image").Action("fetch").BuildUrl("http://blah.com/hello?a=b");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/fetch/http://blah.com/hello%3Fa%3Db", uri);
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/fetch/http://blah.com/hello%3fa%3db", uri);
         }
 
         [Test]
@@ -283,7 +283,7 @@ namespace CloudinaryDotNet.Test
         public void TestHttpEscape()
         {
             string uri = m_api.Url.ResourceType("image").Action("youtube").BuildUrl("http://www.youtube.com/watch?v=d9NF2edxy-M");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/youtube/http://www.youtube.com/watch%3Fv%3Dd9NF2edxy-M", uri);
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/youtube/http://www.youtube.com/watch%3fv%3dd9NF2edxy-M", uri);
         }
 
         [Test]
@@ -565,6 +565,27 @@ namespace CloudinaryDotNet.Test
 
             string result = m_api.UrlImgUp.Shorten(true).BuildUrl("test");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/iu/test", result);
+        }
+
+        [Test]
+        public void TestEscapePublicId()
+        {
+            // should escape public_ids
+
+            var tests = new Dictionary<string, string>()
+            {
+                {"a b", "a%20b"},
+                {"a+b", "a%2bb"},
+                {"a%20b", "a%20b"},
+                {"a-b", "a-b"  },
+                {"a??b", "a%3f%3fb"}
+            };
+
+            foreach (var entry in tests)
+            {
+                string result = m_api.UrlImgUp.BuildUrl(entry.Key);
+                Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/" + entry.Value, result);
+            }
         }
 
         [Test]
