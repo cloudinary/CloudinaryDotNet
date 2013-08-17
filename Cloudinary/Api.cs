@@ -340,28 +340,47 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Signs and serializes upload parameters.
+        /// </summary>
+        /// <param name="parameters">Dictionary of upload parameters.</param>
+        /// <returns>JSON representation of upload parameters.</returns>
+        public string SerializeUploadParams(SortedDictionary<string, object> parameters)
+        {
+            if (parameters == null)
+                parameters = new SortedDictionary<string, object>();
+
+            FinalizeUploadParameters(parameters);
+
+            return JsonConvert.SerializeObject(parameters);
+        }
+
+        /// <summary>
+        /// Gets the upload URL.
+        /// </summary>
+        /// <param name="resourceType">Type of the resource.</param>
+        /// <param name="resource">The resource identifier.</param>
+        /// <returns>The upload URL.</returns>
+        public string GetUploadUrl(string resourceType = "image")
+        {
+            return ApiUrlImgUpV.ResourceType(resourceType).BuildUrl();
+        }
+
+        /// <summary>
         /// Builds HTML form
         /// </summary>
         /// <returns>HTML form</returns>
         public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters, Dictionary<string, string> htmlOptions)
         {
-            if (parameters == null)
-                parameters = new SortedDictionary<string, object>();
-
             if (htmlOptions == null)
                 htmlOptions = new Dictionary<string, string>();
-
-            string url = ApiUrlImgUpV.ResourceType(resourceType).BuildUrl();
-
-            FinalizeUploadParameters(parameters);
 
             StringBuilder builder = new StringBuilder();
 
             builder.
                 Append("<input type='file' name='file' data-url='").
-                Append(url).
+                Append(GetUploadUrl()).
                 Append("' data-form-data='").
-                Append(JsonConvert.SerializeObject(parameters)).
+                Append(SerializeUploadParams(parameters)).
                 Append("' data-cloudinary-field='").
                 Append(field).
                 Append("' class='cloudinary-fileupload");
