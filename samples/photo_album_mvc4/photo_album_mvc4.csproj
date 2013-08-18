@@ -145,6 +145,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\cloudinary_cors.html" />
     <Content Include="Content\Style.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery.cloudinary.js" />
