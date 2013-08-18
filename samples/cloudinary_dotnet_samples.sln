@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{93A043
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "photo_album_mvc4", "photo_album_mvc4\photo_album_mvc4.csproj", "{0A7FA182-4940-4FFE-A5E0-856459C90A1A}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "basic_mvc4_vb", "basic_mvc4_vb\basic_mvc4_vb.vbproj", "{DD563C41-2B7D-49D8-B2D5-406D0C4B4F3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{0A7FA182-4940-4FFE-A5E0-856459C90A1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A7FA182-4940-4FFE-A5E0-856459C90A1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A7FA182-4940-4FFE-A5E0-856459C90A1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD563C41-2B7D-49D8-B2D5-406D0C4B4F3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD563C41-2B7D-49D8-B2D5-406D0C4B4F3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD563C41-2B7D-49D8-B2D5-406D0C4B4F3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD563C41-2B7D-49D8-B2D5-406D0C4B4F3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
