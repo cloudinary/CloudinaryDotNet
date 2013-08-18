@@ -10,7 +10,7 @@
 <body>
     <div id="logo">
         <!-- This will render the image fetched from a remote HTTP URL using Cloudinary -->
-l       @Html.Raw(Model.Cloudinary.Api.Url.ResourceType("image").Action("fetch").BuildImageTag("http://cloudinary.com/images/logo.png"))
+        @Html.Raw(Model.Cloudinary.Api.Url.ResourceType("image").Action("fetch").BuildImageTag("http://cloudinary.com/images/logo.png"))
     </div>
 
     <div id="posterframe">
