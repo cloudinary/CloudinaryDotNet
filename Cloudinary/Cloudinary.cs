@@ -1,10 +1,10 @@
-﻿using System;
+﻿using CloudinaryDotNet.Actions;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using CloudinaryDotNet.Actions;
-using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet
 {
@@ -17,7 +17,6 @@ namespace CloudinaryDotNet
         public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
         public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
         public const string SHARED_CDN = AKAMAI_SHARED_CDN;
-
 
         Api m_api;
 

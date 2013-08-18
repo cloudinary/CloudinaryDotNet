@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CloudinaryDotNet.Actions;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -7,9 +9,8 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
-using CloudinaryDotNet.Actions;
-using Newtonsoft.Json;
 
 namespace CloudinaryDotNet
 {
@@ -344,10 +345,20 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Dictionary of upload parameters.</param>
         /// <returns>JSON representation of upload parameters.</returns>
-        public string SerializeUploadParams(SortedDictionary<string, object> parameters)
+        public string PrepareUploadParams(SortedDictionary<string, object> parameters)
         {
             if (parameters == null)
                 parameters = new SortedDictionary<string, object>();
+
+            string path = "";
+            if (parameters.ContainsKey("callback") && parameters["callback"] != null)
+                path = parameters["callback"].ToString();
+
+            try
+            {
+                parameters["callback"] = BuildCallbackUrl(path);
+            }
+            catch (HttpException) { }
 
             FinalizeUploadParameters(parameters);
 
@@ -360,9 +371,27 @@ namespace CloudinaryDotNet
         /// <param name="resourceType">Type of the resource.</param>
         /// <param name="resource">The resource identifier.</param>
         /// <returns>The upload URL.</returns>
-        public string GetUploadUrl(string resourceType = "image")
+        public string GetUploadUrl(string resourceType = "auto")
         {
-            return ApiUrlImgUpV.ResourceType(resourceType).BuildUrl();
+            return ApiUrlV.Action("upload").ResourceType(resourceType).BuildUrl();
+        }
+
+        public string BuildCallbackUrl(string path = "")
+        {
+            if (String.IsNullOrEmpty(path))
+                path = "/Content/cloudinary_cors.html";
+
+            if (Regex.IsMatch(path.ToLower(), "^https?:/.*"))
+            {
+                return path;
+            }
+            else
+            {
+                if (HttpContext.Current != null)
+                    return new Uri(HttpContext.Current.Request.Url, path).ToString();
+                else
+                    throw new HttpException("Http context is not set. Either use this method in the right context or provide an absolute path to file!");
+            }
         }
 
         /// <summary>
@@ -380,7 +409,7 @@ namespace CloudinaryDotNet
                 Append("<input type='file' name='file' data-url='").
                 Append(GetUploadUrl()).
                 Append("' data-form-data='").
-                Append(SerializeUploadParams(parameters)).
+                Append(PrepareUploadParams(parameters)).
                 Append("' data-cloudinary-field='").
                 Append(field).
                 Append("' class='cloudinary-fileupload");
