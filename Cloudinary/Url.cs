@@ -197,13 +197,17 @@ namespace CloudinaryDotNet
                 {
                     return source;
                 }
+                source = Encode(source);
             }
-            else if (!String.IsNullOrEmpty(FormatValue))
+            else
             {
-                source += "." + FormatValue;
+                source = Encode(Decode(source));
+                if (!String.IsNullOrEmpty(FormatValue))
+                {
+                    source += "." + FormatValue;
+                }
             }
 
-            source = Encode(Decode(source));
 
             string prefix;
             bool sharedDomain = !m_usePrivateCdn;
