@@ -145,12 +145,20 @@ namespace CloudinaryDotNet
             return BuildUrl(source);
         }
 
+#if NET40
+        public IHtmlString BuildImageTag(string source)
+#else
         public string BuildImageTag(string source)
+#endif
         {
             return BuildImageTag(source, new StringDictionary());
         }
 
+#if NET40
+        public IHtmlString BuildImageTag(string source, StringDictionary dict)
+#else
         public string BuildImageTag(string source, StringDictionary dict)
+#endif
         {
             string url = BuildUrl(source);
 
@@ -168,7 +176,11 @@ namespace CloudinaryDotNet
             }
             sb.Append("/>");
 
+#if NET40
+            return new HtmlString(sb.ToString());
+#else
             return sb.ToString();
+#endif
         }
 
         public string BuildUrl()

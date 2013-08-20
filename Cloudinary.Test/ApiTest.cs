@@ -139,7 +139,7 @@ namespace CloudinaryDotNet.Test
         public void TestDifferentHtmlDimensions()
         {
             var trans = new Transformation().Width(100).Height(101).SetHtmlWidth(50).SetHtmlHeight(51);
-            string tag = m_api.UrlImgUp.Transform(trans).BuildImageTag("test");
+            var tag = m_api.UrlImgUp.Transform(trans).BuildImageTag("test").ToString();
             Assert.AreEqual("<img src='http://res.cloudinary.com/testcloud/image/upload/h_101,w_100/test' width='50' height='51'/>", tag);
         }
 
@@ -480,7 +480,7 @@ namespace CloudinaryDotNet.Test
             StringDictionary dict = new StringDictionary();
             dict["alt"] = "my image";
 
-            String result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", dict);
+            var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", dict).ToString();
             Assert.AreEqual("<img src='http://res.cloudinary.com/testcloud/image/upload/c_crop,h_101,w_100/test' alt='my image' width='100' height='101'/>", result);
         }
 
@@ -490,19 +490,21 @@ namespace CloudinaryDotNet.Test
             Dictionary<string, string> htmlOptions = new Dictionary<string, string>();
             htmlOptions.Add("htmlattr", "htmlvalue");
 
-            string s = m_api.BuildUploadForm("test-field", "auto", null, htmlOptions);
+            var s = m_api.BuildUploadForm("test-field", "auto", null, htmlOptions);
+            string ss = s.ToString();
 
-            Assert.IsTrue(s.Contains("type='file'"));
-            Assert.IsTrue(s.Contains("data-cloudinary-field='test-field'"));
-            Assert.IsTrue(s.Contains("class='cloudinary-fileupload'"));
-            Assert.IsTrue(s.Contains("htmlattr='htmlvalue'"));
+            Assert.IsTrue(ss.Contains("type='file'"));
+            Assert.IsTrue(ss.Contains("data-cloudinary-field='test-field'"));
+            Assert.IsTrue(ss.Contains("class='cloudinary-fileupload'"));
+            Assert.IsTrue(ss.Contains("htmlattr='htmlvalue'"));
 
             htmlOptions.Clear();
             htmlOptions.Add("class", "myclass");
 
             s = m_api.BuildUploadForm("test-field", "auto", null, htmlOptions);
+            ss = s.ToString();
 
-            Assert.IsTrue(s.Contains("class='cloudinary-fileupload myclass'"));
+            Assert.IsTrue(ss.Contains("class='cloudinary-fileupload myclass'"));
         }
 
         [Test]

@@ -14,9 +14,13 @@
             <group targetFramework=".NETFramework3.5">
                 <dependency id="Newtonsoft.Json" version="4.5.11" />
             </group>
+            <group targetFramework=".NETFramework4.0">
+                <dependency id="Newtonsoft.Json" version="4.5.11" />
+            </group>
         </dependencies>
     </metadata>
     <files>
-        <file src="Cloudinary\bin\Release\CloudinaryDotNet.dll" target="lib\net35\CloudinaryDotNet.dll" />
+        <file src="Cloudinary\bin\Release\v3.5\CloudinaryDotNet.dll" target="lib\net35\CloudinaryDotNet.dll" />
+        <file src="Cloudinary\bin\Release\v4.0\CloudinaryDotNet.dll" target="lib\net40\CloudinaryDotNet.dll" />
     </files>
 </package>

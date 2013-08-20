@@ -335,7 +335,11 @@ namespace CloudinaryDotNet
         /// Builds HTML form
         /// </summary>
         /// <returns>HTML form</returns>
+#if NET40
+        public IHtmlString BuildUploadForm(string field, string resourceType)
+#else
         public string BuildUploadForm(string field, string resourceType)
+#endif
         {
             return BuildUploadForm(field, resourceType, null, null);
         }
@@ -398,7 +402,11 @@ namespace CloudinaryDotNet
         /// Builds HTML form
         /// </summary>
         /// <returns>HTML form</returns>
+#if NET40
+        public IHtmlString BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters, Dictionary<string, string> htmlOptions)
+#else
         public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters, Dictionary<string, string> htmlOptions)
+#endif
         {
             if (htmlOptions == null)
                 htmlOptions = new Dictionary<string, string>();
@@ -432,7 +440,11 @@ namespace CloudinaryDotNet
 
             builder.Append("'/>");
 
+#if NET40
+            return new HtmlString(builder.ToString());
+#else
             return builder.ToString();
+#endif
         }
 
         /// <summary>
