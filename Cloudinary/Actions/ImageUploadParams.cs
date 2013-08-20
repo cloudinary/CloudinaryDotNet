@@ -39,7 +39,7 @@ namespace CloudinaryDotNet.Actions
         public bool Exif { get; set; }
 
         /// <summary>
-        /// Whether to retrieve predominant colors & color histogram of the uploaded image. Default: false.
+        /// Whether to retrieve predominant colors and color histogram of the uploaded image. Default: false.
         /// </summary>
         public bool Colors { get; set; }
 

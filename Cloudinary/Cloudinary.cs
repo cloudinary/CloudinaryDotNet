@@ -120,12 +120,13 @@ namespace CloudinaryDotNet
         /// Gets URL to download tag cloud as ZIP package
         /// </summary>
         /// <param name="tag">The tag.</param>
+        /// <param name="transform">The transformation.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentException">tag should be specified</exception>
+        /// <exception cref="System.ArgumentException">Tag should be specified!</exception>
         public string DownloadZip(string tag, Transformation transform)
         {
             if (String.IsNullOrEmpty(tag))
-                throw new ArgumentException("tag should be specified");
+                throw new ArgumentException("Tag should be specified!");
 
             UrlBuilder urlBuilder = new UrlBuilder(
                m_api.ApiUrlV

@@ -12,7 +12,8 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Default constructor
         /// </summary>
-        /// <param name="tag">The tag name assigned to images that we should merge into the sprite.</param>
+        /// <param name="publicId">The public id.</param>
+        /// <param name="transformation">The transformation.</param>
         public ExplodeParams(string publicId, Transformation transformation)
         {
             PublicId = publicId;
@@ -24,10 +25,28 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string PublicId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the transformation.
+        /// </summary>
+        /// <value>
+        /// The transformation.
+        /// </value>
         public Transformation Transformation { get; set; }
 
+        /// <summary>
+        /// Gets or sets the notification URL.
+        /// </summary>
+        /// <value>
+        /// The notification URL.
+        /// </value>
         public string NotificationUrl { get; set; }
 
+        /// <summary>
+        /// Gets or sets the format.
+        /// </summary>
+        /// <value>
+        /// The format.
+        /// </value>
         public string Format { get; set; }
 
         /// <summary>

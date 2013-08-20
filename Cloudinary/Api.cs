@@ -373,8 +373,9 @@ namespace CloudinaryDotNet
         /// Gets the upload URL.
         /// </summary>
         /// <param name="resourceType">Type of the resource.</param>
-        /// <param name="resource">The resource identifier.</param>
-        /// <returns>The upload URL.</returns>
+        /// <returns>
+        /// The upload URL.
+        /// </returns>
         public string GetUploadUrl(string resourceType = "auto")
         {
             return ApiUrlV.Action("upload").ResourceType(resourceType).BuildUrl();
