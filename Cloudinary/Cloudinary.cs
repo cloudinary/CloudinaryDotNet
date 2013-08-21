@@ -1,10 +1,11 @@
-﻿using CloudinaryDotNet.Actions;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Web;
+using CloudinaryDotNet.Actions;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet
 {
@@ -639,7 +640,11 @@ namespace CloudinaryDotNet
         /// <param name="directUpload">Whether to reference additional scripts that are necessary for uploading files directly from browser.</param>
         /// <param name="dir">Override location of js files (default: ~/Scripts).</param>
         /// <returns></returns>
+#if NET40
+        public IHtmlString GetCloudinaryJsConfig(bool directUpload = false, string dir = "")
+#else
         public string GetCloudinaryJsConfig(bool directUpload = false, string dir = "")
+#endif
         {
             if (String.IsNullOrEmpty(dir))
                 dir = "~/Scripts";
@@ -678,7 +683,11 @@ namespace CloudinaryDotNet
             sb.AppendLine(");");
             sb.AppendLine("</script>");
 
+#if NET40
+            return new HtmlString(sb.ToString());
+#else
             return sb.ToString();
+#endif
         }
 
         private static void AppendScriptLine(StringBuilder sb, string dir, string script)
