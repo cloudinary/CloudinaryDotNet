@@ -10,8 +10,8 @@ End Section
 @For Each img As basic_mvc4_vb.Image In Model.Images
     @<div class="item">
         <div class="caption">@img.Caption</div>
-        <a href="@img.Url" target="_blank">@Html.Raw(
-        Model.Cloudinary.Api.UrlImgUp.Format(img.Format).Transform(img.ShowTransform).BuildImageTag(img.PublicId))
+        <a href="@img.Url" target="_blank">
+            @Model.Cloudinary.Api.UrlImgUp.Format(img.Format).Transform(img.ShowTransform).BuildImageTag(img.PublicId)
         </a>
         <div class="public_id">@img.PublicId</div>
         <div class="link">

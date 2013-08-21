@@ -20,9 +20,7 @@
 <div id='direct_upload'>
     <h1>Direct upload from the browser</h1>
     <form>
-        @Html.Raw(Model.Cloudinary.Api.BuildUploadForm("test-field", "auto",
-        new SortedDictionary<string, object>() { { "tags", (object)"direct_photo_album" } },
-        new Dictionary<string, string>() { { "multiple", "true" } }))
+        @Model.Cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object>() { { "tags", (object)"direct_photo_album" } }, new Dictionary<string, string>() { { "multiple", "true" } })
     </form>
 
     <!-- status box -->
@@ -40,17 +38,11 @@
 @section scripts
 {
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="~/Scripts/jquery.ui.widget.js"></script>
-    <script src="~/Scripts/jquery.iframe-transport.js"></script>
-    <script src="~/Scripts/jquery.fileupload.js"></script>
-    <script src="~/Scripts/jquery.cloudinary.js"></script>
+    
+    @Html.Raw(Model.Cloudinary.GetCloudinaryJsConfig(true))
 
     <script>
-        $.cloudinary.config("cloud_name", "@Model.Cloudinary.Api.Account.Cloud");
-    </script>
-
-    <script>
-        $(function() {
+        $(function () {
             function prettydump(obj) {
                 ret = ""
                 $.each(obj, function (key, value) {
@@ -58,7 +50,7 @@
                 });
                 return ret;
             }
-    
+
             $('.cloudinary-fileupload')
             .fileupload({
                 dropZone: '#direct_upload',

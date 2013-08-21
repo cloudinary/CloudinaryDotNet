@@ -11,8 +11,8 @@
 {   
     <div class="item">
         <div class="caption">@img.Caption</div>
-        <a href="@img.Url" target="_blank">@Html.Raw(
-        Model.CloudinaryApi.UrlImgUp.Format(img.Format).Transform(img.ShowTransform).BuildImageTag(img.PublicId))
+        <a href="@img.Url" target="_blank">
+            @Model.CloudinaryApi.UrlImgUp.Format(img.Format).Transform(img.ShowTransform).BuildImageTag(img.PublicId)
         </a>
         <div class="public_id">@img.PublicId</div>
         <div class="link">

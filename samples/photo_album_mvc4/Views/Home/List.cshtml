@@ -40,9 +40,7 @@
                 <div class="public_id">
                     @img.PublicId
                 </div>
-                @Html.Raw(Model.Cloudinary.Api.UrlImgUp.Format("jpg")
-                .Transform(new CloudinaryDotNet.Transformation().Height(150).Width(150).Crop("fill"))
-                .BuildImageTag(img.PublicId, new CloudinaryDotNet.StringDictionary("class=thumbnail inline")))
+                @Model.Cloudinary.Api.UrlImgUp.Format("jpg").Transform(new CloudinaryDotNet.Transformation().Height(150).Width(150).Crop("fill")).BuildImageTag(img.PublicId, new CloudinaryDotNet.StringDictionary("class=thumbnail inline"))
             </a>
 
             <div class="less_info">
@@ -70,7 +68,7 @@
                             <td>
                                 <div class="thumbnail_holder">
                                     <a target="_blank" href="@url.BuildUrl(img.PublicId)">
-                                        @Html.Raw(url.BuildImageTag(img.PublicId, new CloudinaryDotNet.StringDictionary("class=thumbnail inline")))
+                                        @url.BuildImageTag(img.PublicId, new CloudinaryDotNet.StringDictionary("class=thumbnail inline"))
                                     </a>
                                 </div>
                                 <br />
