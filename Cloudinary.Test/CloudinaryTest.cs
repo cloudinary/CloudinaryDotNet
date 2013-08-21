@@ -1127,10 +1127,10 @@ namespace CloudinaryDotNet.Test
             string config = m_cloudinary.GetCloudinaryJsConfig().ToString();
 
             Assert.AreEqual(
-                "<script src=\"~/Scripts/jquery.ui.widget.js\"></script>\r\n" +
-                "<script src=\"~/Scripts/jquery.iframe-transport.js\"></script>\r\n" +
-                "<script src=\"~/Scripts/jquery.fileupload.js\"></script>\r\n" +
-                "<script src=\"~/Scripts/jquery.cloudinary.js\"></script>\r\n" +
+                "<script src=\"/Scripts/jquery.ui.widget.js\"></script>\r\n" +
+                "<script src=\"/Scripts/jquery.iframe-transport.js\"></script>\r\n" +
+                "<script src=\"/Scripts/jquery.fileupload.js\"></script>\r\n" +
+                "<script src=\"/Scripts/jquery.cloudinary.js\"></script>\r\n" +
                 "<script type='text/javascript'>\r\n" +
                 "$.cloudinary.config({\r\n" +
                 "  \"cloud_name\": \"" + m_account.Cloud + "\",\r\n" +
