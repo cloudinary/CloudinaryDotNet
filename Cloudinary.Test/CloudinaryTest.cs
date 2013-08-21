@@ -1124,7 +1124,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestJsConfig()
         {
-            string config = m_cloudinary.GetCloudinaryJsConfig();
+            string config = m_cloudinary.GetCloudinaryJsConfig().ToString();
 
             Assert.AreEqual(
                 "<script src=\"~/Scripts/jquery.ui.widget.js\"></script>\r\n" +
@@ -1144,7 +1144,8 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestJsConfigFull()
         {
-            string config = m_cloudinary.GetCloudinaryJsConfig(true, @"https://raw.github.com/cloudinary/cloudinary_js/master/js");
+            string config = m_cloudinary.GetCloudinaryJsConfig(true, @"https://raw.github.com/cloudinary/cloudinary_js/master/js").ToString();
+
             Assert.AreEqual(
                 "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.ui.widget.js\"></script>\r\n" +
                 "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.iframe-transport.js\"></script>\r\n" +
