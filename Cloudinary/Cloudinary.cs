@@ -647,7 +647,7 @@ namespace CloudinaryDotNet
 #endif
         {
             if (String.IsNullOrEmpty(dir))
-                dir = "~/Scripts";
+                dir = "/Scripts";
 
             StringBuilder sb = new StringBuilder(1000);
 
