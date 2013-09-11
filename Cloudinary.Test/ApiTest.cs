@@ -590,6 +590,8 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v1/folder/test", result);
             result = m_api.UrlImgUp.Version("123").BuildUrl("folder/test");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v123/folder/test", result);
+            result = m_api.UrlImgUp.BuildUrl("1/av1/test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v1/1/av1/test", result);
         }
 
         [Test]
