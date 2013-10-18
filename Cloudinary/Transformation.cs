@@ -103,6 +103,7 @@ namespace CloudinaryDotNet
         public Transformation Named(params string[] value) { return Add("transformation", value); }
         public Transformation Crop(string value) { return Add("crop", value); }
         public Transformation Background(string value) { return Add("background", Regex.Replace(value, "^#", "rgb:")); }
+        public Transformation Color(string value) { return Add("color", Regex.Replace(value, "^#", "rgb:")); }
         public Transformation Effect(string value) { return Add("effect", value); }
         public Transformation Effect(string effect, Object param) { return Add("effect", effect + ":" + param); }
         public Transformation Angle(int value) { return Add("angle", value); }
@@ -188,6 +189,12 @@ namespace CloudinaryDotNet
                 background = background.Replace("^#", "rgb:");
             }
 
+            string color = GetString(m_transformParams, "color");
+            if (color != null)
+            {
+                color = color.Replace("^#", "rgb:");
+            }
+
             List<string> transformations = GetStringArray(m_transformParams, "transformation").ToList();
 
             string namedTransformation = String.Join(".", transformations.ToArray());
@@ -202,6 +209,7 @@ namespace CloudinaryDotNet
             parameters.Add("t", namedTransformation);
             parameters.Add("c", crop);
             parameters.Add("b", background);
+            parameters.Add("co", color);
             parameters.Add("a", angle);
             parameters.Add("fl", flags);
 
