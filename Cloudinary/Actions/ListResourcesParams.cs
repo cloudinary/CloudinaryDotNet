@@ -14,6 +14,7 @@ namespace CloudinaryDotNet.Actions
             NextCursor = String.Empty;
             Type = String.Empty;
             Prefix = String.Empty;
+            Tags = false;
         }
 
         public ResourceType ResourceType { get; set; }
@@ -72,6 +73,11 @@ namespace CloudinaryDotNet.Actions
         public int MaxResults { get; set; }
 
         /// <summary>
+        /// Optional. Return tag information for every resources
+        /// </summary>
+        public bool Tags { get; set; }
+
+        /// <summary>
         /// Optional.
         /// </summary>
         public string NextCursor { get; set; }
@@ -98,6 +104,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "next_cursor", NextCursor);
             AddParam(dict, "type", Type);
             AddParam(dict, "prefix", Prefix);
+            AddParam(dict, "tags", Tags);
 
             return dict;
         }

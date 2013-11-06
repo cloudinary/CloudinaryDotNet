@@ -349,14 +349,18 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testlistresources"
+                PublicId = "testlistresources",
+                Tags = "hello"
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            ListResourcesResult result = m_cloudinary.ListResources();
+            ListResourcesResult result = m_cloudinary.ListResources(new ListResourcesParams()
+            {
+                Tags = true
+            });
 
-            Assert.IsTrue(result.Resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload").Count() > 0);
+            Assert.IsTrue(result.Resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload" && res.Tags.Count() == 1 && res.Tags[0] == "hello").Count() > 0);
         }
 
         [Test]
@@ -1189,14 +1193,14 @@ namespace CloudinaryDotNet.Test
         public void TestDownloadPrivate()
         {
             string result = m_cloudinary.DownloadPrivate("zihltjwsyczm700kqj1z");
-            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/\w*/image/download\?api_key=\d*&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}"));
+            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=\d*&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}"));
         }
 
         [Test]
         public void TestDownloadZip()
         {
             string result = m_cloudinary.DownloadZip("api_test_custom1", null);
-            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/\w*/image/download_tag\.zip\?api_key=\d*&signature=\w{40}&tag=api_test_custom1&timestamp=\d{10}"));
+            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download_tag\.zip\?api_key=\d*&signature=\w{40}&tag=api_test_custom1&timestamp=\d{10}"));
         }
     }
 }

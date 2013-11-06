@@ -48,5 +48,8 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
+
+        [DataMember(Name = "tags")]
+        public string[] Tags { get; protected set; }
     }
 }
