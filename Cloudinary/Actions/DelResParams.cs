@@ -8,6 +8,7 @@ namespace CloudinaryDotNet.Actions
         List<string> m_publicIds = new List<string>();
         string m_prefix;
         string m_tag;
+        bool m_all;
 
         public DelResParams()
         {
@@ -29,12 +30,17 @@ namespace CloudinaryDotNet.Actions
         public bool Invalidate { get; set; }
 
         /// <summary>
+        /// Continue deletion from the given cursor
+        /// </summary>
+        public String NextCursor { get; set; }
+
+        /// <summary>
         /// Delete all resources with the given public IDs
         /// </summary>
         public List<string> PublicIds
         {
             get { return m_publicIds; }
-            set { m_publicIds = value; m_prefix = String.Empty; m_tag = String.Empty; }
+            set { m_publicIds = value; m_prefix = String.Empty; m_tag = String.Empty; m_all = false; }
         }
 
         /// <summary>
@@ -43,13 +49,19 @@ namespace CloudinaryDotNet.Actions
         public string Prefix
         {
             get { return m_prefix; }
-            set { m_publicIds = null; m_tag = String.Empty; m_prefix = value; }
+            set { m_publicIds = null; m_tag = String.Empty; m_prefix = value; m_all = false;  }
         }
 
         public string Tag
         {
             get { return m_tag; }
-            set { m_publicIds = null; m_prefix = String.Empty; m_tag = value; }
+            set { m_publicIds = null; m_prefix = String.Empty; m_tag = value; m_all = false; }
+        }
+
+        public bool All
+        {
+            get { return m_all; }
+            set { m_publicIds = null; m_prefix = String.Empty; m_tag = String.Empty; m_all = true; }
         }
 
         /// <summary>
@@ -59,13 +71,14 @@ namespace CloudinaryDotNet.Actions
         {
             if ((PublicIds == null || PublicIds.Count == 0) &&
                 String.IsNullOrEmpty(Prefix) &&
-                String.IsNullOrEmpty(Tag))
+                String.IsNullOrEmpty(Tag) &&
+                !All)
             {
                 throw new ArgumentException("Either PublicIds or Prefix or Tag must be specified!");
             }
 
-            if (String.IsNullOrEmpty(Tag) && String.IsNullOrEmpty(Type))
-                throw new ArgumentException("Type of resource must be specified!");
+            if (!String.IsNullOrEmpty(Tag) && !String.IsNullOrEmpty(Type))
+                throw new ArgumentException("Type of resource cannot specified when tag is given!");
         }
 
         /// <summary>
@@ -78,6 +91,7 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "keep_original", KeepOriginal);
             AddParam(dict, "invalidate", Invalidate);
+            AddParam(dict, "next_cursor", NextCursor);
 
             if (!String.IsNullOrEmpty(Tag))
             {
@@ -90,6 +104,10 @@ namespace CloudinaryDotNet.Actions
             else if (PublicIds != null && PublicIds.Count > 0)
             {
                 dict.Add("public_ids", PublicIds);
+            }
+            if (m_all)
+            {
+                AddParam(dict, "all", true);
             }
 
             return dict;

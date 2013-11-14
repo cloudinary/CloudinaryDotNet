@@ -473,9 +473,33 @@ namespace CloudinaryDotNet
             return DeleteResources(p);
         }
 
+        public DelResResult DeleteResourcesByPrefix(string prefix, bool keepOriginal, string nextCursor)
+        {
+            DelResParams p = new DelResParams() { Prefix = prefix, KeepOriginal = keepOriginal, NextCursor = nextCursor };
+            return DeleteResources(p);
+        }
+
         public DelResResult DeleteResourcesByTag(string tag)
         {
             DelResParams p = new DelResParams() { Tag = tag };
+            return DeleteResources(p);
+        }
+
+        public DelResResult DeleteResourcesByTag(string tag, bool keepOriginal, string nextCursor)
+        {
+            DelResParams p = new DelResParams() { Tag = tag, KeepOriginal = keepOriginal, NextCursor = nextCursor };
+            return DeleteResources(p);
+        }
+
+        public DelResResult DeleteAllResources()
+        {
+            DelResParams p = new DelResParams() { All = true };
+            return DeleteResources(p);
+        }
+
+        public DelResResult DeleteAllResources(bool keepOriginal, string nextCursor)
+        {
+            DelResParams p = new DelResParams() { All = true, KeepOriginal = keepOriginal, NextCursor = nextCursor };
             return DeleteResources(p);
         }
 

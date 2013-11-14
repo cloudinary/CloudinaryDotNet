@@ -11,6 +11,12 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "deleted")]
         public Dictionary<string, string> Deleted { get; protected set; }
 
+        [DataMember(Name = "next_cursor")]
+        public string NextCursor { get; protected set; }
+
+        [DataMember(Name = "partial")]
+        public bool Partial { get; protected set; }
+
         /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>
