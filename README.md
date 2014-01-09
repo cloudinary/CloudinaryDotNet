@@ -13,6 +13,9 @@ Cloudinary provides URL and HTTP based APIs that can be easily integrated with a
 
 For projects based on Microsoft .NET Framrwork, Cloudinary provides a library for simplifying the integration even further.
 
+## Getting started guide
+![](http://res.cloudinary.com/cloudinary/image/upload/see_more_bullet.png)  **Take a look at our [Getting started guide for .NET](http://cloudinary.com/documentation/dotnet_integration#getting_started_guide)**.
+
 ## Setup ######################################################################
 
 CloudinaryDotNet is available as NuGet package at https://nuget.org/packages/CloudinaryDotNet
@@ -113,6 +116,8 @@ Same goes for Twitter:
 
     string url = cloudinary.Api.UrlImgUp.Action("twitter_name").BuildUrl("billclinton.jpg");
 
+![](http://res.cloudinary.com/cloudinary/image/upload/see_more_bullet.png) **See [our documentation](http://cloudinary.com/documentation/dotnet_image_manipulation) for more information about displaying and transforming images in .NET**.
+
 ### Upload
 
 Assuming you have your Cloudinary configuration parameters defined (`cloud_name`, `api_key`, `api_secret`), uploading to Cloudinary is very simple.
@@ -145,6 +150,8 @@ You can also specify your own public ID:
     string url = cloudinary.Api.UrlImgUp.BuildUrl("sample_remote_file.jpg");
 
     http://res.cloudinary.com/cloud_name/image/upload/sample_remote_file.jpg
+
+![](http://res.cloudinary.com/cloudinary/image/upload/see_more_bullet.png) **See [our documentation](http://cloudinary.com/documentation/dotnet_image_upload) for plenty more options of uploading to the cloud from your .NET code**.        
         
 ### imageTag
 
