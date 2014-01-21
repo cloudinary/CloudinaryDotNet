@@ -146,12 +146,12 @@ namespace CloudinaryDotNet
         }
 
 #if NET40
-        public IHtmlString BuildImageTag(string source)
+        public IHtmlString BuildImageTag(string source, params string[] keyValuePairs)
 #else
-        public string BuildImageTag(string source)
+        public string BuildImageTag(string source, params string[] keyValuePairs)
 #endif
         {
-            return BuildImageTag(source, new StringDictionary());
+            return BuildImageTag(source, new StringDictionary(keyValuePairs));
         }
 
 #if NET40
@@ -367,7 +367,7 @@ namespace CloudinaryDotNet
     }
 
     /// <summary>
-    /// This dictionary is based on list so is not very fast but preserves keys order
+    /// This dictionary is based on list so is not very fast but allows not unique keys
     /// </summary>
     public class StringDictionary : IEnumerable<KeyValuePair<string, string>>
     {

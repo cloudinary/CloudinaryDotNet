@@ -485,6 +485,24 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestImageTagNoParams()
+        {
+            Transformation transformation = new Transformation().Width(100).Height(101).Crop("crop");
+
+            var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test").ToString();
+            Assert.AreEqual("<img src='http://res.cloudinary.com/testcloud/image/upload/c_crop,h_101,w_100/test' width='100' height='101'/>", result);
+        }
+
+        [Test]
+        public void TestImageTagParams()
+        {
+            Transformation transformation = new Transformation().Width(100).Height(101).Crop("crop");
+
+            var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", "alt=my image", "test=test2").ToString();
+            Assert.AreEqual("<img src='http://res.cloudinary.com/testcloud/image/upload/c_crop,h_101,w_100/test' alt='my image' test='test2' width='100' height='101'/>", result);
+        }
+
+        [Test]
         public void TestImageUploadTag()
         {
             Dictionary<string, string> htmlOptions = new Dictionary<string, string>();

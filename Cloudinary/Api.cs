@@ -23,6 +23,7 @@ namespace CloudinaryDotNet
         public const string ADDR_RES = "res.cloudinary.com";
         public const string API_VERSION = "v1_1";
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
+        public static readonly string USER_AGENT;
 
         public bool CSubDomain;
         public bool ShortenUrl;
@@ -31,6 +32,13 @@ namespace CloudinaryDotNet
 
         string m_apiAddr = "https://" + ADDR_API;
         SHA1 m_hasher;
+
+        static Api()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            USER_AGENT = String.Format("cld-dotnet-{0}.{1}.{2}",
+                version.Major, version.Minor, version.Build);
+        }
 
         /// <summary>
         /// Default parameterless constructor.
@@ -278,6 +286,7 @@ namespace CloudinaryDotNet
 
             HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
             request.Method = Enum.GetName(typeof(HttpMethod), method);
+            request.UserAgent = USER_AGENT;
 
             if (method == HttpMethod.POST && parameters != null)
             {

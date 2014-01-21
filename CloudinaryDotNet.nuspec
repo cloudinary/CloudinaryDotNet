@@ -2,6 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>CloudinaryDotNet</id>
+        <!-- WARNING: When changing the version number,
+              please change also a value of AssemblyVersion attribute in Cloudinary\Properties\AssemblyInfo.cs.
+              That value is used in a user agent string. -->
         <version>1.0.12</version>
         <title>Cloudinary DotNet Library</title>
         <authors>Cloudinary</authors>
