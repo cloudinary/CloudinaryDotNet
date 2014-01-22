@@ -43,6 +43,9 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary = new Cloudinary(m_account);
 
+            if (!String.IsNullOrWhiteSpace(Settings.Default.ApiBaseAddress))
+                m_cloudinary.Api.ApiBaseAddress = Settings.Default.ApiBaseAddress;
+
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
             m_testPdfPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "multipage.pdf");
             m_testIconPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "favicon.ico");

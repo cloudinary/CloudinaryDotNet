@@ -25,13 +25,14 @@ namespace CloudinaryDotNet
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
         public static readonly string USER_AGENT;
 
+        string m_apiAddr = "https://" + ADDR_API;
+
         public bool CSubDomain;
         public bool ShortenUrl;
         public bool UsePrivateCdn;
         public string PrivateCdn;
 
-        string m_apiAddr = "https://" + ADDR_API;
-        SHA1 m_hasher;
+        SHA1 m_hasher = SHA1.Create();
 
         static Api()
         {
@@ -74,7 +75,6 @@ namespace CloudinaryDotNet
                 PrivateCdn = cloudinaryUri.AbsolutePath;
             }
 
-            m_hasher = SHA1.Create();
         }
 
         /// <summary>
@@ -107,7 +107,6 @@ namespace CloudinaryDotNet
                 throw new ArgumentException("Cloud name must be specified in Account!");
 
             UsePrivateCdn = false;
-            m_hasher = SHA1.Create();
             Account = account;
         }
 
