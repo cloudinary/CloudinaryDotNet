@@ -659,5 +659,36 @@ namespace CloudinaryDotNet.Test
             result = m_api.UrlImgUp.BuildSpriteCss("test.css");
             Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/test.css", result);
         }
+
+        [Test]
+        public void TestSignedUrl()
+        {
+            // should correctly sign a url
+
+            var api = new Api("cloudinary://a:b@test123");
+
+            var expected = "http://res.cloudinary.com/test123/image/upload/s--MaRXzoEC--/c_crop,h_20,w_10/v1234/image.jpg";
+            var actual = api.UrlImgUp.Version("1234")
+                    .Transform(new Transformation().Crop("crop").Width(10).Height(20))
+                    .Signed(true)
+                    .BuildUrl("image.jpg");
+
+            Assert.AreEqual(expected, actual);
+
+            expected = "http://res.cloudinary.com/test123/image/upload/s--ZlgFLQcO--/v1234/image.jpg";
+            actual = api.UrlImgUp.Version("1234")
+                    .Signed(true)
+                    .BuildUrl("image.jpg");
+
+            Assert.AreEqual(expected, actual);
+
+            expected = "http://res.cloudinary.com/test123/image/upload/s--Ai4Znfl3--/c_crop,h_20,w_10/image.jpg";
+            actual = api.UrlImgUp
+                    .Transform(new Transformation().Crop("crop").Width(10).Height(20))
+                     .Signed(true)
+                    .BuildUrl("image.jpg");
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

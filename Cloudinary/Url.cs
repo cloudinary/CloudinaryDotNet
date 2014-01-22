@@ -11,6 +11,8 @@ namespace CloudinaryDotNet
 {
     public class Url : ICloneable
     {
+        Api m_api;
+
         string m_cloudName;
         string m_cloudinaryAddr = Api.ADDR_RES;
         string m_apiVersion;
@@ -18,6 +20,7 @@ namespace CloudinaryDotNet
         bool m_shorten;
         bool m_secure;
         bool m_usePrivateCdn;
+        bool m_signed;
         string m_privateCdn;
         string m_version;
         string m_cName;
@@ -33,6 +36,12 @@ namespace CloudinaryDotNet
         public Url(string cloudName)
         {
             m_cloudName = cloudName;
+        }
+
+        public Url(Api api)
+        {
+            m_cloudName = api.Account.Cloud;
+            m_api = api;
         }
 
         public string FormatValue { get; set; }
@@ -78,6 +87,12 @@ namespace CloudinaryDotNet
         public Url Version(string version)
         {
             m_version = version;
+            return this;
+        }
+
+        public Url Signed(bool signed)
+        {
+            m_signed = signed;
             return this;
         }
 
@@ -220,7 +235,6 @@ namespace CloudinaryDotNet
                 }
             }
 
-
             string prefix;
             bool sharedDomain = !m_usePrivateCdn;
             string privateCdn = m_privateCdn;
@@ -269,21 +283,37 @@ namespace CloudinaryDotNet
             urlParts.Add(m_resourceType);
             urlParts.Add(m_action);
             urlParts.AddRange(m_customParts);
-            urlParts.Add(transformationStr);
 
             if (source.Contains("/") && !Regex.IsMatch(source, "^v[0-9]+/") && !Regex.IsMatch(source, "https?:/.*") && String.IsNullOrEmpty(m_version))
             {
                 m_version = "1";
             }
 
-            if (!String.IsNullOrEmpty(m_version))
-                urlParts.Add(String.Format("v{0}", m_version));
+            var version = String.IsNullOrEmpty(m_version) ? String.Empty : String.Format("v{0}", m_version);
 
+            if (m_signed)
+            {
+                if (m_api == null)
+                    throw new NullReferenceException("Reference to an Api object must be provided in order to sign URI!");
+
+                var signedPart = String.Join("/", new string[] { transformationStr, version, source });
+                signedPart = Regex.Replace(signedPart, "^/+", String.Empty);
+                signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
+                signedPart = Regex.Replace(signedPart, "/$", String.Empty);
+
+                signedPart = m_api.Sign(signedPart);
+                urlParts.Add(signedPart);
+            }
+
+            urlParts.Add(transformationStr);
+            urlParts.Add(version);
             urlParts.Add(source);
 
             string uriStr = String.Join("/", urlParts.ToArray());
-            uriStr = Regex.Replace(uriStr, "([^:])\\/+", "$1/");
-            return Regex.Replace(uriStr, "/$", String.Empty);
+            uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
+            uriStr = Regex.Replace(uriStr, "/$", String.Empty);
+
+            return uriStr;
         }
 
         private static string Decode(string input)

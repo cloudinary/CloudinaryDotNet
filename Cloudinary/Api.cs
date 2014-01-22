@@ -135,6 +135,19 @@ namespace CloudinaryDotNet
             return sign.ToString();
         }
 
+        /// <summary>
+        /// Signs the specified URI part.
+        /// </summary>
+        /// <param name="uriPart">The URI part.</param>
+        /// <returns></returns>
+        public string Sign(string uriPart)
+        {
+            var sign = Convert.ToBase64String(
+                m_hasher.ComputeHash(Encoding.UTF8.GetBytes(uriPart + Account.ApiSecret)));
+
+            return "s--" + sign.Substring(0, 8) + "--/";
+        }
+
         public Account Account { get; private set; }
 
         /// <summary>
@@ -153,7 +166,7 @@ namespace CloudinaryDotNet
         {
             get
             {
-                return new Url(Account.Cloud)
+                return new Url(this)
                     .CSubDomain(CSubDomain)
                     .Shorten(ShortenUrl)
                     .PrivateCdn(UsePrivateCdn)
