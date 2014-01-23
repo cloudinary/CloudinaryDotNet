@@ -806,6 +806,55 @@ namespace CloudinaryDotNet.Test
             Assert.IsTrue(result.Tags.Contains("api_test_custom"));
         }
 
+        [Test]
+        public void TestAllowedFormats()
+        {
+            //should allow whitelisted formats if allowed_formats
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                AllowedFormats = new string[] { "jpg" }
+            };
+
+            var res = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual("jpg", res.Format);
+        }
+
+        [Test]
+        public void TestAllowedFormatsWithIllegalFormat()
+        {
+            //should prevent non whitelisted formats from being uploaded if allowed_formats is specified
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                AllowedFormats = new string[] { "png" }
+            };
+
+            var res = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+        }
+
+        [Test]
+        public void TestAllowedFormatsWithFormat()
+        {
+            //should allow non whitelisted formats if type is specified and convert to that type
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                AllowedFormats = new string[] { "png" },
+                Format = "png"
+            };
+
+            var res = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual("png", res.Format);
+        }
+
         // Test disabled because it deletes all images in the remote account.
         public void DeleteAllInLoop()
         {

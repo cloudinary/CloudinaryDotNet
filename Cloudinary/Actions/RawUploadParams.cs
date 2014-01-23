@@ -95,6 +95,11 @@ namespace CloudinaryDotNet.Actions
         public StringDictionary Context { get; set; }
 
         /// <summary>
+        /// Sets a set of allowed formats.
+        /// </summary>
+        public string[] AllowedFormats { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -124,6 +129,9 @@ namespace CloudinaryDotNet.Actions
 
             if (UseFilename)
                 AddParam(dict, "unique_filename", UniqueFilename);
+
+            if (AllowedFormats != null)
+                AddParam(dict, "allowed_formats", String.Join(",", AllowedFormats));
 
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "discard_original_filename", DiscardOriginalFilename);
