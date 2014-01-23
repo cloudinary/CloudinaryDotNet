@@ -49,6 +49,11 @@ namespace CloudinaryDotNet.Actions
         public bool Faces { get; set; }
 
         /// <summary>
+        /// Sets the face coordinates.
+        /// </summary>
+        public long[] FaceCoordinates { get; set; }
+
+        /// <summary>
         /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
         public bool Metadata { get; set; }
@@ -78,6 +83,11 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "image_metadata", Metadata);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
+
+            if (FaceCoordinates != null)
+            {
+                AddParam(dict, "face_coordinates", String.Join(",", FaceCoordinates.Select(l => l.ToString()).ToArray()));
+            }
 
             if (Transformation != null)
                 AddParam(dict, "transformation", Transformation.Generate());

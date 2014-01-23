@@ -7,6 +7,10 @@ namespace CloudinaryDotNet.Actions
 {
     public class ExplicitParams : BaseParams
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExplicitParams"/> class.
+        /// </summary>
+        /// <param name="publicId">The identifier that is used for accessing the uploaded resource.</param>
         public ExplicitParams(string publicId)
         {
             PublicId = publicId;
@@ -14,15 +18,32 @@ namespace CloudinaryDotNet.Actions
             Tags = String.Empty;
         }
 
+        /// <summary>
+        /// A list of transformations to create for the uploaded image during the upload process, instead of lazily creating them when being accessed by your site's visitors.
+        /// </summary>
         public List<Transformation> EagerTransforms { get; set; }
 
         public string Type { get; set; }
 
+        /// <summary>
+        /// The identifier that is used for accessing the uploaded resource. A randomly generated ID is assigned if not specified.
+        /// </summary>
         public string PublicId { get; set; }
 
+        /// <summary>
+        /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'. For example 'X-Robots-Tag: noindex'.
+        /// </summary>
         public Dictionary<string, string> Headers { get; set; }
 
+        /// <summary>
+        /// A comma-separated list of tag names to assign to the uploaded image for later group reference.
+        /// </summary>
         public string Tags { get; set; }
+
+        /// <summary>
+        /// Sets the face coordinates.
+        /// </summary>
+        public long[] FaceCoordinates { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -44,6 +65,11 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "tags", Tags);
             AddParam(dict, "type", Type);
+
+            if (FaceCoordinates != null)
+            {
+                AddParam(dict, "face_coordinates", String.Join(",", FaceCoordinates.Select(l => l.ToString()).ToArray()));
+            }
 
             if (EagerTransforms != null)
             {

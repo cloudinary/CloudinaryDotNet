@@ -55,6 +55,12 @@ namespace CloudinaryDotNet
             get { return m_api; }
         }
 
+        /// <summary>
+        /// This method can be used to force refresh facebook and twitter profile pictures. The response of this method includes the image's version. Use this version to bypass previously cached CDN copies.
+        /// Also it can be used to generate transformed versions of an uploaded image. This is useful when Strict Transformations are allowed for your account and you wish to create custom derived images for already uploaded images. 
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
         public ExplicitResult Explicit(ExplicitParams parameters)
         {
             string uri = m_api.ApiUrlImgUpV.Action("explicit").BuildUrl();

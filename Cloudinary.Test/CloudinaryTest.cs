@@ -136,6 +136,48 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestFaceCoordinates()
+        {
+            //should allow sending face coordinates
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                FaceCoordinates = new long[] { 120L, 30L, 109L, 150L },
+                Faces = true
+            };
+
+            var uploadRes = m_cloudinary.Upload(uploadParams);
+
+            Assert.NotNull(uploadRes);
+            Assert.AreEqual(1, uploadRes.Faces.Length);
+            Assert.AreEqual(4, uploadRes.Faces[0].Length);
+            for (int i = 0; i < 4; i++)
+            {
+                Assert.AreEqual(uploadParams.FaceCoordinates[i], uploadRes.Faces[0][i]);
+            }
+
+            var explicitParams = new ExplicitParams(uploadRes.PublicId)
+            {
+                FaceCoordinates = new long[] { 121L, 31L, 110L, 151L },
+                Type = "upload"
+            };
+
+            var explicitRes = m_cloudinary.Explicit(explicitParams);
+
+            var res = m_cloudinary.GetResource(
+                new GetResourceParams(uploadRes.PublicId) { Faces = true });
+
+            Assert.NotNull(res);
+            Assert.AreEqual(1, res.Faces.Length);
+            Assert.AreEqual(4, res.Faces[0].Length);
+            for (int i = 0; i < 4; i++)
+            {
+                Assert.AreEqual(explicitParams.FaceCoordinates[i], res.Faces[0][i]);
+            }
+        }
+
+        [Test]
         public void TestUploadLocalImageUseFilename()
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
