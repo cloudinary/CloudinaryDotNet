@@ -26,11 +26,12 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// Invalidate is only supported when deleting a single resource, not when deleting in bulk.
         /// </summary>
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// Continue deletion from the given cursor
+        /// Continue deletion from the given cursor. Notice that it doesn't have a lot of meaning unless the <see cref="KeepOriginal"/> flag is set to True.
         /// </summary>
         public String NextCursor { get; set; }
 
@@ -49,7 +50,7 @@ namespace CloudinaryDotNet.Actions
         public string Prefix
         {
             get { return m_prefix; }
-            set { m_publicIds = null; m_tag = String.Empty; m_prefix = value; m_all = false;  }
+            set { m_publicIds = null; m_tag = String.Empty; m_prefix = value; m_all = false; }
         }
 
         public string Tag

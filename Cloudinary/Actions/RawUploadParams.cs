@@ -18,6 +18,7 @@ namespace CloudinaryDotNet.Actions
         {
             Overwrite = true;
             UniqueFilename = true;
+            Context = new StringDictionary();
         }
 
         /// <summary>
@@ -89,6 +90,11 @@ namespace CloudinaryDotNet.Actions
         public bool Overwrite { get; set; }
 
         /// <summary>
+        /// Allows to store a set of key-value pairs together with resource.
+        /// </summary>
+        public StringDictionary Context { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -125,6 +131,11 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "proxy", Proxy);
             AddParam(dict, "folder", Folder);
             AddParam(dict, "overwrite", Overwrite);
+
+            if (Context != null && Context.Count > 0)
+            {
+                AddParam(dict, "context", String.Join("|", Context.Pairs));
+            }
 
             if (Headers != null && Headers.Count > 0)
             {

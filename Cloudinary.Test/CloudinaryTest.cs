@@ -728,6 +728,25 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestContext()
+        {
+            //should allow sending context
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Context = new StringDictionary("key=value", "key2=value2")
+            };
+
+            var uploaded = m_cloudinary.Upload(uploadParams);
+
+            var res = m_cloudinary.GetResource(uploaded.PublicId);
+
+            Assert.AreEqual("value", res.JsonObj["context"]["custom"]["key"].ToString());
+            Assert.AreEqual("value2", res.JsonObj["context"]["custom"]["key2"].ToString());
+        }
+
+        [Test]
         public void TestListTags()
         {
             // should allow listing tags
