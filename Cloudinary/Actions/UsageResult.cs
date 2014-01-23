@@ -46,10 +46,10 @@ namespace CloudinaryDotNet.Actions
     public class Usage
     {
         [DataMember(Name = "usage")]
-        public int Used { get; protected set; }
+        public Int64 Used { get; protected set; }
 
         [DataMember(Name = "limit")]
-        public int Limit { get; protected set; }
+        public Int64 Limit { get; protected set; }
 
         [DataMember(Name = "used_percent")]
         public float UsedPercent { get; protected set; }
