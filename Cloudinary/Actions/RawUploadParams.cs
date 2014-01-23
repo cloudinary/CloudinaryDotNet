@@ -17,6 +17,7 @@ namespace CloudinaryDotNet.Actions
         public RawUploadParams()
         {
             Overwrite = true;
+            UniqueFilename = true;
         }
 
         /// <summary>
@@ -56,6 +57,11 @@ namespace CloudinaryDotNet.Actions
         /// Whether to use the original file name of the uploaded image if available for the public ID. The file name is normalized and random characters are appended to ensure uniqueness. Default: false.
         /// </summary>
         public bool UseFilename { get; set; }
+
+        /// <summary>
+        /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at the end of the filename that guarantee its uniqueness.
+        /// </summary>
+        public bool UniqueFilename { get; set; }
 
         /// <summary>
         /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments (setting the 'flags' transformation parameter to 'attachment'). Default: false.
@@ -109,6 +115,10 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "tags", Tags);
             AddParam(dict, "type", Type);
             AddParam(dict, "use_filename", UseFilename);
+
+            if (UseFilename)
+                AddParam(dict, "unique_filename", UniqueFilename);
+
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "discard_original_filename", DiscardOriginalFilename);
             AddParam(dict, "notification_url", NotificationUrl);

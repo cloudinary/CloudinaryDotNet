@@ -153,6 +153,24 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUploadLocalImageUniqueFilename()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                EagerAsync = true,
+                UseFilename = true,
+                UniqueFilename = false,
+                NotificationUrl = "http://www.google.com"
+            };
+
+            var result = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual("TestImage", result.PublicId);
+        }
+
+        [Test]
         public void TestUploadTransformationResize()
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
