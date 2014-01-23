@@ -59,6 +59,7 @@ namespace CloudinaryDotNet.Test
             }
 
             m_cloudinary.DeleteTransform("api_test_transformation3");
+            m_cloudinary.DeleteResources(ResourceType.Raw, "test_raw_overwrite");
         }
 
         [Test]
@@ -80,9 +81,38 @@ namespace CloudinaryDotNet.Test
             checkParams.Add("version", uploadResult.Version);
 
             Api api = new Api(m_account);
-            string expectedSign = api.GetSign(checkParams);
+            string expectedSign = api.SignParameters(checkParams);
 
             Assert.AreEqual(expectedSign, uploadResult.Signature);
+        }
+
+        [Test]
+        public void TestUploadOverwrite()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = "test_raw_overwrite",
+                Overwrite = false
+            };
+
+            var img1 = m_cloudinary.Upload(uploadParams, "raw");
+
+            Assert.NotNull(img1);
+
+            uploadParams.File = new FileDescription(m_testPdfPath);
+
+            var img2 = m_cloudinary.Upload(uploadParams, "raw");
+
+            Assert.NotNull(img2);
+            Assert.AreEqual(img1.Length, img2.Length);
+
+            uploadParams.Overwrite = true;
+
+            img2 = m_cloudinary.Upload(uploadParams, "raw");
+
+            Assert.NotNull(img2);
+            Assert.AreNotEqual(img1.Length, img2.Length);
         }
 
         [Test]

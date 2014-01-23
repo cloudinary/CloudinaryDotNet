@@ -12,6 +12,14 @@ namespace CloudinaryDotNet.Actions
     public class RawUploadParams : BaseParams
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RawUploadParams"/> class.
+        /// </summary>
+        public RawUploadParams()
+        {
+            Overwrite = true;
+        }
+
+        /// <summary>
         /// Either the actual data of the image or an HTTP URL of a public image on the Internet.
         /// </summary>
         public FileDescription File { get; set; }
@@ -70,6 +78,11 @@ namespace CloudinaryDotNet.Actions
         public string Folder { get; set; }
 
         /// <summary>
+        /// Whether to overwrite existing resources with the same public ID.
+        /// </summary>
+        public bool Overwrite { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -101,6 +114,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "notification_url", NotificationUrl);
             AddParam(dict, "proxy", Proxy);
             AddParam(dict, "folder", Folder);
+            AddParam(dict, "overwrite", Overwrite);
 
             if (Headers != null && Headers.Count > 0)
             {

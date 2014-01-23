@@ -1,6 +1,4 @@
-﻿using CloudinaryDotNet.Actions;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -11,13 +9,15 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using CloudinaryDotNet.Actions;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet
 {
     /// <summary>
     /// Technological layer to work with cloudinary API
     /// </summary>
-    public class Api
+    public class Api : ISignProvider
     {
         public const string ADDR_API = "api.cloudinary.com";
         public const string ADDR_RES = "res.cloudinary.com";
@@ -31,8 +31,6 @@ namespace CloudinaryDotNet
         public bool ShortenUrl;
         public bool UsePrivateCdn;
         public string PrivateCdn;
-
-        SHA1 m_hasher = SHA1.Create();
 
         static Api()
         {
@@ -110,44 +108,6 @@ namespace CloudinaryDotNet
             Account = account;
         }
 
-        /// <summary>
-        /// Calculates signature of parameters
-        /// </summary>
-        /// <param name="parameters">Parameters to sign</param>
-        /// <returns>Signature of parameters</returns>
-        public string GetSign(IDictionary<string, object> parameters)
-        {
-            StringBuilder signBase = new StringBuilder(String.Join("&", parameters
-                .Where(pair => pair.Value != null)
-                .Select(pair => String.Format("{0}={1}", pair.Key,
-                    pair.Value is IEnumerable<string>
-                    ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
-                    : pair.Value.ToString()))
-                .ToArray()));
-
-            signBase.Append(Account.ApiSecret);
-
-            byte[] hash = m_hasher.ComputeHash(Encoding.UTF8.GetBytes(signBase.ToString()));
-
-            StringBuilder sign = new StringBuilder();
-            foreach (byte b in hash) sign.Append(b.ToString("x2"));
-
-            return sign.ToString();
-        }
-
-        /// <summary>
-        /// Signs the specified URI part.
-        /// </summary>
-        /// <param name="uriPart">The URI part.</param>
-        /// <returns></returns>
-        public string Sign(string uriPart)
-        {
-            var sign = Convert.ToBase64String(
-                m_hasher.ComputeHash(Encoding.UTF8.GetBytes(uriPart + Account.ApiSecret)));
-
-            return "s--" + sign.Substring(0, 8) + "--/";
-        }
-
         public Account Account { get; private set; }
 
         /// <summary>
@@ -166,7 +126,7 @@ namespace CloudinaryDotNet
         {
             get
             {
-                return new Url(this)
+                return new Url(Account.Cloud, this)
                     .CSubDomain(CSubDomain)
                     .Shorten(ShortenUrl)
                     .PrivateCdn(UsePrivateCdn)
@@ -470,6 +430,51 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Calculates signature of parameters
+        /// </summary>
+        /// <param name="parameters">Parameters to sign</param>
+        /// <returns>Signature of parameters</returns>
+        public string SignParameters(IDictionary<string, object> parameters)
+        {
+            StringBuilder signBase = new StringBuilder(String.Join("&", parameters
+                .Where(pair => pair.Value != null)
+                .Select(pair => String.Format("{0}={1}", pair.Key,
+                    pair.Value is IEnumerable<string>
+                    ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
+                    : pair.Value.ToString()))
+                .ToArray()));
+
+            signBase.Append(Account.ApiSecret);
+
+            var hash = ComputeHash(signBase.ToString());
+            StringBuilder sign = new StringBuilder();
+            foreach (byte b in hash) sign.Append(b.ToString("x2"));
+
+            return sign.ToString();
+        }
+
+        /// <summary>
+        /// Signs the specified URI part.
+        /// </summary>
+        /// <param name="uriPart">The URI part.</param>
+        /// <returns></returns>
+        public string SignUriPart(string uriPart)
+        {
+
+            var hash = ComputeHash(uriPart + Account.ApiSecret);
+            var sign = Convert.ToBase64String(hash);
+            return "s--" + sign.Substring(0, 8) + "--/";
+        }
+
+        private byte[] ComputeHash(string s)
+        {
+            using (var sha1 = SHA1.Create())
+            {
+                return sha1.ComputeHash(Encoding.UTF8.GetBytes(s));
+            }
+        }
+
+        /// <summary>
         /// Calculates current UNIX time
         /// </summary>
         /// <returns>Amount of seconds from 1 january 1970</returns>
@@ -481,7 +486,7 @@ namespace CloudinaryDotNet
         internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
         {
             parameters.Add("timestamp", GetTime());
-            parameters.Add("signature", GetSign(parameters));
+            parameters.Add("signature", SignParameters(parameters));
             parameters.Add("api_key", Account.ApiKey);
         }
 
@@ -534,6 +539,12 @@ namespace CloudinaryDotNet
                 writer.BaseStream.Write(buf, 0, cnt);
             }
         }
+    }
+
+    public interface ISignProvider
+    {
+        string SignParameters(IDictionary<string, object> parameters);
+        string SignUriPart(string uriPart);
     }
 
     /// <summary>

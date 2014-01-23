@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Web;
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json.Linq;
 
@@ -458,6 +457,13 @@ namespace CloudinaryDotNet
                 DelDerivedResResult result = DelDerivedResResult.Parse(response);
                 return result;
             }
+        }
+
+        public DelResResult DeleteResources(ResourceType type, params string[] publicIds)
+        {
+            DelResParams p = new DelResParams() { ResourceType = type };
+            p.PublicIds.AddRange(publicIds);
+            return DeleteResources(p);
         }
 
         public DelResResult DeleteResources(params string[] publicIds)

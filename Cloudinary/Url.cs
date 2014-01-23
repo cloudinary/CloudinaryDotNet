@@ -11,7 +11,7 @@ namespace CloudinaryDotNet
 {
     public class Url : ICloneable
     {
-        Api m_api;
+        ISignProvider m_signProvider;
 
         string m_cloudName;
         string m_cloudinaryAddr = Api.ADDR_RES;
@@ -38,10 +38,10 @@ namespace CloudinaryDotNet
             m_cloudName = cloudName;
         }
 
-        public Url(Api api)
+        public Url(string cloudName, ISignProvider signProvider)
+            : this(cloudName)
         {
-            m_cloudName = api.Account.Cloud;
-            m_api = api;
+            m_signProvider = signProvider;
         }
 
         public string FormatValue { get; set; }
@@ -293,15 +293,15 @@ namespace CloudinaryDotNet
 
             if (m_signed)
             {
-                if (m_api == null)
-                    throw new NullReferenceException("Reference to an Api object must be provided in order to sign URI!");
+                if (m_signProvider == null)
+                    throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
 
                 var signedPart = String.Join("/", new string[] { transformationStr, version, source });
                 signedPart = Regex.Replace(signedPart, "^/+", String.Empty);
                 signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
                 signedPart = Regex.Replace(signedPart, "/$", String.Empty);
 
-                signedPart = m_api.Sign(signedPart);
+                signedPart = m_signProvider.SignUriPart(signedPart);
                 urlParts.Add(signedPart);
             }
 

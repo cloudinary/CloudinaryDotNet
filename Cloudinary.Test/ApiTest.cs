@@ -26,7 +26,7 @@ namespace CloudinaryDotNet.Test
             parameters.Add("public_id", "sample");
             parameters.Add("timestamp", "1315060510");
 
-            Assert.AreEqual("c3470533147774275dd37996cc4d0e68fd03cd4f", m_api.GetSign(parameters));
+            Assert.AreEqual("c3470533147774275dd37996cc4d0e68fd03cd4f", m_api.SignParameters(parameters));
         }
 
         [Test]
