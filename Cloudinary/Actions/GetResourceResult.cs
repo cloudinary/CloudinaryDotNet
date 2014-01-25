@@ -1,8 +1,7 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -67,6 +66,9 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
+
+        [DataMember(Name = "context")]
+        public JToken Context { get; protected set; }
 
         /// <summary>
         /// Parses HTTP response and creates new instance of this class

@@ -1,7 +1,6 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -51,5 +50,8 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
+
+        [DataMember(Name = "context")]
+        public JToken Context { get; protected set; }
     }
 }

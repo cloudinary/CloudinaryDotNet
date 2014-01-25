@@ -5,67 +5,33 @@ namespace CloudinaryDotNet.Actions
 {
     public class ListResourcesParams : BaseParams
     {
-        string m_tag;
-        string m_prefix;
-        string m_type;
-
-        public ListResourcesParams()
-        {
-            NextCursor = String.Empty;
-            Type = String.Empty;
-            Prefix = String.Empty;
-            Tags = false;
-        }
-
+        /// <summary>
+        /// Gets or sets the type of the resource.
+        /// </summary>
+        /// <value>
+        /// The type of the resource.
+        /// </value>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
         /// Find all resources that their public ID starts with the given prefix.
-        /// When Prefix is set Tag will be cleared.
+        /// Does not effect if <see cref="Tag"/> or <see cref="PublicIds"/> are set.
         /// </summary>
-        public string Prefix
-        {
-            get { return m_prefix; }
-            set
-            {
-                if (!String.IsNullOrEmpty(value))
-                {
-                    Tag = String.Empty;
-                    m_prefix = value;
-                }
-            }
-        }
-
-        public string Type
-        {
-            get { return m_type; }
-            set
-            {
-                if (!String.IsNullOrEmpty(value))
-                {
-                    Tag = String.Empty;
-                    m_type = value;
-                }
-            }
-        }
+        public string Prefix { get; set; }
 
         /// <summary>
-        /// Max number of resources to return. Default=10. Maximum=500.
-        /// When Tag is set Type and Prefix will be cleared.
+        /// Type of resource (upload, facebook, etc).
+        /// Does not effect if <see cref="Tag"/> is set.
         /// </summary>
-        public string Tag
-        {
-            get { return m_tag; }
-            set
-            {
-                if (!String.IsNullOrEmpty(value))
-                {
-                    Type = String.Empty;
-                    Prefix = String.Empty;
-                    m_tag = value;
-                }
-            }
-        }
+        public string Type { get; set; }
+
+        public string Tag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the public identifiers to list.
+        /// Does not effect if <see cref="Tag"/> is set.
+        /// </summary>
+        public List<string> PublicIds { get; set; }
 
         /// <summary>
         /// Optional. Max number of resources to return. Default=10. Maximum=500.
@@ -73,14 +39,24 @@ namespace CloudinaryDotNet.Actions
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// Optional. Return tag information for every resources
+        /// If true, include the list of tag names assigned to each resource.
         /// </summary>
         public bool Tags { get; set; }
+
+        /// <summary>
+        /// If true, include context assigned to each resource.
+        /// </summary>
+        public bool Context { get; set; }
 
         /// <summary>
         /// Optional.
         /// </summary>
         public string NextCursor { get; set; }
+
+        /// <summary>
+        /// Sorting direction (could be asc, desc, 1, -1).
+        /// </summary>
+        public string Direction { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -96,15 +72,31 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
+            var dict = new SortedDictionary<string, object>();
 
             if (MaxResults > 0)
                 AddParam(dict, "max_results", MaxResults.ToString());
 
             AddParam(dict, "next_cursor", NextCursor);
-            AddParam(dict, "type", Type);
-            AddParam(dict, "prefix", Prefix);
             AddParam(dict, "tags", Tags);
+            AddParam(dict, "context", Context);
+
+            if (PublicIds == null || PublicIds.Count == 0)
+                AddParam(dict, "direction", Direction);
+
+            if (String.IsNullOrEmpty(Tag))
+            {
+                AddParam(dict, "type", Type);
+
+                if (PublicIds != null && PublicIds.Count > 0)
+                {
+                    AddParam(dict, "public_ids", PublicIds);
+                }
+                else
+                {
+                    AddParam(dict, "prefix", Prefix);
+                }
+            }
 
             return dict;
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text;  
 
 namespace CloudinaryDotNet.Actions
 {
@@ -41,9 +41,9 @@ namespace CloudinaryDotNet.Actions
         public string Tags { get; set; }
 
         /// <summary>
-        /// Sets the face coordinates.
+        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>/>.
         /// </summary>
-        public long[] FaceCoordinates { get; set; }
+        public object FaceCoordinates { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -68,7 +68,7 @@ namespace CloudinaryDotNet.Actions
 
             if (FaceCoordinates != null)
             {
-                AddParam(dict, "face_coordinates", String.Join(",", FaceCoordinates.Select(l => l.ToString()).ToArray()));
+                AddParam(dict, "face_coordinates", FaceCoordinates.ToString());
             }
 
             if (EagerTransforms != null)

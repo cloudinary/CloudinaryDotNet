@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace CloudinaryDotNet.Actions
@@ -49,9 +50,9 @@ namespace CloudinaryDotNet.Actions
         public bool Faces { get; set; }
 
         /// <summary>
-        /// Sets the face coordinates.
+        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>/>.
         /// </summary>
-        public long[] FaceCoordinates { get; set; }
+        public object FaceCoordinates { get; set; }
 
         /// <summary>
         /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
@@ -85,9 +86,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
 
             if (FaceCoordinates != null)
-            {
-                AddParam(dict, "face_coordinates", String.Join(",", FaceCoordinates.Select(l => l.ToString()).ToArray()));
-            }
+                AddParam(dict, "face_coordinates", FaceCoordinates.ToString());
 
             if (Transformation != null)
                 AddParam(dict, "transformation", Transformation.Generate());
@@ -99,6 +98,15 @@ namespace CloudinaryDotNet.Actions
             }
 
             return dict;
+        }
+    }
+
+    public class FaceCoordinates : List<Rectangle>
+    {
+        public override string ToString()
+        {
+            return String.Join("|",
+                    this.Select(r => String.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
         }
     }
 }

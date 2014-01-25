@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Cloudinary.Test.Properties;
+using CloudinaryDotNet.Actions;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Cloudinary.Test.Properties;
-using CloudinaryDotNet.Actions;
-using NUnit.Framework;
 
 namespace CloudinaryDotNet.Test
 {
@@ -140,26 +141,35 @@ namespace CloudinaryDotNet.Test
         {
             //should allow sending face coordinates
 
+            var faceCoordinates = new FaceCoordinates()
+            {
+                new Rectangle(121,31,110,151),
+                new Rectangle(120,30,109,150)
+            };
+
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                FaceCoordinates = new long[] { 120L, 30L, 109L, 150L },
+                FaceCoordinates = faceCoordinates,
                 Faces = true
             };
 
             var uploadRes = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(uploadRes);
-            Assert.AreEqual(1, uploadRes.Faces.Length);
+            Assert.AreEqual(2, uploadRes.Faces.Length);
             Assert.AreEqual(4, uploadRes.Faces[0].Length);
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 2; i++)
             {
-                Assert.AreEqual(uploadParams.FaceCoordinates[i], uploadRes.Faces[0][i]);
+                Assert.AreEqual(faceCoordinates[i].X, uploadRes.Faces[i][0]);
+                Assert.AreEqual(faceCoordinates[i].Y, uploadRes.Faces[i][1]);
+                Assert.AreEqual(faceCoordinates[i].Width, uploadRes.Faces[i][2]);
+                Assert.AreEqual(faceCoordinates[i].Height, uploadRes.Faces[i][3]);
             }
 
             var explicitParams = new ExplicitParams(uploadRes.PublicId)
             {
-                FaceCoordinates = new long[] { 121L, 31L, 110L, 151L },
+                FaceCoordinates = "122,32,111,152",
                 Type = "upload"
             };
 
@@ -171,10 +181,10 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(res);
             Assert.AreEqual(1, res.Faces.Length);
             Assert.AreEqual(4, res.Faces[0].Length);
-            for (int i = 0; i < 4; i++)
-            {
-                Assert.AreEqual(explicitParams.FaceCoordinates[i], res.Faces[0][i]);
-            }
+            Assert.AreEqual(122, res.Faces[0][0]);
+            Assert.AreEqual(32, res.Faces[0][1]);
+            Assert.AreEqual(111, res.Faces[0][2]);
+            Assert.AreEqual(152, res.Faces[0][3]);
         }
 
         [Test]
@@ -479,17 +489,67 @@ namespace CloudinaryDotNet.Test
         {
             // should allow listing resources by prefix
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testlistblablabla"
+                PublicId = "testlistblablabla",
+                Context = new StringDictionary("context=abc")
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            ListResourcesResult result = m_cloudinary.ListResourcesByPrefix("upload", "testlist", null);
+            var result = m_cloudinary.ListResourcesByPrefix("testlist", true, true);
 
             Assert.IsTrue(result.Resources.Where(res => res.PublicId.StartsWith("testlist")).Count() == result.Resources.Count());
+            Assert.IsTrue(result.Resources.Where(res => (res.Context == null ? false : res.Context["custom"]["context"].ToString() == "abc")).Count() > 0);
+        }
+
+        [Test]
+        public void TestResourcesListingDirection()
+        {
+            // should allow listing resources in both directions
+
+            var result = m_cloudinary.ListResources(new ListResourcesParams()
+            {
+                Type = "upload",
+                Prefix = "testlist",
+                Direction = "asc"
+            });
+
+            var list1 = result.Resources.Select(r => r.PublicId).ToArray();
+
+            result = m_cloudinary.ListResources(new ListResourcesParams()
+            {
+                Type = "upload",
+                Prefix = "testlist",
+                Direction = "-1"
+            });
+
+            var list2 = result.Resources.Select(r => r.PublicId).Reverse().ToArray();
+
+            Assert.AreEqual(list1.Length, list2.Length);
+            for (int i = 0; i < list1.Length; i++)
+            {
+                Assert.AreEqual(list1[i], list2[i]);
+            }
+        }
+
+        [Test]
+        public void TestListResourcesByPublicIds()
+        {
+            // should allow listing resources by public ids
+
+            var result = m_cloudinary.ListResourceByPublicIds(new List<string>()
+                {
+                    "testlistresources",
+                    "testlistblablabla",
+                    "test_context"
+                }, true, true);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(3, result.Resources.Length);
+            Assert.True(result.Resources.Where(r => r.Tags != null && r.Tags.Length > 0 && r.Tags[0] == "hello").Count() == 1);
+            Assert.True(result.Resources.Where(r => r.Context != null).Count() == 2);
         }
 
         [Test]
@@ -777,6 +837,7 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
+                PublicId = "test_context",
                 Context = new StringDictionary("key=value", "key2=value2")
             };
 
@@ -784,8 +845,8 @@ namespace CloudinaryDotNet.Test
 
             var res = m_cloudinary.GetResource(uploaded.PublicId);
 
-            Assert.AreEqual("value", res.JsonObj["context"]["custom"]["key"].ToString());
-            Assert.AreEqual("value2", res.JsonObj["context"]["custom"]["key2"].ToString());
+            Assert.AreEqual("value", res.Context["custom"]["key"].ToString());
+            Assert.AreEqual("value2", res.Context["custom"]["key2"].ToString());
         }
 
         [Test]
@@ -874,12 +935,9 @@ namespace CloudinaryDotNet.Test
                 bool resourcesLeft = false;
                 foreach (var res in existingResources.Resources)
                 {
-                    if (res.Type != "sprite")
-                    {
-                        deleteParams.Type = res.Type;
-                        resourcesLeft = true;
-                        break;
-                    }
+                    deleteParams.Type = res.Type;
+                    resourcesLeft = true;
+                    break;
                 }
 
                 if (!resourcesLeft) break;

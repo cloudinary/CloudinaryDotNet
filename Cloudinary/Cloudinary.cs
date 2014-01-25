@@ -1,10 +1,10 @@
-﻿using System;
+﻿using CloudinaryDotNet.Actions;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using CloudinaryDotNet.Actions;
-using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet
 {
@@ -253,6 +253,9 @@ namespace CloudinaryDotNet
             }
         }
 
+        /// <summary>
+        /// Lists resource types.
+        /// </summary>
         public ListResourceTypesResult ListResourceTypes()
         {
             using (HttpWebResponse response = m_api.Call(
@@ -263,22 +266,33 @@ namespace CloudinaryDotNet
             }
         }
 
-        public ListResourcesResult ListResources()
-        {
-            return ListResources(new ListResourcesParams());
-        }
-
-        public ListResourcesResult ListResources(string nextCursor)
+        /// <summary>
+        /// Lists resources.
+        /// </summary>
+        /// <param name="nextCursor">Starting position.</param>
+        public ListResourcesResult ListResources(string nextCursor = null)
         {
             return ListResources(new ListResourcesParams() { NextCursor = nextCursor });
         }
 
-        public ListResourcesResult ListResourcesByType(string type, string nextCursor)
+        /// <summary>
+        /// Lists resources of specified type.
+        /// </summary>
+        /// <param name="type">Resource type.</param>
+        /// <param name="nextCursor">Starting position.</param>
+        public ListResourcesResult ListResourcesByType(string type, string nextCursor = null)
         {
             return ListResources(new ListResourcesParams() { Type = type, NextCursor = nextCursor });
         }
 
-        public ListResourcesResult ListResourcesByPrefix(string type, string prefix, string nextCursor)
+        /// <summary>
+        /// Lists resources by prefix.
+        /// </summary>
+        /// <param name="prefix">Public identifier prefix.</param>
+        /// <param name="type">Resource type.</param>
+        /// <param name="nextCursor">Starting position.</param>
+        /// <returns></returns>
+        public ListResourcesResult ListResourcesByPrefix(string prefix, string type = "upload", string nextCursor = null)
         {
             return ListResources(new ListResourcesParams()
             {
@@ -288,7 +302,34 @@ namespace CloudinaryDotNet
             });
         }
 
-        public ListResourcesResult ListResourcesByTag(string tag, string nextCursor)
+        /// <summary>
+        /// Lists resources by prefix.
+        /// </summary>
+        /// <param name="prefix">Public identifier prefix.</param>
+        /// <param name="tags">Whether to include tags in result.</param>
+        /// <param name="context">Whether to include context in result.</param>
+        /// <param name="type">Resource type.</param>
+        /// <param name="nextCursor">Starting position.</param>
+        /// <returns></returns>
+        public ListResourcesResult ListResourcesByPrefix(string prefix, bool tags, bool context, string type = "upload", string nextCursor = null)
+        {
+            return ListResources(new ListResourcesParams()
+            {
+                Tags = tags,
+                Context = context,
+                Type = type,
+                Prefix = prefix,
+                NextCursor = nextCursor
+            });
+        }
+
+        /// <summary>
+        /// Lists resources by tag.
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <param name="nextCursor">Starting position.</param>
+        /// <returns></returns>
+        public ListResourcesResult ListResourcesByTag(string tag, string nextCursor = null)
         {
             return ListResources(new ListResourcesParams()
             {
@@ -297,6 +338,40 @@ namespace CloudinaryDotNet
             });
         }
 
+        /// <summary>
+        /// Returns resources with specified public identifiers.
+        /// </summary>
+        /// <param name="publicIds">Public identifiers.</param>
+        /// <returns></returns>
+        public ListResourcesResult ListResourcesByPublicIds(IEnumerable<string> publicIds)
+        {
+            return ListResources(new ListResourcesParams()
+            {
+                PublicIds = new List<string>(publicIds)
+            });
+        }
+
+        /// <summary>
+        /// Returns resources with specified public identifiers.
+        /// </summary>
+        /// <param name="publicIds">Public identifiers.</param>
+        /// <param name="tags">Whether to include tags in result.</param>
+        /// <param name="context">Whether to include context in result.</param>
+        /// <returns></returns>
+        public ListResourcesResult ListResourceByPublicIds(IEnumerable<string> publicIds, bool tags, bool context)
+        {
+            return ListResources(new ListResourcesParams()
+            {
+                PublicIds = new List<string>(publicIds),
+                Tags = tags,
+                Context = context
+            });
+        }
+
+        /// <summary>
+        /// Lists resources.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
         public ListResourcesResult ListResources(ListResourcesParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
@@ -308,7 +383,17 @@ namespace CloudinaryDotNet
 
             foreach (var param in parameters.ToParamsDictionary())
             {
-                urlBuilder.QueryString[param.Key] = param.Value.ToString();
+                if (param.Value is IEnumerable<string>)
+                {
+                    foreach (var s in (IEnumerable<string>)param.Value)
+                    {
+                        urlBuilder.QueryString.Add(param.Key + "[]", s);
+                    }
+                }
+                else
+                {
+                    urlBuilder.QueryString[param.Key] = param.Value.ToString();
+                }
             }
 
             using (HttpWebResponse response = m_api.Call(
@@ -677,7 +762,7 @@ namespace CloudinaryDotNet
         /// <param name="dir">Override location of js files (default: ~/Scripts).</param>
         /// <returns></returns>
 #if NET40
-        public IHtmlString GetCloudinaryJsConfig(bool directUpload = false, string dir = "")
+        public System.Web.IHtmlString GetCloudinaryJsConfig(bool directUpload = false, string dir = "")
 #else
         public string GetCloudinaryJsConfig(bool directUpload = false, string dir = "")
 #endif
@@ -720,7 +805,7 @@ namespace CloudinaryDotNet
             sb.AppendLine("</script>");
 
 #if NET40
-            return new HtmlString(sb.ToString());
+            return new System.Web.HtmlString(sb.ToString());
 #else
             return sb.ToString();
 #endif
