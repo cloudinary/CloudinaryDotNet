@@ -463,7 +463,7 @@ namespace CloudinaryDotNet
 
             var hash = ComputeHash(uriPart + Account.ApiSecret);
             var sign = Convert.ToBase64String(hash);
-            return "s--" + sign.Substring(0, 8) + "--/";
+            return "s--" + sign.Substring(0, 8).Replace("+", "-").Replace("/", "_") + "--/";
         }
 
         private byte[] ComputeHash(string s)
