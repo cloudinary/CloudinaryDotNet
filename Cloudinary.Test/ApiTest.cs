@@ -689,6 +689,14 @@ namespace CloudinaryDotNet.Test
                     .BuildUrl("image.jpg");
 
             Assert.AreEqual(expected, actual);
+
+            expected = "http://res.cloudinary.com/test123/image/upload/s--qjq_PXhy--/c_crop,h_20,w_1/v1/image.jpg";
+            actual = api.UrlImgUp.Version("1")
+                    .Transform(new Transformation().Crop("crop").Width(1).Height(20))
+                    .Signed(true)
+                    .BuildUrl("image.jpg");
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }
