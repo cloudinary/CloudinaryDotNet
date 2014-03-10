@@ -46,6 +46,11 @@ namespace CloudinaryDotNet.Actions
         public object FaceCoordinates { get; set; }
 
         /// <summary>
+        /// Allows to store a set of key-value pairs together with resource.
+        /// </summary>
+        public StringDictionary Context { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -75,6 +80,11 @@ namespace CloudinaryDotNet.Actions
             {
                 AddParam(dict, "eager",
                     String.Join("|", EagerTransforms.Select(t => t.Generate()).ToArray()));
+            }
+
+            if (Context != null && Context.Count > 0)
+            {
+                AddParam(dict, "context", String.Join("|", Context.Pairs));
             }
 
             if (Headers != null && Headers.Count > 0)
