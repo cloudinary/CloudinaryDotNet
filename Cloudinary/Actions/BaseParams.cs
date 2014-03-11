@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -23,6 +24,11 @@ namespace CloudinaryDotNet.Actions
         {
             if (!String.IsNullOrEmpty(value))
                 dict.Add(key, value);
+        }
+
+        protected void AddParam(SortedDictionary<string, object> dict, string key, float value)
+        {
+            dict.Add(key, value.ToString(CultureInfo.InvariantCulture));
         }
 
         protected void AddParam(SortedDictionary<string, object> dict, string key, IEnumerable<string> value)

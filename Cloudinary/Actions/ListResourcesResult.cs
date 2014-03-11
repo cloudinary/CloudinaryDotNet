@@ -51,6 +51,12 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
 
+        [DataMember(Name = "backup")]
+        public bool? Backup { get; protected set; }
+
+        [DataMember(Name = "moderation_status")]
+        public ModerationStatus? ModerationStatus { get; protected set; }
+
         [DataMember(Name = "context")]
         public JToken Context { get; protected set; }
     }

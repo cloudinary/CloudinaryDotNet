@@ -7,9 +7,63 @@ using System.Text.RegularExpressions;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of uploading a file to cloudinary
+    /// Basic parameters of file upload
     /// </summary>
-    public class RawUploadParams : BaseParams
+    public class BasicRawUploadParams : BaseParams
+    {
+        /// <summary>
+        /// Either the actual data of the image or an HTTP URL of a public image on the Internet.
+        /// </summary>
+        public FileDescription File { get; set; }
+
+        /// <summary>
+        /// The identifier that is used for accessing the uploaded resource. A randomly generated ID is assigned if not specified.
+        /// </summary>
+        public string PublicId { get; set; }
+
+        /// <summary>
+        /// Tell Cloudinary whether to backup the uploaded image. Overrides the default backup settings of your account.
+        /// </summary>
+        public bool? Backup { get; set; }
+
+        /// <summary>
+        /// Gets or sets privacy mode of the file. Valid values: 'upload' and 'authenticated'. Default: 'upload'.
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Validate object model
+        /// </summary>
+        public override void Check()
+        {
+            if (File == null)
+                throw new ArgumentException("File must be specified in UploadParams!");
+
+            if (!File.IsRemote && File.Stream == null && String.IsNullOrEmpty(File.FilePath))
+                throw new ArgumentException("File is not ready!");
+
+            if (String.IsNullOrEmpty(File.FileName))
+                throw new ArgumentException("File name must be specified in UploadParams!");
+        }
+
+        public override SortedDictionary<string, object> ToParamsDictionary()
+        {
+            var dict = new SortedDictionary<string, object>();
+
+            AddParam(dict, "public_id", PublicId);
+            AddParam(dict, "type", Type);
+
+            if (Backup.HasValue)
+                AddParam(dict, "backup", Backup.Value);
+
+            return dict;
+        }
+    }
+
+    /// <summary>
+    /// Extended Parameters of file upload
+    /// </summary>
+    public class RawUploadParams : BasicRawUploadParams
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RawUploadParams"/> class.
@@ -22,24 +76,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Either the actual data of the image or an HTTP URL of a public image on the Internet.
-        /// </summary>
-        public FileDescription File { get; set; }
-
-        /// <summary>
-        /// The identifier that is used for accessing the uploaded resource. A randomly generated ID is assigned if not specified.
-        /// </summary>
-        public string PublicId { get; set; }
-
-        /// <summary>
         /// A comma-separated list of tag names to assign to the uploaded image for later group reference.
         /// </summary>
         public string Tags { get; set; }
-
-        /// <summary>
-        /// Gets or sets privacy mode of the file. Valid values: 'upload' and 'authenticated'. Default: 'upload'.
-        /// </summary>
-        public string Type { get; set; }
 
         /// <summary>
         /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
@@ -90,6 +129,11 @@ namespace CloudinaryDotNet.Actions
         public bool Overwrite { get; set; }
 
         /// <summary>
+        /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the Aspose Document Conversion add-on.
+        /// </summary>
+        public string RawConvert { get; set; }
+
+        /// <summary>
         /// Allows to store a set of key-value pairs together with resource.
         /// </summary>
         public StringDictionary Context { get; set; }
@@ -100,19 +144,9 @@ namespace CloudinaryDotNet.Actions
         public string[] AllowedFormats { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Set to "manual" to add the uploaded image to a queue of pending moderation images. Set to "webpurify" to automatically moderate the uploaded image using the WebPurify Image Moderation add-on.
         /// </summary>
-        public override void Check()
-        {
-            if (File == null)
-                throw new ArgumentException("File must be specified in UploadParams!");
-
-            if (!File.IsRemote && File.Stream == null || !File.Stream.CanRead)
-                throw new ArgumentException("File is not ready!");
-
-            if (String.IsNullOrEmpty(File.FileName))
-                throw new ArgumentException("File name must be specified in UploadParams!");
-        }
+        public string Moderation { get; set; }
 
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
@@ -120,12 +154,11 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
+            var dict = base.ToParamsDictionary();
 
-            AddParam(dict, "public_id", PublicId);
             AddParam(dict, "tags", Tags);
-            AddParam(dict, "type", Type);
             AddParam(dict, "use_filename", UseFilename);
+            AddParam(dict, "moderation", Moderation);
 
             if (UseFilename)
                 AddParam(dict, "unique_filename", UniqueFilename);
@@ -139,6 +172,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "proxy", Proxy);
             AddParam(dict, "folder", Folder);
             AddParam(dict, "overwrite", Overwrite);
+            AddParam(dict, "raw_convert", RawConvert);
 
             if (Context != null && Context.Count > 0)
             {
@@ -161,7 +195,7 @@ namespace CloudinaryDotNet.Actions
     }
 
     /// <summary>
-    /// Represents a file to upload to cloudinary
+    /// Represents a file for uploading to cloudinary
     /// </summary>
     public class FileDescription
     {
@@ -169,6 +203,11 @@ namespace CloudinaryDotNet.Actions
         string m_path;
         Stream m_stream;
         bool m_isRemote;
+
+        internal int BufferLength = Int32.MaxValue;
+        internal bool EOF = false;
+        internal int BytesSent = 0;
+        internal bool LastPart = false;
 
         /// <summary>
         /// Constructor to upload file from stream

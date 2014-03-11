@@ -510,34 +510,52 @@ namespace CloudinaryDotNet
             }
             else
             {
+                int bytesSent = 0;
                 if (file.Stream == null)
                 {
                     using (FileStream stream = new FileStream(file.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        WriteFile(writer, stream, file.FileName);
+                        stream.Seek(file.BytesSent, SeekOrigin.Begin);
+                        file.EOF = WriteFile(writer, stream, file.BufferLength, file.FileName, out bytesSent);
+                        file.BytesSent += bytesSent;
+                        file.LastPart = stream.Length - file.BytesSent <= file.BufferLength;
                     }
                 }
                 else
                 {
-                    WriteFile(writer, file.Stream, file.FileName);
+                    file.EOF = WriteFile(writer, file.Stream, file.BufferLength, file.FileName, out bytesSent);
+                    file.BytesSent += bytesSent;
+                    if (file.Stream.CanSeek)
+                        file.LastPart = file.Stream.Length - file.BytesSent <= file.BufferLength;
                 }
             }
         }
 
-        private void WriteFile(StreamWriter writer, Stream stream, string fileName)
+        /// <param name="length">Maximum amount of bytes to send.</param>
+        /// <param name="bytesSent">Amount of sent bytes.</param>
+        /// <returns>
+        /// true for EOF.
+        /// </returns>
+        private bool WriteFile(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
         {
             writer.WriteLine("--{0}", HTTP_BOUNDARY);
             writer.WriteLine("Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
             writer.WriteLine("Content-Type: application/octet-stream");
             writer.WriteLine();
 
+            bytesSent = 0;
+            int toSend = 0;
             byte[] buf = new byte[4096];
-            int cnt, pos = 0;
+            int cnt = 0;
 
-            while ((cnt = stream.Read(buf, pos, buf.Length)) > 0)
+            while ((toSend = length - bytesSent) > 0
+                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
             {
                 writer.BaseStream.Write(buf, 0, cnt);
+                bytesSent += cnt;
             }
+
+            return cnt == 0;
         }
     }
 

@@ -3,35 +3,20 @@ using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
+    /// <summary>
+    /// Allows to list resources.
+    /// </summary>
     public class ListResourcesParams : BaseParams
     {
         /// <summary>
-        /// Gets or sets the type of the resource.
+        /// Type of resource (image, raw).
         /// </summary>
-        /// <value>
-        /// The type of the resource.
-        /// </value>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// Find all resources that their public ID starts with the given prefix.
-        /// Does not effect if <see cref="Tag"/> or <see cref="PublicIds"/> are set.
-        /// </summary>
-        public string Prefix { get; set; }
-
-        /// <summary>
         /// Type of resource (upload, facebook, etc).
-        /// Does not effect if <see cref="Tag"/> is set.
         /// </summary>
         public string Type { get; set; }
-
-        public string Tag { get; set; }
-
-        /// <summary>
-        /// Gets or sets the public identifiers to list.
-        /// Does not effect if <see cref="Tag"/> is set.
-        /// </summary>
-        public List<string> PublicIds { get; set; }
 
         /// <summary>
         /// Optional. Max number of resources to return. Default=10. Maximum=500.
@@ -39,9 +24,14 @@ namespace CloudinaryDotNet.Actions
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// If true, include the list of tag names assigned to each resource.
+        /// If true, include list of tag names assigned for each resource.
         /// </summary>
         public bool Tags { get; set; }
+
+        /// <summary>
+        /// If true, include moderation status for each resource. 
+        /// </summary>
+        public bool Moderations { get; set; }
 
         /// <summary>
         /// If true, include context assigned to each resource.
@@ -79,24 +69,149 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "next_cursor", NextCursor);
             AddParam(dict, "tags", Tags);
+            AddParam(dict, "moderations", Moderations);
             AddParam(dict, "context", Context);
+            AddParam(dict, "direction", Direction);
+            AddParam(dict, "type", Type);
 
-            if (PublicIds == null || PublicIds.Count == 0)
-                AddParam(dict, "direction", Direction);
+            return dict;
+        }
+    }
+
+    /// <summary>
+    /// Allows to filter resources by specific public identifiers.
+    /// </summary>
+    public class ListSpecificResourcesParams : ListResourcesParams
+    {
+        public ListSpecificResourcesParams()
+        {
+            PublicIds = new List<string>();
+        }
+
+        /// <summary>
+        /// Gets or sets the public identifiers to list.
+        /// When set it overrides usage of <see cref="ListResourcesParams.Direction"/>.
+        /// </summary>
+        public List<string> PublicIds { get; set; }
+
+        /// <summary>
+        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// </summary>
+        /// <returns>Sorted dictionary of parameters</returns>
+        public override SortedDictionary<string, object> ToParamsDictionary()
+        {
+            var dict = base.ToParamsDictionary();
+
+            if (PublicIds != null && PublicIds.Count > 0)
+            {
+                AddParam(dict, "public_ids", PublicIds);
+
+                if (dict.ContainsKey("direction"))
+                    dict.Remove("direction");
+            }
+
+            return dict;
+        }
+    }
+
+    /// <summary>
+    /// Allow to filter resources by prefix.
+    /// </summary>
+    public class ListResourcesByPrefixParams : ListResourcesParams
+    {
+        /// <summary>
+        /// Find all resources that their public ID starts with the given prefix.
+        /// Does not effect if <see cref="PublicIds"/> is set.
+        /// </summary>
+        public string Prefix { get; set; }
+
+        /// <summary>
+        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// </summary>
+        /// <returns>Sorted dictionary of parameters</returns>
+        public override SortedDictionary<string, object> ToParamsDictionary()
+        {
+            var dict = base.ToParamsDictionary();
+
+            AddParam(dict, "prefix", Prefix);
+
+            return dict;
+        }
+    }
+
+    /// <summary>
+    /// Allows to filter resources by tag.
+    /// </summary>
+    public class ListResourcesByTagParams : ListResourcesParams
+    {
+        /// <summary>
+        /// Gets or sets the tag to filter resources.
+        /// </summary>
+        public string Tag { get; set; }
+
+        /// <summary>
+        /// Validate object model
+        /// </summary>
+        /// <exception cref="System.ArgumentException">Tag must be set to list resource by tag!</exception>
+        public override void Check()
+        {
+            base.Check();
 
             if (String.IsNullOrEmpty(Tag))
-            {
-                AddParam(dict, "type", Type);
+                throw new ArgumentException("Tag must be set to filter resources by tag!");
+        }
 
-                if (PublicIds != null && PublicIds.Count > 0)
-                {
-                    AddParam(dict, "public_ids", PublicIds);
-                }
-                else
-                {
-                    AddParam(dict, "prefix", Prefix);
-                }
-            }
+        /// <summary>
+        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// </summary>
+        /// <returns>Sorted dictionary of parameters</returns>
+        public override SortedDictionary<string, object> ToParamsDictionary()
+        {
+            var dict = base.ToParamsDictionary();
+
+            if (dict.ContainsKey("type"))
+                dict.Remove("type");
+
+            return dict;
+        }
+    }
+
+    /// <summary>
+    /// Allows to filter resources by moderation kind/status.
+    /// </summary>
+    public class ListResourcesByModerationParams : ListResourcesParams
+    {
+        /// <summary>
+        /// Gets or sets the kind of the moderation (manual, etc.).
+        /// </summary>
+        public string ModerationKind { get; set; }
+
+        /// <summary>
+        /// Gets or sets the moderation status.
+        /// </summary>
+        public ModerationStatus ModerationStatus { get; set; }
+
+        /// <summary>
+        /// Validate object model
+        /// </summary>
+        public override void Check()
+        {
+            base.Check();
+
+            if (String.IsNullOrEmpty(ModerationKind))
+                throw new ArgumentException("ModerationKind must be set to filter resources by moderation kind/status!");
+        }
+
+        /// <summary>
+        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// </summary>
+        /// <returns>Sorted dictionary of parameters</returns>
+        public override SortedDictionary<string, object> ToParamsDictionary()
+        {
+            var dict = base.ToParamsDictionary();
+
+            if (dict.ContainsKey("type"))
+                dict.Remove("type");
 
             return dict;
         }

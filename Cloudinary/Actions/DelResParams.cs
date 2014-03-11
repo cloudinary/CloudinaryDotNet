@@ -59,6 +59,9 @@ namespace CloudinaryDotNet.Actions
             set { m_publicIds = null; m_prefix = String.Empty; m_tag = value; m_all = false; }
         }
 
+        /// <summary>
+        /// Delete all resources. Optional (default: false). 
+        /// </summary>
         public bool All
         {
             get { return m_all; }

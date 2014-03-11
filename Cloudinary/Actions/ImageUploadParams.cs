@@ -70,6 +70,25 @@ namespace CloudinaryDotNet.Actions
         public string EagerNotificationUrl { get; set; }
 
         /// <summary>
+        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
+        /// </summary>
+        public string Categorization { get; set; }
+
+        /// <summary>
+        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
+        /// </summary>
+        public float? AutoTagging { get; set; }
+
+        /// <summary>
+        /// Set to "rekognition_face" to automatically extract advanced face attributes of photos using the ReKognition Detect Face Attributes add-on.
+        /// </summary>
+        public string Detection { get; set; }
+
+        public string SimilaritySearch { get; set; }
+
+        public string Ocr { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
         /// </summary>
         /// <returns>Sorted dictionary of parameters</returns>
@@ -84,6 +103,13 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "image_metadata", Metadata);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
+            AddParam(dict, "categorization", Categorization);
+            AddParam(dict, "detection", Detection);
+            AddParam(dict, "ocr", Ocr);
+            AddParam(dict, "similarity_search", SimilaritySearch);
+
+            if (AutoTagging.HasValue)
+                AddParam(dict, "auto_tagging", AutoTagging.Value);
 
             if (FaceCoordinates != null)
                 AddParam(dict, "face_coordinates", FaceCoordinates.ToString());

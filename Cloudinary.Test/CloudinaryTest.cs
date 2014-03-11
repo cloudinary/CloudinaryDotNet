@@ -88,6 +88,32 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestModeration()
+        {
+            var uploadParams = new RawUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Moderation = "manual"
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.NotNull(uploadResult);
+            Assert.NotNull(uploadResult.Moderation);
+            Assert.AreEqual(1, uploadResult.Moderation.Count);
+            Assert.AreEqual("manual", uploadResult.Moderation[0].Kind);
+            Assert.AreEqual(ModerationStatus.Pending, uploadResult.Moderation[0].Status);
+
+            var getResult = m_cloudinary.GetResource(uploadResult.PublicId);
+
+            Assert.NotNull(getResult);
+            Assert.NotNull(getResult.Moderation);
+            Assert.AreEqual(1, getResult.Moderation.Count);
+            Assert.AreEqual("manual", getResult.Moderation[0].Kind);
+            Assert.AreEqual(ModerationStatus.Pending, getResult.Moderation[0].Status);
+        }
+
+        [Test]
         public void TestUploadOverwrite()
         {
             var uploadParams = new ImageUploadParams()
@@ -332,6 +358,19 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUploadLargeRawFiles()
+        {
+            // support uploading large raw files
+
+            var result = m_cloudinary.UploadLargeRaw(new BasicRawUploadParams()
+            {
+                File = new FileDescription(m_testPdfPath)
+            });
+
+            Assert.AreEqual(new FileInfo(m_testPdfPath).Length, result.Length);
+        }
+
+        [Test]
         public void TestTagAdd()
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
@@ -449,7 +488,7 @@ namespace CloudinaryDotNet.Test
         {
             // should allow listing resources
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = "testlistresources",
@@ -458,10 +497,7 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.Upload(uploadParams);
 
-            ListResourcesResult result = m_cloudinary.ListResources(new ListResourcesParams()
-            {
-                Tags = true
-            });
+            var result = m_cloudinary.ListResources();
 
             Assert.IsTrue(result.Resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload" && res.Tags.Count() == 1 && res.Tags[0] == "hello").Count() > 0);
         }
@@ -471,7 +507,7 @@ namespace CloudinaryDotNet.Test
         {
             // should allow listing resources by type
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = "testlistresourcesbytype"
@@ -479,7 +515,7 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.Upload(uploadParams);
 
-            ListResourcesResult result = m_cloudinary.ListResourcesByType("upload", null);
+            var result = m_cloudinary.ListResourcesByType("upload");
 
             Assert.IsTrue(result.Resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload").Count() > 0);
         }
@@ -498,7 +534,7 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.Upload(uploadParams);
 
-            var result = m_cloudinary.ListResourcesByPrefix("testlist", true, true);
+            var result = m_cloudinary.ListResourcesByPrefix("testlist", true, true, true);
 
             Assert.IsTrue(result.Resources.Where(res => res.PublicId.StartsWith("testlist")).Count() == result.Resources.Count());
             Assert.IsTrue(result.Resources.Where(res => (res.Context == null ? false : res.Context["custom"]["context"].ToString() == "abc")).Count() > 0);
@@ -509,7 +545,7 @@ namespace CloudinaryDotNet.Test
         {
             // should allow listing resources in both directions
 
-            var result = m_cloudinary.ListResources(new ListResourcesParams()
+            var result = m_cloudinary.ListResources(new ListResourcesByPrefixParams()
             {
                 Type = "upload",
                 Prefix = "testlist",
@@ -518,7 +554,7 @@ namespace CloudinaryDotNet.Test
 
             var list1 = result.Resources.Select(r => r.PublicId).ToArray();
 
-            result = m_cloudinary.ListResources(new ListResourcesParams()
+            result = m_cloudinary.ListResources(new ListResourcesByPrefixParams()
             {
                 Type = "upload",
                 Prefix = "testlist",
@@ -544,7 +580,7 @@ namespace CloudinaryDotNet.Test
                     "testlistresources",
                     "testlistblablabla",
                     "test_context"
-                }, true, true);
+                }, true, true, true);
 
             Assert.NotNull(result);
             Assert.AreEqual(3, result.Resources.Length);
@@ -557,9 +593,9 @@ namespace CloudinaryDotNet.Test
         {
             // should allow listing resources by tag
 
-            FileDescription file = new FileDescription(m_testImagePath);
+            var file = new FileDescription(m_testImagePath);
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams()
             {
                 File = file,
                 Tags = "teslistresourcesbytag1,beauty"
@@ -575,9 +611,56 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.Upload(uploadParams);
 
-            ListResourcesResult result = m_cloudinary.ListResourcesByTag("teslistresourcesbytag1", null);
+            var result = m_cloudinary.ListResourcesByTag("teslistresourcesbytag1");
 
             Assert.AreEqual(2, result.Resources.Count());
+        }
+
+        [Test]
+        public void TestListByModerationUpdate()
+        {
+            // should support listing by moderation kind and value
+
+            List<ImageUploadResult> uploadResults = new List<ImageUploadResult>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                uploadResults.Add(m_cloudinary.Upload(new ImageUploadParams()
+                {
+                    File = new FileDescription(m_testImagePath),
+                    Moderation = "manual"
+                }));
+            }
+
+            m_cloudinary.UpdateResource(uploadResults[0].PublicId, ModerationStatus.Approved);
+            m_cloudinary.UpdateResource(uploadResults[1].PublicId, ModerationStatus.Rejected);
+
+            var requestParams = new ListResourcesByModerationParams()
+            {
+                MaxResults = 1000,
+                ModerationKind = "manual",
+            };
+
+            requestParams.ModerationStatus = ModerationStatus.Approved;
+            var approved = m_cloudinary.ListResources(requestParams);
+
+            requestParams.ModerationStatus = ModerationStatus.Rejected;
+            var rejected = m_cloudinary.ListResources(requestParams);
+
+            requestParams.ModerationStatus = ModerationStatus.Pending;
+            var pending = m_cloudinary.ListResources(requestParams);
+
+            Assert.True(approved.Resources.Where(r => r.PublicId == uploadResults[0].PublicId).Count() > 0);
+            Assert.True(approved.Resources.Where(r => r.PublicId == uploadResults[1].PublicId).Count() == 0);
+            Assert.True(approved.Resources.Where(r => r.PublicId == uploadResults[2].PublicId).Count() == 0);
+
+            Assert.True(rejected.Resources.Where(r => r.PublicId == uploadResults[0].PublicId).Count() == 0);
+            Assert.True(rejected.Resources.Where(r => r.PublicId == uploadResults[1].PublicId).Count() > 0);
+            Assert.True(rejected.Resources.Where(r => r.PublicId == uploadResults[2].PublicId).Count() == 0);
+
+            Assert.True(pending.Resources.Where(r => r.PublicId == uploadResults[0].PublicId).Count() == 0);
+            Assert.True(pending.Resources.Where(r => r.PublicId == uploadResults[1].PublicId).Count() == 0);
+            Assert.True(pending.Resources.Where(r => r.PublicId == uploadResults[2].PublicId).Count() > 0);
         }
 
         [Test]
@@ -585,7 +668,7 @@ namespace CloudinaryDotNet.Test
         {
             // should allow listing resources with cursor
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = "testlistresources1"
@@ -601,13 +684,13 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.Upload(uploadParams);
 
-            ListResourcesParams listParams = new ListResourcesParams()
+            var listParams = new ListResourcesParams()
             {
                 ResourceType = ResourceType.Image,
                 MaxResults = 1
             };
 
-            ListResourcesResult result1 = m_cloudinary.ListResources(listParams);
+            var result1 = m_cloudinary.ListResources(listParams);
 
             Assert.IsNotNull(result1.Resources);
             Assert.AreEqual(1, result1.Resources.Length);
@@ -615,7 +698,7 @@ namespace CloudinaryDotNet.Test
 
             listParams.NextCursor = result1.NextCursor;
 
-            ListResourcesResult result2 = m_cloudinary.ListResources(listParams);
+            var result2 = m_cloudinary.ListResources(listParams);
 
             Assert.IsNotNull(result2.Resources);
             Assert.AreEqual(1, result2.Resources.Length);
@@ -916,6 +999,27 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual("png", res.Format);
         }
 
+        [Test]
+        public void TestManualModeration()
+        {
+            // should support setting manual moderation status
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Moderation = "manual"
+            });
+
+            Assert.NotNull(uploadResult);
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId) { ModerationStatus = Actions.ModerationStatus.Approved });
+
+            Assert.NotNull(updateResult);
+            Assert.NotNull(updateResult.Moderation);
+            Assert.AreEqual(1, updateResult.Moderation.Count);
+            Assert.AreEqual(ModerationStatus.Approved, updateResult.Moderation[0].Status);
+        }
+
         // Test disabled because it deletes all images in the remote account.
         public void DeleteAllInLoop()
         {
@@ -930,11 +1034,13 @@ namespace CloudinaryDotNet.Test
 
                 nextCursor = existingResources.NextCursor;
 
-                DelResParams deleteParams = new DelResParams();
+                DelResParams deleteParams = new DelResParams() { All = true };
 
                 bool resourcesLeft = false;
                 foreach (var res in existingResources.Resources)
                 {
+                    if (res.Backup.HasValue && res.Backup.Value) continue;
+
                     deleteParams.Type = res.Type;
                     resourcesLeft = true;
                     break;
@@ -942,15 +1048,7 @@ namespace CloudinaryDotNet.Test
 
                 if (!resourcesLeft) break;
 
-                foreach (var resource in existingResources.Resources)
-                {
-                    if (resource.Type == deleteParams.Type)
-                        deleteParams.PublicIds.Add(resource.PublicId);
-                }
-
-                Console.WriteLine("Deleting {0} resources of type {1}...", deleteParams.PublicIds.Count, deleteParams.Type);
-
-                m_cloudinary.DeleteResources(deleteParams);
+                var delResult = m_cloudinary.DeleteResources(deleteParams);
             }
         }
 
@@ -1208,6 +1306,26 @@ namespace CloudinaryDotNet.Test
                 Format("png").Version(expResult.Version).BuildUrl("cloudinary");
 
             Assert.AreEqual(url, expResult.Eager[0].Uri.AbsoluteUri);
+        }
+
+        [Test]
+        public void TestExplicitContext()
+        {
+            var exp = new ExplicitParams("cloudinary")
+            {
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                Type = "twitter_name",
+                Context = new StringDictionary("context1=254")
+            };
+
+            var expResult = m_cloudinary.Explicit(exp);
+
+            Assert.IsNotNull(expResult);
+
+            var getResult = m_cloudinary.GetResource(new GetResourceParams(expResult.PublicId) { Type = "twitter_name" });
+
+            Assert.IsNotNull(getResult);
+            Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString());
         }
 
         [Test]

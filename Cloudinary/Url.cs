@@ -439,6 +439,13 @@ namespace CloudinaryDotNet
             PopulateQueryString();
         }
 
+        public UrlBuilder(string uri, IDictionary<string, object> @params)
+            : base(uri)
+        {
+            PopulateQueryString();
+            SetParameters(@params);
+        }
+
         public UrlBuilder(Uri uri)
             : base(uri)
         {
@@ -469,6 +476,24 @@ namespace CloudinaryDotNet
             : base(page.Request.Url.AbsoluteUri)
         {
             PopulateQueryString();
+        }
+
+        public void SetParameters(IDictionary<string, object> @params)
+        {
+            foreach (var param in @params)
+            {
+                if (param.Value is IEnumerable<string>)
+                {
+                    foreach (var s in (IEnumerable<string>)param.Value)
+                    {
+                        QueryString.Add(param.Key + "[]", s);
+                    }
+                }
+                else
+                {
+                    QueryString[param.Key] = param.Value.ToString();
+                }
+            }
         }
 
         public new string ToString()

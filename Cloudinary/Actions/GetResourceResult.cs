@@ -67,6 +67,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
 
+        [DataMember(Name = "moderation")]
+        public List<Moderation> Moderation { get; protected set; }
+
         [DataMember(Name = "context")]
         public JToken Context { get; protected set; }
 

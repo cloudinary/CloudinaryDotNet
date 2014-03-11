@@ -13,6 +13,21 @@ using Newtonsoft.Json.Linq;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
+    /// Possible moderation statuses
+    /// </summary>
+    public enum ModerationStatus
+    {
+        [Description("pending")]
+        Pending,
+        [Description("rejected")]
+        Rejected,
+        [Description("approved")]
+        Approved,
+        [Description("overridden")]
+        Overridden
+    }
+
+    /// <summary>
     /// Possible types of resources to store on cloudinary
     /// </summary>
     public enum ResourceType
@@ -127,5 +142,21 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }
+    }
+
+    [DataContract]
+    public class Moderation
+    {
+        [DataMember(Name = "status")]
+        public ModerationStatus Status;
+
+        [DataMember(Name = "kind")]
+        public string Kind;
+
+        [DataMember(Name = "response")]
+        public string Response;
+
+        [DataMember(Name = "updated_at")]
+        public DateTime UpdatedAt;
     }
 }
