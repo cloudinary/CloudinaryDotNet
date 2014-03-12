@@ -1,7 +1,4 @@
-﻿using Cloudinary.Test.Properties;
-using CloudinaryDotNet.Actions;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -9,6 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Cloudinary.Test.Properties;
+using CloudinaryDotNet.Actions;
+using NUnit.Framework;
 
 namespace CloudinaryDotNet.Test
 {
@@ -111,6 +111,101 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(1, getResult.Moderation.Count);
             Assert.AreEqual("manual", getResult.Moderation[0].Kind);
             Assert.AreEqual(ModerationStatus.Pending, getResult.Moderation[0].Status);
+        }
+
+        [Test]
+        public void TestOcrUpdate()
+        {
+            // should support requesting ocr info
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            });
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            {
+                Ocr = "illegal"
+            });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestRawConvertUpdate()
+        {
+            // should support requesting raw conversion
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testPdfPath)
+            });
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            {
+                RawConvert = "illegal"
+            });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestCategorizationUpdate()
+        {
+            // should support requesting categorization
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            });
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            {
+                Categorization = "illegal"
+            });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestDetectionUpdate()
+        {
+            // should support requesting detection
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            });
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            {
+                Detection = "illegal"
+            });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestSimilaritySearchUpdate()
+        {
+            // should support requesting similarity search
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            });
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            {
+                SimilaritySearch = "illegal"
+            });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
         }
 
         [Test]
@@ -228,6 +323,96 @@ namespace CloudinaryDotNet.Test
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
 
             Assert.True(result.PublicId.StartsWith("TestImage"));
+        }
+
+        [Test]
+        public void TestOcrRequest()
+        {
+            //should support requesting ocr info
+
+            var res = m_cloudinary.Upload(new ImageUploadParams()
+                {
+                    File = new FileDescription(m_testImagePath),
+                    Ocr = "illegal"
+                });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.True(res.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestRawConvertRequest()
+        {
+            //should support requesting raw conversion
+
+            var res = m_cloudinary.Upload(new RawUploadParams()
+               {
+                   File = new FileDescription(m_testPdfPath),
+                   RawConvert = "illegal"
+               });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.True(res.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestCategorizationRequest()
+        {
+            //should support requesting categorization
+
+            var res = m_cloudinary.Upload(new ImageUploadParams()
+               {
+                   File = new FileDescription(m_testImagePath),
+                   Categorization = "illegal"
+               });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.True(res.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestDetectionRequest()
+        {
+            //should support requesting detection
+
+            var res = m_cloudinary.Upload(new ImageUploadParams()
+               {
+                   File = new FileDescription(m_testImagePath),
+                   Detection = "illegal"
+               });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.True(res.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestSimilaritySearchRequest()
+        {
+            //should support requesting similarity search
+
+            var res = m_cloudinary.Upload(new ImageUploadParams()
+               {
+                   File = new FileDescription(m_testImagePath),
+                   SimilaritySearch = "illegal"
+               });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.True(res.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestAutoTaggingRequest()
+        {
+            //should support requesting auto tagging
+
+            var res = m_cloudinary.Upload(new ImageUploadParams()
+               {
+                   File = new FileDescription(m_testImagePath),
+                   AutoTagging = 0.5f
+               });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.True(res.Error.Message.StartsWith("Must use"));
         }
 
         [Test]
