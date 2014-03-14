@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CloudinaryDotNet</RootNamespace>
     <AssemblyName>CloudinaryDotNet</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OutputPath>bin\$(Configuration)\$(TargetFrameworkVersion)\</OutputPath>
     <TargetFrameworkProfile />
     <FileAlignment>512</FileAlignment>
@@ -100,6 +100,7 @@
     <Compile Include="Actions\ImageUploadParams.cs" />
     <Compile Include="Actions\TagParams.cs" />
     <Compile Include="Actions\TextParams.cs" />
+    <Compile Include="Cloudinary.Async.cs" />
     <Compile Include="Cloudinary.cs" />
     <Compile Include="Actions\DeletionParams.cs" />
     <Compile Include="Actions\RawUploadParams.cs" />

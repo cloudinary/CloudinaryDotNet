@@ -9,9 +9,9 @@ using System.Text;
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// Main class of cloudinary .NET API
+    /// Main class of cloudinary .NET API.
     /// </summary>
-    public class Cloudinary
+    public partial class Cloudinary
     {
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
         public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
@@ -72,10 +72,10 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Upload an image file to cloudinary
+        /// Uploads an image file to cloudinary.
         /// </summary>
-        /// <param name="parameters">Parameters for uploading image to cloudinary</param>
-        /// <returns>Results of image uploading</returns>
+        /// <param name="parameters">Parameters of image uploading .</param>
+        /// <returns>Results of image uploading.</returns>
         public ImageUploadResult Upload(ImageUploadParams parameters)
         {
             string uri = m_api.ApiUrlImgUpV.BuildUrl();
@@ -165,7 +165,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Uploads a file to cloudinary.
         /// </summary>
-        /// <param name="parameters">Parameters of uploading a file to cloudinary.</param>
+        /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="type">The type ("raw" or "auto", last by default).</param>
         public RawUploadResult Upload(RawUploadParams parameters, string type = "auto")
         {
@@ -179,6 +179,17 @@ namespace CloudinaryDotNet
             }
         }
 
+        /// <summary>
+        /// Uploads large file to cloudinary by dividing it to chunks.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">
+        /// Please use BasicRawUploadParams class for large raw file uploading!
+        /// or
+        /// The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!
+        /// </exception>
         public RawUploadResult UploadLargeRaw(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
         {
             if (parameters is RawUploadParams)

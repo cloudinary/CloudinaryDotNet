@@ -61,7 +61,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         /// <param name="response">HTTP response</param>
         /// <returns>New instance of this class</returns>
-        internal static RawPartUploadResult Parse(HttpWebResponse response)
+        internal static new RawPartUploadResult Parse(HttpWebResponse response)
         {
             return Parse<RawPartUploadResult>(response);
         }

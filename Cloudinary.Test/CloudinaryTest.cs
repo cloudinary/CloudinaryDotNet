@@ -1209,31 +1209,31 @@ namespace CloudinaryDotNet.Test
         public void DeleteAllInLoop()
         {
             return;
+            HashSet<string> types = new HashSet<string>();
             string nextCursor = String.Empty;
 
-            while (true)
+            do
             {
-                ListResourcesResult existingResources = String.IsNullOrEmpty(nextCursor) ?
-                    m_cloudinary.ListResources() :
-                    m_cloudinary.ListResources(nextCursor);
+                var listParams = new ListResourcesParams()
+                {
+                    NextCursor = nextCursor,
+                    MaxResults = 1000
+                };
 
+                var existingResources = m_cloudinary.ListResources(listParams);
                 nextCursor = existingResources.NextCursor;
 
-                DelResParams deleteParams = new DelResParams() { All = true };
-
-                bool resourcesLeft = false;
                 foreach (var res in existingResources.Resources)
                 {
-                    if (res.Backup.HasValue && res.Backup.Value) continue;
-
-                    deleteParams.Type = res.Type;
-                    resourcesLeft = true;
-                    break;
+                    types.Add(res.Type);
                 }
+            } while (!String.IsNullOrEmpty(nextCursor));
 
-                if (!resourcesLeft) break;
+            foreach (var type in types)
+            {
+                var deleteParams = new DelResParams() { Type = type, All = true };
 
-                var delResult = m_cloudinary.DeleteResources(deleteParams);
+                m_cloudinary.DeleteResources(deleteParams);
             }
         }
 
