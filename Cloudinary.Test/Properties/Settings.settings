@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="CloudName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">d72d72f7</Value>
     </Setting>
     <Setting Name="ApiKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">244372474152595</Value>
     </Setting>
     <Setting Name="ApiSecret" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">9Dsu_dJVu75JYTtW1K8-xHhs2Qg</Value>
     </Setting>
     <Setting Name="ApiBaseAddress" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />

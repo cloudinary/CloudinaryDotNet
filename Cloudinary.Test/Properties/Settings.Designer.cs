@@ -25,7 +25,7 @@ namespace Cloudinary.Test.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("d72d72f7")]
         public string CloudName {
             get {
                 return ((string)(this["CloudName"]));
@@ -34,7 +34,7 @@ namespace Cloudinary.Test.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("244372474152595")]
         public string ApiKey {
             get {
                 return ((string)(this["ApiKey"]));
@@ -43,7 +43,7 @@ namespace Cloudinary.Test.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("9Dsu_dJVu75JYTtW1K8-xHhs2Qg")]
         public string ApiSecret {
             get {
                 return ((string)(this["ApiSecret"]));
