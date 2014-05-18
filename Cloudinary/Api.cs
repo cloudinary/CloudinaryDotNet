@@ -304,11 +304,13 @@ namespace CloudinaryDotNet
 
             try
             {
-                return request.GetResponse() as HttpWebResponse;
+                return (HttpWebResponse)request.GetResponse();
             }
             catch (WebException ex)
             {
-                return ex.Response as HttpWebResponse;
+                var response = ex.Response as HttpWebResponse;
+                if (response == null) throw;
+                else return response;
             }
         }
 

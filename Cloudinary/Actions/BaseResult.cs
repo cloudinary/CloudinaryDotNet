@@ -106,26 +106,26 @@ namespace CloudinaryDotNet.Actions
         /// <returns>New instance of this class</returns>
         internal static T Parse<T>(HttpWebResponse response) where T : BaseResult, new()
         {
+            if (response == null)
+                throw new ArgumentNullException("response");
+
             T result = new T();
 
-            if (response != null)
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
             {
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string s = reader.ReadToEnd();
+                string s = reader.ReadToEnd();
 
 #if DEBUG
                     Console.WriteLine(String.Format("RESPONSE ({0}):", typeof(T).Name));
                     Console.WriteLine(s);
 #endif
 
-                    result = JsonConvert.DeserializeObject<T>(s);
-                    result.JsonObj = JToken.Parse(s);
-                }
-
-                result.StatusCode = response.StatusCode;
+                result = JsonConvert.DeserializeObject<T>(s);
+                result.JsonObj = JToken.Parse(s);
             }
+
+            result.StatusCode = response.StatusCode;
 
             return result;
         }
