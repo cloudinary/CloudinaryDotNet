@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Cloudinary.Test.Properties;
+using CloudinaryDotNet.Actions;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -6,9 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Cloudinary.Test.Properties;
-using CloudinaryDotNet.Actions;
-using NUnit.Framework;
+using System.Threading;
 
 namespace CloudinaryDotNet.Test
 {
@@ -325,80 +326,50 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.PublicId.StartsWith("TestImage"));
         }
 
-        [Test]
-        public void TestOcrRequest()
-        {
-            //should support requesting ocr info
+        //[Test]
+        //public void TestRawConvertRequest()
+        //{
+        //    //should support requesting raw conversion
 
-            var res = m_cloudinary.Upload(new ImageUploadParams()
-                {
-                    File = new FileDescription(m_testImagePath),
-                    Ocr = "illegal"
-                });
+        //    var res = m_cloudinary.Upload(new RawUploadParams()
+        //       {
+        //           File = new FileDescription(m_testPdfPath),
+        //           RawConvert = "illegal"
+        //       });
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.True(res.Error.Message.StartsWith("Illegal value"));
-        }
+        //    Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+        //    Assert.True(res.Error.Message.StartsWith("Illegal value"));
+        //}
 
-        [Test]
-        public void TestRawConvertRequest()
-        {
-            //should support requesting raw conversion
+        //[Test]
+        //public void TestCategorizationRequest()
+        //{
+        //    //should support requesting categorization
 
-            var res = m_cloudinary.Upload(new RawUploadParams()
-               {
-                   File = new FileDescription(m_testPdfPath),
-                   RawConvert = "illegal"
-               });
+        //    var res = m_cloudinary.Upload(new ImageUploadParams()
+        //       {
+        //           File = new FileDescription(m_testImagePath),
+        //           Categorization = "illegal"
+        //       });
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.True(res.Error.Message.StartsWith("Illegal value"));
-        }
+        //    Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+        //    Assert.True(res.Error.Message.StartsWith("Illegal value"));
+        //}
 
-        [Test]
-        public void TestCategorizationRequest()
-        {
-            //should support requesting categorization
+        //[Test]
+        //public void TestDetectionRequest()
+        //{
+        //    //should support requesting detection
 
-            var res = m_cloudinary.Upload(new ImageUploadParams()
-               {
-                   File = new FileDescription(m_testImagePath),
-                   Categorization = "illegal"
-               });
+        //    var res = m_cloudinary.Upload(new ImageUploadParams()
+        //       {
+        //           File = new FileDescription(m_testImagePath),
+        //           Detection = "illegal"
+        //       });
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.True(res.Error.Message.StartsWith("Illegal value"));
-        }
-
-        [Test]
-        public void TestDetectionRequest()
-        {
-            //should support requesting detection
-
-            var res = m_cloudinary.Upload(new ImageUploadParams()
-               {
-                   File = new FileDescription(m_testImagePath),
-                   Detection = "illegal"
-               });
-
-            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.True(res.Error.Message.StartsWith("Illegal value"));
-        }
-
-        [Test]
-        public void TestSimilaritySearchRequest()
-        {
-            //should support requesting similarity search
-
-            var res = m_cloudinary.Upload(new ImageUploadParams()
-               {
-                   File = new FileDescription(m_testImagePath),
-                   SimilaritySearch = "illegal"
-               });
-
-            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.True(res.Error.Message.StartsWith("Illegal value"));
-        }
+        //    Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+        //    Assert.True(res.Error.Message.StartsWith("Illegal value"));
+        //}
 
         [Test]
         public void TestAutoTaggingRequest()
@@ -680,7 +651,7 @@ namespace CloudinaryDotNet.Test
                 Tags = "hello"
             };
 
-            m_cloudinary.Upload(uploadParams);
+            var uploadResult = m_cloudinary.Upload(uploadParams);
 
             var result = m_cloudinary.ListResources();
 
@@ -940,7 +911,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestGetResource()
         {
-            // should allow get resource metadata
+            // should allow get resource details
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
@@ -951,7 +922,8 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult getResult = m_cloudinary.GetResource("testgetresource");
+            GetResourceResult getResult = m_cloudinary.GetResource(
+                new GetResourceParams("testgetresource") { Phash = true });
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual("testgetresource", getResult.PublicId);
@@ -960,11 +932,14 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual("jpg", getResult.Format);
             Assert.AreEqual(1, getResult.Derived.Length);
             Assert.Null(getResult.Metadata);
+            Assert.IsNotNullOrEmpty(getResult.Phash);
         }
 
         [Test]
         public void TestGetResourceWithMetadata()
         {
+            // should allow get resource metadata
+
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
@@ -1211,6 +1186,19 @@ namespace CloudinaryDotNet.Test
             return;
             HashSet<string> types = new HashSet<string>();
             string nextCursor = String.Empty;
+
+            do
+            {
+                var response = m_cloudinary.ListUploadPresets(nextCursor);
+                nextCursor = response.NextCursor;
+
+                foreach (var preset in response.Presets)
+                {
+                    m_cloudinary.DeleteUploadPreset(preset.Name);
+                }
+            } while (!String.IsNullOrEmpty(nextCursor));
+
+            HashSet<string> types = new HashSet<string>();
 
             do
             {
@@ -1725,6 +1713,204 @@ namespace CloudinaryDotNet.Test
         {
             string result = m_cloudinary.DownloadZip("api_test_custom1", null);
             Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download_tag\.zip\?api_key=\d*&signature=\w{40}&tag=api_test_custom1&timestamp=\d{10}"));
+        }
+
+        [Test]
+        public void TestListUploadPresets()
+        {
+            // should allow creating and listing upload_presets
+
+            var preset = new UploadPresetParams()
+            {
+                Name = "api_test_upload_preset",
+                Folder = "folder",
+                DisallowPublicId = true,
+                Unsigned = true,
+                AllowedFormats = new string[] { "jpg", "bmp" }
+            };
+
+            var result = m_cloudinary.CreateUploadPreset(preset);
+
+            preset = new UploadPresetParams()
+            {
+                Name = "api_test_upload_preset2",
+                Folder = "folder2",
+                Tags = "a,b,c",
+                Context = new StringDictionary("a=b", "c=d"),
+                Transformation = new Transformation().Width(100).Crop("scale"),
+                EagerTransforms = new List<object>() { new Transformation().X(100) },
+                FaceCoordinates = "1,2,3,4"
+            };
+
+            result = m_cloudinary.CreateUploadPreset(preset);
+
+            var presets = m_cloudinary.ListUploadPresets();
+
+            Assert.AreEqual(presets.Presets[0].Name, "api_test_upload_preset2");
+            Assert.AreEqual(presets.Presets[1].Name, "api_test_upload_preset");
+
+            var delResult = m_cloudinary.DeleteUploadPreset("api_test_upload_preset");
+            Assert.AreEqual("deleted", delResult.Message);
+            delResult = m_cloudinary.DeleteUploadPreset("api_test_upload_preset2");
+            Assert.AreEqual("deleted", delResult.Message);
+        }
+
+        [Test]
+        public void TestGetUploadPreset()
+        {
+            // should allow getting a single upload_preset
+
+            var tags = new string[] { "a", "b", "c" };
+
+            var @params = new UploadPresetParams()
+            {
+                Tags = String.Join(",", tags),
+                Context = new StringDictionary("a=b", "c=d"),
+                Transformation = new Transformation().Width(100).Crop("scale"),
+                EagerTransforms = new List<object>() { new Transformation().X(100) },
+                FaceCoordinates = "1,2,3,4",
+                Unsigned = true,
+                Folder = "folder",
+                AllowedFormats = new string[] { "jpg", "pdf" }
+            };
+
+            var creationResult = m_cloudinary.CreateUploadPreset(@params);
+
+            var preset = m_cloudinary.GetUploadPreset(creationResult.Name);
+
+            Assert.AreEqual(creationResult.Name, preset.Name);
+            Assert.AreEqual(true, preset.Unsigned);
+            Assert.AreEqual("folder", preset.Settings.Folder);
+            Assert.AreEqual("100", preset.Settings.Transformation[0]["width"].ToString());
+            Assert.AreEqual("scale", preset.Settings.Transformation[0]["crop"].ToString());
+
+            m_cloudinary.DeleteUploadPreset(preset.Name);
+        }
+
+        [Test]
+        public void TestDeleteUploadPreset()
+        {
+            // should allow deleting upload_presets
+
+            m_cloudinary.CreateUploadPreset(new UploadPresetParams()
+            {
+                Name = "api_test_upload_preset4",
+                Folder = "folder"
+            });
+
+            var result = m_cloudinary.DeleteUploadPreset("api_test_upload_preset4");
+
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+
+            result = m_cloudinary.DeleteUploadPreset("api_test_upload_preset4");
+
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+        }
+
+        [Test]
+        public void TestUpdateUploadPreset()
+        {
+            // should allow updating upload presets
+
+            var presetToCreate = new UploadPresetParams()
+            {
+                Folder = "folder",
+                Context = new StringDictionary("a=b", "b=c"),
+                Transformation = new Transformation().X(100),
+                EagerTransforms = new List<object>() { new Transformation().X(100).Y(100), "w_50" },
+                AllowedFormats = new string[] { "jpg", "png" },
+                Tags = "a,b,c",
+                FaceCoordinates = "1,2,3,4"
+            };
+
+            var presetName = m_cloudinary.CreateUploadPreset(presetToCreate).Name;
+
+            var preset = m_cloudinary.GetUploadPreset(presetName);
+
+            var presetToUpdate = new UploadPresetParams(preset);
+
+            presetToUpdate.Colors = true;
+            presetToUpdate.Unsigned = true;
+            presetToUpdate.DisallowPublicId = true;
+
+            var result = m_cloudinary.UpdateUploadPreset(presetToUpdate);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.AreEqual("updated", result.Message);
+
+            preset = m_cloudinary.GetUploadPreset(presetName);
+
+            Assert.NotNull(preset);
+            Assert.AreEqual(presetName, preset.Name);
+            Assert.AreEqual(true, preset.Unsigned);
+
+            // TODO: compare settings of preset and presetToUpdate
+
+            m_cloudinary.DeleteUploadPreset(preset.Name);
+        }
+
+        [Test]
+        public void TestUnsignedUpload()
+        {
+            // should support unsigned uploading using presets
+
+            var preset = m_cloudinary.CreateUploadPreset(new UploadPresetParams()
+            {
+                Folder = "upload_folder",
+                Unsigned = true
+            });
+
+            var acc = new Account(Settings.Default.CloudName);
+            var cloudinary = new Cloudinary(acc);
+
+            var upload = cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                UploadPreset = preset.Name,
+                Unsigned = true
+            });
+
+            Assert.True(upload.PublicId.StartsWith("upload_folder"));
+
+            m_cloudinary.DeleteUploadPreset(preset.Name);
+        }
+
+        [Test]
+        public void TestApiLimits()
+        {
+            // should support reporting the current API limits found in the response header
+
+            var result1 = m_cloudinary.ListTransformations();
+            var result2 = m_cloudinary.ListTransformations();
+
+            Assert.AreEqual(result2.Remaining, result1.Remaining - 1);
+            Assert.Greater(result2.Limit, result2.Remaining);
+            Assert.AreEqual(result1.Reset, result2.Reset);
+            Assert.True(result2.Reset > DateTime.Now);
+        }
+
+        [Test]
+        public void TestListResourcesStartAt()
+        {
+            // should allow listing resources by start date - make sure your clock is set correctly!!!
+
+            Thread.Sleep(2000);
+
+            DateTime start = DateTime.UtcNow;
+
+            var result =
+                m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath) });
+
+            Thread.Sleep(2000);
+
+            var resources = m_cloudinary.ListResources(
+                new ListResourcesParams() { Type = "upload", StartAt = start, Direction = "asc" });
+
+            Assert.NotNull(resources);
+            Assert.NotNull(resources.Resources);
+            Assert.True(resources.Resources.Length > 0);
+            Assert.AreEqual(result.PublicId, resources.Resources[0].PublicId);
         }
     }
 }

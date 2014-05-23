@@ -498,7 +498,7 @@ namespace CloudinaryDotNet
 
         public new string ToString()
         {
-            GetQueryString();
+            BuildQueryString();
 
             return base.Uri.AbsoluteUri;
         }
@@ -546,7 +546,7 @@ namespace CloudinaryDotNet
             }
         }
 
-        private void GetQueryString()
+        private void BuildQueryString()
         {
             if (m_queryString == null) return;
 

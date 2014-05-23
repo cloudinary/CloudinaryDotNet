@@ -31,6 +31,11 @@ namespace CloudinaryDotNet.Actions
         public int MaxResults { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to return the phash value.
+        /// </summary>
+        public bool Phash { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -54,6 +59,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "colors", Colors);
             AddParam(dict, "faces", Faces);
             AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "phash", Phash);
 
             return dict;
         }

@@ -27,6 +27,15 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Parametrized constructor
+        /// </summary>
+        /// <param name="cloud">Cloud name</param>
+        public Account(string cloud)
+        {
+            Cloud = cloud;
+        }
+
+        /// <summary>
         /// Cloud name
         /// </summary>
         public string Cloud { get; set; }

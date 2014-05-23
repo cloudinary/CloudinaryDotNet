@@ -3,10 +3,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -100,6 +96,21 @@ namespace CloudinaryDotNet.Actions
         public Error Error { get; protected set; }
 
         /// <summary>
+        /// Gets current limit of API requests until <see cref="Reset"/>.
+        /// </summary>
+        public long Limit { get; protected set; }
+
+        /// <summary>
+        /// Gets remaining amount of requests until <see cref="Reset"/>.
+        /// </summary>
+        public long Remaining { get; protected set; }
+
+        /// <summary>
+        /// Gets time of next reset of limits.
+        /// </summary>
+        public DateTime Reset { get; protected set; }
+
+        /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>
         /// <param name="response">HTTP response</param>
@@ -124,6 +135,25 @@ namespace CloudinaryDotNet.Actions
                 result = JsonConvert.DeserializeObject<T>(s);
                 result.JsonObj = JToken.Parse(s);
             }
+
+            if (response.Headers != null)
+                foreach (var header in response.Headers.AllKeys)
+                {
+                    if (header.StartsWith("X-FeatureRateLimit"))
+                    {
+                        long l;
+                        DateTime t;
+
+                        if (header.EndsWith("Limit") && long.TryParse(response.Headers[header], out l))
+                            result.Limit = l;
+
+                        if (header.EndsWith("Remaining") && long.TryParse(response.Headers[header], out l))
+                            result.Remaining = l;
+
+                        if (header.EndsWith("Reset") && DateTime.TryParse(response.Headers[header], out t))
+                            result.Reset = t;
+                    }
+                }
 
             result.StatusCode = response.StatusCode;
 

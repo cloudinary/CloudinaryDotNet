@@ -72,6 +72,115 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Creates the upload preset.
+        /// Upload presets allow you to define the default behavior for your uploads, instead of receiving these as parameters during the upload request itself. Upload presets have precedence over client-side upload parameters.
+        /// </summary>
+        /// <param name="parameters">Parameters of the upload preset.</param>
+        /// <returns></returns>
+        public UploadPresetResult CreateUploadPreset(UploadPresetParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                Add("upload_presets").
+                BuildUrl(),
+                parameters.ToParamsDictionary());
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, urlBuilder.ToString(), null, null))
+            {
+                return UploadPresetResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        /// Updates the upload preset.
+        /// Every update overwrites all the preset settings.
+        /// </summary>
+        /// <param name="parameters">New parameters for upload preset.</param>
+        /// <returns></returns>
+        public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters)
+        {
+            var @params = parameters.ToParamsDictionary();
+            @params.Remove("name");
+
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV
+                .Add("upload_presets")
+                .Add(parameters.Name)
+                .BuildUrl(),
+                @params);
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.PUT, urlBuilder.ToString(), null, null))
+            {
+                return UploadPresetResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        /// Gets the upload preset.
+        /// </summary>
+        /// <param name="name">Name of the upload preset.</param>
+        /// <returns></returns>
+        public GetUploadPresetResult GetUploadPreset(string name)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV
+                .Add("upload_presets")
+                .Add(name)
+                .BuildUrl());
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.GET, urlBuilder.ToString(), null, null))
+            {
+                return GetUploadPresetResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        /// Lists upload presets.
+        /// </summary>
+        /// <returns></returns>
+        public ListUploadPresetsResult ListUploadPresets(string nextCursor = null)
+        {
+            return ListUploadPresets(new ListUploadPresetsParams() { NextCursor = nextCursor });
+        }
+
+        /// <summary>
+        /// Lists upload presets.
+        /// </summary>
+        /// <returns></returns>
+        public ListUploadPresetsResult ListUploadPresets(ListUploadPresetsParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV
+                .Add("upload_presets")
+                .BuildUrl(),
+                parameters.ToParamsDictionary());
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.GET, urlBuilder.ToString(), null, null))
+            {
+                return ListUploadPresetsResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the upload preset.
+        /// </summary>
+        /// <param name="name">Name of the upload preset.</param>
+        /// <returns></returns>
+        public DeleteUploadPresetResult DeleteUploadPreset(string name)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV
+                .Add("upload_presets")
+                .Add(name)
+                .BuildUrl());
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.DELETE, urlBuilder.ToString(), null, null))
+            {
+                return DeleteUploadPresetResult.Parse(response);
+            }
+        }
+
+        /// <summary>
         /// Uploads an image file to cloudinary.
         /// </summary>
         /// <param name="parameters">Parameters of image uploading .</param>

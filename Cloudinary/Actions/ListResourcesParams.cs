@@ -49,6 +49,11 @@ namespace CloudinaryDotNet.Actions
         public string Direction { get; set; }
 
         /// <summary>
+        /// List resources uploaded later than <see cref="StartAt"/>.
+        /// </summary>
+        public DateTime StartAt { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -67,6 +72,7 @@ namespace CloudinaryDotNet.Actions
             if (MaxResults > 0)
                 AddParam(dict, "max_results", MaxResults.ToString());
 
+            AddParam(dict, "start_at", StartAt);
             AddParam(dict, "next_cursor", NextCursor);
             AddParam(dict, "tags", Tags);
             AddParam(dict, "moderations", Moderations);

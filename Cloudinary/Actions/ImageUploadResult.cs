@@ -40,6 +40,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "colors")]
         public string[][] Colors { get; protected set; }
 
+        [DataMember(Name = "phash")]
+        public string Phash { get; protected set; }
+
         /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>

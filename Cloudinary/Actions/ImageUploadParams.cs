@@ -11,6 +11,15 @@ namespace CloudinaryDotNet.Actions
     public class ImageUploadParams : RawUploadParams
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ImageUploadParams"/> class.
+        /// </summary>
+        public ImageUploadParams()
+        {
+            Overwrite = null;
+            UniqueFilename = null;
+        }
+
+        /// <summary>
         /// An optional format to convert the uploaded image to before saving in the cloud. For example: "jpg".
         /// </summary>
         public string Format { get; set; }
@@ -37,17 +46,17 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Whether to retrieve the Exif metadata of the uploaded photo. Default: false.
         /// </summary>
-        public bool Exif { get; set; }
+        public bool? Exif { get; set; }
 
         /// <summary>
         /// Whether to retrieve predominant colors and color histogram of the uploaded image. Default: false.
         /// </summary>
-        public bool Colors { get; set; }
+        public bool? Colors { get; set; }
 
         /// <summary>
         /// Whether to retrieve a list of coordinates of automatically detected faces in the uploaded photo. Default: false.
         /// </summary>
-        public bool Faces { get; set; }
+        public bool? Faces { get; set; }
 
         /// <summary>
         /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>/>.
@@ -57,12 +66,12 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
-        public bool Metadata { get; set; }
+        public bool? Metadata { get; set; }
 
         /// <summary>
         /// Whether to generate the eager transformations asynchronously in the background after the upload request is completed rather than online as part of the upload call. Default: false.
         /// </summary>
-        public bool EagerAsync { get; set; }
+        public bool? EagerAsync { get; set; }
 
         /// <summary>
         /// An HTTP URL to send notification to (a webhook) when the generation of eager transformations is completed.
@@ -89,9 +98,24 @@ namespace CloudinaryDotNet.Actions
         public string Ocr { get; set; }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Optional. Allows to use an upload preset for setting parameters of this upload.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        public string UploadPreset { get; set; }
+
+        /// <summary>
+        /// Optional. Allows to send unsigned request. Requires setting appropriate <see cref="UploadPreset"/>.
+        /// </summary>
+        public bool? Unsigned { get; set; }
+
+        /// <summary>
+        /// Gets or sets the phash flag.
+        /// </summary>
+        public bool? Phash { get; set; }
+
+        /// <summary>
+        /// Maps object model to dictionary of parameters in cloudinary notation.
+        /// </summary>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -107,6 +131,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "detection", Detection);
             AddParam(dict, "ocr", Ocr);
             AddParam(dict, "similarity_search", SimilaritySearch);
+            AddParam(dict, "upload_preset", UploadPreset);
+            AddParam(dict, "unsigned", Unsigned);
+            AddParam(dict, "phash", Phash);
 
             if (AutoTagging.HasValue)
                 AddParam(dict, "auto_tagging", AutoTagging.Value);

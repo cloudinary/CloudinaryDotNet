@@ -86,7 +86,7 @@ namespace CloudinaryDotNet.Actions
         /// <value>
         ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
         /// </value>
-        public bool Invalidate { get; set; }
+        public bool? Invalidate { get; set; }
 
         /// <summary>
         /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'. For example 'X-Robots-Tag: noindex'.
@@ -96,17 +96,17 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Whether to use the original file name of the uploaded image if available for the public ID. The file name is normalized and random characters are appended to ensure uniqueness. Default: false.
         /// </summary>
-        public bool UseFilename { get; set; }
+        public bool? UseFilename { get; set; }
 
         /// <summary>
         /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at the end of the filename that guarantee its uniqueness.
         /// </summary>
-        public bool UniqueFilename { get; set; }
+        public bool? UniqueFilename { get; set; }
 
         /// <summary>
         /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments (setting the 'flags' transformation parameter to 'attachment'). Default: false.
         /// </summary>
-        public bool DiscardOriginalFilename { get; set; }
+        public bool? DiscardOriginalFilename { get; set; }
 
         /// <summary>
         /// An HTTP URL to send notification to (a webhook) when the upload is completed.
@@ -126,7 +126,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Whether to overwrite existing resources with the same public ID.
         /// </summary>
-        public bool Overwrite { get; set; }
+        public bool? Overwrite { get; set; }
 
         /// <summary>
         /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the Aspose Document Conversion add-on.
@@ -149,9 +149,9 @@ namespace CloudinaryDotNet.Actions
         public string Moderation { get; set; }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             var dict = base.ToParamsDictionary();
@@ -160,7 +160,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "use_filename", UseFilename);
             AddParam(dict, "moderation", Moderation);
 
-            if (UseFilename)
+            if (UseFilename.HasValue && UseFilename.Value)
                 AddParam(dict, "unique_filename", UniqueFilename);
 
             if (AllowedFormats != null)
@@ -171,8 +171,8 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "notification_url", NotificationUrl);
             AddParam(dict, "proxy", Proxy);
             AddParam(dict, "folder", Folder);
-            AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "raw_convert", RawConvert);
+            AddParam(dict, "overwrite", Overwrite);
 
             if (Context != null && Context.Count > 0)
             {

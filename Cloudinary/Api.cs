@@ -32,6 +32,20 @@ namespace CloudinaryDotNet
         public bool UsePrivateCdn;
         public string PrivateCdn;
 
+        /// <summary>
+        /// Sets whether to use the use chunked encoding <seealso cref="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1"/>.
+        /// Server must support HTTP/1.1 in order to use the chunked encoding.
+        /// </summary>
+        public bool UseChunkedEncoding = true;
+
+        /// <summary>
+        /// Maximum size of chunk when uploading a file.
+        /// </summary>
+        public int ChunkSize = 65000;
+
+        /// <summary>
+        /// Initializes the <see cref="Api"/> class.
+        /// </summary>
         static Api()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -262,12 +276,17 @@ namespace CloudinaryDotNet
 
             if (method == HttpMethod.POST && parameters != null)
             {
+                if (UseChunkedEncoding)
+                    request.SendChunked = true;
+
                 request.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
-                FinalizeUploadParameters(parameters);
+
+                if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+                    FinalizeUploadParameters(parameters);
 
                 using (Stream requestStream = request.GetRequestStream())
                 {
-                    using (StreamWriter writer = new StreamWriter(requestStream) { AutoFlush = true })
+                    using (StreamWriter writer = new StreamWriter(requestStream))
                     {
                         foreach (var param in parameters)
                         {
@@ -545,9 +564,11 @@ namespace CloudinaryDotNet
             writer.WriteLine("Content-Type: application/octet-stream");
             writer.WriteLine();
 
+            writer.Flush();
+
             bytesSent = 0;
             int toSend = 0;
-            byte[] buf = new byte[4096];
+            byte[] buf = new byte[ChunkSize];
             int cnt = 0;
 
             while ((toSend = length - bytesSent) > 0
