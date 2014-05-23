@@ -1184,7 +1184,7 @@ namespace CloudinaryDotNet.Test
         public void DeleteAllInLoop()
         {
             return;
-            HashSet<string> types = new HashSet<string>();
+
             string nextCursor = String.Empty;
 
             do
