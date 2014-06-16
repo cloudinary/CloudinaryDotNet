@@ -40,6 +40,10 @@
   <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">
     <DefineConstants>NET40</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Sign)' == 'true' ">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\CloudinaryDotNet.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
       <HintPath Condition=" '$(TargetFrameworkVersion)' == 'v3.5' ">..\packages\Newtonsoft.Json.4.5.11\lib\net35\Newtonsoft.Json.dll</HintPath>
