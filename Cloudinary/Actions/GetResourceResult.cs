@@ -76,6 +76,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "phash")]
         public string Phash { get; protected set; }
 
+        [DataMember(Name = "predominant")]
+        public Predominant Predominant { get; set; }
+
         /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>
@@ -85,6 +88,13 @@ namespace CloudinaryDotNet.Actions
         {
             return Parse<GetResourceResult>(response);
         }
+    }
+
+    [DataContract]
+    public class Predominant
+    {
+        [DataMember(Name = "google")]
+        public object[][] Google { get; set; }
     }
 
     [DataContract]
