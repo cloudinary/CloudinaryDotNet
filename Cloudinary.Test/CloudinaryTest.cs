@@ -793,7 +793,7 @@ namespace CloudinaryDotNet.Test
 
             var requestParams = new ListResourcesByModerationParams()
             {
-                MaxResults = 1000,
+                MaxResults = 500,
                 ModerationKind = "manual",
             };
 
@@ -1205,7 +1205,7 @@ namespace CloudinaryDotNet.Test
                 var listParams = new ListResourcesParams()
                 {
                     NextCursor = nextCursor,
-                    MaxResults = 1000
+                    MaxResults = 500
                 };
 
                 var existingResources = m_cloudinary.ListResources(listParams);
