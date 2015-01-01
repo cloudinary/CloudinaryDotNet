@@ -24,7 +24,7 @@ namespace CloudinaryDotNet
         string m_privateCdn;
         string m_version;
         string m_cName;
-        bool m_cSubDomain;
+        bool m_useSubDomain;
 
         List<string> m_customParts = new List<string>();
 
@@ -132,15 +132,15 @@ namespace CloudinaryDotNet
             return this;
         }
 
-        public Url PrivateCdn(bool privateCdn)
+        public Url PrivateCdn(bool usePrivateCdn)
         {
-            m_usePrivateCdn = privateCdn;
+            m_usePrivateCdn = usePrivateCdn;
             return this;
         }
 
-        public Url CSubDomain(bool cSubDomain)
+        public Url CSubDomain(bool useSubDomain)
         {
-            m_cSubDomain = cSubDomain;
+            m_useSubDomain = useSubDomain;
             return this;
         }
 
@@ -245,6 +245,12 @@ namespace CloudinaryDotNet
                     privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Cloudinary.SHARED_CDN;
                 }
                 sharedDomain |= privateCdn == Cloudinary.SHARED_CDN;
+
+                if (sharedDomain && m_useSubDomain)
+                    privateCdn = privateCdn.Replace(
+                        "res.cloudinary.com",
+                        "res-" + Shard(source) + ".cloudinary.com");
+
                 prefix = String.Format("https://{0}", privateCdn);
             }
             else
@@ -253,13 +259,17 @@ namespace CloudinaryDotNet
                 {
                     prefix = m_cloudinaryAddr;
                 }
+                else if (m_cName != null)
+                {
+                    string subDomain = m_useSubDomain ? "a" + Shard(source) + "." : String.Empty;
+                    prefix = "http://" + subDomain + m_cName;
+                }
                 else
                 {
-                    uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(source));
-                    string subDomain = m_cSubDomain ? "a" + ((hash % 5 + 5) % 5 + 1) + "." : String.Empty;
-                    string host = m_cName != null ? m_cName : (m_usePrivateCdn ? m_cloudName + "-" : String.Empty) + m_cloudinaryAddr;
+                    string subDomain = m_useSubDomain ? "-" + Shard(source) : String.Empty;
+                    string host = (m_usePrivateCdn ? m_cloudName + "-" : String.Empty) + "res" + subDomain + ".cloudinary.com";
 
-                    prefix = "http://" + subDomain + host;
+                    prefix = "http://" + host;
                 }
             }
 
@@ -296,7 +306,7 @@ namespace CloudinaryDotNet
                 if (m_signProvider == null)
                     throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
 
-                var signedPart = String.Join("/", new string[] { transformationStr, version, source });
+                var signedPart = String.Join("/", new string[] { transformationStr, source });
                 signedPart = Regex.Replace(signedPart, "^/+", String.Empty);
                 signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
                 signedPart = Regex.Replace(signedPart, "/$", String.Empty);
@@ -314,6 +324,12 @@ namespace CloudinaryDotNet
             uriStr = Regex.Replace(uriStr, "/$", String.Empty);
 
             return uriStr;
+        }
+
+        private static string Shard(string input)
+        {
+            uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
+            return ((hash % 5 + 5) % 5 + 1).ToString();
         }
 
         private static string Decode(string input)

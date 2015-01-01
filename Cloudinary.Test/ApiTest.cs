@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using CloudinaryDotNet.Actions;
+﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.Web;
 
 namespace CloudinaryDotNet.Test
@@ -82,6 +82,20 @@ namespace CloudinaryDotNet.Test
 
             string uri = m_api.UrlImgUp.Secure(true).PrivateCdn(true).SecureDistribution("something.cloudfront.net").BuildUrl("test");
             Assert.AreEqual("https://something.cloudfront.net/image/upload/test", uri);
+        }
+
+        [Test]
+        public void TestHttpsSharding()
+        {
+            var uri = m_api.UrlImgUp.Secure(true).CSubDomain(true).BuildUrl("image.jpg");
+            Assert.AreEqual("https://res-5.cloudinary.com/testcloud/image/upload/image.jpg", uri);
+        }
+
+        [Test]
+        public void TestHttpSharding()
+        {
+            var uri = m_api.UrlImgUp.CSubDomain(true).BuildUrl("image.jpg");
+            Assert.AreEqual("http://res-5.cloudinary.com/testcloud/image/upload/image.jpg", uri);
         }
 
         [Test]
@@ -667,7 +681,7 @@ namespace CloudinaryDotNet.Test
 
             var api = new Api("cloudinary://a:b@test123");
 
-            var expected = "http://res.cloudinary.com/test123/image/upload/s--MaRXzoEC--/c_crop,h_20,w_10/v1234/image.jpg";
+            var expected = "http://res.cloudinary.com/test123/image/upload/s--Ai4Znfl3--/c_crop,h_20,w_10/v1234/image.jpg";
             var actual = api.UrlImgUp.Version("1234")
                     .Transform(new Transformation().Crop("crop").Width(10).Height(20))
                     .Signed(true)
@@ -675,7 +689,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(expected, actual);
 
-            expected = "http://res.cloudinary.com/test123/image/upload/s--ZlgFLQcO--/v1234/image.jpg";
+            expected = "http://res.cloudinary.com/test123/image/upload/s----SjmNDA--/v1234/image.jpg";
             actual = api.UrlImgUp.Version("1234")
                     .Signed(true)
                     .BuildUrl("image.jpg");
@@ -690,7 +704,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(expected, actual);
 
-            expected = "http://res.cloudinary.com/test123/image/upload/s--qjq_PXhy--/c_crop,h_20,w_1/v1/image.jpg";
+            expected = "http://res.cloudinary.com/test123/image/upload/s--eMXgzFAO--/c_crop,h_20,w_1/v1/image.jpg";
             actual = api.UrlImgUp.Version("1")
                     .Transform(new Transformation().Crop("crop").Width(1).Height(20))
                     .Signed(true)
