@@ -49,6 +49,11 @@ namespace CloudinaryDotNet.Actions
         public string Categorization { get; set; }
 
         /// <summary>
+        /// Set to "remove_the_background" to remove the background from the image.
+        /// </summary>
+        public string BackgroundRemoval { get; set; }
+
+        /// <summary>
         /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
         /// </summary>
         public float? AutoTagging { get; set; }
@@ -94,6 +99,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "detection", Detection);
             AddParam(dict, "ocr", Ocr);
             AddParam(dict, "similarity_search", SimilaritySearch);
+            AddParam(dict, "background_removal", BackgroundRemoval);
 
             if (ModerationStatus != Actions.ModerationStatus.Pending)
                 AddParam(dict, "moderation_status", Api.GetCloudinaryParam<ModerationStatus>(ModerationStatus));

@@ -84,6 +84,11 @@ namespace CloudinaryDotNet.Actions
         public string Categorization { get; set; }
 
         /// <summary>
+        /// Set to "remove_the_background" to remove the background from the image.
+        /// </summary>
+        public string BackgroundRemoval { get; set; }
+
+        /// <summary>
         /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
         /// </summary>
         public float? AutoTagging { get; set; }
@@ -134,6 +139,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "upload_preset", UploadPreset);
             AddParam(dict, "unsigned", Unsigned);
             AddParam(dict, "phash", Phash);
+            AddParam(dict, "background_removal", BackgroundRemoval);
 
             if (AutoTagging.HasValue)
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
