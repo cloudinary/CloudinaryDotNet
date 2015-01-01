@@ -26,7 +26,6 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
-        /// Invalidate is only supported when deleting a single resource, not when deleting in bulk.
         /// </summary>
         public bool Invalidate { get; set; }
 
