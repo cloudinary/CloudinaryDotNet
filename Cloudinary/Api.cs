@@ -35,7 +35,7 @@ namespace CloudinaryDotNet
         public string Suffix;
 
         /// <summary>
-        /// Sets whether to use the use chunked encoding <seealso cref="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1"/>.
+        /// Sets whether to use the use chunked encoding. See http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1 for further info.
         /// Server must support HTTP/1.1 in order to use the chunked encoding.
         /// </summary>
         public bool UseChunkedEncoding = true;
@@ -124,6 +124,9 @@ namespace CloudinaryDotNet
             Account = account;
         }
 
+        /// <summary>
+        /// Cloudinary account information.
+        /// </summary>
         public Account Account { get; private set; }
 
         /// <summary>
@@ -338,19 +341,6 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Builds HTML form
-        /// </summary>
-        /// <returns>HTML form</returns>
-#if NET40
-        public IHtmlString BuildUploadForm(string field, string resourceType)
-#else
-        public string BuildUploadForm(string field, string resourceType)
-#endif
-        {
-            return BuildUploadForm(field, resourceType, null, null);
-        }
-
-        /// <summary>
         /// Signs and serializes upload parameters.
         /// </summary>
         /// <param name="parameters">Dictionary of upload parameters.</param>
@@ -370,7 +360,8 @@ namespace CloudinaryDotNet
             }
             catch (HttpException) { }
 
-            FinalizeUploadParameters(parameters);
+            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+                FinalizeUploadParameters(parameters);
 
             return JsonConvert.SerializeObject(parameters);
         }
@@ -410,19 +401,41 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <returns>HTML form</returns>
 #if NET40
-        public IHtmlString BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters, Dictionary<string, string> htmlOptions)
+        public IHtmlString BuildUnsignedUploadForm(string field, string preset, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
 #else
-        public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters, Dictionary<string, string> htmlOptions)
+        public string BuildUnsignedUploadForm(string field, string preset, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+#endif
+        {
+            if (parameters == null)
+                parameters = new SortedDictionary<string, object>();
+
+            parameters.Add("upload_preset", preset);
+            parameters.Add("unsigned", true);
+
+            return BuildUploadForm(field, "image", parameters, htmlOptions);
+        }
+
+        /// <summary>
+        /// Builds HTML form
+        /// </summary>
+        /// <returns>HTML form</returns>
+#if NET40
+        public IHtmlString BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+#else
+        public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
 #endif
         {
             if (htmlOptions == null)
                 htmlOptions = new Dictionary<string, string>();
 
+            if (String.IsNullOrEmpty(resourceType))
+                resourceType = "auto";
+
             StringBuilder builder = new StringBuilder();
 
             builder.
                 Append("<input type='file' name='file' data-url='").
-                Append(GetUploadUrl()).
+                Append(GetUploadUrl(resourceType)).
                 Append("' data-form-data='").
                 Append(PrepareUploadParams(parameters)).
                 Append("' data-cloudinary-field='").
