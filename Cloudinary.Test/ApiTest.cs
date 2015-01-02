@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace CloudinaryDotNet.Test
@@ -711,6 +712,119 @@ namespace CloudinaryDotNet.Test
                     .BuildUrl("image.jpg");
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "Root path only supported in private CDN!")]
+        public void TestDisallowUseRootPathInSharedDistribution()
+        {
+            m_api.UrlImgUp.UseRootPath(true).BuildUrl("test");
+        }
+
+        [Test]
+        public void TestSupportUseRootPathForPrivateCdn()
+        {
+            var actual = m_api.UrlImgUp.PrivateCdn(true).UseRootPath(true).BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/test", actual);
+
+            actual = m_api.UrlImgUp.PrivateCdn(true).Transform(new Transformation().Angle(0)).UseRootPath(true).BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/a_0/test", actual);
+        }
+
+        [Test]
+        public void TestSupportUseRootPathTogetherWithUrlSuffixForPrivateCdn()
+        {
+            var actual = m_api.UrlImgUp.PrivateCdn(true).Suffix("hello").UseRootPath(true).BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/test/hello", actual);
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "Root path only supported for image/upload!")]
+        public void TestDisallowUseRootPathIfNotImageUploadForFacebook()
+        {
+            m_api.UrlImgUp.UseRootPath(true).PrivateCdn(true).Action("facebook").BuildUrl("test");
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "Root path only supported for image/upload!")]
+        public void TestDisallowUseRootPathIfNotImageUploadForRaw()
+        {
+            m_api.UrlImgUp.UseRootPath(true).PrivateCdn(true).ResourceType("raw").BuildUrl("test");
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "URL Suffix only supported in private CDN!")]
+        public void TestDisallowUrlSuffixInSharedDistribution()
+        {
+            m_api.UrlImgUp.Suffix("hello").BuildUrl("test");
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "URL Suffix only supported for image/upload and raw/upload!")]
+        public void TestDisallowUrlSuffixInNonUploadTypes()
+        {
+            m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).Action("facebook").BuildUrl("test");
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(ArgumentException), ExpectedMessage = "Suffix should not include . or /!")]
+        public void TestDisallowUrlSuffixWithSlash()
+        {
+            m_api.UrlImgUp.Suffix("hello/world").PrivateCdn(true).BuildUrl("test");
+        }
+
+        [Test]
+        [ExpectedException(ExpectedException = typeof(ArgumentException), ExpectedMessage = "Suffix should not include . or /!")]
+        public void TestDisallowUrlSuffixWithDot()
+        {
+            m_api.UrlImgUp.Suffix("hello.world").PrivateCdn(true).BuildUrl("test");
+        }
+
+        [Test]
+        public void TestSupportUrlSuffixForPrivateCdn()
+        {
+            string actual = m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/images/test/hello", actual);
+
+            actual = m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).Transform(new Transformation().Angle(0)).BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/images/a_0/test/hello", actual);
+        }
+
+        [Test]
+        public void TestPutFormatAfterUrlSuffix()
+        {
+            string actual = m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).Format("jpg").BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/images/test/hello.jpg", actual);
+        }
+
+        [Test]
+        public void TestNotSignTheUrlSuffix()
+        {
+            var r = new Regex("s--[0-9A-Za-z_-]{8}--", RegexOptions.Compiled);
+
+            string url = m_api.UrlImgUp.Format("jpg").Signed(true).BuildUrl("test");
+            var match = r.Match(url);
+
+            Assert.IsTrue(match.Success);
+
+            string actual = m_api.UrlImgUp.Format("jpg").PrivateCdn(true).Signed(true).Suffix("hello").BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/images/" + match.Value + "/test/hello.jpg", actual);
+
+            url = m_api.UrlImgUp.Format("jpg").Signed(true).Transform(new Transformation().Angle(0)).BuildUrl("test");
+            match = r.Match(url);
+
+            Assert.IsTrue(match.Success);
+
+            actual = m_api.UrlImgUp.Format("jpg").PrivateCdn(true).Signed(true).Suffix("hello").Transform(new Transformation().Angle(0)).BuildUrl("test");
+
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/images/" + match.Value + "/a_0/test/hello.jpg", actual);
+        }
+
+        [Test]
+        public void TestSupportUrlSuffixForRawUploads()
+        {
+            string actual = m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).ResourceType("raw").BuildUrl("test");
+            Assert.AreEqual("http://testcloud-res.cloudinary.com/files/test/hello", actual);
         }
     }
 }

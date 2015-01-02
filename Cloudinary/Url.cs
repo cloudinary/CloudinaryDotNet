@@ -21,6 +21,8 @@ namespace CloudinaryDotNet
         bool m_secure;
         bool m_usePrivateCdn;
         bool m_signed;
+        bool m_useRootPath;
+        string m_suffix;
         string m_privateCdn;
         string m_version;
         string m_cName;
@@ -144,6 +146,18 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        public Url UseRootPath(bool useRootPath)
+        {
+            m_useRootPath = useRootPath;
+            return this;
+        }
+
+        public Url Suffix(string suffix)
+        {
+            m_suffix = suffix;
+            return this;
+        }
+
         public Transformation Transformation
         {
             get
@@ -208,7 +222,19 @@ namespace CloudinaryDotNet
             if (String.IsNullOrEmpty(m_cloudName))
                 throw new ArgumentException("cloudName must be specified!");
 
+            if (!m_usePrivateCdn && m_useRootPath)
+                throw new NotSupportedException("Root path only supported in private CDN!");
+
+            if (!m_usePrivateCdn && !String.IsNullOrEmpty(m_suffix))
+                throw new NotSupportedException("URL Suffix only supported in private CDN!");
+
             if (source == null) return null;
+
+            if (Regex.IsMatch(source.ToLower(), "^https?:/.*") &&
+                (m_action == "upload" || m_action == "asset"))
+            {
+                return source;
+            }
 
             if (m_action == "fetch" && !String.IsNullOrEmpty(FormatValue))
             {
@@ -218,25 +244,93 @@ namespace CloudinaryDotNet
 
             string transformationStr = Transformation.Generate();
 
+            var src = UpdateSource(source);
+
+            bool sharedDomain;
+            var prefix = GetPrefix(src.Source, out sharedDomain);
+
+            List<string> urlParts = new List<string>(new string[] { prefix });
+            if (!String.IsNullOrEmpty(m_apiVersion))
+            {
+                urlParts.Add(m_apiVersion);
+                urlParts.Add(m_cloudName);
+            }
+            else if (sharedDomain)
+            {
+                urlParts.Add(m_cloudName);
+            }
+
+            UpdateAction();
+
+            urlParts.Add(m_resourceType);
+            urlParts.Add(m_action);
+            urlParts.AddRange(m_customParts);
+
+            if (src.SourceToSign.Contains("/") && !Regex.IsMatch(src.SourceToSign, "^v[0-9]+/") && !Regex.IsMatch(src.SourceToSign, "https?:/.*") && String.IsNullOrEmpty(m_version))
+            {
+                m_version = "1";
+            }
+
+            var version = String.IsNullOrEmpty(m_version) ? String.Empty : String.Format("v{0}", m_version);
+
+            if (m_signed)
+            {
+                if (m_signProvider == null)
+                    throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
+
+                var signedPart = String.Join("/", new string[] { transformationStr, src.SourceToSign });
+                signedPart = Regex.Replace(signedPart, "^/+", String.Empty);
+                signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
+                signedPart = Regex.Replace(signedPart, "/$", String.Empty);
+
+                signedPart = m_signProvider.SignUriPart(signedPart);
+                urlParts.Add(signedPart);
+            }
+
+            urlParts.Add(transformationStr);
+            urlParts.Add(version);
+            urlParts.Add(src.Source);
+
+            string uriStr = String.Join("/", urlParts.ToArray());
+            uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
+            uriStr = Regex.Replace(uriStr, "/$", String.Empty);
+
+            return uriStr;
+        }
+
+        private CSource UpdateSource(string source)
+        {
+            CSource src = null;
+
             if (Regex.IsMatch(source.ToLower(), "^https?:/.*"))
             {
-                if (m_action == "upload" || m_action == "asset")
-                {
-                    return source;
-                }
-                source = Encode(source);
+                src = new CSource(Encode(source));
             }
             else
             {
-                source = Encode(Decode(source));
+                src = new CSource(Encode(Decode(source)));
+
+                if (!String.IsNullOrEmpty(m_suffix))
+                {
+                    if (Regex.IsMatch(m_suffix, "[\\./]"))
+                        throw new ArgumentException("Suffix should not include . or /!");
+
+                    src.Source += "/" + m_suffix;
+                }
+
                 if (!String.IsNullOrEmpty(FormatValue))
                 {
-                    source += "." + FormatValue;
+                    src += "." + FormatValue;
                 }
             }
 
+            return src;
+        }
+
+        private string GetPrefix(string source, out bool sharedDomain)
+        {
             string prefix;
-            bool sharedDomain = !m_usePrivateCdn;
+            sharedDomain = !m_usePrivateCdn;
             string privateCdn = m_privateCdn;
             if (m_secure)
             {
@@ -273,15 +367,41 @@ namespace CloudinaryDotNet
                 }
             }
 
-            List<string> urlParts = new List<string>(new string[] { prefix });
-            if (!String.IsNullOrEmpty(m_apiVersion))
+            return prefix;
+        }
+
+        private void UpdateAction()
+        {
+            if (!String.IsNullOrEmpty(m_suffix))
             {
-                urlParts.Add(m_apiVersion);
-                urlParts.Add(m_cloudName);
+                if (m_resourceType == "image" && m_action == "upload")
+                {
+                    m_resourceType = "images";
+                    m_action = null;
+                }
+                else if (m_resourceType == "raw" && m_action == "upload")
+                {
+                    m_resourceType = "files";
+                    m_action = null;
+                }
+                else
+                {
+                    throw new NotSupportedException("URL Suffix only supported for image/upload and raw/upload!");
+                }
             }
-            else if (sharedDomain)
+
+            if (m_useRootPath)
             {
-                urlParts.Add(m_cloudName);
+                if (m_resourceType == "image" && m_action == "upload"
+                    || m_resourceType == "images" && String.IsNullOrEmpty(m_action))
+                {
+                    m_resourceType = String.Empty;
+                    m_action = String.Empty;
+                }
+                else
+                {
+                    throw new NotSupportedException("Root path only supported for image/upload!");
+                }
             }
 
             if (m_shorten && m_resourceType == "image" && m_action == "upload")
@@ -289,41 +409,6 @@ namespace CloudinaryDotNet
                 m_resourceType = String.Empty;
                 m_action = "iu";
             }
-
-            urlParts.Add(m_resourceType);
-            urlParts.Add(m_action);
-            urlParts.AddRange(m_customParts);
-
-            if (source.Contains("/") && !Regex.IsMatch(source, "^v[0-9]+/") && !Regex.IsMatch(source, "https?:/.*") && String.IsNullOrEmpty(m_version))
-            {
-                m_version = "1";
-            }
-
-            var version = String.IsNullOrEmpty(m_version) ? String.Empty : String.Format("v{0}", m_version);
-
-            if (m_signed)
-            {
-                if (m_signProvider == null)
-                    throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
-
-                var signedPart = String.Join("/", new string[] { transformationStr, source });
-                signedPart = Regex.Replace(signedPart, "^/+", String.Empty);
-                signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
-                signedPart = Regex.Replace(signedPart, "/$", String.Empty);
-
-                signedPart = m_signProvider.SignUriPart(signedPart);
-                urlParts.Add(signedPart);
-            }
-
-            urlParts.Add(transformationStr);
-            urlParts.Add(version);
-            urlParts.Add(source);
-
-            string uriStr = String.Join("/", urlParts.ToArray());
-            uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
-            uriStr = Regex.Replace(uriStr, "/$", String.Empty);
-
-            return uriStr;
         }
 
         private static string Shard(string input)
@@ -632,5 +717,24 @@ namespace CloudinaryDotNet
                 table[i] = temp;
             }
         }
+    }
+
+    class CSource
+    {
+        public CSource(string source)
+        {
+            SourceToSign = Source = source;
+        }
+
+        public static CSource operator +(CSource src, string value)
+        {
+            src.Source += value;
+            src.SourceToSign += value;
+
+            return src;
+        }
+
+        public string Source;
+        public string SourceToSign;
     }
 }

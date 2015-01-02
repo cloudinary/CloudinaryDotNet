@@ -29,8 +29,10 @@ namespace CloudinaryDotNet
 
         public bool CSubDomain;
         public bool ShortenUrl;
+        public bool UseRootPath;
         public bool UsePrivateCdn;
         public string PrivateCdn;
+        public string Suffix;
 
         /// <summary>
         /// Sets whether to use the use chunked encoding <seealso cref="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1"/>.
@@ -156,9 +158,11 @@ namespace CloudinaryDotNet
         {
             get
             {
-                return Url.
-                    ResourceType("image").
-                    Action("upload");
+                return Url
+                    .ResourceType("image")
+                    .Action("upload")
+                    .UseRootPath(UseRootPath)
+                    .Suffix(Suffix);
             }
         }
 
