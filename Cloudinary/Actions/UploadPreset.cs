@@ -295,7 +295,7 @@ namespace CloudinaryDotNet.Actions
         public string Categorization { get; set; }
 
         /// <summary>
-        /// By providing the AutoTagging parameter, uploaded images are automatically assigned tags based on the detected scene categories. The value of the AutoTagging parameter is the minimum score of a detected category that should be automatically used as an assigned tag. <seealso cref="http://cloudinary.com/documentation/rekognition_scene_categorization_addon#automatic_image_tagging"/>
+        /// By providing the AutoTagging parameter, uploaded images are automatically assigned tags based on the detected scene categories. The value of the AutoTagging parameter is the minimum score of a detected category that should be automatically used as an assigned tag. See http://cloudinary.com/documentation/rekognition_scene_categorization_addon#automatic_image_tagging for comments.
         /// </summary>
         public float? AutoTagging { get; set; }
 

@@ -127,7 +127,6 @@ namespace CloudinaryDotNet.Actions
     {
         /// <summary>
         /// Find all resources that their public ID starts with the given prefix.
-        /// Does not effect if <see cref="PublicIds"/> is set.
         /// </summary>
         public string Prefix { get; set; }
 

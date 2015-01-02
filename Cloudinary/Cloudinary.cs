@@ -511,6 +511,7 @@ namespace CloudinaryDotNet
         /// <param name="tags">Whether to include tags in result.</param>
         /// <param name="context">Whether to include context in result.</param>
         /// <param name="type">Resource type.</param>
+        /// <param name="moderations">If true, include moderation status for each resource.</param>
         /// <param name="nextCursor">Starting position.</param>
         /// <returns></returns>
         public ListResourcesResult ListResourcesByPrefix(string prefix, bool tags, bool context, bool moderations, string type = "upload", string nextCursor = null)
