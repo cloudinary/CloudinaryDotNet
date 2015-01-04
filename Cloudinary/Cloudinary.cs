@@ -343,7 +343,7 @@ namespace CloudinaryDotNet
                         throw new WebException(String.Format(
                             "An error has occured while uploading file (status code: {0}). {1}",
                             partResult.StatusCode,
-                            partResult.Error));
+                            partResult.Error != null ? partResult.Error.Message : "Unknown error"));
 
                     if (partNumber == 1)
                     {
