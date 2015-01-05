@@ -198,6 +198,33 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Gets list of folders in the root.
+        /// </summary>
+        public GetFoldersResult RootFolders()
+        {
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.GET, m_api.ApiUrlV.Add("folders").BuildUrl(), null, null))
+            {
+                return GetFoldersResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        /// Get list of subfolders in a specified folder.
+        /// </summary>
+        public GetFoldersResult SubFolders(string folder)
+        {
+            if (String.IsNullOrEmpty(folder))
+                throw new ArgumentException("folder must be set! Please use RootFolders() to get list of folders in root!");
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.GET, m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl(), null, null))
+            {
+                return GetFoldersResult.Parse(response);
+            }
+        }
+
+        /// <summary>
         /// Gets URL to download private image
         /// </summary>
         /// <param name="publicId">The image public ID.</param>
