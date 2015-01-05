@@ -32,6 +32,20 @@ namespace CloudinaryDotNet
             m_list.Add(newItem);
         }
 
+        public string Remove(string key)
+        {
+            foreach (var item in m_list)
+            {
+                if (item.Key == key)
+                {
+                    m_list.Remove(item);
+                    return item.Value;
+                }
+            }
+
+            return null;
+        }
+
         public string this[string key]
         {
             get

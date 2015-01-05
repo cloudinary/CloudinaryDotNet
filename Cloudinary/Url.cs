@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -11,6 +9,8 @@ namespace CloudinaryDotNet
 {
     public class Url : ICloneable
     {
+        const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
         ISignProvider m_signProvider;
 
         string m_cloudName;
@@ -184,25 +184,47 @@ namespace CloudinaryDotNet
         }
 
 #if NET40
-        public IHtmlString BuildImageTag(string source, StringDictionary dict)
+        public IHtmlString BuildImageTag(string source, StringDictionary dict = null)
 #else
         public string BuildImageTag(string source, StringDictionary dict)
 #endif
         {
+            if (source == null)
+                throw new ArgumentException("source must not be null!");
+
+            if (dict == null)
+                dict = new StringDictionary();
+
             string url = BuildUrl(source);
 
-            if (!String.IsNullOrEmpty(m_transformation.HtmlWidth))
-                dict.Add("width", m_transformation.HtmlWidth);
+            if (!String.IsNullOrEmpty(Transformation.HtmlWidth))
+                dict.Add("width", Transformation.HtmlWidth);
 
-            if (!String.IsNullOrEmpty(m_transformation.HtmlHeight))
-                dict.Add("height", m_transformation.HtmlHeight);
+            if (!String.IsNullOrEmpty(Transformation.HtmlHeight))
+                dict.Add("height", Transformation.HtmlHeight);
+
+            if (Transformation.HiDpi || Transformation.IsResponsive)
+            {
+                var extraClass = Transformation.IsResponsive ? "cld-responsive" : "cld-hidpi";
+                var userClass = dict["class"];
+                dict["class"] = userClass == null ? extraClass : userClass + " " + extraClass;
+                dict.Add("data-src", url);
+                var responsivePlaceholder = dict.Remove("responsive_placeholder");
+                if (responsivePlaceholder == "blank")
+                    responsivePlaceholder = CL_BLANK;
+                url = responsivePlaceholder;
+            }
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("<img src='").Append(url).Append("'");
+            sb.Append("<img");
+            if (!String.IsNullOrEmpty(url))
+                sb.Append(" src='").Append(url).Append("'");
+
             foreach (var item in dict)
             {
                 sb.Append(" ").Append(item.Key).Append("='").Append(item.Value).Append("'");
             }
+
             sb.Append("/>");
 
 #if NET40
