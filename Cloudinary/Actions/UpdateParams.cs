@@ -40,7 +40,7 @@ namespace CloudinaryDotNet.Actions
         public string RawConvert { get; set; }
 
         /// <summary>
-        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="Rectangle"/> or <see cref="List<Rectangle>"/>.
+        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="Rectangle"/> or <see cref="List{Rectangle}"/>.
         /// </summary>
         public object FaceCoordinates { get; set; }
 
