@@ -43,6 +43,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "phash")]
         public string Phash { get; protected set; }
 
+        [DataMember(Name = "delete_token")]
+        public string DeleteToken { get; protected set; }
+
         /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>

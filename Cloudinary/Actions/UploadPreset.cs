@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -126,7 +127,7 @@ namespace CloudinaryDotNet.Actions
                 }
                 else if (preset.Settings.FaceCoordinates.Type == JTokenType.Array)
                 {
-                    var fc = new FaceCoordinates();
+                    var fc = new List<Rectangle>();
                     foreach (JToken token in preset.Settings.FaceCoordinates)
                     {
                         fc.Add(new System.Drawing.Rectangle(token[0].Value<int>(), token[1].Value<int>(), token[2].Value<int>(), token[3].Value<int>()));

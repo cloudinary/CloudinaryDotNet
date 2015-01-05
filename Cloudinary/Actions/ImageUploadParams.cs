@@ -59,9 +59,14 @@ namespace CloudinaryDotNet.Actions
         public bool? Faces { get; set; }
 
         /// <summary>
-        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>/>.
+        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="Rectangle"/> or <see cref="List<Rectangle>"/>.
         /// </summary>
         public object FaceCoordinates { get; set; }
+
+        /// <summary>
+        /// Coordinates of an interesting region contained in an uploaded image. The given coordinates are used for cropping uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates of the top left corner and the width and height of the region. For example: "85,120,220,310". Otherwise, one can use <see cref="Rectangle"/> structure.
+        /// </summary>
+        public object CustomCoordinates { get; set; }
 
         /// <summary>
         /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
@@ -103,6 +108,11 @@ namespace CloudinaryDotNet.Actions
         public string Ocr { get; set; }
 
         /// <summary>
+        /// Whether to return delete token.
+        /// </summary>
+        public bool? ReturnDeleteToken { get; set; }
+
+        /// <summary>
         /// Optional. Allows to use an upload preset for setting parameters of this upload.
         /// </summary>
         public string UploadPreset { get; set; }
@@ -140,12 +150,13 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "unsigned", Unsigned);
             AddParam(dict, "phash", Phash);
             AddParam(dict, "background_removal", BackgroundRemoval);
+            AddParam(dict, "return_delete_token", ReturnDeleteToken);
 
             if (AutoTagging.HasValue)
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
 
-            if (FaceCoordinates != null)
-                AddParam(dict, "face_coordinates", FaceCoordinates.ToString());
+            AddCoordinates(dict, "face_coordinates", FaceCoordinates);
+            AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
 
             if (Transformation != null)
                 AddParam(dict, "transformation", Transformation.Generate());
@@ -160,6 +171,7 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
+    [Obsolete("One could use List<Rectangle>")]
     public class FaceCoordinates : List<Rectangle>
     {
         public override string ToString()

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Text;  
+using System.Text;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -41,9 +42,14 @@ namespace CloudinaryDotNet.Actions
         public string Tags { get; set; }
 
         /// <summary>
-        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>/>.
+        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="Rectangle"/> or <see cref="List<Rectangle>"/>.
         /// </summary>
         public object FaceCoordinates { get; set; }
+
+        /// <summary>
+        /// Coordinates of an interesting region contained in an uploaded image. The given coordinates are used for cropping uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates of the top left corner and the width and height of the region. For example: "85,120,220,310". Otherwise, one can use <see cref="Rectangle"/> structure.
+        /// </summary>
+        public object CustomCoordinates { get; set; }
 
         /// <summary>
         /// Allows to store a set of key-value pairs together with resource.
@@ -71,10 +77,8 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "tags", Tags);
             AddParam(dict, "type", Type);
 
-            if (FaceCoordinates != null)
-            {
-                AddParam(dict, "face_coordinates", FaceCoordinates.ToString());
-            }
+            AddCoordinates(dict, "face_coordinates", FaceCoordinates);
+            AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
 
             if (EagerTransforms != null)
             {
