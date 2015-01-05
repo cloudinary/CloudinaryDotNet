@@ -28,26 +28,55 @@ namespace CloudinaryDotNet
             "o","opacity"
         };
 
+        /// <summary>
+        /// Default Device Pixel Ratio (float, integer and "auto" values are allowed").
+        /// </summary>
+        public static object DefaultDpr { get; set; }
+
+        /// <summary>
+        /// Whether to enable automatic adaptation of website images by default.
+        /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for further info.
+        /// </summary>
+        public static bool DefaultIsResponsive { get; set; }
+
+        /// <summary>
+        /// Common responsive width transformation.
+        /// </summary>
+        public static Transformation ResponsiveWidthTransform
+        {
+            get
+            {
+                if (m_responsiveWidthTransform == null)
+                    return DEFAULT_RESPONSIVE_WIDTH_TRANSFORM;
+                else
+                    return m_responsiveWidthTransform;
+            }
+            set
+            {
+                m_responsiveWidthTransform = value;
+            }
+        }
+        private static readonly Transformation DEFAULT_RESPONSIVE_WIDTH_TRANSFORM = new Transformation().Width("auto").Crop("limit");
+        private static Transformation m_responsiveWidthTransform = null;
+
         protected Dictionary<string, object> m_transformParams = new Dictionary<string, object>();
         protected List<Transformation> m_nestedTransforms = new List<Transformation>();
 
         protected string m_htmlWidth = null;
         protected string m_htmlHeight = null;
 
+        /// <summary>
+        /// Creates empty transformation object.
+        /// </summary>
         public Transformation() { }
 
+        /// <summary>
+        /// Creates transformation object chained with other transformations.
+        /// </summary>
         public Transformation(List<Transformation> transforms)
         {
             if (transforms != null)
                 m_nestedTransforms = transforms;
-        }
-
-        public Transformation(Dictionary<string, object> transformParams)
-        {
-            foreach (var key in transformParams.Keys)
-            {
-                m_transformParams.Add(key, transformParams[key]);
-            }
         }
 
         public Transformation(params string[] transformParams)
@@ -62,6 +91,22 @@ namespace CloudinaryDotNet
             }
         }
 
+        /// <summary>
+        /// Creates transformation object from single result of  <seealso cref="Actions.GetTransformResult"/>.
+        /// </summary>
+        /// <param name="transformParams">One can use an element of <seealso cref="Actions.GetTransformResult.Info"/> array.</param>
+        public Transformation(Dictionary<string, object> transformParams)
+        {
+            foreach (var key in transformParams.Keys)
+            {
+                m_transformParams.Add(key, transformParams[key]);
+            }
+        }
+
+        /// <summary>
+        /// Creates transformation object from results of <seealso cref="Actions.GetTransformResult"/>.
+        /// </summary>
+        /// <param name="dictionary">One can use <seealso cref="Actions.GetTransformResult.Info"/> array.</param>
         public Transformation(Dictionary<string, object>[] dictionary)
         {
             for (int i = 0; i < dictionary.Length; i++)
@@ -86,6 +131,9 @@ namespace CloudinaryDotNet
         {
             get { return m_nestedTransforms; }
         }
+
+        public bool HiDpi { get; private set; }
+        public bool IsResponsive { get; private set; }
 
         public Transformation Chain()
         {
@@ -127,6 +175,18 @@ namespace CloudinaryDotNet
         public Transformation Delay(object value) { return Add("delay", value); }
         public Transformation RawTransformation(string value) { return Add("raw_transformation", value); }
         public Transformation Flags(params string[] value) { return Add("flags", value); }
+
+        /// <summary>
+        /// Sets Device Pixel Ratio  (float, integer and "auto" values are allowed").
+        /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for further info.
+        /// </summary>
+        public Transformation Dpr(object value) { return Add("dpr", value); }
+
+        /// <summary>
+        /// Whether to enable automatic adaptation of website images.
+        /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for further info.
+        /// </summary>
+        public Transformation ResponsiveWidth(bool value) { return Add("responsive_width", value); }
 
         public Transformation Add(string key, object value)
         {
@@ -170,18 +230,17 @@ namespace CloudinaryDotNet
             bool hasLayer = !String.IsNullOrEmpty(GetString(m_transformParams, "overlay")) ||
                 !String.IsNullOrEmpty(GetString(m_transformParams, "underlay"));
 
-            string crop = GetString(m_transformParams, "crop");
-            String angle = String.Join(".", GetStringArray(m_transformParams, "angle"));
+            var crop = GetString(m_transformParams, "crop");
+            var angle = String.Join(".", GetStringArray(m_transformParams, "angle"));
+
+            bool isResponsive = false;
+            if (!Boolean.TryParse(GetString(m_transformParams, "responsive_width"), out isResponsive))
+                isResponsive = DefaultIsResponsive;
 
             bool no_html_sizes = hasLayer || !String.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
-            if (width != null && (Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes))
-            {
-                this.m_htmlWidth = null;
-            }
-            if (height != null && (Single.Parse(height, CultureInfo.InvariantCulture) < 1 || no_html_sizes))
-            {
-                this.m_htmlHeight = null;
-            }
+            if (width != null && (width == "auto" || Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive)) m_htmlWidth = null;
+            if (height != null && (Single.Parse(height, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
+                m_htmlHeight = null;
 
             string background = GetString(m_transformParams, "background");
             if (background != null)
@@ -219,6 +278,18 @@ namespace CloudinaryDotNet
                     parameters.Add(SimpleParams[i], GetString(m_transformParams, SimpleParams[i + 1]));
             }
 
+            var dpr = GetString(m_transformParams, "dpr") ?? ToString(DefaultDpr);
+            if (dpr != null)
+            {
+                if (dpr.ToLower() == "auto")
+                    HiDpi = true;
+
+                parameters.Add("dpr", dpr);
+            }
+
+            if (width == "auto" || isResponsive)
+                IsResponsive = true;
+
             List<string> components = new List<string>();
             foreach (var param in parameters)
             {
@@ -236,6 +307,9 @@ namespace CloudinaryDotNet
             {
                 transformations.Add(String.Join(",", components.ToArray()));
             }
+
+            if (isResponsive)
+                transformations.Add(ResponsiveWidthTransform.Generate());
 
             return String.Join("/", transformations.ToArray());
         }
@@ -263,7 +337,7 @@ namespace CloudinaryDotNet
             else
             {
                 List<string> list = new List<string>();
-                list.Add(value.ToString());
+                list.Add(ToString(value));
                 return list.ToArray();
             }
         }
@@ -271,18 +345,21 @@ namespace CloudinaryDotNet
         private string GetString(Dictionary<string, object> options, string key)
         {
             if (options.ContainsKey(key))
-            {
-                if (options[key] is Single || options[key] is Double)
-                {
-                    return String.Format(CultureInfo.InvariantCulture, "{0:0.##}", options[key]);
-                }
-                else
-                {
-                    return String.Format(CultureInfo.InvariantCulture, "{0}", options[key]);
-                }
-            }
+                return ToString(options[key]);
             else
                 return null;
+        }
+
+        private static string ToString(object obj)
+        {
+            if (obj == null) return null;
+
+            if (obj is String) return obj.ToString();
+
+            if (obj is Single || obj is Double)
+                return String.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
+
+            return String.Format(CultureInfo.InvariantCulture, "{0}", obj);
         }
 
         #region ICloneable
