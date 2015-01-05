@@ -20,13 +20,30 @@ namespace CloudinaryDotNet.Actions
 
         public string Type { get; set; }
 
+        /// <summary>
+        /// Whether to include EXIF info in result.
+        /// </summary>
         public bool Exif { get; set; }
 
+        /// <summary>
+        /// Whether to include colors info in result.
+        /// </summary>
         public bool Colors { get; set; }
 
+        /// <summary>
+        /// Whether to include faces coordinates in result.
+        /// </summary>
         public bool Faces { get; set; }
 
+        /// <summary>
+        /// Whether to include metadata in result.
+        /// </summary>
         public bool Metadata { get; set; }
+
+        /// <summary>
+        /// Whether to include custom coordinates in result.
+        /// </summary>
+        public bool Coordinates { get; set; }
 
         public int MaxResults { get; set; }
 
@@ -60,6 +77,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "faces", Faces);
             AddParam(dict, "image_metadata", Metadata);
             AddParam(dict, "phash", Phash);
+            AddParam(dict, "coordinates", Coordinates);
 
             return dict;
         }

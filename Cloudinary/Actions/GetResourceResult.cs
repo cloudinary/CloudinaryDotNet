@@ -79,6 +79,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "predominant")]
         public Predominant Predominant { get; set; }
 
+        [DataMember(Name = "coordinates")]
+        public Coordinates Coordinates { get; set; }
+
         /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>
@@ -88,6 +91,13 @@ namespace CloudinaryDotNet.Actions
         {
             return Parse<GetResourceResult>(response);
         }
+    }
+
+    [DataContract]
+    public class Coordinates
+    {
+        [DataMember(Name = "custom")]
+        public int[][] Custom { get; set; }
     }
 
     [DataContract]
