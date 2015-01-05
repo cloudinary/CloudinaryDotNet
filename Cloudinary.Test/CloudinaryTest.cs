@@ -263,7 +263,7 @@ namespace CloudinaryDotNet.Test
         {
             //should allow sending face coordinates
 
-            var faceCoordinates = new FaceCoordinates()
+            var faceCoordinates = new List<Rectangle>()
             {
                 new Rectangle(121,31,110,151),
                 new Rectangle(120,30,109,150)
@@ -278,7 +278,7 @@ namespace CloudinaryDotNet.Test
 
             var uploadRes = m_cloudinary.Upload(uploadParams);
 
-            Assert.NotNull(uploadRes);
+            Assert.NotNull(uploadRes.Faces);
             Assert.AreEqual(2, uploadRes.Faces.Length);
             Assert.AreEqual(4, uploadRes.Faces[0].Length);
             for (int i = 0; i < 2; i++)
@@ -300,7 +300,7 @@ namespace CloudinaryDotNet.Test
             var res = m_cloudinary.GetResource(
                 new GetResourceParams(uploadRes.PublicId) { Faces = true });
 
-            Assert.NotNull(res);
+            Assert.NotNull(res.Faces);
             Assert.AreEqual(1, res.Faces.Length);
             Assert.AreEqual(4, res.Faces[0].Length);
             Assert.AreEqual(122, res.Faces[0][0]);
@@ -513,6 +513,7 @@ namespace CloudinaryDotNet.Test
             }
         }
 
+        // This test needs a really large file to pass (> 5Mb).
         [Test]
         public void TestUploadLargeRawFiles()
         {
@@ -704,7 +705,7 @@ namespace CloudinaryDotNet.Test
             var result = m_cloudinary.ListResources(new ListResourcesByPrefixParams()
             {
                 Type = "upload",
-                Prefix = "testlist",
+                MaxResults = 500,
                 Direction = "asc"
             });
 
@@ -713,7 +714,7 @@ namespace CloudinaryDotNet.Test
             result = m_cloudinary.ListResources(new ListResourcesByPrefixParams()
             {
                 Type = "upload",
-                Prefix = "testlist",
+                MaxResults = 500,
                 Direction = "-1"
             });
 
@@ -1282,18 +1283,18 @@ namespace CloudinaryDotNet.Test
         {
             // should allow getting transformation metadata
 
-            Transformation t = new Transformation().Crop("scale").Width(2.0);
+            var t = new Transformation().Crop("scale").Dpr(1.3).Width(2.0);
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 EagerTransforms = new List<Transformation>() { t },
                 Tags = "transformation"
             };
 
-            m_cloudinary.Upload(uploadParams);
+            var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            GetTransformResult result = m_cloudinary.GetTransform("c_scale,w_2");
+            var result = m_cloudinary.GetTransform("c_scale,dpr_1.3,w_2.0");
 
             Assert.IsNotNull(result);
             Assert.AreEqual(t.Generate(), new Transformation(result.Info[0]).Generate());
@@ -1359,7 +1360,7 @@ namespace CloudinaryDotNet.Test
 
             var getResult = m_cloudinary.GetTransform("api_test_transformation3");
 
-            Assert.IsNotNull(getResult);
+            Assert.IsNotNull(getResult.Info);
             Assert.AreEqual(updateParams.UnsafeTransform.Generate(), new Transformation(getResult.Info).Generate());
             Assert.IsFalse(getResult.Used);
         }
@@ -1597,7 +1598,6 @@ namespace CloudinaryDotNet.Test
 
             var plans = new List<string>() { "Free", "Advanced" };
 
-            Assert.NotNull(result);
             Assert.True(plans.Contains(result.Plan));
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
@@ -1697,7 +1697,6 @@ namespace CloudinaryDotNet.Test
                 "testexplode",
                 new Transformation().Page("all")));
 
-            Assert.NotNull(result);
             Assert.AreEqual("processing", result.Status);
         }
 
@@ -1835,13 +1834,11 @@ namespace CloudinaryDotNet.Test
 
             var result = m_cloudinary.UpdateUploadPreset(presetToUpdate);
 
-            Assert.NotNull(result);
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             Assert.AreEqual("updated", result.Message);
 
             preset = m_cloudinary.GetUploadPreset(presetName);
 
-            Assert.NotNull(preset);
             Assert.AreEqual(presetName, preset.Name);
             Assert.AreEqual(true, preset.Unsigned);
 
@@ -1871,6 +1868,7 @@ namespace CloudinaryDotNet.Test
                 Unsigned = true
             });
 
+            Assert.NotNull(upload.PublicId);
             Assert.True(upload.PublicId.StartsWith("upload_folder"));
 
             m_cloudinary.DeleteUploadPreset(preset.Name);
@@ -1907,10 +1905,99 @@ namespace CloudinaryDotNet.Test
             var resources = m_cloudinary.ListResources(
                 new ListResourcesParams() { Type = "upload", StartAt = start, Direction = "asc" });
 
-            Assert.NotNull(resources);
             Assert.NotNull(resources.Resources);
             Assert.True(resources.Resources.Length > 0);
             Assert.AreEqual(result.PublicId, resources.Resources[0].PublicId);
+        }
+
+        [Test]
+        public void TestCustomCoordinates()
+        {
+            //should allow sending custom coordinates
+
+            var coordinates = new Rectangle(121, 31, 110, 151);
+
+            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), CustomCoordinates = coordinates });
+
+            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
+
+            Assert.NotNull(result.Coordinates);
+            Assert.NotNull(result.Coordinates.Custom);
+            Assert.AreEqual(1, result.Coordinates.Custom.Length);
+            Assert.AreEqual(4, result.Coordinates.Custom[0].Length);
+            Assert.AreEqual(coordinates.X, result.Coordinates.Custom[0][0]);
+            Assert.AreEqual(coordinates.Y, result.Coordinates.Custom[0][1]);
+            Assert.AreEqual(coordinates.Width, result.Coordinates.Custom[0][2]);
+            Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
+
+            coordinates = new Rectangle(122, 32, 110, 152);
+
+            var exResult = m_cloudinary.Explicit(new ExplicitParams(upResult.PublicId) { CustomCoordinates = coordinates, Type = "upload" });
+
+            result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
+
+            Assert.NotNull(result.Coordinates);
+            Assert.NotNull(result.Coordinates.Custom);
+            Assert.AreEqual(1, result.Coordinates.Custom.Length);
+            Assert.AreEqual(4, result.Coordinates.Custom[0].Length);
+            Assert.AreEqual(coordinates.X, result.Coordinates.Custom[0][0]);
+            Assert.AreEqual(coordinates.Y, result.Coordinates.Custom[0][1]);
+            Assert.AreEqual(coordinates.Width, result.Coordinates.Custom[0][2]);
+            Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
+        }
+
+        [Test]
+        public void TestUpdateCustomCoordinates()
+        {
+            //should update custom coordinates
+
+            var coordinates = new Rectangle(121, 31, 110, 151);
+
+            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath) });
+
+            var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { CustomCoordinates = coordinates });
+
+            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
+
+            Assert.NotNull(result.Coordinates);
+            Assert.NotNull(result.Coordinates.Custom);
+            Assert.AreEqual(1, result.Coordinates.Custom.Length);
+            Assert.AreEqual(4, result.Coordinates.Custom[0].Length);
+            Assert.AreEqual(coordinates.X, result.Coordinates.Custom[0][0]);
+            Assert.AreEqual(coordinates.Y, result.Coordinates.Custom[0][1]);
+            Assert.AreEqual(coordinates.Width, result.Coordinates.Custom[0][2]);
+            Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
+        }
+
+        // For this test to work, "Auto-create folders" should be enabled in the Upload Settings, so this test is disabled by default.
+        [Test]
+        public void TestFolderApi()
+        {
+            // should allow to list folders and subfolders
+
+            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder1/item" });
+            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder2/item" });
+            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder1/test_subfolder1/item" });
+            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder1/test_subfolder2/item" });
+
+            var result = m_cloudinary.RootFolders();
+
+            Assert.AreEqual("test_folder1", result.Folders[0].Name);
+            Assert.AreEqual("test_folder2", result.Folders[1].Name);
+
+            result = m_cloudinary.SubFolders("test_folder1");
+
+            Assert.AreEqual("test_folder1/test_subfolder1", result.Folders[0].Path);
+            Assert.AreEqual("test_folder1/test_subfolder2", result.Folders[1].Path);
+
+            result = m_cloudinary.SubFolders("test_folder");
+
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.NotNull(result.Error);
+            Assert.NotNull(result.Error.Message);
+            Assert.AreEqual("Can't find folder with path test_folder", result.Error.Message);
+
+            m_cloudinary.DeleteResourcesByPrefix("test_folder");
         }
     }
 }

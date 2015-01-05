@@ -215,7 +215,7 @@ namespace CloudinaryDotNet.Test
 
             SortedDictionary<string, object> dict = uploadParams.ToParamsDictionary();
 
-            Assert.AreEqual("c_scale,w_2/jpg|w_10/a_10/|h_20,w_20", dict["eager"]);
+            Assert.AreEqual("c_scale,w_2.0/jpg|w_10/a_10/|h_20,w_20", dict["eager"]);
         }
 
         [Test]
@@ -490,13 +490,47 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestImageTag()
         {
-            Transformation transformation = new Transformation().Width(100).Height(101).Crop("crop");
+            var transformation = new Transformation().Width(100).Height(101).Crop("crop");
 
-            StringDictionary dict = new StringDictionary();
+            var dict = new StringDictionary();
             dict["alt"] = "my image";
 
             var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", dict).ToString();
             Assert.AreEqual("<img src='http://res.cloudinary.com/testcloud/image/upload/c_crop,h_101,w_100/test' alt='my image' width='100' height='101'/>", result);
+        }
+
+        [Test]
+        public void TestResponsiveWidth()
+        {
+            var transformation = new Transformation().Width(0.9).Height(0.9).Crop("crop").ResponsiveWidth(true);
+            var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", new StringDictionary("alt=my image"));
+            Assert.AreEqual(
+                    "<img alt='my image' class='cld-responsive' data-src='http://res.cloudinary.com/testcloud/image/upload/c_crop,h_0.9,w_0.9/c_limit,w_auto/test'/>",
+                    result.ToString());
+            result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", new StringDictionary("alt=my image", "class=extra"));
+            Assert.AreEqual(
+                    "<img alt='my image' class='extra cld-responsive' data-src='http://res.cloudinary.com/testcloud/image/upload/c_crop,h_0.9,w_0.9/c_limit,w_auto/test'/>",
+                    result.ToString());
+            transformation = new Transformation().Width("auto").Crop("crop");
+            result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", new StringDictionary("alt=my image", "responsive_placeholder=blank"));
+            Assert.AreEqual(
+                    "<img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' alt='my image' class='cld-responsive' data-src='http://res.cloudinary.com/testcloud/image/upload/c_crop,w_auto/test'/>",
+                    result.ToString());
+            result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", new StringDictionary("alt=my image", "responsive_placeholder=other.gif"));
+            Assert.AreEqual(
+                    "<img src='other.gif' alt='my image' class='cld-responsive' data-src='http://res.cloudinary.com/testcloud/image/upload/c_crop,w_auto/test'/>",
+                    result.ToString());
+        }
+
+        [Test]
+        public void TestImageTagAutoDpr()
+        {
+            var transform = new Transformation().Width(100).Height(101).Crop("crop").Dpr("auto");
+
+            var result = m_api.UrlImgUp.Transform(transform).BuildImageTag("test").ToString();
+
+            Assert.True(transform.HiDpi);
+            Assert.AreEqual("<img width='100' height='101' class='cld-hidpi' data-src='http://res.cloudinary.com/testcloud/image/upload/c_crop,dpr_auto,h_101,w_100/test'/>", result);
         }
 
         [Test]
@@ -825,6 +859,22 @@ namespace CloudinaryDotNet.Test
         {
             string actual = m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).ResourceType("raw").BuildUrl("test");
             Assert.AreEqual("http://testcloud-res.cloudinary.com/files/test/hello", actual);
+        }
+
+        [Test]
+        public void TestResponsiveWidthTransform()
+        {
+            // should support responsive width
+
+            var trans = new Transformation().Width(100).Height(100).Crop("crop").ResponsiveWidth(true);
+            var result = m_api.UrlImgUp.Transform(trans).BuildUrl("test");
+            Assert.True(trans.IsResponsive);
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_crop,h_100,w_100/c_limit,w_auto/test", result);
+            Transformation.ResponsiveWidthTransform = new Transformation().Width("auto").Crop("pad"); trans = new Transformation().Width(100).Height(100).Crop("crop").ResponsiveWidth(true);
+            result = m_api.UrlImgUp.Transform(trans).BuildUrl("test");
+            Assert.True(trans.IsResponsive);
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_crop,h_100,w_100/c_pad,w_auto/test", result);
+            Transformation.ResponsiveWidthTransform = null;
         }
     }
 }
