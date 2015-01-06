@@ -98,6 +98,9 @@ namespace CloudinaryDotNet.Actions
     {
         [DataMember(Name = "custom")]
         public int[][] Custom { get; set; }
+
+        [DataMember(Name = "faces")]
+        public int[][] Faces { get; set; }
     }
 
     [DataContract]
