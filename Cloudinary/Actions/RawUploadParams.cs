@@ -207,7 +207,18 @@ namespace CloudinaryDotNet.Actions
         internal int BufferLength = Int32.MaxValue;
         internal bool EOF = false;
         internal int BytesSent = 0;
-        internal bool LastPart = false;
+
+        internal bool IsLastPart()
+        {
+            long len = 0;
+
+            if (m_stream != null)
+                len = m_stream.Length;
+            else
+                len = new FileInfo(m_path).Length;
+
+            return len - BytesSent <= BufferLength;
+        }
 
         /// <summary>
         /// Constructor to upload file from stream

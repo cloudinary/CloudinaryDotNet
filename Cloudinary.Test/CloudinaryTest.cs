@@ -513,13 +513,11 @@ namespace CloudinaryDotNet.Test
             }
         }
 
-        // This test needs a really large file to pass (> 5Mb).
         [Test]
         public void TestUploadLargeRawFiles()
         {
             // support uploading large raw files
 
-            // Please provide path to some large file (> 5Mb) here
             var largeFilePath = m_testPdfPath;
 
             var result = m_cloudinary.UploadLargeRaw(new BasicRawUploadParams()

@@ -556,15 +556,12 @@ namespace CloudinaryDotNet
                         stream.Seek(file.BytesSent, SeekOrigin.Begin);
                         file.EOF = WriteFile(writer, stream, file.BufferLength, file.FileName, out bytesSent);
                         file.BytesSent += bytesSent;
-                        file.LastPart = stream.Length - file.BytesSent <= file.BufferLength;
                     }
                 }
                 else
                 {
                     file.EOF = WriteFile(writer, file.Stream, file.BufferLength, file.FileName, out bytesSent);
                     file.BytesSent += bytesSent;
-                    if (file.Stream.CanSeek)
-                        file.LastPart = file.Stream.Length - file.BytesSent <= file.BufferLength;
                 }
             }
         }

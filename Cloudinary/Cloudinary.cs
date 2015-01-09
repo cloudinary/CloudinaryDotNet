@@ -358,7 +358,7 @@ namespace CloudinaryDotNet
                     dict["upload_id"] = uploadId;
                 }
 
-                if (parameters.File.LastPart)
+                if (parameters.File.IsLastPart())
                     dict["final"] = true;
 
                 using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, dict, parameters.File))
@@ -1073,7 +1073,6 @@ namespace CloudinaryDotNet
             file.BufferLength = bufferSize;
             file.EOF = false;
             file.BytesSent = 0;
-            file.LastPart = false;
         }
     }
 }
