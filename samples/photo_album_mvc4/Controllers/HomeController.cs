@@ -41,6 +41,23 @@ namespace photo_album_mvc4.Controllers
             return PartialView("Upload", new Model(m_cloudinary));
         }
 
+        public ActionResult UploadDirectly()
+        {
+            var model = new DictionaryModel(m_cloudinary, new Dictionary<string, string>() { { "unsigned", "false" } });
+
+            return PartialView("UploadDirectly", model);
+        }
+
+        public ActionResult UploadDirectlyUnsigned()
+        {
+            var preset = "sample_" + m_cloudinary.Api.SignParameters(new SortedDictionary<string, object>() { { "api_key", m_cloudinary.Api.Account.ApiKey } }).Substring(0, 10);
+            var result = m_cloudinary.CreateUploadPreset(new UploadPresetParams() { Name = preset, Unsigned = true, Folder = "preset_folder" });
+
+            var model = new DictionaryModel(m_cloudinary, new Dictionary<string, string>() { { "unsigned", "true" }, { "preset", preset } });
+
+            return PartialView("UploadDirectly", model);
+        }
+
         [HttpPost]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UploadServer()
@@ -116,6 +133,9 @@ namespace photo_album_mvc4.Controllers
             foreach (var pair in pairs)
             {
                 string[] splittedPair = pair.Split('=');
+
+                if (splittedPair[0].StartsWith("faces"))
+                    continue;
 
                 results.Add(splittedPair[0], splittedPair[1]);
             }

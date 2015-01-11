@@ -18,17 +18,18 @@
     These two pictures weren't even have to be uploaded to Cloudinary, they are retrieved by the service, transformed, cached and distributed through a CDN.
 </p>
 
-<h1>Your Images</h1>
+<h1>Your Photos</h1>
+
+<div class="actions">
+    <a class="upload_link" href="~/Home/Upload">Add photo...</a>
+    <a class="upload_link" href="~/Home/UploadDirectly">Add photo (direct upload)...</a>
+    <a class="upload_link" href="~/Home/UploadDirectlyUnsigned">Add photo (direct unsigned upload)...</a>
+</div>
+
 <div class="photos">
-    <p>
-        Following are the images uploaded by you. You can also upload more pictures.
-	    
-	    You can click on each picture to view its original size, and see more info about and additional transformations.
-	    <a class="upload_link" href="~/Home/Upload">Upload Images...</a>
-    </p>
     @if (Model.Photos.Count == 0)
     {
-        <p>No images were uploaded yet.</p>
+        <p>No photos were uploaded yet.</p>
     }
     else
     {

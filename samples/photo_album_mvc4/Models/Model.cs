@@ -1,8 +1,5 @@
-﻿using System;
+﻿using CloudinaryDotNet;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using CloudinaryDotNet;
 
 namespace photo_album_mvc4.Models
 {
