@@ -464,13 +464,13 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUploadRemote()
         {
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription("http://cloudinary.com/images/logo.png"),
+                File = new FileDescription("http://cloudinary.com/images/old_logo.png"),
                 Tags = "remote"
             };
 
-            ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
+            var uploadResult = m_cloudinary.Upload(uploadParams);
 
             Assert.AreEqual(3381, uploadResult.Length);
             Assert.AreEqual(241, uploadResult.Width);
