@@ -749,10 +749,12 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "Root path only supported in private CDN!")]
-        public void TestDisallowUseRootPathInSharedDistribution()
+        public void TestSupportUseRootPathInSharedDistribution()
         {
-            m_api.UrlImgUp.UseRootPath(true).BuildUrl("test");
+            var actual = m_api.UrlImgUp.UseRootPath(true).PrivateCdn(false).BuildUrl("test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/test", actual);
+            actual = m_api.UrlImgUp.UseRootPath(true).PrivateCdn(false).Transform(new Transformation().Angle(0)).BuildUrl("test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/a_0/test", actual);
         }
 
         [Test]

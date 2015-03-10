@@ -244,9 +244,6 @@ namespace CloudinaryDotNet
             if (String.IsNullOrEmpty(m_cloudName))
                 throw new ArgumentException("cloudName must be specified!");
 
-            if (!m_usePrivateCdn && m_useRootPath)
-                throw new NotSupportedException("Root path only supported in private CDN!");
-
             if (!m_usePrivateCdn && !String.IsNullOrEmpty(m_suffix))
                 throw new NotSupportedException("URL Suffix only supported in private CDN!");
 
