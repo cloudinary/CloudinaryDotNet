@@ -18,11 +18,17 @@
     <RestorePackages>true</RestorePackages>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v3.5' ">
+    <DefineConstants>NET35</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">
+    <DefineConstants>NET40</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -30,16 +36,9 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\$(Configuration)\$(TargetFrameworkVersion)\CloudinaryDotNet.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v3.5' ">
-    <DefineConstants>NET35</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">
-    <DefineConstants>NET40</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Sign)' == 'true' ">
     <SignAssembly>true</SignAssembly>
