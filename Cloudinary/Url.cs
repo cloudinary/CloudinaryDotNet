@@ -441,7 +441,7 @@ namespace CloudinaryDotNet
 
         private static string Decode(string input)
         {
-            StringBuilder resultStr = new StringBuilder();
+            StringBuilder resultStr = new StringBuilder(input.Length);
 
             int pos = 0;
 
@@ -467,13 +467,13 @@ namespace CloudinaryDotNet
 
         private static string Encode(string input)
         {
-            StringBuilder resultStr = new StringBuilder();
+            StringBuilder resultStr = new StringBuilder(input.Length);
             foreach (char ch in input)
             {
-                if (IsUnsafe(ch))
+                if (!IsSafe(ch))
                 {
                     resultStr.Append('%');
-                    resultStr.Append(String.Format("{0:x2}", (short)ch));
+                    resultStr.Append(String.Format("{0:X2}", (short)ch));
                 }
                 else
                 {
@@ -483,12 +483,13 @@ namespace CloudinaryDotNet
             return resultStr.ToString();
         }
 
-        private static bool IsUnsafe(char ch)
+        private static bool IsSafe(char ch)
         {
-            if (ch > 128 || ch < 0)
-                return true;
+            if (ch >= 0x30 && ch <= 0x39) return true; // 0-9
+            if (ch >= 0x41 && ch <= 0x5a) return true; // A-Z
+            if (ch >= 0x61 && ch <= 0x7a) return true; // a-z
 
-            return " $&+,;=?@<>#%".IndexOf(ch) >= 0;
+            return "/:-_.*".IndexOf(ch) >= 0;
         }
 
         #region ICloneable

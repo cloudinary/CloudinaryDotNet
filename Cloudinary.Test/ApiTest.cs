@@ -274,7 +274,7 @@ namespace CloudinaryDotNet.Test
             // should escape fetch urls
 
             string uri = m_api.Url.ResourceType("image").Action("fetch").BuildUrl("http://blah.com/hello?a=b");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/fetch/http://blah.com/hello%3fa%3db", uri);
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/fetch/http://blah.com/hello%3Fa%3Db", uri);
         }
 
         [Test]
@@ -299,7 +299,7 @@ namespace CloudinaryDotNet.Test
         public void TestHttpEscape()
         {
             string uri = m_api.Url.ResourceType("image").Action("youtube").BuildUrl("http://www.youtube.com/watch?v=d9NF2edxy-M");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/youtube/http://www.youtube.com/watch%3fv%3dd9NF2edxy-M", uri);
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/youtube/http://www.youtube.com/watch%3Fv%3Dd9NF2edxy-M", uri);
         }
 
         [Test]
@@ -687,10 +687,10 @@ namespace CloudinaryDotNet.Test
             var tests = new Dictionary<string, string>()
             {
                 {"a b", "a%20b"},
-                {"a+b", "a%2bb"},
+                {"a+b", "a%2Bb"},
                 {"a%20b", "a%20b"},
                 {"a-b", "a-b"  },
-                {"a??b", "a%3f%3fb"}
+                {"a??b", "a%3F%3Fb"}
             };
 
             foreach (var entry in tests)
