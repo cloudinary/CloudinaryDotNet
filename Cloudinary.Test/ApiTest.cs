@@ -400,6 +400,15 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestZoom()
+        {
+            // should support zooming
+            var transformation = new Transformation().Crop("crop").Gravity("face").Zoom(3);
+            var result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_crop,g_face,z_3/test", result);
+        }
+
+        [Test]
         public void TestPage()
         {
             // should support page
