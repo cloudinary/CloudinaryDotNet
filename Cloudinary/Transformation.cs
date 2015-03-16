@@ -159,7 +159,7 @@ namespace CloudinaryDotNet
         public Transformation Named(params string[] value) { return Add("transformation", value); }
         
         /// <summary>
-        /// A crop mode that determines how to transform the image for fitting into the desired width & height dimensions.
+        /// A crop mode that determines how to transform the image for fitting into the desired width and height dimensions.
         /// </summary>
         public Transformation Crop(string value) { return Add("crop", value); }
         public Transformation Background(string value) { return Add("background", Regex.Replace(value, "^#", "rgb:")); }
