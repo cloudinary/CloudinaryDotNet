@@ -67,22 +67,22 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUploadLocalImage()
         {
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath)
             };
 
-            ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
+            var uploadResult = m_cloudinary.Upload(uploadParams);
 
             Assert.AreEqual(1920, uploadResult.Width);
             Assert.AreEqual(1200, uploadResult.Height);
             Assert.AreEqual("jpg", uploadResult.Format);
 
-            SortedDictionary<string, object> checkParams = new SortedDictionary<string, object>();
+            var checkParams = new SortedDictionary<string, object>();
             checkParams.Add("public_id", uploadResult.PublicId);
             checkParams.Add("version", uploadResult.Version);
 
-            Api api = new Api(m_account);
+            var api = new Api(m_account);
             string expectedSign = api.SignParameters(checkParams);
 
             Assert.AreEqual(expectedSign, uploadResult.Signature);
@@ -188,6 +188,41 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
             Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
+        }
+
+        [Test]
+        public void TestRekognitionFace()
+        {
+            // should support rekognition face
+            // RekognitionFace add-on should be enabled for the used account
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            });
+
+            Assert.IsNull(uploadResult.Info);
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            {
+                Detection = "rekognition_face"
+            });
+
+            Assert.NotNull(updateResult.Info);
+            Assert.NotNull(updateResult.Info.Detection);
+            Assert.NotNull(updateResult.Info.Detection.RekognitionFace);
+            Assert.AreEqual("complete", updateResult.Info.Detection.RekognitionFace.Status);
+
+            uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Detection = "rekognition_face"
+            });
+
+            Assert.NotNull(uploadResult.Info);
+            Assert.NotNull(uploadResult.Info.Detection);
+            Assert.NotNull(uploadResult.Info.Detection.RekognitionFace);
+            Assert.AreEqual("complete", uploadResult.Info.Detection.RekognitionFace.Status);
         }
 
         [Test]
