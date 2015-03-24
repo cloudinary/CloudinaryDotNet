@@ -5,7 +5,7 @@
         <!-- WARNING: When changing the version number,
               please change also a value of AssemblyVersion attribute in Cloudinary\Properties\AssemblyInfo.cs.
               That value is used in a user agent string. -->
-        <version>1.0.19</version>
+        <version>1.0.21</version>
         <title>Cloudinary DotNet Library</title>
         <authors>Cloudinary</authors>
         <owners>Cloudinary</owners>
