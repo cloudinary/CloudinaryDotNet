@@ -11,12 +11,18 @@ namespace CloudinaryDotNet.Test
     public class ApiTest
     {
         Api m_api;
+        string m_defaultRootPath;
+        string m_defaultImgUpPath;
+        string m_defaultVideoUpPath;
 
         [SetUp]
         public void Init()
         {
             Account account = new Account("testcloud", "1234", "abcd");
             m_api = new Api(account);
+            m_defaultRootPath = "http://res.cloudinary.com/testcloud/";
+            m_defaultImgUpPath = m_defaultRootPath + "image/upload/";
+            m_defaultVideoUpPath = m_defaultRootPath + "video/upload/";
         }
 
         [Test]
@@ -46,7 +52,7 @@ namespace CloudinaryDotNet.Test
             // should use cloud_name from account
 
             string uri = m_api.UrlImgUp.BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "test", uri);
         }
 
         [Test]
@@ -123,7 +129,7 @@ namespace CloudinaryDotNet.Test
             // should use format from options
 
             string uri = m_api.UrlImgUp.Format("jpg").BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/test.jpg", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "test.jpg", uri);
         }
 
         [Test]
@@ -131,7 +137,7 @@ namespace CloudinaryDotNet.Test
         {
             var trans = new Transformation().Overlay("overlay.png").Opacity(40);
             var uri = m_api.UrlImgUp.Transform(trans).BuildUrl("test.jpg");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/l_overlay.png,o_40/test.jpg", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "l_overlay.png,o_40/test.jpg", uri);
         }
 
         [Test]
@@ -140,14 +146,14 @@ namespace CloudinaryDotNet.Test
             Transformation transformation = new Transformation().Width(100).Height(101);
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
 
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/h_101,w_100/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "h_101,w_100/test", uri);
             Assert.AreEqual("101", transformation.HtmlHeight);
             Assert.AreEqual("100", transformation.HtmlWidth);
 
             transformation = new Transformation().Width(100).Height(101).Crop("crop");
             uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
 
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_crop,h_101,w_100/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "c_crop,h_101,w_100/test", uri);
         }
 
         [Test]
@@ -165,7 +171,7 @@ namespace CloudinaryDotNet.Test
 
             Transformation transformation = new Transformation().X(1).Y(2).Radius(3).Gravity("center").Quality(0.4).Prefix("a");
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/g_center,p_a,q_0.4,r_3,x_1,y_2/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "g_center,p_a,q_0.4,r_3,x_1,y_2/test", uri);
         }
 
         [Test]
@@ -175,7 +181,7 @@ namespace CloudinaryDotNet.Test
 
             Transformation transformation = new Transformation().Named("blip");
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/t_blip/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "t_blip/test", uri);
         }
 
         [Test]
@@ -185,7 +191,7 @@ namespace CloudinaryDotNet.Test
 
             Transformation transformation = new Transformation().Named("blip", "blop");
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/t_blip.blop/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "t_blip.blop/test", uri);
         }
 
         [Test]
@@ -196,7 +202,7 @@ namespace CloudinaryDotNet.Test
             Transformation transformation = new Transformation().X(100).Y(100).Crop("fill").Chain().Crop("crop").Width(100);
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
             Assert.AreEqual("100", transformation.HtmlWidth);
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_fill,x_100,y_100/c_crop,w_100/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,x_100,y_100/c_crop,w_100/test", uri);
         }
 
         [Test]
@@ -226,7 +232,7 @@ namespace CloudinaryDotNet.Test
             Transformation transformation = new Transformation().X(100).Y(100).Width(200).Crop("fill").Chain().Radius(10).Chain().Crop("crop").Width(100);
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
             Assert.AreEqual("100", transformation.HtmlWidth);
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_fill,w_200,x_100,y_100/r_10/c_crop,w_100/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_200,x_100,y_100/r_10/c_crop,w_100/test", uri);
         }
 
         [Test]
@@ -234,7 +240,7 @@ namespace CloudinaryDotNet.Test
         {
             Transformation transformation = new Transformation().Chain().X(100).Y(100).Crop("fill").Chain();
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_fill,x_100,y_100/test", uri);
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,x_100,y_100/test", uri);
         }
 
         [Test]
@@ -243,7 +249,7 @@ namespace CloudinaryDotNet.Test
             // should use type of action from options
 
             string uri = m_api.UrlImgUp.Action("facebook").BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/facebook/test", uri);
+            Assert.AreEqual(m_defaultRootPath + "image/facebook/test", uri);
         }
 
         [Test]
@@ -252,7 +258,7 @@ namespace CloudinaryDotNet.Test
             // should use resource_type from options
 
             string uri = m_api.Url.ResourceType("raw").Action("upload").BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/raw/upload/test", uri);
+            Assert.AreEqual(m_defaultRootPath + "raw/upload/test", uri);
         }
 
         [Test]
@@ -265,7 +271,7 @@ namespace CloudinaryDotNet.Test
             uri = m_api.Url.ResourceType("image").Action("asset").BuildUrl("http://test");
             Assert.AreEqual("http://test", uri);
             uri = m_api.Url.ResourceType("image").Action("fetch").BuildUrl("http://test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/fetch/http://test", uri);
+            Assert.AreEqual(m_defaultRootPath + "image/fetch/http://test", uri);
         }
 
         [Test]
@@ -274,7 +280,7 @@ namespace CloudinaryDotNet.Test
             // should escape fetch urls
 
             string uri = m_api.Url.ResourceType("image").Action("fetch").BuildUrl("http://blah.com/hello?a=b");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/fetch/http://blah.com/hello%3Fa%3Db", uri);
+            Assert.AreEqual(m_defaultRootPath + "image/fetch/http://blah.com/hello%3Fa%3Db", uri);
         }
 
         [Test]
@@ -299,7 +305,7 @@ namespace CloudinaryDotNet.Test
         public void TestHttpEscape()
         {
             string uri = m_api.Url.ResourceType("image").Action("youtube").BuildUrl("http://www.youtube.com/watch?v=d9NF2edxy-M");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/youtube/http://www.youtube.com/watch%3Fv%3Dd9NF2edxy-M", uri);
+            Assert.AreEqual(m_defaultRootPath + "image/youtube/http://www.youtube.com/watch%3Fv%3Dd9NF2edxy-M", uri);
         }
 
         [Test]
@@ -308,10 +314,10 @@ namespace CloudinaryDotNet.Test
             // should support background
             Transformation transformation = new Transformation().Background("red");
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/b_red/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "b_red/test", result);
             transformation = new Transformation().Background("#112233");
             result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/b_rgb:112233/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "b_rgb:112233/test", result);
         }
 
         [Test]
@@ -320,7 +326,7 @@ namespace CloudinaryDotNet.Test
             // should support default_image
             Transformation transformation = new Transformation().DefaultImage("default");
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/d_default/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "d_default/test", result);
         }
 
         [Test]
@@ -329,10 +335,10 @@ namespace CloudinaryDotNet.Test
             // should support angle
             Transformation transformation = new Transformation().Angle(12);
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/a_12/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "a_12/test", result);
             transformation = new Transformation().Angle("exif", "12");
             result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/a_exif.12/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "a_exif.12/test", result);
         }
 
         [Test]
@@ -341,13 +347,13 @@ namespace CloudinaryDotNet.Test
             // should support overlay
             Transformation transformation = new Transformation().Overlay("text:hello");
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/l_text:hello/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "l_text:hello/test", result);
             // should not pass width/height to html if overlay
             transformation = new Transformation().Overlay("text:hello").Width(100).Height(100);
             result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
             Assert.IsNull(transformation.HtmlHeight);
             Assert.IsNull(transformation.HtmlWidth);
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/h_100,l_text:hello,w_100/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "h_100,l_text:hello,w_100/test", result);
         }
 
         [Test]
@@ -355,13 +361,13 @@ namespace CloudinaryDotNet.Test
         {
             Transformation transformation = new Transformation().Underlay("text:hello");
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/u_text:hello/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "u_text:hello/test", result);
             // should not pass width/height to html if underlay
             transformation = new Transformation().Underlay("text:hello").Width(100).Height(100);
             result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
             Assert.IsNull(transformation.HtmlHeight);
             Assert.IsNull(transformation.HtmlWidth);
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/h_100,u_text:hello,w_100/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "h_100,u_text:hello,w_100/test", result);
         }
 
         [Test]
@@ -369,7 +375,7 @@ namespace CloudinaryDotNet.Test
         {
             // should support format for fetch urls
             String result = m_api.UrlImgUp.Format("jpg").Action("fetch").BuildUrl("http://cloudinary.com/images/logo.png");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/fetch/f_jpg/http://cloudinary.com/images/logo.png", result);
+            Assert.AreEqual(m_defaultRootPath + "image/fetch/f_jpg/http://cloudinary.com/images/logo.png", result);
         }
 
         [Test]
@@ -378,7 +384,7 @@ namespace CloudinaryDotNet.Test
             // should support effect
             Transformation transformation = new Transformation().Effect("sepia");
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/e_sepia/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "e_sepia/test", result);
         }
 
         [Test]
@@ -387,7 +393,7 @@ namespace CloudinaryDotNet.Test
             // should support effect with param
             Transformation transformation = new Transformation().Effect("sepia", 10);
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/e_sepia:10/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "e_sepia:10/test", result);
         }
 
         [Test]
@@ -396,7 +402,7 @@ namespace CloudinaryDotNet.Test
             // should support density
             Transformation transformation = new Transformation().Density(150);
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/dn_150/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "dn_150/test", result);
         }
 
         [Test]
@@ -405,7 +411,7 @@ namespace CloudinaryDotNet.Test
             // should support zooming
             var transformation = new Transformation().Crop("crop").Gravity("face").Zoom(3);
             var result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_crop,g_face,z_3/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "c_crop,g_face,z_3/test", result);
         }
 
         [Test]
@@ -414,7 +420,7 @@ namespace CloudinaryDotNet.Test
             // should support page
             Transformation transformation = new Transformation().Page(5);
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/pg_5/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "pg_5/test", result);
         }
 
         [Test]
@@ -423,13 +429,13 @@ namespace CloudinaryDotNet.Test
             // should support border
             Transformation transformation = new Transformation().Border(5, "black");
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/bo_5px_solid_black/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "bo_5px_solid_black/test", result);
             transformation = new Transformation().Border(5, "#ffaabbdd");
             result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/bo_5px_solid_rgb:ffaabbdd/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "bo_5px_solid_rgb:ffaabbdd/test", result);
             transformation = new Transformation().Border("1px_solid_blue");
             result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/bo_1px_solid_blue/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "bo_1px_solid_blue/test", result);
         }
 
         [Test]
@@ -438,10 +444,10 @@ namespace CloudinaryDotNet.Test
             // should support flags
             Transformation transformation = new Transformation().Flags("abc");
             String result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/fl_abc/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "fl_abc/test", result);
             transformation = new Transformation().Flags("abc", "def");
             result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/fl_abc.def/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "fl_abc.def/test", result);
         }
 
         [Test]
@@ -468,8 +474,8 @@ namespace CloudinaryDotNet.Test
             Url url2 = url1.Clone().Action("go").Transform(t2);
             string result1 = url1.BuildUrl("test");
             string result2 = url2.BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/a_12/test", result1);
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/go/c_fill/test", result2);
+            Assert.AreEqual(m_defaultImgUpPath + "a_12/test", result1);
+            Assert.AreEqual(m_defaultRootPath + "image/go/c_fill/test", result2);
         }
 
         [Test]
@@ -629,10 +635,10 @@ namespace CloudinaryDotNet.Test
             // should build urls to get sprite css and picture by tag (with transformations and prefix)
 
             string uri = m_api.UrlImgUp.Action("sprite").BuildUrl("teslistresourcesbytag1.png");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/teslistresourcesbytag1.png", uri);
+            Assert.AreEqual(m_defaultRootPath + "image/sprite/teslistresourcesbytag1.png", uri);
 
             uri = m_api.UrlImgUp.Action("sprite").BuildUrl("teslistresourcesbytag1.css");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/teslistresourcesbytag1.css", uri);
+            Assert.AreEqual(m_defaultRootPath + "image/sprite/teslistresourcesbytag1.css", uri);
 
             uri = m_api.ApiUrlImgUpV.CloudinaryAddr("http://api.cloudinary.com").Action("sprite").BuildUrl();
             Assert.AreEqual("http://api.cloudinary.com/v1_1/testcloud/image/sprite", uri);
@@ -645,7 +651,7 @@ namespace CloudinaryDotNet.Test
 
             Transformation t = new Transformation().Crop("fit").Height(60).Width(150);
             string uri = m_api.UrlImgUp.Action("sprite").Transform(t).BuildUrl("logo.png");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/c_fit,h_60,w_150/logo.png", uri);
+            Assert.AreEqual(m_defaultRootPath + "image/sprite/c_fit,h_60,w_150/logo.png", uri);
         }
 
         [Test]
@@ -654,7 +660,7 @@ namespace CloudinaryDotNet.Test
             // should build urls to get sprite css and picture by tag with prefix
 
             string uri = m_api.UrlImgUp.Action("sprite").Add("p_home_thing_").BuildUrl("logo.css");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/p_home_thing_/logo.css", uri);
+            Assert.AreEqual(m_defaultRootPath + "image/sprite/p_home_thing_/logo.css", uri);
         }
 
         [Test]
@@ -663,11 +669,11 @@ namespace CloudinaryDotNet.Test
             // should add version if public_id contains /
 
             string result = m_api.UrlImgUp.BuildUrl("folder/test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v1/folder/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "v1/folder/test", result);
             result = m_api.UrlImgUp.Version("123").BuildUrl("folder/test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v123/folder/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "v123/folder/test", result);
             result = m_api.UrlImgUp.BuildUrl("1/av1/test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v1/1/av1/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "v1/1/av1/test", result);
         }
 
         [Test]
@@ -676,7 +682,7 @@ namespace CloudinaryDotNet.Test
             // should not add version if public_id contains version already
 
             string result = m_api.UrlImgUp.BuildUrl("v1234/test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/v1234/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "v1234/test", result);
         }
 
         [Test]
@@ -685,7 +691,7 @@ namespace CloudinaryDotNet.Test
             // should allow to shorted image/upload urls
 
             string result = m_api.UrlImgUp.Shorten(true).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/iu/test", result);
+            Assert.AreEqual(m_defaultRootPath + "iu/test", result);
         }
 
         [Test]
@@ -705,7 +711,7 @@ namespace CloudinaryDotNet.Test
             foreach (var entry in tests)
             {
                 string result = m_api.UrlImgUp.BuildUrl(entry.Key);
-                Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/" + entry.Value, result);
+                Assert.AreEqual(m_defaultImgUpPath + "" + entry.Value, result);
             }
         }
 
@@ -713,9 +719,9 @@ namespace CloudinaryDotNet.Test
         public void TestSpriteCss()
         {
             var result = m_api.UrlImgUp.BuildSpriteCss("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/test.css", result);
+            Assert.AreEqual(m_defaultRootPath + "image/sprite/test.css", result);
             result = m_api.UrlImgUp.BuildSpriteCss("test.css");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/sprite/test.css", result);
+            Assert.AreEqual(m_defaultRootPath + "image/sprite/test.css", result);
         }
 
         [Test]
@@ -761,9 +767,9 @@ namespace CloudinaryDotNet.Test
         public void TestSupportUseRootPathInSharedDistribution()
         {
             var actual = m_api.UrlImgUp.UseRootPath(true).PrivateCdn(false).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/test", actual);
+            Assert.AreEqual(m_defaultRootPath + "test", actual);
             actual = m_api.UrlImgUp.UseRootPath(true).PrivateCdn(false).Transform(new Transformation().Angle(0)).BuildUrl("test");
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/a_0/test", actual);
+            Assert.AreEqual(m_defaultRootPath + "a_0/test", actual);
         }
 
         [Test]
@@ -880,12 +886,147 @@ namespace CloudinaryDotNet.Test
             var trans = new Transformation().Width(100).Height(100).Crop("crop").ResponsiveWidth(true);
             var result = m_api.UrlImgUp.Transform(trans).BuildUrl("test");
             Assert.True(trans.IsResponsive);
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_crop,h_100,w_100/c_limit,w_auto/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "c_crop,h_100,w_100/c_limit,w_auto/test", result);
             Transformation.ResponsiveWidthTransform = new Transformation().Width("auto").Crop("pad"); trans = new Transformation().Width(100).Height(100).Crop("crop").ResponsiveWidth(true);
             result = m_api.UrlImgUp.Transform(trans).BuildUrl("test");
             Assert.True(trans.IsResponsive);
-            Assert.AreEqual("http://res.cloudinary.com/testcloud/image/upload/c_crop,h_100,w_100/c_pad,w_auto/test", result);
+            Assert.AreEqual(m_defaultImgUpPath + "c_crop,h_100,w_100/c_pad,w_auto/test", result);
             Transformation.ResponsiveWidthTransform = null;
+        }
+
+        [Test]
+        public void TestVideoCodec()
+        {
+            // should support a string value
+
+            var actual = m_api.UrlVideoUp.Transform(new Transformation().VideoCodec("auto")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "vc_auto/video_id", actual);
+
+            // should support a hash value
+
+            actual = m_api.UrlVideoUp.Transform(new Transformation().VideoCodec("codec", "h264", "profile", "basic", "level", "3.1")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "vc_h264:basic:3.1/video_id", actual);
+        }
+
+        [Test]
+        public void TestAudioCodec()
+        {
+            // should support a string value
+
+            var actual = m_api.UrlVideoUp.Transform(new Transformation().AudioCodec("acc")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "ac_acc/video_id", actual);
+        }
+
+        [Test]
+        public void TestBitRate()
+        {
+            // should support a numeric value
+
+            var actual = m_api.UrlVideoUp.Transform(new Transformation().BitRate(2048)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "br_2048/video_id", actual);
+
+            // should support a string value
+
+            actual = m_api.UrlVideoUp.Transform(new Transformation().BitRate("44k")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "br_44k/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().BitRate("1m")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "br_1m/video_id", actual);
+        }
+
+        [Test]
+        public void TestAudioFrequency()
+        {
+            // should support an integer value
+
+            String actual = m_api.UrlVideoUp.Transform(new Transformation().AudioFrequency(44100)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "af_44100/video_id", actual);
+
+            // should support a string value
+
+            actual = m_api.UrlVideoUp.Transform(new Transformation().AudioFrequency("44100")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "af_44100/video_id", actual);
+        }
+
+        [Test]
+        public void TestVideoSampling()
+        {
+            String actual = m_api.UrlVideoUp.Transform(new Transformation().VideoSamplingFrames(20)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "vs_20/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().VideoSamplingSeconds(20)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "vs_20s/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().VideoSamplingSeconds(20.0)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "vs_20.0s/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().VideoSampling("2.3s")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "vs_2.3s/video_id", actual);
+        }
+
+        [Test]
+        public void TestStartOffset()
+        {
+            var actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset(2.63)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "so_2.63/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset("2.63p")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "so_2.63p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset("2.63%")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "so_2.63p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffsetPercent(2.63)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "so_2.63p/video_id", actual);
+        }
+
+        [Test]
+        public void TestDuration()
+        {
+            var actual = m_api.UrlVideoUp.Transform(new Transformation().Duration(2.63)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "du_2.63/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().Duration("2.63p")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "du_2.63p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().Duration("2.63%")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "du_2.63p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().DurationPercent(2.63)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "du_2.63p/video_id", actual);
+        }
+
+        [Test]
+        public void TestOffset()
+        {
+            var actual = m_api.UrlVideoUp.Transform(new Transformation().Offset("2.66..3.21")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_3.21,so_2.66/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().Offset(new float[] { 2.67f, 3.22f })).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_3.22,so_2.67/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().Offset(new double[] { 2.67, 3.22 })).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_3.22,so_2.67/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().Offset(new String[] { "35%", "70%" })).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_70p,so_35p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().Offset(new String[] { "36p", "71p" })).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_71p,so_36p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().Offset(new String[] { "35.5p", "70.5p" })).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_70.5p,so_35.5p/video_id", actual);
+        }
+
+        [Test]
+        public void TestStartEndOffset()
+        {
+            var actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset("2.66").EndOffset("3.21")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_3.21,so_2.66/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset(2.67f).EndOffset(3.22f)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_3.22,so_2.67/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset(2.67).EndOffset(3.22)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_3.22,so_2.67/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset("35%").EndOffset("70%")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_70p,so_35p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset("36p").EndOffset("71p")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_71p,so_36p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset("35.5p").EndOffset("70.5p")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "eo_70.5p,so_35.5p/video_id", actual);
+        }
+
+        [Test]
+        public void TestZoomVideo()
+        {
+            String actual = m_api.UrlVideoUp.Transform(new Transformation().Zoom("1.5")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "z_1.5/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().Zoom(1.5)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "z_1.5/video_id", actual);
         }
     }
 }

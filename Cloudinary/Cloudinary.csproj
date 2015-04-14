@@ -116,7 +116,9 @@
     <Compile Include="Actions\ImageUploadResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringDictionary.cs" />
-    <Compile Include="Transformation.cs" />
+    <Compile Include="Transforms\ImageTransform.cs" />
+    <Compile Include="Transforms\VideoTransform.cs" />
+    <Compile Include="Transforms\Transformation.cs" />
     <Compile Include="Url.cs" />
   </ItemGroup>
   <ItemGroup>

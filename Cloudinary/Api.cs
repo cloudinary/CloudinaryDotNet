@@ -170,6 +170,21 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Default URL for working with uploaded videos
+        /// </summary>
+        public Url UrlVideoUp
+        {
+            get
+            {
+                return Url
+                    .ResourceType("video")
+                    .Action("upload")
+                    .UseRootPath(UseRootPath)
+                    .Suffix(Suffix);
+            }
+        }
+
+        /// <summary>
         /// Default cloudinary API URL
         /// </summary>
         public Url ApiUrl

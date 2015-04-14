@@ -2006,7 +2006,6 @@ namespace CloudinaryDotNet.Test
         }
 
         // For this test to work, "Auto-create folders" should be enabled in the Upload Settings, so this test is disabled by default.
-        [Test]
         public void TestFolderApi()
         {
             // should allow to list folders and subfolders
