@@ -114,6 +114,7 @@
     <Compile Include="Actions\DeletionParams.cs" />
     <Compile Include="Actions\RawUploadParams.cs" />
     <Compile Include="Actions\ImageUploadResult.cs" />
+    <Compile Include="Cloudinary.Static.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringDictionary.cs" />
     <Compile Include="Transforms\ImageTransform.cs" />

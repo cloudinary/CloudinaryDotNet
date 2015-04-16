@@ -1131,8 +1131,8 @@ namespace CloudinaryDotNet.Test
             var expectedTag = "<video poster='{0}.jpg'>" + "<source src='{0}.ogv' type='video/ogg'>"
                     + "<source src='{0}.mp4' type='video/mp4'>" + "</video>";
             expectedTag = String.Format(expectedTag, expectedUrl);
-            String actualTag = m_api.UrlVideoUp.SourceTypes(new string[] { "ogv", "mp4" })
-                    .BuildVideoTag("movie.mp4");
+            string actualTag = m_api.UrlVideoUp.SourceTypes(new string[] { "ogv", "mp4" })
+                    .BuildVideoTag("movie.mp4").ToString();
             Assert.AreEqual(expectedTag, actualTag);
         }
 
