@@ -365,13 +365,19 @@ namespace CloudinaryDotNet
 
             foreach (var key in m_transformParams.Keys)
             {
-                if (m_transformParams[key] is Array)
+                var value = m_transformParams[key];
+
+                if (value is Array)
                 {
-                    t.Add(key, ((Array)m_transformParams[key]).Clone());
+                    t.Add(key, ((Array)value).Clone());
                 }
-                else if (m_transformParams[key] is String || m_transformParams[key] is ValueType)
+                else if (value is String || value is ValueType)
                 {
-                    t.Add(key, m_transformParams[key]);
+                    t.Add(key, value);
+                }
+                else if (value is Dictionary<string, string>)
+                {
+                    t.Add(key, new Dictionary<string, string>((Dictionary<string, string>)value));
                 }
                 else
                 {

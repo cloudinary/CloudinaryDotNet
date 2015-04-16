@@ -572,21 +572,19 @@ namespace CloudinaryDotNet.Test
             Dictionary<string, string> htmlOptions = new Dictionary<string, string>();
             htmlOptions.Add("htmlattr", "htmlvalue");
 
-            var s = m_api.BuildUploadForm("test-field", "auto", null, htmlOptions);
-            string ss = s.ToString();
+            var result = m_api.BuildUploadForm("test-field", "auto", null, htmlOptions).ToString();
 
-            Assert.IsTrue(ss.Contains("type='file'"));
-            Assert.IsTrue(ss.Contains("data-cloudinary-field='test-field'"));
-            Assert.IsTrue(ss.Contains("class='cloudinary-fileupload'"));
-            Assert.IsTrue(ss.Contains("htmlattr='htmlvalue'"));
+            Assert.IsTrue(result.Contains("type='file'"));
+            Assert.IsTrue(result.Contains("data-cloudinary-field='test-field'"));
+            Assert.IsTrue(result.Contains("class='cloudinary-fileupload'"));
+            Assert.IsTrue(result.Contains("htmlattr='htmlvalue'"));
 
             htmlOptions.Clear();
             htmlOptions.Add("class", "myclass");
 
-            s = m_api.BuildUploadForm("test-field", "auto", null, htmlOptions);
-            ss = s.ToString();
+            result = m_api.BuildUploadForm("test-field", "auto", null, htmlOptions).ToString();
 
-            Assert.IsTrue(ss.Contains("class='cloudinary-fileupload myclass'"));
+            Assert.IsTrue(result.Contains("class='cloudinary-fileupload myclass'"));
         }
 
         [Test]
@@ -1027,6 +1025,196 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(m_defaultVideoUpPath + "z_1.5/video_id", actual);
             actual = m_api.UrlVideoUp.Transform(new Transformation().Zoom(1.5)).BuildUrl("video_id");
             Assert.AreEqual(m_defaultVideoUpPath + "z_1.5/video_id", actual);
+        }
+
+        [Test]
+        public void TestVideoTag()
+        {
+            var expectedUrl = m_defaultVideoUpPath + "movie";
+            var expectedTag = "<video poster='{0}.jpg'>" + "<source src='{0}.webm' type='video/webm'>"
+                    + "<source src='{0}.mp4' type='video/mp4'>"
+                    + "<source src='{0}.ogv' type='video/ogg'>"
+                    + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl);
+            Assert.AreEqual(expectedTag, m_api.UrlVideoUp.BuildVideoTag("movie").ToString());
+        }
+
+        [Test]
+        public void TestVideoTagWithAttributes()
+        {
+            var attributes = new StringDictionary(
+                "autoplay=true",
+                "controls",
+                "loop",
+                "muted=true",
+                "preload",
+                "style=border: 1px");
+
+            var expectedUrl = m_defaultVideoUpPath + "movie";
+            var expectedTag = "<video autoplay='true' controls loop muted='true' poster='{0}.jpg' preload style='border: 1px'>"
+                    + "<source src='{0}.webm' type='video/webm'>"
+                    + "<source src='{0}.mp4' type='video/mp4'>"
+                    + "<source src='{0}.ogv' type='video/ogg'>" + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl);
+            Assert.AreEqual(expectedTag, m_api.UrlVideoUp.BuildVideoTag("movie", attributes).ToString());
+        }
+
+        [Test]
+        public void TestVideoTagWithTransformation()
+        {
+            var transformation = new Transformation().VideoCodec("codec", "h264").AudioCodec("acc").StartOffset(3);
+            var expectedUrl = m_defaultVideoUpPath + "ac_acc,so_3.0,vc_h264/movie";
+            var expectedTag = "<video height='100' poster='{0}.jpg' src='{0}.mp4' width='200'></video>";
+            expectedTag = String.Format(expectedTag, expectedUrl);
+
+            var actualTag = m_api.UrlVideoUp.Transform(transformation).SourceTypes(new string[] { "mp4" })
+                    .BuildVideoTag("movie", new StringDictionary() { { "html_height", "100" }, { "html_width", "200" } });
+            Assert.AreEqual(expectedTag, actualTag);
+
+            expectedTag = "<video height='100' poster='{0}.jpg' width='200'>"
+                    + "<source src='{0}.webm' type='video/webm'>"
+                    + "<source src='{0}.mp4' type='video/mp4'>"
+                    + "<source src='{0}.ogv' type='video/ogg'>"
+                    + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl);
+            actualTag = m_api.UrlVideoUp.Transform(transformation)
+                    .BuildVideoTag("movie", new StringDictionary() { { "html_height", "100" }, { "html_width", "200" } });
+            Assert.AreEqual(expectedTag, actualTag);
+
+            transformation.Width(250);
+            expectedUrl = m_defaultVideoUpPath + "ac_acc,so_3.0,vc_h264,w_250/movie";
+            expectedTag = "<video poster='{0}.jpg' width='250'>"
+                    + "<source src='{0}.webm' type='video/webm'>"
+                    + "<source src='{0}.mp4' type='video/mp4'>"
+                    + "<source src='{0}.ogv' type='video/ogg'>"
+                    + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl);
+            actualTag = m_api.UrlVideoUp.Transform(transformation)
+                    .BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+
+            transformation.Crop("fit");
+            expectedUrl = m_defaultVideoUpPath + "ac_acc,c_fit,so_3.0,vc_h264,w_250/movie";
+            expectedTag = "<video poster='{0}.jpg'>"
+                    + "<source src='{0}.webm' type='video/webm'>"
+                    + "<source src='{0}.mp4' type='video/mp4'>"
+                    + "<source src='{0}.ogv' type='video/ogg'>"
+                    + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl);
+            actualTag = m_api.UrlVideoUp.Transform(transformation)
+                    .BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+        }
+
+        [Test]
+        public void TestVideoTagWithFallback()
+        {
+            var expectedUrl = m_defaultVideoUpPath + "movie";
+            var fallback = "<span id='spanid'>Cannot display video</span>";
+            var expectedTag = "<video poster='{0}.jpg' src='{0}.mp4'>{1}</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl, fallback);
+            var actualTag = m_api.UrlVideoUp.FallbackContent(fallback).SourceTypes(new String[] { "mp4" })
+                    .BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+
+            expectedTag = "<video poster='{0}.jpg'>" + "<source src='{0}.webm' type='video/webm'>"
+                    + "<source src='{0}.mp4' type='video/mp4'>" + "<source src='{0}.ogv' type='video/ogg'>{1}" + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl, fallback);
+            actualTag = m_api.UrlVideoUp.FallbackContent(fallback).BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+        }
+
+        [Test]
+        public void TestVideoTagWithSourceTypes()
+        {
+            var expectedUrl = m_defaultVideoUpPath + "movie";
+            var expectedTag = "<video poster='{0}.jpg'>" + "<source src='{0}.ogv' type='video/ogg'>"
+                    + "<source src='{0}.mp4' type='video/mp4'>" + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl);
+            String actualTag = m_api.UrlVideoUp.SourceTypes(new string[] { "ogv", "mp4" })
+                    .BuildVideoTag("movie.mp4");
+            Assert.AreEqual(expectedTag, actualTag);
+        }
+
+        [Test]
+        public void TestVideoTagWithSourceTransformation()
+        {
+            var expectedUrl = m_defaultVideoUpPath + "q_50/w_100/movie";
+            var expectedOgvUrl = m_defaultVideoUpPath + "q_50/w_100/q_70/movie";
+            var expectedMp4Url = m_defaultVideoUpPath + "q_50/w_100/q_30/movie";
+            var expectedTag = "<video poster='{0}.jpg' width='100'>"
+                    + "<source src='{0}.webm' type='video/webm'>"
+                    + "<source src='{1}.mp4' type='video/mp4'>"
+                    + "<source src='{2}.ogv' type='video/ogg'>"
+                    + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl, expectedMp4Url, expectedOgvUrl);
+            var actualTag = m_api.UrlVideoUp.Transform(new Transformation().Quality(50).Chain().Width(100))
+                    .SourceTransformationFor("mp4", new Transformation().Quality(30))
+                    .SourceTransformationFor("ogv", new Transformation().Quality(70))
+                    .BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+
+            expectedTag = "<video poster='{0}.jpg' width='100'>" + "<source src='{0}.webm' type='video/webm'>"
+                    + "<source src='{1}.mp4' type='video/mp4'>" + "</video>";
+            expectedTag = String.Format(expectedTag, expectedUrl, expectedMp4Url);
+            actualTag = m_api.UrlVideoUp.Transform(new Transformation().Quality(50).Chain().Width(100))
+                    .SourceTransformationFor("mp4", new Transformation().Quality(30))
+                    .SourceTransformationFor("ogv", new Transformation().Quality(70))
+                    .SourceTypes("webm", "mp4").BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+        }
+
+        [Test]
+        public void TestVideoTagWithPoster()
+        {
+            var expectedUrl = m_defaultVideoUpPath + "movie";
+            var posterUrl = "http://image/somewhere.jpg";
+            var expectedTag = "<video poster='{0}' src='{1}.mp4'></video>";
+            expectedTag = String.Format(expectedTag, posterUrl, expectedUrl);
+            var actualTag = m_api.UrlVideoUp.SourceTypes("mp4").Poster(posterUrl)
+                    .BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+
+            posterUrl = m_defaultVideoUpPath + "g_north/movie.jpg";
+            expectedTag = "<video poster='{0}' src='{1}.mp4'></video>";
+            expectedTag = String.Format(expectedTag, posterUrl, expectedUrl);
+            actualTag = m_api.UrlVideoUp.SourceTypes("mp4")
+                    .Poster(new Transformation().Gravity("north"))
+                    .BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+
+            posterUrl = m_defaultVideoUpPath + "g_north/my_poster.jpg";
+            expectedTag = "<video poster='{0}' src='{1}.mp4'></video>";
+            expectedTag = String.Format(expectedTag, posterUrl, expectedUrl);
+            actualTag = m_api.UrlVideoUp.SourceTypes("mp4")
+                .Poster(m_api.UrlVideoUp.Source("my_poster").Format("jpg").Transform(new Transformation().Gravity("north")))
+                .BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+
+            expectedTag = "<video src='{0}.mp4'></video>";
+            expectedTag = String.Format(expectedTag, expectedUrl);
+            actualTag = m_api.UrlVideoUp.SourceTypes("mp4").Poster(null).BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+
+            actualTag = m_api.UrlVideoUp.SourceTypes("mp4").Poster(false).BuildVideoTag("movie");
+            Assert.AreEqual(expectedTag, actualTag);
+        }
+
+        [Test]
+        public void TestEmptySource()
+        {
+            var url = m_api.UrlImgUp.BuildUrl();
+            Assert.AreEqual(m_defaultImgUpPath, url + "/");
+        }
+
+        [Test]
+        public void TestCloudParams()
+        {
+            var @params = new StringDictionary("a", "b=c", "d=gggg===ggg====");
+            Assert.AreEqual("a", @params.Pairs[0]);
+            Assert.Null(@params["a"]);
+            Assert.AreEqual("c", @params["b"]);
+            Assert.AreEqual("gggg===ggg====", @params["d"]);
         }
     }
 }
