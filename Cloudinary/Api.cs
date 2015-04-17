@@ -360,10 +360,13 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Dictionary of upload parameters.</param>
         /// <returns>JSON representation of upload parameters.</returns>
-        public string PrepareUploadParams(SortedDictionary<string, object> parameters)
+        public string PrepareUploadParams(IDictionary<string, object> parameters)
         {
             if (parameters == null)
                 parameters = new SortedDictionary<string, object>();
+
+            if (!(parameters is SortedDictionary<string, object>))
+                parameters = new SortedDictionary<string, object>(parameters);
 
             string path = "";
             if (parameters.ContainsKey("callback") && parameters["callback"] != null)
@@ -416,7 +419,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <returns>HTML form</returns>
 #if NET40
-        public IHtmlString BuildUnsignedUploadForm(string field, string preset, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        public IHtmlString BuildUnsignedUploadForm(string field, string preset, IDictionary<string, object> parameters = null, IDictionary<string, string> htmlOptions = null)
 #else
         public string BuildUnsignedUploadForm(string field, string preset, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
 #endif
@@ -435,7 +438,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <returns>HTML form</returns>
 #if NET40
-        public IHtmlString BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        public IHtmlString BuildUploadForm(string field, string resourceType, IDictionary<string, object> parameters = null, IDictionary<string, string> htmlOptions = null)
 #else
         public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
 #endif
@@ -490,7 +493,7 @@ namespace CloudinaryDotNet
         public string SignParameters(IDictionary<string, object> parameters)
         {
             StringBuilder signBase = new StringBuilder(String.Join("&", parameters
-                .Where(pair => pair.Value != null)
+                .Where(pair => pair.Value != null && pair.Key != "resource_type")
                 .Select(pair => String.Format("{0}={1}", pair.Key,
                     pair.Value is IEnumerable<string>
                     ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())

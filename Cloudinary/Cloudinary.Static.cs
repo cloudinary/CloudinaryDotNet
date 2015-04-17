@@ -25,12 +25,12 @@ namespace CloudinaryDotNet
         public static Transformation T { get { return new Transformation(); } }
 
         /// <summary>
-        /// Gets the URL for uploaded image.
+        /// Gets the URL builder for uploaded image.
         /// </summary>
         public static Url UrlImgUp { get { return m_cloudinary.Api.UrlImgUp; } }
 
         /// <summary>
-        /// Gets the URL for uploaded video.
+        /// Gets the URL builder for uploaded video.
         /// </summary>
         public static Url UrlVideoUp { get { return m_cloudinary.Api.UrlVideoUp; } }
 
