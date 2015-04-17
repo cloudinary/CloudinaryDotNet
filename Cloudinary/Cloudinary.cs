@@ -197,6 +197,23 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Uploads a video file to cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of video uploading .</param>
+        /// <returns>Results of video uploading.</returns>
+        public VideoUploadResult Upload(VideoUploadParams parameters)
+        {
+            string uri = m_api.ApiUrlVideoUpV.BuildUrl();
+
+            ResetInternalFileDescription(parameters.File);
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File))
+            {
+                return VideoUploadResult.Parse(response);
+            }
+        }
+
+        /// <summary>
         /// Gets list of folders in the root.
         /// </summary>
         public GetFoldersResult RootFolders()

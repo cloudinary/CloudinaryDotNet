@@ -235,6 +235,19 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Default cloudinary API URL for uploading images with version
+        /// </summary>
+        public Url ApiUrlVideoUpV
+        {
+            get
+            {
+                return ApiUrlV.
+                    Action("upload").
+                    ResourceType("video");
+            }
+        }
+
+        /// <summary>
         /// Gets cloudinary parameter from enumeration
         /// </summary>
         /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute</typeparam>
@@ -493,7 +506,7 @@ namespace CloudinaryDotNet
         public string SignParameters(IDictionary<string, object> parameters)
         {
             StringBuilder signBase = new StringBuilder(String.Join("&", parameters
-                .Where(pair => pair.Value != null && pair.Key != "resource_type")
+                .Where(pair => pair.Value != null)
                 .Select(pair => String.Format("{0}={1}", pair.Key,
                     pair.Value is IEnumerable<string>
                     ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())

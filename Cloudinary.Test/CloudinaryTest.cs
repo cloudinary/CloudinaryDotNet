@@ -19,6 +19,7 @@ namespace CloudinaryDotNet.Test
         Account m_account;
         Cloudinary m_cloudinary;
         string m_testImagePath;
+        string m_testVideoPath;
         string m_testPdfPath;
         string m_testIconPath;
 
@@ -48,12 +49,14 @@ namespace CloudinaryDotNet.Test
             if (!String.IsNullOrWhiteSpace(Settings.Default.ApiBaseAddress))
                 m_cloudinary.Api.ApiBaseAddress = Settings.Default.ApiBaseAddress;
 
+            m_testVideoPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "movie.mp4");
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
             m_testPdfPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "multipage.pdf");
             m_testIconPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "favicon.ico");
 
             Resources.TestImage.Save(m_testImagePath);
             File.WriteAllBytes(m_testPdfPath, Resources.multipage);
+            File.WriteAllBytes(m_testVideoPath, Resources.movie);
 
             using (Stream s = new FileStream(m_testIconPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
@@ -86,6 +89,30 @@ namespace CloudinaryDotNet.Test
             string expectedSign = api.SignParameters(checkParams);
 
             Assert.AreEqual(expectedSign, uploadResult.Signature);
+        }
+
+        [Test]
+        public void TestUploadLocalVideo()
+        {
+            var uploadParams = new VideoUploadParams()
+            {
+                File = new FileDescription(m_testVideoPath)
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(640, uploadResult.Width);
+            Assert.AreEqual(320, uploadResult.Height);
+            Assert.AreEqual("mp4", uploadResult.Format);
+            Assert.NotNull(uploadResult.Audio);
+            Assert.AreEqual("aac", uploadResult.Audio.Codec);
+            Assert.NotNull(uploadResult.Video);
+            Assert.AreEqual("h264", uploadResult.Video.Codec);
+
+            var getResource = new GetResourceParams(uploadResult.PublicId) { ResourceType = ResourceType.Video };
+            var info = m_cloudinary.GetResource(getResource);
+
+            Assert.AreEqual("mp4", info.Format);
         }
 
         [Test]

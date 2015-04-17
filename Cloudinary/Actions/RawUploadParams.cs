@@ -11,11 +11,6 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class BasicRawUploadParams : BaseParams
     {
-        public BasicRawUploadParams()
-        {
-            ResourceType = "auto";
-        }
-
         /// <summary>
         /// Either the actual data of the image or an HTTP URL of a public image on the Internet.
         /// </summary>
@@ -35,14 +30,6 @@ namespace CloudinaryDotNet.Actions
         /// Gets or sets privacy mode of the file. Valid values: 'upload' and 'authenticated'. Default: 'upload'.
         /// </summary>
         public string Type { get; set; }
-
-        /// <summary>
-        /// Gets or sets the type of the resource.
-        /// </summary>
-        /// <value>
-        /// The type of the resource ("auto", "raw", "image", "video").
-        /// </value>
-        public string ResourceType { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -65,7 +52,6 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "type", Type);
-            AddParam(dict, "resource_type", ResourceType);
 
             if (Backup.HasValue)
                 AddParam(dict, "backup", Backup.Value);
@@ -86,7 +72,6 @@ namespace CloudinaryDotNet.Actions
         {
             Overwrite = true;
             UniqueFilename = true;
-            ResourceType = "raw";
             Context = new StringDictionary();
         }
 

@@ -15,7 +15,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ImageUploadParams()
         {
-            ResourceType = "image";
             Overwrite = null;
             UniqueFilename = null;
         }

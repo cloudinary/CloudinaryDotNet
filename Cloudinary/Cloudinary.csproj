@@ -99,6 +99,8 @@
     <Compile Include="Actions\ListResourceTypesResult.cs" />
     <Compile Include="Actions\UploadPreset.cs" />
     <Compile Include="Actions\UsageResult.cs" />
+    <Compile Include="Actions\VideoUploadParams.cs" />
+    <Compile Include="Actions\VideoUploadResult.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="Actions\BaseParams.cs" />
     <Compile Include="Actions\BaseResult.cs" />

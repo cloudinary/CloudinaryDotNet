@@ -37,7 +37,12 @@ namespace CloudinaryDotNet.Actions
         /// Any files (text, binary)
         /// </summary>
         [Description("raw")]
-        Raw
+        Raw,
+        /// <summary>
+        /// Video files in various formats (mp4, etc.)
+        /// </summary>
+        [Description("video")]
+        Video
     }
 
     /// <summary>
@@ -128,8 +133,8 @@ namespace CloudinaryDotNet.Actions
                 string s = reader.ReadToEnd();
 
 #if DEBUG
-                    Console.WriteLine(String.Format("RESPONSE ({0}):", typeof(T).Name));
-                    Console.WriteLine(s);
+                Console.WriteLine(String.Format("RESPONSE ({0}):", typeof(T).Name));
+                Console.WriteLine(s);
 #endif
 
                 result = JsonConvert.DeserializeObject<T>(s);
