@@ -569,7 +569,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestImageUploadTag()
         {
-            Dictionary<string, string> htmlOptions = new Dictionary<string, string>();
+            var htmlOptions = new Dictionary<string, string>();
             htmlOptions.Add("htmlattr", "htmlvalue");
 
             var result = m_api.BuildUploadForm("test-field", "auto", null, htmlOptions).ToString();
@@ -1068,7 +1068,7 @@ namespace CloudinaryDotNet.Test
             expectedTag = String.Format(expectedTag, expectedUrl);
 
             var actualTag = m_api.UrlVideoUp.Transform(transformation).SourceTypes(new string[] { "mp4" })
-                    .BuildVideoTag("movie", new StringDictionary() { { "html_height", "100" }, { "html_width", "200" } });
+                    .BuildVideoTag("movie", "html_height=100", "html_width=200").ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
             expectedTag = "<video height='100' poster='{0}.jpg' width='200'>"
@@ -1078,7 +1078,9 @@ namespace CloudinaryDotNet.Test
                     + "</video>";
             expectedTag = String.Format(expectedTag, expectedUrl);
             actualTag = m_api.UrlVideoUp.Transform(transformation)
-                    .BuildVideoTag("movie", new StringDictionary() { { "html_height", "100" }, { "html_width", "200" } });
+                    .BuildVideoTag("movie", new StringDictionary() { { "html_height", "100" }, { "html_width", "200" } })
+                    .ToString();
+
             Assert.AreEqual(expectedTag, actualTag);
 
             transformation.Width(250);
@@ -1090,7 +1092,7 @@ namespace CloudinaryDotNet.Test
                     + "</video>";
             expectedTag = String.Format(expectedTag, expectedUrl);
             actualTag = m_api.UrlVideoUp.Transform(transformation)
-                    .BuildVideoTag("movie");
+                    .BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
             transformation.Crop("fit");
@@ -1102,7 +1104,7 @@ namespace CloudinaryDotNet.Test
                     + "</video>";
             expectedTag = String.Format(expectedTag, expectedUrl);
             actualTag = m_api.UrlVideoUp.Transform(transformation)
-                    .BuildVideoTag("movie");
+                    .BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
         }
 
@@ -1114,13 +1116,13 @@ namespace CloudinaryDotNet.Test
             var expectedTag = "<video poster='{0}.jpg' src='{0}.mp4'>{1}</video>";
             expectedTag = String.Format(expectedTag, expectedUrl, fallback);
             var actualTag = m_api.UrlVideoUp.FallbackContent(fallback).SourceTypes(new String[] { "mp4" })
-                    .BuildVideoTag("movie");
+                    .BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
             expectedTag = "<video poster='{0}.jpg'>" + "<source src='{0}.webm' type='video/webm'>"
                     + "<source src='{0}.mp4' type='video/mp4'>" + "<source src='{0}.ogv' type='video/ogg'>{1}" + "</video>";
             expectedTag = String.Format(expectedTag, expectedUrl, fallback);
-            actualTag = m_api.UrlVideoUp.FallbackContent(fallback).BuildVideoTag("movie");
+            actualTag = m_api.UrlVideoUp.FallbackContent(fallback).BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
         }
 
@@ -1151,7 +1153,7 @@ namespace CloudinaryDotNet.Test
             var actualTag = m_api.UrlVideoUp.Transform(new Transformation().Quality(50).Chain().Width(100))
                     .SourceTransformationFor("mp4", new Transformation().Quality(30))
                     .SourceTransformationFor("ogv", new Transformation().Quality(70))
-                    .BuildVideoTag("movie");
+                    .BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
             expectedTag = "<video poster='{0}.jpg' width='100'>" + "<source src='{0}.webm' type='video/webm'>"
@@ -1160,7 +1162,7 @@ namespace CloudinaryDotNet.Test
             actualTag = m_api.UrlVideoUp.Transform(new Transformation().Quality(50).Chain().Width(100))
                     .SourceTransformationFor("mp4", new Transformation().Quality(30))
                     .SourceTransformationFor("ogv", new Transformation().Quality(70))
-                    .SourceTypes("webm", "mp4").BuildVideoTag("movie");
+                    .SourceTypes("webm", "mp4").BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
         }
 
@@ -1172,7 +1174,7 @@ namespace CloudinaryDotNet.Test
             var expectedTag = "<video poster='{0}' src='{1}.mp4'></video>";
             expectedTag = String.Format(expectedTag, posterUrl, expectedUrl);
             var actualTag = m_api.UrlVideoUp.SourceTypes("mp4").Poster(posterUrl)
-                    .BuildVideoTag("movie");
+                    .BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
             posterUrl = m_defaultVideoUpPath + "g_north/movie.jpg";
@@ -1180,7 +1182,7 @@ namespace CloudinaryDotNet.Test
             expectedTag = String.Format(expectedTag, posterUrl, expectedUrl);
             actualTag = m_api.UrlVideoUp.SourceTypes("mp4")
                     .Poster(new Transformation().Gravity("north"))
-                    .BuildVideoTag("movie");
+                    .BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
             posterUrl = m_defaultVideoUpPath + "g_north/my_poster.jpg";
@@ -1188,15 +1190,15 @@ namespace CloudinaryDotNet.Test
             expectedTag = String.Format(expectedTag, posterUrl, expectedUrl);
             actualTag = m_api.UrlVideoUp.SourceTypes("mp4")
                 .Poster(m_api.UrlVideoUp.Source("my_poster").Format("jpg").Transform(new Transformation().Gravity("north")))
-                .BuildVideoTag("movie");
+                .BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
             expectedTag = "<video src='{0}.mp4'></video>";
             expectedTag = String.Format(expectedTag, expectedUrl);
-            actualTag = m_api.UrlVideoUp.SourceTypes("mp4").Poster(null).BuildVideoTag("movie");
+            actualTag = m_api.UrlVideoUp.SourceTypes("mp4").Poster(null).BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
-            actualTag = m_api.UrlVideoUp.SourceTypes("mp4").Poster(false).BuildVideoTag("movie");
+            actualTag = m_api.UrlVideoUp.SourceTypes("mp4").Poster(false).BuildVideoTag("movie").ToString();
             Assert.AreEqual(expectedTag, actualTag);
         }
 
