@@ -1,7 +1,7 @@
 ﻿
 namespace CloudinaryDotNet.Actions
 {
-    public class VideoUploadParams : RawUploadParams
+    public class VideoUploadParams : ImageUploadParams
     {
         // Nothing special
     }

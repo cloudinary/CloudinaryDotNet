@@ -24,6 +24,16 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public List<Transformation> EagerTransforms { get; set; }
 
+        /// <summary>
+        /// Whether to generate the eager transformations asynchronously in the background after the upload request is completed rather than online as part of the upload call. Default: false.
+        /// </summary>
+        public bool? EagerAsync { get; set; }
+
+        /// <summary>
+        /// An HTTP URL to send notification to (a webhook) when the generation of eager transformations is completed.
+        /// </summary>
+        public string EagerNotificationUrl { get; set; }
+
         public string Type { get; set; }
 
         /// <summary>
@@ -76,6 +86,8 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "tags", Tags);
             AddParam(dict, "type", Type);
+            AddParam(dict, "eager_async", EagerAsync);
+            AddParam(dict, "eager_notification_url", EagerNotificationUrl);
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
