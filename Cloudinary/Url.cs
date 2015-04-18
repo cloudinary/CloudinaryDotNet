@@ -327,7 +327,7 @@ namespace CloudinaryDotNet
         /// Builds a video tag for embedding in a web view.
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
-        /// <param name="dict">Array of strings in form of "key=value".</param>
+        /// <param name="keyValuePairs">Array of strings in form of "key=value".</param>
 #if NET40
         public IHtmlString BuildVideoTag(string source, params string[] keyValuePairs)
 #else
