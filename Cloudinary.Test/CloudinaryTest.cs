@@ -116,6 +116,17 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUploadCustom()
+        {
+            var file = new FileDescription(m_testVideoPath);
+
+            var uploadResult = m_cloudinary.Upload("video", null, file);
+
+            Assert.NotNull(uploadResult);
+            Assert.AreEqual("video", uploadResult.ResourceType);
+        }
+
+        [Test]
         public void TestModeration()
         {
             var uploadParams = new RawUploadParams()

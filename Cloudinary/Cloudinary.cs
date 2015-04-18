@@ -214,6 +214,30 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Uploads a file to cloudinary.
+        /// </summary>
+        /// <param name="resourceType">Resource type ("image", "raw", "video", "auto")</param>
+        /// <param name="parameters">Upload parameters.</param>
+        /// <param name="fileDescription">File description.</param>
+        public RawUploadResult Upload(string resourceType, IDictionary<string, object> parameters, FileDescription fileDescription)
+        {
+            string uri = m_api.ApiUrlV.Action("upload").ResourceType(resourceType).BuildUrl();
+
+            ResetInternalFileDescription(fileDescription);
+
+            if (parameters == null)
+                parameters = new SortedDictionary<string, object>();
+
+            if (!(parameters is SortedDictionary<string, object>))
+                parameters = new SortedDictionary<string, object>(parameters);
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, (SortedDictionary<string, object>)parameters, fileDescription))
+            {
+                return RawUploadResult.Parse(response);
+            }
+        }
+
+        /// <summary>
         /// Gets list of folders in the root.
         /// </summary>
         public GetFoldersResult RootFolders()
