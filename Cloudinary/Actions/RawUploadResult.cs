@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
@@ -32,6 +33,12 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "moderation")]
         public List<Moderation> Moderation { get; protected set; }
+
+        [DataMember(Name = "created_at")]
+        public DateTime CreatedAt { get; protected set; }
+
+        [DataMember(Name = "tags")]
+        public string[] Tags { get; protected set; }
 
         /// <summary>
         /// Parses HTTP response and creates new instance of this class

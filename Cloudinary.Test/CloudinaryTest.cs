@@ -23,7 +23,34 @@ namespace CloudinaryDotNet.Test
         string m_testPdfPath;
         string m_testIconPath;
 
-        [SetUp]
+        /// <summary>
+        /// A convenience method for uploading an image before testing
+        /// </summary>
+        /// <param name="id">The ID of the resource</param>
+        /// <returns>The upload results</returns>
+        private ImageUploadResult UploadTestResource( String id)
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = id,
+                Tags = "test"
+            };
+            return m_cloudinary.Upload(uploadParams);
+        }
+
+        /// <summary>
+        /// A convenience method for deleting an image in the test
+        /// </summary>
+        /// <param name="id">The ID of the image to delete</param>
+        /// <returns>The results of the deletion</returns>
+        private DelResResult DeleteTestResource( String id)
+        {
+            return m_cloudinary.DeleteResources(id);
+        }
+
+
+        [TestFixtureSetUp]
         public void Initialize()
         {
             m_account = new Account(
@@ -62,9 +89,6 @@ namespace CloudinaryDotNet.Test
             {
                 Resources.favicon.Save(s);
             }
-
-            m_cloudinary.DeleteTransform("api_test_transformation3");
-            m_cloudinary.DeleteResources(ResourceType.Raw, "test_raw_overwrite");
         }
 
         [Test]
@@ -228,7 +252,7 @@ namespace CloudinaryDotNet.Test
             Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
         }
 
-        [Test]
+        [Test, Ignore( "Requires Rekognition plugin")]
         public void TestRekognitionFace()
         {
             // should support rekognition face
@@ -250,7 +274,8 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(updateResult.Info.Detection);
             Assert.NotNull(updateResult.Info.Detection.RekognitionFace);
             Assert.AreEqual("complete", updateResult.Info.Detection.RekognitionFace.Status);
-
+            m_cloudinary.DeleteResources(uploadResult.PublicId);
+            
             uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
@@ -261,6 +286,7 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(uploadResult.Info.Detection);
             Assert.NotNull(uploadResult.Info.Detection.RekognitionFace);
             Assert.AreEqual("complete", uploadResult.Info.Detection.RekognitionFace.Status);
+            m_cloudinary.DeleteResources(uploadResult.PublicId);
         }
 
         [Test]
@@ -725,14 +751,26 @@ namespace CloudinaryDotNet.Test
                 PublicId = "testlistresources",
                 Tags = "hello"
             };
-
+            
             var uploadResult = m_cloudinary.Upload(uploadParams);
-
-            var result = m_cloudinary.ListResources();
-
-            Assert.IsTrue(result.Resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload" && res.Tags.Count() == 1 && res.Tags[0] == "hello").Count() > 0);
+            IEnumerable<Resource> resources = new Resource[0];
+//            for(ListResourcesResult current = m_cloudinary.ListResources(); current.NextCursor != null; current = m_cloudinary.ListResources(current.NextCursor)) {
+//                resources =  resources.Concat(current.Resources);
+//            }
+            resources = GetAllResults((cursor) => m_cloudinary.ListResources(cursor) );
+            Assert.IsTrue(resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload" && res.Tags.Count() == 1 && res.Tags[0] == "hello").Count() > 0);
         }
+        protected IEnumerable<Resource> GetAllResults(Func<String, ListResourcesResult> list)
+        {
+            ListResourcesResult current = list(null);
+            IEnumerable<Resource> resources = current.Resources;
+            for (; resources != null && current.NextCursor != null; current = list(current.NextCursor))
+            {
+                resources = resources.Concat(current.Resources);
+            }
 
+            return resources;
+        }
         [Test]
         public void TestListResourcesByType()
         {
@@ -746,9 +784,10 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.Upload(uploadParams);
 
-            var result = m_cloudinary.ListResourcesByType("upload");
+            IEnumerable<Resource> result = GetAllResults((cursor) => m_cloudinary.ListResourcesByType("upload", cursor));
 
-            Assert.IsTrue(result.Resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload").Count() > 0);
+            Assert.IsNotEmpty(result.Where(res => res.Type == "upload"));
+            Assert.IsEmpty(result.Where(res => res.Type != "upload"));
         }
 
         [Test]
@@ -825,11 +864,12 @@ namespace CloudinaryDotNet.Test
             // should allow listing resources by tag
 
             var file = new FileDescription(m_testImagePath);
-
+            var tag = "teslistresourcesbytag1";
+            m_cloudinary.DeleteResourcesByTag(tag);
             var uploadParams = new ImageUploadParams()
             {
                 File = file,
-                Tags = "teslistresourcesbytag1,beauty"
+                Tags = tag + ",beauty"
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -837,14 +877,13 @@ namespace CloudinaryDotNet.Test
             uploadParams = new ImageUploadParams()
             {
                 File = file,
-                Tags = "teslistresourcesbytag1"
+                Tags = tag
             };
 
             m_cloudinary.Upload(uploadParams);
-
-            var result = m_cloudinary.ListResourcesByTag("teslistresourcesbytag1");
-
+            var result = m_cloudinary.ListResourcesByTag(tag);
             Assert.AreEqual(2, result.Resources.Count());
+            m_cloudinary.DeleteResourcesByTag(tag);
         }
 
         [Test]
@@ -1248,7 +1287,7 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(uploadResult);
 
             var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId) { ModerationStatus = Actions.ModerationStatus.Approved });
-
+            
             Assert.NotNull(updateResult);
             Assert.NotNull(updateResult.Moderation);
             Assert.AreEqual(1, updateResult.Moderation.Count);
@@ -1256,10 +1295,9 @@ namespace CloudinaryDotNet.Test
         }
 
         // Test disabled because it deletes all images in the remote account.
+        [Test, Ignore( "will delete all resources in the account")]
         public void DeleteAllInLoop()
         {
-            return;
-
             string nextCursor = String.Empty;
 
             do
@@ -1668,7 +1706,9 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUsage()
         {
+            UploadTestResource("TestUsage"); // making sure at least one resource exists
             var result = m_cloudinary.GetUsage();
+            DeleteTestResource("TestUsage");
 
             var plans = new List<string>() { "Free", "Advanced" };
 
@@ -1971,16 +2011,17 @@ namespace CloudinaryDotNet.Test
 
             DateTime start = DateTime.UtcNow;
 
-            var result =
-                m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath) });
+            ImageUploadResult result = UploadTestResource("TestListResourcesStartAt");
 
             Thread.Sleep(2000);
 
             var resources = m_cloudinary.ListResources(
-                new ListResourcesParams() { Type = "upload", StartAt = start, Direction = "asc" });
+                new ListResourcesParams() { Type = "upload", StartAt = result.CreatedAt.AddMilliseconds(-10), Direction = "asc" });
 
-            Assert.NotNull(resources.Resources);
-            Assert.True(resources.Resources.Length > 0);
+            DeleteTestResource("TestListResourcesStartAt");
+
+            Assert.NotNull(resources.Resources, "response should include resources");
+            Assert.True(resources.Resources.Length > 0, "response should include at least one resources");
             Assert.AreEqual(result.PublicId, resources.Resources[0].PublicId);
         }
 
