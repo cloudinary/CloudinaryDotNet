@@ -1,43 +1,44 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+//using System.Runtime.Serialization.Json;
 
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
     /// Results of file uploading
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class RawUploadResult : UploadResult
     {
         /// <summary>
         /// Signature
         /// </summary>
-        [DataMember(Name = "signature")]
+        [JsonProperty(PropertyName = "signature")]
         public string Signature { get; protected set; }
 
         /// <summary>
         /// Resource type
         /// </summary>
-        [DataMember(Name = "resource_type")]
+        [JsonProperty(PropertyName = "resource_type")]
         public string ResourceType { get; protected set; }
 
         /// <summary>
         /// File size (in bytes)
         /// </summary>
-        [DataMember(Name = "bytes")]
+        [JsonProperty(PropertyName = "bytes")]
         public long Length { get; protected set; }
 
-        [DataMember(Name = "moderation")]
+        [JsonProperty(PropertyName = "moderation")]
         public List<Moderation> Moderation { get; protected set; }
 
-        [DataMember(Name = "created_at")]
+        [JsonProperty(PropertyName = "created_at")]
         public DateTime CreatedAt { get; protected set; }
 
-        [DataMember(Name = "tags")]
+        [JsonProperty(PropertyName = "tags")]
         public string[] Tags { get; protected set; }
 
         /// <summary>
@@ -54,13 +55,13 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Results of a file's chunk uploading
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class RawPartUploadResult : RawUploadResult
     {
         /// <summary>
         /// Signature
         /// </summary>
-        [DataMember(Name = "upload_id")]
+        [JsonProperty(PropertyName = "upload_id")]
         public string UploadId { get; protected set; }
 
         /// <summary>

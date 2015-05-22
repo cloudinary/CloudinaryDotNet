@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json;
+using System.Net;
 using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions
@@ -6,13 +7,13 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Results of DeleteUploadPreset operation.
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class DeleteUploadPresetResult : BaseResult
     {
         /// <summary>
         /// API message.
         /// </summary>
-        [DataMember(Name = "message")]
+        [JsonProperty(PropertyName = "message")]
         public string Message { get; protected set; }
 
         /// <summary>

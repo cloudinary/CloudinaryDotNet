@@ -1,17 +1,18 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json;
+using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class ListTagsResult : BaseResult
     {
-        [DataMember(Name = "tags")]
+        [JsonProperty(PropertyName = "tags")]
         public string[] Tags { get; protected set; }
 
-        [DataMember(Name = "next_cursor")]
+        [JsonProperty(PropertyName = "next_cursor")]
         public string NextCursor { get; protected set; }
 
         /// <summary>

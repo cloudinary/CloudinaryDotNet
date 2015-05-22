@@ -1,22 +1,23 @@
 ﻿using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
     /// Results of tags management
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class ExplodeResult : BaseResult
     {
-        [DataMember(Name = "status")]
+        [JsonProperty(PropertyName = "status")]
         public string Status { get; protected set; }
 
-        [DataMember(Name = "batch_id")]
+        [JsonProperty(PropertyName = "batch_id")]
         public string BatchId { get; protected set; }
 
         /// <summary>

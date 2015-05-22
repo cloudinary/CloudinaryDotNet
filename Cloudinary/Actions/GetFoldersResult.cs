@@ -2,12 +2,13 @@
 using System.Net;
 using System.Runtime.Serialization;
 
+using Newtonsoft.Json;
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class GetFoldersResult : BaseResult
     {
-        [DataMember(Name = "folders")]
+        [JsonProperty(PropertyName = "folders")]
         public List<Folder> Folders { get; set; }
 
         /// <summary>
@@ -21,13 +22,13 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Folder
     {
-        [DataMember(Name = "name")]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "path")]
+        [JsonProperty(PropertyName = "path")]
         public string Path { get; set; }
     }
 }

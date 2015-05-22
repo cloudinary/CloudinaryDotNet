@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 
@@ -7,46 +8,46 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Results of image uploading
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class ImageUploadResult : RawUploadResult
     {
         /// <summary>
         /// Image width
         /// </summary>
-        [DataMember(Name = "width")]
+        [JsonProperty(PropertyName = "width")]
         public int Width { get; protected set; }
 
         /// <summary>
         /// Image height
         /// </summary>
-        [DataMember(Name = "height")]
+        [JsonProperty(PropertyName = "height")]
         public int Height { get; protected set; }
 
         /// <summary>
         /// Image format
         /// </summary>
-        [DataMember(Name = "format")]
+        [JsonProperty(PropertyName = "format")]
         public string Format { get; protected set; }
 
-        [DataMember(Name = "exif")]
+        [JsonProperty(PropertyName = "exif")]
         public Dictionary<string, string> Exif { get; protected set; }
 
-        [DataMember(Name = "image_metadata")]
+        [JsonProperty(PropertyName = "image_metadata")]
         public Dictionary<string, string> Metadata { get; protected set; }
 
-        [DataMember(Name = "faces")]
+        [JsonProperty(PropertyName = "faces")]
         public int[][] Faces { get; protected set; }
 
-        [DataMember(Name = "colors")]
+        [JsonProperty(PropertyName = "colors")]
         public string[][] Colors { get; protected set; }
 
-        [DataMember(Name = "phash")]
+        [JsonProperty(PropertyName = "phash")]
         public string Phash { get; protected set; }
 
-        [DataMember(Name = "delete_token")]
+        [JsonProperty(PropertyName = "delete_token")]
         public string DeleteToken { get; protected set; }
 
-        [DataMember(Name = "info")]
+        [JsonProperty(PropertyName = "info")]
         public Info Info { get; protected set; }
 
         /// <summary>

@@ -1,20 +1,21 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json;
+using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+//using System.Runtime.Serialization.Json;
 
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
     /// Results of tags management
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class TagResult : BaseResult
     {
         /// <summary>
         /// Public IDs of affected images
         /// </summary>
-        [DataMember(Name = "public_ids")]
+        [JsonProperty(PropertyName = "public_ids")]
         public string[] PublicIds { get; protected set; }
 
         /// <summary>
