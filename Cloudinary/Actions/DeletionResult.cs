@@ -1,19 +1,20 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json;
+using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
     /// Results of deletion
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class DeletionResult : BaseResult
     {
         /// <summary>
         /// Result description
         /// </summary>
-        [DataMember(Name = "result")]
+        [JsonProperty(PropertyName = "result")]
         public string Result { get; protected set; }
 
         /// <summary>

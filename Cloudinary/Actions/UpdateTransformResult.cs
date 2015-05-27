@@ -1,28 +1,28 @@
 ﻿using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+//using System.Runtime.Serialization.Json;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class UpdateTransformResult : BaseResult
     {
-        [DataMember(Name = "name")]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; protected set; }
 
-        [DataMember(Name = "allowed_for_strict")]
+        [JsonProperty(PropertyName = "allowed_for_strict")]
         public bool Strict { get; protected set; }
 
-        [DataMember(Name = "used")]
+        [JsonProperty(PropertyName = "used")]
         public bool Used { get; protected set; }
 
-        [DataMember(Name = "info")]
+        [JsonProperty(PropertyName = "info")]
         public Dictionary<string, string>[] Info { get; protected set; }
 
-        [DataMember(Name = "derived")]
+        [JsonProperty(PropertyName = "derived")]
         public TransformDerived[] Derived { get; protected set; }
 
         /// <summary>

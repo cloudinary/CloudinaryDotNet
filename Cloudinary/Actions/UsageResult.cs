@@ -1,34 +1,35 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Net;
 using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class UsageResult : BaseResult
     {
-        [DataMember(Name = "plan")]
+        [JsonProperty(PropertyName = "plan")]
         public string Plan { get; protected set; }
 
-        [DataMember(Name = "last_updated")]
+        [JsonProperty(PropertyName = "last_updated")]
         public DateTime LastUpdated { get; protected set; }
 
-        [DataMember(Name = "objects")]
+        [JsonProperty(PropertyName = "objects")]
         public Usage Objects { get; protected set; }
 
-        [DataMember(Name = "bandwidth")]
+        [JsonProperty(PropertyName = "bandwidth")]
         public Usage Bandwidth { get; protected set; }
 
-        [DataMember(Name = "storage")]
+        [JsonProperty(PropertyName = "storage")]
         public Usage Storage { get; protected set; }
 
-        [DataMember(Name = "requests")]
+        [JsonProperty(PropertyName = "requests")]
         public int Requests { get; protected set; }
 
-        [DataMember(Name = "resources")]
+        [JsonProperty(PropertyName = "resources")]
         public int Resources { get; protected set; }
 
-        [DataMember(Name = "derived_resources")]
+        [JsonProperty(PropertyName = "derived_resources")]
         public int DerivedResources { get; protected set; }
 
         /// <summary>
@@ -42,16 +43,16 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Usage
     {
-        [DataMember(Name = "usage")]
+        [JsonProperty(PropertyName = "usage")]
         public long Used { get; protected set; }
 
-        [DataMember(Name = "limit")]
+        [JsonProperty(PropertyName = "limit")]
         public long Limit { get; protected set; }
 
-        [DataMember(Name = "used_percent")]
+        [JsonProperty(PropertyName = "used_percent")]
         public float UsedPercent { get; protected set; }
     }
 }

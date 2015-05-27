@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class ListResourceTypesResult : BaseResult
     {
-        [DataMember(Name = "resource_types")]
+        [JsonProperty(PropertyName = "resource_types")]
         protected string[] m_resourceTypes;
 
+        [JsonIgnore]
         public ResourceType[] ResourceTypes { get; protected set; }
 
         /// <summary>

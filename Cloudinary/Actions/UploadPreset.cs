@@ -5,6 +5,7 @@ using System.Net;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Drawing;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -394,13 +395,13 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class UploadPresetResult : BaseResult
     {
-        [DataMember(Name = "message")]
+        [JsonProperty(PropertyName = "message")]
         public string Message { get; protected set; }
 
-        [DataMember(Name = "name")]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; protected set; }
 
         /// <summary>

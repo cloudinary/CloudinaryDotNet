@@ -1,28 +1,29 @@
 ﻿using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+//using System.Runtime.Serialization.Json;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
     /// Results of tags management
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class MultiResult : BaseResult
     {
-        [DataMember(Name = "url")]
+        [JsonProperty(PropertyName = "url")]
         public Uri Uri { get; protected set; }
 
-        [DataMember(Name = "secure_url")]
+        [JsonProperty(PropertyName = "secure_url")]
         public Uri SecureUri { get; protected set; }
 
-        [DataMember(Name = "public_id")]
+        [JsonProperty(PropertyName = "public_id")]
         public string PublicId { get; protected set; }
 
-        [DataMember(Name = "version")]
+        [JsonProperty(PropertyName = "version")]
         public string Version { get; protected set; }
 
         /// <summary>

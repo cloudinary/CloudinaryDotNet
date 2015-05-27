@@ -2,19 +2,20 @@
 using System.Net;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class DelResResult : BaseResult
     {
-        [DataMember(Name = "deleted")]
+        [JsonProperty(PropertyName = "deleted")]
         public Dictionary<string, string> Deleted { get; protected set; }
 
-        [DataMember(Name = "next_cursor")]
+        [JsonProperty(PropertyName = "next_cursor")]
         public string NextCursor { get; protected set; }
 
-        [DataMember(Name = "partial")]
+        [JsonProperty(PropertyName = "partial")]
         public bool Partial { get; protected set; }
 
         /// <summary>

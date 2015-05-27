@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace CloudinaryDotNet
 {
@@ -358,10 +359,12 @@ namespace CloudinaryDotNet
 
             try
             {
+				//System.Diagnostics.Debug.WriteLine("Http request: keys = {0}, values = {1} ", keys, values  );
                 return (HttpWebResponse)request.GetResponse();
             }
             catch (WebException ex)
             {
+				System.Diagnostics.Debug.WriteLine (ex);
                 var response = ex.Response as HttpWebResponse;
                 if (response == null) throw;
                 else return response;
@@ -389,7 +392,7 @@ namespace CloudinaryDotNet
             {
                 parameters["callback"] = BuildCallbackUrl(path);
             }
-            catch (HttpException) { }
+            catch (Exception) { }
 
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
                 FinalizeUploadParameters(parameters);
@@ -420,10 +423,10 @@ namespace CloudinaryDotNet
             }
             else
             {
-                if (HttpContext.Current != null)
-                    return new Uri(HttpContext.Current.Request.Url, path).ToString();
-                else
-                    throw new HttpException("Http context is not set. Either use this method in the right context or provide an absolute path to file!");
+                //if (HttpContext.Current != null)
+                //    return new Uri(HttpContext.Current.Request.Url, path).ToString();
+                //else
+                    throw new Exception("Http context is not set. Either use this method in the right context or provide an absolute path to file!");
             }
         }
 

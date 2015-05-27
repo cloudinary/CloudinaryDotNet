@@ -1,88 +1,90 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class GetResourceResult : BaseResult
     {
-        [DataMember(Name = "resource_type")]
+        [JsonProperty(PropertyName = "resource_type")]
         protected string m_resourceType;
 
-        [DataMember(Name = "public_id")]
+        [JsonProperty(PropertyName = "public_id")]
         public string PublicId { get; protected set; }
 
-        [DataMember(Name = "format")]
+        [JsonProperty(PropertyName = "format")]
         public string Format { get; protected set; }
 
-        [DataMember(Name = "version")]
+        [JsonProperty(PropertyName = "version")]
         public string Version { get; protected set; }
 
+        [JsonIgnore]
         public ResourceType ResourceType
         {
             get { return Api.ParseCloudinaryParam<ResourceType>(m_resourceType); }
         }
 
-        [DataMember(Name = "type")]
+        [JsonProperty(PropertyName = "type")]
         public string Type { get; protected set; }
 
-        [DataMember(Name = "created_at")]
+        [JsonProperty(PropertyName = "created_at")]
         public string Created { get; protected set; }
 
-        [DataMember(Name = "bytes")]
+        [JsonProperty(PropertyName = "bytes")]
         public long Length { get; protected set; }
 
-        [DataMember(Name = "width")]
+        [JsonProperty(PropertyName = "width")]
         public int Width { get; protected set; }
 
-        [DataMember(Name = "height")]
+        [JsonProperty(PropertyName = "height")]
         public int Height { get; protected set; }
 
-        [DataMember(Name = "url")]
+        [JsonProperty(PropertyName = "url")]
         public string Url { get; protected set; }
 
-        [DataMember(Name = "secure_url")]
+        [JsonProperty(PropertyName = "secure_url")]
         public string SecureUrl { get; protected set; }
 
-        [DataMember(Name = "next_cursor")]
+        [JsonProperty(PropertyName = "next_cursor")]
         public string NextCursor { get; protected set; }
 
-        [DataMember(Name = "exif")]
+        [JsonProperty(PropertyName = "exif")]
         public Dictionary<string, string> Exif { get; protected set; }
 
-        [DataMember(Name = "image_metadata")]
+        [JsonProperty(PropertyName = "image_metadata")]
         public Dictionary<string, string> Metadata { get; protected set; }
 
-        [DataMember(Name = "faces")]
+        [JsonProperty(PropertyName = "faces")]
         public int[][] Faces { get; protected set; }
 
-        [DataMember(Name = "colors")]
+        [JsonProperty(PropertyName = "colors")]
         public string[][] Colors { get; protected set; }
 
-        [DataMember(Name = "derived")]
+        [JsonProperty(PropertyName = "derived")]
         public Derived[] Derived { get; protected set; }
 
-        [DataMember(Name = "tags")]
+        [JsonProperty(PropertyName = "tags")]
         public string[] Tags { get; protected set; }
 
-        [DataMember(Name = "moderation")]
+        [JsonProperty(PropertyName = "moderation")]
         public List<Moderation> Moderation { get; protected set; }
 
-        [DataMember(Name = "context")]
+        [JsonProperty(PropertyName = "context")]
         public JToken Context { get; protected set; }
 
-        [DataMember(Name = "phash")]
+        [JsonProperty(PropertyName = "phash")]
         public string Phash { get; protected set; }
 
-        [DataMember(Name = "predominant")]
+        [JsonProperty(PropertyName = "predominant")]
         public Predominant Predominant { get; protected set; }
 
-        [DataMember(Name = "coordinates")]
+        [JsonProperty(PropertyName = "coordinates")]
         public Coordinates Coordinates { get; protected set; }
 
-        [DataMember(Name = "info")]
+        [JsonProperty(PropertyName = "info")]
         public Info Info { get; protected set; }
 
         /// <summary>
@@ -96,271 +98,271 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Coordinates
     {
-        [DataMember(Name = "custom")]
+        [JsonProperty(PropertyName = "custom")]
         public int[][] Custom { get; protected set; }
 
-        [DataMember(Name = "faces")]
+        [JsonProperty(PropertyName = "faces")]
         public int[][] Faces { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Predominant
     {
-        [DataMember(Name = "google")]
+        [JsonProperty(PropertyName = "google")]
         public object[][] Google { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Derived
     {
-        [DataMember(Name = "transformation")]
+        [JsonProperty(PropertyName = "transformation")]
         public string Transformation { get; protected set; }
 
-        [DataMember(Name = "format")]
+        [JsonProperty(PropertyName = "format")]
         public string Format { get; protected set; }
 
-        [DataMember(Name = "bytes")]
+        [JsonProperty(PropertyName = "bytes")]
         public long Length { get; protected set; }
 
-        [DataMember(Name = "id")]
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; protected set; }
 
-        [DataMember(Name = "url")]
+        [JsonProperty(PropertyName = "url")]
         public string Url { get; protected set; }
 
-        [DataMember(Name = "secure_url")]
+        [JsonProperty(PropertyName = "secure_url")]
         public string SecureUrl { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Info
     {
-        [DataMember(Name = "detection")]
+        [JsonProperty(PropertyName = "detection")]
         public Detection Detection { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Detection
     {
-        [DataMember(Name = "rekognition_face")]
+        [JsonProperty(PropertyName = "rekognition_face")]
         public RekognitionFace RekognitionFace { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class RekognitionFace
     {
-        [DataMember(Name = "status")]
+        [JsonProperty(PropertyName = "status")]
         public string Status { get; protected set; }
 
-        [DataMember(Name = "data")]
+        [JsonProperty(PropertyName = "data")]
         public List<Face> Faces { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Face
     {
-        [DataMember(Name = "boundingbox")]
+        [JsonProperty(PropertyName = "boundingbox")]
         public BoundingBox BoundingBox { get; protected set; }
 
-        [DataMember(Name = "confidence")]
+        [JsonProperty(PropertyName = "confidence")]
         public double Confidence { get; protected set; }
 
         /// <summary>
         /// Estimated age of the person.
         /// </summary>
-        [DataMember(Name = "age")]
+        [JsonProperty(PropertyName = "age")]
         public double Age { get; protected set; }
 
         /// <summary>
         /// 0.0 to 1.0 confidence score of whether the person is smiling.
         /// </summary>
-        [DataMember(Name = "smile")]
+        [JsonProperty(PropertyName = "smile")]
         public double Smile { get; protected set; }
 
         /// <summary>
         /// Score of whether the person is wearing glasses.
         /// </summary>
-        [DataMember(Name = "glasses")]
+        [JsonProperty(PropertyName = "glasses")]
         public double Glasses { get; protected set; }
 
-        [DataMember(Name = "sunglasses")]
+        [JsonProperty(PropertyName = "sunglasses")]
         public double Sunglasses { get; protected set; }
 
-        [DataMember(Name = "beard")]
+        [JsonProperty(PropertyName = "beard")]
         public double Beard { get; protected set; }
 
-        [DataMember(Name = "mustache")]
+        [JsonProperty(PropertyName = "mustache")]
         public double Mustache { get; protected set; }
 
         /// <summary>
         /// Score of whether the eyes of the person are closed.
         /// </summary>
-        [DataMember(Name = "eye_closed")]
+        [JsonProperty(PropertyName = "eye_closed")]
         public double EyeClosed { get; protected set; }
 
         /// <summary>
         /// Score of whether the mouse of the person is wide open.
         /// </summary>
-        [DataMember(Name = "mouth_open_wide")]
+        [JsonProperty(PropertyName = "mouth_open_wide")]
         public double MouthOpenWide { get; protected set; }
 
-        [DataMember(Name = "beauty")]
+        [JsonProperty(PropertyName = "beauty")]
         public double Beauty { get; protected set; }
 
         /// <summary>
         /// Whether the person is a male or a female (high value towards 1 means male).
         /// </summary>
-        [DataMember(Name = "sex")]
+        [JsonProperty(PropertyName = "sex")]
         public double Gender { get; protected set; }
 
-        [DataMember(Name = "race")]
+        [JsonProperty(PropertyName = "race")]
         public Dictionary<string, double> Race { get; protected set; }
 
-        [DataMember(Name = "emotion")]
+        [JsonProperty(PropertyName = "emotion")]
         public Dictionary<string, double> Emotion { get; protected set; }
 
-        [DataMember(Name = "quality")]
+        [JsonProperty(PropertyName = "quality")]
         public Dictionary<string, double> Quality { get; protected set; }
 
         /// <summary>
         /// The way the face is positioned and 3D rotated.
         /// </summary>
-        [DataMember(Name = "pose")]
+        [JsonProperty(PropertyName = "pose")]
         public Dictionary<string, double> Pose { get; protected set; }
 
         /// <summary>
         /// Position of the left eye.
         /// </summary>
-        [DataMember(Name = "eye_left")]
+        [JsonProperty(PropertyName = "eye_left")]
         public Point EyeLeftPosition { get; protected set; }
 
         /// <summary>
         /// Position of the right eye.
         /// </summary>
-        [DataMember(Name = "eye_right")]
+        [JsonProperty(PropertyName = "eye_right")]
         public Point EyeRightPosition { get; protected set; }
 
         /// <summary>
         /// Left point of the left eye.
         /// </summary>
-        [DataMember(Name = "e_ll")]
+        [JsonProperty(PropertyName = "e_ll")]
         public Point EyeLeft_Left { get; protected set; }
 
         /// <summary>
         /// Right point of the left eye.
         /// </summary>
-        [DataMember(Name = "e_lr")]
+        [JsonProperty(PropertyName = "e_lr")]
         public Point EyeLeft_Right { get; protected set; }
 
         /// <summary>
         /// Up point of the left eye.
         /// </summary>
-        [DataMember(Name = "e_lu")]
+        [JsonProperty(PropertyName = "e_lu")]
         public Point EyeLeft_Up { get; protected set; }
 
         /// <summary>
         /// Down point of the left eye.
         /// </summary>
-        [DataMember(Name = "e_ld")]
+        [JsonProperty(PropertyName = "e_ld")]
         public Point EyeLeft_Down { get; protected set; }
 
         /// <summary>
         /// Left point of the right eye.
         /// </summary>
-        [DataMember(Name = "e_rl")]
+        [JsonProperty(PropertyName = "e_rl")]
         public Point EyeRight_Left { get; protected set; }
 
         /// <summary>
         /// Right point of the right eye.
         /// </summary>
-        [DataMember(Name = "e_rr")]
+        [JsonProperty(PropertyName = "e_rr")]
         public Point EyeRight_Right { get; protected set; }
 
         /// <summary>
         /// Up point of the right eye.
         /// </summary>
-        [DataMember(Name = "e_ru")]
+        [JsonProperty(PropertyName = "e_ru")]
         public Point EyeRight_Up { get; protected set; }
 
         /// <summary>
         /// Down point of the right eye.
         /// </summary>
-        [DataMember(Name = "e_rd")]
+        [JsonProperty(PropertyName = "e_rd")]
         public Point EyeRight_Down { get; protected set; }
 
         /// <summary>
         /// Position of the nose.
         /// </summary>
-        [DataMember(Name = "nose")]
+        [JsonProperty(PropertyName = "nose")]
         public Point NosePosition { get; protected set; }
 
         /// <summary>
         /// Left point of the nose.
         /// </summary>
-        [DataMember(Name = "n_l")]
+        [JsonProperty(PropertyName = "n_l")]
         public Point NoseLeft { get; protected set; }
 
         /// <summary>
         /// Right point of the nose.
         /// </summary>
-        [DataMember(Name = "n_r")]
+        [JsonProperty(PropertyName = "n_r")]
         public Point NoseRight { get; protected set; }
 
         /// <summary>
         /// Left point of the mouth.
         /// </summary>
-        [DataMember(Name = "mouth_l")]
+        [JsonProperty(PropertyName = "mouth_l")]
         public Point MouthLeft { get; protected set; }
 
         /// <summary>
         /// Right point of the mouth.
         /// </summary>
-        [DataMember(Name = "mouth_r")]
+        [JsonProperty(PropertyName = "mouth_r")]
         public Point MouthRight { get; protected set; }
 
         /// <summary>
         /// Up point of the mouth.
         /// </summary>
-        [DataMember(Name = "m_u")]
+        [JsonProperty(PropertyName = "m_u")]
         public Point MouthUp { get; protected set; }
 
         /// <summary>
         /// Down point of the mouth.
         /// </summary>
-        [DataMember(Name = "m_d")]
+        [JsonProperty(PropertyName = "m_d")]
         public Point MouthDown { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class BoundingBox
     {
-        [DataMember(Name = "tl")]
+        [JsonProperty(PropertyName = "tl")]
         public Point TopLeft { get; protected set; }
 
-        [DataMember(Name = "size")]
+        [JsonProperty(PropertyName = "size")]
         public Size Size { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Point
     {
-        [DataMember(Name = "x")]
+        [JsonProperty(PropertyName = "x")]
         public double X { get; protected set; }
 
-        [DataMember(Name = "y")]
+        [JsonProperty(PropertyName = "y")]
         public double Y { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Size
     {
-        [DataMember(Name = "width")]
+        [JsonProperty(PropertyName = "width")]
         public double Width { get; protected set; }
 
-        [DataMember(Name = "height")]
+        [JsonProperty(PropertyName = "height")]
         public double Height { get; protected set; }
     }
 }

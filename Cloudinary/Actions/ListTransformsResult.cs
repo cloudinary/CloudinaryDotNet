@@ -1,17 +1,18 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json;
+using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class ListTransformsResult : BaseResult
     {
-        [DataMember(Name = "transformations")]
+        [JsonProperty(PropertyName = "transformations")]
         public TransformDesc[] Transformations { get; protected set; }
 
-        [DataMember(Name = "next_cursor")]
+        [JsonProperty(PropertyName = "next_cursor")]
         public string NextCursor { get; protected set; }
 
         /// <summary>
@@ -25,16 +26,16 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class TransformDesc
     {
-        [DataMember(Name = "name")]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; protected set; }
 
-        [DataMember(Name = "allowed_for_strict")]
+        [JsonProperty(PropertyName = "allowed_for_strict")]
         public bool Strict { get; protected set; }
 
-        [DataMember(Name = "used")]
+        [JsonProperty(PropertyName = "used")]
         public bool Used { get; protected set; }
     }
 }

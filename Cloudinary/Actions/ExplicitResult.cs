@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class ExplicitResult : RawUploadResult
     {
-        [DataMember(Name = "format")]
+        [JsonProperty(PropertyName = "format")]
         public string Format { get; protected set; }
 
-        [DataMember(Name = "type")]
+        [JsonProperty(PropertyName = "type")]
         public string Type { get; protected set; }
 
-        [DataMember(Name = "eager")]
+        [JsonProperty(PropertyName = "eager")]
         public Eager[] Eager { get; protected set; }
 
         /// <summary>
@@ -30,13 +31,13 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Eager
     {
-        [DataMember(Name = "url")]
+        [JsonProperty(PropertyName = "url")]
         public Uri Uri { get; protected set; }
 
-        [DataMember(Name = "secure_url")]
+        [JsonProperty(PropertyName = "secure_url")]
         public Uri SecureUri { get; protected set; }
     }
 }

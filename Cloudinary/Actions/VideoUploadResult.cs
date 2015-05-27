@@ -1,57 +1,58 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json;
+using System.Net;
 using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class VideoUploadResult : RawUploadResult
     {
         /// <summary>
         /// Video width
         /// </summary>
-        [DataMember(Name = "width")]
+        [JsonProperty(PropertyName = "width")]
         public int Width { get; protected set; }
 
         /// <summary>
         /// Video height
         /// </summary>
-        [DataMember(Name = "height")]
+        [JsonProperty(PropertyName = "height")]
         public int Height { get; protected set; }
 
         /// <summary>
         /// File format
         /// </summary>
-        [DataMember(Name = "format")]
+        [JsonProperty(PropertyName = "format")]
         public string Format { get; protected set; }
 
         /// <summary>
         /// Video information.
         /// </summary>
-        [DataMember(Name = "video")]
+        [JsonProperty(PropertyName = "video")]
         public Video Video { get; protected set; }
 
         /// <summary>
         /// Audio information.
         /// </summary>
-        [DataMember(Name = "audio")]
+        [JsonProperty(PropertyName = "audio")]
         public Audio Audio { get; protected set; }
 
         /// <summary>
         /// Frame rate.
         /// </summary>
-        [DataMember(Name = "frame_rate")]
+        [JsonProperty(PropertyName = "frame_rate")]
         public double FrameRate { get; protected set; }
 
         /// <summary>
         /// Bit rate.
         /// </summary>
-        [DataMember(Name = "bit_rate")]
+        [JsonProperty(PropertyName = "bit_rate")]
         public int BitRate { get; protected set; }
 
         /// <summary>
         /// Duration.
         /// </summary>
-        [DataMember(Name = "duration")]
+        [JsonProperty(PropertyName = "duration")]
         public double Duration { get; protected set; }
 
         /// <summary>
@@ -65,38 +66,38 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Video
     {
-        [DataMember(Name = "pix_format")]
+        [JsonProperty(PropertyName = "pix_format")]
         public string Format { get; protected set; }
 
-        [DataMember(Name = "codec")]
+        [JsonProperty(PropertyName = "codec")]
         public string Codec { get; protected set; }
 
-        [DataMember(Name = "level")]
+        [JsonProperty(PropertyName = "level")]
         public int Level { get; protected set; }
 
-        [DataMember(Name = "bit_rate")]
+        [JsonProperty(PropertyName = "bit_rate")]
         public int BitRate { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Audio
     {
-        [DataMember(Name = "codec")]
+        [JsonProperty(PropertyName = "codec")]
         public string Codec { get; protected set; }
 
-        [DataMember(Name = "bit_rate")]
+        [JsonProperty(PropertyName = "bit_rate")]
         public int BitRate { get; protected set; }
 
-        [DataMember(Name = "frequency")]
+        [JsonProperty(PropertyName = "frequency")]
         public int Frequency { get; protected set; }
 
-        [DataMember(Name = "channels")]
+        [JsonProperty(PropertyName = "channels")]
         public int Channels { get; protected set; }
 
-        [DataMember(Name = "channel_layout")]
+        [JsonProperty(PropertyName = "channel_layout")]
         public string ChannelLayout { get; protected set; }
     }
 }

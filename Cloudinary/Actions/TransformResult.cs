@@ -1,18 +1,19 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+//using System.Runtime.Serialization.Json;
 using System.Text;
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class TransformResult : BaseResult
     {
-        [DataMember(Name = "message")]
+        [JsonProperty(PropertyName = "message")]
         public string Message { get; protected set; }
 
         /// <summary>

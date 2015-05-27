@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{F32D1C36-BC32-47E4-93B6-00E2F1EB30CA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>CloudinaryDroid</RootNamespace>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <AssemblyName>CloudinaryDroid</AssemblyName>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\Cloudinary\Account.cs">
+      <Link>Account.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Api.cs">
+      <Link>Api.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Cloudinary.Async.cs">
+      <Link>Cloudinary.Async.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Cloudinary.cs">
+      <Link>Cloudinary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\StringDictionary.cs">
+      <Link>StringDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Url.cs">
+      <Link>Url.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\BaseParams.cs">
+      <Link>Actions\BaseParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\BaseResult.cs">
+      <Link>Actions\BaseResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\CreateTransformParams.cs">
+      <Link>Actions\CreateTransformParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\DelDerivedResParams.cs">
+      <Link>Actions\DelDerivedResParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\DelDerivedResResult.cs">
+      <Link>Actions\DelDerivedResResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\DeleteUploadPreset.cs">
+      <Link>Actions\DeleteUploadPreset.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\DeletionParams.cs">
+      <Link>Actions\DeletionParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\DeletionResult.cs">
+      <Link>Actions\DeletionResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\DelResParams.cs">
+      <Link>Actions\DelResParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\DelResResult.cs">
+      <Link>Actions\DelResResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ExplicitParams.cs">
+      <Link>Actions\ExplicitParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ExplicitResult.cs">
+      <Link>Actions\ExplicitResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ExplodeParams.cs">
+      <Link>Actions\ExplodeParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ExplodeResult.cs">
+      <Link>Actions\ExplodeResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\GetFoldersResult.cs">
+      <Link>Actions\GetFoldersResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\GetResourceParams.cs">
+      <Link>Actions\GetResourceParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\GetResourceResult.cs">
+      <Link>Actions\GetResourceResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\GetTransformParams.cs">
+      <Link>Actions\GetTransformParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\GetTransformResult.cs">
+      <Link>Actions\GetTransformResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\GetUploadPreset.cs">
+      <Link>Actions\GetUploadPreset.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ImageUploadParams.cs">
+      <Link>Actions\ImageUploadParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ImageUploadResult.cs">
+      <Link>Actions\ImageUploadResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ListResourcesParams.cs">
+      <Link>Actions\ListResourcesParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ListResourcesResult.cs">
+      <Link>Actions\ListResourcesResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ListResourceTypesResult.cs">
+      <Link>Actions\ListResourceTypesResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ListTagsParams.cs">
+      <Link>Actions\ListTagsParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ListTagsResult.cs">
+      <Link>Actions\ListTagsResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ListTransformsParams.cs">
+      <Link>Actions\ListTransformsParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ListTransformsResult.cs">
+      <Link>Actions\ListTransformsResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\ListUploadPresets.cs">
+      <Link>Actions\ListUploadPresets.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\MultiParams.cs">
+      <Link>Actions\MultiParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\MultiResult.cs">
+      <Link>Actions\MultiResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\RawUploadParams.cs">
+      <Link>Actions\RawUploadParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\RawUploadResult.cs">
+      <Link>Actions\RawUploadResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\RenameParams.cs">
+      <Link>Actions\RenameParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\RenameResult.cs">
+      <Link>Actions\RenameResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\SpriteParams.cs">
+      <Link>Actions\SpriteParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\SpriteResult.cs">
+      <Link>Actions\SpriteResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\TagParams.cs">
+      <Link>Actions\TagParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\TagResult.cs">
+      <Link>Actions\TagResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\TextParams.cs">
+      <Link>Actions\TextParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\TextResult.cs">
+      <Link>Actions\TextResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\TransformResult.cs">
+      <Link>Actions\TransformResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\UpdateParams.cs">
+      <Link>Actions\UpdateParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\UpdateTransformParams.cs">
+      <Link>Actions\UpdateTransformParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\UpdateTransformResult.cs">
+      <Link>Actions\UpdateTransformResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\UploadPreset.cs">
+      <Link>Actions\UploadPreset.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\UsageResult.cs">
+      <Link>Actions\UsageResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\VideoUploadParams.cs">
+      <Link>Actions\VideoUploadParams.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Actions\VideoUploadResult.cs">
+      <Link>Actions\VideoUploadResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Transforms\ImageTransform.cs">
+      <Link>Transforms\ImageTransform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Transforms\Transformation.cs">
+      <Link>Transforms\Transformation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Cloudinary\Transforms\VideoTransform.cs">
+      <Link>Transforms\VideoTransform.cs</Link>
+    </Compile>
+    <Compile Include="CloudinaryWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Assets\AboutAssets.txt" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\drawable-hdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\Icon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="New Folder\" />
+  </ItemGroup>
+</Project>

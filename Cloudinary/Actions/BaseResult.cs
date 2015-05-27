@@ -48,38 +48,38 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Results of uploading
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public abstract class UploadResult : BaseResult
     {
         /// <summary>
         /// Public ID of uploaded resource
         /// </summary>
-        [DataMember(Name = "public_id")]
+        [JsonProperty(PropertyName = "public_id")]
         public string PublicId { get; protected set; }
 
         /// <summary>
         /// Version of uploaded resource
         /// </summary>
-        [DataMember(Name = "version")]
+        [JsonProperty(PropertyName = "version")]
         public string Version { get; protected set; }
 
         /// <summary>
         /// URL of uploaded resource
         /// </summary>
-        [DataMember(Name = "url")]
+        [JsonProperty(PropertyName = "url")]
         public Uri Uri { get; protected set; }
 
         /// <summary>
         /// Secured URL of uploaded resource
         /// </summary>
-        [DataMember(Name = "secure_url")]
+        [JsonProperty(PropertyName = "secure_url")]
         public Uri SecureUri { get; protected set; }
     }
 
     /// <summary>
     /// Represents basic result of HTTP request
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public abstract class BaseResult
     {
         //protected static Dictionary<Type, DataContractJsonSerializer> m_serializers = new Dictionary<Type, DataContractJsonSerializer>();
@@ -87,32 +87,37 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// HTTP status code
         /// </summary>
+        [JsonIgnore]
         public HttpStatusCode StatusCode { get; protected set; }
 
         /// <summary>
         /// Raw JSON as received from server
         /// </summary>
+        [JsonIgnore]
         public JToken JsonObj { get; protected set; }
 
         /// <summary>
         /// Description of server-side error (if one has occured)
         /// </summary>
-        [DataMember(Name = "error")]
+        [JsonProperty(PropertyName = "error")]
         public Error Error { get; protected set; }
 
         /// <summary>
         /// Gets current limit of API requests until <see cref="Reset"/>.
         /// </summary>
+        [JsonIgnore]
         public long Limit { get; protected set; }
 
         /// <summary>
         /// Gets remaining amount of requests until <see cref="Reset"/>.
         /// </summary>
+        [JsonIgnore]
         public long Remaining { get; protected set; }
 
         /// <summary>
         /// Gets time of next reset of limits.
         /// </summary>
+        [JsonIgnore]
         public DateTime Reset { get; protected set; }
 
         /// <summary>
@@ -169,29 +174,29 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Represents server-side error
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class Error
     {
         /// <summary>
         /// Error description
         /// </summary>
-        [DataMember(Name = "message")]
+        [JsonProperty(PropertyName = "message")]
         public string Message { get; protected set; }
     }
 
-    [DataContract]
+    //[DataContract]
     public class Moderation
     {
-        [DataMember(Name = "status")]
+        [JsonProperty(PropertyName = "status")]
         public ModerationStatus Status;
 
-        [DataMember(Name = "kind")]
+        [JsonProperty(PropertyName = "kind")]
         public string Kind;
 
-        [DataMember(Name = "response")]
+        [JsonProperty(PropertyName = "response")]
         public string Response;
 
-        [DataMember(Name = "updated_at")]
+        [JsonProperty(PropertyName = "updated_at")]
         public DateTime UpdatedAt;
     }
 }

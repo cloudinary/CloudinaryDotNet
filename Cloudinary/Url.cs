@@ -874,11 +874,11 @@ namespace CloudinaryDotNet
         {
         }
 
-        public UrlBuilder(System.Web.UI.Page page)
-            : base(page.Request.Url.AbsoluteUri)
-        {
-            PopulateQueryString();
-        }
+        //public UrlBuilder(System.Web.UI.Page page)
+        //    : base(page.Request.Url.AbsoluteUri)
+        //{
+        //    PopulateQueryString();
+        //}
 
         public void SetParameters(IDictionary<string, object> @params)
         {
@@ -905,21 +905,21 @@ namespace CloudinaryDotNet
             return base.Uri.AbsoluteUri;
         }
 
-        public void Navigate()
-        {
-            _Navigate(true);
-        }
+        //public void Navigate()
+        //{
+        //    _Navigate(true);
+        //}
 
-        public void Navigate(bool endResponse)
-        {
-            _Navigate(endResponse);
-        }
+        //public void Navigate(bool endResponse)
+        //{
+        //    _Navigate(endResponse);
+        //}
 
-        private void _Navigate(bool endResponse)
-        {
-            string uri = this.ToString();
-            HttpContext.Current.Response.Redirect(uri, endResponse);
-        }
+        //private void _Navigate(bool endResponse)
+        //{
+        //    string uri = this.ToString();
+        //    HttpContext.Current.Response.Redirect(uri, endResponse);
+        //}
 
         private void PopulateQueryString()
         {

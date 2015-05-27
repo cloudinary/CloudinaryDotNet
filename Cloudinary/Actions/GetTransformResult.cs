@@ -1,28 +1,28 @@
 ﻿using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
-    [DataContract]
+    //[DataContract]
     public class GetTransformResult : BaseResult
     {
-        [DataMember(Name = "name")]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; protected set; }
 
-        [DataMember(Name = "allowed_for_strict")]
+        [JsonProperty(PropertyName = "allowed_for_strict")]
         public bool Strict { get; protected set; }
 
-        [DataMember(Name = "used")]
+        [JsonProperty(PropertyName = "used")]
         public bool Used { get; protected set; }
 
-        [DataMember(Name = "info")]
+        [JsonProperty(PropertyName = "info")]
         public Dictionary<string, object>[] Info { get; protected set; }
 
-        [DataMember(Name = "derived")]
+        [JsonProperty(PropertyName = "derived")]
         public TransformDerived[] Derived { get; protected set; }
 
         /// <summary>
@@ -36,36 +36,37 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class TransformDerived
     {
-        [DataMember(Name = "public_id")]
+        [JsonProperty(PropertyName = "public_id")]
         public string PublicId { get; protected set; }
 
-        [DataMember(Name = "resource_type")]
+        [JsonProperty(PropertyName = "resource_type")]
         public string m_resourceType;
 
+        [JsonIgnore]
         public ResourceType ResourceType
         {
             get { return Api.ParseCloudinaryParam<ResourceType>(m_resourceType); }
         }
 
-        [DataMember(Name = "type")]
+        [JsonProperty(PropertyName = "type")]
         public string Type { get; protected set; }
 
-        [DataMember(Name = "format")]
+        [JsonProperty(PropertyName = "format")]
         public string Format { get; protected set; }
 
-        [DataMember(Name = "url")]
+        [JsonProperty(PropertyName = "url")]
         public string Url { get; protected set; }
 
-        [DataMember(Name = "secure_url")]
+        [JsonProperty(PropertyName = "secure_url")]
         public string SecureUrl { get; protected set; }
 
-        [DataMember(Name = "bytes")]
+        [JsonProperty(PropertyName = "bytes")]
         public long Length { get; protected set; }
 
-        [DataMember(Name = "id")]
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; protected set; }
     }
 }

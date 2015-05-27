@@ -53,10 +53,15 @@ namespace CloudinaryDotNet.Test
         [TestFixtureSetUp]
         public void Initialize()
         {
+            //m_account = new Account(
+            //    Settings.Default.CloudName,
+            //    Settings.Default.ApiKey,
+            //    Settings.Default.ApiSecret);
+
             m_account = new Account(
-                Settings.Default.CloudName,
-                Settings.Default.ApiKey,
-                Settings.Default.ApiSecret);
+                "dt7dlkaum",
+                "743578136545741",
+                "wETwOKHSP6vvb4VHzZNh4qWcCGQ");
 
             if (String.IsNullOrEmpty(m_account.Cloud))
                 Console.WriteLine("Cloud name must be specified in test configuration (app.config)!");
@@ -1295,7 +1300,7 @@ namespace CloudinaryDotNet.Test
         }
 
         // Test disabled because it deletes all images in the remote account.
-        [Test, Ignore( "will delete all resources in the account")]
+        [Test] //, Ignore( "will delete all resources in the account")]
         public void DeleteAllInLoop()
         {
             string nextCursor = String.Empty;
@@ -1972,7 +1977,7 @@ namespace CloudinaryDotNet.Test
                 Unsigned = true
             });
 
-            var acc = new Account(Settings.Default.CloudName);
+            var acc = new Account("dt7dlkaum"); //Settings.Default.CloudName);
             var cloudinary = new Cloudinary(acc);
 
             var upload = cloudinary.Upload(new ImageUploadParams()

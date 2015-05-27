@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 
@@ -47,19 +48,19 @@ namespace CloudinaryDotNet.Actions
     /// <summary>
     /// Response to <see cref="ListUploadPresetsParams"/>.
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class ListUploadPresetsResult : BaseResult
     {
         /// <summary>
         /// Gets presets.
         /// </summary>
-        [DataMember(Name = "presets")]
+        [JsonProperty(PropertyName = "presets")]
         public List<GetUploadPresetResult> Presets { get; protected set; }
 
         /// <summary>
         /// Holds the cursor value if there are more presets than <see cref="ListUploadPresetsParams.MaxResults"/>.
         /// </summary>
-        [DataMember(Name = "next_cursor")]
+        [JsonProperty(PropertyName = "next_cursor")]
         public string NextCursor { get; protected set; }
 
         /// <summary>

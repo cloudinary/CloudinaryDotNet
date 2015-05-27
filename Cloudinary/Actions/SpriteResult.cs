@@ -1,37 +1,38 @@
 ﻿using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+//using System.Runtime.Serialization.Json;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
     /// Results of tags management
     /// </summary>
-    [DataContract]
+    //[DataContract]
     public class SpriteResult : BaseResult
     {
-        [DataMember(Name = "css_url")]
+        [JsonProperty(PropertyName = "css_url")]
         public Uri CssUri { get; protected set; }
 
-        [DataMember(Name = "secure_css_url")]
+        [JsonProperty(PropertyName = "secure_css_url")]
         public Uri SecureCssUri { get; protected set; }
 
-        [DataMember(Name = "image_url")]
+        [JsonProperty(PropertyName = "image_url")]
         public Uri ImageUri { get; protected set; }
 
-        [DataMember(Name = "json_url")]
+        [JsonProperty(PropertyName = "json_url")]
         public Uri JsonUri { get; protected set; }
 
-        [DataMember(Name = "public_id")]
+        [JsonProperty(PropertyName = "public_id")]
         public string PublicId { get; protected set; }
 
-        [DataMember(Name = "version")]
+        [JsonProperty(PropertyName = "version")]
         public string Version { get; protected set; }
 
-        [DataMember(Name = "image_infos")]
+        [JsonProperty(PropertyName = "image_infos")]
         public Dictionary<string, ImageInfo> ImageInfos { get; protected set; }
 
         /// <summary>
@@ -45,19 +46,19 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
-    [DataContract]
+    //[DataContract]
     public class ImageInfo
     {
-        [DataMember(Name = "width")]
+        [JsonProperty(PropertyName = "width")]
         public int Width { get; protected set; }
 
-        [DataMember(Name = "height")]
+        [JsonProperty(PropertyName = "height")]
         public int Height { get; protected set; }
 
-        [DataMember(Name = "x")]
+        [JsonProperty(PropertyName = "x")]
         public int X { get; protected set; }
 
-        [DataMember(Name = "y")]
+        [JsonProperty(PropertyName = "y")]
         public int Y { get; protected set; }
     }
 }
