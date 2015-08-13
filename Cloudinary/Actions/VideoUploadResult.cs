@@ -99,4 +99,27 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "channel_layout")]
         public string ChannelLayout { get; protected set; }
     }
+
+	/// <summary>
+	/// Results of a file's chunk uploading
+	/// </summary>
+	[DataContract]
+	public class VideoPartUploadResult : VideoUploadResult
+	{
+		/// <summary>
+		/// Signature
+		/// </summary>
+		[DataMember(Name = "upload_id")]
+		public string UploadId { get; protected set; }
+
+		/// <summary>
+		/// Parses HTTP response and creates new instance of this class
+		/// </summary>
+		/// <param name="response">HTTP response</param>
+		/// <returns>New instance of this class</returns>
+		internal static new VideoPartUploadResult Parse(HttpWebResponse response)
+		{
+			return Parse<VideoPartUploadResult>(response);
+		}
+	}
 }

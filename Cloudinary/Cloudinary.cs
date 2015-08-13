@@ -425,6 +425,60 @@ namespace CloudinaryDotNet
             return result;
         }
 
+		public VideoUploadResult UploadLargeRaw(VideoUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
+		{
+			if (parameters.File.IsRemote)
+				throw new ArgumentException("The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!");
+
+			string uri = m_api.ApiUrlV.Action("upload_large").ResourceType("video").BuildUrl();
+
+			ResetInternalFileDescription(parameters.File, bufferSize);
+
+			int partNumber = 1;
+			string publicId = null;
+			string uploadId = null;
+
+			VideoUploadResult result = null;
+
+			while (!parameters.File.EOF)
+			{
+				var dict = parameters.ToParamsDictionary();
+
+				dict.Add("part_number", partNumber);
+
+				if (partNumber > 1)
+				{
+					dict["public_id"] = publicId;
+					dict["upload_id"] = uploadId;
+				}
+
+				if (parameters.File.IsLastPart())
+					dict["final"] = true;
+
+				using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, dict, parameters.File))
+				{
+					var partResult = VideoPartUploadResult.Parse(response);
+					result = partResult;
+
+					if (result.StatusCode != HttpStatusCode.OK)
+						throw new WebException(String.Format(
+							"An error has occured while uploading file (status code: {0}). {1}",
+							partResult.StatusCode,
+							partResult.Error != null ? partResult.Error.Message : "Unknown error"));
+
+					if (partNumber == 1)
+					{
+						publicId = partResult.PublicId;
+						uploadId = partResult.UploadId;
+					}
+
+					partNumber++;
+				}
+			}
+
+			return result;
+		}
+
         /// <summary>
         /// Changes public identifier of a file.
         /// </summary>
