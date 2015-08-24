@@ -564,11 +564,10 @@ namespace CloudinaryDotNet
 #if DEBUG
             Console.WriteLine(String.Format("{0}: {1}", key, value));
 #endif
-            writer.WriteLine("--{0}", HTTP_BOUNDARY);
-            writer.WriteLine("Content-Disposition: form-data; name=\"{1}\"{0}{0}{2}",
-                Environment.NewLine,
-                key,
-                value);
+            WriteLine (writer, "--{0}", HTTP_BOUNDARY);
+            WriteLine (writer, "Content-Disposition: form-data; name=\"{0}\"", key);
+            WriteLine (writer);
+            WriteLine (writer, value);
         }
 
         private void WriteFile(StreamWriter writer, FileDescription file)
@@ -610,10 +609,10 @@ namespace CloudinaryDotNet
         /// </returns>
         private bool WriteFile(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
         {
-            writer.WriteLine("--{0}", HTTP_BOUNDARY);
-            writer.WriteLine("Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
-            writer.WriteLine("Content-Type: application/octet-stream");
-            writer.WriteLine();
+            WriteLine(writer, "--{0}", HTTP_BOUNDARY);
+            WriteLine(writer, "Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
+            WriteLine(writer, "Content-Type: application/octet-stream");
+            WriteLine(writer);
 
             writer.Flush();
 
@@ -630,6 +629,23 @@ namespace CloudinaryDotNet
             }
 
             return cnt == 0;
+        }
+
+        private void WriteLine(StreamWriter writer)
+        {
+            writer.Write ("\r\n");
+        }
+
+        private void WriteLine(StreamWriter writer, string format)
+        {
+            writer.Write (format);
+            writer.Write ("\r\n");
+        }
+
+        private void WriteLine(StreamWriter writer, string format, Object val)
+        {
+            writer.Write (format, val);
+            writer.Write ("\r\n");
         }
     }
 
