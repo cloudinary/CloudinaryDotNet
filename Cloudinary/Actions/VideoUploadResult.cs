@@ -78,7 +78,7 @@ namespace CloudinaryDotNet.Actions
         public int Level { get; protected set; }
 
         [DataMember(Name = "bit_rate")]
-        public int BitRate { get; protected set; }
+        public int? BitRate { get; protected set; }
     }
 
     [DataContract]
