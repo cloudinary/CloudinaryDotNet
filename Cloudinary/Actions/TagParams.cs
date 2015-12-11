@@ -54,7 +54,7 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "tag", Tag);
             AddParam(dict, "public_ids", PublicIds);
-            AddParam(dict, "resourcetype", ResourceType);
+            AddParam(dict, "resource_type", Api.GetCloudinaryParam<ResourceType>(ResourceType));
             AddParam(dict, "command", Api.GetCloudinaryParam<TagCommand>(Command));
 
             return dict;
