@@ -19,7 +19,8 @@ namespace CloudinaryDotNet.Actions
             get { return m_publicIds; }
             set { m_publicIds = value; }
         }
-
+        
+        public ResourceType ResourceType { get; set; } 
         /// <summary>
         /// The tag name to assign or remove.
         /// </summary>
@@ -53,6 +54,7 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "tag", Tag);
             AddParam(dict, "public_ids", PublicIds);
+            AddParam(dict, "resourcetype", ResourceType);
             AddParam(dict, "command", Api.GetCloudinaryParam<TagCommand>(Command));
 
             return dict;
