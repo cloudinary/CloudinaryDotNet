@@ -20,7 +20,11 @@ namespace CloudinaryDotNet.Actions
             set { m_publicIds = value; }
         }
         
-        public ResourceType ResourceType { get; set; } 
+        /// <summary>
+        /// The Resource Type [video,image,raw] to assign or remove
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
+        
         /// <summary>
         /// The tag name to assign or remove.
         /// </summary>
