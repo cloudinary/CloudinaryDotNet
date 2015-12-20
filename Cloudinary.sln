@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Web
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloudinary", "Cloudinary\Cloudinary.csproj", "{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloudinary.Test", "Cloudinary.Test\Cloudinary.Test.csproj", "{16C07542-4726-4AE7-9FDD-62DB823B449E}"
@@ -10,6 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D5DD0E
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB3C0EFC-024A-4850-B201-375BC198F376}"
+	ProjectSection(SolutionItems) = preProject
+		sdk-test.testsettings = sdk-test.testsettings
 	EndProjectSection
 EndProject
 Global

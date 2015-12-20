@@ -34,6 +34,8 @@ namespace CloudinaryDotNet
         public string PrivateCdn;
         public string Suffix;
 
+        public int Timeout = 0;
+
         /// <summary>
         /// Sets whether to use the use chunked encoding. See http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1 for further info.
         /// Server must support HTTP/1.1 in order to use the chunked encoding.
@@ -304,10 +306,14 @@ namespace CloudinaryDotNet
             Console.WriteLine(String.Format("{0} REQUEST:", method));
             Console.WriteLine(url);
 #endif
-
+            
             HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
             request.Method = Enum.GetName(typeof(HttpMethod), method);
             request.UserAgent = USER_AGENT;
+            if (Timeout > 0)
+            {
+                request.Timeout = Timeout;
+            }
 
             if (method == HttpMethod.POST && parameters != null)
             {

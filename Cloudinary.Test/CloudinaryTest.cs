@@ -3,6 +3,7 @@ using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -72,7 +73,6 @@ namespace CloudinaryDotNet.Test
             Assert.IsFalse(String.IsNullOrEmpty(m_account.ApiSecret));
 
             m_cloudinary = new Cloudinary(m_account);
-
             if (!String.IsNullOrWhiteSpace(Settings.Default.ApiBaseAddress))
                 m_cloudinary.Api.ApiBaseAddress = Settings.Default.ApiBaseAddress;
 
@@ -113,6 +113,44 @@ namespace CloudinaryDotNet.Test
             string expectedSign = api.SignParameters(checkParams);
 
             Assert.AreEqual(expectedSign, uploadResult.Signature);
+        }
+
+        [Test]
+        public void TestUploadLocalImageTimeout()
+        {
+            var code = WebExceptionStatus.Success;
+            var timeout = 11000;
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            };
+            var origAddr = m_cloudinary.Api.ApiBaseAddress;
+            Stopwatch stopWatch = new Stopwatch();
+            m_cloudinary.Api.ApiBaseAddress = "https://10.255.255.1";
+            m_cloudinary.Api.Timeout = timeout;
+            try
+            {
+                stopWatch.Start();
+                m_cloudinary.Upload(uploadParams);
+            }
+            catch (WebException e)
+            {
+                Console.WriteLine("Error {0}", e.Message);
+                code = e.Status;
+                stopWatch.Stop();
+
+            }
+            finally
+            {
+                m_cloudinary.Api.ApiBaseAddress = origAddr;
+                stopWatch.Stop();
+            }
+
+            //Assert.AreEqual(WebExceptionStatus.Timeout, code);
+            Console.WriteLine("Elapsed {0}", stopWatch.ElapsedMilliseconds);
+            Assert.LessOrEqual(timeout - 1000, stopWatch.ElapsedMilliseconds);
+            Assert.GreaterOrEqual(timeout + 1000, stopWatch.ElapsedMilliseconds);
+
         }
 
         [Test]
