@@ -17,6 +17,7 @@ namespace CloudinaryDotNet.Test
     [TestFixture]
     public class CloudinaryTest
     {
+        private const string TEST_TAG = "cloudinarydotnet_test";
         Account m_account;
         Cloudinary m_cloudinary;
         string m_testImagePath;
@@ -352,8 +353,9 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "test_raw_overwrite",
-                Overwrite = false
+                PublicId = "test_raw_overwrite" + new Random().Next(),
+                Overwrite = false,
+                Tags = TEST_TAG
             };
 
             var img1 = m_cloudinary.Upload(uploadParams, "raw");
