@@ -1,5 +1,6 @@
 ﻿using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -51,31 +52,50 @@ namespace CloudinaryDotNet.Test
             return m_cloudinary.DeleteResources(id);
         }
 
-
-        [TestFixtureSetUp]
-        public void Initialize()
+        /// <summary>
+        /// A convenient method for initialization of new Account instance with necessary checks
+        /// </summary>
+        /// <returns>New Account instance</returns>
+        private Account GetAccountInstance()
         {
-            m_account = new Account(
+            Account account = new Account(
                 Settings.Default.CloudName,
                 Settings.Default.ApiKey,
                 Settings.Default.ApiSecret);
 
-            if (String.IsNullOrEmpty(m_account.Cloud))
+            if (String.IsNullOrEmpty(account.Cloud))
                 Console.WriteLine("Cloud name must be specified in test configuration (app.config)!");
 
-            if (String.IsNullOrEmpty(m_account.ApiKey))
+            if (String.IsNullOrEmpty(account.ApiKey))
                 Console.WriteLine("Cloudinary API key must be specified in test configuration (app.config)!");
 
-            if (String.IsNullOrEmpty(m_account.ApiSecret))
+            if (String.IsNullOrEmpty(account.ApiSecret))
                 Console.WriteLine("Cloudinary API secret must be specified in test configuration (app.config)!");
 
-            Assert.IsFalse(String.IsNullOrEmpty(m_account.Cloud));
-            Assert.IsFalse(String.IsNullOrEmpty(m_account.ApiKey));
-            Assert.IsFalse(String.IsNullOrEmpty(m_account.ApiSecret));
+            Assert.IsFalse(String.IsNullOrEmpty(account.Cloud));
+            Assert.IsFalse(String.IsNullOrEmpty(account.ApiKey));
+            Assert.IsFalse(String.IsNullOrEmpty(account.ApiSecret));
+            return account;
+        }
 
-            m_cloudinary = new Cloudinary(m_account);
+        /// <summary>
+        /// A convenient method for initialization of new Coudinary instance with necessary checks
+        /// </summary>
+        /// <param name="account">Instance of Account</param>
+        /// <returns>New Cloudinary instance</returns>
+        private Cloudinary GetCloudinaryInstance(Account account)
+        {
+            Cloudinary cloudinary = new Cloudinary(account);
             if (!String.IsNullOrWhiteSpace(Settings.Default.ApiBaseAddress))
-                m_cloudinary.Api.ApiBaseAddress = Settings.Default.ApiBaseAddress;
+                cloudinary.Api.ApiBaseAddress = Settings.Default.ApiBaseAddress;
+            return cloudinary;
+        }
+
+        [TestFixtureSetUp]
+        public void Initialize()
+        {
+            m_account = GetAccountInstance();
+            m_cloudinary = GetCloudinaryInstance(m_account);
 
             m_testVideoPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "movie.mp4");
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
@@ -1614,6 +1634,46 @@ namespace CloudinaryDotNet.Test
             uploadParams.Headers.Add("Blink", "182");
 
             m_cloudinary.Upload(uploadParams);
+        }
+
+        [Test]
+        public void TestExplicitInvalidate()
+        {
+            ExplicitParams exp = new ExplicitParams("cloudinary")
+            {
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                Invalidate = true,
+                Type = "twitter_name"
+            };
+
+            var mock = new Mock<HttpWebRequest>();
+
+            mock.Setup(x => x.GetRequestStream()).Returns(new MemoryStream());
+            mock.Setup(x => x.GetResponse()).Returns((WebResponse)null);
+            mock.CallBase = true;
+
+            HttpWebRequest request = null;
+            Func<string, HttpWebRequest> requestBuilder = (x) =>
+            {
+                request = mock.Object;
+                request.Headers = new WebHeaderCollection();
+                return request;
+            };
+
+            Cloudinary fakeCloudinary = GetCloudinaryInstance(m_account);
+            fakeCloudinary.Api.RequestBuilder = requestBuilder;
+
+            try
+            {
+                fakeCloudinary.Explicit(exp);
+            }
+            // consciously return null in GetResponse() and extinguish the ArgumentNullException while parsing response, 'cause it's not in focus of current test
+            catch (ArgumentNullException) { }
+
+            MemoryStream stream = request.GetRequestStream() as MemoryStream;
+            var content = System.Text.Encoding.Default.GetString(stream.ToArray());
+
+            StringAssert.Contains("name=\"invalidate\"\r\n\r\ntrue\r\n", content);
         }
 
         [Test]

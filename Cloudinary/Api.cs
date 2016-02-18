@@ -33,6 +33,7 @@ namespace CloudinaryDotNet
         public bool UsePrivateCdn;
         public string PrivateCdn;
         public string Suffix;
+        public Func<string, HttpWebRequest> RequestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
 
         public int Timeout = 0;
 
@@ -307,7 +308,7 @@ namespace CloudinaryDotNet
             Console.WriteLine(url);
 #endif
             
-            HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
+            HttpWebRequest request = RequestBuilder(url);
             request.Method = Enum.GetName(typeof(HttpMethod), method);
             request.UserAgent = USER_AGENT;
             if (Timeout > 0)

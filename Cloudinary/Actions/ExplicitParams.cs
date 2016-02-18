@@ -67,6 +67,14 @@ namespace CloudinaryDotNet.Actions
         public StringDictionary Context { get; set; }
 
         /// <summary>
+        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
+        /// </value>
+        public bool Invalidate { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -88,6 +96,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "type", Type);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
+            AddParam(dict, "invalidate", Invalidate);
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);

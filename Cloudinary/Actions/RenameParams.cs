@@ -38,6 +38,14 @@ namespace CloudinaryDotNet.Actions
         public bool Overwrite { get; set; }
 
         /// <summary>
+        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
+        /// </value>
+        public bool Invalidate { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
         /// </summary>
         /// <returns>Sorted dictionary of parameters</returns>
@@ -49,6 +57,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "to_public_id", ToPublicId);
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "type", Type);
+            AddParam(dict, "invalidate", Invalidate);
 
             return dict;
         }
