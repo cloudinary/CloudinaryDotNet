@@ -33,6 +33,7 @@ namespace CloudinaryDotNet
         public bool UsePrivateCdn;
         public string PrivateCdn;
         public string Suffix;
+        public string UserPlatform;
         public Func<string, HttpWebRequest> RequestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
 
         public int Timeout = 0;
@@ -54,7 +55,7 @@ namespace CloudinaryDotNet
         static Api()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            USER_AGENT = String.Format("cld-dotnet-{0}.{1}.{2}",
+            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2}",
                 version.Major, version.Minor, version.Build);
         }
 
@@ -310,7 +311,13 @@ namespace CloudinaryDotNet
             
             HttpWebRequest request = RequestBuilder(url);
             request.Method = Enum.GetName(typeof(HttpMethod), method);
-            request.UserAgent = USER_AGENT;
+            
+            // Add platform information to the USER_AGENT header
+            // This is intended for platform information and not individual applications!
+            request.UserAgent = !string.IsNullOrEmpty(UserPlatform)
+                ? string.Format("{0} {1}", UserPlatform, USER_AGENT)
+                : USER_AGENT;
+
             if (Timeout > 0)
             {
                 request.Timeout = Timeout;
