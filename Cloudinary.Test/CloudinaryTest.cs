@@ -1870,6 +1870,47 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestAspectRatioTransformation()
+        {
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "arTransformation",
+                PublicId = "arTransformation25",
+                Transformation = new Transformation().Width(100).AspectRatio(2.5)
+            };
+            ImageUploadResult iuResult25 = m_cloudinary.Upload(uploadParams);
+
+            Assert.NotNull(iuResult25);
+            Assert.AreEqual(100, iuResult25.Width);
+            Assert.AreEqual(40, iuResult25.Height);
+
+            uploadParams.PublicId = "arTransformation69";
+            uploadParams.Transformation = new Transformation().Width(100).AspectRatio(6, 9);
+            ImageUploadResult iuResult69 = m_cloudinary.Upload(uploadParams);
+
+            Assert.NotNull(iuResult69);
+            Assert.AreEqual(100, iuResult69.Width);
+            Assert.AreEqual(150, iuResult69.Height);
+
+            uploadParams.PublicId = "arTransformation30";
+            uploadParams.Transformation = new Transformation().Width(150).AspectRatio("3.0");
+            ImageUploadResult iuResult30 = m_cloudinary.Upload(uploadParams);
+
+            Assert.NotNull(iuResult30);
+            Assert.AreEqual(150, iuResult30.Width);
+            Assert.AreEqual(50, iuResult30.Height);
+
+            uploadParams.PublicId = "arTransformation12";
+            uploadParams.Transformation = new Transformation().Width(100).AspectRatio("1:2");
+            ImageUploadResult iuResult12 = m_cloudinary.Upload(uploadParams);
+
+            Assert.NotNull(iuResult12);
+            Assert.AreEqual(100, iuResult12.Width);
+            Assert.AreEqual(200, iuResult12.Height);
+        }
+
+        [Test]
         public void TestJsConfig()
         {
             string config = m_cloudinary.GetCloudinaryJsConfig().ToString();

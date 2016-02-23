@@ -29,6 +29,7 @@ namespace CloudinaryDotNet
             "ac", "audio_codec",
             "br", "bit_rate",
             "af", "audio_frequency",
+            "ar", "aspect_ratio",
             "vs", "video_sampling"
         };
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
@@ -17,6 +18,23 @@ namespace CloudinaryDotNet
         public Transformation SetHtmlWidth(object value) { m_htmlWidth = value.ToString(); return this; }
         public Transformation SetHtmlHeight(object value) { m_htmlHeight = value.ToString(); return this; }
         public Transformation Named(params string[] value) { return Add("transformation", value); }
+
+        /// <summary>
+        /// Add the aspect_ratio parameter to resize or crop the image to a new aspect ratio.
+        /// Decimal format (e.g., 1.33 or 2.5)
+        /// </summary>
+        /// <param name="value">A decimal value representing the ratio of the width divided by the height</param>
+        public Transformation AspectRatio(double value) { return AspectRatio(value.ToString(CultureInfo.InvariantCulture)); }
+
+        /// <summary>
+        /// Add the aspect_ratio parameter to resize or crop the image to a new aspect ratio.
+        /// Format - nom:denom (e.g., 4:3 or 16:9).
+        /// </summary>
+        /// <param name="nom">Signifies the relative width</param>
+        /// <param name="denom">Signifies the relative height</param>
+        public Transformation AspectRatio(int nom, int denom) { return AspectRatio(string.Format("{0}:{1}", nom, denom)); }
+
+        public Transformation AspectRatio(string value) { return Add("aspect_ratio", value); }
 
         /// <summary>
         /// A crop mode that determines how to transform the image for fitting into the desired width and height dimensions.
