@@ -63,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
+    <Compile Include="Actions\RestoreParams.cs" />
+    <Compile Include="Actions\RestoreResult.cs" />
     <Compile Include="Actions\GetFoldersResult.cs" />
     <Compile Include="Actions\DeleteUploadPreset.cs" />
     <Compile Include="Actions\GetUploadPreset.cs" />

@@ -919,6 +919,31 @@ namespace CloudinaryDotNet
             }
         }
 
+        public RestoreResult RestoreResource(params string[] publicIds)
+        {
+            RestoreParams restoreParams = new RestoreParams();
+            restoreParams.PublicIds.AddRange(publicIds);
+            return RestoreResource(restoreParams);
+        }
+
+        public RestoreResult RestoreResource(RestoreParams parameters)
+        {
+            string uri = m_api.ApiUrlV.
+                ResourceType("resources").
+                Add(parameters.ResourceType.ToString().ToLower()).
+                Add("upload").
+                Add("restore").BuildUrl();
+
+            UrlBuilder urlBuilder = new UrlBuilder(uri, parameters.ToParamsDictionary());
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.POST, urlBuilder.ToString(), null, null))
+            {
+                RestoreResult result = RestoreResult.Parse(response);
+                return result;
+            }
+        }
+
         public UpdateTransformResult UpdateTransform(UpdateTransformParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(

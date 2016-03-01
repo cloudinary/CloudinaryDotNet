@@ -1247,6 +1247,60 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestRestoreNoBackup()
+        {
+            ImageUploadParams uploadParams_nobackup = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = "testdelandrestore_nobackup"
+            };
+
+            m_cloudinary.Upload(uploadParams_nobackup);
+            GetResourceResult resource = m_cloudinary.GetResource("testdelandrestore_nobackup");
+            Assert.IsNotNull(resource);
+            Assert.AreEqual("testdelandrestore_nobackup", resource.PublicId);
+
+            DelResResult delResult = m_cloudinary.DeleteResources("testdelandrestore_nobackup");
+            Assert.AreEqual("deleted", delResult.Deleted["testdelandrestore_nobackup"]);
+
+            resource = m_cloudinary.GetResource("testdelandrestore_nobackup");
+            Assert.IsTrue(string.IsNullOrEmpty(resource.PublicId));
+
+            RestoreResult rResult = m_cloudinary.RestoreResource("testdelandrestore_nobackup");
+            Assert.IsNotNull(rResult.JsonObj["testdelandrestore_nobackup"], "Should contain key \"testdelandrestore_nobackup\". ");
+            Assert.AreEqual("no_backup", rResult.JsonObj["testdelandrestore_nobackup"]["error"].ToString());
+        }
+
+        [Test]
+        public void TestRestore()
+        {
+            ImageUploadParams uploadParams_backup = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = "delete_restore",
+                Backup = true
+            };
+
+            m_cloudinary.Upload(uploadParams_backup);
+            GetResourceResult resource_backup = m_cloudinary.GetResource("delete_restore");
+            Assert.IsNotNull(resource_backup);
+            Assert.AreEqual("delete_restore", resource_backup.PublicId);
+
+            DelResResult delResult_backup = m_cloudinary.DeleteResources("delete_restore");
+            Assert.AreEqual("deleted", delResult_backup.Deleted["delete_restore"]);
+
+            resource_backup = m_cloudinary.GetResource("delete_restore");
+            Assert.AreEqual(0, resource_backup.Length);
+
+            RestoreResult rResult_backup = m_cloudinary.RestoreResource("delete_restore");
+            Assert.IsNotNull(rResult_backup.JsonObj["delete_restore"], "Should contain key \"delete_restore\". ");
+            Assert.AreEqual("delete_restore", rResult_backup.JsonObj["delete_restore"]["public_id"].ToString());
+
+            resource_backup = m_cloudinary.GetResource("delete_restore");
+            Assert.IsFalse(string.IsNullOrEmpty(resource_backup.PublicId));
+        }
+
+        [Test]
         public void TestContext()
         {
             //should allow sending context
