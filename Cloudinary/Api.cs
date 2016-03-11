@@ -308,10 +308,10 @@ namespace CloudinaryDotNet
             Console.WriteLine(String.Format("{0} REQUEST:", method));
             Console.WriteLine(url);
 #endif
-            
+
             HttpWebRequest request = RequestBuilder(url);
             request.Method = Enum.GetName(typeof(HttpMethod), method);
-            
+
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
             request.UserAgent = !string.IsNullOrEmpty(UserPlatform)
@@ -322,6 +322,9 @@ namespace CloudinaryDotNet
             {
                 request.Timeout = Timeout;
             }
+
+            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (method == HttpMethod.POST && parameters != null)
             {
@@ -363,11 +366,6 @@ namespace CloudinaryDotNet
                         writer.Write("--{0}--", HTTP_BOUNDARY);
                     }
                 }
-            }
-            else
-            {
-                byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-                request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
             }
 
             try
@@ -578,10 +576,10 @@ namespace CloudinaryDotNet
 #if DEBUG
             Console.WriteLine(String.Format("{0}: {1}", key, value));
 #endif
-            WriteLine (writer, "--{0}", HTTP_BOUNDARY);
-            WriteLine (writer, "Content-Disposition: form-data; name=\"{0}\"", key);
-            WriteLine (writer);
-            WriteLine (writer, value);
+            WriteLine(writer, "--{0}", HTTP_BOUNDARY);
+            WriteLine(writer, "Content-Disposition: form-data; name=\"{0}\"", key);
+            WriteLine(writer);
+            WriteLine(writer, value);
         }
 
         private void WriteFile(StreamWriter writer, FileDescription file)
@@ -647,19 +645,19 @@ namespace CloudinaryDotNet
 
         private void WriteLine(StreamWriter writer)
         {
-            writer.Write ("\r\n");
+            writer.Write("\r\n");
         }
 
         private void WriteLine(StreamWriter writer, string format)
         {
-            writer.Write (format);
-            writer.Write ("\r\n");
+            writer.Write(format);
+            writer.Write("\r\n");
         }
 
         private void WriteLine(StreamWriter writer, string format, Object val)
         {
-            writer.Write (format, val);
-            writer.Write ("\r\n");
+            writer.Write(format, val);
+            writer.Write("\r\n");
         }
     }
 

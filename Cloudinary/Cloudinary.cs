@@ -944,6 +944,121 @@ namespace CloudinaryDotNet
             }
         }
 
+        private string GetUploadMappingUrl(UploadMappingParams parameters)
+        {
+            var uri = m_api.ApiUrlV.
+                ResourceType("upload_mappings").
+                BuildUrl();
+            return new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
+        }
+
+        /// <summary>
+        /// Returns list of all upload mappings
+        /// </summary>
+        /// <param name="parameters">Uses only <see cref="MaxResults"/> and <see cref="NextCursor"/> properties. Can be null.</param>
+        public UploadMappingResults UploadMappings(UploadMappingParams parameters)
+        {
+            if (parameters == null)
+        	    parameters = new UploadMappingParams();
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.GET, GetUploadMappingUrl(parameters), parameters.ToParamsDictionary(), null))
+            {
+                UploadMappingResults result = UploadMappingResults.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Returns single upload mapping by <see cref="Folder"/> name.
+        /// </summary>
+        public UploadMappingResults UploadMapping(string folder)
+        {
+            if (string.IsNullOrEmpty(folder))
+                throw new ArgumentException("Folder must be specified.");
+
+            var parameters = new UploadMappingParams() { Folder = folder };
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.GET, GetUploadMappingUrl(parameters), parameters.ToParamsDictionary(), null))
+            {
+                UploadMappingResults result = UploadMappingResults.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Create a new upload mapping folder and its template (URL).
+        /// </summary>
+        public UploadMappingResults CreateUploadMapping(string folder, string template)
+        {
+            if (string.IsNullOrEmpty(folder))
+                throw new ArgumentException("Folder property must be specified.");
+
+            if (string.IsNullOrEmpty(template))
+                throw new ArgumentException("Template must be specified.");
+
+            var parameters = new UploadMappingParams()
+            {
+                Folder = folder,
+                Template = template,
+            };
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, GetUploadMappingUrl(parameters), parameters.ToParamsDictionary(), null))
+            {
+                UploadMappingResults result = UploadMappingResults.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Updates existing upload mapping
+        /// </summary>
+        /// <param name="folder">Existing Folder to be updated</param>
+        /// <param name="newTemplate">New value of Template Url</param>
+        /// <returns></returns>
+        public UploadMappingResults UpdateUploadMapping(string folder, string newTemplate)
+        {
+            if (string.IsNullOrEmpty(folder))
+                throw new ArgumentException("Folder must be specified.");
+
+            if (string.IsNullOrEmpty(newTemplate))
+                throw new ArgumentException("New Template name must be specified.");
+
+            var parameters = new UploadMappingParams() { Folder = folder, Template = newTemplate };
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.PUT, GetUploadMappingUrl(parameters), parameters.ToParamsDictionary(), null))
+            {
+                UploadMappingResults result = UploadMappingResults.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Deletes all upload mappings 
+        /// </summary>
+        public UploadMappingResults DeleteUploadMapping()
+        {
+            return DeleteUploadMapping(string.Empty);
+        }
+
+        /// <summary>
+        /// Deletes upload mapping by <paramref name="folder"/> name
+        /// </summary>
+        public UploadMappingResults DeleteUploadMapping(string folder)
+        {
+            var parameters = new UploadMappingParams();
+
+            if (!string.IsNullOrEmpty(folder))
+            {
+                parameters.Folder = folder;
+            }
+
+            using (HttpWebResponse response = m_api.Call(HttpMethod.DELETE, GetUploadMappingUrl(parameters), parameters.ToParamsDictionary(), null))
+            {
+                UploadMappingResults result = UploadMappingResults.Parse(response);
+                return result;
+            }
+        }
+
         public UpdateTransformResult UpdateTransform(UpdateTransformParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(

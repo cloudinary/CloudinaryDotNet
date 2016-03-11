@@ -31,7 +31,7 @@ namespace CloudinaryDotNet.Test
         /// </summary>
         /// <param name="id">The ID of the resource</param>
         /// <returns>The upload results</returns>
-        private ImageUploadResult UploadTestResource( String id)
+        private ImageUploadResult UploadTestResource(String id)
         {
             var uploadParams = new ImageUploadParams()
             {
@@ -47,7 +47,7 @@ namespace CloudinaryDotNet.Test
         /// </summary>
         /// <param name="id">The ID of the image to delete</param>
         /// <returns>The results of the deletion</returns>
-        private DelResResult DeleteTestResource( String id)
+        private DelResResult DeleteTestResource(String id)
         {
             return m_cloudinary.DeleteResources(id);
         }
@@ -311,7 +311,7 @@ namespace CloudinaryDotNet.Test
             Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
         }
 
-        [Test, Ignore( "Requires Rekognition plugin")]
+        [Test, Ignore("Requires Rekognition plugin")]
         public void TestRekognitionFace()
         {
             // should support rekognition face
@@ -334,7 +334,7 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(updateResult.Info.Detection.RekognitionFace);
             Assert.AreEqual("complete", updateResult.Info.Detection.RekognitionFace.Status);
             m_cloudinary.DeleteResources(uploadResult.PublicId);
-            
+
             uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
@@ -536,10 +536,10 @@ namespace CloudinaryDotNet.Test
             //should support requesting auto tagging
 
             var res = m_cloudinary.Upload(new ImageUploadParams()
-               {
-                   File = new FileDescription(m_testImagePath),
-                   AutoTagging = 0.5f
-               });
+            {
+                File = new FileDescription(m_testImagePath),
+                AutoTagging = 0.5f
+            });
 
             Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
             Assert.True(res.Error.Message.StartsWith("Must use"));
@@ -724,7 +724,7 @@ namespace CloudinaryDotNet.Test
 
             var tagParams = new TagParams()
             {
-                PublicIds = new List<string>() { 
+                PublicIds = new List<string>() {
                     uploadResult1.PublicId,
                     uploadResult2.PublicId
                 },
@@ -811,13 +811,13 @@ namespace CloudinaryDotNet.Test
                 PublicId = "testlistresources",
                 Tags = "hello"
             };
-            
+
             var uploadResult = m_cloudinary.Upload(uploadParams);
             IEnumerable<Resource> resources = new Resource[0];
-//            for(ListResourcesResult current = m_cloudinary.ListResources(); current.NextCursor != null; current = m_cloudinary.ListResources(current.NextCursor)) {
-//                resources =  resources.Concat(current.Resources);
-//            }
-            resources = GetAllResults((cursor) => m_cloudinary.ListResources(cursor) );
+            //            for(ListResourcesResult current = m_cloudinary.ListResources(); current.NextCursor != null; current = m_cloudinary.ListResources(current.NextCursor)) {
+            //                resources =  resources.Concat(current.Resources);
+            //            }
+            resources = GetAllResults((cursor) => m_cloudinary.ListResources(cursor));
             Assert.IsTrue(resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload" && res.Tags.Count() == 1 && res.Tags[0] == "hello").Count() > 0);
         }
         protected IEnumerable<Resource> GetAllResults(Func<String, ListResourcesResult> list)
@@ -1401,7 +1401,7 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(uploadResult);
 
             var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId) { ModerationStatus = Actions.ModerationStatus.Approved });
-            
+
             Assert.NotNull(updateResult);
             Assert.NotNull(updateResult.Moderation);
             Assert.AreEqual(1, updateResult.Moderation.Count);
@@ -1409,7 +1409,7 @@ namespace CloudinaryDotNet.Test
         }
 
         // Test disabled because it deletes all images in the remote account.
-        [Test, Ignore( "will delete all resources in the account")]
+        [Test, Ignore("will delete all resources in the account")]
         public void DeleteAllInLoop()
         {
             string nextCursor = String.Empty;
@@ -1862,12 +1862,12 @@ namespace CloudinaryDotNet.Test
         public void TestJsonObject()
         {
             ExplicitParams exp = new ExplicitParams("cloudinary")
-             {
+            {
 
-                 EagerTransforms = new List<Transformation>() {
+                EagerTransforms = new List<Transformation>() {
                     new EagerTransformation().Crop("scale").Width(2.0) },
-                 Type = "twitter_name"
-             };
+                Type = "twitter_name"
+            };
 
             var result = m_cloudinary.Explicit(exp);
 
@@ -2326,5 +2326,42 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.DeleteResourcesByPrefix("test_folder");
         }
+
+        [Test]
+        public void TestUploadMapping()
+        {
+            try
+            {
+                m_cloudinary.DeleteUploadMapping("api_test_upload_mapping");
+            }
+            catch (Exception) { }
+
+            UploadMappingResults result;
+            result = m_cloudinary.CreateUploadMapping("api_test_upload_mapping", "http://upload.wikimedia.org/wikipedia");
+            StringAssert.AreEqualIgnoringCase("created", result.Message);
+
+            result = m_cloudinary.UploadMapping("api_test_upload_mapping");
+            Assert.AreEqual(1, result.Mappings.Count);
+            Assert.AreEqual("http://upload.wikimedia.org/wikipedia", result.Mappings["api_test_upload_mapping"]);
+            
+            result = m_cloudinary.UpdateUploadMapping("api_test_upload_mapping", "http://res.cloudinary.com");
+            StringAssert.AreEqualIgnoringCase("updated", result.Message);
+            
+            result = m_cloudinary.UploadMapping("api_test_upload_mapping");
+            Assert.AreEqual(1, result.Mappings.Count);
+            Assert.AreEqual("http://res.cloudinary.com", result.Mappings["api_test_upload_mapping"]);
+
+            result = m_cloudinary.UploadMappings(new UploadMappingParams());
+            Assert.IsTrue(result.Mappings.ContainsKey("api_test_upload_mapping"));
+            Assert.IsTrue(result.Mappings.ContainsValue("http://res.cloudinary.com"));
+
+            result = m_cloudinary.DeleteUploadMapping("api_test_upload_mapping");
+            StringAssert.AreEqualIgnoringCase("deleted", result.Message);
+
+            result = m_cloudinary.UploadMappings(new UploadMappingParams());
+            Assert.IsFalse(result.Mappings.ContainsKey("api_test_upload_mapping"));
+            Assert.IsFalse(result.Mappings.ContainsValue("http://res.cloudinary.com"));
+        }
+
     }
 }

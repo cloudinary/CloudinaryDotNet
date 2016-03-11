@@ -69,6 +69,7 @@
     <Compile Include="Actions\DeleteUploadPreset.cs" />
     <Compile Include="Actions\GetUploadPreset.cs" />
     <Compile Include="Actions\ListUploadPresets.cs" />
+    <Compile Include="Actions\UploadMappingParams.cs" />
     <Compile Include="Actions\UpdateParams.cs" />
     <Compile Include="Actions\ExplodeParams.cs" />
     <Compile Include="Actions\ExplodeResult.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Actions\ListResourcesParams.cs" />
     <Compile Include="Actions\ListResourcesResult.cs" />
     <Compile Include="Actions\ListResourceTypesResult.cs" />
+    <Compile Include="Actions\UploadMappingResults.cs" />
     <Compile Include="Actions\UploadPreset.cs" />
     <Compile Include="Actions\UsageResult.cs" />
     <Compile Include="Actions\VideoUploadParams.cs" />
