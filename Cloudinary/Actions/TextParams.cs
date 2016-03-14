@@ -54,7 +54,17 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Whether to use a "normal" or a "bold" font. Default: "normal".
         /// </summary>
-        public string FontWeitgh { get; set; }
+        [Obsolete("Property FontWeitgh is deprecated, please use FontWeight instead")]
+        public string FontWeitgh
+        {
+            get { return FontWeight; }
+            set { FontWeight = value; }
+        }
+
+        /// <summary>
+        /// Whether to use a "normal" or a "bold" font. Default: "normal".
+        /// </summary>
+        public string FontWeight { get; set; }
 
         /// <summary>
         /// Whether to use a "normal" or an "italic" font. Default: "normal".
@@ -75,6 +85,11 @@ namespace CloudinaryDotNet.Actions
         /// Optionally add an "underline" to the text. Default: "none".
         /// </summary>
         public string TextDecoration { get; set; }
+
+        /// <summary>
+        /// Text alignment for the text. Default: "left".
+        /// </summary>
+        public string TextAlign { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -98,11 +113,12 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "font_family", FontFamily);
             AddParam(dict, "font_size", FontSize.ToString());
             AddParam(dict, "font_color", FontColor);
-            AddParam(dict, "font_weight", FontWeitgh);
+            AddParam(dict, "font_weight", FontWeight);
             AddParam(dict, "font_style", FontStyle);
             AddParam(dict, "background", Background);
             AddParam(dict, "opacity", Opacity);
             AddParam(dict, "text_decoration", TextDecoration);
+            AddParam(dict, "text_align", TextAlign);
 
             return dict;
         }
