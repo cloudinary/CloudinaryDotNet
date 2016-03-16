@@ -31,7 +31,7 @@ namespace CloudinaryDotNet.Actions
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
-
+            dict.Add("transformation", Transform.Generate());
             return dict;
         }
     }

@@ -54,7 +54,7 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
             AddParam(dict, "folder", Folder);
-            AddParam(dict, "template", HttpUtility.UrlEncode(Template));
+            AddParam(dict, "template", Template);
             if (MaxResults > 0)
                 AddParam(dict, "max_results", MaxResults);
             if (!string.IsNullOrEmpty(NextCursor))

@@ -326,7 +326,7 @@ namespace CloudinaryDotNet
             byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
             request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
-            if (method == HttpMethod.POST && parameters != null)
+            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
             {
                 if (UseChunkedEncoding)
                     request.SendChunked = true;
