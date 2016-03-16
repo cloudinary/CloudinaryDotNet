@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.Actions
         /// Optional. When a listing request has more results to return than <see cref="MaxResults"/>, the <see cref="NextCursor"/> value is returned as part of the response. 
         /// You can then specify this value as the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
-        public int NextCursor { get; set; }
+        public string NextCursor { get; set; }
 
         /// <summary>
         /// Optional. Max number of upload mappings to return. Default=10. Maximum=500.
@@ -57,7 +57,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "template", HttpUtility.UrlEncode(Template));
             if (MaxResults > 0)
                 AddParam(dict, "max_results", MaxResults);
-            if (NextCursor > 0)
+            if (!string.IsNullOrEmpty(NextCursor))
                 AddParam(dict, "next_cursor", NextCursor);
             return dict;
         }
