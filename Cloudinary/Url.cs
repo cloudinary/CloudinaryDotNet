@@ -282,10 +282,10 @@ namespace CloudinaryDotNet
 
             string url = BuildUrl(source);
 
-            if (!String.IsNullOrEmpty(Transformation.HtmlWidth))
+            if (!string.IsNullOrEmpty(Transformation.HtmlWidth))
                 dict.Add("width", Transformation.HtmlWidth);
 
-            if (!String.IsNullOrEmpty(Transformation.HtmlHeight))
+            if (!string.IsNullOrEmpty(Transformation.HtmlHeight))
                 dict.Add("height", Transformation.HtmlHeight);
 
             if (Transformation.HiDpi || Transformation.IsResponsive)
@@ -302,12 +302,12 @@ namespace CloudinaryDotNet
 
             var sb = new StringBuilder();
             sb.Append("<img");
-            if (!String.IsNullOrEmpty(url))
-                sb.Append(" src='").Append(url).Append("'");
+            if (!string.IsNullOrEmpty(url))
+                sb.Append(" src=\"").Append(url).Append("\"");
 
             foreach (var item in dict)
             {
-                sb.Append(" ").Append(item.Key).Append("='").Append(item.Value).Append("'");
+                sb.Append(" ").Append(item.Key).Append("=\"").Append(HttpUtility.HtmlAttributeEncode(item.Value)).Append("\"");
             }
 
             sb.Append("/>");
