@@ -583,10 +583,13 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestEnglishText()
         {
-            TextResult textResult = m_cloudinary.Text("Sample text.");
+            TextParams tParams = new TextParams("Sample text.");
+            tParams.Background = "red";
+            tParams.FontStyle = "italic";
+            TextResult textResult = m_cloudinary.Text(tParams);
 
             Assert.AreEqual(67, textResult.Width);
-            Assert.AreEqual(10, textResult.Height);
+            Assert.AreEqual(11, textResult.Height);
         }
 
         [Test]

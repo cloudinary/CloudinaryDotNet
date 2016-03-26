@@ -128,6 +128,10 @@
     </Compile>
     <Compile Include="StringDictionary.cs" />
     <Compile Include="Transforms\ImageTransform.cs" />
+    <Compile Include="Transforms\BaseLayer.cs" />
+    <Compile Include="Transforms\Layer.cs" />
+    <Compile Include="Transforms\SubtitlesLayer.cs" />
+    <Compile Include="Transforms\TextLayer.cs" />
     <Compile Include="Transforms\VideoTransform.cs" />
     <Compile Include="Transforms\Transformation.cs" />
     <Compile Include="Url.cs" />

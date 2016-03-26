@@ -357,6 +357,36 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestOverlayHelpers()
+        {
+            Dictionary<BaseLayer, string> layerTests = new Dictionary<BaseLayer, string>();
+            layerTests.Add(new Layer().PublicId("logo"), "logo");
+            layerTests.Add(new Layer().PublicId("folder/logo"), "folder:logo");
+            layerTests.Add(new Layer().PublicId("logo").Type("private"), "private:logo");
+            layerTests.Add(new Layer().PublicId("logo").Format("png"), "logo.png");
+            layerTests.Add(new Layer().ResourceType("video").PublicId("cat"), "video:cat");
+            layerTests.Add(new TextLayer().Text("Hello World, Nice to meet you?")
+                                              .FontFamily("Arial")
+                                              .FontSize(18), "text:Arial_18:Hello%20World%E2%80%9A%20Nice%20to%20meet%20you%3F");
+            layerTests.Add(new TextLayer("Hello World, Nice to meet you?")
+                                              .FontFamily("Arial")
+                                              .FontSize(18)
+                                              .FontWeight("bold")
+                                              .FontStyle("italic")
+                                              .LetterSpacing("4")
+                                              .LineSpacing("3"), "text:Arial_18_bold_italic_letter_spacing_4_line_spacing_3:Hello%20World%E2%80%9A%20Nice%20to%20meet%20you%3F");
+            layerTests.Add(new SubtitlesLayer().PublicId("sample_sub_en.srt"), "subtitles:sample_sub_en.srt");
+            layerTests.Add(new SubtitlesLayer().PublicId("sample_sub_he.srt").FontFamily("Arial").FontSize(40), "subtitles:Arial_40:sample_sub_he.srt");
+            
+            foreach(var layerTest in layerTests)
+            {
+                string expected = layerTest.Value;
+                string actual = layerTest.Key.ToString();
+                Assert.IsTrue(expected.Equals(actual, StringComparison.InvariantCultureIgnoreCase));
+            }
+        }
+
+        [Test]
         public void TestUnderlay()
         {
             Transformation transformation = new Transformation().Underlay("text:hello");
@@ -368,6 +398,20 @@ namespace CloudinaryDotNet.Test
             Assert.IsNull(transformation.HtmlHeight);
             Assert.IsNull(transformation.HtmlWidth);
             Assert.AreEqual(m_defaultImgUpPath + "h_100,u_text:hello,w_100/test", result);
+        }
+
+        [Test(Description = "Must supply fontFamily for text in overlay"), ExpectedException(typeof(ArgumentException))]
+        public void testOverlayError1()
+        {
+            var transformation = new Transformation().Overlay(new TextLayer().PublicId("test").FontStyle("italic"));
+            m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+        }
+
+        [Test(Description = "Must supply publicId for non-text underlay"), ExpectedException(typeof(ArgumentException))]
+        public void testOverlayError2()
+        {
+            var transformation = new Transformation().Overlay(new Layer().ResourceType("video"));
+            m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
         }
 
         [Test]

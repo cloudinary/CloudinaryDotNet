@@ -101,7 +101,9 @@ namespace CloudinaryDotNet
         /// </summary>
         public Transformation Opacity(int value) { return Add("opacity", value); }
         public Transformation Overlay(string value) { return Add("overlay", value); }
+        public Transformation Overlay(BaseLayer value) { return Add("overlay", value); }
         public Transformation Underlay(string value) { return Add("underlay", value); }
+        public Transformation Underlay(BaseLayer value) { return Add("underlay", value); }
         public Transformation FetchFormat(string value) { return Add("fetch_format", value); }
 
         /// <summary>
