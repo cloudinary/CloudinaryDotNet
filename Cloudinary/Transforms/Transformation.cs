@@ -146,6 +146,7 @@ namespace CloudinaryDotNet
             Transformation nested = this.Clone();
             nested.m_nestedTransforms = null;
             m_nestedTransforms.Add(nested);
+            m_transformParams = new Dictionary<string, object>();
             Transformation transform = new Transformation(m_nestedTransforms);
             return transform;
         }
@@ -162,12 +163,13 @@ namespace CloudinaryDotNet
 
         public virtual string Generate()
         {
-            List<string> parts =
-                m_nestedTransforms.Select(t => t.GenerateThis()).ToList();
+            HashSet<string> parts = new HashSet<string>(m_nestedTransforms.Select(t => t.GenerateThis()).ToList());
 
-            parts.Add(GenerateThis());
+            var thisTransform = GenerateThis();
+            if(!string.IsNullOrEmpty(thisTransform))
+                parts.Add(thisTransform);
 
-            return String.Join("/", parts.ToArray());
+            return string.Join("/", parts.ToArray());
         }
 
         public string GenerateThis()
@@ -189,18 +191,19 @@ namespace CloudinaryDotNet
             if (m_htmlHeight == null)
                 m_htmlHeight = height;
 
-            bool hasLayer = !String.IsNullOrEmpty(GetString(m_transformParams, "overlay")) ||
-                !String.IsNullOrEmpty(GetString(m_transformParams, "underlay"));
+            bool hasLayer = !string.IsNullOrEmpty(GetString(m_transformParams, "overlay")) ||
+                !string.IsNullOrEmpty(GetString(m_transformParams, "underlay"));
 
             var crop = GetString(m_transformParams, "crop");
-            var angle = String.Join(".", GetStringArray(m_transformParams, "angle"));
+            var angle = string.Join(".", GetStringArray(m_transformParams, "angle"));
 
             bool isResponsive = false;
-            if (!Boolean.TryParse(GetString(m_transformParams, "responsive_width"), out isResponsive))
+            if (!bool.TryParse(GetString(m_transformParams, "responsive_width"), out isResponsive))
                 isResponsive = DefaultIsResponsive;
 
             bool no_html_sizes = hasLayer || !String.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
-            if (width != null && (width == "auto" || Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive)) m_htmlWidth = null;
+            if (width != null && (width == "auto" || Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
+                m_htmlWidth = null;
             if (height != null && (Single.Parse(height, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
                 m_htmlHeight = null;
 
@@ -218,11 +221,11 @@ namespace CloudinaryDotNet
 
             List<string> transformations = GetStringArray(m_transformParams, "transformation").ToList();
 
-            string namedTransformation = String.Join(".", transformations.ToArray());
+            string namedTransformation = string.Join(".", transformations.ToArray());
 
             transformations = new List<string>();
 
-            string flags = String.Join(".", GetStringArray(m_transformParams, "flags"));
+            string flags = string.Join(".", GetStringArray(m_transformParams, "flags"));
 
             object obj = null;
             string startOffset = null;
@@ -287,8 +290,8 @@ namespace CloudinaryDotNet
             List<string> components = new List<string>();
             foreach (var param in parameters)
             {
-                if (!String.IsNullOrEmpty(param.Value))
-                    components.Add(String.Format("{0}_{1}", param.Key, param.Value));
+                if (!string.IsNullOrEmpty(param.Value))
+                    components.Add(string.Format("{0}_{1}", param.Key, param.Value));
             }
 
             string rawTransformation = GetString(m_transformParams, "raw_transformation");
@@ -297,15 +300,21 @@ namespace CloudinaryDotNet
                 components.Add(rawTransformation);
             }
 
+            string ifValue = GetString(m_transformParams, "if");
+            if (!string.IsNullOrEmpty(ifValue))
+            {
+                components.Insert(0, string.Format("if_{0}", new Condition(ifValue).ToString()));
+            }
+
             if (components.Count > 0)
             {
-                transformations.Add(String.Join(",", components.ToArray()));
+                transformations.Add(string.Join(",", components.ToArray()));
             }
 
             if (isResponsive)
                 transformations.Add(ResponsiveWidthTransform.Generate());
 
-            return String.Join("/", transformations.ToArray());
+            return string.Join("/", transformations.ToArray());
         }
 
         public string HtmlWidth
@@ -354,6 +363,11 @@ namespace CloudinaryDotNet
                 return String.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
 
             return String.Format(CultureInfo.InvariantCulture, "{0}", obj);
+        }
+
+        public override string ToString()
+        {
+            return Generate();
         }
 
         #region ICloneable

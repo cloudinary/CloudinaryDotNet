@@ -150,5 +150,60 @@ namespace CloudinaryDotNet
         /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for further info.
         /// </summary>
         public Transformation ResponsiveWidth(bool value) { return Add("responsive_width", value); }
+
+        /// <summary>
+        /// Start defining a condition, which will be completed with a call <seealso cref="Condition.Then()"/>
+        /// </summary>
+        /// <returns>Condition</returns>
+        public Condition IfCondition()
+        {
+            return new Condition().SetParent(this);
+        }
+
+        /// <summary>
+        /// Define a conditional transformation defined by the condition string.
+        /// </summary>
+        /// <param name="condition">A condition string.</param>
+        /// <returns>The transformation for chaining.</returns>
+        public Transformation IfCondition(string condition)
+        {
+            return Add("if", condition);
+        }
+
+        public Transformation IfElse()
+        {
+            Chain();
+            return Add("if", "else");
+        }
+
+        public Transformation EndIf()
+        {
+            Chain();
+            int transSize = m_nestedTransforms.Count;
+            for (int i = transSize - 1; i >= 0; i--)
+            {
+                Transformation segment = m_nestedTransforms[i]; // [..., {if: "w_gt_1000",c: "fill", w: 500}, ...]
+                if (segment.Params.ContainsKey("if"))
+                { // if: "w_gt_1000"
+                    var value = segment.Params["if"];
+                    string ifValue = value.ToString();
+                    if (ifValue.Equals("end")) break;
+                    if (segment.Params.Count > 1)
+                    {
+                        segment.Params.Remove("if"); // {c: fill, w: 500}
+                        m_nestedTransforms[i] = segment; // [..., {c: fill, w: 500}, ...]
+                        m_nestedTransforms.Insert(i, new Transformation(string.Format("if={0}", value.ToString()))); // [..., "if_w_gt_1000", {c: fill, w: 500}, ...]
+                    }
+                    // otherwise keep looking for if_condition
+                    if (!string.Equals("else", ifValue))
+                    {
+                        break;
+                    }
+                }
+            }
+            Add("if", "end");
+            return Chain();
+        }
+
     }
 }

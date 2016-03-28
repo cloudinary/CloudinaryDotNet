@@ -8,7 +8,7 @@ using System.Web;
 namespace CloudinaryDotNet.Test
 {
     [TestFixture]
-    public class ApiTest
+    public partial class ApiTest
     {
         Api m_api;
         string m_defaultRootPath;
@@ -221,7 +221,7 @@ namespace CloudinaryDotNet.Test
 
             SortedDictionary<string, object> dict = uploadParams.ToParamsDictionary();
 
-            Assert.AreEqual("c_scale,w_2.0/jpg|w_10/a_10/|h_20,w_20", dict["eager"]);
+            Assert.AreEqual("c_scale,w_2.0/jpg|w_10/a_10|h_20,w_20", dict["eager"]);
         }
 
         [Test]
@@ -377,8 +377,8 @@ namespace CloudinaryDotNet.Test
                                               .LineSpacing("3"), "text:Arial_18_bold_italic_letter_spacing_4_line_spacing_3:Hello%20World%E2%80%9A%20Nice%20to%20meet%20you%3F");
             layerTests.Add(new SubtitlesLayer().PublicId("sample_sub_en.srt"), "subtitles:sample_sub_en.srt");
             layerTests.Add(new SubtitlesLayer().PublicId("sample_sub_he.srt").FontFamily("Arial").FontSize(40), "subtitles:Arial_40:sample_sub_he.srt");
-            
-            foreach(var layerTest in layerTests)
+
+            foreach (var layerTest in layerTests)
             {
                 string expected = layerTest.Value;
                 string actual = layerTest.Key.ToString();
