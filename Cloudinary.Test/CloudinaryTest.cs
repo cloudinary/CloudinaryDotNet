@@ -1,6 +1,8 @@
 ﻿using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -2346,10 +2348,10 @@ namespace CloudinaryDotNet.Test
             result = m_cloudinary.UploadMapping("api_test_upload_mapping");
             Assert.AreEqual(1, result.Mappings.Count);
             Assert.AreEqual("http://upload.wikimedia.org/wikipedia", result.Mappings["api_test_upload_mapping"]);
-            
+
             result = m_cloudinary.UpdateUploadMapping("api_test_upload_mapping", "http://res.cloudinary.com");
             StringAssert.AreEqualIgnoringCase("updated", result.Message);
-            
+
             result = m_cloudinary.UploadMapping("api_test_upload_mapping");
             Assert.AreEqual(1, result.Mappings.Count);
             Assert.AreEqual("http://res.cloudinary.com", result.Mappings["api_test_upload_mapping"]);
@@ -2366,5 +2368,76 @@ namespace CloudinaryDotNet.Test
             Assert.IsFalse(result.Mappings.ContainsValue("http://res.cloudinary.com"));
         }
 
+        [Test]
+        public void TestResponsiveBreakpointsToJson()
+        {
+            var responsiveBreakpoint = new ResponsiveBreakpoint().ToString(Formatting.None);
+            Assert.AreEqual("{\"create_derived\":true}", responsiveBreakpoint, "an empty ResponsiveBreakpoint should have create_derived=true");
+
+            var expectedToken1 = JToken.Parse("{\"create_derived\":false,\"max_width\":500,\"min_width\":100,\"max_images\":5,\"transformation\":\"a_45\"}");
+            IEnumerable<string> expectedList1 = expectedToken1.Children().Select(s => s.ToString(Formatting.None));
+
+            Transformation transform = new Transformation().Angle(45);
+
+            var breakpoint = new ResponsiveBreakpoint().CreateDerived(false)
+                    .Transformation(transform)
+                    .MaxWidth(500)
+                    .MinWidth(100)
+                    .MaxImages(5);
+
+            var actualList1 = breakpoint.Children().Select(s => s.ToString(Formatting.None));
+            CollectionAssert.AreEquivalent(expectedList1, actualList1);
+
+            breakpoint.Transformation(transform.Height(210).Crop("scale"));
+
+            var expectedToken2 = JToken.Parse("{\"create_derived\":false,\"max_width\":500,\"min_width\":100,\"max_images\":5,\"transformation\":\"a_45,c_scale,h_210\"}");
+            var expectedList2 = expectedToken2.Children().Select(s => s.ToString(Formatting.None));
+
+            var actualList2 = breakpoint.Children().Select(s => s.ToString(Formatting.None));
+            CollectionAssert.AreEquivalent(expectedList2, actualList2);
+        }
+
+        [Test]
+        public void TestResponsiveBreakpoints()
+        {
+            var breakpoint = new ResponsiveBreakpoint().MaxImages(5).BytesStep(20)
+                                .MinWidth(200).MaxWidth(1000).CreateDerived(false);
+
+            var breakpoint2 = new ResponsiveBreakpoint().MaxImages(4).BytesStep(20)
+                                .MinWidth(100).MaxWidth(900).CreateDerived(false);
+            // An array of breakpoints
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = "responsiveBreakpoint_id",
+                Tags = "test",
+                ResponsiveBreakpoints = new List<ResponsiveBreakpoint> { breakpoint, breakpoint2 }
+            };
+            ImageUploadResult result = m_cloudinary.Upload(uploadParams);
+            Assert.AreEqual(2, result.ResponsiveBreakpoints.Count);
+
+            Assert.AreEqual(5, result.ResponsiveBreakpoints[0].Breakpoints.Count);
+            Assert.AreEqual(1000, result.ResponsiveBreakpoints[0].Breakpoints[0].Width);
+            Assert.AreEqual(200, result.ResponsiveBreakpoints[0].Breakpoints[4].Width);
+
+            Assert.AreEqual(4, result.ResponsiveBreakpoints[1].Breakpoints.Count);
+            Assert.AreEqual(900, result.ResponsiveBreakpoints[1].Breakpoints[0].Width);
+            Assert.AreEqual(100, result.ResponsiveBreakpoints[1].Breakpoints[3].Width);
+
+            // responsive breakpoints for Explicit()
+            ExplicitParams exp = new ExplicitParams("responsiveBreakpoint_id")
+            {
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                Type = "upload",
+                ResponsiveBreakpoints = new List<ResponsiveBreakpoint> { breakpoint2.CreateDerived(true) }
+            };
+
+            ExplicitResult expResult = m_cloudinary.Explicit(exp);
+
+            Assert.AreEqual(1, expResult.ResponsiveBreakpoints.Count);
+            Assert.AreEqual(4, expResult.ResponsiveBreakpoints[0].Breakpoints.Count);
+            Assert.AreEqual(900, expResult.ResponsiveBreakpoints[0].Breakpoints[0].Width);
+            Assert.AreEqual(100, expResult.ResponsiveBreakpoints[0].Breakpoints[3].Width);
+        }
     }
 }

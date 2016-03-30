@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
+    <Compile Include="Actions\ResponsiveBreakpointResult.cs" />
     <Compile Include="Actions\RestoreParams.cs" />
     <Compile Include="Actions\RestoreResult.cs" />
     <Compile Include="Actions\GetFoldersResult.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Transforms\ImageTransform.cs" />
     <Compile Include="Transforms\BaseLayer.cs" />
     <Compile Include="Transforms\Layer.cs" />
+    <Compile Include="Transforms\ResponsiveBreakpoint.cs" />
     <Compile Include="Transforms\SubtitlesLayer.cs" />
     <Compile Include="Transforms\TextLayer.cs" />
     <Compile Include="Transforms\VideoTransform.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -128,6 +129,11 @@ namespace CloudinaryDotNet.Actions
         public bool? Phash { get; set; }
 
         /// <summary>
+        /// Optional. Allows to pass a list of ResponsiveBreakpoints parameters
+        /// </summary>
+        public List<ResponsiveBreakpoint> ResponsiveBreakpoints { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
         /// <returns>Sorted dictionary of parameters.</returns>
@@ -164,7 +170,12 @@ namespace CloudinaryDotNet.Actions
             if (EagerTransforms != null && EagerTransforms.Count > 0)
             {
                 AddParam(dict, "eager",
-                    String.Join("|", EagerTransforms.Select(t => t.Generate()).ToArray()));
+                    string.Join("|", EagerTransforms.Select(t => t.Generate()).ToArray()));
+            }
+
+            if (ResponsiveBreakpoints != null && ResponsiveBreakpoints.Count > 0)
+            {
+                AddParam(dict, "responsive_breakpoints", JsonConvert.SerializeObject(ResponsiveBreakpoints));
             }
 
             return dict;
@@ -176,8 +187,8 @@ namespace CloudinaryDotNet.Actions
     {
         public override string ToString()
         {
-            return String.Join("|",
-                    this.Select(r => String.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
+            return string.Join("|",
+                    this.Select(r => string.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
         }
     }
 }

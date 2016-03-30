@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -15,8 +15,8 @@ namespace CloudinaryDotNet.Actions
         public ExplicitParams(string publicId)
         {
             PublicId = publicId;
-            Type = String.Empty;
-            Tags = String.Empty;
+            Type = string.Empty;
+            Tags = string.Empty;
         }
 
         /// <summary>
@@ -67,6 +67,11 @@ namespace CloudinaryDotNet.Actions
         public StringDictionary Context { get; set; }
 
         /// <summary>
+        /// Allows generate breakpoints for an already uploaded image
+        /// </summary>
+        public List<ResponsiveBreakpoint> ResponsiveBreakpoints { get; set; }
+
+        /// <summary>
         /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
         /// </summary>
         /// <value>
@@ -79,7 +84,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(PublicId))
+            if (string.IsNullOrEmpty(PublicId))
                 throw new ArgumentException("PublicId must be set!");
         }
 
@@ -104,12 +109,17 @@ namespace CloudinaryDotNet.Actions
             if (EagerTransforms != null)
             {
                 AddParam(dict, "eager",
-                    String.Join("|", EagerTransforms.Select(t => t.Generate()).ToArray()));
+                    string.Join("|", EagerTransforms.Select(t => t.Generate()).ToArray()));
             }
 
             if (Context != null && Context.Count > 0)
             {
-                AddParam(dict, "context", String.Join("|", Context.Pairs));
+                AddParam(dict, "context", string.Join("|", Context.Pairs));
+            }
+
+            if (ResponsiveBreakpoints != null && ResponsiveBreakpoints.Count > 0)
+            {
+                AddParam(dict, "responsive_breakpoints", JsonConvert.SerializeObject(ResponsiveBreakpoints));
             }
 
             if (Headers != null && Headers.Count > 0)

@@ -20,13 +20,29 @@ namespace CloudinaryDotNet.Actions
         public Eager[] Eager { get; protected set; }
 
         /// <summary>
+        /// List of responsive image breakpoints
+        /// </summary>
+        public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
+
+        /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>
         /// <param name="response">HTTP response</param>
         /// <returns>New instance of this class</returns>
         internal new static ExplicitResult Parse(HttpWebResponse response)
         {
-            return Parse<ExplicitResult>(response);
+            ExplicitResult result = Parse<ExplicitResult>(response);
+
+            if (result.JsonObj != null)
+            {
+                var responsiveBreakpoints = result.JsonObj["responsive_breakpoints"];
+                if (responsiveBreakpoints != null)
+                {
+                    result.ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
+                }
+            }
+
+            return result;
         }
     }
 
