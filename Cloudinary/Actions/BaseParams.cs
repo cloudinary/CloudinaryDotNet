@@ -12,6 +12,11 @@ namespace CloudinaryDotNet.Actions
     public abstract class BaseParams
     {
         /// <summary>
+        /// The dictionary with custom parameters
+        /// </summary>
+        private IDictionary<string, string> CustomParams = new Dictionary<string, string>();
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public abstract void Check();
@@ -20,7 +25,26 @@ namespace CloudinaryDotNet.Actions
         /// Maps object model to dictionary of parameters in cloudinary notation
         /// </summary>
         /// <returns></returns>
-        public abstract SortedDictionary<string, object> ToParamsDictionary();
+        public virtual SortedDictionary<string, object> ToParamsDictionary()
+        {
+            var dict = new SortedDictionary<string, object>();
+            foreach(var item in CustomParams)
+            {
+                dict.Add(item.Key, item.Value);
+            }
+            return dict;
+        }
+
+        /// <summary>
+        /// Allow passing ad-hoc parameters in each method (mainly to allow work-around solutions until a fix is published)
+        /// </summary>
+        /// <param name="key">The key</param>
+        /// <param name="value">The value</param>
+        public void AddCustomParam(string key, string value)
+        {
+            if(!string.IsNullOrEmpty(value))
+            CustomParams.Add(key, value);
+        }
 
         /// <summary>
         /// Adds the parameter.
@@ -30,7 +54,7 @@ namespace CloudinaryDotNet.Actions
         /// <param name="value">The value.</param>
         protected void AddParam(SortedDictionary<string, object> dict, string key, string value)
         {
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 dict.Add(key, value);
         }
 
@@ -106,12 +130,12 @@ namespace CloudinaryDotNet.Actions
             if (coordObj is Rectangle)
             {
                 var rect = (Rectangle)coordObj;
-                dict.Add(key, String.Format("{0},{1},{2},{3}", rect.X, rect.Y, rect.Width, rect.Height));
+                dict.Add(key, string.Format("{0},{1},{2},{3}", rect.X, rect.Y, rect.Width, rect.Height));
             }
             else if (coordObj is List<Rectangle>)
             {
                 var list = (List<Rectangle>)coordObj;
-                dict.Add(key, String.Join("|", list.Select(r => String.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray()));
+                dict.Add(key, string.Join("|", list.Select(r => string.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray()));
             }
             else
             {

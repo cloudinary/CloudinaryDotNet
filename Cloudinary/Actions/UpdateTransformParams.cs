@@ -40,7 +40,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = new SortedDictionary<string, object>();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             AddParam(dict, "allowed_for_strict", Strict ? "true" : "false");
 

@@ -67,7 +67,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            var dict = new SortedDictionary<string, object>();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
                 AddParam(dict, "max_results", MaxResults.ToString());
@@ -106,7 +106,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            var dict = base.ToParamsDictionary();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (PublicIds != null && PublicIds.Count > 0)
             {
@@ -136,7 +136,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            var dict = base.ToParamsDictionary();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             AddParam(dict, "prefix", Prefix);
 
@@ -172,7 +172,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            var dict = base.ToParamsDictionary();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (dict.ContainsKey("type"))
                 dict.Remove("type");
@@ -213,7 +213,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            var dict = base.ToParamsDictionary();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (dict.ContainsKey("type"))
                 dict.Remove("type");

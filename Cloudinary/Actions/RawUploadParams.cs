@@ -39,16 +39,16 @@ namespace CloudinaryDotNet.Actions
             if (File == null)
                 throw new ArgumentException("File must be specified in UploadParams!");
 
-            if (!File.IsRemote && File.Stream == null && String.IsNullOrEmpty(File.FilePath))
+            if (!File.IsRemote && File.Stream == null && string.IsNullOrEmpty(File.FilePath))
                 throw new ArgumentException("File is not ready!");
 
-            if (String.IsNullOrEmpty(File.FileName))
+            if (string.IsNullOrEmpty(File.FileName))
                 throw new ArgumentException("File name must be specified in UploadParams!");
         }
 
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            var dict = new SortedDictionary<string, object>();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "type", Type);
@@ -154,7 +154,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            var dict = base.ToParamsDictionary();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             AddParam(dict, "tags", Tags);
             AddParam(dict, "use_filename", UseFilename);

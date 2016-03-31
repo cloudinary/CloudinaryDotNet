@@ -2439,5 +2439,35 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(900, expResult.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(100, expResult.ResponsiveBreakpoints[0].Breakpoints[3].Width);
         }
+
+        [Test(Description = "Use Image upload parameters as Ad-Hoc custom parameters")]
+        public void TestAdHocParams()
+        {
+            var breakpoint = new ResponsiveBreakpoint().MaxImages(5).BytesStep(20)
+                                .MinWidth(200).MaxWidth(1000).CreateDerived(false);
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath)
+            };
+
+            uploadParams.AddCustomParam("public_id", "test_ad_hoc_params_id");
+            uploadParams.AddCustomParam("tags", "test");
+            uploadParams.AddCustomParam("IgnoredEmptyParameter", "");
+            uploadParams.AddCustomParam("responsive_breakpoints", JsonConvert.SerializeObject(new List<ResponsiveBreakpoint> { breakpoint }));
+            uploadParams.AddCustomParam("IgnoredNullParameter", null);
+
+            var paramsDict = uploadParams.ToParamsDictionary();
+            Assert.AreEqual(3, paramsDict.Count);
+            Assert.IsFalse(paramsDict.ContainsKey("IgnoredEmptyParameter"));
+            Assert.IsFalse(paramsDict.ContainsKey("IgnoredNullParameter"));
+
+            ImageUploadResult result = m_cloudinary.Upload(uploadParams);
+            Assert.AreEqual(1, result.ResponsiveBreakpoints.Count);
+
+            Assert.AreEqual(5, result.ResponsiveBreakpoints[0].Breakpoints.Count);
+            Assert.AreEqual(1000, result.ResponsiveBreakpoints[0].Breakpoints[0].Width);
+            Assert.AreEqual(200, result.ResponsiveBreakpoints[0].Breakpoints[4].Width);
+        }
     }
 }

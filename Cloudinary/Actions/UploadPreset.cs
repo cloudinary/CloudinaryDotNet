@@ -326,7 +326,7 @@ namespace CloudinaryDotNet.Actions
         /// </returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            var dict = new SortedDictionary<string, object>();
+            SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             AddParam(dict, "name", Name);
             AddParam(dict, "unsigned", Unsigned);
