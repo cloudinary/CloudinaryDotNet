@@ -1152,6 +1152,45 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Create archive and store it as a raw resource in your Cloudinary
+        /// </summary>
+        /// <param name="parameters">Parameters of new generated archive</param>
+        /// <returns>Result of operation</returns>
+        public ArchiveResult CreateArchive(ArchiveParams parameters)
+        {
+            var url = m_api.ApiUrlV.
+                ResourceType("image").
+                Action("generate_archive").
+                BuildUrl();
+
+            parameters.Mode(ArchiveCallMode.Create);
+
+            using (HttpWebResponse response = m_api.Call(
+                HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
+            {
+                return ArchiveResult.Parse(response);
+            }
+        }
+
+        /// <summary>
+        ///  Return Url on archive file
+        /// </summary>
+        /// <param name="parameters">Parameters of generated archive</param>
+        /// <returns>Url on archive file</returns>
+        public string DownloadArchiveUrl(ArchiveParams parameters)
+        {
+            parameters.Mode(ArchiveCallMode.Download);
+
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType("image").
+                Action("generate_archive").
+                BuildUrl());
+
+            return GetDownloadUrl(urlBuilder, parameters.ToParamsDictionary());
+        }
+
+        /// <summary>
         /// Gets java script that configures Cloudinary JS.
         /// </summary>
         /// <param name="directUpload">Whether to reference additional scripts that are necessary for uploading files directly from browser.</param>

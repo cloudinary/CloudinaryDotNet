@@ -1,5 +1,6 @@
 ﻿using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
+using Ionic.Zip;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -2468,6 +2469,89 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(5, result.ResponsiveBreakpoints[0].Breakpoints.Count);
             Assert.AreEqual(1000, result.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(200, result.ResponsiveBreakpoints[0].Breakpoints[4].Width);
+        }
+
+        [Test]
+        public void TestCreateArchive()
+        {
+            string archiveTag = string.Format("archive_tag_{0}", UnixTimeNow());
+            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow());
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                UseFilename = true,
+                Tags = archiveTag
+            };
+            m_cloudinary.Upload(uploadParams);
+
+            ArchiveParams parameters = new ArchiveParams().Tags(new List<string> { archiveTag }).TargetPublicId(targetPublicId);
+            ArchiveResult result = m_cloudinary.CreateArchive(parameters);
+            Assert.AreEqual(string.Format("{0}.zip", targetPublicId), result.PublicId);
+            Assert.AreEqual(1, result.FileCount);
+
+            uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(500) },
+                UseFilename = false,
+                Tags = archiveTag
+            };
+            m_cloudinary.Upload(uploadParams);
+
+            parameters = new ArchiveParams().Tags(new List<string> { archiveTag })
+                                            .PublicIds(new List<string> { "sample" })
+                                            .Transformations(new List<Transformation> { new Transformation().Width("0.5"), new Transformation().Width(2) })
+                                            .FlattenFolders(true)
+                                            .UseOriginalFilename(true);
+            result = m_cloudinary.CreateArchive(parameters);
+            Assert.AreEqual(3, result.FileCount);
+        }
+
+        [Test]
+        public void TestDownloadArchive()
+        {
+            string archiveTag = string.Format("archive_tag_{0}", UnixTimeNow());
+            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow());
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                UseFilename = true,
+                Tags = archiveTag
+            };
+            m_cloudinary.Upload(uploadParams);
+
+            uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(500) },
+                UseFilename = false,
+                Tags = archiveTag
+            };
+            m_cloudinary.Upload(uploadParams);
+
+            var parameters = new ArchiveParams().Tags(new List<string> { archiveTag }).TargetPublicId(targetPublicId);
+            string url = m_cloudinary.DownloadArchiveUrl(parameters);
+
+            using (var client = new WebClient())
+            {
+                byte[] data = client.DownloadData(url);
+                using (var s = new MemoryStream(data))
+                {
+                    ZipFile zip = ZipFile.Read(s);
+                    var cnt = zip.Entries.Count;
+                    Assert.AreEqual(2, cnt);
+                }
+            }
+        }
+
+        private long UnixTimeNow()
+        {
+            var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+            return (long)timeSpan.TotalSeconds;
         }
     }
 }

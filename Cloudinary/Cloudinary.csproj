@@ -70,6 +70,8 @@
     <Compile Include="Actions\DeleteUploadPreset.cs" />
     <Compile Include="Actions\GetUploadPreset.cs" />
     <Compile Include="Actions\ListUploadPresets.cs" />
+    <Compile Include="Actions\ArchiveParams.cs" />
+    <Compile Include="Actions\ArchiveResult.cs" />
     <Compile Include="Actions\UploadMappingParams.cs" />
     <Compile Include="Actions\UpdateParams.cs" />
     <Compile Include="Actions\ExplodeParams.cs" />
