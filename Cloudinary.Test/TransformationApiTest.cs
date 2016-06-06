@@ -11,11 +11,13 @@ namespace CloudinaryDotNet.Test
         {
             Transformation transformation = new Transformation().IfCondition("w_lt_200").Crop("fill").Height(120).Width(80);
             string sTransform = transformation.ToString();
-            Assert.AreEqual("if_w_lt_200,c_fill,h_120,w_80", sTransform, "should include the if parameter as the first component in the transformation string");
+            Assert.AreEqual(sTransform.IndexOf("if"), 0, "should include the if parameter as the first component in the transformation string");
+            Assert.AreEqual("if_w_lt_200,c_fill,h_120,w_80", sTransform, "should be proper transformation string");
 
             transformation = new Transformation().Crop("fill").Height(120).IfCondition("w_lt_200").Width(80);
             sTransform = transformation.ToString();
-            Assert.AreEqual("if_w_lt_200,c_fill,h_120,w_80", sTransform, "should include the if parameter as the first component in the transformation string");
+            Assert.AreEqual(sTransform.IndexOf("if"), 0, "should include the if parameter as the first component in the transformation string");
+            Assert.AreEqual("if_w_lt_200,c_fill,h_120,w_80", sTransform, "components should be in proper order");
 
             transformation = new Transformation().IfCondition("w_lt_200").Crop("fill").Height(120).Width(80).
                                           Chain().IfCondition("w_gt_400").Crop("fit").Height(150).Width(150).
@@ -39,7 +41,9 @@ namespace CloudinaryDotNet.Test
                 .Chain().Effect("brightness", 50)
                 .Chain().Effect("shadow").Color("red")
                 .EndIf();
-            Assert.AreEqual("if_w_lt_200/c_fill,e_sharpen,h_120,w_80/e_brightness:50/co_red,e_shadow/if_end", transformation.ToString(), "should include the if_end as the last parameter in its component");
+            string sTransform = transformation.ToString();
+            Assert.IsTrue(sTransform.EndsWith("if_end"), "should include the if_end as the last parameter in its component");
+            Assert.AreEqual("if_w_lt_200/c_fill,e_sharpen,h_120,w_80/e_brightness:50/co_red,e_shadow/if_end", sTransform, "should be proper transformation string");
         }
 
         [Test]
@@ -63,7 +67,8 @@ namespace CloudinaryDotNet.Test
             };
             transformation = new Transformation(transformations);
             sTransform = transformation.ToString();
-            Assert.AreEqual("if_w_lt_200/c_fill,h_120,w_80/if_else/c_fill,h_90,w_100", sTransform, "if_else should be without any transformation parameters");
+            Assert.IsTrue(sTransform.Contains("/if_else/"), "if_else should be without any transformation parameters");
+            Assert.AreEqual("if_w_lt_200/c_fill,h_120,w_80/if_else/c_fill,h_90,w_100", sTransform, "should be proper transformation string");
         }
 
         [Test]
