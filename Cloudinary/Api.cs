@@ -314,9 +314,9 @@ namespace CloudinaryDotNet
 
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
-            request.UserAgent = !string.IsNullOrEmpty(UserPlatform)
-                ? string.Format("{0} {1}", UserPlatform, USER_AGENT)
-                : USER_AGENT;
+            request.UserAgent = string.IsNullOrEmpty(UserPlatform)
+                ? USER_AGENT
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
 
             if (Timeout > 0)
             {

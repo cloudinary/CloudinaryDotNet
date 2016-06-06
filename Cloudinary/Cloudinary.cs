@@ -909,14 +909,14 @@ namespace CloudinaryDotNet
             }
         }
 
-        public RestoreResult RestoreResource(params string[] publicIds)
+        public RestoreResult Restore(params string[] publicIds)
         {
             RestoreParams restoreParams = new RestoreParams();
             restoreParams.PublicIds.AddRange(publicIds);
-            return RestoreResource(restoreParams);
+            return Restore(restoreParams);
         }
 
-        public RestoreResult RestoreResource(RestoreParams parameters)
+        public RestoreResult Restore(RestoreParams parameters)
         {
             var url = m_api.ApiUrlV.
                 ResourceType("resources").
@@ -946,6 +946,32 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Calls an API method and returns a parsed result
+        /// </summary>
+        private UploadMappingResults CallUploadMappingsAPI(HttpMethod httpMethod, UploadMappingParams parameters)
+        {
+            string url;
+            SortedDictionary<string, object> body = null;
+            if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
+            {
+                url = GetUploadMappingUrl();
+                if (parameters != null)
+                {
+                    body = parameters.ToParamsDictionary();
+                }
+            }
+            else
+            {
+                url = GetUploadMappingUrl(parameters);
+            }
+            using (HttpWebResponse response = m_api.Call(httpMethod, url, body, null))
+            {
+                UploadMappingResults result = UploadMappingResults.Parse(response);
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Returns list of all upload mappings
         /// </summary>
         /// <param name="parameters">Uses only <see cref="MaxResults"/> and <see cref="NextCursor"/> properties. Can be null.</param>
@@ -954,11 +980,7 @@ namespace CloudinaryDotNet
             if (parameters == null)
                 parameters = new UploadMappingParams();
 
-            using (HttpWebResponse response = m_api.Call(HttpMethod.GET, GetUploadMappingUrl(parameters), null, null))
-            {
-                UploadMappingResults result = UploadMappingResults.Parse(response);
-                return result;
-            }
+            return CallUploadMappingsAPI(HttpMethod.GET, parameters);
         }
 
         /// <summary>
@@ -971,11 +993,7 @@ namespace CloudinaryDotNet
 
             var parameters = new UploadMappingParams() { Folder = folder };
 
-            using (HttpWebResponse response = m_api.Call(HttpMethod.GET, GetUploadMappingUrl(parameters), null, null))
-            {
-                UploadMappingResults result = UploadMappingResults.Parse(response);
-                return result;
-            }
+            return CallUploadMappingsAPI(HttpMethod.GET, parameters);
         }
 
         /// <summary>
@@ -994,12 +1012,7 @@ namespace CloudinaryDotNet
                 Folder = folder,
                 Template = template,
             };
-
-            using (HttpWebResponse response = m_api.Call(HttpMethod.POST, GetUploadMappingUrl(), parameters.ToParamsDictionary(), null))
-            {
-                UploadMappingResults result = UploadMappingResults.Parse(response);
-                return result;
-            }
+            return CallUploadMappingsAPI(HttpMethod.POST, parameters);
         }
 
         /// <summary>
@@ -1018,11 +1031,7 @@ namespace CloudinaryDotNet
 
             var parameters = new UploadMappingParams() { Folder = folder, Template = newTemplate };
 
-            using (HttpWebResponse response = m_api.Call(HttpMethod.PUT, GetUploadMappingUrl(), parameters.ToParamsDictionary(), null))
-            {
-                UploadMappingResults result = UploadMappingResults.Parse(response);
-                return result;
-            }
+            return CallUploadMappingsAPI(HttpMethod.PUT, parameters);
         }
 
         /// <summary>
@@ -1045,11 +1054,7 @@ namespace CloudinaryDotNet
                 parameters.Folder = folder;
             }
 
-            using (HttpWebResponse response = m_api.Call(HttpMethod.DELETE, GetUploadMappingUrl(parameters), null, null))
-            {
-                UploadMappingResults result = UploadMappingResults.Parse(response);
-                return result;
-            }
+            return CallUploadMappingsAPI(HttpMethod.DELETE, parameters);
         }
 
         public UpdateTransformResult UpdateTransform(UpdateTransformParams parameters)
