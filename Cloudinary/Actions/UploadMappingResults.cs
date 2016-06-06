@@ -20,6 +20,11 @@ namespace CloudinaryDotNet.Actions
         public Dictionary<string, string> Mappings { get; protected set; }
 
         /// <summary>
+        /// Holds the cursor value if there are more upload mappings than <see cref="UploadMappingParams.MaxResults"/>.
+        /// </summary>
+        public string NextCursor { get; protected set; }
+
+        /// <summary>
         /// Parses HTTP response and creates new instance of this class
         /// </summary>
         /// <param name="response">HTTP response</param>
@@ -52,6 +57,9 @@ namespace CloudinaryDotNet.Actions
                 var template = result.JsonObj.Value<string>("template") ?? string.Empty;
                 if (!string.IsNullOrEmpty(folder))
                     result.Mappings.Add(folder, template);
+
+                //parsing NextCursor
+                result.NextCursor = result.JsonObj.Value<string>("next_cursor") ?? string.Empty;
             }
             
             return result;
