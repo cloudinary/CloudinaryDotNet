@@ -410,30 +410,4 @@ namespace CloudinaryDotNet.Actions
             return dict;
         }
     }
-
-    /// <summary>
-    /// The format for the generated archive
-    /// </summary>
-    public enum ArchiveFormat
-    {
-        /// <summary>
-        /// Specifies ZIP format for an archive
-        /// </summary>
-        [Description("zip")]
-        Zip
-    }
-
-    public enum ArchiveCallMode
-    {
-        /// <summary>
-        ///  Indicates to return the generated archive file
-        /// </summary>
-        [Description("download")]
-        Download,
-        /// <summary>
-        /// Indicates to store the generated archive file as a raw resource in your Cloudinary account and return a JSON with the URLs for accessing it
-        /// </summary>
-        [Description("create")]
-        Create
-    }
 }

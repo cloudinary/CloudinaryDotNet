@@ -63,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
+    <Compile Include="Actions\ArchiveCallMode.cs" />
+    <Compile Include="Actions\ArchiveFormat.cs" />
     <Compile Include="Actions\ResponsiveBreakpointResult.cs" />
     <Compile Include="Actions\RestoreParams.cs" />
     <Compile Include="Actions\RestoreResult.cs" />
