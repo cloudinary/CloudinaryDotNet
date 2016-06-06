@@ -1637,12 +1637,12 @@ namespace CloudinaryDotNet.Test
             ExplicitParams exp = new ExplicitParams("cloudinary")
             {
                 EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
-                Type = "twitter_name"
+                Type = "facebook"
             };
 
             ExplicitResult expResult = m_cloudinary.Explicit(exp);
 
-            string url = new Url(m_account.Cloud).ResourceType("image").Add("twitter_name").
+            string url = new Url(m_account.Cloud).ResourceType("image").Add("facebook").
                 Transform(new Transformation().Crop("scale").Width(2.0)).
                 Format("png").Version(expResult.Version).BuildUrl("cloudinary");
 
@@ -1655,7 +1655,7 @@ namespace CloudinaryDotNet.Test
             var exp = new ExplicitParams("cloudinary")
             {
                 EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
-                Type = "twitter_name",
+                Type = "facebook",
                 Context = new StringDictionary("context1=254")
             };
 
@@ -1663,7 +1663,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.IsNotNull(expResult);
 
-            var getResult = m_cloudinary.GetResource(new GetResourceParams(expResult.PublicId) { Type = "twitter_name" });
+            var getResult = m_cloudinary.GetResource(new GetResourceParams(expResult.PublicId) { Type = "facebook" });
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString());
@@ -1749,7 +1749,7 @@ namespace CloudinaryDotNet.Test
 
                 EagerTransforms = new List<Transformation>() {
                     new EagerTransformation().Crop("scale").Width(2.0) },
-                Type = "twitter_name"
+                Type = "facebook"
             };
 
             var result = m_cloudinary.Explicit(exp);
