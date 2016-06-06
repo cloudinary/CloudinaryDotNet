@@ -13,21 +13,21 @@ namespace CloudinaryDotNet.Actions
         private List<string> m_tags;
         private List<string> m_prefixes;
 
-        private string resourceType = null;
-        private string type = null;
-        private List<Transformation> transformations = null;
-        private ArchiveCallMode mode = ArchiveCallMode.Create;
-        private ArchiveFormat targetFormat = ArchiveFormat.Zip;
-        private bool flattenFolders = false;
-        private bool flattenTransformations = false;
-        private int expiresAt = 0;
-        private bool useOriginalFilename = false;
-        private string notificationUrl = null;
-        private bool keepDerived = false;
+        private string m_resourceType;
+        private string m_type;
+        private List<Transformation> m_transformations;
+        private ArchiveCallMode m_mode = ArchiveCallMode.Create;
+        private ArchiveFormat m_targetFormat = ArchiveFormat.Zip;
+        private bool m_flattenFolders;
+        private bool m_flattenTransformations;
+        private int m_expiresAt;
+        private bool m_useOriginalFilename;
+        private string m_notificationUrl;
+        private bool m_keepDerived;
 
-        private string targetPublicId = null;
-        private bool async = false;
-        private List<string> targetTags = null;
+        private string m_targetPublicId;
+        private bool m_async;
+        private List<string> m_targetTags;
 
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public virtual ArchiveCallMode Mode()
         {
-            return mode;
+            return m_mode;
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns></returns>
         public ArchiveParams Mode(ArchiveCallMode mode)
         {
-            this.mode = mode;
+            this.m_mode = mode;
             return this;
         }
 
@@ -119,7 +119,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string ResourceType()
         {
-            return resourceType;
+            return m_resourceType;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams ResourceType(string resourceType)
         {
-            this.resourceType = resourceType;
+            this.m_resourceType = resourceType;
             return this;
         }
 
@@ -136,7 +136,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Type()
         {
-            return type;
+            return m_type;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams Type(string type)
         {
-            this.type = type;
+            this.m_type = type;
             return this;
         }
 
@@ -154,7 +154,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns></returns>
         public List<Transformation> Transformations()
         {
-            return transformations;
+            return m_transformations;
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams Transformations(List<Transformation> transformations)
         {
-            this.transformations = transformations;
+            this.m_transformations = transformations;
             return this;
         }
 
@@ -171,7 +171,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveFormat TargetFormat()
         {
-            return targetFormat;
+            return m_targetFormat;
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams TargetFormat(ArchiveFormat targetFormat)
         {
-            this.targetFormat = targetFormat;
+            this.m_targetFormat = targetFormat;
             return this;
         }
 
@@ -188,7 +188,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string TargetPublicId()
         {
-            return targetPublicId;
+            return m_targetPublicId;
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams TargetPublicId(string targetPublicId)
         {
-            this.targetPublicId = targetPublicId;
+            this.m_targetPublicId = targetPublicId;
             return this;
         }
 
@@ -206,7 +206,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public bool IsFlattenFolders()
         {
-            return flattenFolders;
+            return m_flattenFolders;
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams FlattenFolders(bool flattenFolders)
         {
-            this.flattenFolders = flattenFolders;
+            this.m_flattenFolders = flattenFolders;
             return this;
         }
 
@@ -224,7 +224,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns></returns>
         public bool IsFlattenTransformations()
         {
-            return flattenTransformations;
+            return m_flattenTransformations;
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams FlattenTransformations(bool flattenTransformations)
         {
-            this.flattenTransformations = flattenTransformations;
+            this.m_flattenTransformations = flattenTransformations;
             return this;
         }
 
@@ -241,7 +241,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public int ExpiresAt()
         {
-            return expiresAt;
+            return m_expiresAt;
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams ExpiresAt(int expiresAt)
         {
-            this.expiresAt = expiresAt;
+            this.m_expiresAt = expiresAt;
             return this;
         }
 
@@ -260,7 +260,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public bool IsUseOriginalFilename()
         {
-            return useOriginalFilename;
+            return m_useOriginalFilename;
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns></returns>
         public ArchiveParams UseOriginalFilename(bool useOriginalFilename)
         {
-            this.useOriginalFilename = useOriginalFilename;
+            this.m_useOriginalFilename = useOriginalFilename;
             return this;
         }
 
@@ -279,7 +279,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public bool IsAsync()
         {
-            return async;
+            return m_async;
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams Async(bool async)
         {
-            this.async = async;
+            this.m_async = async;
             return this;
         }
 
@@ -297,7 +297,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string NotificationUrl()
         {
-            return notificationUrl;
+            return m_notificationUrl;
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams NotificationUrl(string notificationUrl)
         {
-            this.notificationUrl = notificationUrl;
+            this.m_notificationUrl = notificationUrl;
             return this;
         }
 
@@ -314,7 +314,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public List<string> TargetTags()
         {
-            return targetTags;
+            return m_targetTags;
         }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams TargetTags(List<string> targetTags)
         {
-            this.targetTags = targetTags;
+            this.m_targetTags = targetTags;
             return this;
         }
 
@@ -332,7 +332,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public bool IsKeepDerived()
         {
-            return keepDerived;
+            return m_keepDerived;
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ArchiveParams KeepDerived(bool keepDerived)
         {
-            this.keepDerived = keepDerived;
+            this.m_keepDerived = keepDerived;
             return this;
         }
 
@@ -365,47 +365,47 @@ namespace CloudinaryDotNet.Actions
             if (m_prefixes != null && m_prefixes.Count > 0)
                 AddParam(dict, "prefixes", string.Join(",", m_prefixes));
 
-            if (!string.IsNullOrEmpty(resourceType))
-                AddParam(dict, "resource_type", resourceType);
+            if (!string.IsNullOrEmpty(m_resourceType))
+                AddParam(dict, "resource_type", m_resourceType);
 
-            if (!string.IsNullOrEmpty(type))
-                AddParam(dict, "type", type);
+            if (!string.IsNullOrEmpty(m_type))
+                AddParam(dict, "type", m_type);
 
-            if (transformations != null && transformations.Count > 0)
-                AddParam(dict, "transformations", string.Join("/", transformations));
+            if (m_transformations != null && m_transformations.Count > 0)
+                AddParam(dict, "transformations", string.Join("/", m_transformations));
 
-            if (targetFormat != ArchiveFormat.Zip)
-                AddParam(dict, "target_format", Api.GetCloudinaryParam(targetFormat));
+            if (m_targetFormat != ArchiveFormat.Zip)
+                AddParam(dict, "target_format", Api.GetCloudinaryParam(m_targetFormat));
 
-            if (flattenFolders)
-                AddParam(dict, "flatten_folders", flattenFolders);
+            if (m_flattenFolders)
+                AddParam(dict, "flatten_folders", m_flattenFolders);
 
-            if (flattenTransformations)
-                AddParam(dict, "flatten_transformations", flattenTransformations);
+            if (m_flattenTransformations)
+                AddParam(dict, "flatten_transformations", m_flattenTransformations);
 
-            if (useOriginalFilename)
-                AddParam(dict, "use_original_filename", useOriginalFilename);
+            if (m_useOriginalFilename)
+                AddParam(dict, "use_original_filename", m_useOriginalFilename);
 
-            if (!string.IsNullOrEmpty(notificationUrl))
-                AddParam(dict, "notification_url", notificationUrl);
+            if (!string.IsNullOrEmpty(m_notificationUrl))
+                AddParam(dict, "notification_url", m_notificationUrl);
 
-            if (keepDerived)
-                AddParam(dict, "keep_derived", keepDerived);
+            if (m_keepDerived)
+                AddParam(dict, "keep_derived", m_keepDerived);
 
-            if (mode == ArchiveCallMode.Create)
+            if (m_mode == ArchiveCallMode.Create)
             {
-                if (async)
-                    AddParam(dict, "async", async);
+                if (m_async)
+                    AddParam(dict, "async", m_async);
 
-                if (!string.IsNullOrEmpty(targetPublicId))
-                    AddParam(dict, "target_public_id", targetPublicId);
+                if (!string.IsNullOrEmpty(m_targetPublicId))
+                    AddParam(dict, "target_public_id", m_targetPublicId);
 
-                if (targetTags != null && targetTags.Count > 0)
-                    AddParam(dict, "target_tags", string.Join(",", targetTags));
+                if (m_targetTags != null && m_targetTags.Count > 0)
+                    AddParam(dict, "target_tags", string.Join(",", m_targetTags));
             }
 
-            if (expiresAt > 0 && mode == ArchiveCallMode.Download)
-                AddParam(dict, "expires_at", expiresAt);
+            if (m_expiresAt > 0 && m_mode == ArchiveCallMode.Download)
+                AddParam(dict, "expires_at", m_expiresAt);
 
             return dict;
         }

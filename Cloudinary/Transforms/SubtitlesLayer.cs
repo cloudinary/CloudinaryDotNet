@@ -8,7 +8,7 @@
     {
         public SubtitlesLayer()
         {
-            resourceType = "subtitles";
+            m_resourceType = "subtitles";
         }
     }
 }

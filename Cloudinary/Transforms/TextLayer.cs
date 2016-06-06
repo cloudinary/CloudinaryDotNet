@@ -4,30 +4,34 @@ using System.Web;
 
 namespace CloudinaryDotNet
 {
+    /// <summary>
+    /// Represents property of the overlay parameter (l_text: in URLs)
+    /// for placing text as an overlay.
+    /// </summary>
     public class TextLayer : BaseLayer<TextLayer>
     {
-        protected string text;
-        protected string fontFamily;
-        protected int fontSize;
+        protected string m_text;
+        protected string m_fontFamily;
+        protected int m_fontSize;
 
-        protected string fontWeight;
-        protected string fontStyle;
-        protected string textDecoration;
-        protected string textAlign;
-        protected string stroke;
-        protected string letterSpacing;
-        protected string lineSpacing;
+        protected string m_fontWeight;
+        protected string m_fontStyle;
+        protected string m_textDecoration;
+        protected string m_textAlign;
+        protected string m_stroke;
+        protected string m_letterSpacing;
+        protected string m_lineSpacing;
 
         public TextLayer()
         {
-            fontSize = 12;
-            resourceType = "text";
+            m_resourceType = "text";
+            FontSize(12);
         }
 
         /// <param name="text">The text to generate an image for.</param>
         public TextLayer(string text) : this()
         {
-            this.text = OverlayTextEncode(text);
+            Text(text);
         }
 
         public new TextLayer ResourceType(string resourceType)
@@ -50,7 +54,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer Text(string text)
         {
-            this.text = OverlayTextEncode(text);
+            this.m_text = OverlayTextEncode(text);
             return this;
         }
 
@@ -69,7 +73,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer FontFamily(string fontFamily)
         {
-            this.fontFamily = fontFamily;
+            this.m_fontFamily = fontFamily;
             return this;
         }
 
@@ -78,7 +82,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer FontSize(int fontSize)
         {
-            this.fontSize = fontSize;
+            this.m_fontSize = fontSize;
             return this;
         }
 
@@ -87,7 +91,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer FontWeight(string fontWeight)
         {
-            this.fontWeight = fontWeight;
+            this.m_fontWeight = fontWeight;
             return this;
         }
 
@@ -96,7 +100,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer FontStyle(string fontStyle)
         {
-            this.fontStyle = fontStyle;
+            this.m_fontStyle = fontStyle;
             return this;
         }
 
@@ -105,7 +109,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer TextDecoration(string textDecoration)
         {
-            this.textDecoration = textDecoration;
+            this.m_textDecoration = textDecoration;
             return this;
         }
 
@@ -114,7 +118,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer TextAlign(string textAlign)
         {
-            this.textAlign = textAlign;
+            this.m_textAlign = textAlign;
             return this;
         }
 
@@ -124,7 +128,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer Stroke(string stroke)
         {
-            this.stroke = stroke;
+            this.m_stroke = stroke;
             return this;
         }
 
@@ -134,7 +138,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer LetterSpacing(string letterSpacing)
         {
-            this.letterSpacing = letterSpacing;
+            this.m_letterSpacing = letterSpacing;
             return this;
         }
 
@@ -144,19 +148,13 @@ namespace CloudinaryDotNet
         /// </summary>
         public TextLayer LineSpacing(string lineSpacing)
         {
-            this.lineSpacing = lineSpacing;
+            this.m_lineSpacing = lineSpacing;
             return this;
         }
 
-        public override string ToString()
+        public override string AdditionalParams()
         {
-            if (string.IsNullOrEmpty(publicId) && string.IsNullOrEmpty(text))
-            {
-                throw new ArgumentException("Must supply either text or publicId.");
-            }
-
             List<string> components = new List<string>();
-            components.Add(resourceType);
 
             var styleIdentifier = TextStyleIdentifier();
             if (!string.IsNullOrEmpty(styleIdentifier))
@@ -164,50 +162,53 @@ namespace CloudinaryDotNet
                 components.Add(styleIdentifier);
             }
 
-            if (!string.IsNullOrEmpty(publicId))
+            if (!string.IsNullOrEmpty(m_text))
             {
-                components.Add(FormattedPublicId());
+                components.Add(m_text);
             }
-
-            if (!string.IsNullOrEmpty(text))
-            {
-                components.Add(text);
-            }
-
             return string.Join(":", components);
+        }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(m_publicId) && string.IsNullOrEmpty(m_text))
+            {
+                throw new ArgumentException("Must supply either text or publicId.");
+            }
+            return base.ToString();
         }
 
         private string TextStyleIdentifier()
         {
             List<string> components = new List<string>();
 
-            if (!string.IsNullOrEmpty(fontWeight) && !fontWeight.Equals("normal"))
-                components.Add(fontWeight);
-            if (!string.IsNullOrEmpty(fontStyle) && !fontStyle.Equals("normal"))
-                components.Add(fontStyle);
-            if (!string.IsNullOrEmpty(textDecoration) && !textDecoration.Equals("none"))
-                components.Add(textDecoration);
-            if (!string.IsNullOrEmpty(textAlign))
-                components.Add(textAlign);
-            if (!string.IsNullOrEmpty(stroke) && !stroke.Equals("none"))
-                components.Add(stroke);
-            if (!string.IsNullOrEmpty(letterSpacing))
-                components.Add(string.Format("letter_spacing_{0}", letterSpacing));
-            if (!string.IsNullOrEmpty(lineSpacing))
-                components.Add(string.Format("line_spacing_{0}", lineSpacing));
+            if (!string.IsNullOrEmpty(m_fontWeight) && !m_fontWeight.Equals("normal"))
+                components.Add(m_fontWeight);
+            if (!string.IsNullOrEmpty(m_fontStyle) && !m_fontStyle.Equals("normal"))
+                components.Add(m_fontStyle);
+            if (!string.IsNullOrEmpty(m_textDecoration) && !m_textDecoration.Equals("none"))
+                components.Add(m_textDecoration);
+            if (!string.IsNullOrEmpty(m_textAlign))
+                components.Add(m_textAlign);
+            if (!string.IsNullOrEmpty(m_stroke) && !m_stroke.Equals("none"))
+                components.Add(m_stroke);
+            if (!string.IsNullOrEmpty(m_letterSpacing))
+                components.Add(string.Format("letter_spacing_{0}", m_letterSpacing));
+            if (!string.IsNullOrEmpty(m_lineSpacing))
+                components.Add(string.Format("line_spacing_{0}", m_lineSpacing));
 
-            if (string.IsNullOrEmpty(fontFamily) && components.Count == 0)
+            if (string.IsNullOrEmpty(m_fontFamily) && components.Count == 0)
             {
                 return null;
             }
 
-            if (string.IsNullOrEmpty(fontFamily))
+            if (string.IsNullOrEmpty(m_fontFamily))
             {
                 throw new ArgumentException("Must supply fontFamily.");
             }
 
-            components.Insert(0, fontSize.ToString());
-            components.Insert(0, fontFamily);
+            components.Insert(0, m_fontSize.ToString());
+            components.Insert(0, m_fontFamily);
 
             return string.Join("_", components);
         }

@@ -138,6 +138,7 @@
     <Compile Include="Transforms\Layer.cs" />
     <Compile Include="Transforms\ResponsiveBreakpoint.cs" />
     <Compile Include="Transforms\SubtitlesLayer.cs" />
+    <Compile Include="Transforms\VideoLayer.cs" />
     <Compile Include="Transforms\TextLayer.cs" />
     <Compile Include="Transforms\VideoTransform.cs" />
     <Compile Include="Transforms\Transformation.cs" />

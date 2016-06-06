@@ -13,65 +13,75 @@ namespace CloudinaryDotNet
     /// </summary>
     public abstract class BaseLayer<T> : BaseLayer where T : BaseLayer<T>
     {
-        protected string resourceType = null;
-        protected string type = null;
-        protected string publicId = null;
-        protected string format = null;
+        protected string m_resourceType;
+        protected string m_type;
+        protected string m_publicId;
+        protected string m_format;
 
         public T ResourceType(string resourceType)
         {
-            this.resourceType = resourceType;
+            m_resourceType = resourceType;
             return (T)this;
         }
 
         public T Type(string type)
         {
-            this.type = type;
+            this.m_type = type;
             return (T)this;
         }
 
         public T PublicId(string publicId)
         {
-            this.publicId = publicId.Replace('/', ':');
+            this.m_publicId = publicId.Replace('/', ':');
             return (T)this;
         }
 
         public T Format(string format)
         {
-            this.format = format;
+            this.m_format = format;
             return (T)this;
+        }
+
+        public virtual string AdditionalParams()
+        {
+            return string.Empty;
         }
 
         public override string ToString()
         {
             List<string> components = new List<string>();
-            if (!string.IsNullOrEmpty(resourceType) && !resourceType.Equals("image"))
+            if (!string.IsNullOrEmpty(m_resourceType) && !m_resourceType.Equals("image"))
             {
-                components.Add(resourceType);
+                components.Add(m_resourceType);
             }
 
-            if (!string.IsNullOrEmpty(type) && !type.Equals("upload"))
+            if (!string.IsNullOrEmpty(m_type) && !m_type.Equals("upload"))
             {
-                components.Add(type);
+                components.Add(m_type);
             }
 
-            if (string.IsNullOrEmpty(publicId))
+            string additionalParams = this.AdditionalParams();
+
+            if (!string.IsNullOrEmpty(additionalParams))
             {
-                throw new ArgumentException("Must supply publicId");
+                components.Add(additionalParams);
             }
 
-            components.Add(FormattedPublicId());
+            if (!string.IsNullOrEmpty(m_publicId))
+            {
+                components.Add(FormattedPublicId());
+            }
 
             return string.Join(":", components);
         }
 
-        protected string FormattedPublicId()
+        private string FormattedPublicId()
         {
-            var transientPublicId = publicId;
+            var transientPublicId = m_publicId;
 
-            if (!string.IsNullOrEmpty(format))
+            if (!string.IsNullOrEmpty(m_format))
             {
-                transientPublicId = string.Format("{0}.{1}", transientPublicId, format);
+                transientPublicId = string.Format("{0}.{1}", transientPublicId, m_format);
             }
 
             return transientPublicId;
