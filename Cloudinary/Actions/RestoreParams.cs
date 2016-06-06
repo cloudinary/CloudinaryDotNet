@@ -19,6 +19,11 @@ namespace CloudinaryDotNet.Actions
             set { m_publicIds = value; }
         }
 
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
+        }
+
         /// <summary>
         /// Restore resources with the given resource type. Default resource type: "image"
         /// </summary>
@@ -33,7 +38,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (PublicIds == null || PublicIds.Count == 0)
+            if (!PublicIdsExist)
             {
                 throw new ArgumentException("At least one PublicId must be specified!");
             }
@@ -47,7 +52,7 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
-            if (PublicIds != null && PublicIds.Count > 0)
+            if (PublicIdsExist)
             {
                 dict.Add("public_ids", PublicIds);
             }

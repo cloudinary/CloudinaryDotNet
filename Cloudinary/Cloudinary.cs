@@ -16,6 +16,9 @@ namespace CloudinaryDotNet
         public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
         public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
         public const string SHARED_CDN = AKAMAI_SHARED_CDN;
+        private const string RESOURCE_TYPE_IMAGE = "image";
+        private const string ACTION_GENERATE_ARCHIVE = "generate_archive";
+
 
         Api m_api;
 
@@ -274,7 +277,7 @@ namespace CloudinaryDotNet
 
             UrlBuilder urlBuilder = new UrlBuilder(
                m_api.ApiUrlV
-               .ResourceType("image")
+               .ResourceType(RESOURCE_TYPE_IMAGE)
                .Action("download")
                .BuildUrl());
 
@@ -308,7 +311,7 @@ namespace CloudinaryDotNet
 
             UrlBuilder urlBuilder = new UrlBuilder(
                m_api.ApiUrlV
-               .ResourceType("image")
+               .ResourceType(RESOURCE_TYPE_IMAGE)
                .Action("download_tag.zip")
                .BuildUrl());
 
@@ -1151,6 +1154,8 @@ namespace CloudinaryDotNet
             }
         }
 
+
+
         /// <summary>
         /// Create archive and store it as a raw resource in your Cloudinary
         /// </summary>
@@ -1159,8 +1164,8 @@ namespace CloudinaryDotNet
         public ArchiveResult CreateArchive(ArchiveParams parameters)
         {
             var url = m_api.ApiUrlV.
-                ResourceType("image").
-                Action("generate_archive").
+                ResourceType(RESOURCE_TYPE_IMAGE).
+                Action(ACTION_GENERATE_ARCHIVE).
                 BuildUrl();
 
             parameters.Mode(ArchiveCallMode.Create);
@@ -1183,8 +1188,8 @@ namespace CloudinaryDotNet
 
             UrlBuilder urlBuilder = new UrlBuilder(
                 m_api.ApiUrlV.
-                ResourceType("image").
-                Action("generate_archive").
+                ResourceType(RESOURCE_TYPE_IMAGE).
+                Action(ACTION_GENERATE_ARCHIVE).
                 BuildUrl());
 
             return GetDownloadUrl(urlBuilder, parameters.ToParamsDictionary());

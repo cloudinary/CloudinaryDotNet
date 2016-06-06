@@ -8,9 +8,16 @@ namespace CloudinaryDotNet
     /// </summary>
     public class ResponsiveBreakpoint : JObject
     {
+        private const string CREATE_DERIVED = "create_derived";
+        private const string TRANSFORMATION = "transformation";
+        private const string MAX_WIDTH = "max_width";
+        private const string MIN_WIDTH = "min_width";
+        private const string BYTES_STEP = "bytes_step";
+        private const string MAX_IMAGES = "max_images";
+
         public ResponsiveBreakpoint()
         {
-            Add("create_derived", true);
+            Add(CREATE_DERIVED, true);
         }
 
         /// <summary>
@@ -18,7 +25,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public bool IsCreateDerived()
         {
-            return GetValue("create_derived").Value<bool>();
+            return GetValue(CREATE_DERIVED).Value<bool>();
         }
 
         /// <summary>
@@ -27,7 +34,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public ResponsiveBreakpoint CreateDerived(bool createDerived)
         {
-            this["create_derived"] = createDerived;
+            this[CREATE_DERIVED] = createDerived;
             return this;
         }
 
@@ -36,7 +43,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public ResponsiveBreakpoint Transformation(Transformation transformation)
         {
-            this["transformation"] = transformation.ToString();
+            this[TRANSFORMATION] = transformation.ToString();
             return this;
         }
 
@@ -44,37 +51,37 @@ namespace CloudinaryDotNet
         /// Get maximal width in pixels
         /// </summary>
         /// <returns></returns>
-        public int GetMaxWidth()
+        public int MaxWidth()
         {
-            return Value<int>("max_width");
+            return Value<int>(MAX_WIDTH);
         }
 
         /// <summary>
-        /// Maximal boundary of Width
+        /// Set maximal boundary of Width
         /// </summary>
         /// <param name="maxWidth">Maximal width in pixels</param>
         /// <returns></returns>
         public ResponsiveBreakpoint MaxWidth(int maxWidth)
         {
-            this["max_width"] = maxWidth;
+            this[MAX_WIDTH] = maxWidth;
             return this;
         }
 
         /// <summary>
         /// Get minimal Width in pixels
         /// </summary>
-        public int GetMinWidth()
+        public int MinWidth()
         {
-            return Value<int>("min_width");
+            return Value<int>(MIN_WIDTH);
         }
 
         /// <summary>
-        /// Minimal boundary of Width
+        /// Set minimal boundary of Width
         /// </summary>
         /// <param name="minWidth">Minimal width in pixels</param>
         public ResponsiveBreakpoint MinWidth(int minWidth)
         {
-            this["min_width"] = minWidth;
+            this[MIN_WIDTH] = minWidth;
             return this;
         }
 
@@ -83,34 +90,34 @@ namespace CloudinaryDotNet
         /// </summary>
         public int BytesStep()
         {
-            return Value<int>("bytes_step");
+            return Value<int>(BYTES_STEP);
         }
 
         /// <summary>
-        /// Minimal file size step to generate images
+        /// Set minimal file size step to generate images
         /// </summary>
         /// <param name="bytesStep">File size step in bytes</param>
         /// <returns></returns>
         public ResponsiveBreakpoint BytesStep(int bytesStep)
         {
-            this["bytes_step"] = bytesStep;
+            this[BYTES_STEP] = bytesStep;
             return this;
         }
 
         /// <summary>
-        /// Get maximum number of images to generate
+        /// Get maximal number of images to generate
         /// </summary>
         public int MaxImages()
         {
-            return Value<int>("max_images");
+            return Value<int>(MAX_IMAGES);
         }
 
         /// <summary>
-        /// Maximum number of images to generate
+        /// Set maximum number of images to generate
         /// </summary>
         public ResponsiveBreakpoint MaxImages(int maxImages)
         {
-            this["max_images"] = maxImages;
+            this[MAX_IMAGES] = maxImages;
             return this;
         }
     }
