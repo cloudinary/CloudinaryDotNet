@@ -404,14 +404,14 @@ namespace CloudinaryDotNet.Test
         public void testOverlayError1()
         {
             var transformation = new Transformation().Overlay(new TextLayer().PublicId("test").FontStyle("italic"));
-            m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            transformation.ToString();
         }
 
         [Test(Description = "Must supply publicId for non-text underlay"), ExpectedException(typeof(ArgumentException))]
         public void testOverlayError2()
         {
-            var transformation = new Transformation().Overlay(new Layer().ResourceType("video"));
-            m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            var transformation = new Transformation().Overlay(new VideoLayer());
+            transformation.ToString();
         }
 
         [Test]
