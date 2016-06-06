@@ -85,6 +85,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntegrationTestBase.cs" />
+    <Compile Include="UploadMappingApiTest.cs" />
     <Compile Include="TransformationApiTest.cs" />
     <Compile Include="CloudinaryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,7 +1,6 @@
 ﻿using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using Ionic.Zip;
-using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -12,109 +11,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace CloudinaryDotNet.Test
 {
-    [TestFixture]
-    public class CloudinaryTest
+    public class CloudinaryTest : IntegrationTestBase
     {
-        private const string TEST_TAG = "cloudinarydotnet_test";
-        Account m_account;
-        Cloudinary m_cloudinary;
-        string m_testImagePath;
-        string m_testVideoPath;
-        string m_testPdfPath;
-        string m_testIconPath;
-
-        /// <summary>
-        /// A convenience method for uploading an image before testing
-        /// </summary>
-        /// <param name="id">The ID of the resource</param>
-        /// <returns>The upload results</returns>
-        private ImageUploadResult UploadTestResource(String id)
-        {
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                PublicId = id,
-                Tags = "test"
-            };
-            return m_cloudinary.Upload(uploadParams);
-        }
-
-        /// <summary>
-        /// A convenience method for deleting an image in the test
-        /// </summary>
-        /// <param name="id">The ID of the image to delete</param>
-        /// <returns>The results of the deletion</returns>
-        private DelResResult DeleteTestResource(String id)
-        {
-            return m_cloudinary.DeleteResources(id);
-        }
-
-        /// <summary>
-        /// A convenient method for initialization of new Account instance with necessary checks
-        /// </summary>
-        /// <returns>New Account instance</returns>
-        private Account GetAccountInstance()
-        {
-            Account account = new Account(
-                Settings.Default.CloudName,
-                Settings.Default.ApiKey,
-                Settings.Default.ApiSecret);
-
-            if (String.IsNullOrEmpty(account.Cloud))
-                Console.WriteLine("Cloud name must be specified in test configuration (app.config)!");
-
-            if (String.IsNullOrEmpty(account.ApiKey))
-                Console.WriteLine("Cloudinary API key must be specified in test configuration (app.config)!");
-
-            if (String.IsNullOrEmpty(account.ApiSecret))
-                Console.WriteLine("Cloudinary API secret must be specified in test configuration (app.config)!");
-
-            Assert.IsFalse(String.IsNullOrEmpty(account.Cloud));
-            Assert.IsFalse(String.IsNullOrEmpty(account.ApiKey));
-            Assert.IsFalse(String.IsNullOrEmpty(account.ApiSecret));
-            return account;
-        }
-
-        /// <summary>
-        /// A convenient method for initialization of new Coudinary instance with necessary checks
-        /// </summary>
-        /// <param name="account">Instance of Account</param>
-        /// <returns>New Cloudinary instance</returns>
-        private Cloudinary GetCloudinaryInstance(Account account)
-        {
-            Cloudinary cloudinary = new Cloudinary(account);
-            if (!String.IsNullOrWhiteSpace(Settings.Default.ApiBaseAddress))
-                cloudinary.Api.ApiBaseAddress = Settings.Default.ApiBaseAddress;
-            return cloudinary;
-        }
-
-        [TestFixtureSetUp]
-        public void Initialize()
-        {
-            m_account = GetAccountInstance();
-            m_cloudinary = GetCloudinaryInstance(m_account);
-
-            m_testVideoPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "movie.mp4");
-            m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
-            m_testPdfPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "multipage.pdf");
-            m_testIconPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "favicon.ico");
-
-            Resources.TestImage.Save(m_testImagePath);
-            File.WriteAllBytes(m_testPdfPath, Resources.multipage);
-            File.WriteAllBytes(m_testVideoPath, Resources.movie);
-
-            using (Stream s = new FileStream(m_testIconPath, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                Resources.favicon.Save(s);
-            }
-        }
-
         [Test]
         public void TestUploadLocalImage()
         {
@@ -1724,34 +1627,8 @@ namespace CloudinaryDotNet.Test
                 Type = "twitter_name"
             };
 
-            var mock = new Mock<HttpWebRequest>();
-
-            mock.Setup(x => x.GetRequestStream()).Returns(new MemoryStream());
-            mock.Setup(x => x.GetResponse()).Returns((WebResponse)null);
-            mock.CallBase = true;
-
-            HttpWebRequest request = null;
-            Func<string, HttpWebRequest> requestBuilder = (x) =>
-            {
-                request = mock.Object;
-                request.Headers = new WebHeaderCollection();
-                return request;
-            };
-
-            Cloudinary fakeCloudinary = GetCloudinaryInstance(m_account);
-            fakeCloudinary.Api.RequestBuilder = requestBuilder;
-
-            try
-            {
-                fakeCloudinary.Explicit(exp);
-            }
-            // consciously return null in GetResponse() and extinguish the ArgumentNullException while parsing response, 'cause it's not in focus of current test
-            catch (ArgumentNullException) { }
-
-            MemoryStream stream = request.GetRequestStream() as MemoryStream;
-            var content = System.Text.Encoding.Default.GetString(stream.ToArray());
-
-            StringAssert.Contains("name=\"invalidate\"\r\n\r\ntrue\r\n", content);
+            string rString = GetMockBodyOfCoudinaryRequest(exp, (p, t) => { return p.Explicit(t); });
+            StringAssert.Contains("name=\"invalidate\"\r\n\r\ntrue\r\n", rString);
         }
 
         [Test]
@@ -2334,42 +2211,6 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestUploadMapping()
-        {
-            try
-            {
-                m_cloudinary.DeleteUploadMapping("api_test_upload_mapping");
-            }
-            catch (Exception) { }
-
-            UploadMappingResults result;
-            result = m_cloudinary.CreateUploadMapping("api_test_upload_mapping", "http://upload.wikimedia.org/wikipedia");
-            StringAssert.AreEqualIgnoringCase("created", result.Message);
-
-            result = m_cloudinary.UploadMapping("api_test_upload_mapping");
-            Assert.AreEqual(1, result.Mappings.Count);
-            Assert.AreEqual("http://upload.wikimedia.org/wikipedia", result.Mappings["api_test_upload_mapping"]);
-
-            result = m_cloudinary.UpdateUploadMapping("api_test_upload_mapping", "http://res.cloudinary.com");
-            StringAssert.AreEqualIgnoringCase("updated", result.Message);
-
-            result = m_cloudinary.UploadMapping("api_test_upload_mapping");
-            Assert.AreEqual(1, result.Mappings.Count);
-            Assert.AreEqual("http://res.cloudinary.com", result.Mappings["api_test_upload_mapping"]);
-
-            result = m_cloudinary.UploadMappings(new UploadMappingParams());
-            Assert.IsTrue(result.Mappings.ContainsKey("api_test_upload_mapping"));
-            Assert.IsTrue(result.Mappings.ContainsValue("http://res.cloudinary.com"));
-
-            result = m_cloudinary.DeleteUploadMapping("api_test_upload_mapping");
-            StringAssert.AreEqualIgnoringCase("deleted", result.Message);
-
-            result = m_cloudinary.UploadMappings(new UploadMappingParams());
-            Assert.IsFalse(result.Mappings.ContainsKey("api_test_upload_mapping"));
-            Assert.IsFalse(result.Mappings.ContainsValue("http://res.cloudinary.com"));
-        }
-
-        [Test]
         public void TestResponsiveBreakpointsToJson()
         {
             var responsiveBreakpoint = new ResponsiveBreakpoint().ToString(Formatting.None);
@@ -2546,12 +2387,6 @@ namespace CloudinaryDotNet.Test
                     Assert.AreEqual(2, cnt);
                 }
             }
-        }
-
-        private long UnixTimeNow()
-        {
-            var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-            return (long)timeSpan.TotalSeconds;
         }
     }
 }
