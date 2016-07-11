@@ -2180,7 +2180,7 @@ namespace CloudinaryDotNet.Test
             m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder1/test_subfolder2/item" });
 
             var result = m_cloudinary.RootFolders();
-
+            Assert.Null(result.Error);
             Assert.AreEqual("test_folder1", result.Folders[0].Name);
             Assert.AreEqual("test_folder2", result.Folders[1].Name);
 
@@ -2234,7 +2234,7 @@ namespace CloudinaryDotNet.Test
             var breakpoint = new ResponsiveBreakpoint().MaxImages(5).BytesStep(20)
                                 .MinWidth(200).MaxWidth(1000).CreateDerived(false);
 
-            var breakpoint2 = new ResponsiveBreakpoint().MaxImages(4).BytesStep(20)
+            var breakpoint2 = new ResponsiveBreakpoint().Transformation(new Transformation().Width(0.9).Crop("scale").Radius(50)).MaxImages(4).BytesStep(20)
                                 .MinWidth(100).MaxWidth(900).CreateDerived(false);
             // An array of breakpoints
             ImageUploadParams uploadParams = new ImageUploadParams()
@@ -2245,6 +2245,8 @@ namespace CloudinaryDotNet.Test
                 ResponsiveBreakpoints = new List<ResponsiveBreakpoint> { breakpoint, breakpoint2 }
             };
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
+            Assert.Null(result.Error);
+            Assert.NotNull(result.ResponsiveBreakpoints, "result should include 'ResponsiveBreakpoints'");
             Assert.AreEqual(2, result.ResponsiveBreakpoints.Count);
 
             Assert.AreEqual(5, result.ResponsiveBreakpoints[0].Breakpoints.Count);
