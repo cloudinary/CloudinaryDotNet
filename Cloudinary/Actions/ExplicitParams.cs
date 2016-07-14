@@ -52,12 +52,12 @@ namespace CloudinaryDotNet.Actions
         public string Tags { get; set; }
 
         /// <summary>
-        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="Rectangle"/> or <see cref="List{Rectangle}"/>.
+        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or "Rectangle" />.
         /// </summary>
         public object FaceCoordinates { get; set; }
 
         /// <summary>
-        /// Coordinates of an interesting region contained in an uploaded image. The given coordinates are used for cropping uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates of the top left corner and the width and height of the region. For example: "85,120,220,310". Otherwise, one can use <see cref="Rectangle"/> structure.
+        /// Coordinates of an interesting region contained in an uploaded image. The given coordinates are used for cropping uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates of the top left corner and the width and height of the region. For example: "85,120,220,310". Otherwise, one can use "Rectangle" structure.
         /// </summary>
         public object CustomCoordinates { get; set; }
 

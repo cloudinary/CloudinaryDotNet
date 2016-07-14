@@ -57,7 +57,7 @@ namespace CloudinaryDotNet
         private string Literal(string condition)
         {
             condition = Regex.Replace(condition, "[ _]+", "_");
-            string pattern = string.Format("({0}|[=<>&|!]+)", string.Join("|", Parameters.Keys));
+            string pattern = string.Format("({0}|[=<>&|!]+)", string.Join("|", Parameters.Keys.ToArray()));
             return Regex.Replace(condition, pattern, m => GetOperatorReplacement(m.Value));
         }
 
@@ -93,7 +93,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public string Serialize()
         {
-            return string.Join("_", predicateList);
+            return string.Join("_", predicateList.ToArray());
         }
 
         public override string ToString()

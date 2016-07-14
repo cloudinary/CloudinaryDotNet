@@ -72,7 +72,7 @@ namespace CloudinaryDotNet
                 components.Add(FormattedPublicId());
             }
 
-            return string.Join(":", components);
+            return string.Join(":", components.ToArray());
         }
 
         private string FormattedPublicId()

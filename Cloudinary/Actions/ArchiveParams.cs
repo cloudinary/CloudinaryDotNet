@@ -357,13 +357,13 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "mode", Api.GetCloudinaryParam(Mode()));
 
             if (m_tags != null && m_tags.Count > 0)
-                AddParam(dict, "tags", string.Join(",", m_tags));
+                AddParam(dict, "tags", string.Join(",", m_tags.ToArray()));
 
             if (m_publicIds != null && m_publicIds.Count > 0)
-                AddParam(dict, "public_ids", string.Join(",", m_publicIds));
+                AddParam(dict, "public_ids", string.Join(",", m_publicIds.ToArray()));
 
             if (m_prefixes != null && m_prefixes.Count > 0)
-                AddParam(dict, "prefixes", string.Join(",", m_prefixes));
+                AddParam(dict, "prefixes", string.Join(",", m_prefixes.ToArray()));
 
             if (!string.IsNullOrEmpty(m_resourceType))
                 AddParam(dict, "resource_type", m_resourceType);
@@ -372,7 +372,7 @@ namespace CloudinaryDotNet.Actions
                 AddParam(dict, "type", m_type);
 
             if (m_transformations != null && m_transformations.Count > 0)
-                AddParam(dict, "transformations", string.Join("/", m_transformations));
+                AddParam(dict, "transformations", string.Join("/", m_transformations.ConvertAll(t => t.ToString()).ToArray()));
 
             if (m_targetFormat != ArchiveFormat.Zip)
                 AddParam(dict, "target_format", Api.GetCloudinaryParam(m_targetFormat));
@@ -401,7 +401,7 @@ namespace CloudinaryDotNet.Actions
                     AddParam(dict, "target_public_id", m_targetPublicId);
 
                 if (m_targetTags != null && m_targetTags.Count > 0)
-                    AddParam(dict, "target_tags", string.Join(",", m_targetTags));
+                    AddParam(dict, "target_tags", string.Join(",", m_targetTags.ToArray()));
             }
 
             if (m_expiresAt > 0 && m_mode == ArchiveCallMode.Download)

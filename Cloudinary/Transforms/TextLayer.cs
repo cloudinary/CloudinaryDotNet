@@ -166,7 +166,7 @@ namespace CloudinaryDotNet
             {
                 components.Add(m_text);
             }
-            return string.Join(":", components);
+            return string.Join(":", components.ToArray());
         }
 
         public override string ToString()
@@ -210,7 +210,7 @@ namespace CloudinaryDotNet
             components.Insert(0, m_fontSize.ToString());
             components.Insert(0, m_fontFamily);
 
-            return string.Join("_", components);
+            return string.Join("_", components.ToArray());
         }
     }
 }
