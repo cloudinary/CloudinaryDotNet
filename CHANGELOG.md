@@ -1,4 +1,9 @@
 
+1.0.25 / 2016-08-18
+===================
+
+  * Add UploadLarge
+
 1.0.24 / 2016-07-15
 ==================
 New functionality and features
