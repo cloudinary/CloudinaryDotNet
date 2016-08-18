@@ -302,7 +302,7 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Dictionary of call parameters (can be null)</param>
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
-        public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
+        public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
 #if DEBUG
             Console.WriteLine(String.Format("{0} REQUEST:", method));
@@ -311,7 +311,6 @@ namespace CloudinaryDotNet
 
             HttpWebRequest request = RequestBuilder(url);
             request.Method = Enum.GetName(typeof(HttpMethod), method);
-
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
             request.UserAgent = string.IsNullOrEmpty(UserPlatform)
@@ -322,10 +321,16 @@ namespace CloudinaryDotNet
             {
                 request.Timeout = Timeout;
             }
-
             byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
             request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
+            if (extraHeaders != null)
+            {
+                foreach (var header in extraHeaders)
+                {
+                    request.Headers[header.Key] = header.Value;
+                }
+            }
             if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
             {
                 if (UseChunkedEncoding)

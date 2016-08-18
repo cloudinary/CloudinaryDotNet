@@ -587,13 +587,28 @@ namespace CloudinaryDotNet.Test
             // support uploading large raw files
 
             var largeFilePath = m_testPdfPath;
-
+            int fileLength = (int)new FileInfo(largeFilePath).Length;
             var result = m_cloudinary.UploadLargeRaw(new BasicRawUploadParams()
             {
                 File = new FileDescription(largeFilePath)
             });
 
-            Assert.AreEqual(new FileInfo(largeFilePath).Length, result.Length);
+            Assert.AreEqual(fileLength, result.Length);
+        }
+
+        [Test]
+        public void TestUploadLarge()
+        {
+            // support uploading large image
+
+            var largeFilePath = m_testImagePath;
+            int fileLength = (int)new FileInfo(largeFilePath).Length;
+            var result = m_cloudinary.UploadLarge(new BasicRawUploadParams()
+            {
+                File = new FileDescription(largeFilePath)
+            }) as ImageUploadResult;
+
+            Assert.AreEqual(fileLength, result.Length);
         }
 
         [Test]

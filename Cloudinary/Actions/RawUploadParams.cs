@@ -208,7 +208,7 @@ namespace CloudinaryDotNet.Actions
         internal bool EOF = false;
         internal int BytesSent = 0;
 
-        internal bool IsLastPart()
+        internal long GetFileLength()
         {
             long len = 0;
 
@@ -216,8 +216,12 @@ namespace CloudinaryDotNet.Actions
                 len = m_stream.Length;
             else
                 len = new FileInfo(m_path).Length;
+            return len;
+        }
 
-            return len - BytesSent <= BufferLength;
+        internal bool IsLastPart()
+        {
+            return GetFileLength() - BytesSent <= BufferLength;
         }
 
         /// <summary>
