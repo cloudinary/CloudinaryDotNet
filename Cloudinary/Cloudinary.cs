@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -21,6 +22,7 @@ namespace CloudinaryDotNet
 
 
         Api m_api;
+        private static Random m_random = new Random();
 
         /// <summary>
         /// Default parameterless constructor.
@@ -372,54 +374,54 @@ namespace CloudinaryDotNet
 
             if (parameters.File.IsRemote)
                 throw new ArgumentException("The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!");
+            return UploadLarge(parameters, bufferSize, true) as RawUploadResult;
+        }
 
-            string uri = m_api.ApiUrlV.Action("upload_large").ResourceType("raw").BuildUrl();
+        private string RandomPublicId()
+        {
+            byte[] buffer = new byte[8];
+            m_random.NextBytes(buffer);
+            return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+        }
 
+        public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024, bool isRaw = false)
+        {
+            Url url = m_api.ApiUrlImgUpV;
+            if (isRaw)
+            {
+                url.ResourceType("raw");
+            }
+            string uri = url.BuildUrl();
             ResetInternalFileDescription(parameters.File, bufferSize);
-
-            int partNumber = 1;
-            string publicId = null;
-            string uploadId = null;
-
-            RawUploadResult result = null;
+            var extraHeaders = new Dictionary<string, string>();
+            extraHeaders["X-Unique-Upload-Id"] = RandomPublicId();
+            parameters.File.BufferLength = bufferSize;
+            var apiParams = parameters.ToParamsDictionary();
+            var fileLength = parameters.File.GetFileLength();
+            UploadResult result = null;
 
             while (!parameters.File.EOF)
             {
-                var dict = parameters.ToParamsDictionary();
-
-                dict.Add("part_number", partNumber);
-
-                if (partNumber > 1)
+                long currentBufferSize = Math.Min(bufferSize, fileLength - parameters.File.BytesSent);
+                string range = string.Format("bytes {0}-{1}/{2}", parameters.File.BytesSent, parameters.File.BytesSent + currentBufferSize - 1, fileLength);
+                extraHeaders["Content-Range"] = range;
+                using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, apiParams, parameters.File, extraHeaders))
                 {
-                    dict["public_id"] = publicId;
-                    dict["upload_id"] = uploadId;
-                }
-
-                if (parameters.File.IsLastPart())
-                    dict["final"] = true;
-
-                using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, dict, parameters.File))
-                {
-                    var partResult = RawPartUploadResult.Parse(response);
-                    result = partResult;
+                    if (isRaw)
+                        result = RawUploadResult.Parse(response);
+                    else
+                        result = ImageUploadResult.Parse(response);
 
                     if (result.StatusCode != HttpStatusCode.OK)
                         throw new WebException(String.Format(
                             "An error has occured while uploading file (status code: {0}). {1}",
-                            partResult.StatusCode,
-                            partResult.Error != null ? partResult.Error.Message : "Unknown error"));
-
-                    if (partNumber == 1)
-                    {
-                        publicId = partResult.PublicId;
-                        uploadId = partResult.UploadId;
-                    }
-
-                    partNumber++;
+                            result.StatusCode,
+                            result.Error != null ? result.Error.Message : "Unknown error"));
                 }
             }
 
             return result;
+
         }
 
         /// <summary>
