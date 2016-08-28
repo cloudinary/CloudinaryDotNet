@@ -396,13 +396,13 @@ namespace CloudinaryDotNet
             var extraHeaders = new Dictionary<string, string>();
             extraHeaders["X-Unique-Upload-Id"] = RandomPublicId();
             parameters.File.BufferLength = bufferSize;
-            var apiParams = parameters.ToParamsDictionary();
             var fileLength = parameters.File.GetFileLength();
             UploadResult result = null;
 
             while (!parameters.File.EOF)
             {
                 long currentBufferSize = Math.Min(bufferSize, fileLength - parameters.File.BytesSent);
+                var apiParams = parameters.ToParamsDictionary();
                 string range = string.Format("bytes {0}-{1}/{2}", parameters.File.BytesSent, parameters.File.BytesSent + currentBufferSize - 1, fileLength);
                 extraHeaders["Content-Range"] = range;
                 using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, apiParams, parameters.File, extraHeaders))

@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\favicon.ico" />
+    <None Include="Resources\TestLargeImage.jpg" />
     <None Include="Resources\movie.mp4" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
