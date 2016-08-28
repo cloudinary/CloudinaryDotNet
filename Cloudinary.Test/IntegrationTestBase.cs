@@ -14,6 +14,7 @@ namespace CloudinaryDotNet.Test
     public class IntegrationTestBase
     {
         protected string m_testImagePath;
+        protected string m_testLargeImagePath;
         protected string m_testVideoPath;
         protected string m_testPdfPath;
         protected string m_testIconPath;
@@ -31,10 +32,12 @@ namespace CloudinaryDotNet.Test
 
             m_testVideoPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "movie.mp4");
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
+            m_testLargeImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestLargeImage.jpg");
             m_testPdfPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "multipage.pdf");
             m_testIconPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "favicon.ico");
 
             Resources.TestImage.Save(m_testImagePath);
+            Resources.TestLargeImage.Save(m_testLargeImagePath);
             File.WriteAllBytes(m_testPdfPath, Resources.multipage);
             File.WriteAllBytes(m_testVideoPath, Resources.movie);
 
