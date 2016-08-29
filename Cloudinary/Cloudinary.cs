@@ -384,20 +384,43 @@ namespace CloudinaryDotNet
             return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
         }
 
+        public RawUploadResult UploadLarge(RawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
+        {
+            return UploadLarge<RawUploadResult>(parameters, "raw", bufferSize);
+        }
+
+        public ImageUploadResult UploadLarge(ImageUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
+        {
+            return UploadLarge<ImageUploadResult>(parameters, "image", bufferSize);
+        }
+
+        public VideoUploadResult UploadLarge(VideoUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
+        {
+            return UploadLarge<VideoUploadResult>(parameters, "video", bufferSize);
+        }
+        [Obsolete("Use UploadLarge(parameters, bufferSize) instead.")]
         public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024, bool isRaw = false)
         {
-            Url url = m_api.ApiUrlImgUpV;
             if (isRaw)
             {
-                url.ResourceType("raw");
+                return UploadLarge<RawUploadResult>(parameters, "raw", bufferSize);
+            } else
+            {
+                return UploadLarge<ImageUploadResult>(parameters, "image", bufferSize);
             }
+            
+        }
+        public T UploadLarge<T>(BasicRawUploadParams parameters, string resourceType, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
+        {
+            Url url = m_api.ApiUrlImgUpV;
+            url.ResourceType(resourceType);
             string uri = url.BuildUrl();
             ResetInternalFileDescription(parameters.File, bufferSize);
             var extraHeaders = new Dictionary<string, string>();
             extraHeaders["X-Unique-Upload-Id"] = RandomPublicId();
             parameters.File.BufferLength = bufferSize;
             var fileLength = parameters.File.GetFileLength();
-            UploadResult result = null;
+            T result = null;
 
             while (!parameters.File.EOF)
             {
@@ -407,10 +430,7 @@ namespace CloudinaryDotNet
                 extraHeaders["Content-Range"] = range;
                 using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, apiParams, parameters.File, extraHeaders))
                 {
-                    if (isRaw)
-                        result = RawUploadResult.Parse(response);
-                    else
-                        result = ImageUploadResult.Parse(response);
+                    result = BaseResult.Parse<T>(response);
 
                     if (result.StatusCode != HttpStatusCode.OK)
                         throw new WebException(String.Format(
@@ -419,9 +439,7 @@ namespace CloudinaryDotNet
                             result.Error != null ? result.Error.Message : "Unknown error"));
                 }
             }
-
             return result;
-
         }
 
         /// <summary>
