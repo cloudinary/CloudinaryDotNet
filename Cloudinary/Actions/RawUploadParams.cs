@@ -31,6 +31,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Type { get; set; }
 
+        public ResourceType ResourceType
+        {
+            get { return Actions.ResourceType.Raw; }
+        }
         /// <summary>
         /// Validate object model
         /// </summary>

@@ -588,7 +588,7 @@ namespace CloudinaryDotNet.Test
 
             var largeFilePath = m_testLargeImagePath;
             int fileLength = (int)new FileInfo(largeFilePath).Length;
-            var result = m_cloudinary.UploadLargeRaw(new BasicRawUploadParams()
+            var result = m_cloudinary.UploadLarge(new RawUploadParams()
             {
                 File = new FileDescription(largeFilePath)
             }, 5 * 1024 * 1024);
@@ -603,10 +603,10 @@ namespace CloudinaryDotNet.Test
 
             var largeFilePath = m_testLargeImagePath;
             int fileLength = (int)new FileInfo(largeFilePath).Length;
-            var result = m_cloudinary.UploadLarge(new BasicRawUploadParams()
+            var result = m_cloudinary.UploadLarge(new ImageUploadParams()
             {
                 File = new FileDescription(largeFilePath)
-            }, 5 * 1024 * 1024) as ImageUploadResult;
+            }, 5 * 1024 * 1024);
 
             Assert.AreEqual(fileLength, result.Length);
         }

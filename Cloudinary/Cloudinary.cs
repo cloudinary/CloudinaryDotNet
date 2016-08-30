@@ -386,34 +386,34 @@ namespace CloudinaryDotNet
 
         public RawUploadResult UploadLarge(RawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
         {
-            return UploadLarge<RawUploadResult>(parameters, "raw", bufferSize);
+            return UploadLarge<RawUploadResult>(parameters, bufferSize);
         }
 
         public ImageUploadResult UploadLarge(ImageUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
         {
-            return UploadLarge<ImageUploadResult>(parameters, "image", bufferSize);
+            return UploadLarge<ImageUploadResult>(parameters, bufferSize);
         }
 
         public VideoUploadResult UploadLarge(VideoUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
         {
-            return UploadLarge<VideoUploadResult>(parameters, "video", bufferSize);
+            return UploadLarge<VideoUploadResult>(parameters, bufferSize);
         }
         [Obsolete("Use UploadLarge(parameters, bufferSize) instead.")]
         public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024, bool isRaw = false)
         {
             if (isRaw)
             {
-                return UploadLarge<RawUploadResult>(parameters, "raw", bufferSize);
+                return UploadLarge<RawUploadResult>(parameters, bufferSize);
             } else
             {
-                return UploadLarge<ImageUploadResult>(parameters, "image", bufferSize);
+                return UploadLarge<ImageUploadResult>(parameters, bufferSize);
             }
             
         }
-        public T UploadLarge<T>(BasicRawUploadParams parameters, string resourceType, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
+        public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
         {
             Url url = m_api.ApiUrlImgUpV;
-            url.ResourceType(resourceType);
+            url.ResourceType(Enum.GetName(typeof(ResourceType), parameters.ResourceType));
             string uri = url.BuildUrl();
             ResetInternalFileDescription(parameters.File, bufferSize);
             var extraHeaders = new Dictionary<string, string>();

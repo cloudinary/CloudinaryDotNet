@@ -11,6 +11,8 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class ImageUploadParams : RawUploadParams
     {
+        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageUploadParams"/> class.
         /// </summary>
@@ -44,6 +46,8 @@ namespace CloudinaryDotNet.Actions
             set { base.Type = value; }
         }
 
+        public new ResourceType ResourceType {
+            get { return Actions.ResourceType.Image; } }
         /// <summary>
         /// Whether to retrieve the Exif metadata of the uploaded photo. Default: false.
         /// </summary>
