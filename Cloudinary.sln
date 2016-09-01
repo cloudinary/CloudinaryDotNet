@@ -1,23 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloudinary", "Cloudinary\Cloudinary.csproj", "{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4FD640DE-E362-4205-8595-776CB5DAE1BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloudinary.Test", "Cloudinary.Test\Cloudinary.Test.csproj", "{16C07542-4726-4AE7-9FDD-62DB823B449E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D5DD0E4A-296D-4563-BDB9-FB99C80DDB77}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C8EDC2BE-8C7A-4436-A03B-0A1A902B01FA}"
 	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
+		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB3C0EFC-024A-4850-B201-375BC198F376}"
-	ProjectSection(SolutionItems) = preProject
-		sdk-test.testsettings = sdk-test.testsettings
-	EndProjectSection
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Cloudinary", "src\Cloudinary\Cloudinary.xproj", "{6B481BEF-36DD-49A7-A674-788CDBF7096A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5B596CA9-4523-4902-B8F6-D6968FA27F6E}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Cloudinary.Test", "test\Cloudinary.Test\Cloudinary.Test.xproj", "{9F8EA517-A9FF-4AE8-A1CC-FBCF86178A50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,16 +22,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{16C07542-4726-4AE7-9FDD-62DB823B449E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16C07542-4726-4AE7-9FDD-62DB823B449E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16C07542-4726-4AE7-9FDD-62DB823B449E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{16C07542-4726-4AE7-9FDD-62DB823B449E}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{6B481BEF-36DD-49A7-A674-788CDBF7096A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B481BEF-36DD-49A7-A674-788CDBF7096A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B481BEF-36DD-49A7-A674-788CDBF7096A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B481BEF-36DD-49A7-A674-788CDBF7096A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F8EA517-A9FF-4AE8-A1CC-FBCF86178A50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F8EA517-A9FF-4AE8-A1CC-FBCF86178A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F8EA517-A9FF-4AE8-A1CC-FBCF86178A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F8EA517-A9FF-4AE8-A1CC-FBCF86178A50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6B481BEF-36DD-49A7-A674-788CDBF7096A} = {4FD640DE-E362-4205-8595-776CB5DAE1BF}
+		{9F8EA517-A9FF-4AE8-A1CC-FBCF86178A50} = {5B596CA9-4523-4902-B8F6-D6968FA27F6E}
 	EndGlobalSection
 EndGlobal

@@ -205,4 +205,4 @@ FakesAssemblies/
 *.opt
 
 *snk
-app.config
+appsettings.json
