@@ -1,4 +1,12 @@
 
+1.0.26 / 2016-09-02
+===================
+
+  * Support Video in UploadLarge
+  * Use generics in UploadLarge
+  * Merge pull request #18 from RTLcoil/features/new-features
+  * UploadLarge fixes and tests
+
 1.0.25 / 2016-08-18
 ===================
 
