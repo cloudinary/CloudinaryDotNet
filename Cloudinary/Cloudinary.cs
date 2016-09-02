@@ -413,7 +413,8 @@ namespace CloudinaryDotNet
         public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
         {
             Url url = m_api.ApiUrlImgUpV;
-            url.ResourceType(Enum.GetName(typeof(ResourceType), parameters.ResourceType));
+            //url.ResourceType(Enum.GetName(typeof(ResourceType), parameters.ResourceType));
+            url.ResourceType(Enum.GetName(typeof(ResourceType), parameters.ResourceType).ToLower());
             string uri = url.BuildUrl();
             ResetInternalFileDescription(parameters.File, bufferSize);
             var extraHeaders = new Dictionary<string, string>();

@@ -31,7 +31,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Type { get; set; }
 
-        public ResourceType ResourceType
+        public virtual ResourceType ResourceType
         {
             get { return Actions.ResourceType.Raw; }
         }

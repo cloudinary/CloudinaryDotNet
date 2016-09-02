@@ -46,8 +46,10 @@ namespace CloudinaryDotNet.Actions
             set { base.Type = value; }
         }
 
-        public new ResourceType ResourceType {
-            get { return Actions.ResourceType.Image; } }
+        public override ResourceType ResourceType
+        {
+            get { return Actions.ResourceType.Image; }
+        }
         /// <summary>
         /// Whether to retrieve the Exif metadata of the uploaded photo. Default: false.
         /// </summary>
