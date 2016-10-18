@@ -118,8 +118,23 @@ namespace CloudinaryDotNet.Test
         /// <param name="requestParams">Parameters for Cloudinary call</param>
         /// <param name="cloudinaryCall">Cloudinary call, e.g. "(cloudinaryInstance, params) => {return cloudinaryInstance.Text(params); }"</param>
         /// <returns></returns>
-        protected string GetMockBodyOfCoudinaryRequest<TParams, TResult>(TParams requestParams, Func<Cloudinary, TParams, TResult> cloudinaryCall) 
-            where TParams: BaseParams 
+        protected string GetMockBodyOfCoudinaryRequest<TParams, TResult>(TParams requestParams, Func<Cloudinary, TParams, TResult> cloudinaryCall)
+            where TParams : BaseParams
+            where TResult : BaseResult
+        {
+            HttpWebRequest request = null;
+            return GetMockBodyOfCoudinaryRequest(requestParams, cloudinaryCall, out request);
+        }
+
+        /// <summary>
+        /// Get stream represented as String and request object from mock request to Cloudinary API
+        /// </summary>
+        /// <param name="requestParams">Parameters for Cloudinary call</param>
+        /// <param name="cloudinaryCall">Cloudinary call, e.g. "(cloudinaryInstance, params) => {return cloudinaryInstance.Text(params); }"</param>
+        /// <param name="request">HttpWebRequest object as out parameter for further analyze of properties</param>
+        /// <returns></returns>
+        protected string GetMockBodyOfCoudinaryRequest<TParams, TResult>(TParams requestParams, Func<Cloudinary, TParams, TResult> cloudinaryCall, out HttpWebRequest request)
+            where TParams : BaseParams
             where TResult : BaseResult
         {
             #region Mock infrastructure
@@ -129,12 +144,12 @@ namespace CloudinaryDotNet.Test
             mock.Setup(x => x.GetResponse()).Returns((WebResponse)null);
             mock.CallBase = true;
 
-            HttpWebRequest request = null;
+            HttpWebRequest localRequest = null;
             Func<string, HttpWebRequest> requestBuilder = (x) =>
             {
-                request = mock.Object;
-                request.Headers = new WebHeaderCollection();
-                return request;
+                localRequest = mock.Object;
+                localRequest.Headers = new WebHeaderCollection();
+                return localRequest;
             };
             #endregion
 
@@ -148,7 +163,8 @@ namespace CloudinaryDotNet.Test
             // consciously return null in GetResponse() and extinguish the ArgumentNullException while parsing response, 'cause it's not in focus of current test
             catch (ArgumentNullException) { }
 
-            MemoryStream stream = request.GetRequestStream() as MemoryStream;
+            MemoryStream stream = localRequest.GetRequestStream() as MemoryStream;
+            request = localRequest;
             return System.Text.Encoding.Default.GetString(stream.ToArray());
         }
 

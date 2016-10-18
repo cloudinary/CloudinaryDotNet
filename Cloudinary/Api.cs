@@ -333,6 +333,9 @@ namespace CloudinaryDotNet
             }
             if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
             {
+                request.AllowWriteStreamBuffering = false;
+                request.AllowAutoRedirect = false;
+
                 if (UseChunkedEncoding)
                     request.SendChunked = true;
 
