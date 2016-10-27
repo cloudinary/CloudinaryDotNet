@@ -1636,6 +1636,19 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestAllowWriteStreamBufferingSet()
+        {
+            var largeFilePath = m_testLargeImagePath;
+            var rawUploadParams = new BasicRawUploadParams() { File = new FileDescription(largeFilePath) };
+
+            //check of AllowWriteStreamBuffering option set to false
+            HttpWebRequest requestDefault = null;
+            GetMockBodyOfCoudinaryRequest(rawUploadParams, (p, t) => { return p.UploadLarge(t, 5 * 1024 * 1024); }, out requestDefault);
+            Assert.IsFalse(requestDefault.AllowWriteStreamBuffering);
+            Assert.IsFalse(requestDefault.AllowAutoRedirect);
+        }
+
+        [Test]
         public void TestExplicitInvalidate()
         {
             ExplicitParams exp = new ExplicitParams("cloudinary")
