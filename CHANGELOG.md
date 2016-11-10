@@ -1,4 +1,10 @@
 
+1.0.27 / 2016-11-10
+===================
+
+  * Merge pull request #19 from RTLcoil/features/new-features
+  * Simplify ability to set AllowWriteStreamBuffering for upload
+
 1.0.26 / 2016-09-02
 ===================
 
