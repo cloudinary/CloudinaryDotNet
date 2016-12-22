@@ -358,13 +358,13 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "mode", Api.GetCloudinaryParam(Mode()));
 
             if (m_tags != null && m_tags.Count > 0)
-                AddParam(dict, "tags", string.Join(",", m_tags.ToArray()));
+                AddParam(dict, "tags", m_tags);
 
             if (m_publicIds != null && m_publicIds.Count > 0)
-                AddParam(dict, "public_ids", string.Join(",", m_publicIds.ToArray()));
+                AddParam(dict, "public_ids", m_publicIds);
 
             if (m_prefixes != null && m_prefixes.Count > 0)
-                AddParam(dict, "prefixes", string.Join(",", m_prefixes.ToArray()));
+                AddParam(dict, "prefixes", m_prefixes);
 
             if (!string.IsNullOrEmpty(m_resourceType))
                 AddParam(dict, "resource_type", m_resourceType);
@@ -402,7 +402,7 @@ namespace CloudinaryDotNet.Actions
                     AddParam(dict, "target_public_id", m_targetPublicId);
 
                 if (m_targetTags != null && m_targetTags.Count > 0)
-                    AddParam(dict, "target_tags", string.Join(",", m_targetTags.ToArray()));
+                    AddParam(dict, "target_tags", m_targetTags);
             }
 
             if (m_expiresAt > 0 && m_mode == ArchiveCallMode.Download)

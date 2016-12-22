@@ -494,8 +494,8 @@ namespace CloudinaryDotNet.Test
             tParams.FontStyle = "italic";
             TextResult textResult = m_cloudinary.Text(tParams);
 
-            Assert.AreEqual(67, textResult.Width);
-            Assert.AreEqual(11, textResult.Height);
+            Assert.IsTrue(textResult.Width > 0);
+            Assert.IsTrue(textResult.Height > 0);
         }
 
         [Test]
@@ -2364,7 +2364,7 @@ namespace CloudinaryDotNet.Test
         /// <summary>
         /// Uploads test image with params specified
         /// </summary>
-        private void UploadImageForTestArchive(string archiveTag, double width, bool useFileName)
+        private ImageUploadResult UploadImageForTestArchive(string archiveTag, double width, bool useFileName)
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
@@ -2373,7 +2373,7 @@ namespace CloudinaryDotNet.Test
                 UseFilename = useFileName,
                 Tags = archiveTag
             };
-            m_cloudinary.Upload(uploadParams);
+            return m_cloudinary.Upload(uploadParams);
         }
 
         [Test]
@@ -2382,21 +2382,36 @@ namespace CloudinaryDotNet.Test
             string archiveTag = string.Format("archive_tag_{0}", UnixTimeNow());
             string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow());
 
-            UploadImageForTestArchive(archiveTag, 2.0, true);
+            ImageUploadResult res = UploadImageForTestArchive(archiveTag, 2.0, true);
 
-            ArchiveParams parameters = new ArchiveParams().Tags(new List<string> { archiveTag }).TargetPublicId(targetPublicId);
+            ArchiveParams parameters = new ArchiveParams().Tags(new List<string> { archiveTag, "no_such_tag" }).TargetPublicId(targetPublicId);
             ArchiveResult result = m_cloudinary.CreateArchive(parameters);
             Assert.AreEqual(string.Format("{0}.zip", targetPublicId), result.PublicId);
             Assert.AreEqual(1, result.FileCount);
 
-            UploadImageForTestArchive(archiveTag, 500, false);
+            ImageUploadResult res2 = UploadImageForTestArchive(archiveTag, 500, false);
 
-            parameters = new ArchiveParams().Tags(new List<string> { archiveTag })
+            parameters = new ArchiveParams().PublicIds(new List<string> { res.PublicId, res2.PublicId })
                                             .Transformations(new List<Transformation> { new Transformation().Width("0.5"), new Transformation().Width(2) })
                                             .FlattenFolders(true)
                                             .UseOriginalFilename(true);
             result = m_cloudinary.CreateArchive(parameters);
             Assert.AreEqual(2, result.FileCount);
+        }
+
+        [Test]
+        public void TestCreateArchiveMultiplePublicIds()
+        {
+            // should support archiving based on multiple public IDs
+            string archiveTag = string.Format("archive_tag_{0}", UnixTimeNow());
+            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow());
+
+            UploadImageForTestArchive(archiveTag, 2.0, true);
+
+            ArchiveParams parameters = new ArchiveParams().Tags(new List<string> { archiveTag, "sadf" }).TargetPublicId(targetPublicId);
+            ArchiveResult result = m_cloudinary.CreateArchive(parameters);
+            Assert.AreEqual(string.Format("{0}.zip", targetPublicId), result.PublicId);
+            Assert.AreEqual(1, result.FileCount);
         }
 
         [Test]
