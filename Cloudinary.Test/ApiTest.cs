@@ -845,13 +845,6 @@ namespace CloudinaryDotNet.Test
             m_api.UrlImgUp.UseRootPath(true).PrivateCdn(true).ResourceType("raw").BuildUrl("test");
         }
 
-        //[Test]
-        //[ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "URL Suffix only supported in private CDN!")]
-        //public void TestDisallowUrlSuffixInSharedDistribution()
-        //{
-        //    m_api.UrlImgUp.Suffix("hello").BuildUrl("test");
-        //}
-
         [Test]
         [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "URL Suffix only supported for image/upload and raw/upload!")]
         public void TestDisallowUrlSuffixInNonUploadTypes()
