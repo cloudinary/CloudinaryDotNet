@@ -492,9 +492,6 @@ namespace CloudinaryDotNet
             if (String.IsNullOrEmpty(m_cloudName))
                 throw new ArgumentException("cloudName must be specified!");
 
-            if (!m_usePrivateCdn && !String.IsNullOrEmpty(m_suffix))
-                throw new NotSupportedException("URL Suffix only supported in private CDN!");
-
             if (source == null)
                 source = m_source;
 

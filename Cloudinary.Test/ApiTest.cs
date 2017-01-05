@@ -846,13 +846,6 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "URL Suffix only supported in private CDN!")]
-        public void TestDisallowUrlSuffixInSharedDistribution()
-        {
-            m_api.UrlImgUp.Suffix("hello").BuildUrl("test");
-        }
-
-        [Test]
         [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "URL Suffix only supported for image/upload and raw/upload!")]
         public void TestDisallowUrlSuffixInNonUploadTypes()
         {
@@ -918,6 +911,13 @@ namespace CloudinaryDotNet.Test
         {
             string actual = m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).ResourceType("raw").BuildUrl("test");
             Assert.AreEqual("http://testcloud-res.cloudinary.com/files/test/hello", actual);
+        }
+
+        [Test]
+        public void TestSupportUrlSuffixForSharedCdn()
+        {
+            string actual = m_api.UrlImgUp.Suffix("hello").Signed(true).Format("jpg").BuildUrl("test");
+            Assert.AreEqual("http://res.cloudinary.com/testcloud/images/s--1TMilNWq--/test/hello.jpg", actual);
         }
 
         [Test]
