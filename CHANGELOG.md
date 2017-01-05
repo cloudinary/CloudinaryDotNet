@@ -1,4 +1,9 @@
 
+1.0.29 / 2017-01-05
+===================
+
+  * remove private distribution limitation for SEO suffix
+
 1.0.28 / 2016-12-22
 ===================
 
