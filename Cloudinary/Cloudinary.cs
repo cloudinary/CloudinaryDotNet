@@ -1194,7 +1194,6 @@ namespace CloudinaryDotNet
             if (!String.IsNullOrEmpty(parameters.ResourceType()))
                 url.ResourceType(parameters.ResourceType());
             string uri = url.BuildUrl();
-            Console.WriteLine(uri);
 
             parameters.Mode(ArchiveCallMode.Create);
 
