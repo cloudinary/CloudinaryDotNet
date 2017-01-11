@@ -366,9 +366,6 @@ namespace CloudinaryDotNet.Actions
             if (m_prefixes != null && m_prefixes.Count > 0)
                 AddParam(dict, "prefixes", m_prefixes);
 
-            if (!string.IsNullOrEmpty(m_resourceType))
-                AddParam(dict, "resource_type", m_resourceType);
-
             if (!string.IsNullOrEmpty(m_type))
                 AddParam(dict, "type", m_type);
 
