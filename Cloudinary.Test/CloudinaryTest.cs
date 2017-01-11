@@ -2405,7 +2405,8 @@ namespace CloudinaryDotNet.Test
             RawUploadParams uploadParams = new RawUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Folder = "test_folder"
+                Folder = "test_folder",
+                Type = "private"
             };
 
             RawUploadResult uploadResult1 = m_cloudinary.Upload(uploadParams, "raw");
@@ -2418,6 +2419,7 @@ namespace CloudinaryDotNet.Test
 
             ArchiveParams parameters = new ArchiveParams().PublicIds(new List<string> { uploadResult1.PublicId, uploadResult2.PublicId })
                                             .ResourceType("raw")
+                                            .Type("private")
                                             .UseOriginalFilename(true);
             ArchiveResult result = m_cloudinary.CreateArchive(parameters);
             Assert.AreEqual(2, result.FileCount);
