@@ -284,20 +284,20 @@ namespace CloudinaryDotNet.Test
                 Tags = TEST_TAG
             };
 
-            var img1 = m_cloudinary.Upload(uploadParams, "raw");
+            var img1 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img1);
 
             uploadParams.File = new FileDescription(m_testPdfPath);
 
-            var img2 = m_cloudinary.Upload(uploadParams, "raw");
+            var img2 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img2);
             Assert.AreEqual(img1.Length, img2.Length);
 
             uploadParams.Overwrite = true;
 
-            img2 = m_cloudinary.Upload(uploadParams, "raw");
+            img2 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img2);
             Assert.AreNotEqual(img1.Length, img2.Length);
@@ -2396,6 +2396,30 @@ namespace CloudinaryDotNet.Test
                                             .FlattenFolders(true)
                                             .UseOriginalFilename(true);
             result = m_cloudinary.CreateArchive(parameters);
+            Assert.AreEqual(2, result.FileCount);
+        }
+
+        [Test]
+        public void TestCreateArchiveRawResources()
+        {
+            RawUploadParams uploadParams = new RawUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Folder = "test_folder"
+            };
+
+            RawUploadResult uploadResult1 = m_cloudinary.Upload(uploadParams, "raw");
+
+            uploadParams.File = new FileDescription(m_testPdfPath);
+
+            RawUploadResult uploadResult2 = m_cloudinary.Upload(uploadParams, "raw");
+            
+            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow());
+
+            ArchiveParams parameters = new ArchiveParams().PublicIds(new List<string> { uploadResult1.PublicId, uploadResult2.PublicId })
+                                            .ResourceType("raw")
+                                            .UseOriginalFilename(true);
+            ArchiveResult result = m_cloudinary.CreateArchive(parameters);
             Assert.AreEqual(2, result.FileCount);
         }
 
