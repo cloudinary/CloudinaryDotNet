@@ -249,7 +249,7 @@ namespace CloudinaryDotNet.Actions
             m_path = filePath;
 
             if (!m_isRemote)
-                m_name = Path.GetFileNameWithoutExtension(m_path);
+                m_name = Path.GetFileName(m_path);
             else
                 m_name = m_path;
         }
