@@ -1,4 +1,13 @@
 
+1.0.30 / 2017-01-14
+===================
+
+  * Add varying type to createArchive test
+  * Fix createArchive to support resource_type
+  * Use extension inclusive filename method for supporting proper raw public IDs
+  * Remove resource_type from archiveParams toParamsDictionary
+  * Added raw archive test + fix faulty overwrite test
+
 1.0.29 / 2017-01-05
 ===================
 
