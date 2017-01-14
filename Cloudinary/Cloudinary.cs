@@ -1188,15 +1188,17 @@ namespace CloudinaryDotNet
         /// <returns>Result of operation</returns>
         public ArchiveResult CreateArchive(ArchiveParams parameters)
         {
-            var url = m_api.ApiUrlV.
+            Url url = m_api.ApiUrlV.
                 ResourceType(RESOURCE_TYPE_IMAGE).
-                Action(ACTION_GENERATE_ARCHIVE).
-                BuildUrl();
+                Action(ACTION_GENERATE_ARCHIVE);
+            if (!String.IsNullOrEmpty(parameters.ResourceType()))
+                url.ResourceType(parameters.ResourceType());
+            string uri = url.BuildUrl();
 
             parameters.Mode(ArchiveCallMode.Create);
 
             using (HttpWebResponse response = m_api.Call(
-                HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
+                HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
                 return ArchiveResult.Parse(response);
             }
