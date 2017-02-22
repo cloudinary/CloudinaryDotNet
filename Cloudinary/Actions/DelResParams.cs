@@ -9,6 +9,7 @@ namespace CloudinaryDotNet.Actions
         string m_prefix;
         string m_tag;
         bool m_all;
+        SpecialImageType specialType = SpecialImageType.None;
 
         public DelResParams()
         {
@@ -18,6 +19,17 @@ namespace CloudinaryDotNet.Actions
         public ResourceType ResourceType { get; set; }
 
         public string Type { get; set; }
+
+        public SpecialImageType SpecialType {
+            get
+            {
+                return specialType; 
+            }
+            set
+            {
+                specialType = value;
+            }
+        }
 
         /// <summary>
         /// If true, delete only the derived images of the matching resources.

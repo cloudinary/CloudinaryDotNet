@@ -67,11 +67,32 @@ namespace CloudinaryDotNet.Test
         /// A convenience method for deleting an image in the test
         /// </summary>
         /// <param name="id">The ID of the image to delete</param>
-        /// <returns>The results of the deletion</returns>
-        protected DelResResult DeleteTestResource(String id)
+        protected void DeleteTestResource(String id)
         {
-            return m_cloudinary.DeleteResources(id);
+            DelResResult delResult = m_cloudinary.DeleteResources(id);
+            Assert.AreEqual(delResult.StatusCode, HttpStatusCode.OK);
+            Assert.IsNull(delResult.Error);
+            Assert.AreEqual("deleted", delResult.Deleted[id]);
         }
+        protected void DeleteTestResource(ResourceType resourceType, String id)
+        {
+            DeleteTestResource(resourceType, false, id);
+        }
+        protected void DeleteTestResource(ResourceType resourceType, bool isPrivate, String id)
+        {
+            DelResResult delResult = m_cloudinary.DeleteResources(resourceType, isPrivate, id);
+            Assert.AreEqual(delResult.StatusCode, HttpStatusCode.OK);
+            Assert.IsNull(delResult.Error);
+            Assert.AreEqual("deleted", delResult.Deleted[id]);
+        }
+        protected void DeleteTestResource(SpecialImageType specialImageType, String id)
+        {
+            DelResResult delResult = m_cloudinary.DeleteResources(specialImageType, id);
+            Assert.AreEqual(delResult.StatusCode, HttpStatusCode.OK);
+            Assert.IsNull(delResult.Error);
+            Assert.AreEqual("deleted", delResult.Deleted[id]);
+        }
+
 
         /// <summary>
         /// A convenient method for initialization of new Account instance with necessary checks
