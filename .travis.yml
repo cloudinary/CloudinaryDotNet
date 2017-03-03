@@ -1,0 +1,8 @@
+language: csharp
+solution: Cloudinary.sln
+install:
+  - nuget restore Cloudinary.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release Cloudinary.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./Cloudinary.Test/bin/Debug/Cloudinary.Test.dll

@@ -14,7 +14,7 @@
     <OutputPath>bin\$(Configuration)\$(TargetFrameworkVersion)\</OutputPath>
     <TargetFrameworkProfile />
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\CloudinaryDotNet</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
@@ -148,5 +148,5 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
 </Project>

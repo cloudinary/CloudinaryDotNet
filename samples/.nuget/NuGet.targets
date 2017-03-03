@@ -32,14 +32,14 @@
     </PropertyGroup>
     
     <PropertyGroup Condition=" '$(OS)' != 'Windows_NT'">
-        <!-- We need to launch nuget.exe with the mono command if we're not on windows -->
+        <!-- We need to launch NuGet.exe with the mono command if we're not on windows -->
         <NuGetToolsPath>$(SolutionDir).nuget</NuGetToolsPath>
         <PackagesConfig>packages.config</PackagesConfig>
     </PropertyGroup>
     
     <PropertyGroup>
         <!-- NuGet command -->
-        <NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)\nuget.exe</NuGetExePath>
+        <NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)\NuGet.exe</NuGetExePath>
         <PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources>
         
         <NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
@@ -66,11 +66,11 @@
     </PropertyGroup>
 
     <Target Name="CheckPrerequisites">
-        <!-- Raise an error if we're unable to locate nuget.exe  -->
+        <!-- Raise an error if we're unable to locate NuGet.exe  -->
         <Error Condition="'$(DownloadNuGetExe)' != 'true' AND !Exists('$(NuGetExePath)')" Text="Unable to locate '$(NuGetExePath)'" />
         <SetEnvironmentVariable EnvKey="VisualStudioVersion" EnvValue="$(VisualStudioVersion)" Condition=" '$(VisualStudioVersion)' != '' AND '$(OS)' == 'Windows_NT' " />
         <!--
-        Take advantage of MsBuild's build dependency tracking to make sure that we only ever download nuget.exe once.
+        Take advantage of MsBuild's build dependency tracking to make sure that we only ever download NuGet.exe once.
         This effectively acts as a lock that makes sure that the download operation will only happen once and all
         parallel builds will have to wait for it to complete.
         -->
@@ -117,7 +117,7 @@
 
                     Log.LogMessage("Downloading latest version of NuGet.exe...");
                     WebClient webClient = new WebClient();
-                    webClient.DownloadFile("https://nuget.org/nuget.exe", OutputFilename);
+                    webClient.DownloadFile("https://nuget.org/NuGet.exe", OutputFilename);
 
                     return true;
                 }
