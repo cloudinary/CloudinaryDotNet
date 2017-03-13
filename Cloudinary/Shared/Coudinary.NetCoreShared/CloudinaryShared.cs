@@ -1,0 +1,175 @@
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Coudinary.NetCoreShared
+{
+    public class CloudinaryShared
+    {
+        public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
+        public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
+        public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
+        public const string SHARED_CDN = AKAMAI_SHARED_CDN;
+        protected const string RESOURCE_TYPE_IMAGE = "image";
+        protected const string ACTION_GENERATE_ARCHIVE = "generate_archive";
+        protected static Random m_random = new Random();
+
+        protected ApiShared m_api;
+
+        public CloudinaryShared()
+        {
+            m_api = new ApiShared();
+        }
+
+        /// <summary>
+        /// Parameterized constructor
+        /// </summary>
+        /// <param name="cloudinaryUrl">Cloudinary URL</param>
+        public CloudinaryShared(string cloudinaryUrl)
+        {
+            m_api = new ApiShared(cloudinaryUrl);
+        }
+
+        /// <summary>
+        /// Parameterized constructor
+        /// </summary>
+        /// <param name="account">Cloudinary account</param>
+        public CloudinaryShared(Account account)
+        {
+            m_api = new ApiShared(account);
+        }
+
+        /// <summary>
+        /// Gets URL to download private image
+        /// </summary>
+        /// <param name="publicId">The image public ID.</param>
+        /// <param name="attachment">Whether to download image as attachment (optional).</param>
+        /// <param name="format">Format to download (optional).</param>
+        /// <param name="type">The type (optional).</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">publicId can't be null</exception>
+        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "")
+        {
+            if (String.IsNullOrEmpty(publicId))
+                throw new ArgumentException("publicId");
+
+            UrlBuilder urlBuilder = new UrlBuilder(
+               m_api.ApiUrlV
+               .ResourceType(RESOURCE_TYPE_IMAGE)
+               .Action("download")
+               .BuildUrl());
+
+            var parameters = new SortedDictionary<string, object>();
+
+            parameters.Add("public_id", publicId);
+
+            if (!String.IsNullOrEmpty(format))
+                parameters.Add("format", format);
+
+            if (attachment != null)
+                parameters.Add("attachment", (bool)attachment ? "true" : "false");
+
+            if (!String.IsNullOrEmpty(type))
+                parameters.Add("type", type);
+
+            return GetDownloadUrl(urlBuilder, parameters);
+        }
+
+        /// <summary>
+        /// Gets URL to download tag cloud as ZIP package
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <param name="transform">The transformation.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">Tag should be specified!</exception>
+        public string DownloadZip(string tag, Transformation transform)
+        {
+            if (String.IsNullOrEmpty(tag))
+                throw new ArgumentException("Tag should be specified!");
+
+            UrlBuilder urlBuilder = new UrlBuilder(
+               m_api.ApiUrlV
+               .ResourceType(RESOURCE_TYPE_IMAGE)
+               .Action("download_tag.zip")
+               .BuildUrl());
+
+            var parameters = new SortedDictionary<string, object>();
+
+            parameters.Add("tag", tag);
+
+            if (transform != null)
+                parameters.Add("transformation", transform.Generate());
+
+            return GetDownloadUrl(urlBuilder, parameters);
+        }
+
+        private string RandomPublicId()
+        {
+            byte[] buffer = new byte[8];
+            m_random.NextBytes(buffer);
+            return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+        }
+
+        private string GetUploadMappingUrl()
+        {
+            return m_api.ApiUrlV.
+                ResourceType("upload_mappings").
+                BuildUrl();
+        }
+        
+        private string GetUploadMappingUrl(UploadMappingParams parameters)
+        {
+            var uri = GetUploadMappingUrl();
+            return new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
+        }
+        
+        /// <summary>
+        ///  Return Url on archive file
+        /// </summary>
+        /// <param name="parameters">Parameters of generated archive</param>
+        /// <returns>Url on archive file</returns>
+        public string DownloadArchiveUrl(ArchiveParams parameters)
+        {
+            parameters.Mode(ArchiveCallMode.Download);
+
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                ResourceType(RESOURCE_TYPE_IMAGE).
+                Action(ACTION_GENERATE_ARCHIVE).
+                BuildUrl());
+
+            return GetDownloadUrl(urlBuilder, parameters.ToParamsDictionary());
+        }
+
+        private static void AppendScriptLine(StringBuilder sb, string dir, string script)
+        {
+            sb.Append("<script src=\"");
+            sb.Append(dir);
+
+            if (!dir.EndsWith("/") && !dir.EndsWith("\\"))
+                sb.Append("/");
+
+            sb.Append(script);
+
+            sb.AppendLine("\"></script>");
+        }
+
+        private string GetDownloadUrl(UrlBuilder builder, IDictionary<string, object> parameters)
+        {
+            m_api.FinalizeUploadParameters(parameters);
+            builder.SetParameters(parameters);
+            return builder.ToString();
+        }
+
+        private static void ResetInternalFileDescription(FileDescription file, int bufferSize = Int32.MaxValue)
+        {
+            file.BufferLength = bufferSize;
+            file.EOF = false;
+            file.BytesSent = 0;
+        }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Coudinary.NetCoreShared;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -7,55 +8,15 @@ using System.Web;
 
 namespace CloudinaryDotNet
 {
-    public class Url : ICloneable
+    public class Url : UrlShared, ICloneable
     {
-        const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-        static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };
-        static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
-
-        ISignProvider m_signProvider;
-
-        string m_cloudName;
-        string m_cloudinaryAddr = Api.ADDR_RES;
-        string m_apiVersion;
-
-        bool m_shorten;
-        bool m_secure;
-        bool m_usePrivateCdn;
-        bool m_signed;
-        bool m_useRootPath;
-        string m_suffix;
-        string m_privateCdn;
-        string m_version;
-        string m_cName;
-        string m_source;
-        string m_fallbackContent;
-        bool m_useSubDomain;
-        Dictionary<string, Transformation> m_sourceTransforms;
-        List<string> m_customParts = new List<string>();
-        Transformation m_posterTransformation;
-        string m_posterSource;
-        Url m_posterUrl;
-
-        string[] m_sourceTypes;
-
-        string m_action = String.Empty;
-        string m_resourceType = String.Empty;
-
-        Transformation m_transformation;
-
-        public Url(string cloudName)
+        public Url(string cloudName) : base(cloudName)
         {
-            m_cloudName = cloudName;
         }
 
-        public Url(string cloudName, ISignProvider signProvider)
-            : this(cloudName)
+        public Url(string cloudName, ISignProvider signProvider) : base(cloudName, signProvider)
         {
-            m_signProvider = signProvider;
         }
-
-        public string FormatValue { get; set; }
 
         public Url Shorten(bool shorten)
         {
@@ -232,15 +193,6 @@ namespace CloudinaryDotNet
             }
 
             return this;
-        }
-
-        public Transformation Transformation
-        {
-            get
-            {
-                if (m_transformation == null) m_transformation = new Transformation();
-                return m_transformation;
-            }
         }
 
         public string BuildSpriteCss(string source)
@@ -973,66 +925,5 @@ namespace CloudinaryDotNet
         }
     }
 
-    public static class Crc32
-    {
-        static uint[] table;
-
-        public static uint ComputeChecksum(byte[] bytes)
-        {
-            uint crc = 0xffffffff;
-            for (int i = 0; i < bytes.Length; ++i)
-            {
-                byte index = (byte)(((crc) & 0xff) ^ bytes[i]);
-                crc = (uint)((crc >> 8) ^ table[index]);
-            }
-            return ~crc;
-        }
-
-        public static byte[] ComputeChecksumBytes(byte[] bytes)
-        {
-            return BitConverter.GetBytes(ComputeChecksum(bytes));
-        }
-
-        static Crc32()
-        {
-            uint poly = 0xedb88320;
-            table = new uint[256];
-            uint temp = 0;
-            for (uint i = 0; i < table.Length; ++i)
-            {
-                temp = i;
-                for (int j = 8; j > 0; --j)
-                {
-                    if ((temp & 1) == 1)
-                    {
-                        temp = (uint)((temp >> 1) ^ poly);
-                    }
-                    else
-                    {
-                        temp >>= 1;
-                    }
-                }
-                table[i] = temp;
-            }
-        }
-    }
-
-    class CSource
-    {
-        public CSource(string source)
-        {
-            SourceToSign = Source = source;
-        }
-
-        public static CSource operator +(CSource src, string value)
-        {
-            src.Source += value;
-            src.SourceToSign += value;
-
-            return src;
-        }
-
-        public string Source;
-        public string SourceToSign;
-    }
 }
+
