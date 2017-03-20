@@ -1,4 +1,5 @@
-﻿using Cloudinary.Test.Properties;
+﻿using Cloudinary.Test;
+using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using Ionic.Zip;
 using Newtonsoft.Json;
@@ -2099,7 +2100,9 @@ namespace CloudinaryDotNet.Test
                 Unsigned = true
             });
 
-            var acc = new Account(Settings.Default.CloudName);
+            string cloudName = string.IsNullOrWhiteSpace(Settings.Default.CloudName) ? SettingsReader.ReadSetting("ApiBaseAddress") : Settings.Default.CloudName;
+
+            var acc = new Account(cloudName);
             var cloudinary = new Cloudinary(acc);
 
             var upload = cloudinary.Upload(new ImageUploadParams()

@@ -9,16 +9,16 @@
   <applicationSettings>
     <Cloudinary.Test.Properties.Settings>
       <setting name="ApiBaseAddress" serializeAs="String">
-        <value />
+        <!--ApiBaseAddress--><value /><!--/ApiBaseAddress-->
       </setting>
       <setting name="CloudName" serializeAs="String">
-        <value></value>
+        <!--CloudName--><value /><!--/CloudName-->
       </setting>
       <setting name="ApiKey" serializeAs="String">
-        <value></value>
+        <!--ApiKey--><value /><!--/ApiKey-->
       </setting>
       <setting name="ApiSecret" serializeAs="String">
-        <value></value>
+        <!--ApiSecret--><value /><!--/ApiSecret-->
       </setting>
     </Cloudinary.Test.Properties.Settings>
   </applicationSettings>
