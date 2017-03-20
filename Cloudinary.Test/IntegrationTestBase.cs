@@ -1,4 +1,5 @@
-﻿using Cloudinary.Test.Properties;
+﻿using Cloudinary.Test;
+using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using Moq;
 using NUnit.Framework;
@@ -79,10 +80,14 @@ namespace CloudinaryDotNet.Test
         /// <returns>New Account instance</returns>
         private Account GetAccountInstance()
         {
+            string cloudName = string.IsNullOrWhiteSpace(Settings.Default.CloudName) ? SettingsReader.ReadSetting("ApiBaseAddress") : Settings.Default.CloudName;
+            string apiKey = string.IsNullOrWhiteSpace(Settings.Default.ApiKey) ? SettingsReader.ReadSetting("ApiKey") : Settings.Default.ApiKey;
+            string apiSecret = string.IsNullOrWhiteSpace(Settings.Default.ApiSecret) ? SettingsReader.ReadSetting("ApiSecret") : Settings.Default.ApiSecret;
+
             Account account = new Account(
-                Settings.Default.CloudName,
-                Settings.Default.ApiKey,
-                Settings.Default.ApiSecret);
+                cloudName,
+                apiKey,
+                apiSecret);
 
             if (String.IsNullOrEmpty(account.Cloud))
                 Console.WriteLine("Cloud name must be specified in test configuration (app.config)!");
@@ -107,8 +112,9 @@ namespace CloudinaryDotNet.Test
         protected Cloudinary GetCloudinaryInstance(Account account)
         {
             Cloudinary cloudinary = new Cloudinary(account);
-            if (!String.IsNullOrWhiteSpace(Settings.Default.ApiBaseAddress))
-                cloudinary.Api.ApiBaseAddress = Settings.Default.ApiBaseAddress;
+            string apiAddressBase = string.IsNullOrWhiteSpace(Settings.Default.ApiBaseAddress) ? SettingsReader.ReadSetting("ApiBaseAddress") : Settings.Default.ApiBaseAddress;
+            cloudinary.Api.ApiBaseAddress = apiAddressBase;
+
             return cloudinary;
         }
 

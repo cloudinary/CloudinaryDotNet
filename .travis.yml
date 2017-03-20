@@ -1,8 +1,11 @@
 language: csharp
 solution: Cloudinary.sln
+before_script:
+   - bash travis_before.sh
 install:
   - nuget restore Cloudinary.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Release Cloudinary.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./Cloudinary.Test/bin/Debug/Cloudinary.Test.dll
+  - xbuild /p:Configuration=Debug Cloudinary.sln
+  - bash config_exists.sh
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe /home/travis/build/RTLcoil/CloudinaryDotNet/Cloudinary.Test/bin/Debug/Cloudinary.Test.dll

@@ -94,6 +94,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -102,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntegrationTestBase.cs" />
+    <Compile Include="SettingsReader.cs" />
     <Compile Include="UploadMappingApiTest.cs" />
     <Compile Include="TransformationApiTest.cs" />
     <Compile Include="CloudinaryTest.cs" />

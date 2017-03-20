@@ -308,7 +308,6 @@ namespace CloudinaryDotNet
             Console.WriteLine(String.Format("{0} REQUEST:", method));
             Console.WriteLine(url);
 #endif
-
             HttpWebRequest request = RequestBuilder(url);
             request.Method = Enum.GetName(typeof(HttpMethod), method);
             // Add platform information to the USER_AGENT header
