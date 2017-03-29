@@ -49,10 +49,10 @@ hosts:
 
 # environment variables
 environment:
-  ApiBaseAddress: value1
-  CloudName: value2
-  ApiKey: value3
-  ApiSecret: value4
+  ApiBaseAddress: https://api.cloudinary.com/
+  CloudName: rtlstudio
+  ApiKey: 146226318487765
+  ApiSecret: y7-FKWTwqOKmWmk9bXvI_gnimjo
 
 # build cache to preserve files/folders between builds
 cache:
@@ -123,7 +123,7 @@ build:
 
 # scripts to run before build
 before_build:
-- ps: 'before_build.ps1'
+ - ps: .\before_build.ps1
 # scripts to run *after* solution is built and *before* automatic packaging occurs (web apps, NuGet packages, Azure Cloud Services)
 before_package:
 
