@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
-using Coudinary.NetCoreShared;
+using CloudinaryShared.Core;
 
 namespace CloudinaryDotNet
 {

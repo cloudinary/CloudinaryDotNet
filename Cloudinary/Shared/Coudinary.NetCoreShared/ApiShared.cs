@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Coudinary.NetCoreShared
+namespace CloudinaryShared.Core
 {
     public class ApiShared : ISignProvider
     {

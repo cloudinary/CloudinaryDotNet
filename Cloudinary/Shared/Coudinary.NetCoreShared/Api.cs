@@ -1,5 +1,5 @@
 ﻿using CloudinaryDotNet.Actions;
-using Coudinary.NetCoreShared;
+using CloudinaryShared.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace CloudinaryDotNet
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
         //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
-        public HttpResponseMessage Call(Coudinary.NetCoreShared.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -97,23 +97,23 @@ namespace CloudinaryDotNet
             }
         }
 
-        public HttpRequestMessage PrepareRequestBody(Coudinary.NetCoreShared.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public HttpRequestMessage PrepareRequestBody(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             var req = RequestBuilder();
 
             req.RequestUri = new Uri(url);
             switch (method)
             {
-                case Coudinary.NetCoreShared.HttpMethod.DELETE:
+                case CloudinaryShared.Core.HttpMethod.DELETE:
                     req.Method = System.Net.Http.HttpMethod.Delete;
                     break;
-                case Coudinary.NetCoreShared.HttpMethod.GET:
+                case CloudinaryShared.Core.HttpMethod.GET:
                     req.Method = System.Net.Http.HttpMethod.Get;
                     break;
-                case Coudinary.NetCoreShared.HttpMethod.POST:
+                case CloudinaryShared.Core.HttpMethod.POST:
                     req.Method = System.Net.Http.HttpMethod.Post;
                     break;
-                case Coudinary.NetCoreShared.HttpMethod.PUT:
+                case CloudinaryShared.Core.HttpMethod.PUT:
                     req.Method = System.Net.Http.HttpMethod.Put;
                     break;
                 default:
@@ -134,7 +134,7 @@ namespace CloudinaryDotNet
                 }
             }
 
-            if ((method == Coudinary.NetCoreShared.HttpMethod.POST || method == Coudinary.NetCoreShared.HttpMethod.PUT) && parameters != null)
+            if ((method == CloudinaryShared.Core.HttpMethod.POST || method == CloudinaryShared.Core.HttpMethod.PUT) && parameters != null)
             {
                 if (UseChunkedEncoding)
                     req.Headers.Add("Transfer-Encoding", "chunked");

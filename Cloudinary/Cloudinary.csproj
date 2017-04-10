@@ -96,10 +96,9 @@
         
     <Compile Include="Shared\Coudinary.NetCoreShared\Account.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\ApiShared.cs" />
-    <Compile Include="Shared\Coudinary.NetCoreShared\UrlShared.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Url.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryShared.cs" />
     <Compile Include="Cloudinary.cs" />
-    <Compile Include="Url.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="Cloudinary.Async.cs" />
     

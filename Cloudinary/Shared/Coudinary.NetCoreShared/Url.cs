@@ -1,23 +1,136 @@
 ﻿using CloudinaryDotNet;
-using Coudinary.NetCoreShared;
-using Microsoft.AspNetCore.Html;
+using CloudinaryDotNet.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
-namespace CloudinaryDotNet
+#if NET40
+using System.Web;
+#endif
+
+namespace CloudinaryShared.Core
 {
-    public class Url : UrlShared
+    public class Url : CloudinaryDotNet.Core.ICloneable
     {
-        public Url(string cloudName) : base(cloudName)
+        public static class Crc32
         {
+            static uint[] table;
+
+            public static uint ComputeChecksum(byte[] bytes)
+            {
+                uint crc = 0xffffffff;
+                for (int i = 0; i < bytes.Length; ++i)
+                {
+                    byte index = (byte)(((crc) & 0xff) ^ bytes[i]);
+                    crc = (uint)((crc >> 8) ^ table[index]);
+                }
+                return ~crc;
+            }
+
+            public static byte[] ComputeChecksumBytes(byte[] bytes)
+            {
+                return BitConverter.GetBytes(ComputeChecksum(bytes));
+            }
+
+            static Crc32()
+            {
+                uint poly = 0xedb88320;
+                table = new uint[256];
+                uint temp = 0;
+                for (uint i = 0; i < table.Length; ++i)
+                {
+                    temp = i;
+                    for (int j = 8; j > 0; --j)
+                    {
+                        if ((temp & 1) == 1)
+                        {
+                            temp = (uint)((temp >> 1) ^ poly);
+                        }
+                        else
+                        {
+                            temp >>= 1;
+                        }
+                    }
+                    table[i] = temp;
+                }
+            }
         }
 
-        public Url(string cloudName, ISignProvider signProvider) : base(cloudName, signProvider)
+        protected class CSource
         {
+            public CSource(string source)
+            {
+                SourceToSign = Source = source;
+            }
+
+            public static CSource operator +(CSource src, string value)
+            {
+                src.Source += value;
+                src.SourceToSign += value;
+
+                return src;
+            }
+
+            public string Source;
+            public string SourceToSign;
+        }
+
+        protected const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+        protected static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };
+        protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
+
+        protected ISignProvider m_signProvider;
+
+        protected string m_cloudName;
+        protected string m_cloudinaryAddr = Api.ADDR_RES;
+        protected string m_apiVersion;
+
+        protected bool m_shorten;
+        protected bool m_secure;
+        protected bool m_usePrivateCdn;
+        protected bool m_signed;
+        protected bool m_useRootPath;
+        protected string m_suffix;
+        protected string m_privateCdn;
+        protected string m_version;
+        protected string m_cName;
+        protected string m_source;
+        protected string m_fallbackContent;
+        protected bool m_useSubDomain;
+        protected Dictionary<string, Transformation> m_sourceTransforms;
+        protected List<string> m_customParts = new List<string>();
+        protected Transformation m_posterTransformation;
+        protected string m_posterSource;
+        protected Url m_posterUrl;
+        protected string[] m_sourceTypes;
+        protected string m_action = String.Empty;
+        protected string m_resourceType = String.Empty;
+        protected Transformation m_transformation;
+
+        public Url(string cloudName)
+        {
+            m_cloudName = cloudName;
+        }
+
+        public Url(string cloudName, ISignProvider signProvider)
+            : this(cloudName)
+        {
+            m_signProvider = signProvider;
+        }
+
+        public string FormatValue { get; set; }
+
+        public Transformation Transformation
+        {
+            get
+            {
+                if (m_transformation == null) m_transformation = new Transformation();
+                return m_transformation;
+            }
         }
 
         public Url Shorten(bool shorten)
@@ -211,7 +324,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="keyValuePairs">Array of strings in form of "key=value".</param>
-        public IHtmlContent BuildImageTag(string source, params string[] keyValuePairs)
+        public string BuildImageTag(string source, params string[] keyValuePairs)
         {
             return BuildImageTag(source, new StringDictionary(keyValuePairs));
         }
@@ -221,7 +334,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="dict">Additional parameters.</param>
-        public IHtmlContent BuildImageTag(string source, StringDictionary dict = null)
+        public string BuildImageTag(string source, StringDictionary dict = null)
         {
             if (dict == null)
                 dict = new StringDictionary();
@@ -253,24 +366,28 @@ namespace CloudinaryDotNet
 
             foreach (var item in dict)
             {
-                sb.Append(" ").Append(item.Key).Append("=\"").Append(WebUtility.HtmlEncode(item.Value)).Append("\"");
+#if NET40
+                sb.Append(" ").Append(item.Key).Append("=\"").Append(HttpUtility.HtmlAttributeEncode(item.Value)).Append("\"");
+#else
+                sb.Append(" ").Append(item.Key).Append("=\"").Append(System.Net.WebUtility.HtmlEncode(item.Value)).Append("\"");
+#endif
             }
 
             sb.Append("/>");
 
-            return new Microsoft.AspNetCore.Html.HtmlString(sb.ToString());
+            return sb.ToString();
         }
 
-        #endregion
+#endregion
 
-        #region BuildVideoTag
+#region BuildVideoTag
 
         /// <summary>
         /// Builds a video tag for embedding in a web view.
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="keyValuePairs">Array of strings in form of "key=value".</param>
-        public IHtmlContent BuildVideoTag(string source, params string[] keyValuePairs)
+        public string BuildVideoTag(string source, params string[] keyValuePairs)
         {
             return BuildVideoTag(source, new StringDictionary(keyValuePairs));
         }
@@ -280,7 +397,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="dict">Additional parameters.</param>
-        public IHtmlContent BuildVideoTag(string source, StringDictionary dict = null)
+        public string BuildVideoTag(string source, StringDictionary dict = null)
         {
             if (dict == null)
                 dict = new StringDictionary();
@@ -348,8 +465,7 @@ namespace CloudinaryDotNet
                 sb.Append(m_fallbackContent);
 
             sb.Append("</video>");
-
-            return new HtmlString(sb.ToString());
+            return sb.ToString();
         }
 
         private void AppendVideoSources(StringBuilder sb, string source, string sourceType)
@@ -408,9 +524,9 @@ namespace CloudinaryDotNet
             return posterUrl;
         }
 
-        #endregion
+#endregion
 
-        #region BuildUrl
+#region BuildUrl
 
         public string BuildUrl()
         {
@@ -421,9 +537,6 @@ namespace CloudinaryDotNet
         {
             if (String.IsNullOrEmpty(m_cloudName))
                 throw new ArgumentException("cloudName must be specified!");
-
-            if (!m_usePrivateCdn && !String.IsNullOrEmpty(m_suffix))
-                throw new NotSupportedException("URL Suffix only supported in private CDN!");
 
             if (source == null)
                 source = m_source;
@@ -671,9 +784,9 @@ namespace CloudinaryDotNet
             return "/:-_.*".IndexOf(ch) >= 0;
         }
 
-        #endregion
+#endregion
 
-        #region ICloneable
+#region ICloneable
 
         /// <summary>
         /// Creates a new object that is a deep copy of the current instance.
@@ -714,7 +827,18 @@ namespace CloudinaryDotNet
             return newUrl;
         }
 
-        #endregion
+        /// <summary>
+        /// Creates a new object that is a deep copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a deep copy of this instance.
+        /// </returns>
+        object CloudinaryDotNet.Core.ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+#endregion
     }
 
     public class UrlBuilder : UriBuilder
@@ -873,5 +997,3 @@ namespace CloudinaryDotNet
         }
     }
 }
-
-

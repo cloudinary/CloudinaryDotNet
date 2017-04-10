@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Coudinary.NetCoreShared
+namespace CloudinaryShared.Core
 {
-    public class CloudinaryShared
+    public class CloudinaryShared<TApi> where TApi: ApiShared
     {
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
         public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
@@ -18,30 +18,7 @@ namespace Coudinary.NetCoreShared
         protected const string ACTION_GENERATE_ARCHIVE = "generate_archive";
         protected static Random m_random = new Random();
 
-        protected ApiShared m_api;
-
-        public CloudinaryShared()
-        {
-            m_api = new ApiShared();
-        }
-
-        /// <summary>
-        /// Parameterized constructor
-        /// </summary>
-        /// <param name="cloudinaryUrl">Cloudinary URL</param>
-        public CloudinaryShared(string cloudinaryUrl)
-        {
-            m_api = new ApiShared(cloudinaryUrl);
-        }
-
-        /// <summary>
-        /// Parameterized constructor
-        /// </summary>
-        /// <param name="account">Cloudinary account</param>
-        public CloudinaryShared(Account account)
-        {
-            m_api = new ApiShared(account);
-        }
+        protected TApi m_api;
 
         /// <summary>
         /// Gets URL to download private image
