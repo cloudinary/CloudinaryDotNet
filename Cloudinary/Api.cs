@@ -8,9 +8,14 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+#if NETSTANDARD1_6
+using System.Net;
+#else
 using System.Web;
+#endif
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet
 {
@@ -54,7 +59,11 @@ namespace CloudinaryDotNet
         /// </summary>
         static Api()
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var version = typeof(Api)
+#if NETSTANDARD1_6
+                .GetTypeInfo()
+#endif
+                .Assembly.GetName().Version;
             USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2}",
                 version.Major, version.Minor, version.Build);
         }
@@ -259,7 +268,11 @@ namespace CloudinaryDotNet
         /// <returns>Cloudinary-compatible parameter</returns>
         public static string GetCloudinaryParam<T>(T e)
         {
-            Type eType = typeof(T);
+            var eType = typeof(T)
+#if NETSTANDARD1_6
+                .GetTypeInfo()
+#endif
+                ;
             FieldInfo fi = eType.GetField(e.ToString());
             DescriptionAttribute[] attrs = (DescriptionAttribute[])fi.GetCustomAttributes(
                 typeof(DescriptionAttribute), false);
@@ -278,7 +291,11 @@ namespace CloudinaryDotNet
         /// <returns>API-compatible parameter</returns>
         public static T ParseCloudinaryParam<T>(string s)
         {
-            Type eType = typeof(T);
+            var eType = typeof(T)
+#if NETSTANDARD1_6
+                .GetTypeInfo()
+#endif
+                ;
             foreach (var fi in eType.GetFields())
             {
                 DescriptionAttribute[] attrs = (DescriptionAttribute[])fi.GetCustomAttributes(
@@ -293,7 +310,7 @@ namespace CloudinaryDotNet
 
             return default(T);
         }
-
+        
         /// <summary>
         /// Custom call to cloudinary API
         /// </summary>
@@ -313,6 +330,7 @@ namespace CloudinaryDotNet
             request.Method = Enum.GetName(typeof(HttpMethod), method);
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
+#if !NETSTANDARD1_6
             request.UserAgent = string.IsNullOrEmpty(UserPlatform)
                 ? USER_AGENT
                 : string.Format("{0} {1}", UserPlatform, USER_AGENT);
@@ -321,9 +339,9 @@ namespace CloudinaryDotNet
             {
                 request.Timeout = Timeout;
             }
+#endif
             byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
-
+            request.Headers["Authorization"] = String.Format("Basic {0}", Convert.ToBase64String(authBytes));
             if (extraHeaders != null)
             {
                 foreach (var header in extraHeaders)
@@ -333,18 +351,22 @@ namespace CloudinaryDotNet
             }
             if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
             {
+#if !NETSTANDARD1_6
                 request.AllowWriteStreamBuffering = false;
                 request.AllowAutoRedirect = false;
 
                 if (UseChunkedEncoding)
                     request.SendChunked = true;
-
+#endif
                 request.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
 
                 if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
                     FinalizeUploadParameters(parameters);
-
+#if NETSTANDARD1_6
+                using (Stream requestStream = request.GetRequestStreamAsync().Result) //forgive me please
+#else
                 using (Stream requestStream = request.GetRequestStream())
+#endif
                 {
                     using (StreamWriter writer = new StreamWriter(requestStream))
                     {
@@ -378,7 +400,11 @@ namespace CloudinaryDotNet
 
             try
             {
+#if NETSTANDARD1_6
+                return (HttpWebResponse)request.GetResponseAsync().Result; //please forgive me
+#else
                 return (HttpWebResponse)request.GetResponse();
+#endif
             }
             catch (WebException ex)
             {
@@ -388,6 +414,7 @@ namespace CloudinaryDotNet
             }
         }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Signs and serializes upload parameters.
         /// </summary>
@@ -518,6 +545,7 @@ namespace CloudinaryDotNet
 #endif
         }
 
+#endif
         /// <summary>
         /// Calculates signature of parameters
         /// </summary>
@@ -615,7 +643,6 @@ namespace CloudinaryDotNet
                 }
             }
         }
-
         /// <summary>
         /// Writes one chunk of file to stream.
         /// </summary>

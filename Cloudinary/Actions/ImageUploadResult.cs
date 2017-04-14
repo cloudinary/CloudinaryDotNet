@@ -54,25 +54,18 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal new static ImageUploadResult Parse(HttpWebResponse response)
-        {
-            ImageUploadResult result = Parse<ImageUploadResult>(response);
 
-            if(result.JsonObj != null)
+        protected override void OnParse()
+        {
+            if (JsonObj != null)
             {
-                var responsiveBreakpoints = result.JsonObj["responsive_breakpoints"];
-                if(responsiveBreakpoints != null)
+                var responsiveBreakpoints = JsonObj["responsive_breakpoints"];
+                if (responsiveBreakpoints != null)
                 {
-                    result.ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
+                    ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
                 }
             }
-
-            return result;
         }
+     
     }
 }

@@ -31,15 +31,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "derived_resources")]
         public int DerivedResources { get; protected set; }
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static UsageResult Parse(HttpWebResponse response)
-        {
-            return Parse<UsageResult>(response);
-        }
     }
 
     [DataContract]

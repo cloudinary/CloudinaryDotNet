@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 using System;
 using System.Collections.Generic;
 
@@ -34,15 +34,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "image_infos")]
         public Dictionary<string, ImageInfo> ImageInfos { get; protected set; }
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static SpriteResult Parse(HttpWebResponse response)
-        {
-            return Parse<SpriteResult>(response);
-        }
     }
 
     [DataContract]

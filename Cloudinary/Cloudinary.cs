@@ -71,7 +71,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
-                return ExplicitResult.Parse(response);
+                return BaseResult.Parse<ExplicitResult>(response);
             }
         }
 
@@ -89,7 +89,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
             {
-                return UploadPresetResult.Parse(response);
+                return BaseResult.Parse<UploadPresetResult>(response);
             }
         }
 
@@ -111,7 +111,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.PUT, url, @params, null))
             {
-                return UploadPresetResult.Parse(response);
+                return BaseResult.Parse<UploadPresetResult>(response);
             }
         }
 
@@ -129,7 +129,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.GET, url, null, null))
             {
-                return GetUploadPresetResult.Parse(response);
+                return BaseResult.Parse<GetUploadPresetResult>(response);
             }
         }
 
@@ -156,7 +156,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.GET, urlBuilder.ToString(), null, null))
             {
-                return ListUploadPresetsResult.Parse(response);
+                return BaseResult.Parse<ListUploadPresetsResult>(response);
             }
         }
 
@@ -174,7 +174,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.DELETE, url, null, null))
             {
-                return DeleteUploadPresetResult.Parse(response);
+                return BaseResult.Parse<DeleteUploadPresetResult>(response);
             }
         }
 
@@ -191,7 +191,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File))
             {
-                return ImageUploadResult.Parse(response);
+                return BaseResult.Parse<ImageUploadResult>(response);
             }
         }
 
@@ -208,7 +208,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File))
             {
-                return VideoUploadResult.Parse(response);
+                return BaseResult.Parse<VideoUploadResult>(response);
             }
         }
 
@@ -232,7 +232,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, (SortedDictionary<string, object>)parameters, fileDescription))
             {
-                return RawUploadResult.Parse(response);
+                return BaseResult.Parse<RawUploadResult>(response);
             }
         }
 
@@ -244,7 +244,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.GET, m_api.ApiUrlV.Add("folders").BuildUrl(), null, null))
             {
-                return GetFoldersResult.Parse(response);
+                return BaseResult.Parse<GetFoldersResult>(response);
             }
         }
 
@@ -259,7 +259,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.GET, m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl(), null, null))
             {
-                return GetFoldersResult.Parse(response);
+                return BaseResult.Parse<GetFoldersResult>(response);
             }
         }
 
@@ -333,7 +333,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.GET, uri, null, null))
             {
-                return UsageResult.Parse(response);
+                return BaseResult.Parse<UsageResult>(response);
             }
         }
 
@@ -350,7 +350,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File))
             {
-                return RawUploadResult.Parse(response);
+                return BaseResult.Parse<RawUploadResult>(response);
             }
         }
 
@@ -465,7 +465,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
-                return RenameResult.Parse(response);
+                return BaseResult.Parse<RenameResult>(response);
             }
         }
 
@@ -482,7 +482,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
-                DeletionResult result = DeletionResult.Parse(response);
+                DeletionResult result = BaseResult.Parse<DeletionResult>(response);
                 return result;
             }
         }
@@ -508,7 +508,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
-                TextResult result = TextResult.Parse(response);
+                TextResult result = BaseResult.Parse<TextResult>(response);
                 return result;
             }
         }
@@ -524,7 +524,7 @@ namespace CloudinaryDotNet
 
             using (HttpWebResponse response = m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
-                TagResult result = TagResult.Parse(response);
+                TagResult result = BaseResult.Parse<TagResult>(response);
                 return result;
             }
         }
@@ -537,7 +537,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.GET, m_api.ApiUrlV.Add("resources").BuildUrl(), null, null))
             {
-                ListResourceTypesResult result = ListResourceTypesResult.Parse(response);
+                ListResourceTypesResult result = BaseResult.Parse<ListResourceTypesResult>(response);
                 return result;
             }
         }
@@ -718,7 +718,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.GET, urlBuilder.ToString(), null, null))
             {
-                ListResourcesResult result = ListResourcesResult.Parse(response);
+                ListResourcesResult result = BaseResult.Parse<ListResourcesResult>(response);
                 return result;
             }
         }
@@ -745,7 +745,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.GET, urlBuilder.ToString(), null, null))
             {
-                ListTagsResult result = ListTagsResult.Parse(response);
+                ListTagsResult result = BaseResult.Parse<ListTagsResult>(response);
                 return result;
             }
         }
@@ -766,7 +766,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.GET, urlBuilder.ToString(), null, null))
             {
-                ListTransformsResult result = ListTransformsResult.Parse(response);
+                ListTransformsResult result = BaseResult.Parse<ListTransformsResult>(response);
                 return result;
             }
         }
@@ -788,7 +788,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.GET, urlBuilder.ToString(), null, null))
             {
-                GetTransformResult result = GetTransformResult.Parse(response);
+                GetTransformResult result = BaseResult.Parse<GetTransformResult>(response);
                 return result;
             }
         }
@@ -809,7 +809,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
             {
-                return GetResourceResult.Parse(response);
+                return BaseResult.Parse<GetResourceResult>(response);
             }
         }
 
@@ -831,7 +831,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.GET, urlBuilder.ToString(), null, null))
             {
-                GetResourceResult result = GetResourceResult.Parse(response);
+                GetResourceResult result = BaseResult.Parse<GetResourceResult>(response);
                 return result;
             }
         }
@@ -854,7 +854,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.DELETE, urlBuilder.ToString(), null, null))
             {
-                DelDerivedResResult result = DelDerivedResResult.Parse(response);
+                DelDerivedResResult result = BaseResult.Parse<DelDerivedResResult>(response);
                 return result;
             }
         }
@@ -924,7 +924,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.DELETE, urlBuilder.ToString(), null, null))
             {
-                DelResResult result = DelResResult.Parse(response);
+                DelResResult result = BaseResult.Parse<DelResResult>(response);
                 return result;
             }
         }
@@ -947,7 +947,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
             {
-                RestoreResult result = RestoreResult.Parse(response);
+                RestoreResult result = BaseResult.Parse<RestoreResult>(response);
                 return result;
             }
         }
@@ -986,7 +986,7 @@ namespace CloudinaryDotNet
             }
             using (HttpWebResponse response = m_api.Call(httpMethod, url, body, null))
             {
-                UploadMappingResults result = UploadMappingResults.Parse(response);
+                UploadMappingResults result = BaseResult.Parse<UploadMappingResults>(response);
                 return result;
             }
         }
@@ -1087,7 +1087,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.PUT, url, parameters.ToParamsDictionary(), null))
             {
-                UpdateTransformResult result = UpdateTransformResult.Parse(response);
+                UpdateTransformResult result = BaseResult.Parse<UpdateTransformResult>(response);
                 return result;
             }
         }
@@ -1102,7 +1102,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
             {
-                TransformResult result = TransformResult.Parse(response);
+                TransformResult result = BaseResult.Parse<TransformResult>(response);
                 return result;
             }
         }
@@ -1117,7 +1117,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.DELETE, url, null, null))
             {
-                TransformResult result = TransformResult.Parse(response);
+                TransformResult result = BaseResult.Parse<TransformResult>(response);
                 return result;
             }
         }
@@ -1136,7 +1136,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
             {
-                SpriteResult result = SpriteResult.Parse(response);
+                SpriteResult result = BaseResult.Parse<SpriteResult>(response);
                 return result;
             }
         }
@@ -1155,7 +1155,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
             {
-                MultiResult result = MultiResult.Parse(response);
+                MultiResult result = BaseResult.Parse<MultiResult>(response);
                 return result;
             }
         }
@@ -1174,7 +1174,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
             {
-                ExplodeResult result = ExplodeResult.Parse(response);
+                ExplodeResult result = BaseResult.Parse<ExplodeResult>(response);
                 return result;
             }
         }
@@ -1200,7 +1200,7 @@ namespace CloudinaryDotNet
             using (HttpWebResponse response = m_api.Call(
                 HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
-                return ArchiveResult.Parse(response);
+                return BaseResult.Parse<ArchiveResult>(response);
             }
         }
 

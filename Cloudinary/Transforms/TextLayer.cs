@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NETSTANDARD1_6
+using System.Net;
+#else
 using System.Web;
+#endif
 
 namespace CloudinaryDotNet
 {
@@ -63,7 +67,11 @@ namespace CloudinaryDotNet
         /// </summary>
         private string OverlayTextEncode(string text)
         {
+#if NETSTANDARD1_6 
+            return WebUtility.UrlEncode(text)
+#else
             return HttpUtility.UrlEncodeUnicode(text)
+#endif
                 .Replace("%2f", "/").Replace("%3a", ":").Replace("+", "%20")
                 .Replace("%2c", "%e2%80%9a").Replace("/", "%e2%81%84");
         }

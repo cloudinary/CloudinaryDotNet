@@ -1,12 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net40</TargetFrameworks>
+    <TargetFrameworks>net35;net40;netstandard1.6</TargetFrameworks>
     <Copyright>Copyright © Cloudinary Ltd. 2015</Copyright>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(TargetFramework) == 'net35'">
+    <DefineConstants>CLONEABLE;ASPX</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(TargetFramework) == 'net40'">
+    <DefineConstants>CLONEABLE;ASPX</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
+    <PackageReference Include="System.Net.Requests" Version="4.3.0" />
+    <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.6'">
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
