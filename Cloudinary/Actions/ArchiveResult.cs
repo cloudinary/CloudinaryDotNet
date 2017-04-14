@@ -47,5 +47,6 @@ namespace CloudinaryDotNet.Actions
             result.FileCount = result.JsonObj.Value<int>("file_count");
             return result;
         }
+
     }
 }
