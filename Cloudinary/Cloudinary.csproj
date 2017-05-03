@@ -93,17 +93,16 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\GetUploadPreset.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\DeleteUploadPreset.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ListUploadPresets.cs" />
-        
     <Compile Include="Shared\Coudinary.NetCoreShared\Account.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\ApiShared.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Crc32.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\CSource.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Url.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryShared.cs" />
     <Compile Include="Cloudinary.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="Cloudinary.Async.cs" />
-    
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\DeletionResult.cs" />
-    
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ArchiveCallMode.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ArchiveFormat.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\RestoreParams.cs" />
@@ -150,7 +149,6 @@
     <Compile Include="Transforms\TextLayer.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Transforms\VideoTransform.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Transforms\Transformation.cs" />
-    
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

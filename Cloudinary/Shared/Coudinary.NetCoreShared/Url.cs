@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Core;
+using CloudinaryDotNet.Shared.Coudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,68 +17,7 @@ namespace CloudinaryShared.Core
 {
     public class Url : CloudinaryDotNet.Core.ICloneable
     {
-        public static class Crc32
-        {
-            static uint[] table;
-
-            public static uint ComputeChecksum(byte[] bytes)
-            {
-                uint crc = 0xffffffff;
-                for (int i = 0; i < bytes.Length; ++i)
-                {
-                    byte index = (byte)(((crc) & 0xff) ^ bytes[i]);
-                    crc = (uint)((crc >> 8) ^ table[index]);
-                }
-                return ~crc;
-            }
-
-            public static byte[] ComputeChecksumBytes(byte[] bytes)
-            {
-                return BitConverter.GetBytes(ComputeChecksum(bytes));
-            }
-
-            static Crc32()
-            {
-                uint poly = 0xedb88320;
-                table = new uint[256];
-                uint temp = 0;
-                for (uint i = 0; i < table.Length; ++i)
-                {
-                    temp = i;
-                    for (int j = 8; j > 0; --j)
-                    {
-                        if ((temp & 1) == 1)
-                        {
-                            temp = (uint)((temp >> 1) ^ poly);
-                        }
-                        else
-                        {
-                            temp >>= 1;
-                        }
-                    }
-                    table[i] = temp;
-                }
-            }
-        }
-
-        protected class CSource
-        {
-            public CSource(string source)
-            {
-                SourceToSign = Source = source;
-            }
-
-            public static CSource operator +(CSource src, string value)
-            {
-                src.Source += value;
-                src.SourceToSign += value;
-
-                return src;
-            }
-
-            public string Source;
-            public string SourceToSign;
-        }
+        
 
         protected const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         protected static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };

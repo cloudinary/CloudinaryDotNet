@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CloudinaryShared.Core
 {
-    public class CloudinaryShared<TApi> where TApi: ApiShared
+    public abstract class CloudinaryShared<TApi> where TApi: ApiShared
     {
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
         public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
