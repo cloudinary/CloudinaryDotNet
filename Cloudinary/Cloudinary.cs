@@ -42,14 +42,6 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// API object that used by this instance
-        /// </summary>
-        public Api Api
-        {
-            get { return m_api; }
-        }
-
-        /// <summary>
         /// This method can be used to force refresh facebook and twitter profile pictures. The response of this method includes the image's version. Use this version to bypass previously cached CDN copies.
         /// Also it can be used to generate transformed versions of an uploaded image. This is useful when Strict Transformations are allowed for your account and you wish to create custom derived images for already uploaded images. 
         /// </summary>

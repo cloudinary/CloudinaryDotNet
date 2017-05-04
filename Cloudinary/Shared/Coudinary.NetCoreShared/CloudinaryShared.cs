@@ -19,6 +19,14 @@ namespace CloudinaryShared.Core
         protected static Random m_random = new Random();
 
         protected TApi m_api;
+        
+        /// <summary>
+        /// API object that used by this instance
+        /// </summary>
+        public TApi Api
+        {
+            get { return m_api; }
+        }
 
         /// <summary>
         /// Gets URL to download private image
