@@ -1,3 +1,16 @@
+1.0.31 / 2017-05-04
+===================
+
+  * Code structure refactored to support both .net classic and net core support  
+  * Added .net core support in separate project
+  * General code between .net core and .net classic versions moved to shared scope
+  * Added base classes with common functionality for Cloudinary and Api objects
+  * Added child classes fo Cloudinary and Api that contains specific differences for .net classic and .net core versions
+  * Removed using of IHTMLString type
+  * Added tests projects for both .net classic and .net core versions
+  * Test project for .net classic adopted for working with shared code scope
+  * General code cleanup, removed unused constructors and other code improvements    
+  
 
 1.0.30 / 2017-01-14
 ===================
