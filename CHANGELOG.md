@@ -1,3 +1,7 @@
+1.0.31 / 2017-05-04
+===================
+
+  * Added configuration for working with appVeyour automatic tests service
 
 1.0.30 / 2017-01-14
 ===================
