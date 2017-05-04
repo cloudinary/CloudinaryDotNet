@@ -1,3 +1,7 @@
+1.0.30 / 2017-05-04
+===================
+
+  * Gitignore file adopted for working with Cloudinary.
 
 1.0.30 / 2017-01-14
 ===================
