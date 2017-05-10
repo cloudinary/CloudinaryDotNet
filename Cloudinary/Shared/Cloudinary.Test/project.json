@@ -22,11 +22,11 @@
   "buildOptions": {
     "embed": {
       "includeFiles": [
-        "Resources/TestImage.jpg",
-        "Resources/favicon.ico",
-        "Resources/movie.mp4",
-        "Resources/multipage.pdf",
-        "Resources/TestLargeImage.jpg"
+        "../../../Resources/Resources/TestImage.jpg",
+        "../../../Resources/Resources/favicon.ico",
+        "../../../Resources/Resources/movie.mp4",
+        "../../../Resources/Resources/multipage.pdf",
+        "../../../Resources/Resources/TestLargeImage.jpg"
       ]
     }
   },

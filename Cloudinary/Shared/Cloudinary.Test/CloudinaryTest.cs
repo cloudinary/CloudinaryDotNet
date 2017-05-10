@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Core;
+using CloudinaryShared.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -1604,7 +1605,7 @@ namespace CloudinaryDotNet.Test
             string rString = GetMockBodyOfCoudinaryRequest(exp, (p, t) =>
             {
                 
-                p.Api.PrepareRequestBody(Coudinary.NetCoreShared.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
+                p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
                 return (TextResult)null;
             });
             Assert.That(rString, Does.Contain("name=\"invalidate\"\r\n\r\ntrue\r\n"));
@@ -2291,7 +2292,7 @@ namespace CloudinaryDotNet.Test
             string rString = GetMockBodyOfCoudinaryRequest(tParams, (p, t) =>
             {
                 
-                p.Api.PrepareRequestBody(Coudinary.NetCoreShared.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
+                p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
                 return (TextResult)null;
             });
 
@@ -2308,7 +2309,7 @@ namespace CloudinaryDotNet.Test
 
             string rString = GetMockBodyOfCoudinaryRequest(tParams, (p, t) =>
             {
-                p.Api.PrepareRequestBody(Coudinary.NetCoreShared.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
+                p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
                 return (TextResult)null;
             });
 
