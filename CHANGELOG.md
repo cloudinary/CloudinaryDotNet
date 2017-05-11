@@ -1,7 +1,11 @@
+
 1.0.30 / 2017-05-04
 ===================
 
   * Gitignore file adopted for working with Cloudinary.
+  * Added custom configuration handler and section for Cloudinary test project
+  * SettingsReader class was adopted for working with custom configuration section
+  * Added configuration for working with appVeyour automatic tests service
 
 1.0.30 / 2017-01-14
 ===================
