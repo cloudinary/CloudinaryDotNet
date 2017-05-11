@@ -13,13 +13,13 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public enum ModerationStatus
     {
-        [Description("pending")]
+        [EnumMember(Value = "pending")]
         Pending,
-        [Description("rejected")]
+        [EnumMember(Value = "rejected")]
         Rejected,
-        [Description("approved")]
+        [EnumMember(Value = "approved")]
         Approved,
-        [Description("overridden")]
+        [EnumMember(Value = "overridden")]
         Overridden
     }
 
@@ -31,17 +31,17 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Images in various formats (jpg, png, etc.)
         /// </summary>
-        [Description("image")]
+        [EnumMember(Value = "image")]
         Image,
         /// <summary>
         /// Any files (text, binary)
         /// </summary>
-        [Description("raw")]
+        [EnumMember(Value = "raw")]
         Raw,
         /// <summary>
         /// Video files in various formats (mp4, etc.)
         /// </summary>
-        [Description("video")]
+        [EnumMember(Value = "video")]
         Video
     }
 
@@ -120,10 +120,12 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         /// <param name="response">HTTP response</param>
         /// <returns>New instance of this class</returns>
-        internal static T Parse<T>(HttpWebResponse response) where T : BaseResult, new()
+        internal static T Parse<T>(Object responseObj) where T : BaseResult, new()
         {
-            if (response == null)
+            if (responseObj == null)
                 throw new ArgumentNullException("response");
+
+            HttpWebResponse response = (HttpWebResponse)responseObj;
 
             T result = new T();
 

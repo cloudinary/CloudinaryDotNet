@@ -1,6 +1,7 @@
 ﻿using Cloudinary.Test.Configuration;
 using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
+using CloudinaryShared.Core;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -329,10 +330,10 @@ namespace CloudinaryDotNet.Test
         {
             //should allow sending face coordinates
 
-            var faceCoordinates = new List<Rectangle>()
+            var faceCoordinates = new List<CloudinaryDotNet.Core.Rectangle>()
             {
-                new Rectangle(121,31,110,151),
-                new Rectangle(120,30,109,150)
+                new CloudinaryDotNet.Core.Rectangle(121,31,110,151),
+                new CloudinaryDotNet.Core.Rectangle(120,30,109,150)
             };
 
             var uploadParams = new ImageUploadParams()
@@ -2144,7 +2145,7 @@ namespace CloudinaryDotNet.Test
         {
             //should allow sending custom coordinates
 
-            var coordinates = new Rectangle(121, 31, 110, 151);
+            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
 
             var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), CustomCoordinates = coordinates });
 
@@ -2159,7 +2160,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(coordinates.Width, result.Coordinates.Custom[0][2]);
             Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
 
-            coordinates = new Rectangle(122, 32, 110, 152);
+            coordinates = new CloudinaryDotNet.Core.Rectangle(122, 32, 110, 152);
 
             var exResult = m_cloudinary.Explicit(new ExplicitParams(upResult.PublicId) { CustomCoordinates = coordinates, Type = "upload" });
 
@@ -2180,7 +2181,7 @@ namespace CloudinaryDotNet.Test
         {
             //should update custom coordinates
 
-            var coordinates = new Rectangle(121, 31, 110, 151);
+            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
 
             var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath) });
 

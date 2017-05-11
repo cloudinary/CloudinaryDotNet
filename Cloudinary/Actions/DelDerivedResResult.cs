@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         /// <param name="response">HTTP response</param>
         /// <returns>New instance of this class</returns>
-        internal static DelDerivedResResult Parse(HttpWebResponse response)
+        internal static DelDerivedResResult Parse(Object response)
         {
             return Parse<DelDerivedResResult>(response);
         }
