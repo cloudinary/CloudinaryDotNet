@@ -14,10 +14,10 @@ branches:
 skip_tags: true
 
 # Start builds on tags only (GitHub and BitBucket)
-skip_non_tags: true
+skip_non_tags: false
 
 # Do not build feature branch with open Pull Requests
-skip_branch_with_pr: true
+skip_branch_with_pr: false
 
 # Maximum number of concurrent jobs for the project
 max_jobs: 1
