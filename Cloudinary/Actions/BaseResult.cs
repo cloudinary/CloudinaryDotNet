@@ -45,6 +45,26 @@ namespace CloudinaryDotNet.Actions
         Video
     }
 
+    // types to manipulate with generated images
+    public enum SpecialImageType
+    {
+        /// <summary>
+        /// Text images
+        /// </summary>
+        [Description("Text")]
+        Text,
+        /// <summary>
+        /// Sprite images
+        /// </summary>
+        [Description("Sprite")]
+        Sprite,
+        /// <summary>
+        /// Standard image
+        /// </summary>
+        None
+    }
+
+
     /// <summary>
     /// Results of uploading
     /// </summary>

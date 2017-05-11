@@ -404,11 +404,12 @@ namespace CloudinaryDotNet
             if (isRaw)
             {
                 return UploadLarge<RawUploadResult>(parameters, bufferSize);
-            } else
+            }
+            else
             {
                 return UploadLarge<ImageUploadResult>(parameters, bufferSize);
             }
-            
+
         }
         public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
         {
@@ -858,13 +859,27 @@ namespace CloudinaryDotNet
                 return result;
             }
         }
-
         public DelResResult DeleteResources(ResourceType type, params string[] publicIds)
         {
-            DelResParams p = new DelResParams() { ResourceType = type };
+            return DeleteResources(type, false, publicIds);
+        }
+
+        public DelResResult DeleteResources(ResourceType type, bool isPrivate, params string[] publicIds)
+        {
+            DelResParams p =
+                isPrivate ?
+                new DelResParams() { ResourceType = type, Type = "private" } :
+                new DelResParams() { ResourceType = type };
             p.PublicIds.AddRange(publicIds);
             return DeleteResources(p);
         }
+        public DelResResult DeleteResources(SpecialImageType type, params string[] publicIds)
+        {
+            DelResParams p = new DelResParams() { SpecialType = type };
+            p.PublicIds.AddRange(publicIds);
+            return DeleteResources(p);
+        }
+
 
         public DelResResult DeleteResources(params string[] publicIds)
         {
@@ -915,9 +930,16 @@ namespace CloudinaryDotNet
                 Add("resources").
                 Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType));
 
-            url = string.IsNullOrEmpty(parameters.Tag)
-                ? url.Add(parameters.Type)
-                : url.Add("tags").Add(parameters.Tag);
+            if (string.IsNullOrEmpty(parameters.Tag))
+            {
+                url = parameters.SpecialType == SpecialImageType.None ?
+                        url.Add(parameters.Type) :
+                        url.Add(parameters.SpecialType.ToString().ToLower());
+            }
+            else
+            {
+                url = url.Add("tags").Add(parameters.Tag);
+            }
 
             UrlBuilder urlBuilder = new UrlBuilder(url.BuildUrl(), parameters.ToParamsDictionary());
 

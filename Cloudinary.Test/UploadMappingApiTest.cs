@@ -6,26 +6,23 @@ namespace CloudinaryDotNet.Test
 {
     public class UploadMappingTest : IntegrationTestBase
     {
-        string[] FOLDERS = { "api_test_upload_mapping_000", "api_test_upload_mapping_001", "api_test_upload_mapping_002"};
         const string TEMPLATE = "http://upload.wikimedia.org/wikipedia";
         const string NEW_TEMPLATE = "http://res.cloudinary.com";
 
         public override void Initialize()
         {
             base.Initialize();
-
-            try
-            {
-                m_cloudinary.DeleteUploadMapping(FOLDERS[0]);
-                m_cloudinary.DeleteUploadMapping(FOLDERS[1]);
-                m_cloudinary.DeleteUploadMapping(FOLDERS[2]);
-            }
-            catch (Exception) { }
         }
 
         [Test]
         public void TestUploadMapping()
         {
+            string[] FOLDERS = new string[3];
+            for (int i=0; i< FOLDERS.Length;i++)
+            {
+                FOLDERS[i] = "api_test_upload_mapping_" + Guid.NewGuid().ToString();
+            }
+
             UploadMappingResults result;
             result = m_cloudinary.CreateUploadMapping(FOLDERS[0], TEMPLATE);
             StringAssert.AreEqualIgnoringCase("created", result.Message);
@@ -51,13 +48,33 @@ namespace CloudinaryDotNet.Test
             result = m_cloudinary.UploadMappings(new UploadMappingParams());
             Assert.IsFalse(result.Mappings.ContainsKey(FOLDERS[0]));
             Assert.IsFalse(result.Mappings.ContainsValue(NEW_TEMPLATE));
+            delMappings(FOLDERS);
+
+
+        }
+        private void delMappings(string[] folders)
+        {
+            foreach (string folder in folders)
+            {
+                try
+                {
+                    m_cloudinary.DeleteUploadMapping(folder);
+                }
+                catch { }
+            }
         }
 
         [Test]
         public void TestUploadMappingNextCursor()
         {
+            string[] FOLDERS = new string[3];
+            for (int i = 0; i < FOLDERS.Length; i++)
+            {
+                FOLDERS[i] = "api_test_upload_mapping_" + Guid.NewGuid().ToString();
+            }
+
             UploadMappingResults result;
-            string templateSuffix = "_test";
+            string templateSuffix = "_test" + Guid.NewGuid();
 
             result = m_cloudinary.CreateUploadMapping(FOLDERS[1], TEMPLATE + templateSuffix);
             StringAssert.AreEqualIgnoringCase("created", result.Message);
@@ -81,6 +98,8 @@ namespace CloudinaryDotNet.Test
             UploadMappingResults results2 = m_cloudinary.UploadMappings(uploadMappingParams);
             Assert.IsNull(results2.Error);
             Assert.AreEqual(1, results2.Mappings.Count);
+            delMappings(FOLDERS);
         }
+
     }
 }
