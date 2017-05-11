@@ -63,6 +63,7 @@ cache:
 
 # scripts that run after cloning repository
 install:
+  - rd /s /q "C:\Program Files\dotnet\sdk\1.0.1"
   # by default, all script lines are interpreted as batch
   - echo This is batch
   # to run script as a PowerShell command prepend it with ps:
