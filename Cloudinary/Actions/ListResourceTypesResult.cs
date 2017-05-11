@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+
 
 namespace CloudinaryDotNet.Actions
 {
@@ -14,24 +14,16 @@ namespace CloudinaryDotNet.Actions
 
         public ResourceType[] ResourceTypes { get; protected set; }
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static ListResourceTypesResult Parse(HttpWebResponse response)
+        protected override void OnParse()
         {
-            ListResourceTypesResult result = Parse<ListResourceTypesResult>(response);
-
             List<ResourceType> types = new List<ResourceType>();
-            foreach (var type in result.m_resourceTypes)
+
+            foreach (var type in m_resourceTypes)
             {
                 types.Add(Api.ParseCloudinaryParam<ResourceType>(type));
             }
-
-            result.ResourceTypes = types.ToArray();
-
-            return result;
+            ResourceTypes = types.ToArray();
         }
+
     }
 }

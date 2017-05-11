@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+#if NETSTANDARD1_6
+using System.Net;
+#else
 using System.Web;
+#endif
 
 namespace CloudinaryDotNet
 {
-    public class Url : ICloneable
+    public class Url
+#if CLONEABLE
+    : ICloneable
+#endif
     {
         const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };
@@ -307,7 +314,14 @@ namespace CloudinaryDotNet
 
             foreach (var item in dict)
             {
-                sb.Append(" ").Append(item.Key).Append("=\"").Append(HttpUtility.HtmlAttributeEncode(item.Value)).Append("\"");
+                sb.Append(" ").Append(item.Key)
+                    .Append("=\"")
+#if NETSTANDARD1_6
+                    .Append(System.Net.WebUtility.HtmlEncode(item.Value))
+#else
+                    .Append(HttpUtility.HtmlAttributeEncode(item.Value))
+#endif
+                    .Append("\"");
             }
 
             sb.Append("/>");
@@ -319,9 +333,9 @@ namespace CloudinaryDotNet
 #endif
         }
 
-        #endregion
+#endregion
 
-        #region BuildVideoTag
+#region BuildVideoTag
 
         /// <summary>
         /// Builds a video tag for embedding in a web view.
@@ -478,9 +492,9 @@ namespace CloudinaryDotNet
             return posterUrl;
         }
 
-        #endregion
+#endregion
 
-        #region BuildUrl
+#region BuildUrl
 
         public string BuildUrl()
         {
@@ -738,9 +752,9 @@ namespace CloudinaryDotNet
             return "/:-_.*".IndexOf(ch) >= 0;
         }
 
-        #endregion
+#endregion
 
-        #region ICloneable
+#region ICloneable
 
         /// <summary>
         /// Creates a new object that is a deep copy of the current instance.
@@ -780,7 +794,7 @@ namespace CloudinaryDotNet
 
             return newUrl;
         }
-
+#if CLONEABLE
         /// <summary>
         /// Creates a new object that is a deep copy of the current instance.
         /// </summary>
@@ -791,8 +805,8 @@ namespace CloudinaryDotNet
         {
             return Clone();
         }
-
-        #endregion
+#endif
+#endregion
     }
 
     public class UrlBuilder : UriBuilder
@@ -870,12 +884,13 @@ namespace CloudinaryDotNet
             : base(scheme, host, port, path, extraValue)
         {
         }
-
+#if ASPX
         public UrlBuilder(System.Web.UI.Page page)
             : base(page.Request.Url.AbsoluteUri)
         {
             PopulateQueryString();
         }
+#endif
 
         public void SetParameters(IDictionary<string, object> @params)
         {
@@ -902,6 +917,7 @@ namespace CloudinaryDotNet
             return base.Uri.AbsoluteUri;
         }
 
+#if !NETSTANDARD1_6
         public void Navigate()
         {
             _Navigate(true);
@@ -917,7 +933,7 @@ namespace CloudinaryDotNet
             string uri = this.ToString();
             HttpContext.Current.Response.Redirect(uri, endResponse);
         }
-
+#endif
         private void PopulateQueryString()
         {
             string query = base.Query;

@@ -5,7 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
 {
-    public partial class Transformation : ICloneable
+    public partial class Transformation
+#if CLONEABLE
+    : ICloneable
+#endif
     {
         private static readonly Regex RANGE_VALUE_RE = new Regex("^((?:\\d+\\.)?\\d+)([%pP])?$", RegexOptions.Compiled);
         private static readonly Regex RANGE_RE = new Regex("^(\\d+\\.)?\\d+[%pP]?\\.\\.(\\d+\\.)?\\d+[%pP]?$", RegexOptions.Compiled);

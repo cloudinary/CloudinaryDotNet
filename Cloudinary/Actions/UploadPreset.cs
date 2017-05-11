@@ -403,14 +403,5 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "name")]
         public string Name { get; protected set; }
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static UploadPresetResult Parse(HttpWebResponse response)
-        {
-            return Parse<UploadPresetResult>(response);
-        }
     }
 }

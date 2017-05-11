@@ -92,7 +92,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Raw JSON as received from server
         /// </summary>
-        public JToken JsonObj { get; protected set; }
+        public JToken JsonObj { get; set; }
 
         /// <summary>
         /// Description of server-side error (if one has occured)
@@ -114,6 +114,12 @@ namespace CloudinaryDotNet.Actions
         /// Gets time of next reset of limits.
         /// </summary>
         public DateTime Reset { get; protected set; }
+
+
+        protected virtual void OnParse()
+        {
+
+        }
 
         /// <summary>
         /// Parses HTTP response and creates new instance of this class
@@ -146,22 +152,20 @@ namespace CloudinaryDotNet.Actions
                 {
                     if (header.StartsWith("X-FeatureRateLimit"))
                     {
-                        long l;
-                        DateTime t;
 
-                        if (header.EndsWith("Limit") && long.TryParse(response.Headers[header], out l))
+                        if (header.EndsWith("Limit") && long.TryParse(response.Headers[header], out long l))
                             result.Limit = l;
 
                         if (header.EndsWith("Remaining") && long.TryParse(response.Headers[header], out l))
                             result.Remaining = l;
 
-                        if (header.EndsWith("Reset") && DateTime.TryParse(response.Headers[header], out t))
+                        if (header.EndsWith("Reset") && DateTime.TryParse(response.Headers[header], out DateTime t))
                             result.Reset = t;
                     }
                 }
 
             result.StatusCode = response.StatusCode;
-
+            result.OnParse();
             return result;
         }
     }

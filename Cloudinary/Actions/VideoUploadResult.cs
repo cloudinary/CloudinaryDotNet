@@ -54,15 +54,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "duration")]
         public double Duration { get; protected set; }
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static new VideoUploadResult Parse(HttpWebResponse response)
-        {
-            return Parse<VideoUploadResult>(response);
-        }
     }
 
     [DataContract]

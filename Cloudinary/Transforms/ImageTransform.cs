@@ -4,7 +4,10 @@ using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
 {
-    public partial class Transformation : ICloneable
+    public partial class Transformation
+#if CLONEABLE
+    : ICloneable
+#endif
     {
         /// <summary>
         /// The required width of a transformed image or an overlay. Can be specified separately or together with the height value. Can also be a decimal value (e.g., 0.2) for percentage based resizing.

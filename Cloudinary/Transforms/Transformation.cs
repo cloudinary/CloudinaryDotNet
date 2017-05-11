@@ -5,13 +5,16 @@ using System.Linq;
 
 namespace CloudinaryDotNet
 {
-    public partial class Transformation : ICloneable
+    public partial class Transformation
+#if CLONEABLE
+    : ICloneable
+#endif
     {
         static readonly string[] SimpleParams = new string[] {
             "x", "x",
             "y", "y",
             "r", "radius",
-            "d", "default_image", 
+            "d", "default_image",
             "g", "gravity",
             "cs", "color_space",
             "p", "prefix",
@@ -166,7 +169,7 @@ namespace CloudinaryDotNet
             HashSet<string> parts = new HashSet<string>(m_nestedTransforms.Select(t => t.GenerateThis()).ToList());
 
             var thisTransform = GenerateThis();
-            if(!string.IsNullOrEmpty(thisTransform))
+            if (!string.IsNullOrEmpty(thisTransform))
                 parts.Add(thisTransform);
 
             return string.Join("/", parts.ToArray());
@@ -411,11 +414,12 @@ namespace CloudinaryDotNet
 
             return t;
         }
-
+#if CLONEABLE
         object ICloneable.Clone()
         {
             return Clone();
         }
+#endif
 
         #endregion
     }

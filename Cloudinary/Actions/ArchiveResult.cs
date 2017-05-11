@@ -32,20 +32,15 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public int FileCount { get; private set; }
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static ArchiveResult Parse(HttpWebResponse response)
+        protected override void OnParse()
         {
-            ArchiveResult result = Parse<ArchiveResult>(response);
-            result.Url = result.JsonObj.Value<string>("url");
-            result.SecureUrl = result.JsonObj.Value<string>("secure_url");
-            result.PublicId = result.JsonObj.Value<string>("public_id");
-            result.Bytes = result.JsonObj.Value<long>("bytes");
-            result.FileCount = result.JsonObj.Value<int>("file_count");
-            return result;
+            Url = JsonObj.Value<string>("url");
+            SecureUrl = JsonObj.Value<string>("secure_url");
+            PublicId = JsonObj.Value<string>("public_id");
+            Bytes = JsonObj.Value<long>("bytes");
+            FileCount = JsonObj.Value<int>("file_count");
         }
+        
+
     }
 }

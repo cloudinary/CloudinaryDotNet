@@ -370,7 +370,7 @@ namespace CloudinaryDotNet.Actions
                 AddParam(dict, "type", m_type);
 
             if (m_transformations != null && m_transformations.Count > 0)
-                AddParam(dict, "transformations", string.Join("/", m_transformations.ConvertAll(t => t.ToString()).ToArray()));
+                AddParam(dict, "transformations", string.Join("/", m_transformations.Select(t => t.ToString()).ToArray()));
 
             if (m_targetFormat != ArchiveFormat.Zip)
                 AddParam(dict, "target_format", Api.GetCloudinaryParam(m_targetFormat));
