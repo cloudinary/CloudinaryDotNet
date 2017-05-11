@@ -1,4 +1,6 @@
-﻿using Cloudinary.Test.Properties;
+﻿using Cloudinary.Test;
+using Cloudinary.Test.Configuration;
+using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using Moq;
 using NUnit.Framework;
@@ -35,7 +37,7 @@ namespace CloudinaryDotNet.Test
             m_testLargeImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestLargeImage.jpg");
             m_testPdfPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "multipage.pdf");
             m_testIconPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "favicon.ico");
-
+            
             Resources.TestImage.Save(m_testImagePath);
             Resources.TestLargeImage.Save(m_testLargeImagePath);
             File.WriteAllBytes(m_testPdfPath, Resources.multipage);
@@ -79,10 +81,14 @@ namespace CloudinaryDotNet.Test
         /// <returns>New Account instance</returns>
         private Account GetAccountInstance()
         {
+            string cloudName = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.CloudName) ? SettingsReader.ReadSetting("ApiBaseAddress") : ClodinarySettings.Settings.CloudName;
+            string apiKey = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiKey) ? SettingsReader.ReadSetting("ApiKey") : ClodinarySettings.Settings.ApiKey;
+            string apiSecret = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiSecret) ? SettingsReader.ReadSetting("ApiSecret") : ClodinarySettings.Settings.ApiSecret;
+
             Account account = new Account(
-                Settings.Default.CloudName,
-                Settings.Default.ApiKey,
-                Settings.Default.ApiSecret);
+                cloudName,
+                apiKey,
+                apiSecret);
 
             if (String.IsNullOrEmpty(account.Cloud))
                 Console.WriteLine("Cloud name must be specified in test configuration (app.config)!");
@@ -107,8 +113,9 @@ namespace CloudinaryDotNet.Test
         protected Cloudinary GetCloudinaryInstance(Account account)
         {
             Cloudinary cloudinary = new Cloudinary(account);
-            if (!String.IsNullOrWhiteSpace(Settings.Default.ApiBaseAddress))
-                cloudinary.Api.ApiBaseAddress = Settings.Default.ApiBaseAddress;
+            string apiAddressBase = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiBaseAddress) ? SettingsReader.ReadSetting("ApiBaseAddress") : ClodinarySettings.Settings.ApiBaseAddress;
+            cloudinary.Api.ApiBaseAddress = apiAddressBase;
+
             return cloudinary;
         }
 

@@ -1,4 +1,5 @@
-﻿using Cloudinary.Test.Properties;
+﻿using Cloudinary.Test.Configuration;
+using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using CloudinaryShared.Core;
 using Ionic.Zip;
@@ -2100,7 +2101,7 @@ namespace CloudinaryDotNet.Test
                 Unsigned = true
             });
 
-            var acc = new Account(Settings.Default.CloudName);
+            var acc = new Account(ClodinarySettings.Settings.CloudName);
             var cloudinary = new Cloudinary(acc);
 
             var upload = cloudinary.Upload(new ImageUploadParams()
