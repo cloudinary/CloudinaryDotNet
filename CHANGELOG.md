@@ -1,6 +1,8 @@
 1.0.31 / 2017-05-04
 ===================
 
+  * Added custom configuration handler and section for Cloudinary test project
+  * SettingsReader class was adopted for working with custom configuration section
   * Added configuration for working with appVeyour automatic tests service
 
 1.0.30 / 2017-01-14
