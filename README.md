@@ -38,6 +38,13 @@ Please see NuGet Documentation at http://docs.nuget.org/ for instructions of how
 2. NuGet package is a ZIP archive that could be extracted using any unzip tool.
 3. NuGet package contains CloudinaryDotNet.dll, xml documentation and this file.
 
+## Manual add reference to visual studio .net core or .net classic projects
+
+1. Open cloudinary.sln in visual studio 2015 or 2017.
+2. Run "build" in debug or release mode.
+3. Once done, corresponding dll files: CloudinaryDotNet.dll – for .net classic projects, Coudinary.NetCoreShared.dll – for .net core projects will appear in “bin” folders.
+4. Then you can add corresponding dll file as reference in you project in solution - add refference menu.
+
 ## Try it right away
 
 Sign up for a [free account](https://cloudinary.com/users/register/free) so you can try out image transformations and seamless image delivery through CDN.
