@@ -64,7 +64,7 @@ namespace CloudinaryDotNet.Actions
         public bool All
         {
             get { return m_all; }
-            set { m_publicIds = null; m_prefix = String.Empty; m_tag = String.Empty; m_all = true; }
+            set { m_publicIds = null; m_prefix = String.Empty; m_tag = String.Empty; m_all = value; }
         }
 
         /// <summary>
