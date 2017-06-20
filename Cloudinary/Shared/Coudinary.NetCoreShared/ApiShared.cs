@@ -457,7 +457,7 @@ namespace CloudinaryShared.Core
 
         protected void WriteFile(StreamWriter writer, FileDescription file)
         {
-            if (file.IsRemote)
+            if (file.IsRemote && file.Stream == null)
             {
                 WriteParam(writer, "file", file.FilePath);
             }

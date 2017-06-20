@@ -329,6 +329,8 @@ namespace CloudinaryDotNet
             }
 
         }
+
+
         public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
         {
             Url url = m_api.ApiUrlImgUpV;
@@ -338,7 +340,7 @@ namespace CloudinaryDotNet
             var extraHeaders = new Dictionary<string, string>();
             extraHeaders["X-Unique-Upload-Id"] = RandomPublicId();
             parameters.File.BufferLength = bufferSize;
-            var fileLength = parameters.File.GetFileLength();
+             var fileLength = parameters.File.GetFileLength();
             T result = null;
 
             while (!parameters.File.EOF)

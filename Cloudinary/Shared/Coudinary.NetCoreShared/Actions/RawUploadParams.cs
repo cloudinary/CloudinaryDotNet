@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -239,6 +241,37 @@ namespace CloudinaryDotNet.Actions
             m_stream = stream;
         }
 
+#if NET40
+        protected Stream GetStream(String url)
+        {
+            HttpWebRequest aRequest = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse aResponse = (HttpWebResponse)aRequest.GetResponse();
+
+            Stream webStream = aResponse.GetResponseStream();
+            var memStream = new MemoryStream();
+            webStream.CopyTo(memStream);
+            memStream.Position = 0;
+            webStream.Dispose();
+
+            return memStream;
+        }
+#else
+        protected Stream GetStream(String url)
+        {
+            HttpRequestMessage msg = new HttpRequestMessage();
+            msg.RequestUri = new Uri(url);
+            Stream result = msg.Content.ReadAsStreamAsync().Result;
+
+
+            var memStream = new MemoryStream();
+            result.CopyTo(memStream);
+            memStream.Position = 0;
+            result.Dispose();
+
+            return memStream;
+        }
+#endif
+
         /// <summary>
         /// Constructor to upload file by path
         /// </summary>
@@ -249,9 +282,14 @@ namespace CloudinaryDotNet.Actions
             m_path = filePath;
 
             if (!m_isRemote)
+            {
                 m_name = Path.GetFileName(m_path);
+            }
             else
+            {
                 m_name = m_path;
+                m_stream = GetStream(m_name);
+            }
         }
 
         /// <summary>

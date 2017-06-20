@@ -614,6 +614,30 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUploadLargeFromWeb()
+        {
+            // support uploading large image
+
+            var largeFilePath = "http://res.cloudinary.com/demo/video/upload/v1496743637/dog.mp4";
+            var result = m_cloudinary.UploadLarge(new ImageUploadParams()
+            {
+                File = new FileDescription(largeFilePath)
+            }, 5 * 1024 * 1024);
+
+            Assert.AreEqual(result.StatusCode, System.Net.HttpStatusCode.OK);
+            Assert.AreEqual(result.Format, "mp4");
+        }
+
+        //[Test]
+        //public void RenamePrams()
+        //{
+        //    RenameParams rp = new RenameParams("async_test_vid", "fold1/async_test_vid");
+        //    rp.AddCustomParam("resource_type", "video");
+        //    RenameResult res = m_cloudinary.Rename(rp);
+        //    Assert.AreEqual(res.StatusCode, System.Net.HttpStatusCode.OK);
+        //}
+
+        [Test]
         public void TestTagAdd()
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
