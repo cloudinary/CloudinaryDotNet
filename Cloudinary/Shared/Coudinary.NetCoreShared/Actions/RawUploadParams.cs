@@ -120,6 +120,11 @@ namespace CloudinaryDotNet.Actions
         public string NotificationUrl { get; set; }
 
         /// <summary>
+        /// Allows the resource to behave as if it's of the authenticated 'type' while still using the default 'upload' type in delivery URLs
+        /// </summary>
+        public string AccessMode { get; set; }
+
+        /// <summary>
         /// Proxy to use when Cloudinary accesses remote folders
         /// </summary>
         public string Proxy { get; set; }
@@ -175,6 +180,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "discard_original_filename", DiscardOriginalFilename);
             AddParam(dict, "notification_url", NotificationUrl);
+            AddParam(dict, "access_mode", AccessMode);
             AddParam(dict, "proxy", Proxy);
             AddParam(dict, "folder", Folder);
             AddParam(dict, "raw_convert", RawConvert);
