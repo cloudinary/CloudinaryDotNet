@@ -147,7 +147,8 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new RawUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Moderation = "manual"
+                Moderation = "manual",
+                
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -684,6 +685,31 @@ namespace CloudinaryDotNet.Test
             }, 5 * 1024 * 1024);
 
             Assert.AreEqual(fileLength, result.Length);
+        }
+
+        [Test]
+        public void TestPublishByTag()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "TestForPublish",
+                PublicId = "TestForPublish",
+                Overwrite = true,
+                Type = "private"
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            var publish_result = m_cloudinary.PublishResourceByTag("TestForPublish", new PublishResourceParams() {
+                ResourceType = ResourceType.Image
+            });
+
+            Assert.AreEqual(publish_result.Published.Count, 1);
+
+            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
+                "TestForPublish");
+
         }
 
         [Test]

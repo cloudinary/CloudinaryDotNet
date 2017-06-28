@@ -156,5 +156,46 @@ namespace CloudinaryShared.Core
             file.EOF = false;
             file.BytesSent = 0;
         }
+
+        /// <summary>
+        /// Publish resources by prefix.
+        /// </summary>
+        /// <param name="prefix">The prefix for publishing resources.</param>
+        /// <param name="publishResourceParams">Parameters for publishing of resources.</param>
+        /// <returns></returns>
+        public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams publishResourceParams)
+        {
+            return PublishResource("prefix", prefix, publishResourceParams);
+        }
+
+        /// <summary>
+        /// Publish resources by tag.
+        /// </summary>
+        /// <param name="prefix">The tag for publishing resources.</param>
+        /// <param name="publishResourceParams">Parameters for publishing of resources.</param>
+        /// <returns></returns>
+        public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams publishResourceParams)
+        {
+            return PublishResource("tag", tag, publishResourceParams);
+        }
+
+        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams publishResourceParams)
+        {
+            
+            PublishResourceParams prParams = new PublishResourceParams();
+           
+            Url url = m_api.ApiUrlV
+                .Add("resources")
+                .Add(publishResourceParams.ResourceType.ToString().ToLower())
+                .Add("publish_resources");
+
+            prParams.AddCustomParam(byKey, value);
+
+
+            object response = m_api.Call(HttpMethod.POST, url.BuildUrl(), prParams.ToParamsDictionary(), null);
+
+            return PublishResourceResult.Parse(response);
+
+        }
     }
 }

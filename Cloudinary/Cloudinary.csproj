@@ -130,6 +130,8 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\VideoUploadParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\BaseParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ImageUploadParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\PublishResourceParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\PublishResourceResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\TagParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\TextParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\DeletionParams.cs" />

@@ -75,7 +75,7 @@ namespace CloudinaryDotNet
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
         //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
-        public HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public override object Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             using (HttpClient client = new HttpClient())
             {
