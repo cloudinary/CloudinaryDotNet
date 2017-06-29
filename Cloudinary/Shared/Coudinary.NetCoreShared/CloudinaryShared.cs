@@ -181,21 +181,48 @@ namespace CloudinaryShared.Core
 
         private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams publishResourceParams)
         {
-            
-            PublishResourceParams prParams = new PublishResourceParams();
-           
             Url url = m_api.ApiUrlV
                 .Add("resources")
                 .Add(publishResourceParams.ResourceType.ToString().ToLower())
                 .Add("publish_resources");
 
-            prParams.AddCustomParam(byKey, value);
-
-
-            object response = m_api.Call(HttpMethod.POST, url.BuildUrl(), prParams.ToParamsDictionary(), null);
+            publishResourceParams.AddCustomParam(byKey, value);
+            object response = m_api.Call(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
 
             return PublishResourceResult.Parse(response);
 
+        }
+
+        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        {
+
+           Url url = m_api.ApiUrlV
+                .Add("resources")
+                .Add(updateResourceAccessModeParams.ResourceType.ToString().ToLower())
+                .Add(updateResourceAccessModeParams.Type)
+                .Add("update_access_mode");
+
+            if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+                updateResourceAccessModeParams.AddCustomParam(byKey, value);
+
+            object response = m_api.Call(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
+
+            return UpdateResourceAccessModeResult.Parse(response);
+        }
+        
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        {
+            return UpdateResourceAccessMode("tag", tag, updateResourceAccessModeParams);
+        }
+
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(string prefix, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        {
+            return UpdateResourceAccessMode("prefix", prefix, updateResourceAccessModeParams);
+        }
+
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        {
+            return UpdateResourceAccessMode(string.Empty, string.Empty, updateResourceAccessModeParams);
         }
     }
 }

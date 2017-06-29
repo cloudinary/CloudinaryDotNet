@@ -713,6 +713,66 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUpdateAccessModeByTag()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "TestForUpdateAccessMode",
+                PublicId = "TestForUpdateAccessMode",
+                Overwrite = true,
+                Type = "private"
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            var update_result = m_cloudinary.UpdateResourceAccessModeByTag("TestForUpdateAccessMode", new UpdateResourceAccessModeParams()
+            {
+                ResourceType = ResourceType.Image,
+                Type = "upload",
+                AccessMode = "public"
+            });
+
+            //Assert.AreEqual(publish_result.Published.Count, 1);
+
+            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
+                "TestForUpdateAccessMode");
+
+        }
+
+        [Test]
+        public void TestUpdateAccessModeById()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "TestForUpdateAccessMode",
+                PublicId = "TestForUpdateAccessMode",
+                Overwrite = true,
+                Type = "private"
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            List<string> ids = new List<string>();
+            ids.Add("TestForUpdateAccessMode");
+
+            var update_result = m_cloudinary.UpdateResourceAccessModeByIds(new UpdateResourceAccessModeParams()
+            {
+                ResourceType = ResourceType.Image,
+                Type = "upload",
+                AccessMode = "public",
+                PublicIds = ids
+            });
+
+            //Assert.AreEqual(publish_result.Published.Count, 1);
+
+            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
+                "TestForUpdateAccessMode");
+
+        }
+
+        [Test]
         public void TestUploadLargeFromWeb()
         {
             // support uploading large image
