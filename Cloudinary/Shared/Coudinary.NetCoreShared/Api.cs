@@ -202,9 +202,9 @@ namespace CloudinaryDotNet
         /// Builds HTML form
         /// </summary>
         /// <returns>HTML form</returns>
-        public string BuildUnsignedUploadForm(string field, string preset, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        public string BuildUnsignedUploadForm(string field, string preset, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
-            return BuildUploadForm(field, "image", BuildUnsignedUploadParams(preset, parameters), htmlOptions);
+            return BuildUploadForm(field, resourceType, BuildUnsignedUploadParams(preset, parameters), htmlOptions);
         }
 
         /// <summary>
