@@ -7,7 +7,8 @@ namespace CloudinaryDotNet.Actions
     {
         List<string> m_publicIds = new List<string>();
         ResourceType m_resourceType = ResourceType.Image;
-        
+        string m_toType = string.Empty;
+
         public PublishResourceParams() { }
 
         /// <summary>
@@ -33,6 +34,12 @@ namespace CloudinaryDotNet.Actions
             set { m_resourceType = value; }
         }
 
+        public string ToType
+        {
+            get { return m_toType; }
+            set { m_toType = value; }
+        }
+
         /// <summary>
         /// Validate object model
         /// </summary>
@@ -53,6 +60,9 @@ namespace CloudinaryDotNet.Actions
             {
                 dict.Add("public_ids", PublicIds);
             }
+            if (!string.IsNullOrWhiteSpace(this.m_toType))
+                dict.Add("to_type", this.m_toType);
+
             return dict;
         }
     }

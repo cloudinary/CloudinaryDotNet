@@ -179,6 +179,11 @@ namespace CloudinaryShared.Core
             return PublishResource("tag", tag, publishResourceParams);
         }
 
+        public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams publishResourceParams)
+        {
+            return PublishResource(string.Empty, string.Empty, publishResourceParams);
+        }
+
         private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams publishResourceParams)
         {
             Url url = m_api.ApiUrlV
@@ -186,7 +191,9 @@ namespace CloudinaryShared.Core
                 .Add(publishResourceParams.ResourceType.ToString().ToLower())
                 .Add("publish_resources");
 
-            publishResourceParams.AddCustomParam(byKey, value);
+            if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+                publishResourceParams.AddCustomParam(byKey, value);
+
             object response = m_api.Call(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
 
             return PublishResourceResult.Parse(response);
