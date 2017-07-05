@@ -3050,13 +3050,11 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.TotalCount > 0);
             result = m_cloudinary.Search().Expression("public_id: TestForSearch").Execute();
             Assert.True(result.TotalCount > 0);
-            result = m_cloudinary.Search().Expression("tag: TestForSearchTag").Execute();
+            result = m_cloudinary.Search().Expression("tags: TestForSearchTag").Execute();
             Assert.True(result.TotalCount > 0);
 
             DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
                 "TestForSearchTag");
-
-            
         }
     }
 }
