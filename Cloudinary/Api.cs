@@ -77,7 +77,109 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Dictionary of call parameters (can be null)</param>
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
-        public override object Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public override object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+#if DEBUG
+            Console.WriteLine(String.Format("{0} REQUEST:", method));
+            Console.WriteLine(url);
+#endif
+
+            HttpWebRequest request = RequestBuilder(url);
+            request.Method = Enum.GetName(typeof(HttpMethod), method);
+            // Add platform information to the USER_AGENT header
+            // This is intended for platform information and not individual applications!
+            request.UserAgent = string.IsNullOrEmpty(UserPlatform)
+                ? USER_AGENT
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
+
+            if (Timeout > 0)
+            {
+                request.Timeout = Timeout;
+            }
+            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+
+            if (extraHeaders != null)
+            {
+                foreach (var header in extraHeaders)
+                {
+                    request.Headers[header.Key] = header.Value;
+                }
+            }
+            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
+            {
+                request.AllowWriteStreamBuffering = false;
+                request.AllowAutoRedirect = false;
+
+                if (UseChunkedEncoding)
+                    request.SendChunked = true;
+
+                request.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
+
+                if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+                    FinalizeUploadParameters(parameters);
+                else
+                {
+                    if (parameters.ContainsKey("removeUnsignedParam"))
+                    {
+                        parameters.Remove("unsigned");
+                        parameters.Remove("removeUnsignedParam");
+                    }
+                }
+
+                using (Stream requestStream = request.GetRequestStream())
+                {
+                    using (StreamWriter writer = new StreamWriter(requestStream))
+                    {
+                        foreach (var param in parameters)
+                        {
+                            if (param.Value != null)
+                            {
+                                if (param.Value is IEnumerable<string>)
+                                {
+                                    foreach (var item in (IEnumerable<string>)param.Value)
+                                    {
+                                        WriteParam(writer, param.Key + "[]", item);
+                                    }
+                                }
+                                else
+                                {
+                                    WriteParam(writer, param.Key, param.Value.ToString());
+                                }
+                            }
+                        }
+
+                        if (file != null)
+                        {
+                            WriteFile(writer, file);
+                        }
+
+                        writer.Write("--{0}--", HTTP_BOUNDARY);
+                    }
+                }
+            }
+
+            try
+            {
+                return (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                var response = ex.Response as HttpWebResponse;
+                if (response == null) throw;
+                else return response;
+            }
+        }
+
+        /// <summary>
+        /// Custom call to cloudinary API
+        /// </summary>
+        /// <param name="method">HTTP method of call</param>
+        /// <param name="url">URL to call</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null)</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions)</param>
+        /// <returns>HTTP response on call</returns>
+        public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
 #if DEBUG
             Console.WriteLine(String.Format("{0} REQUEST:", method));

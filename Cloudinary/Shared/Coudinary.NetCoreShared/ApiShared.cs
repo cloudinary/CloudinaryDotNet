@@ -81,7 +81,7 @@ namespace CloudinaryShared.Core
 
         }
 
-        public virtual object Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             throw new Exception("Please call overriden method");
         }

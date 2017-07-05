@@ -92,7 +92,7 @@ namespace Coudinary.NetCoreShared
             sParams.Add("unsigned", string.Empty);
             sParams.Add("removeUnsignedParam", string.Empty);
 
-            var response = m_api.Call(HttpMethod.POST, url.BuildUrl(), sParams, null);
+            var response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), sParams, null);
 
             return SearchResult.Parse(response);
         }

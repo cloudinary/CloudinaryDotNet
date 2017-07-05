@@ -200,7 +200,7 @@ namespace CloudinaryShared.Core
             if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
                 publishResourceParams.AddCustomParam(byKey, value);
 
-            object response = m_api.Call(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
+            object response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
 
             return PublishResourceResult.Parse(response);
 
@@ -218,7 +218,7 @@ namespace CloudinaryShared.Core
             if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
                 updateResourceAccessModeParams.AddCustomParam(byKey, value);
 
-            object response = m_api.Call(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
+            object response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
 
             return UpdateResourceAccessModeResult.Parse(response);
         }

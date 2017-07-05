@@ -75,7 +75,39 @@ namespace CloudinaryDotNet
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
         //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
-        public override object Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public override object InternalCall(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                if (Timeout > 0)
+                {
+                    client.Timeout = TimeSpan.FromMilliseconds(Timeout);
+                }
+
+                var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
+
+                var task2 = client.SendAsync(request);
+                task2.Wait();
+
+                if (task2.IsCanceled) { }
+
+                if (task2.IsFaulted) { throw task2.Exception; }
+
+                return task2.Result;
+            }
+        }
+
+
+        /// <summary>
+        /// Custom call to cloudinary API
+        /// </summary>
+        /// <param name="method">HTTP method of call</param>
+        /// <param name="url">URL to call</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null)</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions)</param>
+        /// <returns>HTTP response on call</returns>
+        //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
+        public  HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             using (HttpClient client = new HttpClient())
             {

@@ -2922,7 +2922,7 @@ namespace CloudinaryDotNet.Test
 
             string rString = GetMockBodyOfCoudinaryRequest(tParams, (p, t) =>
             {
-                p.Api.Call(HttpMethod.POST, string.Empty, t.ToParamsDictionary(), null);
+                p.Api.InternalCall(HttpMethod.POST, string.Empty, t.ToParamsDictionary(), null);
                 return (TextResult)null;
             });
 
