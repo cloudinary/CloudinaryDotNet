@@ -151,6 +151,14 @@ namespace CloudinaryDotNet
 
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
                 FinalizeUploadParameters(parameters);
+            else
+            {
+                if (parameters.ContainsKey("removeUnsignedParam"))
+                {
+                    parameters.Remove("unsigned");
+                    parameters.Remove("removeUnsignedParam");
+                }
+            }
 
             var task1 = content.ReadAsStreamAsync();
             task1.Wait();

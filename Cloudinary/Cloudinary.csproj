@@ -134,6 +134,7 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\PublishResourceResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\UpdateResourceAccessModeParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\UpdateResourceAccessModeResult.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\SearchResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\TagParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\TextParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\DeletionParams.cs" />
@@ -145,6 +146,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Shared\Coudinary.NetCoreShared\StringDictionary.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Search.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Core\ICloneable.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Core\Rectangle.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Transforms\Condition.cs" />

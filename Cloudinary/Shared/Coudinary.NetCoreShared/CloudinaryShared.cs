@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Coudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,11 @@ namespace CloudinaryShared.Core
         public TApi Api
         {
             get { return m_api; }
+        }
+
+        public Search Search()
+        {
+            return new Search(m_api);
         }
 
         /// <summary>

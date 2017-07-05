@@ -3031,5 +3031,32 @@ namespace CloudinaryDotNet.Test
                 }
             }
         }
+
+        [Test]
+        public void TestSearchResourceByExpression()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "TestForSearchTag",
+                PublicId = "TestForSearch",
+                Overwrite = true,
+                Type = "private"
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            SearchResult result = m_cloudinary.Search().Expression("resource_type: image").Execute();
+            Assert.True(result.TotalCount > 0);
+            result = m_cloudinary.Search().Expression("public_id: TestForSearch").Execute();
+            Assert.True(result.TotalCount > 0);
+            result = m_cloudinary.Search().Expression("tag: TestForSearchTag").Execute();
+            Assert.True(result.TotalCount > 0);
+
+            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
+                "TestForSearchTag");
+
+            
+        }
     }
 }
