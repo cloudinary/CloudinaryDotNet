@@ -84,6 +84,12 @@ namespace CloudinaryDotNet.Actions
         /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other resources. This means that only the resources with the given Public IDs will have the given tag.
         /// </summary>
         [EnumMember(Value = "set_exclusive")]
-        SetExclusive
+        SetExclusive,
+        /// <summary>
+        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other resources. This means that only the resources with the given Public IDs will have the given tag.
+        /// </summary>
+        [EnumMember(Value = "remove_all")]
+        RemoveAll
+
     }
 }

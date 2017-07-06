@@ -3056,5 +3056,48 @@ namespace CloudinaryDotNet.Test
             DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
                 "TestForSearchTag");
         }
+
+        [Test]
+        public void TestClearAllTags()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "Tag1, Tag2, Tag3",
+                PublicId = "TestClearAllTags",
+                Overwrite = true,
+                Type = "upload",
+                
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(uploadResult.Tags.Length, 3);
+
+            List<string> pIds = new List<string>();
+            pIds.Add("TestClearAllTags");
+
+            TagResult tagResult = m_cloudinary.Tag(new TagParams() {
+                Command = TagCommand.RemoveAll,
+                PublicIds = pIds,
+                Type = "upload",
+
+            });
+
+            var getResResult = m_cloudinary.GetResource(new GetResourceParams(pIds[0])
+            {
+                PublicId = pIds[0],
+                Type = "upload",
+                ResourceType = ResourceType.Image
+            });
+
+            Assert.Null(getResResult.Tags);
+
+            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams()
+            {
+                PublicIds = pIds
+            });
+
+        }
     }
 }
