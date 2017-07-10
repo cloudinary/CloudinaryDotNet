@@ -429,23 +429,7 @@ namespace CloudinaryDotNet
             }
         }
 
-        /// <summary>
-        /// Manage tag assignments
-        /// </summary>
-        /// <param name="parameters">Parameters of tag management</param>
-        /// <returns>Results of tags management</returns>
-        public TagResult Tag(TagParams parameters)
-        {
-            string uri = m_api.ApiUrlImgUpV.Action("tags").BuildUrl();
-
-            using (HttpWebResponse response = (HttpWebResponse)m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
-            {
-                TagResult result = TagResult.Parse(response);
-                return result;
-            }
-        }
-
-        /// <summary>
+          /// <summary>
         /// Lists resource types.
         /// </summary>
         public ListResourceTypesResult ListResourceTypes()

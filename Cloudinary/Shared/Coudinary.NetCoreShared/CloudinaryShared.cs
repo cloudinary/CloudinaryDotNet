@@ -237,5 +237,35 @@ namespace CloudinaryShared.Core
         {
             return UpdateResourceAccessMode(string.Empty, string.Empty, updateResourceAccessModeParams);
         }
+
+        /// <summary>
+        /// Manage tag assignments
+        /// </summary>
+        /// <param name="parameters">Parameters of tag management</param>
+        /// <returns>Results of tags management</returns>
+        public TagResult Tag(TagParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.Action("tags").BuildUrl();
+
+            object response = m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+
+            TagResult result = TagResult.Parse(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Manage context assignments
+        /// </summary>
+        /// <param name="parameters">Parameters of context management</param>
+        /// <returns>Results of contexts management</returns>
+        public ContextResult Context(ContextParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.Action("context").BuildUrl();
+
+            object response = m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+
+            ContextResult result = ContextResult.Parse(response);
+            return result;
+        }
     }
 }

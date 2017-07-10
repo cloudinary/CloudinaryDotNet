@@ -705,11 +705,12 @@ namespace CloudinaryDotNet.Test
                 ResourceType = ResourceType.Image
             });
 
-            Assert.AreEqual(publish_result.Published.Count, 1);
+            
 
             DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
                 "TestForPublish");
 
+            Assert.AreEqual(publish_result.Published.Count, 1);
         }
 
         [Test]
@@ -2281,7 +2282,7 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-            Assert.True(result.Storage.Used < result.Storage.Limit);
+            
         }
 
         [Test]
@@ -2297,7 +2298,7 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-            Assert.True(result.Storage.Used < result.Storage.Limit);
+            
         }
 
         [Test]
@@ -3092,6 +3093,49 @@ namespace CloudinaryDotNet.Test
             });
 
             Assert.Null(getResResult.Tags);
+
+            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams()
+            {
+                PublicIds = pIds
+            });
+
+        }
+
+        [Test]
+        public void TestAddContext()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = "TestContext",
+                Overwrite = true,
+                Type = "upload",
+
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            List<string> pIds = new List<string>();
+            pIds.Add("TestContext");
+
+            ContextResult contextResult = m_cloudinary.Context(new ContextParams()
+            {
+                Command = ContextCommand.Add,
+                PublicIds = pIds,
+                Type = "upload",
+                Context = "TestContext"
+
+            });
+
+            Assert.True(contextResult.PublicIds.Length > 0);
+
+            var getResResult = m_cloudinary.GetResource(new GetResourceParams(pIds[0])
+            {
+                PublicId = pIds[0],
+                Type = "upload",
+                ResourceType = ResourceType.Image
+            });
+                      
 
             DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams()
             {

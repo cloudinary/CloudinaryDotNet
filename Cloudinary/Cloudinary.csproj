@@ -136,6 +136,8 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\UpdateResourceAccessModeResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\SearchResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\TagParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ContextParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ContextResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\TextParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\DeletionParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\RawUploadParams.cs" />
