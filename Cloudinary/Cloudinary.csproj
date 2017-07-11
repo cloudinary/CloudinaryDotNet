@@ -103,6 +103,7 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\CSource.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Url.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryShared.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Constants.cs" />
     <Compile Include="Cloudinary.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="Cloudinary.Async.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Coudinary.NetCoreShared;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
@@ -6,7 +7,7 @@ using System.Runtime.Serialization;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of tag management
+    /// Parameters of context management
     /// </summary>
     public class ContextParams : BaseParams
     {
@@ -32,7 +33,7 @@ namespace CloudinaryDotNet.Actions
         public string Type { get; set; }
 
         /// <summary>
-        /// The action to perform on image resources using the given tag.
+        /// The action to perform on image resources using the given context.
         /// </summary>
         public ContextCommand Command { get; set; }
 
@@ -52,16 +53,16 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
-            AddParam(dict, "context", Context);
-            AddParam(dict, "public_ids", PublicIds);
-            AddParam(dict, "command", Api.GetCloudinaryParam<ContextCommand>(Command));
+            AddParam(dict, Constants.CONTEXT_PARAM_NAME, Context);
+            AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
+            AddParam(dict, Constants.COMMAND, Api.GetCloudinaryParam<ContextCommand>(Command));
 
             return dict;
         }
     }
 
     /// <summary>
-    /// The action to perform on image resources using the given tag.
+    /// The action to perform on image resources using the given context.
     /// </summary>
     public enum ContextCommand
     {

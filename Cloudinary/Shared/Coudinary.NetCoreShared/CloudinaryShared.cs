@@ -210,10 +210,10 @@ namespace CloudinaryShared.Core
         {
 
            Url url = m_api.ApiUrlV
-                .Add("resources")
+                .Add(Constants.RESOURCES_API_URL)
                 .Add(updateResourceAccessModeParams.ResourceType.ToString().ToLower())
                 .Add(updateResourceAccessModeParams.Type)
-                .Add("update_access_mode");
+                .Add(Constants.UPDATE_ACESS_MODE);
 
             if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
                 updateResourceAccessModeParams.AddCustomParam(byKey, value);
@@ -225,12 +225,12 @@ namespace CloudinaryShared.Core
         
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams updateResourceAccessModeParams)
         {
-            return UpdateResourceAccessMode("tag", tag, updateResourceAccessModeParams);
+            return UpdateResourceAccessMode(Constants.TAG_PARAM_NAME, tag, updateResourceAccessModeParams);
         }
 
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(string prefix, UpdateResourceAccessModeParams updateResourceAccessModeParams)
         {
-            return UpdateResourceAccessMode("prefix", prefix, updateResourceAccessModeParams);
+            return UpdateResourceAccessMode(Constants.PREFIX_PARAM_NAME, prefix, updateResourceAccessModeParams);
         }
 
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams updateResourceAccessModeParams)
@@ -245,7 +245,7 @@ namespace CloudinaryShared.Core
         /// <returns>Results of tags management</returns>
         public TagResult Tag(TagParams parameters)
         {
-            string uri = m_api.ApiUrlImgUpV.Action("tags").BuildUrl();
+            string uri = m_api.ApiUrlImgUpV.Action(Constants.TAGS_MANGMENT).BuildUrl();
 
             object response = m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
 
@@ -260,7 +260,7 @@ namespace CloudinaryShared.Core
         /// <returns>Results of contexts management</returns>
         public ContextResult Context(ContextParams parameters)
         {
-            string uri = m_api.ApiUrlImgUpV.Action("context").BuildUrl();
+            string uri = m_api.ApiUrlImgUpV.Action(Constants.CONTEXT_MANAGMENT).BuildUrl();
 
             object response = m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
 
