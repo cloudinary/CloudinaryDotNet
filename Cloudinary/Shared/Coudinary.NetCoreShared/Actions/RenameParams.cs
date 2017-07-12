@@ -9,6 +9,7 @@ namespace CloudinaryDotNet.Actions
         {
             FromPublicId = fromPublicId;
             ToPublicId = toPublicId;
+            ResourceType = ResourceType.Image;
         }
 
         /// <summary>
@@ -44,6 +45,11 @@ namespace CloudinaryDotNet.Actions
         ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
         /// </value>
         public bool Invalidate { get; set; }
+
+        /// <summary>
+        /// The type of resource to rename
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
 
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation

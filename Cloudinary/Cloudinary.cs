@@ -382,7 +382,8 @@ namespace CloudinaryDotNet
         /// <returns></returns>
         public RenameResult Rename(RenameParams parameters)
         {
-            string uri = m_api.ApiUrlImgUpV.Action("rename").BuildUrl();
+            string uri = m_api.ApiUrlV.ResourceType(
+                Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).Action("rename").BuildUrl();
 
             using (HttpWebResponse response =m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
@@ -441,7 +442,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of tags management</returns>
         public TagResult Tag(TagParams parameters)
         {
-            string uri = m_api.ApiUrlImgUpV.Action("tags").BuildUrl();
+            string uri = m_api.ApiUrlV.ResourceType(
+                Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).Action("tags").BuildUrl();
 
             using (HttpWebResponse response =m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
