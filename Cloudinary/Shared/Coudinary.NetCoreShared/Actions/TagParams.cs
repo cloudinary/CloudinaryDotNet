@@ -10,6 +10,11 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class TagParams : BaseParams
     {
+        public TagParams()
+        {
+            ResourceType = ResourceType.Image;
+        }
+
         List<string> m_publicIds = new List<string>();
 
         /// <summary>
@@ -35,6 +40,11 @@ namespace CloudinaryDotNet.Actions
         /// The action to perform on image resources using the given tag.
         /// </summary>
         public TagCommand Command { get; set; }
+
+        /// <summary>
+        /// The type of resource to change tags on
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
 
         /// <summary>
         /// Validate object model
