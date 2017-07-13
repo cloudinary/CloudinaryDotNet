@@ -267,5 +267,10 @@ namespace CloudinaryShared.Core
             ContextResult result = ContextResult.Parse(response);
             return result;
         }
+
+        public AuthToken GetToken(string key)
+        {
+            return new AuthToken(key);
+        }
     }
 }
