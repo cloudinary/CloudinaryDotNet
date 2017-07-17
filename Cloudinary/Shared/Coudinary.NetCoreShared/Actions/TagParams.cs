@@ -26,6 +26,11 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Tag { get; set; }
 
+		/// <summary>
+		/// The type of resource to tag
+		/// </summary>
+		public ResourceType ResourceType { get; set; }
+
         /// <summary>
         /// Type
         /// </summary>
