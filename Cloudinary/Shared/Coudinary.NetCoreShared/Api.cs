@@ -177,6 +177,16 @@ namespace CloudinaryDotNet
             return req;
         }
 
+        public static void CopyStream(Stream input, Stream output)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            int read;
+            while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                output.Write(buffer, 0, read);
+            }
+        }
+
         private MultipartFormDataContent PrepareRequestContent(SortedDictionary<string, object> parameters, FileDescription file)
         {
             var content = new MultipartFormDataContent(HTTP_BOUNDARY);
@@ -197,7 +207,10 @@ namespace CloudinaryDotNet
 
             Stream requestStream = task1.Result;
 
-            StreamWriter writer = new StreamWriter(requestStream);
+            var _ms = new MemoryStream();
+            CopyStream(requestStream, _ms);
+
+            StreamWriter writer = new StreamWriter(_ms);
 
             foreach (var param in parameters)
             {
