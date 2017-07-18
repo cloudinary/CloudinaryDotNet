@@ -16,34 +16,34 @@ namespace Coudinary.NetCoreShared
 
         public Search(ApiShared api)
         {
-            this.m_api = api;
-            this.searchParams = new Dictionary<string, object>();
-            this.sortByParam = new List<Dictionary<string, object>>();
-            this.aggregateParam = new List<string>();
-            this.withFieldParam = new List<string>();
+            m_api = api;
+            searchParams = new Dictionary<string, object>();
+            sortByParam = new List<Dictionary<string, object>>();
+            aggregateParam = new List<string>();
+            withFieldParam = new List<string>();
         }
 
         public Search Expression(string value)
         {
-            this.searchParams.Add("expression", value);
+            searchParams.Add("expression", value);
             return this;
         }
 
         public Search MaxResults(int value)
         {
-            this.searchParams.Add("max_results", value);
+            searchParams.Add("max_results", value);
             return this;
         }
 
         public Search NextCursor(string value)
         {
-            this.searchParams.Add("next_cursor", value);
+            searchParams.Add("next_cursor", value);
             return this;
         }
 
         public Search Direction(string value)
         {
-            this.searchParams.Add("direction", value);
+            searchParams.Add("direction", value);
             return this;
         }
 
@@ -63,14 +63,14 @@ namespace Coudinary.NetCoreShared
         {
             Dictionary<string, object> sortBucket = new Dictionary<string, object>();
             sortBucket.Add(field, dir);
-            this.sortByParam.Add(sortBucket);
+            sortByParam.Add(sortBucket);
 
             return this;
         }
 
         public Dictionary<string, object> ToQuery()
         {
-            Dictionary<string, object> queryParams = new Dictionary<string, object>(this.searchParams);
+            Dictionary<string, object> queryParams = new Dictionary<string, object>(searchParams);
 
             if (withFieldParam.Count > 0)
                 queryParams.Add("with_field", withFieldParam);
@@ -88,7 +88,7 @@ namespace Coudinary.NetCoreShared
         {
             Url url = m_api.ApiUrlV.Add("resources").Add("search");
 
-            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(this.ToQuery());
+            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
             sParams.Add("unsigned", string.Empty);
             sParams.Add("removeUnsignedParam", string.Empty);
 
