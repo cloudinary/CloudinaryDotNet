@@ -9,6 +9,7 @@ namespace CloudinaryDotNet.Actions
         {
             FromPublicId = fromPublicId;
             ToPublicId = toPublicId;
+			ResourceType = ResourceType.Image;
         }
 
         /// <summary>
