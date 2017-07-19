@@ -23,6 +23,9 @@ namespace CloudinaryDotNet.Test
 
         protected const string TEST_TAG = "cloudinarydotnet_test";
 
+        protected const string TOKEN_KEY = "00112233FF99";
+        protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
+
         protected Account m_account;
         protected Cloudinary m_cloudinary;
 

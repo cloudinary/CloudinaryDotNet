@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Core;
 using CloudinaryDotNet.Shared.Coudinary.NetCoreShared;
+using Coudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,13 +18,12 @@ namespace CloudinaryShared.Core
 {
     public class Url : CloudinaryDotNet.Core.ICloneable
     {
-        
-
         protected const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         protected static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };
         protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
 
         protected ISignProvider m_signProvider;
+        protected AuthToken m_AuthToken;
 
         protected string m_cloudName;
         protected string m_cloudinaryAddr = Api.ADDR_RES;
@@ -114,6 +114,16 @@ namespace CloudinaryShared.Core
         public Url Version(string version)
         {
             m_version = version;
+            return this;
+        }
+
+        public Url AuthToken(AuthToken authToken)
+        {
+            if (m_AuthToken == null)
+            {
+                m_AuthToken = authToken;
+            }
+
             return this;
         }
 
@@ -318,9 +328,9 @@ namespace CloudinaryShared.Core
             return sb.ToString();
         }
 
-#endregion
+        #endregion
 
-#region BuildVideoTag
+        #region BuildVideoTag
 
         /// <summary>
         /// Builds a video tag for embedding in a web view.
@@ -464,9 +474,9 @@ namespace CloudinaryShared.Core
             return posterUrl;
         }
 
-#endregion
+        #endregion
 
-#region BuildUrl
+        #region BuildUrl
 
         public string BuildUrl()
         {
@@ -527,7 +537,7 @@ namespace CloudinaryShared.Core
 
             var version = String.IsNullOrEmpty(m_version) ? String.Empty : String.Format("v{0}", m_version);
 
-            if (m_signed)
+            if (m_signed && m_AuthToken == null)
             {
                 if (m_signProvider == null)
                     throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
@@ -540,7 +550,7 @@ namespace CloudinaryShared.Core
                 signedPart = m_signProvider.SignUriPart(signedPart);
                 urlParts.Add(signedPart);
             }
-
+            
             urlParts.Add(transformationStr);
             urlParts.Add(version);
             urlParts.Add(src.Source);
@@ -548,6 +558,12 @@ namespace CloudinaryShared.Core
             string uriStr = String.Join("/", urlParts.ToArray());
             uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
             uriStr = Regex.Replace(uriStr, "/$", String.Empty);
+
+            if (m_signed && m_AuthToken != null)
+            {
+                string tokenStr = m_AuthToken.Generate(uriStr);
+                uriStr = string.Format("{0}?{1}", uriStr, tokenStr);
+            }
 
             return uriStr;
         }
@@ -724,9 +740,9 @@ namespace CloudinaryShared.Core
             return "/:-_.*".IndexOf(ch) >= 0;
         }
 
-#endregion
+        #endregion
 
-#region ICloneable
+        #region ICloneable
 
         /// <summary>
         /// Creates a new object that is a deep copy of the current instance.
@@ -778,7 +794,7 @@ namespace CloudinaryShared.Core
             return Clone();
         }
 
-#endregion
+        #endregion
     }
 
     public class UrlBuilder : UriBuilder

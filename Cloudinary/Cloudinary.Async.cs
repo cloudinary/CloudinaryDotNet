@@ -1,5 +1,4 @@
-﻿#if NET40
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 
@@ -198,4 +197,4 @@ namespace CloudinaryDotNet
         }
     }
 }
-#endif
+

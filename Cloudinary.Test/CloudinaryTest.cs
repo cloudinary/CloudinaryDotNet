@@ -2,6 +2,7 @@
 using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using CloudinaryShared.Core;
+using Coudinary.NetCoreShared;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -148,7 +149,7 @@ namespace CloudinaryDotNet.Test
             {
                 File = new FileDescription(m_testImagePath),
                 Moderation = "manual",
-                
+
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -701,11 +702,12 @@ namespace CloudinaryDotNet.Test
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            var publish_result = m_cloudinary.PublishResourceByTag("TestForPublish", new PublishResourceParams() {
+            var publish_result = m_cloudinary.PublishResourceByTag("TestForPublish", new PublishResourceParams()
+            {
                 ResourceType = ResourceType.Image
             });
 
-            
+
 
             DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
                 "TestForPublish");
@@ -2282,7 +2284,7 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-            
+
         }
 
         [Test]
@@ -2298,7 +2300,7 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-            
+
         }
 
         [Test]
@@ -3068,7 +3070,7 @@ namespace CloudinaryDotNet.Test
                 PublicId = "TestClearAllTags",
                 Overwrite = true,
                 Type = "upload",
-                
+
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -3078,7 +3080,8 @@ namespace CloudinaryDotNet.Test
             List<string> pIds = new List<string>();
             pIds.Add("TestClearAllTags");
 
-            TagResult tagResult = m_cloudinary.Tag(new TagParams() {
+            TagResult tagResult = m_cloudinary.Tag(new TagParams()
+            {
                 Command = TagCommand.RemoveAll,
                 PublicIds = pIds,
                 Type = "upload",
@@ -3135,13 +3138,44 @@ namespace CloudinaryDotNet.Test
                 Type = "upload",
                 ResourceType = ResourceType.Image
             });
-                      
+
 
             DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams()
             {
                 PublicIds = pIds
             });
 
+        }
+
+        [Test]
+        public void TestGenerateAuthToken()
+        {
+            AuthToken t = new AuthToken(TOKEN_KEY);
+            t.StartTime(1111111111).Acl("/image/*").Duration(300);
+
+            Assert.AreEqual("__cld_token__=st=1111111111~exp=1111111411~acl=/image/*~hmac=0854e8b6b6a46471a80b2dc28c69bd352d977a67d031755cc6f3486c121b43af", t.Generate());
+        }
+
+        [Test]
+        public void TestGenerateCookieAuthToken()
+        {
+            AuthToken token = new AuthToken(TOKEN_KEY);
+            token.duration = 300;
+            string user = "foobar";
+            token.acl = "/*/t_" + user;
+            token.StartTime(222222222);
+            string cookieToken = token.Generate();
+
+            Assert.AreEqual("__cld_token__=st=222222222~exp=222222522~acl=/*/t_foobar~hmac=eb5e2266c8ec9573f696025f075b92998080347e1c12ac39a26c94d7d712704a", cookieToken);
+        }
+
+        [Test]
+        public void TestGenerateAuthTokenInTag()
+        {
+            AuthToken t = new AuthToken(TOKEN_KEY);
+            t.StartTime(1111111111).Acl("/image/*").Duration(300);
+            string url = m_cloudinary.Api.Url.AuthToken(t).Signed(true).ResourceType("image").Version("1486020273").BuildImageTag("sample.jpg");
+            Assert.AreEqual("<img src=\"http://res.cloudinary.com/rtlstudio/image/v1486020273/sample.jpg?__cld_token__=st=1111111111~exp=1111111411~acl=/image/*~hmac=e9a0c51530a2a5080be60f6defa0cde8d1f99c1c0787ec7cd30e1f60be65645a\"/>", url);
         }
     }
 }
