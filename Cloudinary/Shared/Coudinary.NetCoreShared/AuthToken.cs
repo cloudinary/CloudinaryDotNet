@@ -157,7 +157,7 @@ namespace Coudinary.NetCoreShared
 
         private string EscapeUrl(string url)
         {
-            return url;
+            return Uri.EscapeDataString(url);
         }
 
         private string Digest(string message)
