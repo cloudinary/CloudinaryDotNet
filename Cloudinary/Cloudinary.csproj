@@ -109,6 +109,7 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryShared.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Constants.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\AuthToken.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryConfiguration.cs" />
     <Compile Include="Cloudinary.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="Cloudinary.Async.cs" />

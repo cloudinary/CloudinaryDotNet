@@ -537,7 +537,7 @@ namespace CloudinaryShared.Core
 
             var version = String.IsNullOrEmpty(m_version) ? String.Empty : String.Format("v{0}", m_version);
 
-            if (m_signed && m_AuthToken == null)
+            if (m_signed && (m_AuthToken == null && CloudinaryConfiguration.AuthToken == null))
             {
                 if (m_signProvider == null)
                     throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
@@ -559,9 +559,10 @@ namespace CloudinaryShared.Core
             uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
             uriStr = Regex.Replace(uriStr, "/$", String.Empty);
 
-            if (m_signed && m_AuthToken != null)
+            if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
             {
-                string tokenStr = m_AuthToken.Generate(uriStr);
+                string tokenStr = m_AuthToken == null && CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken.Generate(uriStr) :
+                     (m_AuthToken != null ? m_AuthToken.Generate(uriStr) : string.Empty);
                 uriStr = string.Format("{0}?{1}", uriStr, tokenStr);
             }
 
