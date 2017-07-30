@@ -91,8 +91,9 @@ namespace Coudinary.NetCoreShared
             SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
             sParams.Add("unsigned", string.Empty);
             sParams.Add("removeUnsignedParam", string.Empty);
-
-            var response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), sParams, null);
+            Dictionary<string, string> extraHeaders = new Dictionary<string, string>();
+            extraHeaders.Add("Content-Type", "application/json");
+            var response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), sParams, null, extraHeaders);
 
             return SearchResult.Parse(response);
         }

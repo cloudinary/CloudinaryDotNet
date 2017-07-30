@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
@@ -160,6 +161,13 @@ namespace CloudinaryDotNet
 
             if (extraHeaders != null)
             {
+                if (extraHeaders.ContainsKey("Content-Type"))
+                {
+                    req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    extraHeaders.Remove("Content-Type");
+                }
+                
+                
                 foreach (var header in extraHeaders)
                 {
                     req.Headers.Add(header.Key, header.Value);

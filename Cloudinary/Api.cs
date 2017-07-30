@@ -101,6 +101,12 @@ namespace CloudinaryDotNet
 
             if (extraHeaders != null)
             {
+                if(extraHeaders.ContainsKey("Content-Type"))
+                {
+                    request.ContentType = extraHeaders["Content-Type"];
+                    extraHeaders.Remove("Content-Type");
+                }
+                
                 foreach (var header in extraHeaders)
                 {
                     request.Headers[header.Key] = header.Value;
