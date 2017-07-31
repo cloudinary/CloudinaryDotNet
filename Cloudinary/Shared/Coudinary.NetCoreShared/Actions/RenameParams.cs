@@ -9,6 +9,7 @@ namespace CloudinaryDotNet.Actions
         {
             FromPublicId = fromPublicId;
             ToPublicId = toPublicId;
+			ResourceType = ResourceType.Image;
         }
 
         /// <summary>
@@ -26,6 +27,11 @@ namespace CloudinaryDotNet.Actions
         /// Target public id.
         /// </value>
         public string ToPublicId { get; set; }
+
+		/// <summary>
+		/// The type of resource to rename
+		/// </summary>
+		public ResourceType ResourceType { get; set; }
 
         public string Type { get; set; }
 

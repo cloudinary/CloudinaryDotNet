@@ -377,9 +377,10 @@ namespace CloudinaryDotNet
         /// <returns></returns>
         public RenameResult Rename(RenameParams parameters)
         {
-            string uri = m_api.ApiUrlImgUpV.Action("rename").BuildUrl();
-
-            using (HttpWebResponse response = (HttpWebResponse)m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
+            string uri = m_api.ApiUrlImgUpV.ResourceType(
+				    Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
+				    Action("rename").BuildUrl();
+            using (HttpWebResponse response =m_api.Call(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null))
             {
                 return RenameResult.Parse(response);
             }
@@ -429,7 +430,7 @@ namespace CloudinaryDotNet
             }
         }
 
-          /// <summary>
+        /// <summary>
         /// Lists resource types.
         /// </summary>
         public ListResourceTypesResult ListResourceTypes()
