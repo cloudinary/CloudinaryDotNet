@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Coudinary.NetCoreShared;
+using System;
 
 namespace CloudinaryDotNet
 {
@@ -10,7 +11,12 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Default constructor
         /// </summary>
-        public Account() { }
+        public Account()
+        {
+            Cloud = CloudinaryConfiguration.CloudName;
+            ApiKey = CloudinaryConfiguration.ApiKey;
+            ApiSecret = CloudinaryConfiguration.ApiSecret;
+        }
 
         /// <summary>
         /// Parametrized constructor

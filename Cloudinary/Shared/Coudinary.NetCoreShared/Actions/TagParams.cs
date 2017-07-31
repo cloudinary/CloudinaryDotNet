@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Coudinary.NetCoreShared;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
@@ -63,9 +64,9 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
-            AddParam(dict, "tag", Tag);
-            AddParam(dict, "public_ids", PublicIds);
-            AddParam(dict, "command", Api.GetCloudinaryParam<TagCommand>(Command));
+            AddParam(dict, Constants.TAG_PARAM_NAME, Tag);
+            AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
+            AddParam(dict, Constants.COMMAND, Api.GetCloudinaryParam<TagCommand>(Command));
 
             return dict;
         }
@@ -95,6 +96,12 @@ namespace CloudinaryDotNet.Actions
         /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other resources. This means that only the resources with the given Public IDs will have the given tag.
         /// </summary>
         [EnumMember(Value = "set_exclusive")]
-        SetExclusive
+        SetExclusive,
+        /// <summary>
+        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other resources. This means that only the resources with the given Public IDs will have the given tag.
+        /// </summary>
+        [EnumMember(Value = "remove_all")]
+        RemoveAll
+
     }
 }

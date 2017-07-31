@@ -10,6 +10,13 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>D:\Sources\CloudinaryDotNet\lib\netcore</OutputPath>
+    <DebugType>none</DebugType>
+    <DebugSymbols>False</DebugSymbols>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Http.Abstractions" Version="1.0.0-rc1-final" />
     <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="1.1.1" />

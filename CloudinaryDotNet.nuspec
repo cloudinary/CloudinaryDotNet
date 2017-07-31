@@ -1,29 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
-    <metadata>
-        <id>CloudinaryDotNet</id>
-        <!-- WARNING: When changing the version number,
-              please change also a value of AssemblyVersion attribute in Cloudinary\Properties\AssemblyInfo.cs.
-              That value is used in a user agent string. -->
-        <version>1.0.30</version>
-        <title>Cloudinary DotNet Library</title>
-        <authors>Cloudinary</authors>
-        <owners>Cloudinary</owners>
-        <iconUrl>http://res.cloudinary.com/cloudinary/image/upload/w_128/cloudinary_logo_square.png</iconUrl>
-        <projectUrl>http://cloudinary.com/</projectUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Official client library for easily integrating with the Cloudinary service</description>
-        <dependencies>
-            <group targetFramework=".NETFramework3.5">
-                <dependency id="Newtonsoft.Json" version="4.5.11" />
-            </group>
-            <group targetFramework=".NETFramework4.0">
-                <dependency id="Newtonsoft.Json" version="4.5.11" />
-            </group>
-        </dependencies>
-    </metadata>
-    <files>
-        <file src="Cloudinary\bin\Release\v3.5\CloudinaryDotNet.dll" target="lib\net35\CloudinaryDotNet.dll" />
-        <file src="Cloudinary\bin\Release\v4.0\CloudinaryDotNet.dll" target="lib\net40\CloudinaryDotNet.dll" />
-    </files>
-</package>
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>CloudinaryDotNetCore</id>
+    <version>1.0.30</version>
+    <title>Cloudinary DotNet Core Library</title>
+    <authors>Cloudinary</authors>
+    <owners>Cloudinary</owners>
+    <licenseUrl>https://github.com/cloudinary/CloudinaryDotNet/blob/master/LICENSE</licenseUrl>
+    <projectUrl>http://cloudinary.com</projectUrl>
+    <iconUrl>http://res.cloudinary.com/cloudinary/image/upload/c_scale,w_64/v1/logo/for_white_bg/cloudinary_icon_for_white_bg.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Official client library for easily integrating with the Cloudinary service</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="10.0.3" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="lib\**" target="lib" />
+  </files>
+ </package>

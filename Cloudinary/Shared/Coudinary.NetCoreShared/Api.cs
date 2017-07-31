@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
@@ -75,7 +76,39 @@ namespace CloudinaryDotNet
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
         //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
-        public HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public override object InternalCall(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                if (Timeout > 0)
+                {
+                    client.Timeout = TimeSpan.FromMilliseconds(Timeout);
+                }
+
+                var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
+
+                var task2 = client.SendAsync(request);
+                task2.Wait();
+
+                if (task2.IsCanceled) { }
+
+                if (task2.IsFaulted) { throw task2.Exception; }
+
+                return task2.Result;
+            }
+        }
+
+
+        /// <summary>
+        /// Custom call to cloudinary API
+        /// </summary>
+        /// <param name="method">HTTP method of call</param>
+        /// <param name="url">URL to call</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null)</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions)</param>
+        /// <returns>HTTP response on call</returns>
+        //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
+        public  HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -128,6 +161,13 @@ namespace CloudinaryDotNet
 
             if (extraHeaders != null)
             {
+                if (extraHeaders.ContainsKey("Content-Type"))
+                {
+                    req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    extraHeaders.Remove("Content-Type");
+                }
+                
+                
                 foreach (var header in extraHeaders)
                 {
                     req.Headers.Add(header.Key, header.Value);
@@ -144,6 +184,7 @@ namespace CloudinaryDotNet
 
             return req;
         }
+ 
 
         private MultipartFormDataContent PrepareRequestContent(SortedDictionary<string, object> parameters, FileDescription file)
         {
@@ -151,12 +192,20 @@ namespace CloudinaryDotNet
 
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
                 FinalizeUploadParameters(parameters);
+            else
+            {
+                if (parameters.ContainsKey("removeUnsignedParam"))
+                {
+                    parameters.Remove("unsigned");
+                    parameters.Remove("removeUnsignedParam");
+                }
+            }
 
             var task1 = content.ReadAsStreamAsync();
             task1.Wait();
 
             Stream requestStream = task1.Result;
-
+            
             StreamWriter writer = new StreamWriter(requestStream);
 
             foreach (var param in parameters)
@@ -183,7 +232,7 @@ namespace CloudinaryDotNet
             }
 
             writer.Write("--{0}--", HTTP_BOUNDARY);
-
+            
             writer.Flush();
 
             return content;
@@ -202,9 +251,9 @@ namespace CloudinaryDotNet
         /// Builds HTML form
         /// </summary>
         /// <returns>HTML form</returns>
-        public string BuildUnsignedUploadForm(string field, string preset, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        public string BuildUnsignedUploadForm(string field, string preset, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
-            return BuildUploadForm(field, "image", BuildUnsignedUploadParams(preset, parameters), htmlOptions);
+            return BuildUploadForm(field, resourceType, BuildUnsignedUploadParams(preset, parameters), htmlOptions);
         }
 
         /// <summary>

@@ -285,6 +285,7 @@ namespace CloudinaryDotNet.Actions
         public FileDescription(string filePath)
         {
             m_isRemote = Regex.IsMatch(filePath, "^ftp:.*|https?:.*|s3:.*|data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
+            bool isBase64 = Regex.IsMatch(filePath, "data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
             m_path = filePath;
 
             if (!m_isRemote)
@@ -294,7 +295,7 @@ namespace CloudinaryDotNet.Actions
             else
             {
                 m_name = m_path;
-                m_stream = GetStream(m_name);
+                m_stream = isBase64 ? null : GetStream(m_name);
             }
         }
 

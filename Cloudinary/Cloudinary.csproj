@@ -28,17 +28,21 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <OutputPath>..\lib\net\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFrameworkVersion)\CloudinaryDotNet.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
+    <OutputPath>..\lib\net\</OutputPath>
+    <DefineConstants />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Sign)' == 'true' ">
     <SignAssembly>true</SignAssembly>
@@ -103,6 +107,9 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\CSource.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Url.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryShared.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Constants.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\AuthToken.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryConfiguration.cs" />
     <Compile Include="Cloudinary.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="Cloudinary.Async.cs" />
@@ -130,7 +137,14 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\VideoUploadParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\BaseParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ImageUploadParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\PublishResourceParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\PublishResourceResult.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\UpdateResourceAccessModeParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\UpdateResourceAccessModeResult.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\SearchResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\TagParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ContextParams.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ContextResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\TextParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\DeletionParams.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\RawUploadParams.cs" />
@@ -141,6 +155,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Shared\Coudinary.NetCoreShared\StringDictionary.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Search.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Core\ICloneable.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Core\Rectangle.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Transforms\Condition.cs" />

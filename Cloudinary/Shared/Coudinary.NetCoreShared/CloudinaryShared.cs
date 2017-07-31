@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Coudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,11 @@ namespace CloudinaryShared.Core
         public TApi Api
         {
             get { return m_api; }
+        }
+
+        public Search Search()
+        {
+            return new Search(m_api);
         }
 
         /// <summary>
@@ -155,6 +161,116 @@ namespace CloudinaryShared.Core
             file.BufferLength = bufferSize;
             file.EOF = false;
             file.BytesSent = 0;
+        }
+
+        /// <summary>
+        /// Publish resources by prefix.
+        /// </summary>
+        /// <param name="prefix">The prefix for publishing resources.</param>
+        /// <param name="publishResourceParams">Parameters for publishing of resources.</param>
+        /// <returns></returns>
+        public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams publishResourceParams)
+        {
+            return PublishResource("prefix", prefix, publishResourceParams);
+        }
+
+        /// <summary>
+        /// Publish resources by tag.
+        /// </summary>
+        /// <param name="prefix">The tag for publishing resources.</param>
+        /// <param name="publishResourceParams">Parameters for publishing of resources.</param>
+        /// <returns></returns>
+        public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams publishResourceParams)
+        {
+            return PublishResource("tag", tag, publishResourceParams);
+        }
+
+        public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams publishResourceParams)
+        {
+            return PublishResource(string.Empty, string.Empty, publishResourceParams);
+        }
+
+        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams publishResourceParams)
+        {
+            Url url = m_api.ApiUrlV
+                .Add("resources")
+                .Add(publishResourceParams.ResourceType.ToString().ToLower())
+                .Add("publish_resources");
+
+            if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+                publishResourceParams.AddCustomParam(byKey, value);
+
+            object response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
+
+            return PublishResourceResult.Parse(response);
+
+        }
+
+        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        {
+
+           Url url = m_api.ApiUrlV
+                .Add(Constants.RESOURCES_API_URL)
+                .Add(updateResourceAccessModeParams.ResourceType.ToString().ToLower())
+                .Add(updateResourceAccessModeParams.Type)
+                .Add(Constants.UPDATE_ACESS_MODE);
+
+            if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+                updateResourceAccessModeParams.AddCustomParam(byKey, value);
+
+            object response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
+
+            return UpdateResourceAccessModeResult.Parse(response);
+        }
+        
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        {
+            return UpdateResourceAccessMode(Constants.TAG_PARAM_NAME, tag, updateResourceAccessModeParams);
+        }
+
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(string prefix, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        {
+            return UpdateResourceAccessMode(Constants.PREFIX_PARAM_NAME, prefix, updateResourceAccessModeParams);
+        }
+
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        {
+            return UpdateResourceAccessMode(string.Empty, string.Empty, updateResourceAccessModeParams);
+        }
+
+        /// <summary>
+        /// Manage tag assignments
+        /// </summary>
+        /// <param name="parameters">Parameters of tag management</param>
+        /// <returns>Results of tags management</returns>
+        public TagResult Tag(TagParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.Action(Constants.TAGS_MANGMENT).BuildUrl();
+
+            object response = m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+
+            TagResult result = TagResult.Parse(response);
+            return result;
+        }
+
+        /// <summary>
+        /// Manage context assignments
+        /// </summary>
+        /// <param name="parameters">Parameters of context management</param>
+        /// <returns>Results of contexts management</returns>
+        public ContextResult Context(ContextParams parameters)
+        {
+            string uri = m_api.ApiUrlImgUpV.Action(Constants.CONTEXT_MANAGMENT).BuildUrl();
+
+            object response = m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+
+            ContextResult result = ContextResult.Parse(response);
+            return result;
+        }
+
+        public AuthToken GetToken(string key)
+        {
+            return new AuthToken(key);
         }
     }
 }
