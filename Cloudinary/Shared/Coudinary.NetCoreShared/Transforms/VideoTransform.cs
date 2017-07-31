@@ -212,6 +212,11 @@ namespace CloudinaryDotNet
             return Add("duration", ToString(value) + "p");
         }
 
+        private Transformation AddaptiveStreaming(string value)
+        {
+            return Add("adaptive_streaming", value);
+        }
+
         private static void ProcessVideoCodec(SortedDictionary<string, string> parameters, Dictionary<string, object> m_transformParams)
         {
             object codecParam = null;
