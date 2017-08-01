@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿  using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -22,6 +22,8 @@ namespace CloudinaryDotNet
         {
             { "width", "w" },
             { "height", "h" },
+            { "initial_width", "iw" },
+            { "initial_height", "ih" },
             { "aspect_ratio", "ar" },
             { "aspectRatio", "ar" },
             { "page_count", "pc" },
@@ -142,9 +144,21 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        public Condition InitialWidth(string @operator, object value)
+        {
+            predicateList.Add(string.Format("iw_{0}_{1}", @operator, value));
+            return this;
+        }
+
         public Condition Height(string @operator, object value)
         {
             predicateList.Add(string.Format("h_{0}_{1}", @operator, value));
+            return this;
+        }
+
+        public Condition InitialHeight(string @operator, object value)
+        {
+            predicateList.Add(string.Format("ih_{0}_{1}", @operator, value));
             return this;
         }
 

@@ -91,6 +91,9 @@ namespace CloudinaryDotNet.Test
 
             transformation = new Transformation().IfCondition().AspectRatio(">=", "3:4").And().PageCount(">=", 100).Or().PageCount("!=", 0).Then().Width(50).Crop("scale");
             Assert.AreEqual("if_ar_gte_3:4_and_pc_gte_100_or_pc_ne_0,c_scale,w_50", transformation.ToString(), "should translate operators");
+
+            transformation = new Transformation().IfCondition().AspectRatio("gt", "3:4").And().InitialHeight(">", 100).And().InitialWidth("<", 500).Then().Width(100).Crop("scale");
+            Assert.AreEqual("if_ar_gt_3:4_and_ih_gt_100_and_iw_lt_500,c_scale,w_100", transformation.ToString(), "passing an operator and a value adds a condition");
         }
 
         [Test]
