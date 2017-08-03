@@ -31,7 +31,8 @@ namespace CloudinaryDotNet
             "br", "bit_rate",
             "af", "audio_frequency",
             "ar", "aspect_ratio",
-            "vs", "video_sampling"
+            "vs", "video_sampling",
+            "sp", "streaming_profile"
         };
 
         /// <summary>

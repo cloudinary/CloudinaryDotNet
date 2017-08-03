@@ -214,7 +214,7 @@ namespace CloudinaryDotNet
 
         private Transformation AddaptiveStreaming(string value)
         {
-            return Add("adaptive_streaming", value);
+            return Add("streaming_profile", value);
         }
 
         private static void ProcessVideoCodec(SortedDictionary<string, string> parameters, Dictionary<string, object> m_transformParams)
