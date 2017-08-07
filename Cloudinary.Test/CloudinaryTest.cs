@@ -3002,9 +3002,11 @@ namespace CloudinaryDotNet.Test
             parameters = new ArchiveParams().PublicIds(new List<string> { res.PublicId, res2.PublicId })
                                             .Transformations(new List<Transformation> { new Transformation().Width("0.5"), new Transformation().Width(2) })
                                             .FlattenFolders(true)
+                                            .SkipTransformationName(true)
                                             .UseOriginalFilename(true);
             result = m_cloudinary.CreateArchive(parameters);
-            Assert.AreEqual(2, result.FileCount);
+
+           Assert.AreEqual(2, result.FileCount);
         }
 
         [Test]
