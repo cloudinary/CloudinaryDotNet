@@ -26,6 +26,7 @@ namespace CloudinaryDotNet
             "bo", "border",
             "q", "quality",
             "o", "opacity",
+            "ki", "keyframe_interval",
             "z", "zoom",
             "ac", "audio_codec",
             "br", "bit_rate",
