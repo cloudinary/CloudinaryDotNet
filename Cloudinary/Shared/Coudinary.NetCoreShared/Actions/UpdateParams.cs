@@ -72,6 +72,8 @@ namespace CloudinaryDotNet.Actions
 
         public string Ocr { get; set; }
 
+        public string NotificationUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the moderation status.
         /// </summary>
@@ -105,6 +107,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "ocr", Ocr);
             AddParam(dict, "similarity_search", SimilaritySearch);
             AddParam(dict, "background_removal", BackgroundRemoval);
+
+            if(!string.IsNullOrWhiteSpace(NotificationUrl))
+                AddParam(dict, "notification_url", NotificationUrl);
 
             if (ModerationStatus != Actions.ModerationStatus.Pending)
                 AddParam(dict, "moderation_status", Api.GetCloudinaryParam<ModerationStatus>(ModerationStatus));

@@ -1355,7 +1355,7 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testdelete"
+                PublicId = "testdelete",
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -1367,6 +1367,43 @@ namespace CloudinaryDotNet.Test
 
             DelResResult delResult = m_cloudinary.DeleteResources(
                 "randomstringopa", "testdeletederived", "testdelete");
+
+            Assert.AreEqual("not_found", delResult.Deleted["randomstringopa"]);
+            Assert.AreEqual("deleted", delResult.Deleted["testdelete"]);
+
+            resource = m_cloudinary.GetResource("testdelete");
+
+            Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
+        }
+
+        [Test]
+        public void TestDeleteByTransformation()
+        {
+            // should allow deleting resources by tranformation
+
+            List<Transformation> transformations = new List<Transformation>() { new Transformation().Width(101).Crop("scale") };
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = transformations,
+                PublicId = "testdeletederived"
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            GetResourceResult resource = m_cloudinary.GetResource("testdeletederived");
+
+            Assert.IsNotNull(resource);
+            Assert.AreEqual(1, resource.Derived.Length);
+                 
+            Assert.IsNotNull(resource);
+            Assert.AreEqual("testdelete", resource.PublicId);
+
+            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams() {
+                ///Transformations = transformations,
+                All = true
+            });
 
             Assert.AreEqual("not_found", delResult.Deleted["randomstringopa"]);
             Assert.AreEqual("deleted", delResult.Deleted["testdelete"]);

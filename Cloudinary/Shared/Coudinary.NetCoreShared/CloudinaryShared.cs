@@ -268,6 +268,20 @@ namespace CloudinaryShared.Core
             return result;
         }
 
+        public DelDerivedResResult DeleteDerivedResourcesByTransform(DelDerivedResParams parameters)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                m_api.ApiUrlV.
+                Add("derived_resources").
+                BuildUrl(),
+                parameters.ToParamsDictionary());
+
+            object response = m_api.InternalCall(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
+
+            DelDerivedResResult result = DelDerivedResResult.Parse(response);
+            return result;
+        }
+
         public AuthToken GetToken(string key)
         {
             return new AuthToken(key);
