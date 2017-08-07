@@ -2321,7 +2321,7 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-
+            Assert.True(result.Storage.Used < result.Storage.Limit);
         }
 
         [Test]
