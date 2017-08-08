@@ -1638,40 +1638,6 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestAllowedFormats()
-        {
-            // should allow listing tags
-
-            ImageUploadParams uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = "api_test_custom"
-            };
-
-            m_cloudinary.Upload(uploadParams);
-
-            ListTagsResult result = m_cloudinary.ListTagsAsync(new ListTagsParams()).Result;
-
-            Assert.IsTrue(result.Tags.Contains("api_test_custom"));
-        }
-
-        [Test]
-        public void TestAllowedFormats()
-        {
-            //should allow whitelisted formats if allowed_formats
-
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                AllowedFormats = new string[] { "jpg" }
-            };
-
-            var res = m_cloudinary.Upload(uploadParams);
-
-            Assert.AreEqual("jpg", res.Format);
-        }
-
-        [Test]
         public void TestAllowedFormatsWithIllegalFormat()
         {
             //should prevent non whitelisted formats from being uploaded if allowed_formats is specified
@@ -1905,65 +1871,6 @@ namespace CloudinaryDotNet.Test
             var result = m_cloudinary.GetTransformAsync(new GetTransformParams { Transformation = "c_scale, dpr_1.3, w_2.0" }).Result;
 
             Assert.IsNotNull(result);
-        }
-
-        [Test]
-        public void TestUpdateTransformStrict()
-        {
-            // should allow getting transformation metadata
-
-            var t = new Transformation().Crop("scale").Dpr(1.3).Width(2.0);
-
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { t },
-                Tags = "transformation"
-            };
-
-            var uploadResult = m_cloudinary.UploadAsync(uploadParams).Result;
-
-            var result = m_cloudinary.GetTransformAsync(new GetTransformParams { Transformation = "c_scale, dpr_1.3, w_2.0" }).Result;
-
-            Assert.IsNotNull(result);
-        }
-
-        [Test]
-        public void TestUpdateTransformStrict()
-        {
-            // should allow updating transformation allowed_for_strict
-
-            Transformation t = new Transformation().Crop("scale").Width(100);
-
-            ImageUploadParams uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { t },
-                Tags = "transformation"
-            };
-
-            m_cloudinary.Upload(uploadParams);
-
-            UpdateTransformParams updateParams = new UpdateTransformParams()
-            {
-                Transformation = "c_scale,w_100",
-                Strict = true
-            };
-
-            UpdateTransformResult result = m_cloudinary.UpdateTransform(updateParams);
-
-            GetTransformResult getResult = m_cloudinary.GetTransform("c_scale,w_100");
-
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(true, getResult.Strict);
-
-            updateParams.Strict = false;
-            m_cloudinary.UpdateTransform(updateParams);
-
-            getResult = m_cloudinary.GetTransform("c_scale,w_100");
-
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(false, getResult.Strict);
         }
 
         [Test]
@@ -2415,22 +2322,6 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-        }
-
-        [Test]
-        public void TestUsageAsync()
-        {
-            UploadTestResource("TestUsage"); // making sure at least one resource exists
-            var result = m_cloudinary.GetUsageAsync().Result;
-            DeleteTestResource("TestUsage");
-
-            var plans = new List<string>() { "Free", "Advanced" };
-
-            Assert.True(plans.Contains(result.Plan));
-            Assert.True(result.Resources > 0);
-            Assert.True(result.Objects.Used < result.Objects.Limit);
-            Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-
         }
 
         [Test]
