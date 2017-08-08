@@ -1622,6 +1622,24 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestAllowedFormats()
         {
+            // should allow listing tags
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "api_test_custom"
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            ListTagsResult result = m_cloudinary.ListTagsAsync(new ListTagsParams()).Result;
+
+            Assert.IsTrue(result.Tags.Contains("api_test_custom"));
+        }
+
+        [Test]
+        public void TestAllowedFormats()
+        {
             //should allow whitelisted formats if allowed_formats
 
             var uploadParams = new ImageUploadParams()
@@ -1831,6 +1849,27 @@ namespace CloudinaryDotNet.Test
 
         [Test]
         public void TestGetTransformAsync()
+        {
+            // should allow getting transformation metadata
+
+            var t = new Transformation().Crop("scale").Dpr(1.3).Width(2.0);
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { t },
+                Tags = "transformation"
+            };
+
+            var uploadResult = m_cloudinary.UploadAsync(uploadParams).Result;
+
+            var result = m_cloudinary.GetTransformAsync(new GetTransformParams { Transformation = "c_scale, dpr_1.3, w_2.0" }).Result;
+
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void TestUpdateTransformStrict()
         {
             // should allow getting transformation metadata
 
@@ -2321,7 +2360,23 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-            Assert.True(result.Storage.Used < result.Storage.Limit);
+
+        }
+
+        [Test]
+        public void TestUsageAsync()
+        {
+            UploadTestResource("TestUsage"); // making sure at least one resource exists
+            var result = m_cloudinary.GetUsageAsync().Result;
+            DeleteTestResource("TestUsage");
+
+            var plans = new List<string>() { "Free", "Advanced" };
+
+            Assert.True(plans.Contains(result.Plan));
+            Assert.True(result.Resources > 0);
+            Assert.True(result.Objects.Used < result.Objects.Limit);
+            Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
+
         }
 
         [Test]
