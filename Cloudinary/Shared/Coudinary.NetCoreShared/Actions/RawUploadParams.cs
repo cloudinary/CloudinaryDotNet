@@ -160,6 +160,11 @@ namespace CloudinaryDotNet.Actions
         public string Moderation { get; set; }
 
         /// <summary>
+        /// Tells Cloudinary whether to perform the upload request in the background (asynchronously).
+        /// </summary>
+        public string Async { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
         /// <returns>Sorted dictionary of parameters.</returns>
@@ -185,6 +190,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "folder", Folder);
             AddParam(dict, "raw_convert", RawConvert);
             AddParam(dict, "overwrite", Overwrite);
+            AddParam(dict, "async", Async);
 
             if (Context != null && Context.Count > 0)
             {

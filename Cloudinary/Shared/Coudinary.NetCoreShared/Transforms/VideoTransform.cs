@@ -212,6 +212,22 @@ namespace CloudinaryDotNet
             return Add("duration", ToString(value) + "p");
         }
 
+        public Transformation KeyframeInterval(int value)
+        {
+            return Add("keyframe_interval", value);
+        }
+
+        public Transformation KeyframeInterval(string value)
+        {
+            return Add("keyframe_interval", value);
+        }
+
+        private Transformation AddaptiveStreaming(string value)
+        {
+            return Add("streaming_profile", value);
+        }
+
+
         private static void ProcessVideoCodec(SortedDictionary<string, string> parameters, Dictionary<string, object> m_transformParams)
         {
             object codecParam = null;
