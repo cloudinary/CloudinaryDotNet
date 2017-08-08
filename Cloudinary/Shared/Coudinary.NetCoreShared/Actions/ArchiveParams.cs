@@ -24,6 +24,7 @@ namespace CloudinaryDotNet.Actions
         private bool m_useOriginalFilename;
         private string m_notificationUrl;
         private bool m_keepDerived;
+        private bool m_skipTransformationName;
 
         private string m_targetPublicId;
         private bool m_async;
@@ -345,6 +346,25 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
+        /// Get whether to strip all transformation details from file names and add a numeric counter to a file name in the case of a name conflict. Default: false.
+        /// </summary>
+        public bool IsSkipTransformationName()
+        {
+            return m_skipTransformationName;
+        }
+
+        /// <summary>
+        /// Set whether to strip all transformation details from file names and add a numeric counter to a file name in the case of a name conflict. Default: false.
+        /// </summary>
+        /// <param name="useOriginalFilename"></param>
+        /// <returns></returns>
+        public ArchiveParams SkipTransformationName(bool skipTransformationName)
+        {
+            this.m_skipTransformationName = skipTransformationName;
+            return this;
+        }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
         /// </summary>
         /// <returns>Sorted dictionary of parameters</returns>
@@ -388,6 +408,9 @@ namespace CloudinaryDotNet.Actions
 
             if (m_keepDerived)
                 AddParam(dict, "keep_derived", m_keepDerived);
+
+            if (m_skipTransformationName)
+                AddParam(dict, "skip_transformation_name", m_skipTransformationName);
 
             if (m_mode == ArchiveCallMode.Create)
             {

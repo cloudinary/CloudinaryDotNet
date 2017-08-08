@@ -991,6 +991,18 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestKeyframeInterval()
+        {
+            // should support an integer value
+            String actual = m_api.UrlVideoUp.Transform(new Transformation().KeyframeInterval(100)).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "ki_100/video_id", actual);
+
+            // should support a string value
+            actual = m_api.UrlVideoUp.Transform(new Transformation().KeyframeInterval("100")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "ki_100/video_id", actual);
+        }
+
+        [Test]
         public void TestVideoSampling()
         {
             String actual = m_api.UrlVideoUp.Transform(new Transformation().VideoSamplingFrames(20)).BuildUrl("video_id");

@@ -15,6 +15,11 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public int MaxResults { get; set; }
 
+        /// <summary>
+        /// Return named transformations or no.
+        /// </summary>
+        public bool? Named { get; set; }
+
         public string NextCursor { get; set; }
 
         /// <summary>
@@ -35,8 +40,10 @@ namespace CloudinaryDotNet.Actions
 
             if (MaxResults > 0)
                 AddParam(dict, "max_results", MaxResults.ToString());
-
-            AddParam(dict, "next_cursor", NextCursor);
+            if(Named.HasValue)
+                AddParam(dict, "named", Named.Value.ToString());
+            if(!string.IsNullOrWhiteSpace(NextCursor))
+                AddParam(dict, "next_cursor", NextCursor);
 
             return dict;
         }

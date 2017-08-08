@@ -26,12 +26,14 @@ namespace CloudinaryDotNet
             "bo", "border",
             "q", "quality",
             "o", "opacity",
+            "ki", "keyframe_interval",
             "z", "zoom",
             "ac", "audio_codec",
             "br", "bit_rate",
             "af", "audio_frequency",
             "ar", "aspect_ratio",
-            "vs", "video_sampling"
+            "vs", "video_sampling",
+            "sp", "streaming_profile"
         };
 
         /// <summary>

@@ -1355,7 +1355,7 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testdelete"
+                PublicId = "testdelete",
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -1367,6 +1367,43 @@ namespace CloudinaryDotNet.Test
 
             DelResResult delResult = m_cloudinary.DeleteResources(
                 "randomstringopa", "testdeletederived", "testdelete");
+
+            Assert.AreEqual("not_found", delResult.Deleted["randomstringopa"]);
+            Assert.AreEqual("deleted", delResult.Deleted["testdelete"]);
+
+            resource = m_cloudinary.GetResource("testdelete");
+
+            Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
+        }
+
+        [Test]
+        public void TestDeleteByTransformation()
+        {
+            // should allow deleting resources by tranformation
+
+            List<Transformation> transformations = new List<Transformation>() { new Transformation().Width(101).Crop("scale") };
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = transformations,
+                PublicId = "testdeletederived"
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            GetResourceResult resource = m_cloudinary.GetResource("testdeletederived");
+
+            Assert.IsNotNull(resource);
+            Assert.AreEqual(1, resource.Derived.Length);
+                 
+            Assert.IsNotNull(resource);
+            Assert.AreEqual("testdelete", resource.PublicId);
+
+            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams() {
+                ///Transformations = transformations,
+                All = true
+            });
 
             Assert.AreEqual("not_found", delResult.Deleted["randomstringopa"]);
             Assert.AreEqual("deleted", delResult.Deleted["testdelete"]);
@@ -1566,6 +1603,24 @@ namespace CloudinaryDotNet.Test
 
         [Test]
         public void TestListTagsAsync()
+        {
+            // should allow listing tags
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "api_test_custom"
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            ListTagsResult result = m_cloudinary.ListTagsAsync(new ListTagsParams()).Result;
+
+            Assert.IsTrue(result.Tags.Contains("api_test_custom"));
+        }
+
+        [Test]
+        public void TestAllowedFormats()
         {
             // should allow listing tags
 
@@ -1794,6 +1849,27 @@ namespace CloudinaryDotNet.Test
 
         [Test]
         public void TestGetTransformAsync()
+        {
+            // should allow getting transformation metadata
+
+            var t = new Transformation().Crop("scale").Dpr(1.3).Width(2.0);
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { t },
+                Tags = "transformation"
+            };
+
+            var uploadResult = m_cloudinary.UploadAsync(uploadParams).Result;
+
+            var result = m_cloudinary.GetTransformAsync(new GetTransformParams { Transformation = "c_scale, dpr_1.3, w_2.0" }).Result;
+
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void TestUpdateTransformStrict()
         {
             // should allow getting transformation metadata
 
@@ -2276,6 +2352,22 @@ namespace CloudinaryDotNet.Test
         {
             UploadTestResource("TestUsage"); // making sure at least one resource exists
             var result = m_cloudinary.GetUsage();
+            DeleteTestResource("TestUsage");
+
+            var plans = new List<string>() { "Free", "Advanced" };
+
+            Assert.True(plans.Contains(result.Plan));
+            Assert.True(result.Resources > 0);
+            Assert.True(result.Objects.Used < result.Objects.Limit);
+            Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
+
+        }
+
+        [Test]
+        public void TestUsageAsync()
+        {
+            UploadTestResource("TestUsage"); // making sure at least one resource exists
+            var result = m_cloudinary.GetUsageAsync().Result;
             DeleteTestResource("TestUsage");
 
             var plans = new List<string>() { "Free", "Advanced" };
@@ -2965,9 +3057,11 @@ namespace CloudinaryDotNet.Test
             parameters = new ArchiveParams().PublicIds(new List<string> { res.PublicId, res2.PublicId })
                                             .Transformations(new List<Transformation> { new Transformation().Width("0.5"), new Transformation().Width(2) })
                                             .FlattenFolders(true)
+                                            .SkipTransformationName(true)
                                             .UseOriginalFilename(true);
             result = m_cloudinary.CreateArchive(parameters);
-            Assert.AreEqual(2, result.FileCount);
+
+           Assert.AreEqual(2, result.FileCount);
         }
 
         [Test]
