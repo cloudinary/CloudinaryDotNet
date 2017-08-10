@@ -14,7 +14,6 @@ namespace CloudinaryDotNet.Test
         Api m_api;
         string m_defaultRootPath;
         string m_defaultImgUpPath;
-        string m_defaultImgFetchPath;
         string m_defaultVideoUpPath;
 
         [SetUp]
@@ -24,7 +23,6 @@ namespace CloudinaryDotNet.Test
             m_api = new Api(account);
             m_defaultRootPath = "http://res.cloudinary.com/testcloud/";
             m_defaultImgUpPath = m_defaultRootPath + "image/upload/";
-            m_defaultImgFetchPath = m_defaultRootPath + "image/fetch/";
             m_defaultVideoUpPath = m_defaultRootPath + "video/upload/";
         }
 
@@ -415,24 +413,6 @@ namespace CloudinaryDotNet.Test
         {
             var transformation = new Transformation().Overlay(new VideoLayer());
             transformation.ToString();
-        }
-
-        [Test]
-        public void TestFetchLayerUrl()
-        {
-            //image for overlay
-            //http://image.com/img/seatrade_supplier_logo.jpg
-
-            //fetch image
-            //http://image.com/files/8813/5551/7470/cruise-ship.png
-
-            var transformation = new Transformation().Overlay(new FetchLayer().Url("http://image.com/img/seatrade_supplier_logo.jpg"));
-            var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
-            Assert.AreEqual(m_defaultImgFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
-
-            //var transformation = new Transformation().Overlay(new FetchLayer().PublicId("test").Url("http:\\sampleuri")).Width(200);
-            //var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("test.jpg");
-            //Assert.AreEqual(m_defaultImgFetchPath + "l_url:aHR0cDpcc2FtcGxldXJp:test,w_200/test.jpg", uri);
         }
 
         [Test]
