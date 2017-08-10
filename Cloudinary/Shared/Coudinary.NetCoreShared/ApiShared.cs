@@ -165,21 +165,6 @@ namespace CloudinaryShared.Core
         }
 
         /// <summary>
-        /// Default URL for working with fetched images
-        /// </summary>
-        public Url UrlImgFetch
-        {
-            get
-            {
-                return Url
-                    .ResourceType("image")
-                    .Action("fetch")
-                    .UseRootPath(UseRootPath)
-                    .Suffix(Suffix);
-            }
-        }
-
-        /// <summary>
         /// Default URL for working with uploaded videos
         /// </summary>
         public Url UrlVideoUp
