@@ -1377,40 +1377,36 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestDeleteByTransformation()
+        public void TestDeleteDerrivedByTransformation()
         {
             // should allow deleting resources by tranformation
 
-            List<Transformation> transformations = new List<Transformation>() { new Transformation().Width(101).Crop("scale") };
+            List<Transformation> transformations = new List<Transformation>() { new Transformation().Width(101).Crop("scale"), new Transformation().Width(10).Crop("scale") };
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 EagerTransforms = transformations,
-                PublicId = "testdeletederived"
+                PublicId = "testdeleteByTransform",
+                Overwrite = true
             };
 
-            m_cloudinary.Upload(uploadParams);
+            var uploadRes = m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource("testdeletederived");
+            GetResourceResult resource = m_cloudinary.GetResource("testdeleteByTransform");
 
             Assert.IsNotNull(resource);
-            Assert.AreEqual(1, resource.Derived.Length);
+            Assert.AreEqual(2, resource.Derived.Length);
                  
             Assert.IsNotNull(resource);
-            Assert.AreEqual("testdelete", resource.PublicId);
+            Assert.AreEqual("testdeleteByTransform", resource.PublicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams() {
-                ///Transformations = transformations,
-                All = true
+            DelDerivedresByTransResult delResult = m_cloudinary.DeleteDerivedResourcesByTransform(new DelDerivedresByTransParam() {
+                PublicId = "testdeleteByTransform",
+                Transformations = transformations
             });
 
-            Assert.AreEqual("not_found", delResult.Deleted["randomstringopa"]);
-            Assert.AreEqual("deleted", delResult.Deleted["testdelete"]);
-
-            resource = m_cloudinary.GetResource("testdelete");
-
-            Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
+            Assert.AreEqual("deleted", delResult.Deleted["testdeleteByTransform"]);
         }
 
         [Test]
