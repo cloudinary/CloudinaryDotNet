@@ -1377,40 +1377,36 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestDeleteByTransformation()
+        public void TestDeleteDerrivedByTransformation()
         {
             // should allow deleting resources by tranformation
 
-            List<Transformation> transformations = new List<Transformation>() { new Transformation().Width(101).Crop("scale") };
+            List<Transformation> transformations = new List<Transformation>() { new Transformation().Width(101).Crop("scale"), new Transformation().Width(10).Crop("scale") };
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 EagerTransforms = transformations,
-                PublicId = "testdeletederived"
+                PublicId = "testdeleteByTransform",
+                Overwrite = true
             };
 
-            m_cloudinary.Upload(uploadParams);
+            var uploadRes = m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource("testdeletederived");
+            GetResourceResult resource = m_cloudinary.GetResource("testdeleteByTransform");
 
             Assert.IsNotNull(resource);
-            Assert.AreEqual(1, resource.Derived.Length);
+            Assert.AreEqual(2, resource.Derived.Length);
                  
             Assert.IsNotNull(resource);
-            Assert.AreEqual("testdelete", resource.PublicId);
+            Assert.AreEqual("testdeleteByTransform", resource.PublicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams() {
-                ///Transformations = transformations,
-                All = true
+            DelDerivedresByTransResult delResult = m_cloudinary.DeleteDerivedResourcesByTransform(new DelDerivedresByTransParam() {
+                PublicId = "testdeleteByTransform",
+                Transformations = transformations
             });
 
-            Assert.AreEqual("not_found", delResult.Deleted["randomstringopa"]);
-            Assert.AreEqual("deleted", delResult.Deleted["testdelete"]);
-
-            resource = m_cloudinary.GetResource("testdelete");
-
-            Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
+            Assert.AreEqual("deleted", delResult.Deleted["testdeleteByTransform"]);
         }
 
         [Test]
@@ -1635,22 +1631,6 @@ namespace CloudinaryDotNet.Test
             ListTagsResult result = m_cloudinary.ListTagsAsync(new ListTagsParams()).Result;
 
             Assert.IsTrue(result.Tags.Contains("api_test_custom"));
-        }
-
-        [Test]
-        public void TestAllowedFormats()
-        {
-            //should allow whitelisted formats if allowed_formats
-
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                AllowedFormats = new string[] { "jpg" }
-            };
-
-            var res = m_cloudinary.Upload(uploadParams);
-
-            Assert.AreEqual("jpg", res.Format);
         }
 
         [Test]
@@ -1887,44 +1867,6 @@ namespace CloudinaryDotNet.Test
             var result = m_cloudinary.GetTransformAsync(new GetTransformParams { Transformation = "c_scale, dpr_1.3, w_2.0" }).Result;
 
             Assert.IsNotNull(result);
-        }
-
-        [Test]
-        public void TestUpdateTransformStrict()
-        {
-            // should allow updating transformation allowed_for_strict
-
-            Transformation t = new Transformation().Crop("scale").Width(100);
-
-            ImageUploadParams uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { t },
-                Tags = "transformation"
-            };
-
-            m_cloudinary.Upload(uploadParams);
-
-            UpdateTransformParams updateParams = new UpdateTransformParams()
-            {
-                Transformation = "c_scale,w_100",
-                Strict = true
-            };
-
-            UpdateTransformResult result = m_cloudinary.UpdateTransform(updateParams);
-
-            GetTransformResult getResult = m_cloudinary.GetTransform("c_scale,w_100");
-
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(true, getResult.Strict);
-
-            updateParams.Strict = false;
-            m_cloudinary.UpdateTransform(updateParams);
-
-            getResult = m_cloudinary.GetTransform("c_scale,w_100");
-
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(false, getResult.Strict);
         }
 
         [Test]
@@ -2376,23 +2318,6 @@ namespace CloudinaryDotNet.Test
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-
-        }
-
-        [Test]
-        public void TestUsageAsync()
-        {
-            UploadTestResource("TestUsage"); // making sure at least one resource exists
-            var result = m_cloudinary.GetUsageAsync().Result;
-            DeleteTestResource("TestUsage");
-
-            var plans = new List<string>() { "Free", "Advanced" };
-
-            Assert.True(plans.Contains(result.Plan));
-            Assert.True(result.Resources > 0);
-            Assert.True(result.Objects.Used < result.Objects.Limit);
-            Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
-
         }
 
         [Test]

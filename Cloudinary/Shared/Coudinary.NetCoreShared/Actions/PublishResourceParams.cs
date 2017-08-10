@@ -60,6 +60,7 @@ namespace CloudinaryDotNet.Actions
             {
                 dict.Add("public_ids", PublicIds);
             }
+            dict.Add("resource_type", this.m_resourceType);
             if (!string.IsNullOrWhiteSpace(this.m_toType))
                 dict.Add("to_type", this.m_toType);
 

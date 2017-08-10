@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CloudinaryShared.Core
 {
-    public abstract class CloudinaryShared<TApi> where TApi: ApiShared
+    public abstract class CloudinaryShared<TApi> where TApi : ApiShared
     {
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
         public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
@@ -20,7 +20,7 @@ namespace CloudinaryShared.Core
         protected static Random m_random = new Random();
 
         protected TApi m_api;
-        
+
         /// <summary>
         /// API object that used by this instance
         /// </summary>
@@ -111,13 +111,13 @@ namespace CloudinaryShared.Core
                 ResourceType("upload_mappings").
                 BuildUrl();
         }
-        
+
         private string GetUploadMappingUrl(UploadMappingParams parameters)
         {
             var uri = GetUploadMappingUrl();
             return new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
         }
-        
+
         /// <summary>
         ///  Return Url on archive file
         /// </summary>
@@ -197,7 +197,7 @@ namespace CloudinaryShared.Core
                 .Add(publishResourceParams.ResourceType.ToString().ToLower())
                 .Add("publish_resources");
 
-            if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
                 publishResourceParams.AddCustomParam(byKey, value);
 
             object response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
@@ -209,20 +209,20 @@ namespace CloudinaryShared.Core
         private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams updateResourceAccessModeParams)
         {
 
-           Url url = m_api.ApiUrlV
-                .Add(Constants.RESOURCES_API_URL)
-                .Add(updateResourceAccessModeParams.ResourceType.ToString().ToLower())
-                .Add(updateResourceAccessModeParams.Type)
-                .Add(Constants.UPDATE_ACESS_MODE);
+            Url url = m_api.ApiUrlV
+                 .Add(Constants.RESOURCES_API_URL)
+                 .Add(updateResourceAccessModeParams.ResourceType.ToString().ToLower())
+                 .Add(updateResourceAccessModeParams.Type)
+                 .Add(Constants.UPDATE_ACESS_MODE);
 
-            if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
                 updateResourceAccessModeParams.AddCustomParam(byKey, value);
 
             object response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
 
             return UpdateResourceAccessModeResult.Parse(response);
         }
-        
+
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams updateResourceAccessModeParams)
         {
             return UpdateResourceAccessMode(Constants.TAG_PARAM_NAME, tag, updateResourceAccessModeParams);
@@ -268,17 +268,13 @@ namespace CloudinaryShared.Core
             return result;
         }
 
-        public DelDerivedResResult DeleteDerivedResourcesByTransform(DelDerivedResParams parameters)
+        public DelDerivedresByTransResult DeleteDerivedResourcesByTransform(DelDerivedresByTransParam parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
-                Add("derived_resources").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
+            Url url = m_api.ApiUrlV.Add("resources").Add(parameters.ResourceType.ToString().ToLower()).Add(parameters.Type);
+            UrlBuilder urlBuilder = new UrlBuilder(url.BuildUrl(), parameters.ToParamsDictionary());
+            object response = m_api.InternalCall(HttpMethod.DELETE, urlBuilder.ToString(), parameters.ToParamsDictionary(), null);
+            DelDerivedresByTransResult result = DelDerivedresByTransResult.Parse(response);
 
-            object response = m_api.InternalCall(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
-
-            DelDerivedResResult result = DelDerivedResResult.Parse(response);
             return result;
         }
 
