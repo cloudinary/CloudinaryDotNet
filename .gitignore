@@ -72,3 +72,6 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 
 *snk
+
+# test configuration file
+app.config
