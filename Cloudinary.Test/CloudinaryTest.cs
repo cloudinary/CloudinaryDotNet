@@ -2785,6 +2785,18 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUpdateQuality()
+        {
+            //should update quality 
+            string publicId = "TestUpdateQuality";
+            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId, Overwrite = true });
+            var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOveride = "auto:best" });
+            Assert.AreEqual(updResult.StatusCode, HttpStatusCode.OK);
+            Assert.Null(updResult.Error);
+            Assert.AreEqual(updResult.PublicId, publicId);
+        }
+
+        [Test]
         public void TestUpdateCustomCoordinatesAsync()
         {
             //should update custom coordinates
