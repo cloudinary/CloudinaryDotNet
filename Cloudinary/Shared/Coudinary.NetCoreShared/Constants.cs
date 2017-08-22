@@ -21,5 +21,14 @@ namespace Coudinary.NetCoreShared
         public const string PREFIX_PARAM_NAME = "prefix";
         public const string PUBLIC_IDS = "public_ids";
         public const string COMMAND = "command";
+
+        //Resource types
+        public const string RESOURCE_TYPE_FETCH = "fetch";
+        public const string RESOURCE_TYPE_IMAGE = "image";
+        public const string RESOURCE_TYPE_VIDEO = "video";
+
+        //Action names
+        public const string ACTION_NAME_UPLOAD = "upload";
+        public const string ACTION_NAME_FETCH = "fetch";
     }
 }
