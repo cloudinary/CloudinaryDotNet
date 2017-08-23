@@ -3,11 +3,11 @@ using System.Configuration;
 
 namespace Cloudinary.Test.Configuration
 {
-    public class ClodinarySettings : ConfigurationSection
+    public class CloudinarySettings : ConfigurationSection
     {
-        private static ClodinarySettings settings = ConfigurationManager.GetSection("ClodinarySettings") as ClodinarySettings;
+        private static CloudinarySettings settings = ConfigurationManager.GetSection("CloudinarySettings") as CloudinarySettings;
 
-        public static ClodinarySettings Settings
+        public static CloudinarySettings Settings
         {
             get
             {
