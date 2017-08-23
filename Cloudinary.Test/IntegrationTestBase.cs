@@ -20,8 +20,10 @@ namespace CloudinaryDotNet.Test
         protected string m_testVideoPath;
         protected string m_testPdfPath;
         protected string m_testIconPath;
+        protected string m_appveyor_job_id;
+        protected string m_suffix;
 
-        protected const string TEST_TAG = "cloudinarydotnet_test";
+        protected string m_test_tag = "cloudinarydotnet_test";
 
         protected const string TOKEN_KEY = "00112233FF99";
         protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
@@ -34,7 +36,9 @@ namespace CloudinaryDotNet.Test
         {
             m_account = GetAccountInstance();
             m_cloudinary = GetCloudinaryInstance(m_account);
-
+            m_appveyor_job_id = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
+            m_suffix = String.IsNullOrEmpty(m_appveyor_job_id) ? new Random().Next(100000, 999999).ToString() : m_appveyor_job_id;
+            m_test_tag += m_suffix;
             m_testVideoPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "movie.mp4");
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
             m_testLargeImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestLargeImage.jpg");
@@ -84,9 +88,9 @@ namespace CloudinaryDotNet.Test
         /// <returns>New Account instance</returns>
         private Account GetAccountInstance()
         {
-            string cloudName = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.CloudName) ? SettingsReader.ReadSetting("ApiBaseAddress") : ClodinarySettings.Settings.CloudName;
-            string apiKey = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiKey) ? SettingsReader.ReadSetting("ApiKey") : ClodinarySettings.Settings.ApiKey;
-            string apiSecret = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiSecret) ? SettingsReader.ReadSetting("ApiSecret") : ClodinarySettings.Settings.ApiSecret;
+            string cloudName = string.IsNullOrWhiteSpace(CloudinarySettings.Settings.CloudName) ? SettingsReader.ReadSetting("CloudName") : CloudinarySettings.Settings.CloudName;
+            string apiKey = string.IsNullOrWhiteSpace(CloudinarySettings.Settings.ApiKey) ? SettingsReader.ReadSetting("ApiKey") : CloudinarySettings.Settings.ApiKey;
+            string apiSecret = string.IsNullOrWhiteSpace(CloudinarySettings.Settings.ApiSecret) ? SettingsReader.ReadSetting("ApiSecret") : CloudinarySettings.Settings.ApiSecret;
 
             Account account = new Account(
                 cloudName,
@@ -116,8 +120,12 @@ namespace CloudinaryDotNet.Test
         protected Cloudinary GetCloudinaryInstance(Account account)
         {
             Cloudinary cloudinary = new Cloudinary(account);
-            string apiAddressBase = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiBaseAddress) ? SettingsReader.ReadSetting("ApiBaseAddress") : ClodinarySettings.Settings.ApiBaseAddress;
-            cloudinary.Api.ApiBaseAddress = apiAddressBase;
+            string apiAddressBase = string.IsNullOrWhiteSpace(CloudinarySettings.Settings.ApiBaseAddress) ? SettingsReader.ReadSetting("ApiBaseAddress") : CloudinarySettings.Settings.ApiBaseAddress;
+            if(!string.IsNullOrWhiteSpace(apiAddressBase))
+            {
+                cloudinary.Api.ApiBaseAddress = apiAddressBase;
+            }
+            
 
             return cloudinary;
         }

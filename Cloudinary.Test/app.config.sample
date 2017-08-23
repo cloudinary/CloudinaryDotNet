@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <configuration>  
   <configSections>
-      <section name="ClodinarySettings" type="Cloudinary.Test.Configuration.ClodinarySettings, Cloudinary.Test"  />
+      <section name="CloudinarySettings" type="Cloudinary.Test.Configuration.CloudinarySettings, Cloudinary.Test"  />
   </configSections>
-  <ClodinarySettings ApiBaseAddress="" CloudName="" ApiKey="" ApiSecret="" />
+  <CloudinarySettings ApiBaseAddress="" CloudName="" ApiKey="" ApiSecret="" />
 </configuration>

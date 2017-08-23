@@ -309,7 +309,7 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(m_testImagePath),
                 PublicId = "test_raw_overwrite" + new Random().Next(),
                 Overwrite = false,
-                Tags = TEST_TAG
+                Tags = m_test_tag
             };
 
             var img1 = m_cloudinary.Upload(uploadParams);
@@ -692,17 +692,17 @@ namespace CloudinaryDotNet.Test
         public void TestPublishByTag()
         {
             var uploadParams = new ImageUploadParams()
-            {
+            {  // use variables for public ID and tags
                 File = new FileDescription(m_testImagePath),
-                Tags = "TestForPublish",
-                PublicId = "TestForPublish",
+                Tags = "TestForPublish", // FIXME use suffix, use list of tags one generic and one   
+                PublicId = "TestForPublish", // FIXME use suffix
                 Overwrite = true,
                 Type = "private"
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            var publish_result = m_cloudinary.PublishResourceByTag("TestForPublish", new PublishResourceParams()
+            var publish_result = m_cloudinary.PublishResourceByTag("TestForPublish" /* FIXME use variable and add suffix */, new PublishResourceParams()
             {
                 ResourceType = ResourceType.Image
             });
@@ -1239,21 +1239,21 @@ namespace CloudinaryDotNet.Test
         public void TestGetResource()
         {
             // should allow get resource details
-
+            String publicId = "testgetresource" + m_suffix;
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
-                PublicId = "testgetresource"
+                PublicId = publicId
             };
 
             m_cloudinary.Upload(uploadParams);
 
             GetResourceResult getResult = m_cloudinary.GetResource(
-                new GetResourceParams("testgetresource") { Phash = true });
+                new GetResourceParams(publicId) { Phash = true });
 
             Assert.IsNotNull(getResult);
-            Assert.AreEqual("testgetresource", getResult.PublicId);
+            Assert.AreEqual(publicId, getResult.PublicId);
             Assert.AreEqual(1920, getResult.Width);
             Assert.AreEqual(1200, getResult.Height);
             Assert.AreEqual("jpg", getResult.Format);
@@ -2664,7 +2664,7 @@ namespace CloudinaryDotNet.Test
                 Unsigned = true
             });
 
-            var acc = new Account(ClodinarySettings.Settings.CloudName);
+            var acc = new Account(CloudinarySettings.Settings.CloudName);
             var cloudinary = new Cloudinary(acc);
 
             var upload = cloudinary.Upload(new ImageUploadParams()
@@ -3019,8 +3019,8 @@ namespace CloudinaryDotNet.Test
         public void TestCreateArchiveMultiplePublicIds()
         {
             // should support archiving based on multiple public IDs
-            string archiveTag = string.Format("archive_tag_{0}", UnixTimeNow());
-            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow());
+            string archiveTag = string.Format("archive_tag_{0}", UnixTimeNow()); // FIXME use m_suffix, use list with m_test_tag
+            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow()); // FIXME use m_suffix
 
             UploadImageForTestArchive(archiveTag, 2.0, true);
 
@@ -3033,8 +3033,8 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestDownloadArchive()
         {
-            string archiveTag = string.Format("archive_tag_{0}", UnixTimeNow());
-            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow());
+            string archiveTag = string.Format("archive_tag_{0}", UnixTimeNow()); // FIXME use m_suffix, use list with m_test_tag
+            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow()); // FIXME use m_suffix
 
             UploadImageForTestArchive(archiveTag, 2.0, true);
             UploadImageForTestArchive(archiveTag, 500, false);
@@ -3055,13 +3055,14 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestSearchResourceByExpression()
+        public void TestSearchResourceByExpression() // FIXME check the results - use the cloudinary_java test code as reference
         {
+            // FIXME use variables. Use m_suffix. Use tag list with m_test_tag
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "TestForSearchTag",
-                PublicId = "TestForSearch",
+                Tags = "TestForSearchTag", 
+                PublicId = "TestForSearch", 
                 Overwrite = true,
                 Type = "private"
             };
@@ -3069,14 +3070,14 @@ namespace CloudinaryDotNet.Test
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
             SearchResult result = m_cloudinary.Search().Expression("resource_type: image").Execute();
-            Assert.True(result.TotalCount > 0);
+            Assert.True(result.TotalCount > 0);  
             result = m_cloudinary.Search().Expression("public_id: TestForSearch").Execute();
             Assert.True(result.TotalCount > 0);
             result = m_cloudinary.Search().Expression("tags: TestForSearchTag").Execute();
             Assert.True(result.TotalCount > 0);
 
             DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
-                "TestForSearchTag");
+                "TestForSearchTag"); // FIXME resource will not be deleted if the test failed. Delete in TestFixtureTearDown using m_test_tag
         }
 
         [Test]
@@ -3166,6 +3167,8 @@ namespace CloudinaryDotNet.Test
 
         }
 
+        // FIXME implement the same tests as in cloudinary_java https://github.com/cloudinary/cloudinary_java/blob/887b0846d9d1402cd9b01cbd1fb88978d048cda0/cloudinary-core/src/test/java/com/cloudinary/AuthTokenTest.java
+
         [Test]
         public void TestGenerateAuthToken()
         {
@@ -3194,7 +3197,7 @@ namespace CloudinaryDotNet.Test
             AuthToken t = new AuthToken(TOKEN_KEY);
             t.StartTime(1111111111).Acl("/image/*").Duration(300);
             string url = m_cloudinary.Api.Url.AuthToken(t).Signed(true).ResourceType("image").Version("1486020273").BuildImageTag("sample.jpg");
-            Assert.AreEqual("<img src=\"http://res.cloudinary.com/rtlstudio/image/v1486020273/sample.jpg?__cld_token__=st=1111111111~exp=1111111411~acl=/image/*~hmac=e9a0c51530a2a5080be60f6defa0cde8d1f99c1c0787ec7cd30e1f60be65645a\"/>", url);
+            Assert.AreEqual("<img src=\"http://res.cloudinary.com/" + CloudinarySettings.Settings.CloudName + "/image/v1486020273/sample.jpg?__cld_token__=st=1111111111~exp=1111111411~acl=/image/*~hmac=e9a0c51530a2a5080be60f6defa0cde8d1f99c1c0787ec7cd30e1f60be65645a\"/>", url);
         }
     }
 }

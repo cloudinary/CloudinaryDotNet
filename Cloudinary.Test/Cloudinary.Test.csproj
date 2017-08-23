@@ -103,7 +103,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\ClodinarySettings.cs" />
+    <Compile Include="Configuration\CloudinarySettings.cs" />
     <Compile Include="IntegrationTestBase.cs" />
     <Compile Include="SettingsReader.cs" />
     <Compile Include="UploadMappingApiTest.cs" />

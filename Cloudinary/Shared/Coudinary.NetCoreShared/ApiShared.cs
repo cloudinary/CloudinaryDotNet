@@ -345,7 +345,7 @@ namespace CloudinaryShared.Core
         /// <returns>Signature of parameters</returns>
         public string SignParameters(IDictionary<string, object> parameters)
         {
-			List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "type","api_key" });
+			List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
             StringBuilder signBase = new StringBuilder(String.Join("&", parameters.
 			                                                       Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
                 .Select(pair => String.Format("{0}={1}", pair.Key,
