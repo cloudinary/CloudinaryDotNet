@@ -1,9 +1,16 @@
+# Cloudinary SDK
+app.config
+
 
 # User-specific files
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
+
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
 
 # Build results
 [Dd]ebug/
@@ -16,6 +23,8 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+[Ll]og/
+
 
 # Visual Studo 2015 cache/options directory
 .vs/
@@ -23,6 +32,11 @@ bld/
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
+
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
 
 # Visual Studio profiler
 *.psess
@@ -33,6 +47,9 @@ bld/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
+
+# NuGet Packages
+*.nupkg
 
 
 # The packages folder can be ignored because of Package Restore
