@@ -73,6 +73,7 @@
     <Compile Include="Actions\BaseResult.cs" />
     <Compile Include="AuthToken.cs" />
     <Compile Include="Shared\AuthToken.cs" />
+    <Compile Include="FileDescription.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ExplicitResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ResponsiveBreakpointResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\RestoreResult.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\ApiShared.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Crc32.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\CSource.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\FileDescriptionBase.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\Transforms\FetchLayer.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Url.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryShared.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Constants.cs" />
