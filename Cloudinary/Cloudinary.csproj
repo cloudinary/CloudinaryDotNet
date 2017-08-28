@@ -71,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\BaseResult.cs" />
+    <Compile Include="AuthToken.cs" />
+    <Compile Include="Shared\AuthToken.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ExplicitResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ResponsiveBreakpointResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\RestoreResult.cs" />
@@ -109,7 +111,7 @@
     <Compile Include="Shared\Coudinary.NetCoreShared\Url.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryShared.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Constants.cs" />
-    <Compile Include="Shared\Coudinary.NetCoreShared\AuthToken.cs" />
+    <Compile Include="Shared\Coudinary.NetCoreShared\AuthTokenBase.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\CloudinaryConfiguration.cs" />
     <Compile Include="Cloudinary.cs" />
     <Compile Include="Api.cs" />

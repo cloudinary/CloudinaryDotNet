@@ -101,12 +101,12 @@ namespace CloudinaryDotNet
 
             if (extraHeaders != null)
             {
-                if(extraHeaders.ContainsKey("Content-Type"))
+                if (extraHeaders.ContainsKey("Content-Type"))
                 {
                     request.ContentType = extraHeaders["Content-Type"];
                     extraHeaders.Remove("Content-Type");
                 }
-                
+
                 foreach (var header in extraHeaders)
                 {
                     request.Headers[header.Key] = header.Value;
@@ -161,6 +161,7 @@ namespace CloudinaryDotNet
                         }
 
                         writer.Write("--{0}--", HTTP_BOUNDARY);
+
                     }
                 }
             }

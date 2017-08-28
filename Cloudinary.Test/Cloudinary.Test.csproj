@@ -103,6 +103,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthTokenTest.cs" />
     <Compile Include="Configuration\CloudinarySettings.cs" />
     <Compile Include="IntegrationTestBase.cs" />
     <Compile Include="SettingsReader.cs" />
