@@ -148,8 +148,9 @@ namespace CloudinaryDotNet
             return this;
         }
 
-        public virtual string Generate() {
-            HashSet<string> parts = new HashSet<string>(m_nestedTransforms.Select(t => t.GenerateThis()).ToList());
+        public virtual string Generate()
+        {
+            List<string> parts = new List<string>(m_nestedTransforms.Select(t => t.GenerateThis()).ToList());
 
             var thisTransform = GenerateThis();
             if (!string.IsNullOrEmpty(thisTransform))
