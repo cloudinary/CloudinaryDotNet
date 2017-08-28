@@ -237,6 +237,32 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestTransformationAutoWidth()
+        {
+            // should support transformations with width:auto and width:auto_breakpoints
+
+            Transformation transformation = new Transformation().Width("auto:20").Crop("fill");
+            string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:20/test", uri);
+
+            transformation = new Transformation().Width("auto:20:350").Crop("fill");
+            uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:20:350/test", uri);
+
+            transformation = new Transformation().Width("auto:breakpoints").Crop("fill");
+            uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:breakpoints/test", uri);
+
+            transformation = new Transformation().Width("auto:breakpoints_100_1900_20_15").Crop("fill");
+            uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:breakpoints_100_1900_20_15/test", uri);
+
+            transformation = new Transformation().Width("auto:breakpoints:json").Crop("fill");
+            uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:breakpoints:json/test", uri);
+        }
+
+        [Test]
         public void TestExcludeEmptyTransformation()
         {
             Transformation transformation = new Transformation().Chain().X(100).Y(100).Crop("fill").Chain();
