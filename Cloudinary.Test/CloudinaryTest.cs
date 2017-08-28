@@ -1259,7 +1259,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(1920, getResult.Width);
             Assert.AreEqual(1200, getResult.Height);
             Assert.AreEqual("jpg", getResult.Format);
-            Assert.AreEqual(2, getResult.Derived.Length);
+            Assert.AreEqual(1, getResult.Derived.Length);
             Assert.Null(getResult.Metadata);
             Assert.IsNotNullOrEmpty(getResult.Phash);
         }
@@ -3070,8 +3070,9 @@ namespace CloudinaryDotNet.Test
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
+            Thread.Sleep(10000);
             var resource = m_cloudinary.GetResource(new GetResourceParams(publicId) { });
-
+            
             Assert.NotNull(resource);
             Assert.AreEqual(resource.PublicId, publicId);
 
@@ -3086,39 +3087,20 @@ namespace CloudinaryDotNet.Test
         public void SearchResourceByPublicId()
         {
             string publicId = "TestForTagSearch" + m_suffix;
-            string tagForSearch = string.Format("TestForTagSearch_{0}", m_test_tag);
-
+            
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = tagForSearch,
+                
                 PublicId = publicId,
                 Overwrite = true,
                 Type = "private"
             };
             var uploadResult = m_cloudinary.Upload(uploadParams);
-
-            var result = m_cloudinary.Search().Expression(string.Format("tags: {0}", tagForSearch)).Execute();
+            Thread.Sleep(10000);
+            var result = m_cloudinary.Search().Expression(string.Format("public_id: {0}", publicId)).Execute();
             Assert.True(result.TotalCount > 0);
-        }
-
-        [Test]
-        public void SearchResourceByPublicID()
-        {
-            String publicId = "TestForPublicIDSearch" + m_suffix;
-
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_test_tag,
-                PublicId = publicId,
-                Overwrite = true,
-                Type = "private"
-            };
-
-            var result = m_cloudinary.Search().Expression(string.Format("tags: {0}", publicId)).Execute();
-            Assert.True(result.TotalCount > 0);
-
+            DelResResult delResult = m_cloudinary.DeleteResources(new string[] { publicId });
         }
 
         [Test]
@@ -3136,13 +3118,15 @@ namespace CloudinaryDotNet.Test
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
+            Thread.Sleep(10000);
 
             SearchResult result = m_cloudinary.Search().Expression("resource_type: image").Execute();
             Assert.True(result.TotalCount > 0);  
             
             result = m_cloudinary.Search().Expression(string.Format("public_id: {0}", publicId)).Execute();
             Assert.True(result.TotalCount > 0);
-            
+
+            DelResResult delResult = m_cloudinary.DeleteResources(new string[] { publicId });
         }
 
         [Test]
@@ -3231,37 +3215,6 @@ namespace CloudinaryDotNet.Test
             });
 
         }
-               
 
-        [Test]
-        public void TestGenerateAuthToken()
-        {
-            AuthToken t = new AuthToken(TOKEN_KEY);
-            t.StartTime(1111111111).Acl("/image/*").Duration(300);
-
-            Assert.AreEqual("__cld_token__=st=1111111111~exp=1111111411~acl=/image/*~hmac=0854e8b6b6a46471a80b2dc28c69bd352d977a67d031755cc6f3486c121b43af", t.Generate());
-        }
-
-        [Test]
-        public void TestGenerateCookieAuthToken()
-        {
-            AuthToken token = new AuthToken(TOKEN_KEY);
-            token.duration = 300;
-            string user = "foobar";
-            token.acl = "/*/t_" + user;
-            token.StartTime(222222222);
-            string cookieToken = token.Generate();
-
-            Assert.AreEqual("__cld_token__=st=222222222~exp=222222522~acl=/*/t_foobar~hmac=eb5e2266c8ec9573f696025f075b92998080347e1c12ac39a26c94d7d712704a", cookieToken);
-        }
-
-        [Test]
-        public void TestGenerateAuthTokenInTag()
-        {
-            AuthToken t = new AuthToken(TOKEN_KEY);
-            t.StartTime(1111111111).Acl("/image/*").Duration(300);
-            string url = m_cloudinary.Api.Url.AuthToken(t).Signed(true).ResourceType("image").Version("1486020273").BuildImageTag("sample.jpg");
-            Assert.AreEqual("<img src=\"http://res.cloudinary.com/" + CloudinarySettings.Settings.CloudName + "/image/v1486020273/sample.jpg?__cld_token__=st=1111111111~exp=1111111411~acl=/image/*~hmac=e9a0c51530a2a5080be60f6defa0cde8d1f99c1c0787ec7cd30e1f60be65645a\"/>", url);
-        }
     }
 }

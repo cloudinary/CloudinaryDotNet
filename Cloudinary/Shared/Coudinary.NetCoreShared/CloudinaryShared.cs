@@ -277,10 +277,5 @@ namespace CloudinaryShared.Core
 
             return result;
         }
-
-        public AuthToken GetToken(string key)
-        {
-            return new AuthToken(key);
-        }
     }
 }
