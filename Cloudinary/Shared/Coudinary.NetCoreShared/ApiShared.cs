@@ -158,8 +158,23 @@ namespace CloudinaryShared.Core
             get
             {
                 return Url
-                    .ResourceType("image")
-                    .Action("upload")
+                    .ResourceType(Constants.RESOURCE_TYPE_IMAGE)
+                    .Action(Constants.ACTION_NAME_UPLOAD)
+                    .UseRootPath(UseRootPath)
+                    .Suffix(Suffix);
+            }
+        }
+
+        /// <summary>
+        /// Default URL for working with fetched images
+        /// </summary>
+        public Url UrlImgFetch
+        {
+            get
+            {
+                return Url
+                    .ResourceType(Constants.RESOURCE_TYPE_IMAGE)
+                    .Action(Constants.ACTION_NAME_FETCH)
                     .UseRootPath(UseRootPath)
                     .Suffix(Suffix);
             }
@@ -173,8 +188,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return Url
-                    .ResourceType("video")
-                    .Action("upload")
+                    .ResourceType(Constants.RESOURCE_TYPE_VIDEO)
+                    .Action(Constants.ACTION_NAME_UPLOAD)
                     .UseRootPath(UseRootPath)
                     .Suffix(Suffix);
             }
@@ -200,8 +215,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return ApiUrl.
-                    Action("upload").
-                    ResourceType("image");
+                    Action(Constants.ACTION_NAME_UPLOAD).
+                    ResourceType(Constants.RESOURCE_TYPE_IMAGE);
             }
         }
 
@@ -225,8 +240,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return ApiUrlV.
-                    Action("upload").
-                    ResourceType("image");
+                    Action(Constants.ACTION_NAME_UPLOAD).
+                    ResourceType(Constants.RESOURCE_TYPE_IMAGE);
             }
         }
 
@@ -238,8 +253,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return ApiUrlV.
-                    Action("upload").
-                    ResourceType("video");
+                    Action(Constants.ACTION_NAME_UPLOAD).
+                    ResourceType(Constants.RESOURCE_TYPE_VIDEO);
             }
         }
 
