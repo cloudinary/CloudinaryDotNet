@@ -9,6 +9,7 @@ namespace CloudinaryDotNet.Actions
         string m_prefix;
         string m_tag;
         bool m_all;
+        List<Transformation> m_transformations;
 
         public DelResParams()
         {
@@ -59,6 +60,16 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
+        /// Set a list of transformations applied for removing derived resources.
+        /// </summary>
+        /// <returns></returns>
+        public List<Transformation> Transformations
+        {
+            get { return m_transformations; }
+            set { m_transformations = value; }
+        }
+
+        /// <summary>
         /// Delete all resources. Optional (default: false). 
         /// </summary>
         public bool All
@@ -100,9 +111,17 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
-            AddParam(dict, "keep_original", KeepOriginal);
+            
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "next_cursor", NextCursor);
+
+            if (m_transformations != null && m_transformations.Count > 0)
+            {
+                AddParam(dict, "transformations", string.Join("/", m_transformations));
+                AddParam(dict, "keep_original", true);
+            }
+            else
+                AddParam(dict, "keep_original", KeepOriginal);
 
             if (!String.IsNullOrEmpty(Tag))
             {
@@ -120,7 +139,7 @@ namespace CloudinaryDotNet.Actions
             {
                 AddParam(dict, "all", true);
             }
-
+            
             return dict;
         }
     }

@@ -1471,6 +1471,48 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestDeleteByTagAndTransformation()
+        {
+            // should allow deleting resources
+            string publicId = "TestDeleteByTagAndTransformation";
+            string tag = "api_test_tag_for_delete";
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Tags = tag,
+                EagerTransforms = new List<Transformation>() { new Transformation().Width(100).Height(110).Opacity(50), new Transformation().Zoom(2.5) }
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            Assert.IsNotNull(resource);
+
+            Assert.AreEqual(resource.Derived.Length, 2);
+            
+            Assert.AreEqual(publicId, resource.PublicId);
+
+            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams() {
+                Tag = tag,
+                Transformations = new List<Transformation>() { new Transformation().Width(100).Height(110).Opacity(50) }
+            });
+
+            resource = m_cloudinary.GetResource(publicId);
+            Assert.IsNotNull(resource);
+            Assert.AreEqual(resource.Derived.Length, 1);
+
+            delResult = m_cloudinary.DeleteResourcesByTag(
+                tag);
+
+            resource = m_cloudinary.GetResource(publicId);
+
+            Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
+
+        }
+
+        [Test]
         public void TestRestoreNoBackup()
         {
             const string TEST_PUBLIC_ID = "testdelandrestore_nobackup";
