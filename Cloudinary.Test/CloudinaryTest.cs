@@ -3173,7 +3173,7 @@ namespace CloudinaryDotNet.Test
         {
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath),
+                File = new FileDescription(m_testImagePath), 
                 PublicId = "TestContext",
                 Overwrite = true,
                 Type = "upload",

@@ -109,7 +109,7 @@ namespace CloudinaryDotNet
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
         //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
-        public  HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -167,8 +167,8 @@ namespace CloudinaryDotNet
                     req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     extraHeaders.Remove("Content-Type");
                 }
-                
-                
+
+
                 foreach (var header in extraHeaders)
                 {
                     req.Headers.Add(header.Key, header.Value);
@@ -185,7 +185,7 @@ namespace CloudinaryDotNet
 
             return req;
         }
- 
+
 
         private MultipartFormDataContent PrepareRequestContent(SortedDictionary<string, object> parameters, FileDescription file)
         {
@@ -202,13 +202,6 @@ namespace CloudinaryDotNet
                 }
             }
 
-            var task1 = content.ReadAsStreamAsync();
-            task1.Wait();
-
-            Stream requestStream = task1.Result;
-            
-            StreamWriter writer = new StreamWriter(requestStream);
-
             foreach (var param in parameters)
             {
                 if (param.Value != null)
@@ -217,28 +210,38 @@ namespace CloudinaryDotNet
                     {
                         foreach (var item in (IEnumerable<string>)param.Value)
                         {
-                            WriteParam(writer, param.Key + "[]", item);
+                            content.Add(new StringContent(item), String.Format("\"{0}\"", string.Concat(param.Key, "[]")));
                         }
                     }
                     else
                     {
-                        WriteParam(writer, param.Key, param.Value.ToString());
+                        content.Add(new StringContent(param.Value.ToString()), String.Format("\"{0}\"", param.Key));
                     }
                 }
             }
 
             if (file != null)
             {
-                WriteFile(writer, file);
-            }
+                Stream stream = null;
 
-            writer.Write("--{0}--", HTTP_BOUNDARY);
-            
-            writer.Flush();
+                if (file.IsRemote && file.Stream != null)
+                {
+                    stream = file.Stream;
+                }
+                else
+                {
+                    stream = File.OpenRead(file.FilePath);
+                }
+
+                var streamContent = new StreamContent(stream);
+                streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + Path.GetFileName(file.FilePath) + "\"");
+                content.Add(streamContent, "file", Path.GetFileName(file.FilePath));
+            }
 
             return content;
         }
-        
+
         public override string BuildCallbackUrl(string path = "")
         {
             if (!Regex.IsMatch(path.ToLower(), "^https?:/.*"))
