@@ -428,14 +428,14 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test(Description = "Must supply fontFamily for text in overlay"), ExpectedException(typeof(ArgumentException))]
-        public void testOverlayError1()
+        public void TestOverlayError1()
         {
             var transformation = new Transformation().Overlay(new TextLayer().PublicId("test").FontStyle("italic"));
             transformation.ToString();
         }
 
         [Test(Description = "Must supply publicId for non-text underlay"), ExpectedException(typeof(ArgumentException))]
-        public void testOverlayError2()
+        public void TestOverlayError2()
         {
             var transformation = new Transformation().Overlay(new VideoLayer());
             transformation.ToString();
