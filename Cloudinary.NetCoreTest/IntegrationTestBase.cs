@@ -7,6 +7,7 @@ using System.Linq;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using Coudinary.NetCoreShared;
 
 namespace CloudinaryDotNet.Test
 {
@@ -31,6 +32,14 @@ namespace CloudinaryDotNet.Test
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
 
+        protected string m_appveyor_job_id;
+        protected string m_suffix;
+
+        protected string m_test_tag = "cloudinarydotnet_test";
+
+        protected const string TOKEN_KEY = "00112233FF99";
+        protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
+
         protected Account m_account;
         protected Cloudinary m_cloudinary;
 
@@ -41,7 +50,9 @@ namespace CloudinaryDotNet.Test
             builder.SetBasePath(Directory.GetCurrentDirectory());
             builder.AddJsonFile("appsettings.json");
             var config = builder.Build();
-
+            m_appveyor_job_id = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
+            m_suffix = String.IsNullOrEmpty(m_appveyor_job_id) ? new Random().Next(100000, 999999).ToString() : m_appveyor_job_id;
+            m_test_tag += m_suffix;
             m_cloudName = config.GetSection("AccountSettings:CloudName").Value;
             m_apiKey = config.GetSection("AccountSettings:ApiKey").Value;
             m_apiSecret = config.GetSection("AccountSettings:ApiSecret").Value;
