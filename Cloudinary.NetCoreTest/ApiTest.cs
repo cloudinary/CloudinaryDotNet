@@ -16,6 +16,7 @@ namespace Cloudinary.NetCoreTest
         string m_defaultRootPath;
         string m_defaultImgUpPath;
         string m_defaultVideoUpPath;
+        string m_defaultImgFetchPath;
 
         [SetUp]
         public void Init()
@@ -25,6 +26,7 @@ namespace Cloudinary.NetCoreTest
             m_defaultRootPath = "http://res.cloudinary.com/testcloud/";
             m_defaultImgUpPath = m_defaultRootPath + "image/upload/";
             m_defaultVideoUpPath = m_defaultRootPath + "video/upload/";
+            m_defaultImgFetchPath = m_defaultRootPath + "image/fetch/";
         }
 
         [Test]
@@ -660,38 +662,6 @@ namespace Cloudinary.NetCoreTest
         }
 
         [Test]
-        public void TestCallbackUrl()
-        {
-            string s = m_api.BuildCallbackUrl("http://localhost/Content/cloudinary_cors.html");
-
-            Assert.AreEqual("http://localhost/Content/cloudinary_cors.html", s);
-        }
-
-        [Test]
-        public void TestUploadParamsWithCallback()
-        {
-            string s = string.Empty;
-
-            var parameters = new SortedDictionary<string, object>()
-            {
-                {"callback", "/custom/custom_cors.html"}
-            };
-
-            s = m_api.PrepareUploadParams(parameters);
-
-            Assert.True(s.Contains("http://localhost:50/custom/custom_cors.html"));
-
-            parameters = new SortedDictionary<string, object>()
-            {
-                {"callback", "https://cloudinary.com/test/cloudinary_cors.html"}
-            };
-
-            s = m_api.PrepareUploadParams(parameters);
-
-            Assert.True(s.Contains("https://cloudinary.com/test/cloudinary_cors.html"));
-        }
-
-        [Test]
         public void TestSprite()
         {
             // should build urls to get sprite css and picture by tag (with transformations and prefix)
@@ -1288,6 +1258,20 @@ namespace Cloudinary.NetCoreTest
             Assert.Null(@params["a"]);
             Assert.AreEqual("c", @params["b"]);
             Assert.AreEqual("gggg===ggg====", @params["d"]);
+        }
+
+        [Test]
+        public void TestFetchLayerUrl()
+        {
+            //image for overlay
+            //http://image.com/img/seatrade_supplier_logo.jpg
+
+            //fetch image
+            //http://image.com/files/8813/5551/7470/cruise-ship.png
+
+            var transformation = new Transformation().Overlay(new FetchLayer().Url("http://image.com/img/seatrade_supplier_logo.jpg"));
+            var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
+            Assert.AreEqual(m_defaultImgFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
         }
     }
 }

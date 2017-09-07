@@ -72,7 +72,6 @@
   <ItemGroup>
     <Compile Include="Actions\BaseResult.cs" />
     <Compile Include="AuthToken.cs" />
-    <Compile Include="Shared\AuthToken.cs" />
     <Compile Include="FileDescription.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ExplicitResult.cs" />
     <Compile Include="Shared\Coudinary.NetCoreShared\Actions\ResponsiveBreakpointResult.cs" />

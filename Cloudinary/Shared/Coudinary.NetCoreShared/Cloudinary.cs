@@ -1082,29 +1082,6 @@ namespace CloudinaryDotNet
             }
         }
 
-
-
-        /// <summary>
-        /// Create archive and store it as a raw resource in your Cloudinary
-        /// </summary>
-        /// <param name="parameters">Parameters of new generated archive</param>
-        /// <returns>Result of operation</returns>
-        public ArchiveResult CreateArchive(ArchiveParams parameters)
-        {
-            var url = m_api.ApiUrlV.
-                ResourceType(RESOURCE_TYPE_IMAGE).
-                Action(ACTION_GENERATE_ARCHIVE).
-                BuildUrl();
-
-            parameters.Mode(ArchiveCallMode.Create);
-
-            using (HttpResponseMessage response = (HttpResponseMessage)m_api.InternalCall(
-                CloudinaryShared.Core.HttpMethod.POST, url, parameters.ToParamsDictionary(), null))
-            {
-                return ArchiveResult.Parse(response);
-            }
-        }
-
         /// <summary>
         /// Gets java script that configures Cloudinary JS.
         /// </summary>

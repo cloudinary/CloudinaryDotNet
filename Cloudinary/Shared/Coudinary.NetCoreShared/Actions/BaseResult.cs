@@ -76,6 +76,18 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "secure_url")]
         public Uri SecureUri { get; protected set; }
+
+        /// <summary>
+        /// Resource length in bytes
+        /// </summary>
+        [DataMember(Name = "bytes")]
+        public long Length { get; protected set; }
+
+        /// <summary>
+        /// Resource format
+        /// </summary>
+        [DataMember(Name = "format")]
+        public string Format { get; protected set; }
     }
 
     /// <summary>

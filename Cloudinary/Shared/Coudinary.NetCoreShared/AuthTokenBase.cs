@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 
-namespace Coudinary.NetCoreShared
+namespace CloudinaryShared.Core
 {
     public class AuthTokenBase
     {
