@@ -171,7 +171,18 @@ namespace CloudinaryDotNet
 
                 foreach (var header in extraHeaders)
                 {
-                    req.Headers.Add(header.Key, header.Value);
+                    if(header.Key.ToLower() == "content-range")
+                    {
+                        string bytes = header.Value.Replace("bytes ", string.Empty);
+                        string start = bytes.Split('-')[0];
+                        string end = bytes.Split('-')[1].Split('/')[0];
+                        req.Headers.Range = new RangeHeaderValue(long.Parse(start), long.Parse(end));
+                    }
+                    else
+                    {
+                        req.Headers.Add(header.Key, header.Value);
+                    }
+                    
                 }
             }
 

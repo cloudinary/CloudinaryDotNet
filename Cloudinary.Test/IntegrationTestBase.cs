@@ -31,7 +31,7 @@ namespace CloudinaryDotNet.Test
         protected Account m_account;
         protected Cloudinary m_cloudinary;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public virtual void Initialize()
         {
             m_account = GetAccountInstance();
@@ -190,6 +190,17 @@ namespace CloudinaryDotNet.Test
         {
             var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
             return (long)timeSpan.TotalSeconds;
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            string publicId = string.Format("TestForTagSearch_{0}", m_suffix);
+            DelResResult delResult = m_cloudinary.DeleteResources(new string[] { publicId });
+            publicId = string.Concat(m_suffix, "_TestForTagSearch");
+            delResult = m_cloudinary.DeleteResources(new string[] { publicId });
+            publicId = string.Concat(m_suffix, "_TestForSearch");
+            delResult = m_cloudinary.DeleteResources(new string[] { publicId });
         }
     }
 }
