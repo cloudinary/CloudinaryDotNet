@@ -50,7 +50,7 @@ namespace Coudinary.NetCoreShared
 
         protected virtual Stream GetStream(string url)
         {
-            throw new Exception("Please call ovverriden method.");
+            throw new Exception("Please call overridden method.");
         }
         
         /// <summary>

@@ -304,7 +304,6 @@ namespace CloudinaryDotNet
             return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
         }
 
-        [Obsolete("HttpClient doesn't support of Content-Range header in request message.")]
         public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024, bool isRaw = false)
         {
             Url url = m_api.ApiUrlImgUpV;

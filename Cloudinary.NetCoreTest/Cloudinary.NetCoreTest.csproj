@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp1.0</TargetFramework>
     <AssemblyName>Cloudinary.NetCoreTest</AssemblyName>
     <PackageId>Cloudinary.NetCoreTest</PackageId>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;dnx451</PackageTargetFallback>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -18,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.0.2" />
@@ -36,7 +35,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Cloudinary\Shared\Coudinary.NetCoreShared\Coudinary.NetCoreShared.csproj" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\TestImage.jpg;Resources\favicon.ico;Resources\movie.mp4;Resources\multipage.pdf;Resources\TestLargeImage.jpg" />
+  </ItemGroup>
+  
   <ItemGroup>
     <Reference Include="System.Configuration">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Configuration.dll</HintPath>
