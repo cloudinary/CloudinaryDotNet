@@ -11,7 +11,7 @@ using Coudinary.NetCoreShared;
 using CloudinaryDotNet;
 using Castle.Core.Resource;
 
-namespace CloudinaryDotNet.Test
+namespace Cloudinary.NetCoreTest
 {
     [TestFixture]
     public class IntegrationTestBase
@@ -187,8 +187,8 @@ namespace CloudinaryDotNet.Test
             // consciously return null in GetResponse() and extinguish the ArgumentNullException while parsing response, 'cause it's not in focus of current test
             catch (ArgumentNullException) { }
 
-            MemoryStream stream = request.Content.ReadAsStreamAsync().Result as MemoryStream;
-            request.Content.Dispose();
+            MemoryStream stream = new MemoryStream(); 
+            request.Content.CopyToAsync(stream).Wait();
             request.Dispose();
             return System.Text.Encoding.UTF8.GetString(stream.ToArray());
         }

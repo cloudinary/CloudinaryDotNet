@@ -1,16 +1,10 @@
-﻿using Cloudinary.Test.Configuration;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Test;
-using CloudinaryShared.Core;
+﻿using CloudinaryDotNet;
 using Coudinary.NetCoreShared;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Cloudinary.Test
+namespace Cloudinary.NetCoreTest
 {
     class AuthTokenTest : IntegrationTestBase
     {

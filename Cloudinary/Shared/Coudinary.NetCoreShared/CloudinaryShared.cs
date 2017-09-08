@@ -281,5 +281,29 @@ namespace CloudinaryShared.Core
             DelDerivedResResult result = DelDerivedResResult.Parse(response);
             return result;
         }
+
+        /// <summary>
+        /// Create archive and store it as a raw resource in your Cloudinary
+        /// </summary>
+        /// <param name="parameters">Parameters of new generated archive</param>
+        /// <returns>Result of operation</returns>
+        public ArchiveResult CreateArchive(ArchiveParams parameters)
+        {
+            Url url = m_api.ApiUrlV.
+                ResourceType(RESOURCE_TYPE_IMAGE).
+                Action(ACTION_GENERATE_ARCHIVE);
+            if (!String.IsNullOrEmpty(parameters.ResourceType()))
+                url.ResourceType(parameters.ResourceType());
+            string uri = url.BuildUrl();
+
+            parameters.Mode(ArchiveCallMode.Create);
+
+            object response = m_api.InternalCall(
+                HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+
+            ArchiveResult result = ArchiveResult.Parse(response);
+
+            return result;
+        }
     }
 }

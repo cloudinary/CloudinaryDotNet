@@ -662,38 +662,6 @@ namespace Cloudinary.NetCoreTest
         }
 
         [Test]
-        public void TestCallbackUrl()
-        {
-            string s = m_api.BuildCallbackUrl("http://localhost/Content/cloudinary_cors.html");
-
-            Assert.AreEqual("http://localhost/Content/cloudinary_cors.html", s);
-        }
-
-        [Test]
-        public void TestUploadParamsWithCallback()
-        {
-            string s = string.Empty;
-
-            var parameters = new SortedDictionary<string, object>()
-            {
-                {"callback", "/custom/custom_cors.html"}
-            };
-
-            s = m_api.PrepareUploadParams(parameters);
-
-            Assert.True(s.Contains("http://localhost:50/custom/custom_cors.html"));
-
-            parameters = new SortedDictionary<string, object>()
-            {
-                {"callback", "https://cloudinary.com/test/cloudinary_cors.html"}
-            };
-
-            s = m_api.PrepareUploadParams(parameters);
-
-            Assert.True(s.Contains("https://cloudinary.com/test/cloudinary_cors.html"));
-        }
-
-        [Test]
         public void TestSprite()
         {
             // should build urls to get sprite css and picture by tag (with transformations and prefix)
