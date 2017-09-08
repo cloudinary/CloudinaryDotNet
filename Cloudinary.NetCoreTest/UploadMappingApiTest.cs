@@ -2,7 +2,6 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Core;
-using CloudinaryDotNet.Test;
 using NUnit.Framework;
 using System;
 

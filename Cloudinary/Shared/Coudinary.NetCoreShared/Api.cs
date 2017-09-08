@@ -99,7 +99,6 @@ namespace CloudinaryDotNet
             }
         }
 
-
         /// <summary>
         /// Custom call to cloudinary API
         /// </summary>
@@ -120,14 +119,13 @@ namespace CloudinaryDotNet
 
                 var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
 
-                var task2 = client.SendAsync(request);
-                task2.Wait();
+                var task = client.SendAsync(request);
+                task.Wait();
 
-                if (task2.IsCanceled) { }
+                if (task.IsCanceled) { }
+                if (task.IsFaulted) { throw task.Exception; }
 
-                if (task2.IsFaulted) { throw task2.Exception; }
-
-                return task2.Result;
+                return task.Result;
             }
         }
 
@@ -168,21 +166,9 @@ namespace CloudinaryDotNet
                     extraHeaders.Remove("Content-Type");
                 }
 
-
                 foreach (var header in extraHeaders)
                 {
-                    if(header.Key.ToLower() == "content-range")
-                    {
-                        string bytes = header.Value.Replace("bytes ", string.Empty);
-                        string start = bytes.Split('-')[0];
-                        string end = bytes.Split('-')[1].Split('/')[0];
-                        req.Headers.Range = new RangeHeaderValue(long.Parse(start), long.Parse(end));
-                    }
-                    else
-                    {
-                        req.Headers.Add(header.Key, header.Value);
-                    }
-                    
+                    req.Headers.Add(header.Key, header.Value);
                 }
             }
 
@@ -193,10 +179,9 @@ namespace CloudinaryDotNet
 
                 req.Content = PrepareRequestContent(parameters, file);
             }
-
+            
             return req;
         }
-
 
         private MultipartFormDataContent PrepareRequestContent(SortedDictionary<string, object> parameters, FileDescription file)
         {
@@ -233,24 +218,71 @@ namespace CloudinaryDotNet
 
             if (file != null)
             {
-                Stream stream = null;
-
-                if (file.IsRemote && file.Stream != null)
+                if (file.IsRemote && file.Stream == null)
                 {
-                    stream = file.Stream;
+                    StringContent strContent = new StringContent(file.FilePath);
+                    strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));
+                    content.Add(strContent);
                 }
                 else
                 {
-                    stream = File.OpenRead(file.FilePath);
-                }
+                    Stream stream = null;
 
-                var streamContent = new StreamContent(stream);
-                streamContent.Headers.Add("Content-Type", "application/octet-stream");
-                streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + Path.GetFileName(file.FilePath) + "\"");
-                content.Add(streamContent, "file", Path.GetFileName(file.FilePath));
+                    if (file.Stream != null)
+                    {
+                        stream = file.Stream;
+                    }
+                    else
+                    {
+                        stream = File.OpenRead(file.FilePath);
+                    }
+
+                    string fileName = string.IsNullOrWhiteSpace(file.FilePath) ? file.FileName : Path.GetFileName(file.FilePath);
+
+                    var streamContent = new StreamContent(stream);
+                    streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                    streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + fileName + "\"");
+                    content.Add(streamContent, "file", fileName);
+                }
             }
 
             return content;
+        }
+
+
+        private byte[] GetRangeFromFile(FileDescription file, Stream stream)
+        {
+            MemoryStream memStream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(memStream);
+
+            int bytesSent = 0;
+            stream.Seek(file.BytesSent, SeekOrigin.Begin);
+            file.EOF = ReadBytes(writer, stream, file.BufferLength, file.FileName, out bytesSent);
+            file.BytesSent += bytesSent;
+            byte[] buff = new byte[bytesSent];
+            writer.BaseStream.Seek(0, SeekOrigin.Begin);
+            writer.BaseStream.Read(buff, 0, bytesSent);
+
+            return buff;
+        }
+
+        private bool ReadBytes(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
+        {
+            
+            bytesSent = 0;
+            int toSend = 0;
+            byte[] buf = new byte[ChunkSize];
+            int cnt = 0;
+
+            while ((toSend = length - bytesSent) > 0
+                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
+            {
+                writer.BaseStream.Write(buf, 0, cnt);
+                writer.Flush();
+                bytesSent += cnt;
+            }
+
+            return cnt == 0;
         }
 
         public override string BuildCallbackUrl(string path = "")

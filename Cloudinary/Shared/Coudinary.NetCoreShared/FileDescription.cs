@@ -25,10 +25,18 @@ namespace Coudinary.NetCoreShared
 
         protected override Stream GetStream(string url)
         {
-            HttpRequestMessage msg = new HttpRequestMessage();
-            msg.RequestUri = new Uri(url);
             var memStream = new MemoryStream();
-            msg.Content.ReadAsStreamAsync().Result.CopyTo(memStream);
+            using (HttpClient client = new HttpClient())
+            {
+                var request = new HttpRequestMessage();
+                request.Method = HttpMethod.Get;
+                request.RequestUri = new Uri(url);
+                var task = client.SendAsync(request);
+                task.Wait();
+                if (task.IsCanceled) { }
+                if (task.IsFaulted) { throw task.Exception; }
+                task.Result.Content.ReadAsStreamAsync().Result.CopyTo(memStream);
+            }
             memStream.Position = 0;
 
             return memStream;

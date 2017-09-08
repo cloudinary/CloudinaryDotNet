@@ -1,24 +1,23 @@
-﻿using Coudinary.NetCoreShared;
+﻿using CloudinaryShared.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace CloudinaryDotNet.Shared
+namespace Coudinary.NetCoreShared
 {
     public class AuthToken : AuthTokenBase
     {
-        public AuthToken():base() {}
+        public AuthToken() : base() { }
 
-        public AuthToken(string key) : base(key) {}
+        public AuthToken(string key) : base(key) { }
 
         protected override string EscapeToLower(string url)
         {
             string escaped = string.Empty;
             string encodedUrl = string.Empty;
 
-            encodedUrl = System.Net.WebUtility.HtmlEncode(url);
+            encodedUrl = System.Net.WebUtility.UrlEncode(url);
             StringBuilder sb = new StringBuilder(encodedUrl);
             string result = sb.ToString();
             string regex = "%..";
