@@ -114,56 +114,7 @@ namespace Cloudinary.Test
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
         }
 
-        [Test]
-        public void TestListResourcesAsync()
-        {
-            // should allow listing resources
-
-            //var uploadParams = new ImageUploadParams()
-            //{
-            //    File = new FileDescription(m_testImagePath),
-            //    PublicId = "testlistresources",
-            //    Tags = "hello"
-            //};
-
-            //var uploadResult = m_cloudinary.UploadAsync(uploadParams).Result;
-            //IEnumerable<Resource> resources = new Resource[0];
-            //resources = GetAllResults((cursor) => m_cloudinary.ListResources(cursor));
-            //Assert.IsTrue(resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload" && res.Tags.Count() == 1 && res.Tags[0] == "hello").Count() > 0);
-        }
-
-        [Test]
-        public void TestDeleteDerivedAsync()
-        {
-            // should allow deleting derived resource
-
-            ImageUploadParams uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Width(101).Crop("scale") },
-                PublicId = "testdeletederived"
-            };
-
-            m_cloudinary.UploadAsync(uploadParams);
-
-            GetResourceResult resource = m_cloudinary.GetResourceAsync(new GetResourceParams("testdeletederived") { }).Result;
-
-            Assert.IsNotNull(resource);
-
-            List<string> delParams = new List<string>();
-            delParams.Add(resource.PublicId);
-
-            DelDerivedResResult delDerivedResult =
-                m_cloudinary.DeleteDerivedResourcesAsync(new DelDerivedResParams() { DerivedResources = delParams }).Result;
-
-            Assert.AreEqual(1, delDerivedResult.Deleted.Values.Count);
-
-            resource = m_cloudinary.GetResource("testdeletederived");
-
-            Assert.IsFalse(String.IsNullOrEmpty(resource.PublicId));
-        }
-
-        [Test]
+       [Test]
         public void TestDeleteAsync()
         {
             // should allow deleting resources
