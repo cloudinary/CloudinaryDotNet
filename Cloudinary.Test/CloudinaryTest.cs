@@ -796,22 +796,22 @@ namespace CloudinaryDotNet.Test
             Assert.IsTrue(result.ResourceTypes.Contains(ResourceType.Image));
         }
 
-        [Test]
+        [Test, Ignore("test needs to be re-written with mocking - it fails when there are many resources")]
         public void TestListResources()
         {
-            //// should allow listing resources
+            // should allow listing resources
 
-            //var uploadParams = new ImageUploadParams()
-            //{
-            //    File = new FileDescription(m_testImagePath),
-            //    PublicId = "testlistresources",
-            //    Tags = "hello"
-            //};
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = "testlistresources",
+                Tags = "hello"
+            };
 
-            //var uploadResult = m_cloudinary.Upload(uploadParams);
-            //IEnumerable<Resource> resources = new Resource[0];
-            //resources = GetAllResults((cursor) => m_cloudinary.ListResources(cursor));
-            //Assert.IsTrue(resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload" && res.Tags.Count() == 1 && res.Tags[0] == "hello").Count() > 0);
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+            IEnumerable<Resource> resources = new Resource[0];
+            resources = GetAllResults((cursor) => m_cloudinary.ListResources(cursor));
+            Assert.IsTrue(resources.Where(res => res.PublicId == uploadParams.PublicId && res.Type == "upload" && res.Tags.Count() == 1 && res.Tags[0] == "hello").Count() > 0);
         }
 
         protected IEnumerable<Resource> GetAllResults(Func<String, ListResourcesResult> list)
@@ -826,23 +826,23 @@ namespace CloudinaryDotNet.Test
             return resources;
         }
 
-        [Test]
+        [Test, Ignore("test needs to be re-written with mocking - it fails when there are many resources")]
         public void TestListResourcesByType()
         {
-            //// should allow listing resources by type
+            // should allow listing resources by type
 
-            //var uploadParams = new ImageUploadParams()
-            //{
-            //    File = new FileDescription(m_testImagePath),
-            //    PublicId = "testlistresourcesbytype"
-            //};
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = "testlistresourcesbytype"
+            };
 
-            //m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(uploadParams);
 
-            //IEnumerable<Resource> result = GetAllResults((cursor) => m_cloudinary.ListResourcesByType("upload", cursor));
+            IEnumerable<Resource> result = GetAllResults((cursor) => m_cloudinary.ListResourcesByType("upload", cursor));
 
-            //Assert.IsNotEmpty(result.Where(res => res.Type == "upload"));
-            //Assert.IsEmpty(result.Where(res => res.Type != "upload"));
+            Assert.IsNotEmpty(result.Where(res => res.Type == "upload"));
+            Assert.IsEmpty(result.Where(res => res.Type != "upload"));
         }
 
         [Test]
