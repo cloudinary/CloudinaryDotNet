@@ -1,5 +1,5 @@
 ﻿using CloudinaryShared.Core;
-using Coudinary.NetCoreShared;
+using Cloudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;

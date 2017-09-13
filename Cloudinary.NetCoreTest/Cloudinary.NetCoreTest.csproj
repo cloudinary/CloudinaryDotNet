@@ -31,13 +31,13 @@
     <PackageReference Include="NUnit.Console" Version="3.4.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Cloudinary\Shared\Coudinary.NetCoreShared\Coudinary.NetCoreShared.csproj" />
-  </ItemGroup>
   
   <ItemGroup>
     <EmbeddedResource Include="Resources\TestImage.jpg;Resources\favicon.ico;Resources\movie.mp4;Resources\multipage.pdf;Resources\TestLargeImage.jpg" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Cloudinary\Shared\Cloudinary.NetCoreShared\CloudinaryDotNet.Core.csproj" />
   </ItemGroup>
   
   <ItemGroup>
