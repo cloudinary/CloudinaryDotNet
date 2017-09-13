@@ -4,7 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 
-namespace Coudinary.NetCoreShared
+namespace Cloudinary.NetCoreShared
 {
     public class FileDescription : FileDescriptionBase
     {

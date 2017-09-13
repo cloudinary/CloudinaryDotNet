@@ -7,7 +7,7 @@ using System.Linq;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using Coudinary.NetCoreShared;
+using Cloudinary.NetCoreShared;
 using CloudinaryDotNet;
 using Castle.Core.Resource;
 
@@ -117,7 +117,7 @@ namespace Cloudinary.NetCoreTest
         }
 
         /// <summary>
-        /// A convenient method for initialization of new Coudinary instance with necessary checks
+        /// A convenient method for initialization of new Cloudinary instance with necessary checks
         /// </summary>
         /// <param name="account">Instance of Account</param>
         /// <returns>New Cloudinary instance</returns>
@@ -160,7 +160,7 @@ namespace Cloudinary.NetCoreTest
         /// <param name="requestParams">Parameters for Cloudinary call</param>
         /// <param name="cloudinaryCall">Cloudinary call, e.g. "(cloudinaryInstance, params) => {return cloudinaryInstance.Text(params); }"</param>
         /// <returns></returns>
-        protected string GetMockBodyOfCoudinaryRequest<TParams, TResult>(TParams requestParams, Func<CloudinaryDotNet.Cloudinary, TParams, TResult> cloudinaryCall)
+        protected string GetMockBodyOfCloudinaryRequest<TParams, TResult>(TParams requestParams, Func<CloudinaryDotNet.Cloudinary, TParams, TResult> cloudinaryCall)
             where TParams : BaseParams
             where TResult : BaseResult
         {

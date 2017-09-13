@@ -3,7 +3,7 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Core;
 using CloudinaryShared.Core;
-using Coudinary.NetCoreShared;
+using Cloudinary.NetCoreShared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -1689,7 +1689,7 @@ namespace Cloudinary.NetCoreTest
                 Type = "twitter_name"
             };
 
-            string rString = GetMockBodyOfCoudinaryRequest(exp, (p, t) =>
+            string rString = GetMockBodyOfCloudinaryRequest(exp, (p, t) =>
             {
                 p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
                 return (TextResult)null;
@@ -2387,7 +2387,7 @@ namespace Cloudinary.NetCoreTest
             tParams.FontStyle = "italic";
             tParams.TextAlign = "center";
 
-            string rString = GetMockBodyOfCoudinaryRequest(tParams, (p, t) =>
+            string rString = GetMockBodyOfCloudinaryRequest(tParams, (p, t) =>
             {
                 p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
                 return (TextResult)null;
@@ -2405,7 +2405,7 @@ namespace Cloudinary.NetCoreTest
             tParams.FontStyle = "italic";
             tParams.TextAlign = "center";
 
-            string rString = GetMockBodyOfCoudinaryRequest(tParams, (p, t) =>
+            string rString = GetMockBodyOfCloudinaryRequest(tParams, (p, t) =>
             {
                 p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
                 return (TextResult)null;

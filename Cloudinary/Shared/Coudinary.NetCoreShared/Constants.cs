@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Coudinary.NetCoreShared
+namespace Cloudinary.NetCoreShared
 {
     static class Constants
     {
@@ -30,5 +30,11 @@ namespace Coudinary.NetCoreShared
         //Action names
         public const string ACTION_NAME_UPLOAD = "upload";
         public const string ACTION_NAME_FETCH = "fetch";
+
+        //URL constants
+        public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
+        public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
+        public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
+        public const string SHARED_CDN = AKAMAI_SHARED_CDN;
     }
 }

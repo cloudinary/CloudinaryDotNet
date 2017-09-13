@@ -2,7 +2,7 @@
 using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
 using CloudinaryShared.Core;
-using Coudinary.NetCoreShared;
+using Cloudinary.NetCoreShared;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -1717,7 +1717,7 @@ namespace CloudinaryDotNet.Test
 
             //check of AllowWriteStreamBuffering option set to false
             HttpWebRequest requestDefault = null;
-            GetMockBodyOfCoudinaryRequest(rawUploadParams, (p, t) => { return p.UploadLarge(t, 5 * 1024 * 1024); }, out requestDefault);
+            GetMockBodyOfCloudinaryRequest(rawUploadParams, (p, t) => { return p.UploadLarge(t, 5 * 1024 * 1024); }, out requestDefault);
             Assert.IsFalse(requestDefault.AllowWriteStreamBuffering);
             Assert.IsFalse(requestDefault.AllowAutoRedirect);
         }
@@ -1732,7 +1732,7 @@ namespace CloudinaryDotNet.Test
                 Type = "twitter_name"
             };
 
-            string rString = GetMockBodyOfCoudinaryRequest(exp, (p, t) => { return p.Explicit(t); });
+            string rString = GetMockBodyOfCloudinaryRequest(exp, (p, t) => { return p.Explicit(t); });
             StringAssert.Contains("name=\"invalidate\"\r\n\r\ntrue\r\n", rString);
         }
 
@@ -2425,7 +2425,7 @@ namespace CloudinaryDotNet.Test
             tParams.FontStyle = "italic";
             tParams.TextAlign = "center";
 
-            string rString = GetMockBodyOfCoudinaryRequest(tParams, (p, t) => { return p.Text(t); });
+            string rString = GetMockBodyOfCloudinaryRequest(tParams, (p, t) => { return p.Text(t); });
 
             StringAssert.Contains("name=\"text_align\"\r\n\r\ncenter\r\n", rString);
         }
@@ -2438,7 +2438,7 @@ namespace CloudinaryDotNet.Test
             tParams.FontStyle = "italic";
             tParams.TextAlign = "center";
 
-            string rString = GetMockBodyOfCoudinaryRequest(tParams, (p, t) =>
+            string rString = GetMockBodyOfCloudinaryRequest(tParams, (p, t) =>
             {
                 p.Api.InternalCall(HttpMethod.POST, string.Empty, t.ToParamsDictionary(), null);
                 return (TextResult)null;

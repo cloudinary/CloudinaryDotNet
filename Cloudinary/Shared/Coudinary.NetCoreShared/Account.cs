@@ -1,4 +1,4 @@
-﻿using Coudinary.NetCoreShared;
+﻿using Cloudinary.NetCoreShared;
 using System;
 
 namespace CloudinaryDotNet

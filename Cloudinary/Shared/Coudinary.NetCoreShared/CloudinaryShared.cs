@@ -1,6 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Coudinary.NetCoreShared;
+using Cloudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,6 @@ namespace CloudinaryShared.Core
 {
     public abstract class CloudinaryShared<TApi> where TApi: ApiShared
     {
-        public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
-        public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
-        public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
-        public const string SHARED_CDN = AKAMAI_SHARED_CDN;
         protected const string RESOURCE_TYPE_IMAGE = "image";
         protected const string ACTION_GENERATE_ARCHIVE = "generate_archive";
         protected static Random m_random = new Random();

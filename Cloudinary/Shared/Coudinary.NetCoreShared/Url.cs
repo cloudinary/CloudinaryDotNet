@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Core;
-using CloudinaryDotNet.Shared.Coudinary.NetCoreShared;
-using Coudinary.NetCoreShared;
+using CloudinaryDotNet.Shared.Cloudinary.NetCoreShared;
+using Cloudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -609,11 +609,11 @@ namespace CloudinaryShared.Core
             string privateCdn = m_privateCdn;
             if (m_secure)
             {
-                if (String.IsNullOrEmpty(privateCdn) || Cloudinary.OLD_AKAMAI_SHARED_CDN == privateCdn)
+                if (String.IsNullOrEmpty(privateCdn) || Constants.OLD_AKAMAI_SHARED_CDN == privateCdn)
                 {
-                    privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Cloudinary.SHARED_CDN;
+                    privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Constants.SHARED_CDN;
                 }
-                sharedDomain |= privateCdn == Cloudinary.SHARED_CDN;
+                sharedDomain |= privateCdn == Constants.SHARED_CDN;
 
                 if (sharedDomain && m_useSubDomain)
                     privateCdn = privateCdn.Replace(
