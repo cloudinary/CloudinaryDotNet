@@ -37,7 +37,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Cloudinary\Shared\Coudinary.NetCoreShared\CloudinaryDotNet.Core.csproj" />
+    <ProjectReference Include="..\Cloudinary\Shared\Cloudinary.NetCoreShared\CloudinaryDotNet.Core.csproj" />
   </ItemGroup>
   
   <ItemGroup>

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <AssemblyName>Coudinary.NetCoreShared</AssemblyName>
-    <PackageId>Coudinary.NetCoreShared</PackageId>
+    <AssemblyName>Cloudinary.NetCoreShared</AssemblyName>
+    <PackageId>Cloudinary.NetCoreShared</PackageId>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
