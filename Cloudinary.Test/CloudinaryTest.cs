@@ -896,19 +896,40 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestContext()
+        {
+            //should allow sending context
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = "test_context",
+                Context = new StringDictionary("key=value", "key2=value2")
+            };
+
+            var uploaded = m_cloudinary.Upload(uploadParams);
+
+            var res = m_cloudinary.GetResource(uploaded.PublicId);
+
+            Assert.AreEqual("value", res.Context["custom"]["key"].ToString());
+            Assert.AreEqual("value2", res.Context["custom"]["key2"].ToString());
+        }
+
+        [Test]
         public void TestListResourcesByPublicIds()
         {
             // should allow listing resources by public ids
 
-            var result = m_cloudinary.ListResourceByPublicIds(new List<string>()
+            List<string> publicIds = new List<string>()
                 {
                     "testlistresources",
                     "testlistblablabla",
                     "test_context"
-                }, true, true, true);
+                };
+            var result = m_cloudinary.ListResourceByPublicIds(publicIds, true, true, true);
 
             Assert.NotNull(result);
-            Assert.AreEqual(3, result.Resources.Length);
+            Assert.AreEqual(3, result.Resources.Length, "expected to find {0} but got {1}", new Object[] { publicIds.Aggregate((current, next) => current + ", " + next), result.Resources.Select(r => r.PublicId).Aggregate((current, next) => current + ", " + next) });
             Assert.True(result.Resources.Where(r => r.Tags != null && r.Tags.Length > 0 && r.Tags[0] == "hello").Count() == 1);
             Assert.True(result.Resources.Where(r => r.Context != null).Count() == 2);
         }
@@ -1297,26 +1318,6 @@ namespace CloudinaryDotNet.Test
 
             resource_backup = m_cloudinary.GetResource(TEST_PUBLIC_ID);
             Assert.IsFalse(string.IsNullOrEmpty(resource_backup.PublicId));
-        }
-
-        [Test]
-        public void TestContext()
-        {
-            //should allow sending context
-
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                PublicId = "test_context",
-                Context = new StringDictionary("key=value", "key2=value2")
-            };
-
-            var uploaded = m_cloudinary.Upload(uploadParams);
-
-            var res = m_cloudinary.GetResource(uploaded.PublicId);
-
-            Assert.AreEqual("value", res.Context["custom"]["key"].ToString());
-            Assert.AreEqual("value2", res.Context["custom"]["key2"].ToString());
         }
 
         [Test]
@@ -2342,7 +2343,7 @@ namespace CloudinaryDotNet.Test
             CollectionAssert.AreEquivalent(expectedList2, actualList2);
         }
 
-        [Test, Ignore("Ignored until 'General error' issue solved")]
+        [Test]
         public void TestResponsiveBreakpoints()
         {
             var breakpoint = new ResponsiveBreakpoint().MaxImages(5).BytesStep(20)
