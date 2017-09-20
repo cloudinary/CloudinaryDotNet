@@ -47,10 +47,6 @@ namespace CloudinaryDotNet.Test
 
             result = m_cloudinary.DeleteUploadMapping(FOLDERS[0]);
             StringAssert.AreEqualIgnoringCase("deleted", result.Message);
-
-            result = m_cloudinary.UploadMappings(new UploadMappingParams());
-            Assert.IsFalse(result.Mappings.ContainsKey(FOLDERS[0]));
-            Assert.IsFalse(result.Mappings.ContainsValue(NEW_TEMPLATE));
         }
 
         [Test]

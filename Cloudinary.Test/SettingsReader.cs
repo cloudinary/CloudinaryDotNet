@@ -7,7 +7,7 @@ namespace Cloudinary.Test
 {
     public static class SettingsReader
     {
-        private const string SETTINGS_XPATH = "/configuration/ClodinarySettings";
+        private const string SETTINGS_XPATH = "/configuration/CloudinarySettings";
 
         public static string ReadSetting(string settingName)
         {

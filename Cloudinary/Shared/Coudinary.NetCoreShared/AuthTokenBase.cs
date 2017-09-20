@@ -4,13 +4,16 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 
 namespace Coudinary.NetCoreShared
 {
-    public class AuthToken
+    public class AuthTokenBase
     {
         public static string AUTH_TOKEN_NAME = "__cld_token__";
+
+        public static AuthTokenBase NULL_AUTH_TOKEN = new AuthTokenBase().SetNull();
 
         public string tokenName = AUTH_TOKEN_NAME;
         public string key;
@@ -23,41 +26,41 @@ namespace Coudinary.NetCoreShared
         public long duration;
         private bool isNullToken = false;
 
-        public AuthToken()
+        public AuthTokenBase()
         {
 
         }
 
-        public AuthToken(string key)
+        public AuthTokenBase(string key)
         {
             this.key = key;
         }
 
-        public AuthToken StartTime(long startTime)
+        public AuthTokenBase StartTime(long startTime)
         {
             this.startTime = startTime;
             return this;
         }
 
-        public AuthToken Expiration(long expiration)
+        public AuthTokenBase Expiration(long expiration)
         {
             this.expiration = expiration;
             return this;
         }
 
-        public AuthToken Ip(string ip)
+        public AuthTokenBase Ip(string ip)
         {
             this.ip = ip;
             return this;
         }
 
-        public AuthToken Acl(string acl)
+        public AuthTokenBase Acl(string acl)
         {
             this.acl = acl;
             return this;
         }
 
-        public AuthToken Duration(long duration)
+        public AuthTokenBase Duration(long duration)
         {
             this.duration = duration;
             return this;
@@ -100,14 +103,14 @@ namespace Coudinary.NetCoreShared
 
             if (!string.IsNullOrWhiteSpace(acl))
             {
-                tokenParts.Add(string.Format("acl={0}", acl));
+                tokenParts.Add(string.Format("acl={0}", EscapeToLower(acl)));
             }
 
             List<string> toSign = new List<string>(tokenParts);
 
             if(!string.IsNullOrWhiteSpace(url))
             {
-                toSign.Add(string.Format("url={0}", EscapeUrl(url)));
+                toSign.Add(string.Format("url={0}", EscapeToLower(url)));
             }
             string auth = Digest(string.Join("~", toSign));
             tokenParts.Add(string.Format("hmac={0}", auth));
@@ -115,9 +118,9 @@ namespace Coudinary.NetCoreShared
             return tokenName + "=" + string.Join("~", tokenParts);
         }
 
-        public AuthToken Copy()
+        public AuthTokenBase Copy()
         {
-            AuthToken authToken = new AuthToken(key);
+            AuthTokenBase authToken = new AuthTokenBase(key);
 
             authToken.tokenName = tokenName;
             authToken.startTime = startTime;
@@ -129,7 +132,7 @@ namespace Coudinary.NetCoreShared
             return authToken;
         }
 
-        private AuthToken SetNull()
+        private AuthTokenBase SetNull()
         {
             isNullToken = true;
             return this;
@@ -137,9 +140,9 @@ namespace Coudinary.NetCoreShared
 
         public override bool Equals(object o)
         {
-            if(o is AuthToken)
+            if(o is AuthTokenBase)
             {
-                AuthToken other = (AuthToken)o;
+                AuthTokenBase other = (AuthTokenBase)o;
                 return  (isNullToken && other.isNullToken)  ||
                     key == null ? other.key == null : key == other.key &&
                     tokenName == other.tokenName &&
@@ -158,6 +161,11 @@ namespace Coudinary.NetCoreShared
         private string EscapeUrl(string url)
         {
             return Uri.EscapeDataString(url);
+        }
+
+        protected virtual string EscapeToLower(string url)
+        {
+            throw new Exception("Please use overriden method.");
         }
 
         private string Digest(string message)

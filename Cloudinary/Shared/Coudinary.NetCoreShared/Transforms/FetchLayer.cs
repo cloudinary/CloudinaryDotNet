@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Coudinary.NetCoreShared;
+using System;
 using System.Collections.Generic;
 
 namespace CloudinaryDotNet
@@ -9,7 +10,7 @@ namespace CloudinaryDotNet
 
         public FetchLayer()
         {
-            m_resourceType = "fetch";
+            m_resourceType = Constants.RESOURCE_TYPE_FETCH;
         }
 
         /// <summary>
