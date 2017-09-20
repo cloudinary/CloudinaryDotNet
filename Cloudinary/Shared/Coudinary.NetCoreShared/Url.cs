@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Core;
-using CloudinaryDotNet.Shared.Coudinary.NetCoreShared;
-using Coudinary.NetCoreShared;
+using CloudinaryDotNet.Shared.Cloudinary.NetCoreShared;
+using Cloudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,7 +23,7 @@ namespace CloudinaryShared.Core
         protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
 
         protected ISignProvider m_signProvider;
-        protected AuthToken m_AuthToken;
+        protected AuthTokenBase m_AuthToken;
 
         protected string m_cloudName;
         protected string m_cloudinaryAddr = Api.ADDR_RES;
@@ -117,7 +117,7 @@ namespace CloudinaryShared.Core
             return this;
         }
 
-        public Url AuthToken(AuthToken authToken)
+        public Url AuthToken(AuthTokenBase authToken)
         {
             if (m_AuthToken == null)
             {
@@ -561,9 +561,13 @@ namespace CloudinaryShared.Core
 
             if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
             {
-                string tokenStr = m_AuthToken == null && CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken.Generate(uriStr) :
-                     (m_AuthToken != null ? m_AuthToken.Generate(uriStr) : string.Empty);
-                uriStr = string.Format("{0}?{1}", uriStr, tokenStr);
+                AuthTokenBase token = m_AuthToken != null ? m_AuthToken : (CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken : null);
+                    
+                if (token != null && token != AuthTokenBase.NULL_AUTH_TOKEN)
+                {
+                    string tokenStr = token.Generate();
+                    uriStr = string.Format("{0}?{1}", uriStr, tokenStr);
+                }
             }
 
             return uriStr;
@@ -605,11 +609,11 @@ namespace CloudinaryShared.Core
             string privateCdn = m_privateCdn;
             if (m_secure)
             {
-                if (String.IsNullOrEmpty(privateCdn) || Cloudinary.OLD_AKAMAI_SHARED_CDN == privateCdn)
+                if (String.IsNullOrEmpty(privateCdn) || Constants.OLD_AKAMAI_SHARED_CDN == privateCdn)
                 {
-                    privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Cloudinary.SHARED_CDN;
+                    privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Constants.SHARED_CDN;
                 }
-                sharedDomain |= privateCdn == Cloudinary.SHARED_CDN;
+                sharedDomain |= privateCdn == Constants.SHARED_CDN;
 
                 if (sharedDomain && m_useSubDomain)
                     privateCdn = privateCdn.Replace(

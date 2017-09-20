@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Coudinary.NetCoreShared
+namespace Cloudinary.NetCoreShared
 {
     public class Search
     {
@@ -84,16 +84,28 @@ namespace Coudinary.NetCoreShared
             return queryParams;
         }
 
-        public SearchResult Execute()
+        private SortedDictionary<string, object> PrepareSearchParams()
         {
-            Url url = m_api.ApiUrlV.Add("resources").Add("search");
-
             SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
             sParams.Add("unsigned", string.Empty);
             sParams.Add("removeUnsignedParam", string.Empty);
+
+            return sParams;
+        }
+
+        private Dictionary<string, string> PrepareHeaders()
+        {
             Dictionary<string, string> extraHeaders = new Dictionary<string, string>();
             extraHeaders.Add("Content-Type", "application/json");
-            var response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), sParams, null, extraHeaders);
+
+            return extraHeaders;
+        }
+
+        public SearchResult Execute()
+        {
+            Url url = m_api.ApiUrlV.Add("resources").Add("search");
+            
+            var response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), PrepareSearchParams(), null, PrepareHeaders());
 
             return SearchResult.Parse(response);
         }

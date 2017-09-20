@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using CloudinaryShared.Core;
+using Cloudinary.NetCoreShared;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -98,7 +99,6 @@ namespace CloudinaryDotNet
             }
         }
 
-
         /// <summary>
         /// Custom call to cloudinary API
         /// </summary>
@@ -108,7 +108,7 @@ namespace CloudinaryDotNet
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
         //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
-        public  HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -119,14 +119,13 @@ namespace CloudinaryDotNet
 
                 var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
 
-                var task2 = client.SendAsync(request);
-                task2.Wait();
+                var task = client.SendAsync(request);
+                task.Wait();
 
-                if (task2.IsCanceled) { }
+                if (task.IsCanceled) { }
+                if (task.IsFaulted) { throw task.Exception; }
 
-                if (task2.IsFaulted) { throw task2.Exception; }
-
-                return task2.Result;
+                return task.Result;
             }
         }
 
@@ -166,8 +165,7 @@ namespace CloudinaryDotNet
                     req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     extraHeaders.Remove("Content-Type");
                 }
-                
-                
+
                 foreach (var header in extraHeaders)
                 {
                     req.Headers.Add(header.Key, header.Value);
@@ -181,10 +179,9 @@ namespace CloudinaryDotNet
 
                 req.Content = PrepareRequestContent(parameters, file);
             }
-
+            
             return req;
         }
- 
 
         private MultipartFormDataContent PrepareRequestContent(SortedDictionary<string, object> parameters, FileDescription file)
         {
@@ -201,13 +198,6 @@ namespace CloudinaryDotNet
                 }
             }
 
-            var task1 = content.ReadAsStreamAsync();
-            task1.Wait();
-
-            Stream requestStream = task1.Result;
-            
-            StreamWriter writer = new StreamWriter(requestStream);
-
             foreach (var param in parameters)
             {
                 if (param.Value != null)
@@ -216,28 +206,85 @@ namespace CloudinaryDotNet
                     {
                         foreach (var item in (IEnumerable<string>)param.Value)
                         {
-                            WriteParam(writer, param.Key + "[]", item);
+                            content.Add(new StringContent(item), String.Format("\"{0}\"", string.Concat(param.Key, "[]")));
                         }
                     }
                     else
                     {
-                        WriteParam(writer, param.Key, param.Value.ToString());
+                        content.Add(new StringContent(param.Value.ToString()), String.Format("\"{0}\"", param.Key));
                     }
                 }
             }
 
             if (file != null)
             {
-                WriteFile(writer, file);
-            }
+                if (file.IsRemote && file.Stream == null)
+                {
+                    StringContent strContent = new StringContent(file.FilePath);
+                    strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));
+                    content.Add(strContent);
+                }
+                else
+                {
+                    Stream stream = null;
 
-            writer.Write("--{0}--", HTTP_BOUNDARY);
-            
-            writer.Flush();
+                    if (file.Stream != null)
+                    {
+                        stream = file.Stream;
+                    }
+                    else
+                    {
+                        stream = File.OpenRead(file.FilePath);
+                    }
+
+                    string fileName = string.IsNullOrWhiteSpace(file.FilePath) ? file.FileName : Path.GetFileName(file.FilePath);
+
+                    var streamContent = new StreamContent(stream);
+                    streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                    streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + fileName + "\"");
+                    content.Add(streamContent, "file", fileName);
+                }
+            }
 
             return content;
         }
-        
+
+
+        private byte[] GetRangeFromFile(FileDescription file, Stream stream)
+        {
+            MemoryStream memStream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(memStream);
+
+            int bytesSent = 0;
+            stream.Seek(file.BytesSent, SeekOrigin.Begin);
+            file.EOF = ReadBytes(writer, stream, file.BufferLength, file.FileName, out bytesSent);
+            file.BytesSent += bytesSent;
+            byte[] buff = new byte[bytesSent];
+            writer.BaseStream.Seek(0, SeekOrigin.Begin);
+            writer.BaseStream.Read(buff, 0, bytesSent);
+
+            return buff;
+        }
+
+        private bool ReadBytes(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
+        {
+            
+            bytesSent = 0;
+            int toSend = 0;
+            byte[] buf = new byte[ChunkSize];
+            int cnt = 0;
+
+            while ((toSend = length - bytesSent) > 0
+                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
+            {
+                writer.BaseStream.Write(buf, 0, cnt);
+                writer.Flush();
+                bytesSent += cnt;
+            }
+
+            return cnt == 0;
+        }
+
         public override string BuildCallbackUrl(string path = "")
         {
             if (!Regex.IsMatch(path.ToLower(), "^https?:/.*"))

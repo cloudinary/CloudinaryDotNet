@@ -14,8 +14,8 @@ namespace CloudinaryDotNet.Test
         Api m_api;
         string m_defaultRootPath;
         string m_defaultImgUpPath;
-        string m_defaultImgFetchPath;
         string m_defaultVideoUpPath;
+        string m_defaultImgFetchPath;
 
         [SetUp]
         public void Init()
@@ -24,8 +24,8 @@ namespace CloudinaryDotNet.Test
             m_api = new Api(account);
             m_defaultRootPath = "http://res.cloudinary.com/testcloud/";
             m_defaultImgUpPath = m_defaultRootPath + "image/upload/";
-            m_defaultImgFetchPath = m_defaultRootPath + "image/fetch/";
             m_defaultVideoUpPath = m_defaultRootPath + "video/upload/";
+            m_defaultImgFetchPath = m_defaultRootPath + "image/fetch/";
         }
 
         [Test]
@@ -239,6 +239,32 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestTransformationAutoWidth()
+        {
+            // should support transformations with width:auto and width:auto_breakpoints
+
+            Transformation transformation = new Transformation().Width("auto:20").Crop("fill");
+            string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:20/test", uri);
+
+            transformation = new Transformation().Width("auto:20:350").Crop("fill");
+            uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:20:350/test", uri);
+
+            transformation = new Transformation().Width("auto:breakpoints").Crop("fill");
+            uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:breakpoints/test", uri);
+
+            transformation = new Transformation().Width("auto:breakpoints_100_1900_20_15").Crop("fill");
+            uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:breakpoints_100_1900_20_15/test", uri);
+
+            transformation = new Transformation().Width("auto:breakpoints:json").Crop("fill");
+            uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(m_defaultImgUpPath + "c_fill,w_auto:breakpoints:json/test", uri);
+        }
+
+        [Test]
         public void TestExcludeEmptyTransformation()
         {
             Transformation transformation = new Transformation().Chain().X(100).Y(100).Crop("fill").Chain();
@@ -403,36 +429,18 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(m_defaultImgUpPath + "h_100,u_text:hello,w_100/test", result);
         }
 
-        [Test(Description = "Must supply fontFamily for text in overlay"), ExpectedException(typeof(ArgumentException))]
-        public void testOverlayError1()
+        [Test]
+        public void TestOverlayError1()
         {
             var transformation = new Transformation().Overlay(new TextLayer().PublicId("test").FontStyle("italic"));
-            transformation.ToString();
-        }
-
-        [Test(Description = "Must supply publicId for non-text underlay"), ExpectedException(typeof(ArgumentException))]
-        public void testOverlayError2()
-        {
-            var transformation = new Transformation().Overlay(new VideoLayer());
-            transformation.ToString();
+            Assert.That(() => transformation.ToString(), Throws.TypeOf<ArgumentException>(), "Must supply fontFamily for text in overlay");
         }
 
         [Test]
-        public void TestFetchLayerUrl()
+        public void TestOverlayError2()
         {
-            //image for overlay
-            //http://image.com/img/seatrade_supplier_logo.jpg
-
-            //fetch image
-            //http://image.com/files/8813/5551/7470/cruise-ship.png
-
-            var transformation = new Transformation().Overlay(new FetchLayer().Url("http://image.com/img/seatrade_supplier_logo.jpg"));
-            var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
-            Assert.AreEqual(m_defaultImgFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
-
-            //var transformation = new Transformation().Overlay(new FetchLayer().PublicId("test").Url("http:\\sampleuri")).Width(200);
-            //var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("test.jpg");
-            //Assert.AreEqual(m_defaultImgFetchPath + "l_url:aHR0cDpcc2FtcGxldXJp:test,w_200/test.jpg", uri);
+            var transformation = new Transformation().Overlay(new VideoLayer());
+            Assert.That(() => transformation.ToString(), Throws.TypeOf<ArgumentException>(), "Must supply publicId for non-text underlay");
         }
 
         [Test]
@@ -853,38 +861,33 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "Root path only supported for image/upload!")]
         public void TestDisallowUseRootPathIfNotImageUploadForFacebook()
         {
-            m_api.UrlImgUp.UseRootPath(true).PrivateCdn(true).Action("facebook").BuildUrl("test");
+            Assert.That(() => m_api.UrlImgUp.UseRootPath(true).PrivateCdn(true).Action("facebook").BuildUrl("test"), Throws.TypeOf<NotSupportedException>(), "Root path only supported for image/upload!");
         }
 
         [Test]
-        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "Root path only supported for image/upload!")]
         public void TestDisallowUseRootPathIfNotImageUploadForRaw()
         {
-            m_api.UrlImgUp.UseRootPath(true).PrivateCdn(true).ResourceType("raw").BuildUrl("test");
+            Assert.That(() => m_api.UrlImgUp.UseRootPath(true).PrivateCdn(true).ResourceType("raw").BuildUrl("test"), Throws.TypeOf<NotSupportedException>(), "Root path only supported for image/upload!");
         }
 
         [Test]
-        [ExpectedException(ExpectedException = typeof(NotSupportedException), ExpectedMessage = "URL Suffix only supported for image/upload and raw/upload!")]
         public void TestDisallowUrlSuffixInNonUploadTypes()
         {
-            m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).Action("facebook").BuildUrl("test");
+            Assert.That(() => m_api.UrlImgUp.Suffix("hello").PrivateCdn(true).Action("facebook").BuildUrl("test"), Throws.TypeOf<NotSupportedException>(), "URL Suffix only supported for image/upload and raw/upload!");
         }
 
         [Test]
-        [ExpectedException(ExpectedException = typeof(ArgumentException), ExpectedMessage = "Suffix should not include . or /!")]
         public void TestDisallowUrlSuffixWithSlash()
         {
-            m_api.UrlImgUp.Suffix("hello/world").PrivateCdn(true).BuildUrl("test");
+            Assert.That(() => m_api.UrlImgUp.Suffix("hello/world").PrivateCdn(true).BuildUrl("test"), Throws.TypeOf<ArgumentException>(), "Suffix should not include . or /!");
         }
 
         [Test]
-        [ExpectedException(ExpectedException = typeof(ArgumentException), ExpectedMessage = "Suffix should not include . or /!")]
         public void TestDisallowUrlSuffixWithDot()
         {
-            m_api.UrlImgUp.Suffix("hello.world").PrivateCdn(true).BuildUrl("test");
+            Assert.That(() => m_api.UrlImgUp.Suffix("hello.world").PrivateCdn(true).BuildUrl("test"), Throws.TypeOf<ArgumentException>(), "Suffix should not include . or /!");
         }
 
         [Test]
@@ -1294,6 +1297,20 @@ namespace CloudinaryDotNet.Test
             Assert.Null(@params["a"]);
             Assert.AreEqual("c", @params["b"]);
             Assert.AreEqual("gggg===ggg====", @params["d"]);
+        }
+
+        [Test]
+        public void TestFetchLayerUrl()
+        {
+            //image for overlay
+            //http://image.com/img/seatrade_supplier_logo.jpg
+
+            //fetch image
+            //http://image.com/files/8813/5551/7470/cruise-ship.png
+
+            var transformation = new Transformation().Overlay(new FetchLayer().Url("http://image.com/img/seatrade_supplier_logo.jpg"));
+            var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
+            Assert.AreEqual(m_defaultImgFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CloudinaryShared.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,13 +7,13 @@ using System.Security.Cryptography;
 using System.Text;
 
 
-namespace Coudinary.NetCoreShared
+namespace Cloudinary.NetCoreShared
 {
     public static  class CloudinaryConfiguration
     {
         public static string CloudName = string.Empty;
         public static string ApiKey = string.Empty;
         public static string ApiSecret = string.Empty;
-        public static AuthToken AuthToken = null;
+        public static AuthTokenBase AuthToken = null;
     }
 }

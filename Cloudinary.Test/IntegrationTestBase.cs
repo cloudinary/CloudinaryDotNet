@@ -20,8 +20,10 @@ namespace CloudinaryDotNet.Test
         protected string m_testVideoPath;
         protected string m_testPdfPath;
         protected string m_testIconPath;
+        protected string m_appveyor_job_id;
+        protected string m_suffix;
 
-        protected const string TEST_TAG = "cloudinarydotnet_test";
+        protected string m_test_tag = "cloudinarydotnet_test";
 
         protected const string TOKEN_KEY = "00112233FF99";
         protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
@@ -29,12 +31,14 @@ namespace CloudinaryDotNet.Test
         protected Account m_account;
         protected Cloudinary m_cloudinary;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public virtual void Initialize()
         {
             m_account = GetAccountInstance();
             m_cloudinary = GetCloudinaryInstance(m_account);
-
+            m_appveyor_job_id = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
+            m_suffix = String.IsNullOrEmpty(m_appveyor_job_id) ? new Random().Next(100000, 999999).ToString() : m_appveyor_job_id;
+            m_test_tag += m_suffix;
             m_testVideoPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "movie.mp4");
             m_testImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestImage.jpg");
             m_testLargeImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestLargeImage.jpg");
@@ -84,9 +88,9 @@ namespace CloudinaryDotNet.Test
         /// <returns>New Account instance</returns>
         private Account GetAccountInstance()
         {
-            string cloudName = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.CloudName) ? SettingsReader.ReadSetting("ApiBaseAddress") : ClodinarySettings.Settings.CloudName;
-            string apiKey = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiKey) ? SettingsReader.ReadSetting("ApiKey") : ClodinarySettings.Settings.ApiKey;
-            string apiSecret = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiSecret) ? SettingsReader.ReadSetting("ApiSecret") : ClodinarySettings.Settings.ApiSecret;
+            string cloudName = string.IsNullOrWhiteSpace(CloudinarySettings.Settings.CloudName) ? SettingsReader.ReadSetting("CloudName") : CloudinarySettings.Settings.CloudName;
+            string apiKey = string.IsNullOrWhiteSpace(CloudinarySettings.Settings.ApiKey) ? SettingsReader.ReadSetting("ApiKey") : CloudinarySettings.Settings.ApiKey;
+            string apiSecret = string.IsNullOrWhiteSpace(CloudinarySettings.Settings.ApiSecret) ? SettingsReader.ReadSetting("ApiSecret") : CloudinarySettings.Settings.ApiSecret;
 
             Account account = new Account(
                 cloudName,
@@ -109,15 +113,19 @@ namespace CloudinaryDotNet.Test
         }
 
         /// <summary>
-        /// A convenient method for initialization of new Coudinary instance with necessary checks
+        /// A convenient method for initialization of new Cloudinary instance with necessary checks
         /// </summary>
         /// <param name="account">Instance of Account</param>
         /// <returns>New Cloudinary instance</returns>
         protected Cloudinary GetCloudinaryInstance(Account account)
         {
             Cloudinary cloudinary = new Cloudinary(account);
-            string apiAddressBase = string.IsNullOrWhiteSpace(ClodinarySettings.Settings.ApiBaseAddress) ? SettingsReader.ReadSetting("ApiBaseAddress") : ClodinarySettings.Settings.ApiBaseAddress;
-            cloudinary.Api.ApiBaseAddress = apiAddressBase;
+            string apiAddressBase = string.IsNullOrWhiteSpace(CloudinarySettings.Settings.ApiBaseAddress) ? SettingsReader.ReadSetting("ApiBaseAddress") : CloudinarySettings.Settings.ApiBaseAddress;
+            if(!string.IsNullOrWhiteSpace(apiAddressBase))
+            {
+                cloudinary.Api.ApiBaseAddress = apiAddressBase;
+            }
+            
 
             return cloudinary;
         }
@@ -128,12 +136,12 @@ namespace CloudinaryDotNet.Test
         /// <param name="requestParams">Parameters for Cloudinary call</param>
         /// <param name="cloudinaryCall">Cloudinary call, e.g. "(cloudinaryInstance, params) => {return cloudinaryInstance.Text(params); }"</param>
         /// <returns></returns>
-        protected string GetMockBodyOfCoudinaryRequest<TParams, TResult>(TParams requestParams, Func<Cloudinary, TParams, TResult> cloudinaryCall)
+        protected string GetMockBodyOfCloudinaryRequest<TParams, TResult>(TParams requestParams, Func<Cloudinary, TParams, TResult> cloudinaryCall)
             where TParams : BaseParams
             where TResult : BaseResult
         {
             HttpWebRequest request = null;
-            return GetMockBodyOfCoudinaryRequest(requestParams, cloudinaryCall, out request);
+            return GetMockBodyOfCloudinaryRequest(requestParams, cloudinaryCall, out request);
         }
 
         /// <summary>
@@ -143,7 +151,7 @@ namespace CloudinaryDotNet.Test
         /// <param name="cloudinaryCall">Cloudinary call, e.g. "(cloudinaryInstance, params) => {return cloudinaryInstance.Text(params); }"</param>
         /// <param name="request">HttpWebRequest object as out parameter for further analyze of properties</param>
         /// <returns></returns>
-        protected string GetMockBodyOfCoudinaryRequest<TParams, TResult>(TParams requestParams, Func<Cloudinary, TParams, TResult> cloudinaryCall, out HttpWebRequest request)
+        protected string GetMockBodyOfCloudinaryRequest<TParams, TResult>(TParams requestParams, Func<Cloudinary, TParams, TResult> cloudinaryCall, out HttpWebRequest request)
             where TParams : BaseParams
             where TResult : BaseResult
         {
@@ -182,6 +190,17 @@ namespace CloudinaryDotNet.Test
         {
             var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
             return (long)timeSpan.TotalSeconds;
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            string publicId = string.Format("TestForTagSearch_{0}", m_suffix);
+            DelResResult delResult = m_cloudinary.DeleteResources(new string[] { publicId });
+            publicId = string.Concat(m_suffix, "_TestForTagSearch");
+            delResult = m_cloudinary.DeleteResources(new string[] { publicId });
+            publicId = string.Concat(m_suffix, "_TestForSearch");
+            delResult = m_cloudinary.DeleteResources(new string[] { publicId });
         }
     }
 }

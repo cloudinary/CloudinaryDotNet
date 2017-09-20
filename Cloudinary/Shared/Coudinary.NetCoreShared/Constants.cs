@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Coudinary.NetCoreShared
+namespace Cloudinary.NetCoreShared
 {
     static class Constants
     {
@@ -21,5 +21,20 @@ namespace Coudinary.NetCoreShared
         public const string PREFIX_PARAM_NAME = "prefix";
         public const string PUBLIC_IDS = "public_ids";
         public const string COMMAND = "command";
+
+        //Resource types
+        public const string RESOURCE_TYPE_FETCH = "fetch";
+        public const string RESOURCE_TYPE_IMAGE = "image";
+        public const string RESOURCE_TYPE_VIDEO = "video";
+
+        //Action names
+        public const string ACTION_NAME_UPLOAD = "upload";
+        public const string ACTION_NAME_FETCH = "fetch";
+
+        //URL constants
+        public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
+        public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
+        public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
+        public const string SHARED_CDN = AKAMAI_SHARED_CDN;
     }
 }

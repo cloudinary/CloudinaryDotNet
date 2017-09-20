@@ -14,7 +14,10 @@ namespace CloudinaryDotNet.Actions
         public long Time { get; protected set; }
 
         [DataMember(Name = "resources")]
-        public List<object> Resources { get; protected set; }
+        public List<SearchResource> Resources { get; protected set; }
+
+        [DataMember(Name = "next_cursor")]
+        public string NextCursor { get; protected set; }
 
         /// <summary>
         /// Parses HTTP response and creates new instance of this class
@@ -25,5 +28,27 @@ namespace CloudinaryDotNet.Actions
         {
             return Parse<SearchResult>(response);
         }
+    }
+
+    [DataContract]
+    public class SearchResource
+    {
+        [DataMember(Name = "public_id")]
+        public string PublicId { get; protected set; }
+
+        [DataMember(Name = "created_at")]
+        public string Created { get; protected set; }
+
+        [DataMember(Name = "format")]
+        public string Format { get; protected set; }
+
+        [DataMember(Name = "width")]
+        public int Width { get; protected set; }
+
+        [DataMember(Name = "height")]
+        public int Height { get; protected set; }
+
+        [DataMember(Name = "bytes")]
+        public long Length { get; protected set; }
     }
 }

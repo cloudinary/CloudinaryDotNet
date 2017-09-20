@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Cloudinary.NetCoreShared;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -157,8 +158,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return Url
-                    .ResourceType("image")
-                    .Action("upload")
+                    .ResourceType(Constants.RESOURCE_TYPE_IMAGE)
+                    .Action(Constants.ACTION_NAME_UPLOAD)
                     .UseRootPath(UseRootPath)
                     .Suffix(Suffix);
             }
@@ -172,8 +173,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return Url
-                    .ResourceType("image")
-                    .Action("fetch")
+                    .ResourceType(Constants.RESOURCE_TYPE_IMAGE)
+                    .Action(Constants.ACTION_NAME_FETCH)
                     .UseRootPath(UseRootPath)
                     .Suffix(Suffix);
             }
@@ -187,8 +188,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return Url
-                    .ResourceType("video")
-                    .Action("upload")
+                    .ResourceType(Constants.RESOURCE_TYPE_VIDEO)
+                    .Action(Constants.ACTION_NAME_UPLOAD)
                     .UseRootPath(UseRootPath)
                     .Suffix(Suffix);
             }
@@ -214,8 +215,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return ApiUrl.
-                    Action("upload").
-                    ResourceType("image");
+                    Action(Constants.ACTION_NAME_UPLOAD).
+                    ResourceType(Constants.RESOURCE_TYPE_IMAGE);
             }
         }
 
@@ -239,8 +240,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return ApiUrlV.
-                    Action("upload").
-                    ResourceType("image");
+                    Action(Constants.ACTION_NAME_UPLOAD).
+                    ResourceType(Constants.RESOURCE_TYPE_IMAGE);
             }
         }
 
@@ -252,8 +253,8 @@ namespace CloudinaryShared.Core
             get
             {
                 return ApiUrlV.
-                    Action("upload").
-                    ResourceType("video");
+                    Action(Constants.ACTION_NAME_UPLOAD).
+                    ResourceType(Constants.RESOURCE_TYPE_VIDEO);
             }
         }
 
@@ -345,7 +346,7 @@ namespace CloudinaryShared.Core
         /// <returns>Signature of parameters</returns>
         public string SignParameters(IDictionary<string, object> parameters)
         {
-			List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "type","api_key" });
+			List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
             StringBuilder signBase = new StringBuilder(String.Join("&", parameters.
 			                                                       Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
                 .Select(pair => String.Format("{0}={1}", pair.Key,

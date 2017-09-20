@@ -148,8 +148,9 @@ namespace CloudinaryDotNet
             return this;
         }
 
-        public virtual string Generate() {
-            HashSet<string> parts = new HashSet<string>(m_nestedTransforms.Select(t => t.GenerateThis()).ToList());
+        public virtual string Generate()
+        {
+            List<string> parts = new List<string>(m_nestedTransforms.Select(t => t.GenerateThis()).ToList());
 
             var thisTransform = GenerateThis();
             if (!string.IsNullOrEmpty(thisTransform))
@@ -186,7 +187,7 @@ namespace CloudinaryDotNet
                 isResponsive = DefaultIsResponsive;
 
             bool no_html_sizes = hasLayer || !String.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
-            if (width != null && (width == "auto" || Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
+            if (width != null && (width.IndexOf("auto") != -1 || Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
                 m_htmlWidth = null;
             if (height != null && (Single.Parse(height, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
                 m_htmlHeight = null;
