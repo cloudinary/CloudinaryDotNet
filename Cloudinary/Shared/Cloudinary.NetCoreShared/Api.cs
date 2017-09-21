@@ -1,19 +1,15 @@
-﻿using CloudinaryDotNet.Actions;
-using CloudinaryShared.Core;
-using Cloudinary.NetCoreShared;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using Cloudinary.NetCoreShared;
+using CloudinaryShared.Core;
+using HttpMethod = CloudinaryShared.Core.HttpMethod;
 
 namespace CloudinaryDotNet
 {
@@ -22,8 +18,11 @@ namespace CloudinaryDotNet
     /// </summary>
     public class Api : ApiShared
     {
-        public Func<HttpRequestMessage> RequestBuilder = () => new HttpRequestMessage();
+        static HttpClient client = new HttpClient();
 
+        public Func<string, HttpRequestMessage> RequestBuilder =
+            (url) => new HttpRequestMessage {RequestUri = new Uri(url)};
+        
         /// <summary>
         /// Default parameterless constructor.
         /// Assumes that environment variable CLOUDINARY_URL is set.
@@ -61,6 +60,9 @@ namespace CloudinaryDotNet
         {
         }
 
+        /// <summary>
+        /// Initializes the <see cref="Api"/> class.
+        /// </summary>
         static Api()
         {
             var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
@@ -76,27 +78,24 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Dictionary of call parameters (can be null)</param>
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
-        //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
-        public override object InternalCall(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public override object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            using (HttpClient client = new HttpClient())
+            var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
+                
+            if (Timeout > 0)
             {
-                if (Timeout > 0)
-                {
-                    client.Timeout = TimeSpan.FromMilliseconds(Timeout);
-                }
-
-                var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
-
-                var task2 = client.SendAsync(request);
-                task2.Wait();
-
-                if (task2.IsCanceled) { }
-
-                if (task2.IsFaulted) { throw task2.Exception; }
-
-                return task2.Result;
+                client.Timeout = TimeSpan.FromMilliseconds(Timeout);
             }
+
+                
+            var task2 = client.SendAsync(request);
+            task2.Wait();
+
+            if (task2.IsCanceled) { }
+
+            if (task2.IsFaulted) { throw task2.Exception; }
+
+            return task2.Result;
         }
 
         /// <summary>
@@ -107,53 +106,37 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Dictionary of call parameters (can be null)</param>
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
         /// <returns>HTTP response on call</returns>
-        //public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file)
-        public HttpResponseMessage Call(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public HttpResponseMessage Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            using (HttpClient client = new HttpClient())
+            var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
+            
+            if (Timeout > 0)
             {
-                if (Timeout > 0)
-                {
-                    client.Timeout = TimeSpan.FromMilliseconds(Timeout);
-                }
-
-                var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
-
-                var task = client.SendAsync(request);
-                task.Wait();
-
-                if (task.IsCanceled) { }
-                if (task.IsFaulted) { throw task.Exception; }
-
-                return task.Result;
+                client.Timeout = TimeSpan.FromMilliseconds(Timeout);
             }
+
+            
+            var task = client.SendAsync(request);
+            task.Wait();
+
+            if (task.IsCanceled) { }
+            if (task.IsFaulted) { throw task.Exception; }
+
+            return task.Result;
+        
         }
 
-        public HttpRequestMessage PrepareRequestBody(CloudinaryShared.Core.HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public HttpRequestMessage PrepareRequestBody(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            var req = RequestBuilder();
+            var req = RequestBuilder(url);
 
-            req.RequestUri = new Uri(url);
-            switch (method)
-            {
-                case CloudinaryShared.Core.HttpMethod.DELETE:
-                    req.Method = System.Net.Http.HttpMethod.Delete;
-                    break;
-                case CloudinaryShared.Core.HttpMethod.GET:
-                    req.Method = System.Net.Http.HttpMethod.Get;
-                    break;
-                case CloudinaryShared.Core.HttpMethod.POST:
-                    req.Method = System.Net.Http.HttpMethod.Post;
-                    break;
-                case CloudinaryShared.Core.HttpMethod.PUT:
-                    req.Method = System.Net.Http.HttpMethod.Put;
-                    break;
-                default:
-                    req.Method = System.Net.Http.HttpMethod.Get;
-                    break;
-            }
+            SetHttpMethod(method, req);
 
-            req.Headers.Add("User-Agent", string.IsNullOrEmpty(UserPlatform) ? USER_AGENT : string.Format("{0} {1}", UserPlatform, USER_AGENT));
+            // Add platform information to the USER_AGENT header
+            // This is intended for platform information and not individual applications!
+            req.Headers.Add("User-Agent", string.IsNullOrEmpty(UserPlatform)
+                ? USER_AGENT
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT));
 
             byte[] _authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
             req.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(_authBytes)));
@@ -172,19 +155,20 @@ namespace CloudinaryDotNet
                 }
             }
 
-            if ((method == CloudinaryShared.Core.HttpMethod.POST || method == CloudinaryShared.Core.HttpMethod.PUT) && parameters != null)
+            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
             {
                 if (UseChunkedEncoding)
                     req.Headers.Add("Transfer-Encoding", "chunked");
 
-                req.Content = PrepareRequestContent(parameters, file);
+                PrepareRequestContent(ref req, parameters, file);
             }
             
             return req;
         }
 
-        private MultipartFormDataContent PrepareRequestContent(SortedDictionary<string, object> parameters, FileDescription file)
+        private void PrepareRequestContent(ref HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file)
         {
+            HttpRequestMessage req = (HttpRequestMessage) request;
             var content = new MultipartFormDataContent(HTTP_BOUNDARY);
 
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
@@ -246,44 +230,9 @@ namespace CloudinaryDotNet
                 }
             }
 
-            return content;
+            req.Content = content;
         }
 
-
-        private byte[] GetRangeFromFile(FileDescription file, Stream stream)
-        {
-            MemoryStream memStream = new MemoryStream();
-            StreamWriter writer = new StreamWriter(memStream);
-
-            int bytesSent = 0;
-            stream.Seek(file.BytesSent, SeekOrigin.Begin);
-            file.EOF = ReadBytes(writer, stream, file.BufferLength, file.FileName, out bytesSent);
-            file.BytesSent += bytesSent;
-            byte[] buff = new byte[bytesSent];
-            writer.BaseStream.Seek(0, SeekOrigin.Begin);
-            writer.BaseStream.Read(buff, 0, bytesSent);
-
-            return buff;
-        }
-
-        private bool ReadBytes(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
-        {
-            
-            bytesSent = 0;
-            int toSend = 0;
-            byte[] buf = new byte[ChunkSize];
-            int cnt = 0;
-
-            while ((toSend = length - bytesSent) > 0
-                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
-            {
-                writer.BaseStream.Write(buf, 0, cnt);
-                writer.Flush();
-                bytesSent += cnt;
-            }
-
-            return cnt == 0;
-        }
 
         public override string BuildCallbackUrl(string path = "")
         {
@@ -316,5 +265,66 @@ namespace CloudinaryDotNet
         {
             return HtmlEncoder.Default.Encode(value);
         }
+        
+        private static void SetHttpMethod(HttpMethod method, HttpRequestMessage req)
+        {
+            switch (method)
+            {
+                case HttpMethod.DELETE:
+                    req.Method = System.Net.Http.HttpMethod.Delete;
+                    break;
+                case HttpMethod.GET:
+                    req.Method = System.Net.Http.HttpMethod.Get;
+                    break;
+                case HttpMethod.POST:
+                    req.Method = System.Net.Http.HttpMethod.Post;
+                    break;
+                case HttpMethod.PUT:
+                    req.Method = System.Net.Http.HttpMethod.Put;
+                    break;
+                default:
+                    req.Method = System.Net.Http.HttpMethod.Get;
+                    break;
+            }
+        }
+
+
+        private byte[] GetRangeFromFile(FileDescription file, Stream stream)
+        {
+            MemoryStream memStream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(memStream);
+
+            int bytesSent = 0;
+            stream.Seek(file.BytesSent, SeekOrigin.Begin);
+            file.EOF = ReadBytes(writer, stream, file.BufferLength, file.FileName, out bytesSent);
+            file.BytesSent += bytesSent;
+            byte[] buff = new byte[bytesSent];
+            writer.BaseStream.Seek(0, SeekOrigin.Begin);
+            writer.BaseStream.Read(buff, 0, bytesSent);
+
+            return buff;
+        }
+
+        private bool ReadBytes(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
+        {
+            
+            bytesSent = 0;
+            int toSend = 0;
+            byte[] buf = new byte[ChunkSize];
+            int cnt = 0;
+
+            while ((toSend = length - bytesSent) > 0
+                   && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
+            {
+                writer.BaseStream.Write(buf, 0, cnt);
+                writer.Flush();
+                bytesSent += cnt;
+            }
+
+            return cnt == 0;
+        }
+
+
     }
+    
 }

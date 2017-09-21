@@ -170,7 +170,7 @@ namespace Cloudinary.NetCoreTest
             mock.CallBase = true;
 
             HttpRequestMessage request = null;
-            Func<HttpRequestMessage> requestBuilder = () =>
+            Func<string, HttpRequestMessage> requestBuilder = (x) =>
             {
                 request = mock.Object;
                 return request;
