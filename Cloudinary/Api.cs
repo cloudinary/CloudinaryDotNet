@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using CloudinaryDotNet.Actions;
-using Newtonsoft.Json;
 using CloudinaryShared.Core;
 
 namespace CloudinaryDotNet
@@ -79,93 +74,13 @@ namespace CloudinaryDotNet
         /// <returns>HTTP response on call</returns>
         public override object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-#if DEBUG
-            Console.WriteLine(String.Format("{0} REQUEST:", method));
-            Console.WriteLine(url);
-#endif
-
             HttpWebRequest request = RequestBuilder(url);
-            request.Method = Enum.GetName(typeof(HttpMethod), method);
-            // Add platform information to the USER_AGENT header
-            // This is intended for platform information and not individual applications!
-            request.UserAgent = string.IsNullOrEmpty(UserPlatform)
-                ? USER_AGENT
-                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
-
             if (Timeout > 0)
             {
                 request.Timeout = Timeout;
             }
-            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
-
-            if (extraHeaders != null)
-            {
-                if (extraHeaders.ContainsKey("Content-Type"))
-                {
-                    request.ContentType = extraHeaders["Content-Type"];
-                    extraHeaders.Remove("Content-Type");
-                }
-
-                foreach (var header in extraHeaders)
-                {
-                    request.Headers[header.Key] = header.Value;
-                }
-            }
-            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
-            {
-                request.AllowWriteStreamBuffering = false;
-                request.AllowAutoRedirect = false;
-
-                if (UseChunkedEncoding)
-                    request.SendChunked = true;
-
-                request.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
-
-                if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
-                    FinalizeUploadParameters(parameters);
-                else
-                {
-                    if (parameters.ContainsKey("removeUnsignedParam"))
-                    {
-                        parameters.Remove("unsigned");
-                        parameters.Remove("removeUnsignedParam");
-                    }
-                }
-
-                using (Stream requestStream = request.GetRequestStream())
-                {
-                    using (StreamWriter writer = new StreamWriter(requestStream))
-                    {
-                        foreach (var param in parameters)
-                        {
-                            if (param.Value != null)
-                            {
-                                if (param.Value is IEnumerable<string>)
-                                {
-                                    foreach (var item in (IEnumerable<string>)param.Value)
-                                    {
-                                        WriteParam(writer, param.Key + "[]", item);
-                                    }
-                                }
-                                else
-                                {
-                                    WriteParam(writer, param.Key, param.Value.ToString());
-                                }
-                            }
-                        }
-
-                        if (file != null)
-                        {
-                            WriteFile(writer, file);
-                        }
-
-                        writer.Write("--{0}--", HTTP_BOUNDARY);
-
-                    }
-                }
-            }
-
+            PrepareRequestBody(ref request, method, url, parameters, file, extraHeaders);
+            
             try
             {
                 return (HttpWebResponse)request.GetResponse();
@@ -188,86 +103,14 @@ namespace CloudinaryDotNet
         /// <returns>HTTP response on call</returns>
         public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-#if DEBUG
-            Console.WriteLine(String.Format("{0} REQUEST:", method));
-            Console.WriteLine(url);
-#endif
-
             HttpWebRequest request = RequestBuilder(url);
-            request.Method = Enum.GetName(typeof(HttpMethod), method);
-            // Add platform information to the USER_AGENT header
-            // This is intended for platform information and not individual applications!
-            request.UserAgent = string.IsNullOrEmpty(UserPlatform)
-                ? USER_AGENT
-                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
-
             if (Timeout > 0)
             {
                 request.Timeout = Timeout;
             }
-            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
-            if (extraHeaders != null)
-            {
-                foreach (var header in extraHeaders)
-                {
-                    request.Headers[header.Key] = header.Value;
-                }
-            }
-            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
-            {
-                request.AllowWriteStreamBuffering = false;
-                request.AllowAutoRedirect = false;
-
-                if (UseChunkedEncoding)
-                    request.SendChunked = true;
-
-                request.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
-
-                if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
-                    FinalizeUploadParameters(parameters);
-                else
-                {
-                    if (parameters.ContainsKey("removeUnsignedParam"))
-                    {
-                        parameters.Remove("unsigned");
-                        parameters.Remove("removeUnsignedParam");
-                    }
-                }
-
-                using (Stream requestStream = request.GetRequestStream())
-                {
-                    using (StreamWriter writer = new StreamWriter(requestStream))
-                    {
-                        foreach (var param in parameters)
-                        {
-                            if (param.Value != null)
-                            {
-                                if (param.Value is IEnumerable<string>)
-                                {
-                                    foreach (var item in (IEnumerable<string>)param.Value)
-                                    {
-                                        WriteParam(writer, param.Key + "[]", item);
-                                    }
-                                }
-                                else
-                                {
-                                    WriteParam(writer, param.Key, param.Value.ToString());
-                                }
-                            }
-                        }
-
-                        if (file != null)
-                        {
-                            WriteFile(writer, file);
-                        }
-
-                        writer.Write("--{0}--", HTTP_BOUNDARY);
-                    }
-                }
-            }
-
+            PrepareRequestBody(ref request, method, url, parameters, file, extraHeaders);
+            
             try
             {
                 return (HttpWebResponse)request.GetResponse();
@@ -280,6 +123,100 @@ namespace CloudinaryDotNet
             }
         }
 
+        public HttpWebRequest PrepareRequestBody(ref HttpWebRequest request, HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            SetHttpMethod(method, request);
+
+            // Add platform information to the USER_AGENT header
+            // This is intended for platform information and not individual applications!
+            request.UserAgent = string.IsNullOrEmpty(UserPlatform)
+                ? USER_AGENT
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
+
+            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+
+            if (extraHeaders != null)
+            {
+                if (extraHeaders.ContainsKey("Content-Type"))
+                {
+                    request.ContentType = extraHeaders["Content-Type"];
+                    extraHeaders.Remove("Content-Type");
+                }
+
+                foreach (var header in extraHeaders)
+                {
+                    request.Headers[header.Key] = header.Value;
+                }
+            }
+
+            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
+            {
+                request.AllowWriteStreamBuffering = false;
+                request.AllowAutoRedirect = false;
+
+                if (UseChunkedEncoding)
+                    request.SendChunked = true;
+
+                PrepareRequestContent(ref request, parameters, file);
+            }
+
+            return request;
+        }
+
+        private void PrepareRequestContent(ref HttpWebRequest request, SortedDictionary<string, object> parameters,
+            FileDescription file)
+        {
+            if ( request == null)
+            {
+                return;
+            }
+            HttpWebRequest req = (HttpWebRequest) request;
+            req.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
+
+            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+                FinalizeUploadParameters(parameters);
+            else
+            {
+                if (parameters.ContainsKey("removeUnsignedParam"))
+                {
+                    parameters.Remove("unsigned");
+                    parameters.Remove("removeUnsignedParam");
+                }
+            }
+
+            using (Stream requestStream = req.GetRequestStream())
+            {
+                using (StreamWriter writer = new StreamWriter(requestStream))
+                {
+                    foreach (var param in parameters)
+                    {
+                        if (param.Value != null)
+                        {
+                            if (param.Value is IEnumerable<string>)
+                            {
+                                foreach (var item in (IEnumerable<string>)param.Value)
+                                {
+                                    WriteParam(writer, param.Key + "[]", item);
+                                }
+                            }
+                            else
+                            {
+                                WriteParam(writer, param.Key, param.Value.ToString());
+                            }
+                        }
+                    }
+
+                    if (file != null)
+                    {
+                        WriteFile(writer, file);
+                    }
+
+                    writer.Write("--{0}--", HTTP_BOUNDARY);
+
+                }
+            }
+        }
         public override string BuildCallbackUrl(string path = "")
         {
             if (String.IsNullOrEmpty(path))
@@ -320,5 +257,12 @@ namespace CloudinaryDotNet
         {
             return HttpUtility.HtmlEncode(value);
         }
+        
+        private static void SetHttpMethod(HttpMethod method, HttpWebRequest req)
+        {
+            req.Method = Enum.GetName(typeof(HttpMethod), method);
+        }
+
+
     }
 }

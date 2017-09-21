@@ -65,10 +65,9 @@ namespace CloudinaryDotNet.Test
             }
             catch (WebException e)
             {
-                Console.WriteLine("Error {0}", e.Message);
                 code = e.Status;
                 stopWatch.Stop();
-
+                Console.WriteLine("Error {0}", e.Message);
             }
             finally
             {
