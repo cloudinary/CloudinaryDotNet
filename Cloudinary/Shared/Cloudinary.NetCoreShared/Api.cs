@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Cloudinary.NetCoreShared;
 using CloudinaryShared.Core;
 using HttpMethod = CloudinaryShared.Core.HttpMethod;
@@ -80,22 +81,34 @@ namespace CloudinaryDotNet
         /// <returns>HTTP response on call</returns>
         public override object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
-                
-            if (Timeout > 0)
+            var request = RequestBuilder(url);
+            HttpResponseMessage response = null;
+            using (request)
             {
-                client.Timeout = TimeSpan.FromMilliseconds(Timeout);
-            }
+                PrepareRequestBody( ref request, method, parameters, file, extraHeaders);
 
+                System.Threading.Tasks.Task<HttpResponseMessage> task2;
                 
-            var task2 = client.SendAsync(request);
-            task2.Wait();
+                if (Timeout > 0)
+                {
+                    var cancellationTokenSource = new CancellationTokenSource(Timeout);
+                    task2 = client.SendAsync(request, cancellationTokenSource.Token);
+                }
+                else
+                {
+                    task2 = client.SendAsync(request);
+                }
+                    
+                task2.Wait();
+                if (task2.IsFaulted) { throw task2.Exception; }
+                response = task2.Result;
+                
+                if (task2.IsCanceled) { }
+                if (task2.IsFaulted) { throw task2.Exception; }
 
-            if (task2.IsCanceled) { }
-
-            if (task2.IsFaulted) { throw task2.Exception; }
-
-            return task2.Result;
+                return response;
+            }
+ 
         }
 
         /// <summary>
@@ -108,67 +121,77 @@ namespace CloudinaryDotNet
         /// <returns>HTTP response on call</returns>
         public HttpResponseMessage Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            var request = PrepareRequestBody(method, url, parameters, file, extraHeaders);
-            
-            if (Timeout > 0)
+            var request = RequestBuilder(url);
+            HttpResponseMessage response = null;
+            using (request)
             {
-                client.Timeout = TimeSpan.FromMilliseconds(Timeout);
+                PrepareRequestBody(ref request, method, parameters, file, extraHeaders);
+
+                System.Threading.Tasks.Task<HttpResponseMessage> task2;
+
+                if (Timeout > 0)
+                {
+                    var cancellationTokenSource = new CancellationTokenSource(Timeout);
+                    task2 = client.SendAsync(request, cancellationTokenSource.Token);
+                }
+                else
+                {
+                    task2 = client.SendAsync(request);
+                }
+
+                task2.Wait();
+                if (task2.IsFaulted) { throw task2.Exception; }
+                response = task2.Result;
+
+                if (task2.IsCanceled) { }
+                if (task2.IsFaulted) { throw task2.Exception; }
+
+                return response;
             }
 
-            
-            var task = client.SendAsync(request);
-            task.Wait();
-
-            if (task.IsCanceled) { }
-            if (task.IsFaulted) { throw task.Exception; }
-
-            return task.Result;
-        
         }
 
-        public HttpRequestMessage PrepareRequestBody(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public HttpRequestMessage PrepareRequestBody(ref HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            var req = RequestBuilder(url);
-
-            SetHttpMethod(method, req);
+            SetHttpMethod(method, request);
 
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
-            req.Headers.Add("User-Agent", string.IsNullOrEmpty(UserPlatform)
+            request.Headers.Add("User-Agent", string.IsNullOrEmpty(UserPlatform)
                 ? USER_AGENT
                 : string.Format("{0} {1}", UserPlatform, USER_AGENT));
 
             byte[] _authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            req.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(_authBytes)));
+            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(_authBytes)));
 
             if (extraHeaders != null)
             {
                 if (extraHeaders.ContainsKey("Content-Type"))
                 {
-                    req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     extraHeaders.Remove("Content-Type");
                 }
 
                 foreach (var header in extraHeaders)
                 {
-                    req.Headers.Add(header.Key, header.Value);
+                    request.Headers.Add(header.Key, header.Value);
                 }
             }
 
             if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
             {
                 if (UseChunkedEncoding)
-                    req.Headers.Add("Transfer-Encoding", "chunked");
+                    request.Headers.Add("Transfer-Encoding", "chunked");
 
-                PrepareRequestContent(ref req, parameters, file);
+                PrepareRequestContent(ref request, parameters, file);
             }
             
-            return req;
+            return request;
         }
 
         private void PrepareRequestContent(ref HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file)
         {
-            HttpRequestMessage req = (HttpRequestMessage) request;
+            //HttpRequestMessage req = (HttpRequestMessage) request;
             var content = new MultipartFormDataContent(HTTP_BOUNDARY);
 
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
@@ -230,7 +253,7 @@ namespace CloudinaryDotNet
                 }
             }
 
-            req.Content = content;
+            request.Content = content;
         }
 
 

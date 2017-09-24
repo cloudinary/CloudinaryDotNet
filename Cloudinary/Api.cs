@@ -79,7 +79,7 @@ namespace CloudinaryDotNet
             {
                 request.Timeout = Timeout;
             }
-            PrepareRequestBody(ref request, method, url, parameters, file, extraHeaders);
+            PrepareRequestBody(ref request, method, parameters, file, extraHeaders);
             
             try
             {
@@ -109,7 +109,7 @@ namespace CloudinaryDotNet
                 request.Timeout = Timeout;
             }
 
-            PrepareRequestBody(ref request, method, url, parameters, file, extraHeaders);
+            PrepareRequestBody(ref request, method, parameters, file, extraHeaders);
             
             try
             {
@@ -123,7 +123,7 @@ namespace CloudinaryDotNet
             }
         }
 
-        public HttpWebRequest PrepareRequestBody(ref HttpWebRequest request, HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        public HttpWebRequest PrepareRequestBody(ref HttpWebRequest request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             SetHttpMethod(method, request);
 

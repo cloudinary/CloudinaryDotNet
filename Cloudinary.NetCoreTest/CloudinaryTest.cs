@@ -76,8 +76,8 @@ namespace Cloudinary.NetCoreTest
             }
 
             Console.WriteLine("Elapsed {0}", stopWatch.ElapsedMilliseconds);
-            Assert.True(timeout - 1000 <= stopWatch.ElapsedMilliseconds);
-            Assert.True(timeout + 1000 >= stopWatch.ElapsedMilliseconds);
+            Assert.GreaterOrEqual(stopWatch.ElapsedMilliseconds, timeout - 1000);
+            Assert.LessOrEqual(stopWatch.ElapsedMilliseconds, timeout + 1000);
         }
 
         [Test]
@@ -1694,7 +1694,8 @@ namespace Cloudinary.NetCoreTest
 
             string rString = GetMockBodyOfCloudinaryRequest(exp, (p, t) =>
             {
-                p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
+                var request = p.Api.RequestBuilder("http://localhost");
+                p.Api.PrepareRequestBody(ref request, CloudinaryShared.Core.HttpMethod.POST, t.ToParamsDictionary(), null);
                 return (TextResult)null;
             });
             Assert.That(rString, Does.Contain("name=\"invalidate\"\r\n\r\ntrue\r\n"));
@@ -2392,7 +2393,8 @@ namespace Cloudinary.NetCoreTest
 
             string rString = GetMockBodyOfCloudinaryRequest(tParams, (p, t) =>
             {
-                p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
+                HttpRequestMessage request = p.Api.RequestBuilder("http://localhost");
+                p.Api.PrepareRequestBody(ref request, CloudinaryShared.Core.HttpMethod.POST, t.ToParamsDictionary(), null);
                 return (TextResult)null;
             });
 
@@ -2410,7 +2412,8 @@ namespace Cloudinary.NetCoreTest
 
             string rString = GetMockBodyOfCloudinaryRequest(tParams, (p, t) =>
             {
-                p.Api.PrepareRequestBody(CloudinaryShared.Core.HttpMethod.POST, "http://localhost", t.ToParamsDictionary(), null);
+                HttpRequestMessage request = p.Api.RequestBuilder("http://localhost");
+                p.Api.PrepareRequestBody(ref request, CloudinaryShared.Core.HttpMethod.POST, t.ToParamsDictionary(), null);
                 return (TextResult)null;
             });
 
