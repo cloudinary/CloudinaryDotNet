@@ -163,11 +163,31 @@ namespace CloudinaryShared.Core
             return Uri.EscapeDataString(url);
         }
 
-        protected virtual string EscapeToLower(string url)
+        protected virtual string EncodedUrl(string url)
         {
             throw new Exception("Please use overriden method.");
         }
 
+        protected string EscapeToLower(string url)
+        {
+            string escaped = string.Empty;
+            string encodedUrl = string.Empty;
+
+            encodedUrl = EncodedUrl(url);
+            StringBuilder sb = new StringBuilder(encodedUrl);
+            string result = sb.ToString();
+            string regex = "%..";
+            Regex r = new Regex(regex, RegexOptions.Compiled);
+            foreach (Match ItemMatch in r.Matches(sb.ToString()))
+            {
+                string buf = sb.ToString().Substring(ItemMatch.Index, ItemMatch.Length).ToLower();
+                sb.Remove(ItemMatch.Index, ItemMatch.Length);
+                sb.Insert(ItemMatch.Index, buf);
+            }
+
+            return sb.ToString();
+        }
+        
         private string Digest(string message)
         {
             byte[] binKey = HexStringToByteArray(this.key);
