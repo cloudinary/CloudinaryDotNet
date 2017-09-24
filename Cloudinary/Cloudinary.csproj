@@ -73,110 +73,22 @@
     <Compile Include="Actions\BaseResult.cs" />
     <Compile Include="AuthToken.cs" />
     <Compile Include="FileDescription.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ExplicitResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ResponsiveBreakpointResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\RestoreResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\GetFoldersResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ArchiveResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ExplodeResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\MultiResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\RenameResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\SpriteResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\TransformResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UpdateTransformResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\GetTransformResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ListTransformsResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ListTagsResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\DelResResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\DelDerivedResResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\GetResourceResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ListResourcesResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ListResourceTypesResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UploadMappingResults.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UsageResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\VideoUploadResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\TagResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\TextResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\RawUploadResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ImageUploadResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UploadPreset.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\GetUploadPreset.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\DeleteUploadPreset.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ListUploadPresets.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Account.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\ApiShared.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Crc32.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\CSource.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\FileDescriptionBase.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\FetchLayer.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Url.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\CloudinaryShared.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Constants.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\AuthTokenBase.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\CloudinaryConfiguration.cs" />
     <Compile Include="Cloudinary.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="Cloudinary.Async.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\DeletionResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ArchiveCallMode.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ArchiveFormat.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\RestoreParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ArchiveParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UploadMappingParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UpdateParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ExplodeParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\MultiParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\RenameParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\SpriteParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ExplicitParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\CreateTransformParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UpdateTransformParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\GetTransformParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ListTransformsParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ListTagsParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\DelResParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\DelDerivedResParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\GetResourceParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ListResourcesParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\VideoUploadParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\BaseParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ImageUploadParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\PublishResourceParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\PublishResourceResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UpdateResourceAccessModeParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\UpdateResourceAccessModeResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\SearchResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\TagParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ContextParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\ContextResult.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\TextParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\DeletionParams.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Actions\RawUploadParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Shared\Cloudinary.NetCoreShared\StringDictionary.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Search.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Core\ICloneable.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Core\Rectangle.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\Condition.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\ImageTransform.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\BaseLayer.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\Layer.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\ResponsiveBreakpoint.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\SubtitlesLayer.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\VideoLayer.cs" />
     <Compile Include="Transforms\TextLayer.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\VideoTransform.cs" />
-    <Compile Include="Shared\Cloudinary.NetCoreShared\Transforms\Transformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
+  <Import Project="..\Shared\Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

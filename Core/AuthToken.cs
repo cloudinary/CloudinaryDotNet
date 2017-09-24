@@ -1,13 +1,10 @@
 ﻿using CloudinaryShared.Core;
-using Cloudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 
-namespace CloudinaryDotNet
+namespace Cloudinary.NetCoreShared
 {
     public class AuthToken : AuthTokenBase
     {
@@ -15,9 +12,10 @@ namespace CloudinaryDotNet
 
         public AuthToken(string key) : base(key) { }
 
+        
         protected override string EncodedUrl(string url)
         {
-            return HttpUtility.UrlEncode(url, Encoding.UTF8);
+            return System.Net.WebUtility.UrlEncode(url);
         }
     }
 }
