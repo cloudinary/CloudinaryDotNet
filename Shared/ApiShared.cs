@@ -1,6 +1,5 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Cloudinary.NetCoreShared;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CloudinaryShared.Core
+namespace CloudinaryDotNet.Shared
 {
     public class ApiShared : ISignProvider
     {

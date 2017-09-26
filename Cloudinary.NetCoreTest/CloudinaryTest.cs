@@ -2,8 +2,7 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Core;
-using CloudinaryShared.Core;
-using Cloudinary.NetCoreShared;
+using CloudinaryDotNet.Shared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;

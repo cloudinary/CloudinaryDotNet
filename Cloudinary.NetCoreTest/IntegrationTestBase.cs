@@ -7,7 +7,6 @@ using System.Linq;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using Cloudinary.NetCoreShared;
 using CloudinaryDotNet;
 using Castle.Core.Resource;
 

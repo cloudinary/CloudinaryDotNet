@@ -1,7 +1,5 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Core;
-using CloudinaryDotNet.Shared.Cloudinary.NetCoreShared;
-using Cloudinary.NetCoreShared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,21 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using CloudinaryDotNet.Shared;
 
 #if NET40
 using System.Web;
 #endif
 
-namespace CloudinaryShared.Core
+namespace CloudinaryDotNet
 {
-    public class Url : CloudinaryDotNet.Core.ICloneable
+    public class Url : Core.ICloneable
     {
         protected const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         protected static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };
         protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
 
         protected ISignProvider m_signProvider;
-        protected AuthTokenBase m_AuthToken;
+        protected AuthToken m_AuthToken;
 
         protected string m_cloudName;
         protected string m_cloudinaryAddr = Api.ADDR_RES;
@@ -117,7 +116,7 @@ namespace CloudinaryShared.Core
             return this;
         }
 
-        public Url AuthToken(AuthTokenBase authToken)
+        public Url AuthToken(AuthToken authToken)
         {
             if (m_AuthToken == null)
             {
@@ -561,9 +560,9 @@ namespace CloudinaryShared.Core
 
             if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
             {
-                AuthTokenBase token = m_AuthToken != null ? m_AuthToken : (CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken : null);
+                AuthToken token = m_AuthToken != null ? m_AuthToken : (CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken : null);
                     
-                if (token != null && token != AuthTokenBase.NULL_AUTH_TOKEN)
+                if (token != null && token != CloudinaryDotNet.AuthToken.NULL_AUTH_TOKEN)
                 {
                     string tokenStr = token.Generate();
                     uriStr = string.Format("{0}?{1}", uriStr, tokenStr);

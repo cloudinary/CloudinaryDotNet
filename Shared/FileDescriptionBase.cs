@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Cloudinary.NetCoreShared
+namespace CloudinaryDotNet.Shared
 {
     /// <summary>
     /// Represents a file for uploading to cloudinary

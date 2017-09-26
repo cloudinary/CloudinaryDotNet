@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CloudinaryDotNet.Shared.Cloudinary.NetCoreShared
+namespace CloudinaryDotNet.Shared
 {
     public class CSource
     {

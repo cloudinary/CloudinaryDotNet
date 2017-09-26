@@ -9,12 +9,11 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Cloudinary.NetCoreShared;
 using CloudinaryDotNet.Actions;
-using CloudinaryShared.Core;
+using CloudinaryDotNet.Shared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using HttpMethod = CloudinaryShared.Core.HttpMethod;
+using HttpMethod = CloudinaryDotNet.Shared.HttpMethod;
 
 namespace CloudinaryDotNet
 {
@@ -422,5 +421,4 @@ namespace CloudinaryDotNet
             }
         }
     }
-    
 }

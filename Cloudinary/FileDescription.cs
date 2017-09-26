@@ -1,5 +1,4 @@
-﻿using Cloudinary.NetCoreShared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Text;
 
 namespace CloudinaryDotNet
 {
-    public class FileDescription : FileDescriptionBase
+    public class FileDescription : Shared.FileDescriptionBase
     {
         /// <summary>
         /// Constructor to upload file from stream
