@@ -193,12 +193,12 @@ namespace CloudinaryShared.Core
                 .Add(publishResourceParams.ResourceType.ToString().ToLower())
                 .Add("publish_resources");
 
-            if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
                 publishResourceParams.AddCustomParam(byKey, value);
-
-            object response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
-
-            return PublishResourceResult.Parse(response);
+            }
+            
+            return m_api.CallAndParse<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
 
         }
 
@@ -211,12 +211,12 @@ namespace CloudinaryShared.Core
                 .Add(updateResourceAccessModeParams.Type)
                 .Add(Constants.UPDATE_ACESS_MODE);
 
-            if(!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
                 updateResourceAccessModeParams.AddCustomParam(byKey, value);
-
-            object response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
-
-            return UpdateResourceAccessModeResult.Parse(response);
+            }
+            
+            return m_api.CallAndParse<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
         }
         
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams updateResourceAccessModeParams)
@@ -243,10 +243,8 @@ namespace CloudinaryShared.Core
         {
             string uri = m_api.ApiUrlImgUpV.Action(Constants.TAGS_MANGMENT).BuildUrl();
 
-            object response = m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
-
-            TagResult result = TagResult.Parse(response);
-            return result;
+            
+            return m_api.CallAndParse<TagResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
         }
 
         /// <summary>
@@ -258,10 +256,7 @@ namespace CloudinaryShared.Core
         {
             string uri = m_api.ApiUrlImgUpV.Action(Constants.CONTEXT_MANAGMENT).BuildUrl();
 
-            object response = m_api.InternalCall(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
-
-            ContextResult result = ContextResult.Parse(response);
-            return result;
+            return m_api.CallAndParse<ContextResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
         }
 
         public DelDerivedResResult DeleteDerivedResourcesByTransform(DelDerivedResParams parameters)
@@ -272,10 +267,7 @@ namespace CloudinaryShared.Core
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            object response = m_api.InternalCall(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
-
-            DelDerivedResResult result = DelDerivedResResult.Parse(response);
-            return result;
+            return m_api.CallAndParse<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
         }
 
         /// <summary>
@@ -285,21 +277,14 @@ namespace CloudinaryShared.Core
         /// <returns>Result of operation</returns>
         public ArchiveResult CreateArchive(ArchiveParams parameters)
         {
-            Url url = m_api.ApiUrlV.
-                ResourceType(RESOURCE_TYPE_IMAGE).
-                Action(ACTION_GENERATE_ARCHIVE);
+            Url url = m_api.ApiUrlV.ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
             if (!String.IsNullOrEmpty(parameters.ResourceType()))
+            {
                 url.ResourceType(parameters.ResourceType());
-            string uri = url.BuildUrl();
-
+            }
+            
             parameters.Mode(ArchiveCallMode.Create);
-
-            object response = m_api.InternalCall(
-                HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
-
-            ArchiveResult result = ArchiveResult.Parse(response);
-
-            return result;
+            return m_api.CallAndParse<ArchiveResult>(HttpMethod.POST, url.BuildUrl(), parameters.ToParamsDictionary(), null);
         }
     }
 }

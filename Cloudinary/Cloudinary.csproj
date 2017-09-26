@@ -70,7 +70,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\BaseResult.cs" />
     <Compile Include="AuthToken.cs" />
     <Compile Include="FileDescription.cs" />
     <Compile Include="Cloudinary.cs" />

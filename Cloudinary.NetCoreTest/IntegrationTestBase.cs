@@ -154,45 +154,6 @@ namespace Cloudinary.NetCoreTest
             return m_cloudinary.DeleteResources(id);
         }
 
-        /// <summary>
-        /// Get stream from mock request to Cloudinary API represented as String
-        /// </summary>
-        /// <param name="requestParams">Parameters for Cloudinary call</param>
-        /// <param name="cloudinaryCall">Cloudinary call, e.g. "(cloudinaryInstance, params) => {return cloudinaryInstance.Text(params); }"</param>
-        /// <returns></returns>
-        protected string GetMockBodyOfCloudinaryRequest<TParams, TResult>(TParams requestParams, Func<CloudinaryDotNet.Cloudinary, TParams, TResult> cloudinaryCall)
-            where TParams : BaseParams
-            where TResult : BaseResult
-        {
-            #region Mock infrastructure
-            var mock = new Mock<HttpRequestMessage>();
-
-            mock.CallBase = true;
-
-            HttpRequestMessage request = null;
-            Func<string, HttpRequestMessage> requestBuilder = (x) =>
-            {
-                request = mock.Object;
-                return request;
-            };
-            #endregion
-
-            CloudinaryDotNet.Cloudinary fakeCloudinary = GetCloudinaryInstance(m_account);
-            fakeCloudinary.Api.RequestBuilder = requestBuilder;
-
-            try
-            {
-                cloudinaryCall(fakeCloudinary, requestParams);
-            }
-            // consciously return null in GetResponse() and extinguish the ArgumentNullException while parsing response, 'cause it's not in focus of current test
-            catch (ArgumentNullException) { }
-
-            MemoryStream stream = new MemoryStream(); 
-            request.Content.CopyToAsync(stream).Wait();
-            request.Dispose();
-            return System.Text.Encoding.UTF8.GetString(stream.ToArray());
-        }
-
         protected long UnixTimeNow()
         {
             var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));

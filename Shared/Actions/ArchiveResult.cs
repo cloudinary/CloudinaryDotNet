@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -32,21 +33,16 @@ namespace CloudinaryDotNet.Actions
         /// Count of files in archive
         /// </summary>
         public int FileCount { get; private set; }
+        
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static ArchiveResult Parse(Object response)
+        internal override void SetValues(JToken source)
         {
-            ArchiveResult result = Parse<ArchiveResult>(response);
-            result.Url = result.JsonObj.Value<string>("url");
-            result.SecureUrl = result.JsonObj.Value<string>("secure_url");
-            result.PublicId = result.JsonObj.Value<string>("public_id");
-            result.Bytes = result.JsonObj.Value<long>("bytes");
-            result.FileCount = result.JsonObj.Value<int>("file_count");
-            return result;
+            base.SetValues(source);
+            Url = source.Value<string>("url");
+            SecureUrl = source.Value<string>("secure_url");
+            PublicId = source.Value<string>("public_id");
+            Bytes = source.Value<long>("bytes");
+            FileCount = source.Value<int>("file_count");
         }
     }
 }

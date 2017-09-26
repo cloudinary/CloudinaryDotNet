@@ -105,9 +105,7 @@ namespace Cloudinary.NetCoreShared
         {
             Url url = m_api.ApiUrlV.Add("resources").Add("search");
             
-            var response = m_api.InternalCall(HttpMethod.POST, url.BuildUrl(), PrepareSearchParams(), null, PrepareHeaders());
-
-            return SearchResult.Parse(response);
+            return m_api.CallAndParse<SearchResult>(HttpMethod.POST, url.BuildUrl(), PrepareSearchParams(), null, PrepareHeaders());
         }
     }
 }
