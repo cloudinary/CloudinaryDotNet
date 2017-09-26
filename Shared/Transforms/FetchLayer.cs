@@ -1,5 +1,4 @@
-﻿using Cloudinary.NetCoreShared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace CloudinaryDotNet

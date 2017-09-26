@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CloudinaryDotNet.Shared.Cloudinary.NetCoreShared
+namespace CloudinaryDotNet
 {
     public static class Crc32
     {

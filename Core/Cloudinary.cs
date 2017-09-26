@@ -1,6 +1,5 @@
 ﻿using CloudinaryDotNet.Actions;
-using CloudinaryShared.Core;
-using Cloudinary.NetCoreShared;
+using CloudinaryDotNet.Shared;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

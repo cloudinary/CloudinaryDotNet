@@ -1,5 +1,4 @@
 ﻿using CloudinaryDotNet;
-using Cloudinary.NetCoreShared;
 using NUnit.Framework;
 using System;
 using System.Text.RegularExpressions;

@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using CloudinaryDotNet.Actions;
-using CloudinaryShared.Core;
+using CloudinaryDotNet.Shared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 //using HttpMethod = CloudinaryDotNet.Shared.HttpMethod;

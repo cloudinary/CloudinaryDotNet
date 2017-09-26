@@ -4,9 +4,9 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 
-namespace Cloudinary.NetCoreShared
+namespace CloudinaryDotNet
 {
-    public class FileDescription : FileDescriptionBase
+    public class FileDescription : Shared.FileDescriptionBase
     {
         /// <summary>
         /// Constructor to upload file from stream

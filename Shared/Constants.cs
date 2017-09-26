@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cloudinary.NetCoreShared
+namespace CloudinaryDotNet
 {
     static class Constants
     {

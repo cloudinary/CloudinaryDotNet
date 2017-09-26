@@ -1,10 +1,10 @@
 ﻿using CloudinaryDotNet.Actions;
-using CloudinaryShared.Core;
+using CloudinaryDotNet.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cloudinary.NetCoreShared
+namespace CloudinaryDotNet
 {
     public class Search
     {

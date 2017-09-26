@@ -2,8 +2,7 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Test;
-using CloudinaryShared.Core;
-using Cloudinary.NetCoreShared;
+using CloudinaryDotNet.Shared;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
