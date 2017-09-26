@@ -36,16 +36,7 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static RawUploadResult Parse(Object response)
-        {
-            return Parse<RawUploadResult>(response);
-        }
+        
     }
 
     /// <summary>
@@ -59,15 +50,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "upload_id")]
         public string UploadId { get; protected set; }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static new RawPartUploadResult Parse(Object response)
-        {
-            return Parse<RawPartUploadResult>(response);
-        }
+        
     }
 }

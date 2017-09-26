@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -23,7 +24,8 @@ namespace CloudinaryDotNet.Actions
         /// <returns>New instance of this class</returns>
         internal static DeleteUploadPresetResult Parse(Object response)
         {
-            return Parse<DeleteUploadPresetResult>(response);
+            return Api.Parse<DeleteUploadPresetResult>(response);
         }
+        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -11,25 +12,17 @@ namespace CloudinaryDotNet.Actions
         protected string[] m_resourceTypes;
 
         public ResourceType[] ResourceTypes { get; protected set; }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static ListResourceTypesResult Parse(Object response)
+        
+        internal override void SetValues(JToken source)
         {
-            ListResourceTypesResult result = Parse<ListResourceTypesResult>(response);
-
+            base.SetValues(source);
             List<ResourceType> types = new List<ResourceType>();
-            foreach (var type in result.m_resourceTypes)
+            foreach (var type in m_resourceTypes)
             {
                 types.Add(Api.ParseCloudinaryParam<ResourceType>(type));
             }
 
-            result.ResourceTypes = types.ToArray();
-
-            return result;
+            ResourceTypes = types.ToArray();
         }
     }
 }

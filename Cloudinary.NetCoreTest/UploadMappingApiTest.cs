@@ -32,7 +32,7 @@ namespace Cloudinary.NetCoreTest
         {
             UploadMappingResults result;
             result = m_cloudinary.CreateUploadMapping(FOLDERS[0], TEMPLATE);
-            StringAssert.AreEqualIgnoringCase("created", result.Message);
+            StringAssert.AreEqualIgnoringCase("created", result.Message, result.JsonObj.ToString());
 
             result = m_cloudinary.UploadMapping(FOLDERS[0]);
             Assert.AreEqual(1, result.Mappings.Count);

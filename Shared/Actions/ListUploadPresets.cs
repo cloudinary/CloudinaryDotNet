@@ -70,7 +70,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>New instance of this class</returns>
         internal static ListUploadPresetsResult Parse(Object response)
         {
-            return Parse<ListUploadPresetsResult>(response);
+            return Api.Parse<ListUploadPresetsResult>(response);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -9,7 +10,10 @@ using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Cloudinary.NetCoreShared;
+using CloudinaryDotNet.Actions;
 using CloudinaryShared.Core;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using HttpMethod = CloudinaryShared.Core.HttpMethod;
 
 namespace CloudinaryDotNet
@@ -21,7 +25,7 @@ namespace CloudinaryDotNet
     {
         static HttpClient client = new HttpClient();
 
-        public Func<string, HttpRequestMessage> RequestBuilder =
+        private Func<string, HttpRequestMessage> RequestBuilder =
             (url) => new HttpRequestMessage {RequestUri = new Uri(url)};
         
         /// <summary>
@@ -87,27 +91,27 @@ namespace CloudinaryDotNet
             {
                 PrepareRequestBody( ref request, method, parameters, file, extraHeaders);
 
-                System.Threading.Tasks.Task<HttpResponseMessage> task2;
+                System.Threading.Tasks.Task<HttpResponseMessage> task;
                 
                 if (Timeout > 0)
                 {
                     var cancellationTokenSource = new CancellationTokenSource(Timeout);
-                    task2 = client.SendAsync(request, cancellationTokenSource.Token);
+                    task = client.SendAsync(request, cancellationTokenSource.Token);
                 }
                 else
                 {
-                    task2 = client.SendAsync(request);
+                    task = client.SendAsync(request);
                 }
                     
-                task2.Wait();
-                if (task2.IsFaulted) { throw task2.Exception; }
-                response = task2.Result;
+                task.Wait();
                 
-                if (task2.IsCanceled) { }
-                if (task2.IsFaulted) { throw task2.Exception; }
-
-                return response;
+                if (task.IsCanceled) { }
+                if (task.IsFaulted) { throw task.Exception; }
+                response = task.Result;
+                
+                
             }
+            return response;
  
         }
 
@@ -118,6 +122,7 @@ namespace CloudinaryDotNet
         /// <param name="url">URL to call</param>
         /// <param name="parameters">Dictionary of call parameters (can be null)</param>
         /// <param name="file">File to upload (must be null for non-uploading actions)</param>
+        /// <param name="extraHeaders">Headers to add to the request</param>
         /// <returns>HTTP response on call</returns>
         public HttpResponseMessage Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
@@ -151,7 +156,7 @@ namespace CloudinaryDotNet
 
         }
 
-        public HttpRequestMessage PrepareRequestBody(ref HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        internal HttpRequestMessage PrepareRequestBody(ref HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             SetHttpMethod(method, request);
 
@@ -161,20 +166,20 @@ namespace CloudinaryDotNet
                 ? USER_AGENT
                 : string.Format("{0} {1}", UserPlatform, USER_AGENT));
 
-            byte[] _authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(_authBytes)));
+            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
             {
-                if (extraHeaders.ContainsKey("Content-Type"))
+                if (extraHeaders.ContainsKey("Accept"))
                 {
-                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    extraHeaders.Remove("Content-Type");
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(extraHeaders["Accept"]));
+                    extraHeaders.Remove("Accpet");
                 }
 
                 foreach (var header in extraHeaders)
                 {
-                    request.Headers.Add(header.Key, header.Value);
+                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
             }
 
@@ -183,17 +188,26 @@ namespace CloudinaryDotNet
                 if (UseChunkedEncoding)
                     request.Headers.Add("Transfer-Encoding", "chunked");
 
-                PrepareRequestContent(ref request, parameters, file);
+                PrepareRequestContent(ref request, parameters, file, extraHeaders);
             }
             
             return request;
         }
 
-        private void PrepareRequestContent(ref HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file)
+        private void PrepareRequestContent(ref HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             //HttpRequestMessage req = (HttpRequestMessage) request;
             var content = new MultipartFormDataContent(HTTP_BOUNDARY);
+            if (extraHeaders != null)
+            {
+                foreach (var header in extraHeaders)
+                {
+                    content.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
+                }
+                
+            }
+            
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
                 FinalizeUploadParameters(parameters);
             else
@@ -347,7 +361,66 @@ namespace CloudinaryDotNet
             return cnt == 0;
         }
 
+        /// <summary>
+        /// Parses HTTP response and creates new instance of this class
+        /// </summary>
+        /// <param name="response">HTTP response</param>
+        /// <returns>New instance of this class</returns>
+        internal static T Parse<T>(Object response) where T : BaseResult, new()
+        {
+            if (response == null)
+                throw new ArgumentNullException(nameof(response));
 
+            HttpResponseMessage message = (HttpResponseMessage)response;
+
+            T result;
+
+            var task = message.Content.ReadAsStreamAsync();
+            task.Wait();
+            using (Stream stream = task.Result)
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string s = reader.ReadToEnd();
+                result = JsonConvert.DeserializeObject<T>(s);
+                result.JsonObj = JToken.Parse(s);
+            }
+
+            if (message.Headers != null)
+                foreach (var header in message.Headers)
+                {
+                    if (header.Key.StartsWith("X-FeatureRateLimit"))
+                    {
+                        long l;
+                        DateTime t;
+
+                        if (header.Key.EndsWith("Limit") && long.TryParse(header.Value.First(), out l))
+                            result.Limit = l;
+
+                        if (header.Key.EndsWith("Remaining") && long.TryParse(header.Value.First(), out l))
+                            result.Remaining = l;
+
+                        if (header.Key.EndsWith("Reset") && DateTime.TryParse(header.Value.First(), out t))
+                            result.Reset = t;
+                    }
+                }
+
+            result.StatusCode = message.StatusCode;
+
+            return result;
+        }
+
+        public override T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file,
+            Dictionary<string, string> extraHeaders = null)
+        {
+            using (var response = Call(method,
+                url,
+                parameters,
+                file,
+                extraHeaders))
+            {
+                return Parse<T>(response);
+            }
+        }
     }
     
 }

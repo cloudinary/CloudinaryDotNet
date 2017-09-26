@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -23,46 +24,39 @@ namespace CloudinaryDotNet.Actions
         /// Holds the cursor value if there are more upload mappings than <see cref="UploadMappingParams.MaxResults"/>.
         /// </summary>
         public string NextCursor { get; protected set; }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static UploadMappingResults Parse(Object response)
+        
+        internal override void SetValues(JToken source)
         {
-            UploadMappingResults result = Parse<UploadMappingResults>(response);
-            if (result.Mappings == null)
-                result.Mappings = new Dictionary<string, string>();
+            base.SetValues(source);
+            if (Mappings == null)
+                Mappings = new Dictionary<string, string>();
 
-            if (result.JsonObj != null)
+            if (source != null)
             {
                 // parsing message
-                var message = result.JsonObj.Value<string>("message") ?? string.Empty;
-                result.Message = message;
+                var message = source.Value<string>("message") ?? string.Empty;
+                Message = message;
 
                 // parsing mappings
-                var mappingsJToken = result.JsonObj["mappings"];
+                var mappingsJToken = source["mappings"];
                 if (mappingsJToken != null)
                 {
                     var mappings = mappingsJToken.Children();
-                    foreach(var mapping in mappings)
+                    foreach (var mapping in mappings)
                     {
-                        result.Mappings.Add(mapping["folder"].ToString(), mapping["template"].ToString());
+                        Mappings.Add(mapping["folder"].ToString(), mapping["template"].ToString());
                     }
                 }
 
                 // parsing single mapping
-                var folder = result.JsonObj.Value<string>("folder") ?? string.Empty;
-                var template = result.JsonObj.Value<string>("template") ?? string.Empty;
+                var folder = source.Value<string>("folder") ?? string.Empty;
+                var template = source.Value<string>("template") ?? string.Empty;
                 if (!string.IsNullOrEmpty(folder))
-                    result.Mappings.Add(folder, template);
+                    Mappings.Add(folder, template);
 
                 //parsing NextCursor
-                result.NextCursor = result.JsonObj.Value<string>("next_cursor") ?? string.Empty;
+                NextCursor = source.Value<string>("next_cursor") ?? string.Empty;
             }
-            
-            return result;
         }
     }
 }

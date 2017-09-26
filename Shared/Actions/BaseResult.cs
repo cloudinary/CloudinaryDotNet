@@ -97,11 +97,19 @@ namespace CloudinaryDotNet.Actions
         /// HTTP status code
         /// </summary>
         public HttpStatusCode StatusCode { get; internal set; }
-
+        private JToken RawJson;
         /// <summary>
         /// Raw JSON as received from server
         /// </summary>
-        public JToken JsonObj { get; internal set; }
+        public JToken JsonObj
+        {
+            get { return RawJson; }
+            internal set
+            {
+                RawJson = value;
+                SetValues(value);
+            }
+        }
 
         /// <summary>
         /// Description of server-side error (if one has occured)
@@ -124,6 +132,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public DateTime Reset { get; internal set; }
 
+        internal virtual void SetValues(JToken source)
+        {
+            
+        }
     }
 
     /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -54,26 +55,15 @@ namespace CloudinaryDotNet.Actions
         /// List of responsive image breakpoints
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static new ImageUploadResult Parse(Object response)
+        
+        internal override void SetValues(JToken source)
         {
-            ImageUploadResult result = Parse<ImageUploadResult>(response);
-
-            if(result.JsonObj != null)
+            base.SetValues(source);
+            var responsiveBreakpoints = source["responsive_breakpoints"];
+            if (responsiveBreakpoints != null)
             {
-                var responsiveBreakpoints = result.JsonObj["responsive_breakpoints"];
-                if(responsiveBreakpoints != null)
-                {
-                    result.ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
-                }
+                ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
             }
-
-            return result;
         }
     }
 }

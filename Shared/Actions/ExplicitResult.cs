@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -24,25 +25,13 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal new static ExplicitResult Parse(Object response)
+        internal override void SetValues(JToken source)
         {
-            ExplicitResult result = Parse<ExplicitResult>(response);
-
-            if (result.JsonObj != null)
+            var responsiveBreakpoints = source["responsive_breakpoints"];
+            if (responsiveBreakpoints != null)
             {
-                var responsiveBreakpoints = result.JsonObj["responsive_breakpoints"];
-                if (responsiveBreakpoints != null)
-                {
-                    result.ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
-                }
+                ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
             }
-
-            return result;
         }
     }
 

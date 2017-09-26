@@ -87,6 +87,11 @@ namespace CloudinaryShared.Core
             throw new Exception("Please call overriden method");
         }
 
+        public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        {
+            throw new NotImplementedException();
+        }
+       
         /// <summary>
         /// Parametrized constructor
         /// </summary>
