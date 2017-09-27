@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>CloudinaryDotNetCore</id>
-    <version>1.0.30</version>
+    <version>1.1.0-rc1</version>
     <title>Cloudinary DotNet Core Library</title>
     <authors>Cloudinary</authors>
     <owners>Cloudinary</owners>
