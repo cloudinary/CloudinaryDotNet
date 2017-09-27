@@ -72,7 +72,6 @@
   <ItemGroup>
     <Compile Include="AuthToken.cs" />
     <Compile Include="FileDescription.cs" />
-    <Compile Include="Cloudinary.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="Cloudinary.Async.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
