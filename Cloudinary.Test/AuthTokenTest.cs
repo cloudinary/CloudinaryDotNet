@@ -1,7 +1,5 @@
-﻿using Cloudinary.Test.Configuration;
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Test;
-using CloudinaryDotNet.Shared;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

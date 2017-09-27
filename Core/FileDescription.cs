@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CloudinaryDotNet
 {
-    public class FileDescription : Shared.FileDescriptionBase
+    public class FileDescription : FileDescriptionBase
     {
         /// <summary>
         /// Constructor to upload file from stream
@@ -29,7 +29,7 @@ namespace CloudinaryDotNet
             using (HttpClient client = new HttpClient())
             {
                 var request = new HttpRequestMessage();
-                request.Method = HttpMethod.Get;
+                request.Method = System.Net.Http.HttpMethod.Get;
                 request.RequestUri = new Uri(url);
                 var task = client.SendAsync(request);
                 task.Wait();

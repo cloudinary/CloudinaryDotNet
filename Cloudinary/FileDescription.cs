@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CloudinaryDotNet
 {
-    public class FileDescription : Shared.FileDescriptionBase
+    public class FileDescription : FileDescriptionBase
     {
         /// <summary>
         /// Constructor to upload file from stream

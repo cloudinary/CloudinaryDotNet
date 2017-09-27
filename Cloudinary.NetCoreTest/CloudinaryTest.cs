@@ -1,8 +1,5 @@
-﻿using Cloudinary.NetCoreTest;
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using CloudinaryDotNet.Core;
-using CloudinaryDotNet.Shared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;

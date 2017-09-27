@@ -10,10 +10,8 @@ using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading;
 using CloudinaryDotNet.Actions;
-using CloudinaryDotNet.Shared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using HttpMethod = CloudinaryDotNet.Shared.HttpMethod;
 
 namespace CloudinaryDotNet
 {
@@ -72,46 +70,6 @@ namespace CloudinaryDotNet
             var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
             USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2}",
                 version.Major, version.Minor, version.Build);
-        }
-
-        /// <summary>
-        /// Custom call to cloudinary API
-        /// </summary>
-        /// <param name="method">HTTP method of call</param>
-        /// <param name="url">URL to call</param>
-        /// <param name="parameters">Dictionary of call parameters (can be null)</param>
-        /// <param name="file">File to upload (must be null for non-uploading actions)</param>
-        /// <returns>HTTP response on call</returns>
-        public override object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-        {
-            var request = RequestBuilder(url);
-            HttpResponseMessage response = null;
-            using (request)
-            {
-                PrepareRequestBody( ref request, method, parameters, file, extraHeaders);
-
-                System.Threading.Tasks.Task<HttpResponseMessage> task;
-                
-                if (Timeout > 0)
-                {
-                    var cancellationTokenSource = new CancellationTokenSource(Timeout);
-                    task = client.SendAsync(request, cancellationTokenSource.Token);
-                }
-                else
-                {
-                    task = client.SendAsync(request);
-                }
-                    
-                task.Wait();
-                
-                if (task.IsCanceled) { }
-                if (task.IsFaulted) { throw task.Exception; }
-                response = task.Result;
-                
-                
-            }
-            return response;
- 
         }
 
         /// <summary>
