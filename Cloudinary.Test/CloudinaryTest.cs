@@ -1,7 +1,5 @@
 ﻿using Cloudinary.Test.Configuration;
-using Cloudinary.Test.Properties;
 using CloudinaryDotNet.Actions;
-using CloudinaryDotNet.Shared;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

@@ -1,5 +1,4 @@
 ﻿using CloudinaryDotNet.Actions;
-using CloudinaryDotNet.Shared;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
