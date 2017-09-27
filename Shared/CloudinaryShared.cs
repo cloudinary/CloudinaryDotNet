@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.Shared
 {
-    public abstract class CloudinaryShared<TApi> where TApi: ApiShared
+    public abstract class CloudinaryShared
     {
         protected const string RESOURCE_TYPE_IMAGE = "image";
         protected const string ACTION_GENERATE_ARCHIVE = "generate_archive";
         protected static Random m_random = new Random();
 
-        protected TApi m_api;
+        protected Api m_api;
         
         /// <summary>
         /// API object that used by this instance
         /// </summary>
-        public TApi Api
+        public Api Api
         {
             get { return m_api; }
         }

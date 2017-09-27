@@ -13,7 +13,7 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Main class of cloudinary .NET API.
     /// </summary>
-    public partial class Cloudinary : CloudinaryShared<Api>
+    public partial class Cloudinary : CloudinaryShared
     {
         /// <summary>
         /// Default parameterless constructor.
