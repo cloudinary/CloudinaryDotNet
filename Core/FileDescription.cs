@@ -29,7 +29,7 @@ namespace CloudinaryDotNet
             using (HttpClient client = new HttpClient())
             {
                 var request = new HttpRequestMessage();
-                request.Method = HttpMethod.Get;
+                request.Method = System.Net.Http.HttpMethod.Get;
                 request.RequestUri = new Uri(url);
                 var task = client.SendAsync(request);
                 task.Wait();
