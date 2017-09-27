@@ -260,7 +260,7 @@ namespace CloudinaryDotNet
         internal static T Parse<T>(Object response) where T : BaseResult, new()
         {
             if (response == null)
-                throw new ArgumentNullException(nameof(response));
+                throw new ArgumentNullException("response");
 
             HttpWebResponse message = (HttpWebResponse)response;
 

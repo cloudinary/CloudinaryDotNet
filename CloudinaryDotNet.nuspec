@@ -1,9 +1,9 @@
-﻿<?xml version="1.0"?>
-<package >
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>CloudinaryDotNetCore</id>
-    <version>1.0.30</version>
-    <title>Cloudinary DotNet Core Library</title>
+    <id>CloudinaryDotNet</id>
+    <version>1.1.0-rc1</version>
+    <title>Cloudinary DotNet Library</title>
     <authors>Cloudinary</authors>
     <owners>Cloudinary</owners>
     <licenseUrl>https://github.com/cloudinary/CloudinaryDotNet/blob/master/LICENSE</licenseUrl>
@@ -11,12 +11,10 @@
     <iconUrl>http://res.cloudinary.com/cloudinary/image/upload/c_scale,w_64/v1/logo/for_white_bg/cloudinary_icon_for_white_bg.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Official client library for easily integrating with the Cloudinary service</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</tags>
-    <dependencies>
-      <dependency id="Newtonsoft.Json" version="10.0.3" />
-    </dependencies>
+
   </metadata>
   <files>
     <file src="lib\**" target="lib" />

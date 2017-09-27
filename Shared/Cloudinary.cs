@@ -549,7 +549,7 @@ namespace CloudinaryDotNet
                 result = m_api.CallAndParse<T>(HttpMethod.POST, uri, apiParams, parameters.File, extraHeaders);
 
                 if (result.StatusCode != HttpStatusCode.OK)
-                    throw new WebException(String.Format(
+                    throw new Exception(String.Format(
                         "An error has occured while uploading file (status code: {0}). {1}",
                         result.StatusCode,
                         result.Error != null ? result.Error.Message : "Unknown error"));

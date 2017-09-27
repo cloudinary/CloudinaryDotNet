@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>CloudinaryDotNet</AssemblyName>
+    <PackageId>CloudinaryDotNet</PackageId>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>CloudinaryDotNet</RootNamespace>
+    <Authors>Cloudinary</Authors>
+    <Version>1.1.0-rc2</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>Official client library for easily integrating with the Cloudinary service</Description>
+    <PackageTags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</PackageTags>
+    <PackageLicenseUrl>https://github.com/cloudinary/CloudinaryDotNet/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>http://cloudinary.com</PackageProjectUrl>
+    <PackageIconUrl>http://res.cloudinary.com/cloudinary/image/upload/c_scale,w_64/v1/logo/for_white_bg/cloudinary_icon_for_white_bg.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/cloudinary/CloudinaryDotNet/</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\lib\</OutputPath>
+    <DebugType>none</DebugType>
+    <DebugSymbols>False</DebugSymbols>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_0</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Actions\BaseResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.WebEncoders" Version="1.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Requests" />
+    <Reference Include="System.Runtime.Serialization.Json" />
+    <Reference Include="System.Text.Encodings.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Actions\" />
+  </ItemGroup>
+  <Import Project="..\Shared\Shared.projitems" Label="Shared" />
+</Project>
