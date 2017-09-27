@@ -74,4 +74,4 @@ UpgradeLog*.htm
 *snk
 
 # test configuration file
-app.config
+app.config.idea/
