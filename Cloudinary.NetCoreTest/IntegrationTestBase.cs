@@ -1,14 +1,11 @@
 ﻿using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Configuration;
-using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.IO;
-using System.Net.Http;
 using System.Reflection;
 using CloudinaryDotNet;
-using Castle.Core.Resource;
 
 namespace Cloudinary.NetCoreTest
 {
