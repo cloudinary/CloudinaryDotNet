@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>70382bcb-a323-4d61-a428-947de01a14e9</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Account.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ArchiveCallMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ArchiveFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ArchiveParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ArchiveResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\BaseParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\BaseResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\CreateTransformParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DelDerivedResParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DelDerivedResResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DeleteUploadPreset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DeletionParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DeletionResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DelResParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DelResResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ExplicitParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ExplicitResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ExplodeParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ExplodeResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\GetFoldersResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\GetResourceParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\GetResourceResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\GetTransformParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\GetTransformResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\GetUploadPreset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ImageUploadParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ImageUploadResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ListResourcesParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ListResourcesResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ListResourceTypesResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ListTagsParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ListTagsResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ListTransformsParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ListTransformsResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ListUploadPresets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MultiParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MultiResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\PublishResourceParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\PublishResourceResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\RawUploadParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\RawUploadResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\RenameParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\RenameResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ResponsiveBreakpointResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\RestoreParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\RestoreResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\SearchResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\SpriteParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\SpriteResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\TagParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\TagResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\TextParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\TextResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\TransformResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateResourceAccessModeParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateResourceAccessModeResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateTransformParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateTransformResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UploadMappingParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UploadMappingResults.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UploadPreset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UsageResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\VideoUploadParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\VideoUploadResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ApiShared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cloudinary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudinaryConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\ICloneable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Crc32.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileDescriptionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Search.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\BaseLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\Condition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\FetchLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\ImageTransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\Layer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\ResponsiveBreakpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\SubtitlesLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\Transformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoTransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Url.cs" />
+  </ItemGroup>
+</Project>
