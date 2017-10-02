@@ -1,6 +1,6 @@
 # Cloudinary SDK
 app.config
-
+appsettings.json
 
 # User-specific files
 *.suo
@@ -73,5 +73,4 @@ UpgradeLog*.htm
 
 *snk
 
-# test configuration file
-app.config.idea/
+.idea/
