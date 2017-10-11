@@ -1,4 +1,5 @@
 ﻿using CloudinaryDotNet.Core;
+using Coudinary.NetCoreShared.Transforms;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -11,11 +12,14 @@ namespace CloudinaryDotNet
         /// The required width of a transformed image or an overlay. Can be specified separately or together with the height value. Can also be a decimal value (e.g., 0.2) for percentage based resizing.
         /// </summary>
         public Transformation Width(object value) { return Add("width", value); }
+        public Transformation Width(Variable var) { return AddVariable("width", var); }
 
         /// <summary>
         /// The required height of a transformed image or an overlay. Can be specified separately or together with the width value. Can also be a decimal value (e.g., 0.2) for percentage based resizing.
         /// </summary>
         public Transformation Height(object value) { return Add("height", value); }
+        public Transformation Height(Variable var) { return AddVariable("height", var); }
+
         public Transformation SetHtmlWidth(object value) { m_htmlWidth = value.ToString(); return this; }
         public Transformation SetHtmlHeight(object value) { m_htmlHeight = value.ToString(); return this; }
         public Transformation Named(params string[] value) { return Add("transformation", value); }
@@ -36,11 +40,14 @@ namespace CloudinaryDotNet
         public Transformation AspectRatio(int nom, int denom) { return AspectRatio(string.Format("{0}:{1}", nom, denom)); }
 
         public Transformation AspectRatio(string value) { return Add("aspect_ratio", value); }
+        public Transformation AspectRatio(Variable var) { return AddVariable("aspect_ratio", var); }
 
         /// <summary>
         /// A crop mode that determines how to transform the image for fitting into the desired width and height dimensions.
         /// </summary>
         public Transformation Crop(string value) { return Add("crop", value); }
+        public Transformation Crop(Variable var) { return AddVariable("crop", var); }
+
         public Transformation Background(string value) { return Add("background", Regex.Replace(value, "^#", "rgb:")); }
 
         /// <summary>
@@ -52,6 +59,8 @@ namespace CloudinaryDotNet
         /// Apply a filter or an effect on an image. The value includes the name of the effect and an additional parameter that controls the behavior of the specific effect.
         /// </summary>
         public Transformation Effect(string value) { return Add("effect", value); }
+        public Transformation Effect(string value, Variable streight) { return Add("effect", string.Concat(value, ":", streight.Key)); }
+        public Transformation Effect(Variable effect, Variable streight) { return Add("effect", string.Concat(effect.Key, ":", streight.Key)); }
 
         /// <summary>
         /// Apply a filter or an effect on an image.
@@ -62,6 +71,7 @@ namespace CloudinaryDotNet
         public Transformation Effect(string effect, Object param) { return Add("effect", effect + ":" + param); }
         public Transformation Angle(int value) { return Add("angle", value); }
         public Transformation Angle(params string[] value) { return Add("angle", value); }
+        public Transformation Angle(Variable var) { return AddVariable("angle", var); }
 
         /// <summary>
         /// Add a solid border around the image. The value has a CSS-like format: width_style_color.
@@ -77,17 +87,21 @@ namespace CloudinaryDotNet
         /// Horizontal position for custom-coordinates based cropping and overlay placement.
         /// </summary>
         public Transformation X(object value) { return Add("x", value); }
+        public Transformation X(Variable var) { return AddVariable("x", var); }
 
         /// <summary>
         /// Vertical position for custom-coordinates based cropping and overlay placement.
         /// </summary>
         public Transformation Y(object value) { return Add("y", value); }
+        public Transformation Y(Variable var) { return AddVariable("y", var); }
         public Transformation Radius(object value) { return Add("radius", value); }
+        public Transformation Radius(Variable var) { return Add("radius", var); }
 
         /// <summary>
         /// Control the JPG compression quality. 1 is the lowest quality and 100 is the highest. The default is the original image's quality or 90% if not available. Reducing quality generates JPG images much smaller in file size.
         /// </summary>
         public Transformation Quality(object value) { return Add("quality", value); }
+        public Transformation Quality(Variable var) { return AddVariable("quality", var); }
         public Transformation DefaultImage(string value) { return Add("default_image", value); }
 
         /// <summary>
@@ -101,6 +115,7 @@ namespace CloudinaryDotNet
         /// Manipulate image opacity in order to make the image semi-transparent.
         /// </summary>
         public Transformation Opacity(int value) { return Add("opacity", value); }
+        public Transformation Opacity(Variable var) { return Add("opacity", var); }
         public Transformation Overlay(string value) { return Add("overlay", value); }
         public Transformation Overlay(BaseLayer value) { return Add("overlay", value); }
         public Transformation Underlay(string value) { return Add("underlay", value); }
@@ -124,6 +139,7 @@ namespace CloudinaryDotNet
         /// How much zoom should be applying when detecting faces for crop, thumb or for overlays. (e.g. 0.5 will cause zoom out of x2 on both axes).
         /// </summary>
         public Transformation Zoom(int value) { return Add("zoom", value); }
+        public Transformation Zoom(Variable var) { return AddVariable("zoom", var); }
 
         /// <summary>
         /// How much zoom should be applying when detecting faces for crop, thumb or for overlays. (e.g. 0.5 will cause zoom out of x2 on both axes).
@@ -145,6 +161,7 @@ namespace CloudinaryDotNet
         /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for further info.
         /// </summary>
         public Transformation Dpr(object value) { return Add("dpr", value); }
+        public Transformation Dpr(Variable var) { return AddVariable("dpr", var); }
 
         /// <summary>
         /// Whether to enable automatic adaptation of website images.

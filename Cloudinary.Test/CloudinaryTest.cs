@@ -1,5 +1,6 @@
 ﻿using Cloudinary.Test.Configuration;
 using CloudinaryDotNet.Actions;
+using Coudinary.NetCoreShared.Transforms;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -2705,8 +2706,75 @@ namespace CloudinaryDotNet.Test
             {
                 PublicIds = pIds
             });
-
         }
 
+        [Test]
+        public void TestUserDefinedVariable()
+        {
+            string publicId = string.Concat(m_suffix, "_Test_UDV");
+            Variable var = new Variable("testvar", 10);
+            Variable newHeight = new Variable("newHeight", new Expression().Value(PredefinedVariable.InitialHeight).Div().Value(var));
+
+            Transformation transform = new Transformation().Var(new Variable("testvar", 10)).Var(newHeight).Height(newHeight);
+            Assert.AreEqual(transform.Generate(), "$testvar_10/$newHeight_ih_div_$testvar/h_$newHeight");
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { transform },
+                PublicId = publicId,
+                Overwrite = true,
+            };
+            var result = m_cloudinary.Upload(uploadParams);
+
+            Assert.True(result.StatusCode == HttpStatusCode.OK);
+
+            var getResResult = m_cloudinary.GetResource(new GetResourceParams(publicId)
+            {
+                PublicId = publicId,
+                Type = "upload",
+                ResourceType = ResourceType.Image
+            });
+
+            Assert.NotNull(getResResult);
+            Assert.True(getResResult.Derived.Length > 0);
+
+            var delRes = m_cloudinary.DeleteResources(new string[] { publicId });
+        }
+
+        [Test]
+        public void TestConditionalUserDefinedVariable()
+        {
+            string publicId = string.Concat(m_suffix, "_Test_UDV");
+
+            Variable varA = new Variable("newWidth", new Expression().Value(PredefinedVariable.InitialWidth).Div().Value(5));
+            Variable varB = new Variable("newHeight", new Expression().Value(PredefinedVariable.InitialHeight).Mul().Value(2));
+            Variable varC = new Variable("compareHeight", new Expression().Value(PredefinedVariable.InitialHeight).Sub().Value(20));
+
+            Transformation transform = new Transformation().Var(varA).Var(varB).Var(varC).IfCondition().FaceCount("gt", varC).Then().Width(varA).Height(varB).EndIf();
+            Assert.AreEqual(transform.Generate(), "$newWidth_iw_div_5/$newHeight_ih_mul_2/$compareHeight_ih_sub_20/if_fc_gt_$compareHeight/h_$newHeight,w_$newWidth/if_end");
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { transform },
+                PublicId = publicId,
+                Overwrite = true,
+            };
+            var result = m_cloudinary.Upload(uploadParams);
+
+            Assert.True(result.StatusCode == HttpStatusCode.OK);
+
+            var getResResult = m_cloudinary.GetResource(new GetResourceParams(publicId)
+            {
+                PublicId = publicId,
+                Type = "upload",
+                ResourceType = ResourceType.Image
+            });
+
+            Assert.NotNull(getResResult);
+            Assert.True(getResResult.Derived.Length > 0);
+
+            var delRes = m_cloudinary.DeleteResources(new string[] { publicId });
+        }
     }
 }
