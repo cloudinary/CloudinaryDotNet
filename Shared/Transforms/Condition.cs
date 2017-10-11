@@ -1,4 +1,5 @@
-﻿  using System.Collections.Generic;
+﻿using Coudinary.NetCoreShared.Transforms;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -144,9 +145,21 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        public Condition Width(string @operator, Variable var)
+        {
+            predicateList.Add(string.Format("w_{0}_{1}", @operator, var.Key));
+            return this;
+        }
+
         public Condition InitialWidth(string @operator, object value)
         {
             predicateList.Add(string.Format("iw_{0}_{1}", @operator, value));
+            return this;
+        }
+
+        public Condition InitialWidth(string @operator, Variable var)
+        {
+            predicateList.Add(string.Format("iw_{0}_{1}", @operator, var.Key));
             return this;
         }
 
@@ -156,9 +169,21 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        public Condition Height(string @operator, Variable var)
+        {
+            predicateList.Add(string.Format("h_{0}_{1}", @operator, var.Key));
+            return this;
+        }
+
         public Condition InitialHeight(string @operator, object value)
         {
             predicateList.Add(string.Format("ih_{0}_{1}", @operator, value));
+            return this;
+        }
+
+        public Condition InitialHeight(string @operator, Variable var)
+        {
+            predicateList.Add(string.Format("ih_{0}_{1}", @operator, var.Key));
             return this;
         }
 
@@ -168,15 +193,33 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        public Condition AspectRatio(string @operator, Variable var)
+        {
+            predicateList.Add(string.Format("ar_{0}_{1}", @operator, var.Key));
+            return this;
+        }
+
         public Condition FaceCount(string @operator, object value)
         {
             predicateList.Add(string.Format("fc_{0}_{1}", @operator, value));
             return this;
         }
 
+        public Condition FaceCount(string @operator, Variable var)
+        {
+            predicateList.Add(string.Format("fc_{0}_{1}", @operator, var.Key));
+            return this;
+        }
+
         public Condition PageCount(string @operator, object value)
         {
             predicateList.Add(string.Format("pc_{0}_{1}", @operator, value));
+            return this;
+        }
+
+        public Condition PageCount(string @operator, Variable var)
+        {
+            predicateList.Add(string.Format("pc_{0}_{1}", @operator, var.Key));
             return this;
         }
     }
