@@ -439,6 +439,28 @@ namespace Cloudinary.NetCoreTest
         }
 
         [Test]
+        public void TestUploadTransformationEffect()
+        {
+            string publicId = string.Concat(m_suffix, "_", "TestEffect");
+
+            Transformation effect = new Transformation().Effect("art:incognito");
+
+            Assert.AreEqual(effect.ToString(), "e_art:incognito");
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                PublicId = publicId,
+                File = new FileDescription(m_testImagePath),
+                Transformation = effect,
+                Tags = m_test_tag
+            };
+
+            ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
+            Assert.AreEqual(uploadResult.StatusCode, HttpStatusCode.OK);
+            var delResult = m_cloudinary.DeleteResources(new string[] { publicId });
+        }
+
+        [Test]
         public void TestEnglishText()
         {
             TextParams tParams = new TextParams("Sample text.");
