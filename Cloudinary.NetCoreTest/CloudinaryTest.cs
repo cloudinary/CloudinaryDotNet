@@ -1085,6 +1085,43 @@ namespace Cloudinary.NetCoreTest
         }
 
         [Test]
+        public void TestRenameNewType()
+        {
+            string publicId = string.Concat(m_suffix, "_renameNewType");
+            string newPublicId = string.Concat(m_suffix, "_renameNewType1");
+
+            var uploadParams = new ImageUploadParams()
+            {
+                PublicId = publicId,
+                File = new FileDescription(m_testImagePath),
+                Tags = m_test_tag,
+                Type = "upload"
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            RenameParams renameParams = new RenameParams(publicId, newPublicId)
+            {
+
+            };
+
+            var renameResult = m_cloudinary.Rename(renameParams);
+            var getResult = m_cloudinary.GetResource(newPublicId);
+            Assert.NotNull(getResult);
+            Assert.AreEqual(getResult.PublicId, newPublicId);
+
+            renameParams = new RenameParams(newPublicId, newPublicId)
+            {
+                Type = "upload",
+                NewType = "private"
+            };
+            renameResult = m_cloudinary.Rename(renameParams);
+            Assert.AreEqual(renameResult.StatusCode, HttpStatusCode.OK);
+            getResult = m_cloudinary.GetResource(newPublicId);
+            Assert.AreEqual(getResult.StatusCode, HttpStatusCode.NotFound);
+        }
+
+        [Test]
         public void TestGetResource()
         {
             // should allow get resource details
