@@ -650,6 +650,11 @@ namespace CloudinaryDotNet
                     m_resourceType = "images";
                     m_action = null;
                 }
+                else if(m_resourceType == "image" && m_action == "private")
+                {
+                    m_resourceType = "private_images";
+                    m_action = null;
+                }
                 else if (m_resourceType == "raw" && m_action == "upload")
                 {
                     m_resourceType = "files";
