@@ -531,7 +531,9 @@ namespace CloudinaryDotNet
         public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
         {
             Url url = m_api.ApiUrlImgUpV;
-            url.ResourceType(Enum.GetName(typeof(ResourceType), parameters.ResourceType).ToLower());
+            var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
+            if (name != null)
+                url.ResourceType(name.ToLower());
             string uri = url.BuildUrl();
             ResetInternalFileDescription(parameters.File, bufferSize);
             var extraHeaders = new Dictionary<string, string>();
@@ -1017,7 +1019,13 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Returns list of all upload mappings
         /// </summary>
-        /// <param name="parameters">Uses only <see cref="MaxResults"/> and <see cref="NextCursor"/> properties. Can be null.</param>
+        /// <param name="parameters">Uses only <see>
+        ///         <cref>MaxResults</cref>
+        ///     </see>
+        ///     and <see>
+        ///         <cref>NextCursor</cref>
+        ///     </see>
+        ///     properties. Can be null.</param>
         public UploadMappingResults UploadMappings(UploadMappingParams parameters)
         {
             if (parameters == null)
