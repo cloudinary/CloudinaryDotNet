@@ -24,12 +24,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
 
-        /// <summary>
-        /// Image format
-        /// </summary>
-        [DataMember(Name = "format")]
-        public string Format { get; protected set; }
-
         [DataMember(Name = "exif")]
         public Dictionary<string, string> Exif { get; protected set; }
 

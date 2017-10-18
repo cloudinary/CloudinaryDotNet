@@ -11,9 +11,6 @@ namespace CloudinaryDotNet.Actions
     [DataContract]
     public class ExplicitResult : RawUploadResult
     {
-        [DataMember(Name = "format")]
-        public string Format { get; protected set; }
-
         [DataMember(Name = "type")]
         public string Type { get; protected set; }
 

@@ -19,9 +19,6 @@ namespace CloudinaryDotNet.Actions
     [DataContract]
     public class Resource : UploadResult
     {
-        [DataMember(Name = "format")]
-        public string Format { get; protected set; }
-
         [DataMember(Name = "resource_type")]
         public string ResourceType { get; protected set; }
 
@@ -30,9 +27,6 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "created_at")]
         public string Created { get; protected set; }
-
-        [DataMember(Name = "bytes")]
-        public long Length { get; protected set; }
 
         [DataMember(Name = "width")]
         public int Width { get; protected set; }

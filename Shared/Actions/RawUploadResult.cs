@@ -22,12 +22,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "resource_type")]
         public string ResourceType { get; protected set; }
 
-        /// <summary>
-        /// File size (in bytes)
-        /// </summary>
-        [DataMember(Name = "bytes")]
-        public long Length { get; protected set; }
-
         [DataMember(Name = "moderation")]
         public List<Moderation> Moderation { get; protected set; }
 

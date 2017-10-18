@@ -20,12 +20,6 @@ namespace CloudinaryDotNet.Actions
         public int Height { get; protected set; }
 
         /// <summary>
-        /// File format
-        /// </summary>
-        [DataMember(Name = "format")]
-        public string Format { get; protected set; }
-
-        /// <summary>
         /// Video information.
         /// </summary>
         [DataMember(Name = "video")]
