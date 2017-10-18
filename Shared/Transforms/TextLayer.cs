@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 
 namespace CloudinaryDotNet
 {
@@ -63,9 +62,11 @@ namespace CloudinaryDotNet
         /// </summary>
         private string OverlayTextEncode(string text)
         {
-            return HttpUtility.UrlEncodeUnicode(text)
-                .Replace("%2f", "/").Replace("%3a", ":").Replace("+", "%20")
-                .Replace("%2c", "%e2%80%9a").Replace("/", "%e2%81%84");
+            var encode = Utils.Encode(text);
+            return encode
+                .Replace("%2f", "%252f").Replace("/", "%252f").Replace("%3a", ":").Replace("+", "%20")
+                .Replace("%2c", "%252c").Replace(",", "%252c");
+//                .Replace(",", "%e2%80%9a");
         }
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace CloudinaryDotNet
             {
                 components.Add(m_text);
             }
-            return string.Join(":", components.ToArray());
+            return string.Join(":", components);
         }
 
         public override string ToString()
@@ -210,7 +211,7 @@ namespace CloudinaryDotNet
             components.Insert(0, m_fontSize.ToString());
             components.Insert(0, m_fontFamily);
 
-            return string.Join("_", components.ToArray());
+            return string.Join("_", components);
         }
     }
 }

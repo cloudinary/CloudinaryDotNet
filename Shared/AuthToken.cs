@@ -166,9 +166,8 @@ namespace CloudinaryDotNet
         protected string EscapeToLower(string url)
         {
             string escaped = string.Empty;
-            string encodedUrl = string.Empty;
 
-            encodedUrl = EncodedUrl(url);
+            var encodedUrl = Utils.EncodedUrl(url);
             StringBuilder sb = new StringBuilder(encodedUrl);
             string result = sb.ToString();
             string regex = "%..";
@@ -222,14 +221,6 @@ namespace CloudinaryDotNet
 
                 return hashComponents.GetHashCode();
             }
-        }
-
-        protected string EncodedUrl(string url)
-        {
-            // FIXME find a better solution to core / foundation without inheritence
-            string encoded = null;
-            encoded = System.Web.HttpUtility.UrlEncode(url, Encoding.UTF8);        
-            return encoded;
         }
     }
 }

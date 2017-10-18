@@ -77,6 +77,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\VideoUploadParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\VideoUploadResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApiShared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AuthToken.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cloudinary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudinaryConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\ResponsiveBreakpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\SubtitlesLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\TextLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Transformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoTransform.cs" />
