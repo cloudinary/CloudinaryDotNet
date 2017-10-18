@@ -800,18 +800,18 @@ namespace CloudinaryDotNet
 
     public class UrlBuilder : UriBuilder
     {
-        StringDictionary m_queryString = null;
+        private StringDictionary queryString = null;
 
         public StringDictionary QueryString
         {
             get
             {
-                if (m_queryString == null)
+                if (queryString == null)
                 {
-                    m_queryString = new StringDictionary();
+                    queryString = new StringDictionary();
                 }
 
-                return m_queryString;
+                return queryString;
             }
         }
 
@@ -908,12 +908,12 @@ namespace CloudinaryDotNet
                 return;
             }
 
-            if (m_queryString == null)
+            if (queryString == null)
             {
-                m_queryString = new StringDictionary();
+                queryString = new StringDictionary();
             }
 
-            m_queryString.Clear();
+            queryString.Clear();
 
             query = query.Substring(1); //remove the ?
 
@@ -922,15 +922,15 @@ namespace CloudinaryDotNet
             {
                 string[] pair = s.Split(new char[] { '=' });
 
-                m_queryString[pair[0]] = (pair.Length > 1) ? pair[1] : string.Empty;
+                queryString[pair[0]] = (pair.Length > 1) ? pair[1] : string.Empty;
             }
         }
 
         private void BuildQueryString()
         {
-            if (m_queryString == null) return;
+            if (queryString == null) return;
 
-            int count = m_queryString.Count;
+            int count = queryString.Count;
 
             if (count == 0)
             {
@@ -942,8 +942,8 @@ namespace CloudinaryDotNet
             string[] values = new string[count];
             string[] pairs = new string[count];
 
-            m_queryString.Keys.CopyTo(keys, 0);
-            m_queryString.Values.CopyTo(values, 0);
+            queryString.Keys.CopyTo(keys, 0);
+            queryString.Values.CopyTo(values, 0);
 
             for (int i = 0; i < count; i++)
             {
