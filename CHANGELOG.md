@@ -1,3 +1,47 @@
+
+1.1.0 / 2017-11-21
+==================
+
+# The CloudinaryDotNet now supports .net core and standard libraries.
+
+The library has been split to a shared project, a Core project and Standard (Foundation) project.
+The standard library is fully backwards compatible with the previous version.
+
+New functionality
+-----------------
+
+  * Search API
+  * Implemented async methods and tests.
+  * Added `access_mode` to RawUploadParams.
+  * AppVeyor CI
+  * Added `quality_override` param and cover test
+
+Other Changes
+-------------
+
+  * Upgrade project structure to VS 2017 and prepare version 1.1.0-rc1
+  * Update Nuget.exe
+  * Remove nupkg from git
+  * Fix http timeout
+  * Rearrange tests to enable `TestListResourcesByPublicIds`
+  * Implemented auto width params for transformation
+  * Fixed setter fo "All" parameter in delResParams class
+  * Gitignore fix
+  * Fixed test for upload mappings - removed unnecessary check.
+  * Fix typos and tests
+  * Fix `.gitignore`
+  * Update Readme to point to HTTPS URLs of cloudinary.com
+  * Added support for different resource_types in Rename and Tag
+  * Fixed setter for "all" property in DelResParam class.
+  * Removed test user credentials from appveyor configuration.
+  * Updated readme file.
+  * Create LICENSE
+  * Added `nuget.config`
+  * AppVeyor configuration.
+  * Added lock files.
+  * project structure rebuild to support netcore platform
+  * Implemented custom configuration section for cloudinary settings.
+  
 1.0.31 / 2017-05-04
 ===================
 
