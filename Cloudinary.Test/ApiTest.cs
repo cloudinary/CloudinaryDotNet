@@ -1325,5 +1325,28 @@ namespace CloudinaryDotNet.Test
             var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
             Assert.AreEqual(m_defaultImgFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
         }
+
+        [Test]
+        public void TestSignParameters()
+        {
+            Dictionary<string, object> paramsSetOne = new Dictionary<string, object>() {
+                { "Param1", "anyString"},
+                { "Param2", 25},
+                { "Param3", 25.35f},
+            };
+
+            Dictionary<string, object> paramsSetTwo = new Dictionary<string, object>() {
+                { "Param1", "anyString"},
+                { "Param2", 25},
+                { "Param3", 25.35f},
+                { "resource_type", "image" },
+                { "file", "anyFile" },
+                { "api_key", "343dsfdf033e-23zx" }
+            };
+
+            Assert.IsTrue(string.Compare(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo)) == 0, "The signatures are not equals.");
+            paramsSetTwo.Add("Param4", "test");
+            Assert.IsTrue(string.Compare(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo)) != 0, "The signatures are equals.");
+        }
     }
 }
