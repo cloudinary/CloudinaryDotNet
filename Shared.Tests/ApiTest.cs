@@ -1313,5 +1313,27 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(effect.ToString(), "e_art:incognito");
         }
+
+        [Test]
+        public void TestSignParameters()
+        {
+            Dictionary<string, object> paramsSetOne = new Dictionary<string, object>() {
+                { "Param1", "anyString"},
+                { "Param2", 25},
+                { "Param3", 25.35f},
+            };
+
+            Dictionary<string, object> paramsSetTwo = new Dictionary<string, object>(paramsSetOne) {
+                { "resource_type", "image" },
+                { "file", "anyFile" },
+                { "api_key", "343dsfdf033e-23zx" }
+            };
+
+            StringAssert.AreEqualIgnoringCase(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo), "The signatures are not equal.");
+
+            paramsSetTwo.Add("Param4", "test");
+
+            StringAssert.AreNotEqualIgnoringCase(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo), "The signatures are equal.");
+        }
     }
 }
