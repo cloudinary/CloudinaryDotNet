@@ -1325,14 +1325,13 @@ namespace CloudinaryDotNet.Test
 
             Dictionary<string, object> paramsSetTwo = new Dictionary<string, object>(paramsSetOne) {
                 { "resource_type", "image" },
+                { "type", "anyType" },
                 { "file", "anyFile" },
                 { "api_key", "343dsfdf033e-23zx" }
             };
 
             StringAssert.AreEqualIgnoringCase(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo), "The signatures are not equal.");
-
             paramsSetTwo.Add("Param4", "test");
-
             StringAssert.AreNotEqualIgnoringCase(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo), "The signatures are equal.");
         }
     }
