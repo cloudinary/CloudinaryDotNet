@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D5DD0E4A-296D-4563-BDB9-FB99C80DDB77}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,20 +12,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D5DD0E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB3C0EFC-024A-4850-B201-375BC198F376}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloudinary", "Cloudinary\Cloudinary.csproj", "{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudinary", "Cloudinary\Cloudinary.csproj", "{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudinaryDotNet.Core", "Core\CloudinaryDotNet.Core.csproj", "{3E57DBDE-EC6F-42D0-AF8A-7B86FE7EC0BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resources", "Resources\Resources.csproj", "{757141AA-C4D6-4749-A98C-EEEF54A09E03}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloudinary.Test", "Cloudinary.Test\Cloudinary.Test.csproj", "{16C07542-4726-4AE7-9FDD-62DB823B449E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudinary.Test", "Cloudinary.Test\Cloudinary.Test.csproj", "{16C07542-4726-4AE7-9FDD-62DB823B449E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudinary.NetCoreTest", "Cloudinary.NetCoreTest\Cloudinary.NetCoreTest.csproj", "{52E04D73-E860-4867-A453-21103A3361BC}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{70382BCB-A323-4D61-A428-947DE01A14E9}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.Tests", "Shared.Tests\Shared.Tests.shproj", "{6BA360FD-D3B4-4D26-A02C-303F9992C8F9}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared.Tests\Shared.Tests.projitems*{6ba360fd-d3b4-4d26-a02c-303f9992c8f9}*SharedItemsImports = 13
 		Shared\Shared.projitems*{6c0acd6c-58bc-4571-a59d-eb752317c8a2}*SharedItemsImports = 4
 		Shared\Shared.projitems*{70382bcb-a323-4d61-a428-947de01a14e9}*SharedItemsImports = 13
 	EndGlobalSection
@@ -42,10 +43,6 @@ Global
 		{3E57DBDE-EC6F-42D0-AF8A-7B86FE7EC0BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E57DBDE-EC6F-42D0-AF8A-7B86FE7EC0BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E57DBDE-EC6F-42D0-AF8A-7B86FE7EC0BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{757141AA-C4D6-4749-A98C-EEEF54A09E03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{757141AA-C4D6-4749-A98C-EEEF54A09E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{757141AA-C4D6-4749-A98C-EEEF54A09E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{757141AA-C4D6-4749-A98C-EEEF54A09E03}.Release|Any CPU.Build.0 = Release|Any CPU
 		{16C07542-4726-4AE7-9FDD-62DB823B449E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{16C07542-4726-4AE7-9FDD-62DB823B449E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16C07542-4726-4AE7-9FDD-62DB823B449E}.Release|Any CPU.ActiveCfg = Release|Any CPU

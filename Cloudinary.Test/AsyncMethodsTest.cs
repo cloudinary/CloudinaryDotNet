@@ -1,16 +1,11 @@
-﻿using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-using CloudinaryDotNet.Test;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+using CloudinaryDotNet.Actions;
+using NUnit.Framework;
 
-
-namespace Cloudinary.Test
+namespace CloudinaryDotNet.Test
 {
     class AsyncMethodsTest : IntegrationTestBase
     {
@@ -111,7 +106,7 @@ namespace Cloudinary.Test
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
         }
 
-       [Test]
+        [Test]
         public void TestDeleteAsync()
         {
             // should allow deleting resources
@@ -401,13 +396,9 @@ namespace Cloudinary.Test
         public void TestUpdateCustomCoordinatesAsync()
         {
             //should update custom coordinates
-
-            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
-
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
             var upResult = m_cloudinary.UploadAsync(new ImageUploadParams() { File = new FileDescription(m_testImagePath) }).Result;
-
             var updResult = m_cloudinary.UpdateResourceAsync(new UpdateParams(upResult.PublicId) { CustomCoordinates = coordinates }).Result;
-
             var result = m_cloudinary.GetResourceAsync(new GetResourceParams(upResult.PublicId) { Coordinates = true }).Result;
 
             Assert.NotNull(result.Coordinates);
@@ -418,18 +409,6 @@ namespace Cloudinary.Test
             Assert.AreEqual(coordinates.Y, result.Coordinates.Custom[0][1]);
             Assert.AreEqual(coordinates.Width, result.Coordinates.Custom[0][2]);
             Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
-        }
-
-        protected IEnumerable<Resource> GetAllResults(Func<String, ListResourcesResult> list)
-        {
-            ListResourcesResult current = list(null);
-            IEnumerable<Resource> resources = current.Resources;
-            for (; resources != null && current.NextCursor != null; current = list(current.NextCursor))
-            {
-                resources = resources.Concat(current.Resources);
-            }
-
-            return resources;
         }
     }
 }

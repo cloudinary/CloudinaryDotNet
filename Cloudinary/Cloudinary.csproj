@@ -71,7 +71,6 @@
     <!--<PackageReference Include="System.Net.Http" Version="4.*" />-->
     <!--<Reference Include="System.Net.Http" Condition="'$(TargetFrameworkVersion.Replace(&quot;v&quot;,&quot;&quot;))' >= '4.6'" />-->
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http" />
     <!-- Should be limited to > 4.6 -->
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel.Web" />
@@ -93,9 +92,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Transforms" />
   </ItemGroup>
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />
 </Project>
