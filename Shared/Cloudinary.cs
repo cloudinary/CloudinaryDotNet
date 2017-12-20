@@ -390,6 +390,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of image uploading.</returns>
         public ImageUploadResult Upload(ImageUploadParams parameters)
         {
+            parameters.Check();
+
             string uri = m_api.ApiUrlImgUpV.BuildUrl();
 
             ResetInternalFileDescription(parameters.File);
@@ -812,6 +814,11 @@ namespace CloudinaryDotNet
         public ListTagsResult ListTagsByPrefix(string prefix)
         {
             return ListTags(new ListTagsParams() { Prefix = prefix });
+        }
+
+        public ListTagsResult ListTagsByPrefix(string prefix, int maxResults)
+        {
+            return ListTags(new ListTagsParams() { Prefix = prefix, MaxResults = maxResults });
         }
 
         public ListTagsResult ListTags(ListTagsParams parameters)
