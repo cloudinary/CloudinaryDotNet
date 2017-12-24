@@ -650,6 +650,21 @@ namespace CloudinaryDotNet
                     m_resourceType = "images";
                     m_action = null;
                 }
+                else if (m_resourceType == "image" && m_action == "private")
+                {
+                    m_resourceType = "private_images";
+                    m_action = null;
+                }
+                else if (m_resourceType == "image" && m_action == "authenticated")
+                {
+                    m_resourceType = "authenticated_images";
+                    m_action = null;
+                }
+                else if (m_resourceType == "video" && m_action == "upload")
+                {
+                    m_resourceType = "videos";
+                    m_action = null;
+                }
                 else if (m_resourceType == "raw" && m_action == "upload")
                 {
                     m_resourceType = "files";
@@ -657,7 +672,8 @@ namespace CloudinaryDotNet
                 }
                 else
                 {
-                    throw new NotSupportedException("URL Suffix only supported for image/upload and raw/upload!");
+                    throw new NotSupportedException("URL Suffix only supported for image/upload, image/private, " +
+                                                    "image/authenticated, video/upload and raw/upload");
                 }
             }
 

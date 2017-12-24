@@ -918,6 +918,26 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestSupportUrlSuffixForPrivateImages()
+        {
+            Url url = new Url("testcloud").ResourceType("image").Action("private").Suffix("suffix");
+            var urlStr = url.BuildUrl();
+            StringAssert.Contains("/private_images/", urlStr);
+            StringAssert.EndsWith("suffix", urlStr);
+
+        }
+
+        [Test]
+        public void TestSupportUrlSuffixForAuthenticatedImages()
+        {
+            Url url = new Url("testcloud").ResourceType("image").Action("authenticated").Suffix("suffix");
+            var urlStr = url.BuildUrl();
+            StringAssert.Contains("/authenticated_images/", urlStr);
+            StringAssert.EndsWith("suffix", urlStr);
+
+        }
+
+        [Test]
         public void TestResponsiveWidthTransform()
         {
             // should support responsive width
