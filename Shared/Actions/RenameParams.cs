@@ -28,12 +28,20 @@ namespace CloudinaryDotNet.Actions
         /// </value>
         public string ToPublicId { get; set; }
 
-		/// <summary>
-		/// The type of resource to rename
-		/// </summary>
-		public ResourceType ResourceType { get; set; }
+	/// <summary>
+	/// The resource type of resource to rename
+	/// </summary>
+	public ResourceType ResourceType { get; set; }
 
+        /// <summary>
+	/// The type of resource to rename
+	/// </summary>
         public string Type { get; set; }
+
+        /// <summary>
+	/// The new type of resource to rename
+	/// </summary>
+        public string NewType { get; set; }
 
         /// <summary>
         /// Whether to overwrite ToPublicId if such id already exists
@@ -64,7 +72,8 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "type", Type);
             AddParam(dict, "invalidate", Invalidate);
-
+            if(!string.IsNullOrWhiteSpace(NewType))
+                AddParam(dict, "to_type", NewType);
             return dict;
         }
 
