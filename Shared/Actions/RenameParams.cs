@@ -9,7 +9,7 @@ namespace CloudinaryDotNet.Actions
         {
             FromPublicId = fromPublicId;
             ToPublicId = toPublicId;
-			ResourceType = ResourceType.Image;
+            ResourceType = ResourceType.Image;
         }
 
         /// <summary>
@@ -28,12 +28,23 @@ namespace CloudinaryDotNet.Actions
         /// </value>
         public string ToPublicId { get; set; }
 
-		/// <summary>
-		/// The type of resource to rename
-		/// </summary>
-		public ResourceType ResourceType { get; set; }
+        /// <summary>
+        /// The type of file to rename. 
+        /// Valid values: image, raw, and video. 
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
 
+        /// <summary>
+        /// The specific type of the resource. 
+        /// Valid values: upload, private and authenticated.
+        /// </summary>
         public string Type { get; set; }
+
+        /// <summary>
+        /// The new type for the resource. 
+        /// Valid values: upload, private and authenticated.
+        /// </summary>
+        public string ToType { get; set; }
 
         /// <summary>
         /// Whether to overwrite ToPublicId if such id already exists
@@ -63,8 +74,8 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "to_public_id", ToPublicId);
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "type", Type);
+            AddParam(dict, "to_type", ToType);
             AddParam(dict, "invalidate", Invalidate);
-
             return dict;
         }
 
