@@ -1116,6 +1116,37 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestRenameToType()
+
+        {
+            string publicId = string.Concat("renameType_", m_suffix);
+            string newPublicId = string.Concat("renameNewType_", m_suffix);
+            string type = "upload";
+            string toType = "private";
+
+            var uploadParams = new ImageUploadParams()
+            {
+                PublicId = publicId,
+                File = new FileDescription(m_testImagePath),
+                Tags = m_test_tag,
+                Type = type
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+            Assert.AreEqual(uploadResult.StatusCode, HttpStatusCode.OK);
+
+            RenameParams renameParams = new RenameParams(publicId, newPublicId)
+            {
+                ToType = toType
+            };
+
+            var renameResult = m_cloudinary.Rename(renameParams);
+            Assert.AreEqual(renameResult.StatusCode, HttpStatusCode.OK);
+            Assert.AreEqual(renameResult.Type, toType);
+            Assert.AreEqual(renameResult.PublicId, newPublicId);
+        }
+
+        [Test]
         public void TestGetResource()
         {
             // should allow get resource details
