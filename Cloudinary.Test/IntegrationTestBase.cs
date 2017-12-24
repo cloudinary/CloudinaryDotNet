@@ -34,6 +34,7 @@ namespace CloudinaryDotNet.Test
         [OneTimeSetUp]
         public virtual void Initialize()
         {
+            
             m_account = GetAccountInstance();
             m_cloudinary = GetCloudinaryInstance(m_account);
             m_appveyor_job_id = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
@@ -44,7 +45,10 @@ namespace CloudinaryDotNet.Test
             m_testLargeImagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestLargeImage.jpg");
             m_testPdfPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "multipage.pdf");
             m_testIconPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "favicon.ico");
-            
+
+            CloudinaryConfiguration.IsTestMode = true;
+            CloudinaryConfiguration.TestTagName = m_test_tag;
+
             Resources.TestImage.Save(m_testImagePath);
             Resources.TestLargeImage.Save(m_testLargeImagePath);
             File.WriteAllBytes(m_testPdfPath, Resources.multipage);
@@ -192,15 +196,10 @@ namespace CloudinaryDotNet.Test
             return (long)timeSpan.TotalSeconds;
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup()
         {
-            string publicId = string.Format("TestForTagSearch_{0}", m_suffix);
-            DelResResult delResult = m_cloudinary.DeleteResources(new string[] { publicId });
-            publicId = string.Concat(m_suffix, "_TestForTagSearch");
-            delResult = m_cloudinary.DeleteResources(new string[] { publicId });
-            publicId = string.Concat(m_suffix, "_TestForSearch");
-            delResult = m_cloudinary.DeleteResources(new string[] { publicId });
+            m_cloudinary.DeleteResourcesByTag(m_test_tag);
         }
     }
 }

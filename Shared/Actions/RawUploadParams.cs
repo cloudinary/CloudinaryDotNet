@@ -168,6 +168,9 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
+            if (CloudinaryConfiguration.IsTestMode)
+                Tags += string.Concat(string.IsNullOrWhiteSpace(Tags) ? string.Empty : ",", CloudinaryConfiguration.TestTagName);
+
             AddParam(dict, "tags", Tags);
             AddParam(dict, "use_filename", UseFilename);
             AddParam(dict, "moderation", Moderation);
