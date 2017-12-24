@@ -1,4 +1,5 @@
 ﻿using CloudinaryDotNet.Actions;
+using Coudinary.NetCoreShared.Transforms;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -1324,6 +1325,12 @@ namespace CloudinaryDotNet.Test
             var transformation = new Transformation().Overlay(new FetchLayer().Url("http://image.com/img/seatrade_supplier_logo.jpg"));
             var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
             Assert.AreEqual(m_defaultImgFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
+        }
+
+        [Test]
+        public void TestAssignVariables()
+        {
+            
         }
     }
 }

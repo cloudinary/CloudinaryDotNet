@@ -1,5 +1,6 @@
 ﻿using Cloudinary.Test.Configuration;
 using CloudinaryDotNet.Actions;
+using Coudinary.NetCoreShared.Transforms;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -1327,9 +1328,11 @@ namespace CloudinaryDotNet.Test
                 Tags = "api_test_custom"
             };
 
-            m_cloudinary.Upload(uploadParams);
+            var result1a = m_cloudinary.Upload(uploadParams);
 
-            ListTagsResult result = m_cloudinary.ListTags();
+            ListTagsResult result = m_cloudinary.ListTags(new ListTagsParams() {
+                MaxResults = 500
+            });
 
             Assert.IsTrue(result.Tags.Contains("api_test_custom"));
         }
@@ -2705,8 +2708,6 @@ namespace CloudinaryDotNet.Test
             {
                 PublicIds = pIds
             });
-
         }
-
     }
 }
