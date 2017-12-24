@@ -1285,5 +1285,13 @@ namespace CloudinaryDotNet.Test
             var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
             Assert.AreEqual(m_defaultImgFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
         }
+
+        [Test]
+        public void TestUploadTransformationEffect()
+        {
+            Transformation effect = new Transformation().Effect("art:incognito");
+
+            Assert.AreEqual(effect.ToString(), "e_art:incognito");
+        }
     }
 }
