@@ -4,14 +4,7 @@ using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions
 {
+    [Obsolete("Use UpdateResourcesAccessModeResult instead", false)]
     [DataContract]
-    public class UpdateResourceAccessModeResult : BaseResult
-    {
-        [DataMember(Name = "updated")]
-        public List<object> Updated { get; protected set; }
-
-        [DataMember(Name = "failed")]
-        public List<object> Failed { get; protected set; }
-        
-    }
+    public class UpdateResourceAccessModeResult : UpdateResourcesAccessModeResult {}
 }
