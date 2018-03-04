@@ -83,6 +83,11 @@ namespace CloudinaryDotNet.Actions
         ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
         /// </value>
         public bool Invalidate { get; set; }
+        
+        /// <summary>
+        /// Perform asynchronous processing on the server in explicit API calls. Default: false.
+        /// </summary>
+        public bool? Async { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -107,6 +112,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
             AddParam(dict, "invalidate", Invalidate);
+            AddParam(dict, "async", Async);
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
