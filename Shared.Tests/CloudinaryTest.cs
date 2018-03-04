@@ -1836,6 +1836,28 @@ namespace CloudinaryDotNet.Test
             Assert.IsNotNull(getResult);
             Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString());
         }
+        
+        /// <summary>
+        /// Test asynchronous processing in explicit API calls
+        /// </summary>
+        [Test]
+        public void TestExplicitAsyncProcessing()
+        {
+
+            ExplicitParams exp = new ExplicitParams("cloudinary")
+            {
+                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                Type = "facebook",
+                Async = true,
+            };
+
+            ExplicitResult expAsyncResult = m_cloudinary.Explicit(exp);
+            
+            Assert.AreEqual("pending", expAsyncResult.Status);
+            Assert.AreEqual("image", expAsyncResult.ResourceType);
+            Assert.AreEqual("facebook", expAsyncResult.Type);
+            Assert.AreEqual("cloudinary", expAsyncResult.PublicId);
+        }
 
         [Test]
         public void TestSprite()

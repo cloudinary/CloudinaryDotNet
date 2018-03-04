@@ -30,6 +30,11 @@ namespace CloudinaryDotNet.Actions
                 ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
             }
         }
+        /// <summary>
+        /// Status is returned when passing `Async` argument set to `true` to the server
+        /// </summary>
+        [DataMember(Name = "status")]
+        public string Status { get; protected set; }
     }
 
     [DataContract]
