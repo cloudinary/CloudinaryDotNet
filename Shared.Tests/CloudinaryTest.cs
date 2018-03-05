@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -2613,18 +2613,37 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(2, result.FileCount);
         }
 
+        private ArchiveParams UploadImageForArchiveAndPrepareParameters()
+        {
+            string archiveTag = string.Format(string.Concat(m_test_tag, "_{0}"), UnixTimeNow());
+            string targetPublicId = string.Format(string.Concat("zip_archive_id_{0}_", m_suffix), UnixTimeNow());
+
+            UploadImageForTestArchive(archiveTag, 2.0, true);
+
+            return new ArchiveParams().Tags(new List<string> { archiveTag, m_test_tag }).TargetPublicId(targetPublicId);
+        }
+
         [Test]
         public void TestCreateArchiveMultiplePublicIds()
         {
             // should support archiving based on multiple public IDs
-            string archiveTag = string.Format(string.Concat(m_test_tag, "_{0}"), UnixTimeNow()); 
-            string targetPublicId = string.Format(string.Concat("archive_id_{0}_", m_suffix), UnixTimeNow()); 
+            var parameters = UploadImageForArchiveAndPrepareParameters();
+            var result = m_cloudinary.CreateArchive(parameters);
 
-            UploadImageForTestArchive(archiveTag, 2.0, true);
+            Assert.AreEqual(string.Format("{0}.zip", parameters.TargetPublicId()), result.PublicId);
+            Assert.AreEqual(1, result.FileCount);
+        }
+        
+        /// <summary>
+        /// Should create a zip archive
+        /// </summary>
+        [Test]
+        public void TestCreateZip()
+        {
+            var parameters = UploadImageForArchiveAndPrepareParameters();
+            var result = m_cloudinary.CreateZip(parameters);
 
-            ArchiveParams parameters = new ArchiveParams().Tags(new List<string> { archiveTag, "sadf" }).TargetPublicId(targetPublicId);
-            ArchiveResult result = m_cloudinary.CreateArchive(parameters);
-            Assert.AreEqual(string.Format("{0}.zip", targetPublicId), result.PublicId);
+            Assert.AreEqual(string.Format("{0}.zip", parameters.TargetPublicId()), result.PublicId);
             Assert.AreEqual(1, result.FileCount);
         }
 
