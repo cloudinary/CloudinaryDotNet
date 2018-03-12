@@ -86,6 +86,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "info")]
         public Info Info { get; protected set; }
         
+        [DataMember(Name = "access_control")]
+        public List<AccessControlRule> AccessControl { get; protected set; }
+        
     }
 
     [DataContract]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -159,6 +160,11 @@ namespace CloudinaryDotNet.Actions
         /// Tells Cloudinary whether to perform the upload request in the background (asynchronously).
         /// </summary>
         public string Async { get; set; }
+        
+        /// <summary>
+        /// Optional. Pass a list of AccessControlRule parameters
+        /// </summary>
+        public List<AccessControlRule> AccessControl { get; set; }
 
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
@@ -202,6 +208,11 @@ namespace CloudinaryDotNet.Actions
                 }
 
                 dict.Add("headers", sb.ToString());
+            }
+            
+            if (AccessControl != null && AccessControl.Count > 0)
+            {
+                AddParam(dict, "access_control", JsonConvert.SerializeObject(AccessControl));
             }
 
             return dict;
