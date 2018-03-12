@@ -201,6 +201,7 @@ namespace CloudinaryDotNet.Test
             delResult = m_cloudinary.DeleteResources(new string[] { publicId });
             publicId = string.Concat(m_suffix, "_TestForSearch");
             delResult = m_cloudinary.DeleteResources(new string[] { publicId });
+            m_cloudinary.DeleteResourcesByTag(m_test_tag);
         }
     }
 }

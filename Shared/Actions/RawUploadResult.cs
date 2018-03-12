@@ -31,6 +31,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
         
+        [DataMember(Name = "access_control")]
+        public List<AccessControlRule> AccessControl { get; protected set; }
+        
     }
 
     /// <summary>

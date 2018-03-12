@@ -531,6 +531,55 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(fileLength, result.Length);
         }
+        
+        /// <summary>
+        /// Test access control rules
+        /// </summary>
+        [Test]
+        public void TestUploadAccessControl()
+        {
+            var start = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var end   = new DateTime(3000, 12, 31, 23, 59, 59, DateTimeKind.Utc);
+
+
+            var accessControl = new List<AccessControlRule> { new AccessControlRule
+                {
+                    AccessType = AccessType.Anonymous,
+                    Start = start,
+                    End = end
+                }
+            };
+            
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_test_tag,
+                AccessControl = accessControl
+            };
+            
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+            
+            Assert.AreEqual(1, uploadResult.AccessControl.Count);
+            
+            Assert.AreEqual(AccessType.Anonymous, uploadResult.AccessControl[0].AccessType);
+            Assert.AreEqual(start, uploadResult.AccessControl[0].Start);
+            Assert.AreEqual(end, uploadResult.AccessControl[0].End);
+            
+            uploadParams.AccessControl.Add(new AccessControlRule{AccessType = AccessType.Token});
+            
+            uploadResult = m_cloudinary.Upload(uploadParams);
+            
+            Assert.AreEqual(2, uploadResult.AccessControl.Count);
+            
+            Assert.AreEqual(AccessType.Anonymous, uploadResult.AccessControl[0].AccessType);
+            Assert.AreEqual(start,  uploadResult.AccessControl[0].Start);
+            Assert.AreEqual(end, uploadResult.AccessControl[0].End);
+            
+            Assert.AreEqual(AccessType.Token, uploadResult.AccessControl[1].AccessType);
+            Assert.IsNull(uploadResult.AccessControl[1].Start);
+            Assert.IsNull(uploadResult.AccessControl[1].End);
+        }
+
 
         [Test]
         public void TestPublishByTag()
@@ -620,6 +669,54 @@ namespace CloudinaryDotNet.Test
                 "TestForUpdateAccessMode");
 
         }
+        
+        /// <summary>
+        /// Test that we can update access control of the resource
+        /// </summary>
+        [Test]
+        public void TestUpdateAccessControl()
+        {
+            var start = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var end   = new DateTime(3000, 12, 31, 23, 59, 59, DateTimeKind.Utc);
+
+            var accessControl = new List<AccessControlRule> { new AccessControlRule {
+                    AccessType = AccessType.Anonymous,
+                    Start = start,
+                    End = end
+            }};
+            
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_test_tag,
+                AccessControl = accessControl
+            };
+            
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(1, uploadResult.AccessControl.Count);
+            
+            Assert.AreEqual(AccessType.Anonymous, uploadResult.AccessControl[0].AccessType);
+            Assert.AreEqual(start, uploadResult.AccessControl[0].Start);
+            Assert.AreEqual(end, uploadResult.AccessControl[0].End);
+            
+            var newAccessControl = new List<AccessControlRule> { new AccessControlRule {
+                AccessType = AccessType.Token,
+                Start = end,
+                End = start
+            }};
+            
+            var updateResult = m_cloudinary.UpdateResource(
+                new UpdateParams(uploadResult.PublicId) {AccessControl = newAccessControl}
+            );
+            
+            Assert.AreEqual(1, updateResult.AccessControl.Count);
+            
+            Assert.AreEqual(AccessType.Token, updateResult.AccessControl[0].AccessType);
+            Assert.AreEqual(end, updateResult.AccessControl[0].Start);
+            Assert.AreEqual(start, updateResult.AccessControl[0].End);
+        }
+
 
         [Test]
         public void TestUploadLargeFromWeb()

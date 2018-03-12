@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -86,6 +87,11 @@ namespace CloudinaryDotNet.Actions
         /// The moderation status.
         /// </value>
         public ModerationStatus ModerationStatus { get; set; }
+        
+        /// <summary>
+        /// Optional. Pass a list of AccessControlRule parameters
+        /// </summary>
+        public List<AccessControlRule> AccessControl { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -144,6 +150,11 @@ namespace CloudinaryDotNet.Actions
                 }
 
                 dict.Add("headers", sb.ToString());
+            }
+            
+            if (AccessControl != null && AccessControl.Count > 0)
+            {
+                AddParam(dict, "access_control", JsonConvert.SerializeObject(AccessControl));
             }
 
             return dict;

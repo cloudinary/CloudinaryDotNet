@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Account.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\AccessControlRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ArchiveCallMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ArchiveFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ArchiveParams.cs" />

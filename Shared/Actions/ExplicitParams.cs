@@ -72,6 +72,11 @@ namespace CloudinaryDotNet.Actions
         public List<ResponsiveBreakpoint> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
+        /// Optional. Pass a list of AccessControlRule parameters
+        /// </summary>
+        public List<AccessControlRule> AccessControl { get; set; }
+        
+        /// <summary>
         /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
         /// </summary>
         /// <value>
@@ -121,6 +126,12 @@ namespace CloudinaryDotNet.Actions
             {
                 AddParam(dict, "responsive_breakpoints", JsonConvert.SerializeObject(ResponsiveBreakpoints));
             }
+            
+            if (AccessControl != null && AccessControl.Count > 0)
+            {
+                AddParam(dict, "access_control", JsonConvert.SerializeObject(AccessControl));
+            }
+
 
             if (Headers != null && Headers.Count > 0)
             {
