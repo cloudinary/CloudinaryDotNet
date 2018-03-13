@@ -255,25 +255,6 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestSimilaritySearchUpdate()
-        {
-            // should support requesting similarity search
-
-            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath)
-            });
-
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
-            {
-                SimilaritySearch = "illegal"
-            });
-
-            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
-            Assert.True(updateResult.Error.Message.StartsWith("Illegal value"));
-        }
-
-        [Test]
         public void TestUploadOverwrite()
         {
             var uploadParams = new ImageUploadParams()
