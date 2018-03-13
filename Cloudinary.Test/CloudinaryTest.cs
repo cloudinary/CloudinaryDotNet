@@ -373,21 +373,6 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestAutoTaggingRequest()
-        {
-            //should support requesting auto tagging
-
-            var res = m_cloudinary.Upload(new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                AutoTagging = 0.5f
-            });
-
-            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
-            Assert.True(res.Error.Message.StartsWith("Must use"));
-        }
-
-        [Test]
         public void TestUploadLocalImageUniqueFilename()
         {
             var uploadParams = new ImageUploadParams()
