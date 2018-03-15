@@ -1,4 +1,21 @@
 
+1.2.0 / 2018-03-15
+==================
+
+New functionality        
+-----------------        
+                         
+  * Add `AccessControl` parameter to Update and Upload
+
+Other Changes
+-------------
+
+  * Fix nuget package structure
+  * NuGet package automatization.
+  * Simplify `ListResources` test`
+  * Remove `auto_tagging` failure test
+  * Remove `similarity_search` test
+
 1.1.1 / 2017-11-21
 ==================
 
