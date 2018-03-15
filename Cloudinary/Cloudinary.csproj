@@ -20,6 +20,8 @@
     <Version>1.1.1</Version>
     <PackageTags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</PackageTags>
     <FileVersion>1.1.0</FileVersion>
+    <RootNamespace>CloudinaryDotNet</RootNamespace>
+    <AssemblyName>CloudinaryDotNet</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v3.5' ">
     <DefineConstants>NET35</DefineConstants>

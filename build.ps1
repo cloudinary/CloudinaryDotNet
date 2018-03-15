@@ -6,11 +6,11 @@ $netClassicPath = "$baseOutputPath\NetClassic"
 $libPath = "lib"
 
 $targetFrameworks = @{
- "\net\net40" = $netClassicPath;
- "\netstandard1.6" = $netCorePath;
+ "\net40" = $netClassicPath;
+ "\netstandard1.3" = $netCorePath;
  "\netcore" = $netCorePath;
 }
-$msbuildExe = 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe'
+
 function Get-MSBuild-Path {
 
     $vs14key = "HKLM:\SOFTWARE\Microsoft\MSBuild\ToolsVersions\14.0"
@@ -35,7 +35,7 @@ function Get-MSBuild-Path {
     }
 
     return $msbuildPath
-
+    
 }
 
 function Build-Net-Classic($outPath) {
@@ -83,5 +83,4 @@ Build-Net-Core $outBuildPath
 Create-Package-Structure $libPath $targetFrameworks
 Create-Package
 
-Write-Host "Done, press any key to continue ..."
-$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Write-Host "Done"
