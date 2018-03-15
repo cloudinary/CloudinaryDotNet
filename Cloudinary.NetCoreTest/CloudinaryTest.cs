@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Coudinary.NetCoreShared.Transforms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -2590,8 +2591,6 @@ namespace Cloudinary.NetCoreTest
             {
                 PublicIds = pIds
             });
-
         }
-
     }
 }
