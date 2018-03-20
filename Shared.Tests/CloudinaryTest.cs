@@ -43,7 +43,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUploadLocalImageTimeout()
         {
-            var code = WebExceptionStatus.Success;
             var timeout = 11000;
             var uploadParams = new ImageUploadParams()
             {
@@ -2553,29 +2552,19 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestDownloadArchive()
+        public void TestDownloadArchiveUrl()
         {
-            string archiveTag = string.Format(string.Concat(m_test_tag, "_{0}"), UnixTimeNow());
-            string targetPublicId = string.Format(string.Concat("archive_id_{0}_", m_suffix), UnixTimeNow());
-
-            UploadImageForTestArchive(archiveTag, 2.0, true);
-            UploadImageForTestArchive(archiveTag, 500, false);
-
-            var parameters = new ArchiveParams().Tags(new List<string> { archiveTag }).TargetPublicId(targetPublicId);
-            string url = m_cloudinary.DownloadArchiveUrl(parameters);
-
-            using (var client = new WebClient())
-            {
-                byte[] data = client.DownloadData(url);
-                using (var s = new MemoryStream(data))
-                {
-                    using (ZipArchive zip = new ZipArchive(s))
-                    {
-                        var cnt = zip.Entries.Count;
-                        Assert.AreEqual(2, cnt);
-                    }
-                }
-            }
+            var archiveTag = string.Format(string.Concat(m_test_tag, "_{0}"), UnixTimeNow());
+            var parameters = new ArchiveParams().Tags(new List<string> { archiveTag });
+            
+            var urlStr = m_cloudinary.DownloadArchiveUrl(parameters);
+            
+            var dicQueryString = new Uri(urlStr).Query.Split('&').ToDictionary(
+                c => c.Split('=')[0], c => Uri.UnescapeDataString(c.Split('=')[1])
+            );
+            
+            Assert.AreEqual("download", dicQueryString["mode"]);
+            Assert.AreEqual(archiveTag, dicQueryString["tags[]"]);
         }
 
         [Test]

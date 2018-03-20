@@ -57,10 +57,9 @@
     <!--<HintPath Condition=" '$(TargetFrameworkVersion)' == 'v3.5' ">..\packages\Newtonsoft.Json.4.5.11\lib\net35\Newtonsoft.Json.dll</HintPath>-->
     <!--<HintPath Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>-->
     <!--</PackageReference>-->
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3">
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1">
       <!--<PrivateAssets>all</PrivateAssets>-->
     </PackageReference>
-    <PackageReference Include="NUnit.Console" Version="3.7.0" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
