@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6ba360fd-d3b4-4d26-a02c-303f9992c8f9</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Shared.Tests</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ApiTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AuthTokenTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudinaryTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntegrationTestBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TransformationApiTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadMappingApiTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)appsettings.json.sample" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\favicon.ico" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\movie.mp4" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\multipage.pdf" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestImage.jpg" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestLargeImage.jpg" />
+  </ItemGroup>
+</Project>

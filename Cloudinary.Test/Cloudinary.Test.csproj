@@ -1,5 +1,5 @@
-﻿
-<Project Sdk="Microsoft.NET.sdk">
+﻿<Project Sdk="Microsoft.NET.sdk">
+  <Import Project="..\Shared.Tests\Shared.Tests.projitems" Label="Shared" />
   <Import Project="..\packages\NUnit3TestAdapter.3.8.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.3.8.0\build\net35\NUnit3TestAdapter.props')" />
   <PropertyGroup>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,7 +9,7 @@
     <ProjectGuid>{16C07542-4726-4AE7-9FDD-62DB823B449E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cloudinary.Test</RootNamespace>
+    <RootNamespace>CloudinaryDotNet.Test</RootNamespace>
     <AssemblyName>Cloudinary.Test</AssemblyName>
     <TargetFramework>net40</TargetFramework>
     <FileAlignment>512</FileAlignment>
@@ -59,11 +59,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.2.1510.2205" />
-    <PackageReference Include="DotNetZip" Version="1.9.8" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.*" />
-    <PackageReference Include="Nunit" Version="[3.8,]" />
-    <PackageReference Include="NUnit3TestAdapter" Version="[3.8,]" />
-    
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -78,26 +76,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncMethodsTest.cs" />
-    <Compile Include="AuthTokenTest.cs" />
-    <Compile Include="Configuration\CloudinarySettings.cs" />
     <Compile Include="IntegrationTestBase.cs" />
-    <Compile Include="SettingsReader.cs" />
-    <Compile Include="UploadMappingApiTest.cs" />
-    <Compile Include="TransformationApiTest.cs" />
-    <Compile Include="CloudinaryTest.cs" />
     <!--<Compile Include="Properties\AssemblyInfo.cs" />-->
     <Compile Include="ApiTest.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cloudinary\Cloudinary.csproj">
@@ -106,13 +92,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Resources\multipage.pdf">
-      <Link>Resources\multipage.pdf</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -139,30 +118,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Resources\Resources\favicon.ico">
-      <Link>Resources\favicon.ico</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Resources\Resources\movie.mp4">
-      <Link>Resources\movie.mp4</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Resources\Resources\TestImage.jpg">
-      <Link>Resources\TestImage.jpg</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Resources\Resources\TestLargeImage.jpg">
-      <Link>Resources\TestLargeImage.jpg</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />

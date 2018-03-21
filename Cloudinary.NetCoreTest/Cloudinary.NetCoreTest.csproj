@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp1.0</TargetFramework>
     <AssemblyName>Cloudinary.NetCoreTest</AssemblyName>
@@ -14,41 +13,22 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="1.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.0.2" />
-    <PackageReference Include="Moq" Version="4.6.38-alpha" />
-    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.*" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Thread" Version="4.*" />
-    <PackageReference Include="NUnit" Version="3.4.1" />
-    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-2" />
-    <PackageReference Include="NUnit.Runners" Version="3.4.1" />
-    <PackageReference Include="NUnit.Console" Version="3.4.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="Moq" Version="4.8.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Resources\TestImage.jpg;Resources\favicon.ico;Resources\movie.mp4;Resources\multipage.pdf;Resources\TestLargeImage.jpg" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Core\CloudinaryDotNet.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Configuration">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Configuration.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -61,5 +41,20 @@
     <!-- TODO Replace hardcoded /bin/release path with a variable-->
     <Copy SourceFiles="$(ProjectDir)appsettings.json" DestinationFolder="$(ProjectDir)bin/Release/$(TargetFramework)" />
   </Target>
-
+  <Import Project="..\Shared.Tests\Shared.Tests.projitems" Label="Shared" />
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\movie.mp4" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\multipage.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\TestImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Resources\TestLargeImage.jpg" />
+  </ItemGroup>
 </Project>
