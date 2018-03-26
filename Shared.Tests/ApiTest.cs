@@ -1019,6 +1019,14 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestStreamingProfile()
+        {
+            var spTransformation = new Transformation().StreamingProfile("some-profile");
+            var transformationUrl = m_api.UrlVideoUp.Transform(spTransformation).BuildUrl();
+            Assert.AreEqual(m_defaultVideoUpPath + "sp_some-profile", transformationUrl);
+        }
+        
+        [Test]
         public void TestVideoSampling()
         {
             String actual = m_api.UrlVideoUp.Transform(new Transformation().VideoSamplingFrames(20)).BuildUrl("video_id");

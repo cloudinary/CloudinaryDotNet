@@ -222,7 +222,7 @@ namespace CloudinaryDotNet
             return Add("keyframe_interval", value);
         }
 
-        private Transformation AddaptiveStreaming(string value)
+        public Transformation StreamingProfile(string value)
         {
             return Add("streaming_profile", value);
         }
