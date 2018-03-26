@@ -41,6 +41,20 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUploadLocalPDFPages()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testPdfPath)
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual("pdf", uploadResult.Format);
+            Assert.AreEqual(TEST_PDF_PAGES_COUNT, uploadResult.Pages);
+        }
+
+        [Test]
         public void TestUploadLocalImageTimeout()
         {
             var timeout = 3000;

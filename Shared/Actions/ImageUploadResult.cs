@@ -46,6 +46,12 @@ namespace CloudinaryDotNet.Actions
         public Info Info { get; protected set; }
 
         /// <summary>
+        /// The number of page(s) or layers in a multi-page or multi-layer file (PDF, animated GIF, TIFF, PSD)
+        /// </summary>
+        [DataMember(Name = "pages")]
+        public int Pages { get; protected set; }
+
+        /// <summary>
         /// List of responsive image breakpoints
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
