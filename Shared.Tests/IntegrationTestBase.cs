@@ -34,6 +34,8 @@ namespace CloudinaryDotNet.Test
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
 
+        protected const int TEST_PDF_PAGES_COUNT = 3;
+
         protected const string TOKEN_KEY = "00112233FF99";
         protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
 
