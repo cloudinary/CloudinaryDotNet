@@ -43,7 +43,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUploadLocalImageTimeout()
         {
-            var timeout = 11000;
+            var timeout = 3000;
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath)
@@ -57,20 +57,18 @@ namespace CloudinaryDotNet.Test
                 stopWatch.Start();
                 m_cloudinary.Upload(uploadParams);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 stopWatch.Stop();
-                Console.WriteLine("Error {0}", e.Message);
             }
             finally
             {
                 m_cloudinary.Api.ApiBaseAddress = origAddr;
                 stopWatch.Stop();
             }
-
-            Console.WriteLine("Elapsed {0}", stopWatch.ElapsedMilliseconds);
-            Assert.LessOrEqual(timeout - 1000, stopWatch.ElapsedMilliseconds);
-            Assert.GreaterOrEqual(timeout + 1000, stopWatch.ElapsedMilliseconds);
+            
+            Assert.LessOrEqual(timeout - 2000, stopWatch.ElapsedMilliseconds);
+            Assert.GreaterOrEqual(timeout + 2000, stopWatch.ElapsedMilliseconds);
         }
 
         [Test]
@@ -1975,46 +1973,60 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestJsConfig()
         {
-            string config = m_cloudinary.GetCloudinaryJsConfig().ToString();
+            var config = m_cloudinary.GetCloudinaryJsConfig().ToString();
+            var expected = String.Join(
+                Environment.NewLine,
+                new List<string>
+                {
+                    "<script src=\"/Scripts/jquery.ui.widget.js\"></script>",
+                    "<script src=\"/Scripts/jquery.iframe-transport.js\"></script>",
+                    "<script src=\"/Scripts/jquery.fileupload.js\"></script>",
+                    "<script src=\"/Scripts/jquery.cloudinary.js\"></script>",
+                    "<script type='text/javascript'>",
+                    "$.cloudinary.config({",
+                    "  \"cloud_name\": \"" + m_account.Cloud + "\",",
+                    "  \"api_key\": \"" + m_account.ApiKey + "\",",
+                    "  \"private_cdn\": false,",
+                    "  \"cdn_subdomain\": false",
+                    "});",
+                    "</script>",
+                    ""
+                }
+            );
 
-            Assert.AreEqual(
-                "<script src=\"/Scripts/jquery.ui.widget.js\"></script>\r\n" +
-                "<script src=\"/Scripts/jquery.iframe-transport.js\"></script>\r\n" +
-                "<script src=\"/Scripts/jquery.fileupload.js\"></script>\r\n" +
-                "<script src=\"/Scripts/jquery.cloudinary.js\"></script>\r\n" +
-                "<script type='text/javascript'>\r\n" +
-                "$.cloudinary.config({\r\n" +
-                "  \"cloud_name\": \"" + m_account.Cloud + "\",\r\n" +
-                "  \"api_key\": \"" + m_account.ApiKey + "\",\r\n" +
-                "  \"private_cdn\": false,\r\n" +
-                "  \"cdn_subdomain\": false\r\n" +
-                "});\r\n" +
-                "</script>\r\n", config);
+            Assert.AreEqual(expected, config);
         }
 
         [Test]
         public void TestJsConfigFull()
         {
-            string config = m_cloudinary.GetCloudinaryJsConfig(true, @"https://raw.github.com/cloudinary/cloudinary_js/master/js").ToString();
+            var config = m_cloudinary.GetCloudinaryJsConfig(true, @"https://raw.github.com/cloudinary/cloudinary_js/master/js").ToString();
+            var expected = String.Join(
+                Environment.NewLine,
+                new List<string>
+                {
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.ui.widget.js\"></script>",
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.iframe-transport.js\"></script>",
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload.js\"></script>",
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.cloudinary.js\"></script>",
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/canvas-to-blob.min.js\"></script>",
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-image.js\"></script>",
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-process.js\"></script>",
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-validate.js\"></script>",
+                    "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/load-image.min.js\"></script>",
+                    "<script type='text/javascript'>",
+                    "$.cloudinary.config({",
+                    "  \"cloud_name\": \"" + m_account.Cloud + "\",",
+                    "  \"api_key\": \"" + m_account.ApiKey + "\",",
+                    "  \"private_cdn\": false,",
+                    "  \"cdn_subdomain\": false",
+                    "});",
+                    "</script>",
+                    ""
+                }
+            );
 
-            Assert.AreEqual(
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.ui.widget.js\"></script>\r\n" +
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.iframe-transport.js\"></script>\r\n" +
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload.js\"></script>\r\n" +
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.cloudinary.js\"></script>\r\n" +
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/canvas-to-blob.min.js\"></script>\r\n" +
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-image.js\"></script>\r\n" +
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-process.js\"></script>\r\n" +
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/jquery.fileupload-validate.js\"></script>\r\n" +
-                "<script src=\"https://raw.github.com/cloudinary/cloudinary_js/master/js/load-image.min.js\"></script>\r\n" +
-                "<script type='text/javascript'>\r\n" +
-                "$.cloudinary.config({\r\n" +
-                "  \"cloud_name\": \"" + m_account.Cloud + "\",\r\n" +
-                "  \"api_key\": \"" + m_account.ApiKey + "\",\r\n" +
-                "  \"private_cdn\": false,\r\n" +
-                "  \"cdn_subdomain\": false\r\n" +
-                "});\r\n" +
-                "</script>\r\n", config);
+            Assert.AreEqual(expected, config);
         }
 
         [Test]
