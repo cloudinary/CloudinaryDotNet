@@ -496,7 +496,7 @@ namespace CloudinaryDotNet.Test
             }
         }
 
-        [Test] //todo: works only in classic. netcore?
+        [Test]
         public void TestUploadLargeRawFiles()
         {
             // support uploading large raw files
@@ -511,7 +511,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(fileLength, result.Length);
         }
 
-        [Test] //todo: works only in classic. netcore?
+        [Test]
         public void TestUploadLarge()
         {
             // support uploading large image
@@ -712,7 +712,7 @@ namespace CloudinaryDotNet.Test
         }
 
 
-        [Test] //todo: works only in classic. netcore?
+        [Test]
         public void TestUploadLargeFromWeb()
         {
             // support uploading large image
@@ -2560,7 +2560,7 @@ namespace CloudinaryDotNet.Test
             var urlStr = m_cloudinary.DownloadArchiveUrl(parameters);
             
             var dicQueryString = new Uri(urlStr).Query.Split('&').ToDictionary(
-                c => c.Split('=')[0], c => Uri.UnescapeDataString(c.Split('=')[1])
+                c => Uri.UnescapeDataString(c.Split('=')[0]), c => Uri.UnescapeDataString(c.Split('=')[1])
             );
             
             Assert.AreEqual("download", dicQueryString["mode"]);
