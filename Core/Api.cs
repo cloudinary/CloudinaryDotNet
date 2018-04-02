@@ -131,7 +131,7 @@ namespace CloudinaryDotNet
                 if (extraHeaders.ContainsKey("Accept"))
                 {
                     request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(extraHeaders["Accept"]));
-                    extraHeaders.Remove("Accpet");
+                    extraHeaders.Remove("Accept");
                 }
 
                 foreach (var header in extraHeaders)
@@ -204,7 +204,7 @@ namespace CloudinaryDotNet
                 }
                 else
                 {
-                    Stream stream = null;
+                    Stream stream;
 
                     if (file.Stream != null)
                     {
@@ -215,9 +215,17 @@ namespace CloudinaryDotNet
                         stream = File.OpenRead(file.FilePath);
                     }
 
+                    if (extraHeaders != null && extraHeaders.ContainsKey("Content-Range"))
+                    {
+                        // Unfortunately we don't have ByteRangeStreamContent here, 
+                        // let's create another stream from the original one
+                        stream =  GetRangeFromFile(file, stream);
+                    }
+
                     string fileName = string.IsNullOrWhiteSpace(file.FilePath) ? file.FileName : Path.GetFileName(file.FilePath);
 
                     var streamContent = new StreamContent(stream);
+                  
                     streamContent.Headers.Add("Content-Type", "application/octet-stream");
                     streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + fileName + "\"");
                     content.Add(streamContent, "file", fileName);
@@ -283,7 +291,7 @@ namespace CloudinaryDotNet
         }
 
 
-        private byte[] GetRangeFromFile(FileDescription file, Stream stream)
+        private Stream GetRangeFromFile(FileDescription file, Stream stream)
         {
             MemoryStream memStream = new MemoryStream();
             StreamWriter writer = new StreamWriter(memStream);
@@ -292,11 +300,9 @@ namespace CloudinaryDotNet
             stream.Seek(file.BytesSent, SeekOrigin.Begin);
             file.EOF = ReadBytes(writer, stream, file.BufferLength, file.FileName, out bytesSent);
             file.BytesSent += bytesSent;
-            byte[] buff = new byte[bytesSent];
             writer.BaseStream.Seek(0, SeekOrigin.Begin);
-            writer.BaseStream.Read(buff, 0, bytesSent);
-
-            return buff;
+            
+            return memStream;
         }
 
         private bool ReadBytes(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
