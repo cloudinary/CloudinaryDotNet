@@ -22,16 +22,17 @@ namespace CloudinaryDotNet.Test
         public void GenerateTokenWithDuration()
         {
             //should generate an authorization token with startTime and duration
-            long firstExp = DateTime.Now.ToUniversalTime().Ticks / 1000L + 300; 
-            System.Threading.Thread.Sleep(1200);
+            long firstExp = DateTime.UtcNow.Ticks / 1000L + 300; 
+            System.Threading.Thread.Sleep(600);
             string token = new AuthToken(KEY).Acl("*").Duration(300).Generate();
-            System.Threading.Thread.Sleep(1200);
-            long secondExp = DateTime.Now.ToUniversalTime().Ticks / 1000L + 300; 
+            System.Threading.Thread.Sleep(600);
+            long secondExp = DateTime.UtcNow.Ticks / 1000L + 300; 
             Regex r = new Regex("exp=(\\d+)");
             Assert.True(r.IsMatch(token));
             string expString = r.Matches(token)[0].ToString().Replace("exp=", string.Empty);
             long actual = long.Parse(expString);
-            Assert.True(actual >= firstExp);
+            Assert.Greater(actual, firstExp);
+            Assert.Less(actual, secondExp);
             Assert.AreEqual(token, new AuthToken(KEY).Acl("*").Expiration(actual).Generate());
         }
 
