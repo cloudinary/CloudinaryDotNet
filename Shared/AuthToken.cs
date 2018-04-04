@@ -78,7 +78,7 @@ namespace CloudinaryDotNet
             {
                 if (duration > 0)
                 {
-                    long start = startTime > 0 ? startTime : DateTime.Now.Ticks / 1000L;
+                    long start = startTime > 0 ? startTime : DateTime.UtcNow.Ticks / 1000L;
                     expiration = start + duration;
                 }
                 else
