@@ -41,9 +41,6 @@ clone_depth: 5                      # clone entire repository history if not def
 hosts:
   queue-server: 127.0.0.1
   db.server.com: 127.0.0.2
-  # Temporary solution advised by appveyor
-  # See: https://appveyor.statuspage.io/incidents/m2vdvw39kdk8
-  api.nuget.org: 93.184.221.200
   
 # build cache to preserve files/folders between builds
 cache:
@@ -97,7 +94,7 @@ build:
   publish_nuget_symbols: false    # generate and publish NuGet symbol packages
   include_nuget_references: false # add -IncludeReferencedProjects option while packaging NuGet artifacts
   # MSBuild verbosity level
-  verbosity: minimal
+  verbosity: normal
 
 test:
   assemblies:
@@ -107,7 +104,7 @@ test:
 # scripts to run before build
 before_build:
  - ps: .\before_build.ps1
- - cmd: appveyor-retry nuget restore -verbosity detailed -DisableParallelProcessing Cloudinary.sln
+ - cmd: appveyor-retry nuget restore Cloudinary.sln
 # scripts to run *after* solution is built and *before* automatic packaging occurs (web apps, NuGet packages, Azure Cloud Services)
 before_package:
 
