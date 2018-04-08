@@ -578,12 +578,13 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestPublishByTag()
         {
-            string publicId = "TestForPublish" + m_suffix;
-            
+            var publicId = "TestForPublish" + m_suffix;
+            var tag = publicId;
+
             var uploadParams = new ImageUploadParams()
             {  
                 File = new FileDescription(m_testImagePath),
-                Tags = publicId,
+                Tags = tag,
                 PublicId = publicId,
                 Overwrite = true,
                 Type = "private"
@@ -595,13 +596,10 @@ namespace CloudinaryDotNet.Test
             {
                 ResourceType = ResourceType.Image
             });
+            //TODO: Fix this, move to tearDown()
+            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(tag);
 
-
-
-            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
-                "TestForPublish");
-
-            Assert.AreEqual(publish_result.Published.Count, 1);
+            Assert.AreEqual(1, publish_result.Published.Count);
         }
 
         [Test]
