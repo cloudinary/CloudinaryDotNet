@@ -5,11 +5,6 @@
 # version format
 version: 1.0.{build}
 
-# branches to build
-branches:
-  # whitelist
-  only:
-    - master
 # Do not build on tags (GitHub and BitBucket)
 skip_tags: true
 
@@ -27,7 +22,7 @@ max_jobs: 1
 #---------------------------------#
 
 # Build worker image (VM template)
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -49,20 +44,12 @@ hosts:
   
 # build cache to preserve files/folders between builds
 cache:
-  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
-  - projectA\libs
-  - node_modules                    # local npm modules
   - '%LocalAppData%\NuGet\Cache'
 
 # scripts that run after cloning repository
 install:
   # by default, all script lines are interpreted as batch
-  - echo This is batch
-  # to run script as a PowerShell command prepend it with ps:
-  - ps: Write-Host 'This is PowerShell'
-  # batch commands start from cmd:
-  - cmd: echo This is batch again
-  - cmd: set MY_VAR=12345
+  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
 
 # enable patching of AssemblyInfo.* files
 assembly_info:
@@ -75,8 +62,8 @@ assembly_info:
 
 # Automatically register private account and/or project AppVeyor NuGet feeds.
 nuget:
-  account_feed: true
-  project_feed: true
+  account_feed: false
+  project_feed: false
   disable_publish_on_pr: true     # disable publishing of .nupkg artifacts to
                                   # account/project feeds for pull request builds
 
@@ -103,21 +90,21 @@ configuration: Release
 build:
   parallel: true                  # enable MSBuild parallel builds
   project: Cloudinary.sln         # path to Visual Studio solution or project
-  publish_wap: false              # package Web Application Projects (WAP) for Web Deploy
-  publish_wap_xcopy: false        # package Web Application Projects (WAP) for XCopy deployment
-  publish_azure: false            # package Azure Cloud Service projects and push to artifacts
   publish_nuget: false            # package projects with .nuspec files and push to artifacts
   publish_nuget_symbols: false    # generate and publish NuGet symbol packages
   include_nuget_references: false # add -IncludeReferencedProjects option while packaging NuGet artifacts
-
   # MSBuild verbosity level
-  verbosity: minimal
+  verbosity: normal
 
+test:
+  assemblies:
+    - Cloudinary.Test.dll
+    - Cloudinary.NetCoreTest.dll
 
 # scripts to run before build
 before_build:
  - ps: .\before_build.ps1
- - cmd: nuget restore Cloudinary.sln
+ - cmd: appveyor-retry nuget restore Cloudinary.sln
 # scripts to run *after* solution is built and *before* automatic packaging occurs (web apps, NuGet packages, Azure Cloud Services)
 before_package:
 
