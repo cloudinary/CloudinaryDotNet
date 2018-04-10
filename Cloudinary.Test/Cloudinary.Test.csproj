@@ -79,23 +79,12 @@
     <Compile Include="IntegrationTestBase.cs" />
     <!--<Compile Include="Properties\AssemblyInfo.cs" />-->
     <Compile Include="ApiTest.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cloudinary\Cloudinary.csproj">
       <Project>{6C0ACD6C-58BC-4571-A59D-EB752317C8A2}</Project>
       <Name>Cloudinary</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
