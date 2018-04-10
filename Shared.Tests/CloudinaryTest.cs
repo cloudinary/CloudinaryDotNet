@@ -1781,24 +1781,7 @@ namespace CloudinaryDotNet.Test
             m_cloudinary.Upload(uploadParams);
         }
 
-        //[Test]
-        //public void TestAgentPlatformHeaders()
-        //{
-        //    HttpWebRequest request = null;
-        //    Func<string, HttpWebRequest> requestBuilder = (x) =>
-        //    {
-        //        request = HttpWebRequest.Create(x) as HttpWebRequest;
-        //        return request;
-        //    };
-        //    m_cloudinary.Api.RequestBuilder = requestBuilder;
-        //    m_cloudinary.Api.UserPlatform = "Test/1.0";
-        //    m_cloudinary.RootFolders();
-
-        //    //Can't test the result, so we just verify the UserAgent parameter is sent to the server
-        //    StringAssert.AreEqualIgnoringCase(string.Format("{0} {1}", m_cloudinary.Api.UserPlatform, Api.USER_AGENT), request.UserAgent);
-        //    StringAssert.IsMatch(@"Test\/1\.0 CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+)", request.UserAgent);
-        //}
-
+        
         //[Test]
         //public void TestAllowWriteStreamBufferingSet()
         //{

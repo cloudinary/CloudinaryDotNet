@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
@@ -68,8 +69,11 @@ namespace CloudinaryDotNet
         static Api()
         {
             var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
-            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2}",
-                version.Major, version.Minor, version.Build);
+  
+            var frameworkDescription = RuntimeInformation.FrameworkDescription;
+
+            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2} ({3})",
+                version.Major, version.Minor, version.Build, frameworkDescription);
         }
 
         /// <summary>

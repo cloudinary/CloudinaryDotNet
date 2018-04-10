@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -9,6 +10,7 @@ using System.Web;
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 
 namespace CloudinaryDotNet
 {
@@ -62,8 +64,11 @@ namespace CloudinaryDotNet
         static Api()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2}",
-                version.Major, version.Minor, version.Build);
+            var frameworkDisplayName = Assembly.GetExecutingAssembly().GetCustomAttributes(true).
+                OfType<System.Runtime.Versioning.TargetFrameworkAttribute>().First().FrameworkDisplayName;
+
+            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2} ({3})",
+                version.Major, version.Minor, version.Build, frameworkDisplayName);
         }
 
         public override T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file,
@@ -99,7 +104,7 @@ namespace CloudinaryDotNet
                 request.Timeout = Timeout;
             }
 
-            PrepareRequestBody(ref request, method, parameters, file, extraHeaders);
+            PrepareRequestBody(request, method, parameters, file, extraHeaders);
             
             try
             {
@@ -112,8 +117,7 @@ namespace CloudinaryDotNet
             }
             return response;
         }
-
-        internal HttpWebRequest PrepareRequestBody(ref HttpWebRequest request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        internal HttpWebRequest PrepareRequestBody(HttpWebRequest request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             SetHttpMethod(method, request);
 
