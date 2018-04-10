@@ -79,9 +79,10 @@ namespace CloudinaryDotNet
                .Action("download")
                .BuildUrl());
 
-            var parameters = new SortedDictionary<string, object>();
-
-            parameters.Add("public_id", publicId);
+            var parameters = new SortedDictionary<string, object>
+            {
+                { "public_id", publicId }
+            };
 
             if (!String.IsNullOrEmpty(format))
                 parameters.Add("format", format);
@@ -113,9 +114,10 @@ namespace CloudinaryDotNet
                .Action("download_tag.zip")
                .BuildUrl());
 
-            var parameters = new SortedDictionary<string, object>();
-
-            parameters.Add("tag", tag);
+            var parameters = new SortedDictionary<string, object>
+            {
+                { "tag", tag }
+            };
 
             if (transform != null)
                 parameters.Add("transformation", transform.Generate());
@@ -489,7 +491,7 @@ namespace CloudinaryDotNet
 
             if (parameters.File.IsRemote)
                 throw new ArgumentException("The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!");
-            return UploadLarge(parameters, bufferSize, true) as RawUploadResult;
+            return UploadLarge<RawUploadResult>(parameters, bufferSize);
         }
 
         private string RandomPublicId()
@@ -536,8 +538,10 @@ namespace CloudinaryDotNet
                 url.ResourceType(name.ToLower());
             string uri = url.BuildUrl();
             ResetInternalFileDescription(parameters.File, bufferSize);
-            var extraHeaders = new Dictionary<string, string>();
-            extraHeaders["X-Unique-Upload-Id"] = RandomPublicId();
+            var extraHeaders = new Dictionary<string, string>
+            {
+                ["X-Unique-Upload-Id"] = RandomPublicId()
+            };
             parameters.File.BufferLength = bufferSize;
             var fileLength = parameters.File.GetFileLength();
             T result = null;
@@ -777,17 +781,14 @@ namespace CloudinaryDotNet
                 ResourceType("resources").
                 Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType));
 
-            if (parameters is ListResourcesByTagParams)
+            if (parameters is ListResourcesByTagParams tagParams)
             {
-                var tagParams = (ListResourcesByTagParams)parameters;
                 if (!String.IsNullOrEmpty(tagParams.Tag))
                     url.Add("tags").Add(tagParams.Tag);
             }
 
-            if (parameters is ListResourcesByModerationParams)
+            if (parameters is ListResourcesByModerationParams modParams)
             {
-                var modParams = (ListResourcesByModerationParams)parameters;
-
                 if (!String.IsNullOrEmpty(modParams.ModerationKind))
                 {
                     url

@@ -87,7 +87,7 @@ namespace CloudinaryDotNet
             HttpResponseMessage response = null;
             using (request)
             {
-                PrepareRequestBody(ref request, method, parameters, file, extraHeaders);
+                PrepareRequestBody(request, method, parameters, file, extraHeaders);
 
                 System.Threading.Tasks.Task<HttpResponseMessage> task2;
 
@@ -113,7 +113,7 @@ namespace CloudinaryDotNet
 
         }
 
-        internal HttpRequestMessage PrepareRequestBody(ref HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        internal HttpRequestMessage PrepareRequestBody(HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             SetHttpMethod(method, request);
 
@@ -145,13 +145,13 @@ namespace CloudinaryDotNet
                 if (UseChunkedEncoding)
                     request.Headers.Add("Transfer-Encoding", "chunked");
 
-                PrepareRequestContent(ref request, parameters, file, extraHeaders);
+                PrepareRequestContent(request, parameters, file, extraHeaders);
             }
             
             return request;
         }
 
-        private void PrepareRequestContent(ref HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        private void PrepareRequestContent(HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             //HttpRequestMessage req = (HttpRequestMessage) request;
             var content = new MultipartFormDataContent(HTTP_BOUNDARY);
