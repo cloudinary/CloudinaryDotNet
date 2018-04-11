@@ -2620,7 +2620,7 @@ namespace CloudinaryDotNet.Test
 
             UploadImageForTestArchive(archiveTag, 2.0, true);
 
-            return new ArchiveParams().Tags(new List<string> { archiveTag, m_test_tag }).TargetPublicId(targetPublicId);
+            return new ArchiveParams().Tags(new List<string> { archiveTag, "non-existent-tag" }).TargetPublicId(targetPublicId);
         }
 
         [Test]
