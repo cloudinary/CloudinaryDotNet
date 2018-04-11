@@ -305,7 +305,10 @@ namespace CloudinaryDotNet
         /// <returns></returns>
         public ExplicitResult Explicit(ExplicitParams parameters)
         {
-            string uri = m_api.ApiUrlImgUpV.Action("explicit").BuildUrl();
+            string uri = m_api.ApiUrlV
+                .ResourceType(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType))
+                .Action("explicit")
+                .BuildUrl();
 
             return m_api.CallAndParse<ExplicitResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
         }

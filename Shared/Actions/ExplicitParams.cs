@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +15,7 @@ namespace CloudinaryDotNet.Actions
         public ExplicitParams(string publicId)
         {
             PublicId = publicId;
+            ResourceType = ResourceType.Image;
             Type = string.Empty;
             Tags = string.Empty;
         }
@@ -35,6 +36,11 @@ namespace CloudinaryDotNet.Actions
         public string EagerNotificationUrl { get; set; }
 
         public string Type { get; set; }
+
+        /// <summary>
+        /// The type of resource
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
 
         /// <summary>
         /// The identifier that is used for accessing the uploaded resource. A randomly generated ID is assigned if not specified.
