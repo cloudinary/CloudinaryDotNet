@@ -13,20 +13,22 @@ namespace CloudinaryDotNet.Test
     {
         protected const string m_config_place = "appsettings.json";
 
+        protected static string m_appveyor_job_id = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
+        protected string m_suffix;
+
         protected string m_testImagePath;
         protected string m_testLargeImagePath;
         protected string m_testVideoPath;
         protected string m_testPdfPath;
         protected string m_testIconPath;
-        protected string m_appveyor_job_id;
-        protected string m_suffix;
 
         protected string m_cloudName;
         protected string m_apiKey;
         protected string m_apiSecret;
         protected string m_apiBaseAddress;
 
-        protected string m_test_tag = "cloudinarydotnet_test";
+        protected static string m_test_tag = "net_tag";
+        protected static string m_test_prefix = "net_";
 
         protected const string TEST_MOVIE = "movie.mp4";
         protected const string TEST_IMAGE = "TestImage.jpg";
@@ -39,6 +41,23 @@ namespace CloudinaryDotNet.Test
         protected const string TOKEN_KEY = "00112233FF99";
         protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
 
+        protected string m_apiTest;
+        protected string m_apiTest1;
+        protected string m_apiTest2;
+
+        protected static string m_folderPrefix;
+        protected string m_apiTag;
+
+        protected const string m_simpleTransformationName = "c_scale,w_2.0";
+        protected readonly Transformation m_simpleTransformation = new Transformation().Crop("scale").Width(2.0);
+        protected const string m_resizeTransformationName = "w_512,h_512";
+        protected readonly Transformation m_resizeTransformation = new Transformation().Width(512).Height(512);
+        protected string m_updateTransformationName;
+        protected Transformation m_updateTransformation;
+        protected Transformation m_explicitTransformation;
+        protected readonly Transformation m_explodeTransformation = new Transformation().Page("all");
+        protected readonly Transformation m_simpleTransformationAngle = new Transformation().Angle(45);
+
         protected Account m_account;
         protected Cloudinary m_cloudinary;
 
@@ -50,14 +69,26 @@ namespace CloudinaryDotNet.Test
             m_apiSecret = settings.ApiSecret;
             m_apiBaseAddress = settings.ApiBaseAddress;
 
-            m_appveyor_job_id = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
-            m_suffix = String.IsNullOrEmpty(m_appveyor_job_id) ? new Random().Next(100000, 999999).ToString() : m_appveyor_job_id;
-            m_test_tag += m_suffix;
-
             m_account = GetAccountInstance();
             m_cloudinary = GetCloudinaryInstance(m_account);
 
             SaveTestResources(assembly);
+
+            InitializeUniqueNames(assembly.GetName().Name);
+        }
+
+        protected void InitializeUniqueNames(string assemblyName)
+        {
+            m_suffix = assemblyName.Replace('.', '_');
+            m_suffix += String.IsNullOrEmpty(m_appveyor_job_id) ? new Random().Next(100000, 999999).ToString() : m_appveyor_job_id;
+            m_apiTest = m_test_prefix + m_suffix;
+            m_apiTest1 = m_apiTest + "_1";
+            m_apiTest2 = m_apiTest + "_2";
+            m_folderPrefix = $"test_folder_{m_suffix}";
+            m_apiTag = $"{m_test_tag}{m_suffix}_api";
+            m_updateTransformationName = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100";
+            m_updateTransformation = new Transformation().Width(100).Crop("scale").Overlay(new TextLayer().Text(m_suffix + "_update").FontFamily("Arial").FontSize(60));
+            m_explicitTransformation = new Transformation().Width(100).Crop("scale").Overlay(new TextLayer().Text(m_suffix).FontFamily("Arial").FontSize(60));
         }
 
         private void SaveTestResources(Assembly assembly)
@@ -100,7 +131,7 @@ namespace CloudinaryDotNet.Test
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = id,
-                Tags = "test"
+                Tags = m_apiTag
             };
             return m_cloudinary.Upload(uploadParams);
         }
@@ -169,15 +200,15 @@ namespace CloudinaryDotNet.Test
         }
 
         [OneTimeTearDown]
-        public void Cleanup()
+        public virtual void Cleanup()
         {
-            string publicId = string.Format("TestForTagSearch_{0}", m_suffix);
-            DelResResult delResult = m_cloudinary.DeleteResources(new string[] { publicId });
-            publicId = string.Concat(m_suffix, "_TestForTagSearch");
-            delResult = m_cloudinary.DeleteResources(new string[] { publicId });
-            publicId = string.Concat(m_suffix, "_TestForSearch");
-            delResult = m_cloudinary.DeleteResources(new string[] { publicId });
-            m_cloudinary.DeleteResourcesByTag(m_test_tag);
+            m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Image });
+            m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Raw });
+            m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Video });
+            m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Raw, Type = "private" });
+            m_cloudinary.DeleteResourcesByPrefix(m_folderPrefix);
+            m_cloudinary.DeleteResourcesByPrefix(m_apiTest);
+            m_cloudinary.DeleteResources(new DelResParams() { PublicIds = { m_apiTest, m_apiTest1, m_apiTest2 }, Prefix = m_test_prefix });
         }
     }
 }

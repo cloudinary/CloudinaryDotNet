@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -14,14 +14,27 @@ using NUnit.Framework;
 
 namespace CloudinaryDotNet.Test
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public partial class CloudinaryTest : IntegrationTestBase
     {
+
+        protected readonly Transformation m_transformationAngleExtended = new Transformation().Angle(45).Height(210).Crop("scale");
+        protected readonly Transformation m_transformationAr25 = new Transformation().Width(100).AspectRatio(2.5);
+        protected readonly Transformation m_transformationAr69 = new Transformation().Width(100).AspectRatio(6, 9);
+        protected readonly Transformation m_transformationAr30 = new Transformation().Width(150).AspectRatio("3.0");
+        protected readonly Transformation m_transformationAr12 = new Transformation().Width(100).AspectRatio("1:2");
+        protected readonly Transformation m_transformationExplode = new Transformation().Page("all");
+
+        protected readonly Transformation m_eagerTransformation = new EagerTransformation(new Transformation().Width(512).Height(512), new Transformation().Width(100).Crop("scale")).SetFormat("png");
+
+
         [Test]
         public void TestUploadLocalImage()
         {
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -45,7 +58,8 @@ namespace CloudinaryDotNet.Test
         {
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(m_testPdfPath)
+                File = new FileDescription(m_testPdfPath),
+                Tags = m_apiTag
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -60,8 +74,10 @@ namespace CloudinaryDotNet.Test
             var timeout = 3000;
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             };
+
             var origAddr = m_cloudinary.Api.ApiBaseAddress;
             Stopwatch stopWatch = new Stopwatch();
             m_cloudinary.Api.ApiBaseAddress = "https://10.255.255.1";
@@ -90,7 +106,8 @@ namespace CloudinaryDotNet.Test
         {
             var uploadParams = new VideoUploadParams()
             {
-                File = new FileDescription(m_testVideoPath)
+                File = new FileDescription(m_testVideoPath),
+                Tags = m_apiTag
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -113,9 +130,9 @@ namespace CloudinaryDotNet.Test
         public void TestUploadCustom()
         {
             var file = new FileDescription(m_testVideoPath);
-
             var uploadResult = m_cloudinary.Upload("video", null, file);
 
+            m_cloudinary.DeleteResources(new DelResParams { PublicIds = new List<string> { uploadResult.PublicId }, ResourceType = ResourceType.Video });
             Assert.NotNull(uploadResult);
             Assert.AreEqual("video", uploadResult.ResourceType);
         }
@@ -127,7 +144,7 @@ namespace CloudinaryDotNet.Test
             {
                 File = new FileDescription(m_testImagePath),
                 Moderation = "manual",
-
+                Tags = m_apiTag
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -154,7 +171,8 @@ namespace CloudinaryDotNet.Test
 
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             });
 
             var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
@@ -173,7 +191,8 @@ namespace CloudinaryDotNet.Test
 
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
-                File = new FileDescription(m_testPdfPath)
+                File = new FileDescription(m_testPdfPath),
+                Tags = m_apiTag
             });
 
             var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
@@ -192,7 +211,8 @@ namespace CloudinaryDotNet.Test
 
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             });
 
             var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
@@ -211,7 +231,8 @@ namespace CloudinaryDotNet.Test
 
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             });
 
             var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
@@ -231,7 +252,8 @@ namespace CloudinaryDotNet.Test
 
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             });
 
             Assert.IsNull(uploadResult.Info);
@@ -245,19 +267,18 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(updateResult.Info.Detection);
             Assert.NotNull(updateResult.Info.Detection.RekognitionFace);
             Assert.AreEqual("complete", updateResult.Info.Detection.RekognitionFace.Status);
-            m_cloudinary.DeleteResources(uploadResult.PublicId);
 
             uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Detection = "rekognition_face"
+                Detection = "rekognition_face",
+                Tags = m_apiTag
             });
 
             Assert.NotNull(uploadResult.Info);
             Assert.NotNull(uploadResult.Info.Detection);
             Assert.NotNull(uploadResult.Info.Detection.RekognitionFace);
             Assert.AreEqual("complete", uploadResult.Info.Detection.RekognitionFace.Status);
-            m_cloudinary.DeleteResources(uploadResult.PublicId);
         }
 
         [Test]
@@ -266,9 +287,9 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "test_raw_overwrite" + new Random().Next(),
+                PublicId = $"{m_apiTest}_TestUploadOverwrite",
                 Overwrite = false,
-                Tags = m_test_tag
+                Tags = m_apiTag
             };
 
             var img1 = m_cloudinary.Upload(uploadParams);
@@ -296,11 +317,12 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
-                PublicId = "test--3",
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                PublicId = $"{m_apiTest}_TestUploadLocalImageGetMetadata",
                 Metadata = true,
                 Exif = true,
-                Colors = true
+                Colors = true,
+                Tags = m_apiTag
             };
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
@@ -315,17 +337,18 @@ namespace CloudinaryDotNet.Test
         {
             //should allow sending face coordinates
 
-            var faceCoordinates = new List<CloudinaryDotNet.Core.Rectangle>()
+            var faceCoordinates = new List<Core.Rectangle>()
             {
-                new CloudinaryDotNet.Core.Rectangle(121,31,110,151),
-                new CloudinaryDotNet.Core.Rectangle(120,30,109,150)
+                new Core.Rectangle(121,31,110,151),
+                new Core.Rectangle(120,30,109,150)
             };
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 FaceCoordinates = faceCoordinates,
-                Faces = true
+                Faces = true,
+                Tags = m_apiTag
             };
 
             var uploadRes = m_cloudinary.Upload(uploadParams);
@@ -344,10 +367,11 @@ namespace CloudinaryDotNet.Test
             var explicitParams = new ExplicitParams(uploadRes.PublicId)
             {
                 FaceCoordinates = "122,32,111,152",
-                Type = "upload"
+                Type = "upload",
+                Tags = m_apiTag
             };
 
-            var explicitRes = m_cloudinary.Explicit(explicitParams);
+            m_cloudinary.Explicit(explicitParams);
 
             var res = m_cloudinary.GetResource(
                 new GetResourceParams(uploadRes.PublicId) { Faces = true });
@@ -367,10 +391,11 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
                 EagerAsync = true,
                 UseFilename = true,
-                NotificationUrl = "http://www.google.com"
+                NotificationUrl = "http://www.google.com",
+                Tags = m_apiTag
             };
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
@@ -384,11 +409,12 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
                 EagerAsync = true,
                 UseFilename = true,
                 UniqueFilename = false,
-                NotificationUrl = "http://www.google.com"
+                NotificationUrl = "http://www.google.com",
+                Tags = m_apiTag
             };
 
             var result = m_cloudinary.Upload(uploadParams);
@@ -402,8 +428,8 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Transformation = new Transformation().Width(512).Height(512),
-                Tags = "transformation"
+                Transformation = m_resizeTransformation,
+                Tags = m_apiTag
             };
 
             ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
@@ -416,9 +442,13 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestEnglishText()
         {
-            TextParams tParams = new TextParams("Sample text.");
-            tParams.Background = "red";
-            tParams.FontStyle = "italic";
+            TextParams tParams = new TextParams("Sample text.")
+            {
+                Background = "red",
+                FontStyle = "italic",
+                PublicId = $"{m_apiTest1}_SAMPLE_TEXT"
+            };
+
             TextResult textResult = m_cloudinary.Text(tParams);
 
             Assert.IsTrue(textResult.Width > 0);
@@ -428,7 +458,12 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestRussianText()
         {
-            TextResult textResult = m_cloudinary.Text("Пример текста.");
+            TextParams tParams = new TextParams("Пример текста.")
+            {
+                PublicId = $"{m_apiTest2}_SAMPLE_TEXT"
+            };
+
+            TextResult textResult = m_cloudinary.Text(tParams);
 
             Assert.AreEqual(100, textResult.Width);
             Assert.AreEqual(13, textResult.Height);
@@ -439,7 +474,8 @@ namespace CloudinaryDotNet.Test
         {
             RawUploadParams uploadParams = new RawUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             };
 
             RawUploadResult uploadResult = m_cloudinary.Upload(uploadParams, "raw");
@@ -462,7 +498,7 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription("http://cloudinary.com/images/old_logo.png"),
-                Tags = "remote"
+                Tags = m_apiTag
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -478,7 +514,8 @@ namespace CloudinaryDotNet.Test
         {
             var upload = new ImageUploadParams()
             {
-                File = new FileDescription("data:image/png;base64,iVBORw0KGgoAA\nAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAAD///+l2Z/dAAAAM0l\nEQVR4nGP4/5/h/1+G/58ZDrAz3D/McH8yw83NDDeNGe4Ug9C9zwz3gVLMDA/A6\nP9/AFGGFyjOXZtQAAAAAElFTkSuQmCC")
+                File = new FileDescription("data:image/png;base64,iVBORw0KGgoAA\nAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAAD///+l2Z/dAAAAM0l\nEQVR4nGP4/5/h/1+G/58ZDrAz3D/McH8yw83NDDeNGe4Ug9C9zwz3gVLMDA/A6\nP9/AFGGFyjOXZtQAAAAAElFTkSuQmCC"),
+                Tags = m_apiTag
             };
 
             var result = m_cloudinary.Upload(upload);
@@ -497,7 +534,7 @@ namespace CloudinaryDotNet.Test
                 ImageUploadParams uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription("streamed", memoryStream),
-                    Tags = "streamed"
+                    Tags = $"{m_apiTag},streamed"
                 };
 
                 ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
@@ -517,7 +554,8 @@ namespace CloudinaryDotNet.Test
             int fileLength = (int)new FileInfo(largeFilePath).Length;
             var result = m_cloudinary.UploadLarge(new RawUploadParams()
             {
-                File = new FileDescription(largeFilePath)
+                File = new FileDescription(largeFilePath),
+                Tags = m_apiTag
             }, 5 * 1024 * 1024);
 
             Assert.AreEqual(fileLength, result.Length);
@@ -532,7 +570,8 @@ namespace CloudinaryDotNet.Test
             int fileLength = (int)new FileInfo(largeFilePath).Length;
             var result = m_cloudinary.UploadLarge(new ImageUploadParams()
             {
-                File = new FileDescription(largeFilePath)
+                File = new FileDescription(largeFilePath),
+                Tags = m_apiTag
             }, 5 * 1024 * 1024);
 
             Assert.AreEqual(fileLength, result.Length);
@@ -547,7 +586,6 @@ namespace CloudinaryDotNet.Test
             var start = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var end   = new DateTime(3000, 12, 31, 23, 59, 59, DateTimeKind.Utc);
 
-
             var accessControl = new List<AccessControlRule> { new AccessControlRule
                 {
                     AccessType = AccessType.Anonymous,
@@ -559,8 +597,8 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = m_test_tag,
-                AccessControl = accessControl
+                AccessControl = accessControl,
+                Tags = m_apiTag
             };
             
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -586,30 +624,26 @@ namespace CloudinaryDotNet.Test
             Assert.IsNull(uploadResult.AccessControl[1].End);
         }
 
-
         [Test]
         public void TestPublishByTag()
         {
-            var publicId = "TestForPublish" + m_suffix;
-            var tag = publicId;
+            var publishTag = $"{m_apiTest}_TestPublishByTag";
 
             var uploadParams = new ImageUploadParams()
             {  
                 File = new FileDescription(m_testImagePath),
-                Tags = tag,
-                PublicId = publicId,
+                Tags = $"{publishTag},{m_apiTag}",
+                PublicId = publishTag,
                 Overwrite = true,
                 Type = "private"
             };
 
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(uploadParams);
 
-            var publish_result = m_cloudinary.PublishResourceByTag(publicId, new PublishResourceParams()
+            var publish_result = m_cloudinary.PublishResourceByTag(publishTag, new PublishResourceParams()
             {
-                ResourceType = ResourceType.Image
+                ResourceType = ResourceType.Image, 
             });
-            //TODO: Fix this, move to tearDown()
-            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(tag);
 
             Assert.AreEqual(1, publish_result.Published.Count);
         }
@@ -617,39 +651,39 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUpdateAccessModeByTag()
         {
+            var publishTag = $"{m_apiTest}_TestForUpdateAccessMode";
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "TestForUpdateAccessMode",
-                PublicId = "TestForUpdateAccessMode",
+                Tags = $"{m_apiTag},{publishTag}",
+                PublicId = publishTag,
                 Overwrite = true,
                 Type = "private"
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            var update_result = m_cloudinary.UpdateResourceAccessModeByTag("TestForUpdateAccessMode", new UpdateResourceAccessModeParams()
+            var update_result = m_cloudinary.UpdateResourceAccessModeByTag(publishTag, new UpdateResourceAccessModeParams()
             {
                 ResourceType = ResourceType.Image,
                 Type = "upload",
                 AccessMode = "public"
             });
 
+            //TODO: fix this test, make assertions working
+
             //Assert.AreEqual(publish_result.Published.Count, 1);
-
-            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
-                "TestForUpdateAccessMode");
-
         }
 
         [Test]
         public void TestUpdateAccessModeById()
         {
+            var publishTag = $"{m_apiTest}_TestForUpdateAccessMode";
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "TestForUpdateAccessMode",
-                PublicId = "TestForUpdateAccessMode",
+                Tags = $"{m_apiTag},{publishTag}",
+                PublicId = publishTag,
                 Overwrite = true,
                 Type = "private"
             };
@@ -657,7 +691,7 @@ namespace CloudinaryDotNet.Test
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
             List<string> ids = new List<string>();
-            ids.Add("TestForUpdateAccessMode");
+            ids.Add(publishTag);
 
             var update_result = m_cloudinary.UpdateResourceAccessModeByIds(new UpdateResourceAccessModeParams()
             {
@@ -667,13 +701,11 @@ namespace CloudinaryDotNet.Test
                 PublicIds = ids
             });
 
+            //TODO: fix this test, make assertions working
+
             //Assert.AreEqual(publish_result.Published.Count, 1);
-
-            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
-                "TestForUpdateAccessMode");
-
         }
-        
+
         /// <summary>
         /// Test that we can update access control of the resource
         /// </summary>
@@ -692,7 +724,7 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = m_test_tag,
+                Tags = m_apiTag,
                 AccessControl = accessControl
             };
             
@@ -721,7 +753,6 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(start, updateResult.AccessControl[0].End);
         }
 
-
         [Test]
         public void TestUploadLargeFromWeb()
         {
@@ -730,7 +761,8 @@ namespace CloudinaryDotNet.Test
             var largeFilePath = "http://res.cloudinary.com/demo/video/upload/v1496743637/dog.mp4";
             var result = m_cloudinary.UploadLarge(new ImageUploadParams()
             {
-                File = new FileDescription(largeFilePath)
+                File = new FileDescription(largeFilePath),
+                Tags = m_apiTag
             }, 5 * 1024 * 1024);
 
             Assert.AreEqual(result.StatusCode, System.Net.HttpStatusCode.OK);
@@ -742,7 +774,8 @@ namespace CloudinaryDotNet.Test
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             };
 
             ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
@@ -791,9 +824,14 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestTagMultiple()
         {
+            var testTag1 = $"{m_apiTag}_Tag1";
+            var testTag2 = $"{m_apiTag}_Tag2";
+            var testTag3 = $"{m_apiTag}_Tag3";
+
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             };
 
             var uploadResult1 = m_cloudinary.Upload(uploadParams);
@@ -805,43 +843,44 @@ namespace CloudinaryDotNet.Test
                     uploadResult1.PublicId,
                     uploadResult2.PublicId
                 },
-                Tag = "tag1"
+                Tag = testTag1
             };
 
             m_cloudinary.Tag(tagParams);
 
             // remove second ID
             tagParams.PublicIds.RemoveAt(1);
-            tagParams.Tag = "tag2";
+            tagParams.Tag = testTag2;
 
             m_cloudinary.Tag(tagParams);
 
             var r = m_cloudinary.GetResource(uploadResult1.PublicId);
             Assert.NotNull(r.Tags);
-            Assert.True(r.Tags.SequenceEqual(new string[] { "tag1", "tag2" }));
+            Assert.Contains(testTag1, r.Tags);
+            Assert.Contains(testTag2, r.Tags);
 
             r = m_cloudinary.GetResource(uploadResult2.PublicId);
             Assert.NotNull(r.Tags);
-            Assert.True(r.Tags.SequenceEqual(new string[] { "tag1" }));
+            Assert.Contains(testTag1, r.Tags);
 
             tagParams.Command = TagCommand.Remove;
-            tagParams.Tag = "tag1";
+            tagParams.Tag = testTag1;
             tagParams.PublicIds = new List<string>() { uploadResult1.PublicId };
 
             m_cloudinary.Tag(tagParams);
 
             r = m_cloudinary.GetResource(uploadResult1.PublicId);
             Assert.NotNull(r.Tags);
-            Assert.True(r.Tags.SequenceEqual(new string[] { "tag2" }));
+            Assert.Contains(testTag2, r.Tags);
 
             tagParams.Command = TagCommand.Replace;
-            tagParams.Tag = "tag3";
+            tagParams.Tag = $"{m_apiTag},{testTag3}";
 
             m_cloudinary.Tag(tagParams);
 
             r = m_cloudinary.GetResource(uploadResult1.PublicId);
             Assert.NotNull(r.Tags);
-            Assert.True(r.Tags.SequenceEqual(new string[] { "tag3" }));
+            Assert.True(r.Tags.SequenceEqual(new string[] { m_apiTag, testTag3 }));
         }
 
         [Test]
@@ -850,7 +889,7 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "test++++++tag"
+                Tags = $"test++++++tag,{m_apiTag}"
             };
 
             ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
@@ -858,7 +897,7 @@ namespace CloudinaryDotNet.Test
             TagParams tagParams = new TagParams()
             {
                 Command = TagCommand.Replace,
-                Tag = "another-tag-test"
+                Tag = $"{m_apiTag}_another-tag-test,{m_apiTag}"
             };
 
             tagParams.PublicIds.Add(uploadResult.PublicId);
@@ -874,7 +913,7 @@ namespace CloudinaryDotNet.Test
         {
             // should allow listing resource_types
             ListResourceTypesResult result = m_cloudinary.ListResourceTypes();
-            Assert.IsTrue(result.ResourceTypes.Contains(ResourceType.Image));
+            Assert.Contains(ResourceType.Image, result.ResourceTypes);
         }
 
         [Test]
@@ -894,7 +933,8 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testlistresourcesbytype"
+                PublicId = $"{m_apiTest}_TestListResourcesByType",
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -909,17 +949,19 @@ namespace CloudinaryDotNet.Test
         public void TestListResourcesByPrefix()
         {
             // should allow listing resources by prefix
+            var publicId = $"testlist{m_apiTest1}";
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testlistblablabla",
-                Context = new StringDictionary("context=abc")
+                PublicId = publicId,
+                Context = new StringDictionary("context=abc"),
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            var result = m_cloudinary.ListResourcesByPrefix("testlist", true, true, true);
+            var result = m_cloudinary.ListResourcesByPrefix(publicId, true, true, true);
 
             //Assert.IsTrue(result.Resources.Where(res => res.PublicId.StartsWith("testlist")).Count() == result.Resources.Count());
             Assert.IsTrue(result.Resources.Where(res => (res.Context == null ? false : res.Context["custom"]["context"].ToString() == "abc")).Count() > 0);
@@ -963,8 +1005,9 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "test_context",
-                Context = new StringDictionary("key=value", "key2=value2")
+                PublicId = $"{m_apiTest}_TestContext",
+                Context = new StringDictionary("key=value", "key2=value2"),
+                Tags = m_apiTag
             };
 
             var uploaded = m_cloudinary.Upload(uploadParams);
@@ -978,12 +1021,20 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestListResourcesByPublicIds()
         {
+            var publicId1 = $"{m_apiTest1}TestListResourcesByPublicIds";
+            var publicId2 = $"{m_apiTest2}TestListResourcesByPublicIds";
+            var context = new StringDictionary("key=value", "key2=value2");
             // should allow listing resources by public ids
+            var uploadParams = new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId1, Context = context, Tags = m_apiTag };
+            m_cloudinary.Upload(uploadParams);
+
+            uploadParams = new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId2, Context = context, Tags = m_apiTag };
+            m_cloudinary.Upload(uploadParams);
 
             List<string> publicIds = new List<string>()
                 {
-                    "testlistblablabla",
-                    "test_context"
+                    publicId1,
+                    publicId2
                 };
             var result = m_cloudinary.ListResourceByPublicIds(publicIds, true, true, true);
 
@@ -996,14 +1047,14 @@ namespace CloudinaryDotNet.Test
         public void TestListResourcesByTag()
         {
             // should allow listing resources by tag
+            var localTag = $"{m_apiTag}_LIST_RESOURCES";
 
             var file = new FileDescription(m_testImagePath);
-            var tag = "teslistresourcesbytag1";
-            m_cloudinary.DeleteResourcesByTag(tag);
+            m_cloudinary.DeleteResourcesByTag(localTag);
             var uploadParams = new ImageUploadParams()
             {
                 File = file,
-                Tags = tag + ",beauty"
+                Tags = $"{m_apiTag},{localTag}"
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -1011,13 +1062,12 @@ namespace CloudinaryDotNet.Test
             uploadParams = new ImageUploadParams()
             {
                 File = file,
-                Tags = tag
+                Tags = $"{m_apiTag},{localTag}"
             };
 
             m_cloudinary.Upload(uploadParams);
-            var result = m_cloudinary.ListResourcesByTag(tag);
+            var result = m_cloudinary.ListResourcesByTag(localTag);
             Assert.AreEqual(2, result.Resources.Count());
-            m_cloudinary.DeleteResourcesByTag(tag);
         }
 
         [Test]
@@ -1032,7 +1082,8 @@ namespace CloudinaryDotNet.Test
                 uploadResults.Add(m_cloudinary.Upload(new ImageUploadParams()
                 {
                     File = new FileDescription(m_testImagePath),
-                    Moderation = "manual"
+                    Moderation = "manual",
+                    Tags = m_apiTag
                 }));
             }
 
@@ -1071,11 +1122,13 @@ namespace CloudinaryDotNet.Test
         public void TestResourcesCursor()
         {
             // should allow listing resources with cursor
+            var publicId = $"{m_apiTest}_TestResourcesCursor";
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testlistresources1"
+                PublicId = $"{publicId}1",
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -1083,7 +1136,8 @@ namespace CloudinaryDotNet.Test
             uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testlistresources2"
+                PublicId = $"{publicId}2",
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -1116,16 +1170,12 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() {
-                    new Transformation().Width(100),
-                    new EagerTransformation(
-                        new Transformation().Width(10),
-                        new Transformation().Angle(10)).SetFormat("png")
-                },
-                Tags = "eager,transformation"
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation, m_eagerTransformation },
+                Tags = $"{m_apiTag},eager,transformation"
             };
 
-            m_cloudinary.Upload(uploadParams);
+            var result = m_cloudinary.Upload(uploadParams);
+            //TODO: fix this test, implement assertions
         }
 
         [Test]
@@ -1133,7 +1183,8 @@ namespace CloudinaryDotNet.Test
         {
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             };
 
             var uploadResult1 = m_cloudinary.Upload(uploadParams);
@@ -1160,8 +1211,8 @@ namespace CloudinaryDotNet.Test
         public void TestRenameToType()
 
         {
-            string publicId = string.Concat("renameType_", m_suffix);
-            string newPublicId = string.Concat("renameNewType_", m_suffix);
+            string publicId = string.Concat("renameType_", m_apiTest);
+            string newPublicId = string.Concat("renameNewType_", m_apiTest);
             string type = "upload";
             string toType = "private";
 
@@ -1169,7 +1220,7 @@ namespace CloudinaryDotNet.Test
             {
                 PublicId = publicId,
                 File = new FileDescription(m_testImagePath),
-                Tags = m_test_tag,
+                Tags = m_apiTag,
                 Type = type
             };
 
@@ -1191,12 +1242,13 @@ namespace CloudinaryDotNet.Test
         public void TestGetResource()
         {
             // should allow get resource details
-            String publicId = "testgetresource" + m_suffix;
+            var publicId = $"testgetresource_{m_apiTest2}";
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
-                PublicId = publicId
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                PublicId = publicId,
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -1218,24 +1270,26 @@ namespace CloudinaryDotNet.Test
         public void TestGetResourceWithMetadata()
         {
             // should allow get resource metadata
+            var publicId = $"{m_apiTest}_TestGetResourceWithMetadata";
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
-                PublicId = "testgetresource2"
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                PublicId = publicId,
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
 
             GetResourceResult getResult = m_cloudinary.GetResource(
-                new GetResourceParams("testgetresource2")
+                new GetResourceParams(publicId)
                 {
                     Metadata = true
                 });
 
             Assert.IsNotNull(getResult);
-            Assert.AreEqual("testgetresource2", getResult.PublicId);
+            Assert.AreEqual(publicId, getResult.PublicId);
             Assert.NotNull(getResult.Metadata);
         }
 
@@ -1243,28 +1297,27 @@ namespace CloudinaryDotNet.Test
         public void TestDeleteDerived()
         {
             // should allow deleting derived resource
+            var publicId = $"{m_apiTest}_TestDeleteDerived";
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Width(101).Crop("scale") },
-                PublicId = "testdeletederived"
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                PublicId = publicId,
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource("testdeletederived");
+            GetResourceResult resource = m_cloudinary.GetResource(publicId);
 
             Assert.IsNotNull(resource);
             Assert.AreEqual(1, resource.Derived.Length);
 
-            DelDerivedResResult delDerivedResult =
-                m_cloudinary.DeleteDerivedResources(resource.Derived[0].Id);
-
+            DelDerivedResResult delDerivedResult = m_cloudinary.DeleteDerivedResources(resource.Derived[0].Id);
             Assert.AreEqual(1, delDerivedResult.Deleted.Values.Count);
 
-            resource = m_cloudinary.GetResource("testdeletederived");
-
+            resource = m_cloudinary.GetResource(publicId);
             Assert.IsFalse(String.IsNullOrEmpty(resource.PublicId));
         }
 
@@ -1272,27 +1325,30 @@ namespace CloudinaryDotNet.Test
         public void TestDelete()
         {
             // should allow deleting resources
+            var publicId = $"{m_apiTest}_TestDelete";
+            var rndString = $"{m_apiTest}_SomeRandomString";
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testdelete",
+                PublicId = publicId,
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource("testdelete");
+            GetResourceResult resource = m_cloudinary.GetResource(publicId);
 
             Assert.IsNotNull(resource);
-            Assert.AreEqual("testdelete", resource.PublicId);
+            Assert.AreEqual(publicId, resource.PublicId);
 
             DelResResult delResult = m_cloudinary.DeleteResources(
-                "randomstringopa", "testdeletederived", "testdelete");
+                rndString, "not_used_string", publicId);
 
-            Assert.AreEqual("not_found", delResult.Deleted["randomstringopa"]);
-            Assert.AreEqual("deleted", delResult.Deleted["testdelete"]);
+            Assert.AreEqual("not_found", delResult.Deleted[rndString]);
+            Assert.AreEqual("deleted", delResult.Deleted[publicId]);
 
-            resource = m_cloudinary.GetResource("testdelete");
+            resource = m_cloudinary.GetResource(publicId);
 
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
         }
@@ -1301,25 +1357,26 @@ namespace CloudinaryDotNet.Test
         public void TestDeleteByPrefix()
         {
             // should allow deleting resources
+            var publicId = $"{m_apiTest}_TestDeleteByPrefix";
+            var prefix = publicId.Substring(0, publicId.Length - 1);
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "testdelete"
+                PublicId = publicId,
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource("testdelete");
+            GetResourceResult resource = m_cloudinary.GetResource(publicId);
 
             Assert.IsNotNull(resource);
-            Assert.AreEqual("testdelete", resource.PublicId);
+            Assert.AreEqual(publicId, resource.PublicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResourcesByPrefix(
-                "testdel");
+            DelResResult delResult = m_cloudinary.DeleteResourcesByPrefix(prefix);
 
-            resource = m_cloudinary.GetResource("testdelete");
-
+            resource = m_cloudinary.GetResource(publicId);
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
         }
 
@@ -1327,85 +1384,86 @@ namespace CloudinaryDotNet.Test
         public void TestDeleteByTag()
         {
             // should allow deleting resources
+            var publicId = $"{m_apiTest}_TestDeleteByTag";
+            var tag = $"{m_apiTag}_TestDeleteByTag";
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "api_test4",
-                Tags = "api_test_tag_for_delete"
+                PublicId = publicId,
+                Tags = $"{tag},{m_apiTag}"
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource(
-                "api_test4");
+            GetResourceResult resource = m_cloudinary.GetResource(publicId);
 
             Assert.IsNotNull(resource);
-            Assert.AreEqual("api_test4", resource.PublicId);
+            Assert.AreEqual(publicId, resource.PublicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
-                "api_test_tag_for_delete");
+            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(tag);
 
-            resource = m_cloudinary.GetResource("api_test4");
-
+            resource = m_cloudinary.GetResource(publicId);
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
         }
 
         [Test]
         public void TestRestoreNoBackup()
         {
-            const string TEST_PUBLIC_ID = "testdelandrestore_nobackup";
+            string publicId = $"{m_apiTest}_TestRestoreNoBackup";
 
             ImageUploadParams uploadParams_nobackup = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = TEST_PUBLIC_ID
+                PublicId = publicId,
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams_nobackup);
-            GetResourceResult resource = m_cloudinary.GetResource(TEST_PUBLIC_ID);
+            GetResourceResult resource = m_cloudinary.GetResource(publicId);
             Assert.IsNotNull(resource);
-            Assert.AreEqual(TEST_PUBLIC_ID, resource.PublicId);
+            Assert.AreEqual(publicId, resource.PublicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResources(TEST_PUBLIC_ID);
-            Assert.AreEqual("deleted", delResult.Deleted[TEST_PUBLIC_ID]);
+            DelResResult delResult = m_cloudinary.DeleteResources(publicId);
+            Assert.AreEqual("deleted", delResult.Deleted[publicId]);
 
-            resource = m_cloudinary.GetResource(TEST_PUBLIC_ID);
+            resource = m_cloudinary.GetResource(publicId);
             Assert.IsTrue(string.IsNullOrEmpty(resource.PublicId));
 
-            RestoreResult rResult = m_cloudinary.Restore(TEST_PUBLIC_ID);
-            Assert.IsNotNull(rResult.JsonObj[TEST_PUBLIC_ID], string.Format("Should contain key \"{0}\". ", TEST_PUBLIC_ID));
-            Assert.AreEqual("no_backup", rResult.JsonObj[TEST_PUBLIC_ID]["error"].ToString());
+            RestoreResult rResult = m_cloudinary.Restore(publicId);
+            Assert.IsNotNull(rResult.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId));
+            Assert.AreEqual("no_backup", rResult.JsonObj[publicId]["error"].ToString());
         }
 
         [Test]
         public void TestRestore()
         {
-            const string TEST_PUBLIC_ID = "delete_restore";
+            string publicId = $"{m_apiTest}_TestRestore";
 
             ImageUploadParams uploadParams_backup = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = TEST_PUBLIC_ID,
-                Backup = true
+                PublicId = publicId,
+                Backup = true,
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams_backup);
-            GetResourceResult resource_backup = m_cloudinary.GetResource(TEST_PUBLIC_ID);
+            GetResourceResult resource_backup = m_cloudinary.GetResource(publicId);
             Assert.IsNotNull(resource_backup);
-            Assert.AreEqual(TEST_PUBLIC_ID, resource_backup.PublicId);
+            Assert.AreEqual(publicId, resource_backup.PublicId);
 
-            DelResResult delResult_backup = m_cloudinary.DeleteResources(TEST_PUBLIC_ID);
-            Assert.AreEqual("deleted", delResult_backup.Deleted[TEST_PUBLIC_ID]);
+            DelResResult delResult_backup = m_cloudinary.DeleteResources(publicId);
+            Assert.AreEqual("deleted", delResult_backup.Deleted[publicId]);
 
-            resource_backup = m_cloudinary.GetResource(TEST_PUBLIC_ID);
+            resource_backup = m_cloudinary.GetResource(publicId);
             Assert.AreEqual(0, resource_backup.Length);
 
-            RestoreResult rResult_backup = m_cloudinary.Restore(TEST_PUBLIC_ID);
-            Assert.IsNotNull(rResult_backup.JsonObj[TEST_PUBLIC_ID], string.Format("Should contain key \"{0}\". ", TEST_PUBLIC_ID));
-            Assert.AreEqual(TEST_PUBLIC_ID, rResult_backup.JsonObj[TEST_PUBLIC_ID]["public_id"].ToString());
+            RestoreResult rResult_backup = m_cloudinary.Restore(publicId);
+            Assert.IsNotNull(rResult_backup.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId));
+            Assert.AreEqual(publicId, rResult_backup.JsonObj[publicId]["public_id"].ToString());
 
-            resource_backup = m_cloudinary.GetResource(TEST_PUBLIC_ID);
+            resource_backup = m_cloudinary.GetResource(publicId);
             Assert.IsFalse(string.IsNullOrEmpty(resource_backup.PublicId));
         }
 
@@ -1413,18 +1471,19 @@ namespace CloudinaryDotNet.Test
         public void TestListTags()
         {
             // should allow listing tags
+            var tag = $"{m_apiTag}_LTags";
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "api_test_custom"
+                Tags = $"{tag},{m_apiTag}"
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            ListTagsResult result = m_cloudinary.ListTags();
+            ListTagsResult result = m_cloudinary.ListTags(new ListTagsParams() { MaxResults = 500 });
 
-            Assert.IsTrue(result.Tags.Contains("api_test_custom"));
+            Assert.Contains(tag, result.Tags);
         }
 
         [Test]
@@ -1436,7 +1495,7 @@ namespace CloudinaryDotNet.Test
             {
                 File = new FileDescription(m_testImagePath),
                 AllowedFormats = new string[] { "jpg" },
-                Tags = m_test_tag
+                Tags = m_apiTag
             };
 
             var res = m_cloudinary.Upload(uploadParams);
@@ -1452,7 +1511,8 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                AllowedFormats = new string[] { "png" }
+                AllowedFormats = new string[] { "png" },
+                Tags = m_apiTag
             };
 
             var res = m_cloudinary.Upload(uploadParams);
@@ -1469,7 +1529,8 @@ namespace CloudinaryDotNet.Test
             {
                 File = new FileDescription(m_testImagePath),
                 AllowedFormats = new string[] { "png" },
-                Format = "png"
+                Format = "png",
+                Tags = m_apiTag
             };
 
             var res = m_cloudinary.Upload(uploadParams);
@@ -1485,12 +1546,13 @@ namespace CloudinaryDotNet.Test
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Moderation = "manual"
+                Moderation = "manual",
+                Tags = m_apiTag
             });
 
             Assert.NotNull(uploadResult);
 
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId) { ModerationStatus = Actions.ModerationStatus.Approved });
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId) { ModerationStatus = ModerationStatus.Approved });
 
             Assert.NotNull(updateResult);
             Assert.NotNull(updateResult.Moderation);
@@ -1546,11 +1608,13 @@ namespace CloudinaryDotNet.Test
         public void TestListTagsPrefix()
         {
             // should allow listing tag by prefix
+            var tag = $"{m_apiTag}_TestListTagsPrefix";
+            var tag2 = $"{m_apiTag}_TestListTagsPrefix2";
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "api_test_custom1"
+                Tags = $"{tag},{m_apiTag}"
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -1558,14 +1622,14 @@ namespace CloudinaryDotNet.Test
             uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "api_test_brustom"
+                Tags = $"{tag2},{m_apiTag}"
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            ListTagsResult result = m_cloudinary.ListTagsByPrefix("api_test");
+            ListTagsResult result = m_cloudinary.ListTagsByPrefix(m_apiTag);
 
-            Assert.IsTrue(result.Tags.Contains("api_test_brustom"));
+            Assert.Contains(tag2, result.Tags);
 
             result = m_cloudinary.ListTagsByPrefix("nononothereisnosuchtag");
 
@@ -1580,8 +1644,8 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(100) },
-                Tags = "transformation"
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
@@ -1590,7 +1654,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Transformations);
-            TransformDesc td = result.Transformations.Where(t => t.Name == "c_scale,w_100").First();
+            TransformDesc td = result.Transformations.Where(t => t.Name == m_simpleTransformationName).First();
             Assert.IsTrue(td.Used);
         }
 
@@ -1599,21 +1663,19 @@ namespace CloudinaryDotNet.Test
         {
             // should allow getting transformation metadata
 
-            var t = new Transformation().Crop("scale").Dpr(1.3).Width(2.0);
-
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { t },
-                Tags = "transformation"
+                EagerTransforms = new List<Transformation>() { m_updateTransformation },
+                Tags = m_apiTag
             };
 
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(uploadParams);
 
-            var result = m_cloudinary.GetTransform("c_scale,dpr_1.3,w_2.0");
+            var result = m_cloudinary.GetTransform(m_updateTransformationName);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(t.Generate(), new Transformation(result.Info[0]).Generate());
+            Assert.AreEqual(m_updateTransformation.ToString(), new Transformation(result.Info[0]).ToString());
         }
 
         [Test]
@@ -1621,27 +1683,24 @@ namespace CloudinaryDotNet.Test
         {
             // should allow updating transformation allowed_for_strict
 
-            Transformation t = new Transformation().Crop("scale").Width(100);
-            string tags = string.Concat(m_test_tag, "_transformation");
-
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { t },
-                Tags = tags
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
 
             UpdateTransformParams updateParams = new UpdateTransformParams()
             {
-                Transformation = "c_scale,w_100",
+                Transformation = m_simpleTransformationName,
                 Strict = true
             };
 
-            UpdateTransformResult result = m_cloudinary.UpdateTransform(updateParams);
+            m_cloudinary.UpdateTransform(updateParams);
 
-            GetTransformResult getResult = m_cloudinary.GetTransform("c_scale,w_100");
+            GetTransformResult getResult = m_cloudinary.GetTransform(m_simpleTransformationName);
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual(true, getResult.Strict);
@@ -1649,7 +1708,7 @@ namespace CloudinaryDotNet.Test
             updateParams.Strict = false;
             m_cloudinary.UpdateTransform(updateParams);
 
-            getResult = m_cloudinary.GetTransform("c_scale,w_100");
+            getResult = m_cloudinary.GetTransform(m_simpleTransformationName);
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual(false, getResult.Strict);
@@ -1658,28 +1717,27 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUpdateTransformUnsafe()
         {
+            string transformName = m_apiTest;
             // should allow unsafe update of named transformation
-
-            var r = m_cloudinary.CreateTransform(
+            m_cloudinary.CreateTransform(
                 new CreateTransformParams()
                 {
-                    Name = "api_test_transformation3",
-                    Transform = new Transformation().Crop("scale").Width(102)
+                    Name = transformName,
+                    Transform = m_simpleTransformation
                 });
 
             var updateParams = new UpdateTransformParams()
             {
-                Transformation = "api_test_transformation3",
-                UnsafeTransform = new Transformation().Crop("scale").Width(103)
+                Transformation = transformName,
+                UnsafeTransform = m_updateTransformation
             };
 
-            var result = m_cloudinary.UpdateTransform(updateParams);
+            m_cloudinary.UpdateTransform(updateParams);
 
-            var getResult = m_cloudinary.GetTransform("api_test_transformation3");
+            var getResult = m_cloudinary.GetTransform(transformName);
 
             Assert.IsNotNull(getResult.Info);
             Assert.AreEqual(updateParams.UnsafeTransform.Generate(), new Transformation(getResult.Info).Generate());
-            //Assert.IsFalse(getResult.Used);
         }
 
         [Test]
@@ -1687,12 +1745,10 @@ namespace CloudinaryDotNet.Test
         {
             // should allow creating named transformation
 
-            Transformation t = new Transformation().Crop("scale").Width(102);
-
             CreateTransformParams create = new CreateTransformParams()
             {
-                Name = "api_test_transformation",
-                Transform = t
+                Name = m_apiTest1,
+                Transform = m_simpleTransformation
             };
 
             m_cloudinary.CreateTransform(create);
@@ -1708,30 +1764,31 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(true, getResult.Strict);
             Assert.AreEqual(false, getResult.Used);
             Assert.AreEqual(1, getResult.Info.Length);
-            Assert.AreEqual(t.Generate(), new Transformation(getResult.Info[0]).Generate());
+            Assert.AreEqual(m_simpleTransformation.Generate(), new Transformation(getResult.Info[0]).Generate());
         }
 
         [Test]
         public void TestDeleteTransform()
         {
+            string transformName = m_apiTest2;
             // should allow deleting named transformation
 
-            m_cloudinary.DeleteTransform("api_test_transformation2");
+            m_cloudinary.DeleteTransform(transformName);
 
             CreateTransformParams create = new CreateTransformParams()
             {
-                Name = "api_test_transformation2",
-                Transform = new Transformation().Crop("scale").Width(103)
+                Name = transformName,
+                Transform = m_simpleTransformation
             };
 
             TransformResult createResult = m_cloudinary.CreateTransform(create);
 
             Assert.AreEqual("created", createResult.Message);
 
-            m_cloudinary.DeleteTransform("api_test_transformation2");
+            m_cloudinary.DeleteTransform(transformName);
 
             GetTransformResult getResult = m_cloudinary.GetTransform(
-                new GetTransformParams() { Transformation = "api_test_transformation2" });
+                new GetTransformParams() { Transformation = transformName });
 
             Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode);
         }
@@ -1744,21 +1801,22 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(100) }
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
 
             GetTransformParams getParams = new GetTransformParams()
             {
-                Transformation = "c_scale,w_100"
+                Transformation = m_simpleTransformationName
             };
 
             GetTransformResult getResult = m_cloudinary.GetTransform(getParams);
 
             Assert.AreEqual(HttpStatusCode.OK, getResult.StatusCode);
 
-            m_cloudinary.DeleteTransform("c_scale,w_100");
+            m_cloudinary.DeleteTransform(m_simpleTransformationName);
 
             getResult = m_cloudinary.GetTransform(getParams);
 
@@ -1771,14 +1829,18 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "headers"
+                PublicId = $"{m_apiTest}_TestUploadHeaders",
+                Tags = m_apiTag
             };
 
-            uploadParams.Headers = new Dictionary<string, string>();
-            uploadParams.Headers.Add("Link", "1");
-            uploadParams.Headers.Add("Blink", "182");
+            uploadParams.Headers = new Dictionary<string, string>
+            {
+                { "Link", "1" },
+                { "Blink", "182" }
+            };
 
             m_cloudinary.Upload(uploadParams);
+            //TODO: fix this test, implement assertions
         }
 
         
@@ -1814,14 +1876,15 @@ namespace CloudinaryDotNet.Test
         {
             ExplicitParams exp = new ExplicitParams("cloudinary")
             {
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
-                Type = "facebook"
+                EagerTransforms = new List<Transformation>() { m_explicitTransformation },
+                Type = "facebook",
+                Tags = m_apiTag
             };
 
             ExplicitResult expResult = m_cloudinary.Explicit(exp);
 
             string url = new Url(m_account.Cloud).ResourceType("image").Add("facebook").
-                Transform(new Transformation().Crop("scale").Width(2.0)).
+                Transform(m_explicitTransformation).
                 Format("png").Version(expResult.Version).BuildUrl("cloudinary");
 
             Assert.AreEqual(url, expResult.Eager[0].Uri.AbsoluteUri);
@@ -1832,9 +1895,10 @@ namespace CloudinaryDotNet.Test
         {
             var exp = new ExplicitParams("cloudinary")
             {
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                EagerTransforms = new List<Transformation>() { m_explicitTransformation },
                 Type = "facebook",
-                Context = new StringDictionary("context1=254")
+                Context = new StringDictionary("context1=254"),
+                Tags = m_apiTag
             };
 
             var expResult = m_cloudinary.Explicit(exp);
@@ -1900,36 +1964,33 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestSprite()
         {
+            var publishTag = $"{m_apiTest1}_LOGO";
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "logo,beauty",
-                PublicId = "logo1",
-                Transformation = new Transformation().Width(200).Height(100)
+                Tags = $"{publishTag},{m_apiTag}",
+                PublicId = publishTag,
+                Transformation = m_resizeTransformation
             };
-
             m_cloudinary.Upload(uploadParams);
 
-            uploadParams.PublicId = "logo2";
-            uploadParams.Transformation = new Transformation().Width(100).Height(100);
-
+            uploadParams.PublicId = $"{publishTag}_logo2";
+            uploadParams.Transformation = m_updateTransformation;
             m_cloudinary.Upload(uploadParams);
 
-            uploadParams.PublicId = "logo3";
-            uploadParams.Transformation = new Transformation().Width(100).Height(300);
-
+            uploadParams.PublicId = $"{publishTag}_logo3";
+            uploadParams.Transformation = m_simpleTransformation;
             m_cloudinary.Upload(uploadParams);
 
-            SpriteParams sprite = new SpriteParams("logo");
-
+            SpriteParams sprite = new SpriteParams(publishTag);
             SpriteResult result = m_cloudinary.MakeSprite(sprite);
 
             Assert.NotNull(result);
             Assert.NotNull(result.ImageInfos);
             Assert.AreEqual(3, result.ImageInfos.Count);
-            Assert.Contains("logo1", result.ImageInfos.Keys);
-            Assert.Contains("logo2", result.ImageInfos.Keys);
-            Assert.Contains("logo3", result.ImageInfos.Keys);
+            Assert.Contains(publishTag, result.ImageInfos.Keys);
+            Assert.Contains($"{publishTag}_logo2", result.ImageInfos.Keys);
+            Assert.Contains($"{publishTag}_logo3", result.ImageInfos.Keys);
         }
 
         [Test]
@@ -1938,25 +1999,22 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "logotrans",
-                PublicId = "logotrans1",
-                Transformation = new Transformation().Width(200).Height(100)
+                Tags = $"{m_apiTest1}_SPRITE,{m_apiTag}",
+                PublicId = $"{m_apiTest1}_SPRITE",
+                Transformation = m_simpleTransformation
             };
-
             m_cloudinary.Upload(uploadParams);
 
-            uploadParams.PublicId = "logotrans2";
-            uploadParams.Transformation = new Transformation().Width(100).Height(100);
-
+            uploadParams.PublicId = $"{m_apiTest1}_logotrans2";
+            uploadParams.Transformation = m_updateTransformation;
             m_cloudinary.Upload(uploadParams);
 
-            uploadParams.PublicId = "logotrans3";
-            uploadParams.Transformation = new Transformation().Width(100).Height(300);
-
+            uploadParams.PublicId = $"{m_apiTest}_logotrans3";
+            uploadParams.Transformation = m_explicitTransformation;
             m_cloudinary.Upload(uploadParams);
 
-            SpriteParams sprite = new SpriteParams("logotrans");
-            sprite.Transformation = new Transformation().Width(100).Height(100).Crop("scale");
+            SpriteParams sprite = new SpriteParams($"{m_apiTest1}_SPRITE");
+            sprite.Transformation = m_resizeTransformation;
 
             SpriteResult result = m_cloudinary.MakeSprite(sprite);
 
@@ -1964,20 +2022,20 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(result.ImageInfos);
             foreach (var item in result.ImageInfos)
             {
-                Assert.AreEqual(100, item.Value.Width);
-                Assert.AreEqual(100, item.Value.Height);
+                Assert.AreEqual(512, item.Value.Width);
+                Assert.AreEqual(512, item.Value.Height);
             }
         }
 
         [Test]
         public void TestJsonObject()
         {
-            ExplicitParams exp = new ExplicitParams("cloudinary")
+            var publicId = "cloudinary";
+            ExplicitParams exp = new ExplicitParams(publicId)
             {
-
-                EagerTransforms = new List<Transformation>() {
-                    new EagerTransformation().Crop("scale").Width(2.0) },
-                Type = "facebook"
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                Type = "facebook",
+                Tags = m_apiTag
             };
 
             var result = m_cloudinary.Explicit(exp);
@@ -1989,9 +2047,10 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUsage()
         {
-            UploadTestResource("TestUsage"); // making sure at least one resource exists
+            var publicId = $"{m_apiTest}_TestUsage";
+
+            UploadTestResource(publicId); // making sure at least one resource exists
             var result = m_cloudinary.GetUsage();
-            DeleteTestResource("TestUsage");
 
             var plans = new List<string>() { "Free", "Advanced" };
 
@@ -2005,32 +2064,36 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestMultiTransformation()
         {
+            var publicId1 = $"{m_apiTest1}_TestMultiTransformation";
+            var publicId2 = $"{m_apiTest2}_TestMultiTransformation";
+            var tag = $"{m_apiTest}_MULTI";
+
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "test--5",
-                PublicId = "test--5-1"
+                Tags = $"{tag},{m_apiTag}",
+                PublicId = publicId1
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            uploadParams.PublicId = "test--5-2";
-            uploadParams.Transformation = new Transformation().Width(100).Height(300);
-
+            uploadParams.PublicId = publicId2;
+            uploadParams.Transformation = m_simpleTransformation;
             m_cloudinary.Upload(uploadParams);
 
-            MultiParams multi = new MultiParams("test--5");
+            MultiParams multi = new MultiParams(tag);
             MultiResult result = m_cloudinary.Multi(multi);
             Assert.True(result.Uri.AbsoluteUri.EndsWith(".gif"));
 
-            multi.Transformation = new Transformation().Width(100);
+            multi.Transformation = m_resizeTransformation;
             result = m_cloudinary.Multi(multi);
-            Assert.True(result.Uri.AbsoluteUri.Contains("w_100"));
+            Assert.IsTrue(result.Uri.AbsoluteUri.Contains("w_512"));
 
-            multi.Transformation = new Transformation().Width(111);
+            multi.Transformation = m_simpleTransformationAngle;
             multi.Format = "pdf";
             result = m_cloudinary.Multi(multi);
-            Assert.True(result.Uri.AbsoluteUri.Contains("w_111"));
+
+            Assert.True(result.Uri.AbsoluteUri.Contains("a_45"));
             Assert.True(result.Uri.AbsoluteUri.EndsWith(".pdf"));
         }
 
@@ -2040,9 +2103,9 @@ namespace CloudinaryDotNet.Test
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = "arTransformation",
-                PublicId = "arTransformation25",
-                Transformation = new Transformation().Width(100).AspectRatio(2.5)
+                Tags = $"{m_apiTag},arTransformation",
+                PublicId = $"arTransformation25_{m_apiTest}",
+                Transformation = m_transformationAr25
             };
             ImageUploadResult iuResult25 = m_cloudinary.Upload(uploadParams);
 
@@ -2050,24 +2113,24 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(100, iuResult25.Width);
             Assert.AreEqual(40, iuResult25.Height);
 
-            uploadParams.PublicId = "arTransformation69";
-            uploadParams.Transformation = new Transformation().Width(100).AspectRatio(6, 9);
+            uploadParams.PublicId = $"arTransformation69_{m_apiTest}";
+            uploadParams.Transformation = m_transformationAr69;
             ImageUploadResult iuResult69 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(iuResult69);
             Assert.AreEqual(100, iuResult69.Width);
             Assert.AreEqual(150, iuResult69.Height);
 
-            uploadParams.PublicId = "arTransformation30";
-            uploadParams.Transformation = new Transformation().Width(150).AspectRatio("3.0");
+            uploadParams.PublicId = $"arTransformation30_{m_apiTest}";
+            uploadParams.Transformation = m_transformationAr30;
             ImageUploadResult iuResult30 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(iuResult30);
             Assert.AreEqual(150, iuResult30.Width);
             Assert.AreEqual(50, iuResult30.Height);
 
-            uploadParams.PublicId = "arTransformation12";
-            uploadParams.Transformation = new Transformation().Width(100).AspectRatio("1:2");
+            uploadParams.PublicId = $"arTransformation12_{m_apiTest}";
+            uploadParams.Transformation = m_transformationAr12;
             ImageUploadResult iuResult12 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(iuResult12);
@@ -2137,17 +2200,19 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestExplode()
         {
+            var publicId = $"testexplode_{m_apiTest}";
+
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testPdfPath),
-                PublicId = "testexplode"
+                PublicId = publicId,
+                Tags = m_apiTag
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            var result = m_cloudinary.Explode(new ExplodeParams(
-                "testexplode",
-                new Transformation().Page("all")));
+            var explodeParams = new ExplodeParams(publicId, m_transformationExplode);
+            var result = m_cloudinary.Explode(explodeParams);
 
             Assert.AreEqual("processing", result.Status);
         }
@@ -2170,13 +2235,16 @@ namespace CloudinaryDotNet.Test
         public void TestListUploadPresets()
         {
             // should allow creating and listing upload_presets
+            var preset1 = $"{m_apiTest1}_api_test_upload_preset";
+            var preset2 = $"{m_apiTest2}_api_test_upload_preset";
 
             var preset = new UploadPresetParams()
             {
-                Name = "api_test_upload_preset",
+                Name = preset1,
                 Folder = "folder",
                 DisallowPublicId = true,
                 Unsigned = true,
+                Tags = m_apiTag,
                 AllowedFormats = new string[] { "jpg", "bmp" }
             };
 
@@ -2184,12 +2252,12 @@ namespace CloudinaryDotNet.Test
 
             preset = new UploadPresetParams()
             {
-                Name = "api_test_upload_preset2",
+                Name = preset2,
                 Folder = "folder2",
-                Tags = "a,b,c",
+                Tags = $"{m_apiTag},a,b,c",
                 Context = new StringDictionary("a=b", "c=d"),
-                Transformation = new Transformation().Width(100).Crop("scale"),
-                EagerTransforms = new List<object>() { new Transformation().X(100) },
+                Transformation = m_simpleTransformation,
+                EagerTransforms = new List<object>() { m_resizeTransformation },
                 FaceCoordinates = "1,2,3,4"
             };
 
@@ -2197,12 +2265,12 @@ namespace CloudinaryDotNet.Test
 
             var presets = m_cloudinary.ListUploadPresets();
 
-            Assert.AreEqual(presets.Presets[0].Name, "api_test_upload_preset2");
-            Assert.AreEqual(presets.Presets[1].Name, "api_test_upload_preset");
+            Assert.AreEqual(presets.Presets[0].Name, preset2);
+            Assert.AreEqual(presets.Presets[1].Name, preset1);
 
-            var delResult = m_cloudinary.DeleteUploadPreset("api_test_upload_preset");
+            var delResult = m_cloudinary.DeleteUploadPreset(preset1);
             Assert.AreEqual("deleted", delResult.Message);
-            delResult = m_cloudinary.DeleteUploadPreset("api_test_upload_preset2");
+            delResult = m_cloudinary.DeleteUploadPreset(preset2);
             Assert.AreEqual("deleted", delResult.Message);
         }
 
@@ -2211,14 +2279,13 @@ namespace CloudinaryDotNet.Test
         {
             // should allow getting a single upload_preset
 
-            var tags = new string[] { "a", "b", "c" };
-
             var @params = new UploadPresetParams()
             {
-                Tags = String.Join(",", tags),
+                Tags = $"a,b,c,{m_apiTag}",
+                Name = $"{m_apiTest1}_upload_preset",
                 Context = new StringDictionary("a=b", "c=d"),
-                Transformation = new Transformation().Width(100).Crop("scale"),
-                EagerTransforms = new List<object>() { new Transformation().X(100) },
+                Transformation = m_simpleTransformation,
+                EagerTransforms = new List<object>() { m_resizeTransformation },
                 FaceCoordinates = "1,2,3,4",
                 Unsigned = true,
                 Folder = "folder",
@@ -2232,29 +2299,26 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(creationResult.Name, preset.Name);
             Assert.AreEqual(true, preset.Unsigned);
             Assert.AreEqual("folder", preset.Settings.Folder);
-            Assert.AreEqual("100", preset.Settings.Transformation[0]["width"].ToString());
+            Assert.AreEqual("2", preset.Settings.Transformation[0]["width"].ToString());
             Assert.AreEqual("scale", preset.Settings.Transformation[0]["crop"].ToString());
-
-            m_cloudinary.DeleteUploadPreset(preset.Name);
         }
 
         [Test]
         public void TestDeleteUploadPreset()
         {
             // should allow deleting upload_presets
+            var preset = $"{m_apiTest}_TestDeleteUploadPreset";
 
             m_cloudinary.CreateUploadPreset(new UploadPresetParams()
             {
-                Name = "api_test_upload_preset4",
+                Name = preset,
                 Folder = "folder"
             });
 
-            var result = m_cloudinary.DeleteUploadPreset("api_test_upload_preset4");
-
+            var result = m_cloudinary.DeleteUploadPreset(preset);
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
 
-            result = m_cloudinary.DeleteUploadPreset("api_test_upload_preset4");
-
+            result = m_cloudinary.DeleteUploadPreset(preset);
             Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
         }
 
@@ -2266,11 +2330,12 @@ namespace CloudinaryDotNet.Test
             var presetToCreate = new UploadPresetParams()
             {
                 Folder = "folder",
+                Name = $"{m_apiTest2}_upload_preset",
                 Context = new StringDictionary("a=b", "b=c"),
-                Transformation = new Transformation().X(100),
-                EagerTransforms = new List<object>() { new Transformation().X(100).Y(100), "w_50" },
+                Transformation = m_simpleTransformation,
+                EagerTransforms = new List<object>() { m_resizeTransformation, m_updateTransformation },
                 AllowedFormats = new string[] { "jpg", "png" },
-                Tags = "a,b,c",
+                Tags = $"a,b,c,{m_apiTag}",
                 FaceCoordinates = "1,2,3,4"
             };
 
@@ -2295,8 +2360,6 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(true, preset.Unsigned);
 
             // TODO: compare settings of preset and presetToUpdate
-
-            m_cloudinary.DeleteUploadPreset(preset.Name);
         }
 
         [Test]
@@ -2306,8 +2369,10 @@ namespace CloudinaryDotNet.Test
 
             var preset = m_cloudinary.CreateUploadPreset(new UploadPresetParams()
             {
+                Name = $"{m_apiTest2}_upload_preset_unsigned",
                 Folder = "upload_folder",
-                Unsigned = true
+                Unsigned = true,
+                Tags = m_apiTag
             });
 
             var acc = new Account(m_cloudName);
@@ -2317,13 +2382,12 @@ namespace CloudinaryDotNet.Test
             {
                 File = new FileDescription(m_testImagePath),
                 UploadPreset = preset.Name,
-                Unsigned = true
+                Unsigned = true,
+                Tags = m_apiTag
             });
 
             Assert.NotNull(upload.PublicId);
             Assert.True(upload.PublicId.StartsWith("upload_folder"));
-
-            m_cloudinary.DeleteUploadPreset(preset.Name);
         }
 
         [Test]
@@ -2334,19 +2398,18 @@ namespace CloudinaryDotNet.Test
             Thread.Sleep(2000);
 
             DateTime start = DateTime.UtcNow;
+            var publicId = $"{m_apiTag}_TestListResourcesStartAt";
 
-            ImageUploadResult result = UploadTestResource("TestListResourcesStartAt");
+            ImageUploadResult result = UploadTestResource(publicId);
 
             Thread.Sleep(2000);
 
             var resources = m_cloudinary.ListResources(
                 new ListResourcesParams() { Type = "upload", StartAt = result.CreatedAt.AddMilliseconds(-10), Direction = "asc" });
 
-            DeleteTestResource("TestListResourcesStartAt");
-
             Assert.NotNull(resources.Resources, "response should include resources");
-            Assert.True(resources.Resources.Length > 0, "response should include at least one resources");
-            Assert.AreEqual(result.PublicId, resources.Resources[0].PublicId);
+            Assert.IsTrue(resources.Resources.Length > 0, "response should include at least one resources");
+            Assert.IsNotNull(resources.Resources.FirstOrDefault(res => res.PublicId == result.PublicId));
         }
 
         [Test]
@@ -2354,9 +2417,9 @@ namespace CloudinaryDotNet.Test
         {
             //should allow sending custom coordinates
 
-            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
 
-            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), CustomCoordinates = coordinates });
+            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), CustomCoordinates = coordinates, Tags = m_apiTag });
 
             var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
 
@@ -2369,9 +2432,9 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(coordinates.Width, result.Coordinates.Custom[0][2]);
             Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
 
-            coordinates = new CloudinaryDotNet.Core.Rectangle(122, 32, 110, 152);
+            coordinates = new Core.Rectangle(122, 32, 110, 152);
 
-            var exResult = m_cloudinary.Explicit(new ExplicitParams(upResult.PublicId) { CustomCoordinates = coordinates, Type = "upload" });
+            var exResult = m_cloudinary.Explicit(new ExplicitParams(upResult.PublicId) { CustomCoordinates = coordinates, Type = "upload", Tags = m_apiTag });
 
             result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
 
@@ -2390,11 +2453,11 @@ namespace CloudinaryDotNet.Test
         {
             //should update custom coordinates
 
-            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
 
-            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath) });
+            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), Tags = m_apiTag });
 
-            var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { CustomCoordinates = coordinates });
+            m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { CustomCoordinates = coordinates });
 
             var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
 
@@ -2412,8 +2475,8 @@ namespace CloudinaryDotNet.Test
         public void TestUpdateQuality()
         {
             //should update quality 
-            string publicId = string.Concat(m_suffix, "_TestUpdateQuality");
-            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId, Overwrite = true, Tags = m_test_tag });
+            string publicId = $"{m_apiTest}_TestUpdateQuality";
+            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId, Overwrite = true, Tags = m_apiTag });
             var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOveride = "auto:best" });
             Assert.AreEqual(updResult.StatusCode, HttpStatusCode.OK);
             Assert.Null(updResult.Error);
@@ -2425,29 +2488,28 @@ namespace CloudinaryDotNet.Test
         {
             // should allow to list folders and subfolders
 
-            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder1/item" });
-            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder2/item" });
-            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder1/test_subfolder1/item" });
-            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = "test_folder1/test_subfolder2/item" });
+            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = $"{m_folderPrefix}1/item", Tags = m_apiTag });
+            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = $"{m_folderPrefix}2/item", Tags = m_apiTag });
+            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = $"{m_folderPrefix}1/test_subfolder1/item", Tags = m_apiTag });
+            m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = $"{m_folderPrefix}1/test_subfolder2/item", Tags = m_apiTag });
 
             var result = m_cloudinary.RootFolders();
             Assert.Null(result.Error);
-            Assert.AreEqual("test_folder1", result.Folders[0].Name);
-            Assert.AreEqual("test_folder2", result.Folders[1].Name);
+            Assert.AreEqual($"{m_folderPrefix}1", result.Folders[0].Name);
+            Assert.AreEqual($"{m_folderPrefix}2", result.Folders[1].Name);
 
-            result = m_cloudinary.SubFolders("test_folder1");
+            result = m_cloudinary.SubFolders($"{m_folderPrefix}1");
 
-            Assert.AreEqual("test_folder1/test_subfolder1", result.Folders[0].Path);
-            Assert.AreEqual("test_folder1/test_subfolder2", result.Folders[1].Path);
+            Assert.AreEqual($"{m_folderPrefix}1/test_subfolder1", result.Folders[0].Path);
+            Assert.AreEqual($"{m_folderPrefix}1/test_subfolder2", result.Folders[1].Path);
 
-            result = m_cloudinary.SubFolders("test_folder");
+            result = m_cloudinary.SubFolders(m_folderPrefix);
 
             Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
             Assert.NotNull(result.Error);
             Assert.NotNull(result.Error.Message);
             Assert.AreEqual("Can't find folder with path test_folder", result.Error.Message);
 
-            m_cloudinary.DeleteResourcesByPrefix("test_folder");
         }
 
         [Test]
@@ -2459,10 +2521,8 @@ namespace CloudinaryDotNet.Test
             var expectedToken1 = JToken.Parse("{\"create_derived\":false,\"max_width\":500,\"min_width\":100,\"max_images\":5,\"transformation\":\"a_45\"}");
             IEnumerable<string> expectedList1 = expectedToken1.Children().Select(s => s.ToString(Formatting.None));
 
-            Transformation transform = new Transformation().Angle(45);
-
             var breakpoint = new ResponsiveBreakpoint().CreateDerived(false)
-                    .Transformation(transform)
+                    .Transformation(m_simpleTransformationAngle)
                     .MaxWidth(500)
                     .MinWidth(100)
                     .MaxImages(5);
@@ -2470,7 +2530,7 @@ namespace CloudinaryDotNet.Test
             var actualList1 = breakpoint.Children().Select(s => s.ToString(Formatting.None));
             CollectionAssert.AreEquivalent(expectedList1, actualList1);
 
-            breakpoint.Transformation(transform.Height(210).Crop("scale"));
+            breakpoint.Transformation(m_transformationAngleExtended);
 
             var expectedToken2 = JToken.Parse("{\"create_derived\":false,\"max_width\":500,\"min_width\":100,\"max_images\":5,\"transformation\":\"a_45,c_scale,h_210\"}");
             var expectedList2 = expectedToken2.Children().Select(s => s.ToString(Formatting.None));
@@ -2482,17 +2542,20 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestResponsiveBreakpoints()
         {
+            var publicId = $"{m_apiTest}_TestResponsiveBreakpoints";
             var breakpoint = new ResponsiveBreakpoint().MaxImages(5).BytesStep(20)
                                 .MinWidth(200).MaxWidth(1000).CreateDerived(false);
 
-            var breakpoint2 = new ResponsiveBreakpoint().Transformation(new Transformation().Width(0.9).Crop("scale").Radius(50)).MaxImages(4).BytesStep(20)
+            //var transformation = new Transformation().Width(0.9).Crop("scale").Radius(50);
+            var breakpoint2 = new ResponsiveBreakpoint().Transformation(m_simpleTransformation).MaxImages(4).BytesStep(20)
                                 .MinWidth(100).MaxWidth(900).CreateDerived(false);
+
             // An array of breakpoints
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                PublicId = "responsiveBreakpoint_id",
-                Tags = "test",
+                PublicId = publicId,
+                Tags = m_apiTag,
                 ResponsiveBreakpoints = new List<ResponsiveBreakpoint> { breakpoint, breakpoint2 }
             };
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
@@ -2509,10 +2572,11 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(100, result.ResponsiveBreakpoints[1].Breakpoints[3].Width);
 
             // responsive breakpoints for Explicit()
-            ExplicitParams exp = new ExplicitParams("responsiveBreakpoint_id")
+            ExplicitParams exp = new ExplicitParams(publicId)
             {
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(2.0) },
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
                 Type = "upload",
+                Tags = m_apiTag,
                 ResponsiveBreakpoints = new List<ResponsiveBreakpoint> { breakpoint2.CreateDerived(true) }
             };
 
@@ -2532,17 +2596,16 @@ namespace CloudinaryDotNet.Test
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(m_testImagePath)
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
             };
 
             uploadParams.AddCustomParam("public_id", "test_ad_hoc_params_id");
-            uploadParams.AddCustomParam("tags", "test");
             uploadParams.AddCustomParam("IgnoredEmptyParameter", "");
             uploadParams.AddCustomParam("responsive_breakpoints", JsonConvert.SerializeObject(new List<ResponsiveBreakpoint> { breakpoint }));
             uploadParams.AddCustomParam("IgnoredNullParameter", null);
 
             var paramsDict = uploadParams.ToParamsDictionary();
-            Assert.AreEqual(3, paramsDict.Count);
             Assert.IsFalse(paramsDict.ContainsKey("IgnoredEmptyParameter"));
             Assert.IsFalse(paramsDict.ContainsKey("IgnoredNullParameter"));
 
@@ -2585,9 +2648,6 @@ namespace CloudinaryDotNet.Test
         //    StringAssert.Contains("name=\"text_align\"\r\n\r\ncenter\r\n", rString);
         //}
 
-        /// <summary>
-        /// Uploads test image with params specified
-        /// </summary>
         private ImageUploadResult UploadImageForTestArchive(string archiveTag, double width, bool useFileName)
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
@@ -2595,44 +2655,51 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(m_testImagePath),
                 EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(width) },
                 UseFilename = useFileName,
-                Tags = archiveTag
+                Tags = $"{archiveTag},{m_apiTag}"
             };
             return m_cloudinary.Upload(uploadParams);
         }
-
+        
         [Test]
         public void TestCreateArchive()
         {
-            string archiveTag = string.Format("{0}_archive_tag_{1}", m_test_tag, UnixTimeNow());
-            string targetPublicId = string.Format("{0}_archive_id_{1}", m_suffix, UnixTimeNow());
+            string archiveTag = $"{m_apiTest}_archive_tag_{UnixTimeNow()}";
+            string targetPublicId = $"{m_apiTest}_archive_id_{UnixTimeNow()}";
 
             ImageUploadResult res = UploadImageForTestArchive(archiveTag, 2.0, true);
 
-            ArchiveParams parameters = new ArchiveParams().Tags(new List<string> { archiveTag, "no_such_tag" }).TargetPublicId(targetPublicId);
+            ArchiveParams parameters = new ArchiveParams()
+                                            .Tags(new List<string> { archiveTag, "no_such_tag" })
+                                            .TargetPublicId(targetPublicId)
+                                            .TargetTags(new List<string> { m_apiTag });
             ArchiveResult result = m_cloudinary.CreateArchive(parameters);
             Assert.AreEqual(string.Format("{0}.zip", targetPublicId), result.PublicId);
             Assert.AreEqual(1, result.FileCount);
 
             ImageUploadResult res2 = UploadImageForTestArchive(archiveTag, 500, false);
 
+            var transformations = new List<Transformation> { m_simpleTransformation, m_updateTransformation };
             parameters = new ArchiveParams().PublicIds(new List<string> { res.PublicId, res2.PublicId })
-                                            .Transformations(new List<Transformation> { new Transformation().Width("0.5"), new Transformation().Width(2) })
+                                            .Transformations(transformations)
                                             .FlattenFolders(true)
                                             .SkipTransformationName(true)
-                                            .UseOriginalFilename(true);
+                                            .UseOriginalFilename(true)
+                                            .Tags(new List<string> { archiveTag })
+                                            .TargetTags(new List<string> { m_apiTag });
             result = m_cloudinary.CreateArchive(parameters);
-
-           Assert.AreEqual(2, result.FileCount);
+            Assert.AreEqual(2, result.FileCount);
         }
 
         [Test]
         public void TestCreateArchiveRawResources()
         {
+            var tag = $"{m_apiTag}_TestCreateArchiveRawResources";
             RawUploadParams uploadParams = new RawUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 Folder = "test_folder",
-                Type = "private"
+                Type = "private",
+                Tags = $"{tag},{m_apiTag}"
             };
 
             RawUploadResult uploadResult1 = m_cloudinary.Upload(uploadParams, "raw");
@@ -2641,24 +2708,24 @@ namespace CloudinaryDotNet.Test
 
             RawUploadResult uploadResult2 = m_cloudinary.Upload(uploadParams, "raw");
 
-            string targetPublicId = string.Format("archive_id_{0}", UnixTimeNow());
-
-            ArchiveParams parameters = new ArchiveParams().PublicIds(new List<string> { uploadResult1.PublicId, uploadResult2.PublicId })
+            ArchiveParams parameters = new ArchiveParams()
+                                            .PublicIds(new List<string> { uploadResult1.PublicId, uploadResult2.PublicId })
                                             .ResourceType("raw")
                                             .Type("private")
-                                            .UseOriginalFilename(true);
+                                            .UseOriginalFilename(true)
+                                            .TargetTags(new List<string> { m_apiTag });
             ArchiveResult result = m_cloudinary.CreateArchive(parameters);
             Assert.AreEqual(2, result.FileCount);
         }
 
         private ArchiveParams UploadImageForArchiveAndPrepareParameters()
         {
-            string archiveTag = string.Format(string.Concat(m_test_tag, "_{0}"), UnixTimeNow());
-            string targetPublicId = string.Format(string.Concat("zip_archive_id_{0}_", m_suffix), UnixTimeNow());
+            string archiveTag = $"{m_apiTag}_{UnixTimeNow()}"; 
+            string targetPublicId = $"archive_id_{UnixTimeNow()}_{m_apiTest}";
 
-            UploadImageForTestArchive(archiveTag, 2.0, true);
+            UploadImageForTestArchive($"{archiveTag},{m_apiTag}", 2.0, true);
 
-            return new ArchiveParams().Tags(new List<string> { archiveTag, "non-existent-tag" }).TargetPublicId(targetPublicId);
+            return new ArchiveParams().Tags(new List<string> { archiveTag, "non-existent-tag" }).TargetTags(new List<string> { m_apiTag }).TargetPublicId(targetPublicId);
         }
 
         [Test]
@@ -2671,7 +2738,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(string.Format("{0}.zip", parameters.TargetPublicId()), result.PublicId);
             Assert.AreEqual(1, result.FileCount);
         }
-        
+
         /// <summary>
         /// Should create a zip archive
         /// </summary>
@@ -2684,13 +2751,13 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(string.Format("{0}.zip", parameters.TargetPublicId()), result.PublicId);
             Assert.AreEqual(1, result.FileCount);
         }
-
+        
         [Test]
         public void TestDownloadArchiveUrl()
         {
-            var archiveTag = string.Format(string.Concat(m_test_tag, "_{0}"), UnixTimeNow());
+            var archiveTag = string.Format(string.Concat(m_apiTag, "_{0}"), UnixTimeNow());
             var parameters = new ArchiveParams().Tags(new List<string> { archiveTag });
-            
+
             var urlStr = m_cloudinary.DownloadArchiveUrl(parameters);
             
             var dicQueryString = new Uri(urlStr).Query.Split('&').ToDictionary(
@@ -2704,19 +2771,19 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void SearchResourceByTag()
         {
-            string publicId = string.Format("TestForTagSearch_{0}", m_suffix);
-            string tagForSearch = string.Format("TestForTagSearch_{0}", m_test_tag);
+            string publicId = $"{m_apiTest}_TestForTagSearch";
+            string tagForSearch = $"{m_apiTag}_TestForTagSearch";
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = tagForSearch,
+                Tags = $"{tagForSearch},{m_apiTag}",
                 PublicId = publicId,
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
             Thread.Sleep(10000);
-            var resource = m_cloudinary.GetResource(new GetResourceParams(publicId) { });
+            var resource = m_cloudinary.GetResource(uploadResult.PublicId);
             
             Assert.NotNull(resource);
             Assert.AreEqual(resource.PublicId, publicId);
@@ -2729,38 +2796,37 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void SearchResourceByPublicId()
         {
-            string publicId = string.Concat(m_suffix, "_TestForTagSearch");
+            string publicId = $"{m_apiTest}_SearchResourceByPublicId";
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                
                 PublicId = publicId,
                 Overwrite = true,
-                Type = "private"
+                Type = "private",
+                Tags = m_apiTag
             };
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(uploadParams);
             Thread.Sleep(10000);
             var result = m_cloudinary.Search().Expression(string.Format("public_id: {0}", publicId)).Execute();
             Assert.True(result.TotalCount > 0);
-            DelResResult delResult = m_cloudinary.DeleteResources(new string[] { publicId });
         }
 
         [Test]
         public void TestSearchResourceByExpression()
         {
-            string publicId = string.Concat(m_suffix, "_TestForSearch");
+            string publicId = $"{m_apiTest}_TestSearchResourceByExpression";
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
-                Tags = m_test_tag,
                 PublicId = publicId, 
                 Overwrite = true,
-                Type = "private"
+                Type = "private",
+                Tags = m_apiTag
             };
 
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(uploadParams);
             Thread.Sleep(10000);
 
             SearchResult result = m_cloudinary.Search().Expression("resource_type: image").Execute();
@@ -2768,31 +2834,28 @@ namespace CloudinaryDotNet.Test
             
             result = m_cloudinary.Search().Expression(string.Format("public_id: {0}", publicId)).Execute();
             Assert.True(result.TotalCount > 0);
-
-            DelResResult delResult = m_cloudinary.DeleteResources(new string[] { publicId });
         }
 
         [Test]
         public void TestClearAllTags()
         {
+            var publicId = $"{m_apiTest}_TestClearAllTags";
+
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 Tags = "Tag1, Tag2, Tag3",
-                PublicId = "TestClearAllTags",
+                PublicId = publicId,
                 Overwrite = true,
-                Type = "upload",
-
+                Type = "upload"
             };
 
-            var uploadResult = m_cloudinary.Upload(uploadParams);
-
-            Assert.AreEqual(uploadResult.Tags.Length, 3);
+            m_cloudinary.Upload(uploadParams);
 
             List<string> pIds = new List<string>();
-            pIds.Add("TestClearAllTags");
+            pIds.Add(publicId);
 
-            TagResult tagResult = m_cloudinary.Tag(new TagParams()
+            m_cloudinary.Tag(new TagParams()
             {
                 Command = TagCommand.RemoveAll,
                 PublicIds = pIds,
@@ -2808,30 +2871,26 @@ namespace CloudinaryDotNet.Test
             });
 
             Assert.Null(getResResult.Tags);
-
-            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams()
-            {
-                PublicIds = pIds
-            });
-
         }
 
         [Test]
         public void TestAddContext()
         {
+            var publicId = $"{m_apiTest}_TestAddContext";
+
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath), 
-                PublicId = "TestContext",
+                PublicId = publicId,
                 Overwrite = true,
                 Type = "upload",
-
+                Tags = m_apiTag
             };
 
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(uploadParams);
 
             List<string> pIds = new List<string>();
-            pIds.Add("TestContext");
+            pIds.Add(publicId);
 
             ContextResult contextResult = m_cloudinary.Context(new ContextParams()
             {
@@ -2839,25 +2898,64 @@ namespace CloudinaryDotNet.Test
                 PublicIds = pIds,
                 Type = "upload",
                 Context = "TestContext"
-
             });
 
             Assert.True(contextResult.PublicIds.Length > 0);
 
-            var getResResult = m_cloudinary.GetResource(new GetResourceParams(pIds[0])
+            m_cloudinary.GetResource(new GetResourceParams(pIds[0])
             {
                 PublicId = pIds[0],
                 Type = "upload",
                 ResourceType = ResourceType.Image
             });
-
-
-            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams()
-            {
-                PublicIds = pIds
-            });
-
         }
 
+        [OneTimeTearDown]
+        public override void Cleanup()
+        {
+            base.Cleanup();
+            m_cloudinary.DeleteTransform(m_updateTransformation.ToString());
+
+            var transforms = new List<object>
+            {
+                m_explicitTransformation,
+                m_updateTransformation,
+                m_apiTest,
+                m_apiTag,
+                m_apiTest1,
+                m_apiTest2, 
+            };
+
+            transforms.ForEach(t => m_cloudinary.DeleteTransform(t.ToString()));
+
+            var presets = new[] {
+                $"{m_apiTest1}_upload_preset",
+                $"{m_apiTest2}_upload_preset",
+                $"{m_apiTest2}_upload_preset_unsigned",
+                $"{m_apiTest1}_api_test_upload_preset",
+                $"{m_apiTest2}_api_test_upload_preset"
+            };
+            foreach (var preset in presets)
+            {
+                m_cloudinary.DeleteUploadPreset(preset);
+            }
+
+            var resources = new Dictionary<string, string>
+            {
+                { $"{m_apiTest1}_SAMPLE_TEXT"         ,"text" },
+                { $"{m_apiTest2}_SAMPLE_TEXT"         ,"text" },
+                { $"{m_apiTest}_MULTI"                 ,"multi" },
+                { $"{m_apiTest}_MULTI,gif,h_512,w_512" ,"multi" },
+                { $"{m_apiTest}_MULTI,pdf,a_45"        ,"multi" },
+                { $"{m_apiTest1}_SPRITE"              ,"sprite" },
+                { $"{m_apiTest1}_SPRITE,h_512,w_512"  ,"sprite" },
+                { $"{m_apiTest1}_LOGO"                ,"sprite" },
+            };
+            var grouped = resources.GroupBy(gr => gr.Value).ToDictionary(r => r.Key, r => r.Select(t => t.Key).ToList());
+            foreach (var resource in grouped)
+            {
+                m_cloudinary.DeleteResources(new DelResParams() { Type = resource.Key, ResourceType = ResourceType.Image, PublicIds = resource.Value });
+            }
+        }
     }
 }
