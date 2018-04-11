@@ -1887,6 +1887,34 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestExplicitVideo()
+        {
+            var uploadParams = new VideoUploadParams()
+            {
+                File = new FileDescription(m_testVideoPath),
+                Tags = m_test_tag
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            var exp = new ExplicitParams(uploadResult.PublicId)
+            {
+                Type = "upload",
+                ResourceType = ResourceType.Video,
+                Context = new StringDictionary("context1=254")
+            };
+
+            var expResult = m_cloudinary.Explicit(exp);
+
+            Assert.IsNotNull(expResult);
+
+            var getResult = m_cloudinary.GetResource(new GetResourceParams(expResult.PublicId) { ResourceType = ResourceType.Video});
+
+            Assert.IsNotNull(getResult);
+            Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString());
+        }
+
+        [Test]
         public void TestSprite()
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
