@@ -760,6 +760,33 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(1, tagResult.PublicIds.Length);
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
         }
+        
+        /// <summary>
+        /// Test that we can add a tag for a video resource
+        /// </summary>
+        [Test]
+        public void TestVideoTagAdd()
+        {
+            var uploadParams = new VideoUploadParams()
+            {
+                File = new FileDescription(m_testVideoPath)
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+            var tagParams = new TagParams()
+            {
+                Command = TagCommand.Add,
+                Tag = m_test_tag,
+                ResourceType = ResourceType.Video
+            };
+
+            tagParams.PublicIds.Add(uploadResult.PublicId);
+
+            var tagResult = m_cloudinary.Tag(tagParams);
+
+            Assert.AreEqual(1, tagResult.PublicIds.Length);
+            Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
+        }
 
         [Test]
         public void TestTagMultiple()
@@ -841,7 +868,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(1, tagResult.PublicIds.Length);
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
         }
-
+        
         [Test]
         public void TestListResourceTypes()
         {

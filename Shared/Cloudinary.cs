@@ -238,9 +238,11 @@ namespace CloudinaryDotNet
         /// <returns>Results of tags management</returns>
         public TagResult Tag(TagParams parameters)
         {
-            string uri = m_api.ApiUrlImgUpV.Action(Constants.TAGS_MANGMENT).BuildUrl();
-
-
+            string uri = m_api.ApiUrlV
+                .ResourceType(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType))
+                .Action(Constants.TAGS_MANGMENT)
+                .BuildUrl();
+            
             return m_api.CallAndParse<TagResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
         }
 
