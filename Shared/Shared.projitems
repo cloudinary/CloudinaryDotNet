@@ -69,6 +69,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateResourceAccessModeParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateResourceAccessModeResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateResourcesAccessModeParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateResourcesAccessModeResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateTransformParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\UpdateTransformResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\UploadMappingParams.cs" />

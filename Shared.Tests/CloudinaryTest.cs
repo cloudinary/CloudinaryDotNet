@@ -623,23 +623,62 @@ namespace CloudinaryDotNet.Test
                 Tags = "TestForUpdateAccessMode",
                 PublicId = "TestForUpdateAccessMode",
                 Overwrite = true,
-                Type = "private"
+                Type = "upload",
+                AccessMode = "authenticated"
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            var update_result = m_cloudinary.UpdateResourceAccessModeByTag("TestForUpdateAccessMode", new UpdateResourceAccessModeParams()
-            {
-                ResourceType = ResourceType.Image,
-                Type = "upload",
-                AccessMode = "public"
-            });
+            var update_result = m_cloudinary.UpdateResourcesAccessModeByTag(
+                "TestForUpdateAccessMode", 
+                new UpdateResourcesAccessModeParams()
+                {
+                    ResourceType = ResourceType.Image,
+                    Type = "upload",
+                    AccessMode = "public"
+                }
+            );
 
-            //Assert.AreEqual(publish_result.Published.Count, 1);
+            Assert.IsNull(update_result.Error);
+            Assert.AreEqual(1, update_result.Updated.Count);
+            Assert.AreEqual(0, update_result.Failed.Count);
 
+            // TODO: Fix Cleanup!
             DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
                 "TestForUpdateAccessMode");
+        }
+        
+        [Test]
+        public void TestUpdateAccessModeByPrefix()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = "TestForUpdateAccessMode",
+                PublicId = "TestForUpdateAccessMode",
+                Overwrite = true,
+                Type = "upload",
+                AccessMode = "authenticated"
+            };
 
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            var update_result = m_cloudinary.UpdateResourcesAccessModeByPrefix(
+                "TestForUpdateAccessMo", 
+                new UpdateResourcesAccessModeParams()
+                {
+                    ResourceType = ResourceType.Image,
+                    Type = "upload",
+                    AccessMode = "public"
+                }
+            );
+
+            Assert.IsNull(update_result.Error);
+            Assert.AreEqual(1, update_result.Updated.Count);
+            Assert.AreEqual(0, update_result.Failed.Count);
+
+            // TODO: Fix Cleanup!
+            DelResResult delResult = m_cloudinary.DeleteResourcesByTag("TestForUpdateAccessMode");
         }
 
         [Test]
@@ -651,7 +690,8 @@ namespace CloudinaryDotNet.Test
                 Tags = "TestForUpdateAccessMode",
                 PublicId = "TestForUpdateAccessMode",
                 Overwrite = true,
-                Type = "private"
+                Type = "upload",
+                AccessMode = "authenticated"
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -659,7 +699,7 @@ namespace CloudinaryDotNet.Test
             List<string> ids = new List<string>();
             ids.Add("TestForUpdateAccessMode");
 
-            var update_result = m_cloudinary.UpdateResourceAccessModeByIds(new UpdateResourceAccessModeParams()
+            var update_result = m_cloudinary.UpdateResourcesAccessModeByIds(new UpdateResourcesAccessModeParams()
             {
                 ResourceType = ResourceType.Image,
                 Type = "upload",
@@ -667,11 +707,12 @@ namespace CloudinaryDotNet.Test
                 PublicIds = ids
             });
 
-            //Assert.AreEqual(publish_result.Published.Count, 1);
+            Assert.IsNull(update_result.Error);
+            Assert.AreEqual(1, update_result.Updated.Count);
+            Assert.AreEqual(0, update_result.Failed.Count);
 
-            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(
-                "TestForUpdateAccessMode");
-
+            // TODO: Fix Cleanup!
+            DelResResult delResult = m_cloudinary.DeleteResourcesByTag("TestForUpdateAccessMode");
         }
         
         /// <summary>

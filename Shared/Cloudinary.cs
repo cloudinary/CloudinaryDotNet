@@ -199,36 +199,70 @@ namespace CloudinaryDotNet
 
         }
 
-        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        private UpdateResourcesAccessModeResult UpdateResourcesAccessMode(string byKey, string value, UpdateResourcesAccessModeParams updateResourcesAccessModeParams)
         {
 
             Url url = m_api.ApiUrlV
                  .Add(Constants.RESOURCES_API_URL)
-                 .Add(updateResourceAccessModeParams.ResourceType.ToString().ToLower())
-                 .Add(updateResourceAccessModeParams.Type)
+                 .Add(updateResourcesAccessModeParams.ResourceType.ToString().ToLower())
+                 .Add(updateResourcesAccessModeParams.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
             {
-                updateResourceAccessModeParams.AddCustomParam(byKey, value);
+                updateResourcesAccessModeParams.AddCustomParam(byKey, value);
             }
 
-            return m_api.CallAndParse<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
+            return m_api.CallAndParse<UpdateResourcesAccessModeResult>(HttpMethod.POST, url.BuildUrl(), updateResourcesAccessModeParams.ToParamsDictionary(), null);
         }
-
+        
+        /// <summary>
+        /// Update resources access mode. Resources are selected by the tag
+        /// </summary>
+        /// <param name="tag">The tag by which to filter applicable resources</param>
+        /// <param name="updateResourcesAccessModeParams">Access mode parameters</param>
+        /// <returns>Result containing a list of updated/failed resources</returns>
+        public UpdateResourcesAccessModeResult UpdateResourcesAccessModeByTag(string tag, UpdateResourcesAccessModeParams updateResourcesAccessModeParams)
+        {
+            return UpdateResourcesAccessMode(Constants.TAG_PARAM_NAME, tag, updateResourcesAccessModeParams);
+        }
+        
+        [Obsolete("Use UpdateResourcesAccessModeByTag instead", false)]
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams updateResourceAccessModeParams)
         {
-            return UpdateResourceAccessMode(Constants.TAG_PARAM_NAME, tag, updateResourceAccessModeParams);
+            return UpdateResourcesAccessMode(Constants.TAG_PARAM_NAME, tag, (UpdateResourcesAccessModeParams)updateResourceAccessModeParams) as UpdateResourceAccessModeResult;
         }
-
+        
+        /// <summary>
+        /// Update resources access mode. Resources are selected by the prefix
+        /// </summary>
+        /// <param name="prefix">The prefix by which to filter applicable resources</param>
+        /// <param name="updateResourcesAccessModeParams">Access mode parameters</param>
+        /// <returns>Result containing a list of updated/failed resources</returns>
+        public UpdateResourcesAccessModeResult UpdateResourcesAccessModeByPrefix(string prefix, UpdateResourcesAccessModeParams updateResourcesAccessModeParams)
+        {
+            return UpdateResourcesAccessMode(Constants.PREFIX_PARAM_NAME, prefix, updateResourcesAccessModeParams);
+        }
+        
+        [Obsolete("Use UpdateResourcesAccessModeByPrefix instead", false)]
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(string prefix, UpdateResourceAccessModeParams updateResourceAccessModeParams)
         {
-            return UpdateResourceAccessMode(Constants.PREFIX_PARAM_NAME, prefix, updateResourceAccessModeParams);
+            return UpdateResourcesAccessMode(Constants.PREFIX_PARAM_NAME, prefix, (UpdateResourcesAccessModeParams)updateResourceAccessModeParams) as UpdateResourceAccessModeResult;
         }
-
+        /// <summary>
+        /// Update resources access mode. Resources are selected by the provided public IDs
+        /// </summary>
+        /// <param name="updateResourcesAccessModeParams">Access mode parameters</param>
+        /// <returns>Result containing a list of updated/failed resources</returns>
+        public UpdateResourcesAccessModeResult UpdateResourcesAccessModeByIds(UpdateResourcesAccessModeParams updateResourcesAccessModeParams)
+        {
+            return UpdateResourcesAccessMode(string.Empty, string.Empty, updateResourcesAccessModeParams);
+        }
+        
+        [Obsolete("Use UpdateResourcesAccessModeByIds instead", false)]
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams updateResourceAccessModeParams)
         {
-            return UpdateResourceAccessMode(string.Empty, string.Empty, updateResourceAccessModeParams);
+            return UpdateResourcesAccessMode(string.Empty, string.Empty, (UpdateResourcesAccessModeParams)updateResourceAccessModeParams) as UpdateResourceAccessModeResult;
         }
 
         /// <summary>
