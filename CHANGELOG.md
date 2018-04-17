@@ -1,4 +1,28 @@
 
+1.3.0 / 2018-04-17
+==================
+
+New functionality
+-----------------
+
+  * Add `ResourceType` to `ExplicitParams`
+  * Add `ToType` param to rename API
+  * Add `CreateZip` API (#88)
+  * Add `Async` parameter to `ExplicitParams`
+  * Add `Pages` to `ImageUploadResult`
+  * Add `StreamingProfile` `Transformation` parameter
+  * Add suffix support for private images.
+
+Other Changes
+-------------
+
+  * Fix `Tag` API for video and raw resource types (#90) fixes #82
+  * Add `FrameworkDisplayName`/`FrameworkDescription` to user agent
+  * Fix `startTime` of `AuthToken` (use UTC)
+  * Fix `UploadLarge` in .NET Core
+  * Share tests between .Net Core and .Net Framework (#91)
+  * Fix compilation warnings / notices
+
 1.2.0 / 2018-03-15
 ==================
 
