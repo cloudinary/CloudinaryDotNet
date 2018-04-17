@@ -17,6 +17,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of image uploading.</returns>
         public Task<RawUploadResult> UploadLargeRawAsync(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
         {
+            parameters.Check();
+
             return Task.Factory.StartNew((object o) =>
             {
                 var t = (Tuple<BasicRawUploadParams, int>)o;
@@ -32,6 +34,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of image uploading.</returns>
         public Task<RawUploadResult> UploadAsync(RawUploadParams parameters, string type = "auto")
         {
+            parameters.Check();
+
             return Task.Factory.StartNew((object o) =>
             {
                 var t = (Tuple<RawUploadParams, string>)o;
@@ -46,6 +50,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of image uploading.</returns>
         public Task<ImageUploadResult> UploadAsync(ImageUploadParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(Upload, parameters);
         }
 
@@ -56,6 +62,8 @@ namespace CloudinaryDotNet
         /// <param name="parameters">The parameters.</param>
         public Task<ExplicitResult> ExplicitAsync(ExplicitParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(Explicit, parameters);
         }
 
@@ -66,6 +74,8 @@ namespace CloudinaryDotNet
         /// <returns></returns>
         public Task<RenameResult> RenameAsync(RenameParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(Rename, parameters);
         }
 
@@ -76,6 +86,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of deletion.</returns>
         public Task<DeletionResult> DestroyAsync(DeletionParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(Destroy, parameters);
         }
 
@@ -86,6 +98,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of generating an image of a given textual string</returns>
         public Task<TextResult> TextAsync(TextParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(Text, parameters);
         }
 
@@ -96,6 +110,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of tags management</returns>
         public Task<TagResult> TagAsync(TagParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(Tag, parameters);
         }
 
@@ -105,51 +121,71 @@ namespace CloudinaryDotNet
         /// <param name="parameters">The parameters.</param>
         public Task<ListResourcesResult> ListResourcesAsync(ListResourcesParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(ListResources, parameters);
         }
 
         public Task<ListTagsResult> ListTagsAsync(ListTagsParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(ListTags, parameters);
         }
 
         public Task<ListTransformsResult> ListTransformationsAsync(ListTransformsParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(ListTransformations, parameters);
         }
 
         public Task<GetTransformResult> GetTransformAsync(GetTransformParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(GetTransform, parameters);
         }
 
         public Task<GetResourceResult> UpdateResourceAsync(UpdateParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(UpdateResource, parameters);
         }
 
         public Task<GetResourceResult> GetResourceAsync(GetResourceParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(GetResource, parameters);
         }
 
         public Task<DelDerivedResResult> DeleteDerivedResourcesAsync(DelDerivedResParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(DeleteDerivedResources, parameters);
         }
 
         public Task<DelResResult> DeleteResourcesAsync(DelResParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(DeleteResources, parameters);
         }
 
         public Task<UpdateTransformResult> UpdateTransformAsync(UpdateTransformParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(UpdateTransform, parameters);
         }
 
         public Task<TransformResult> CreateTransformAsync(CreateTransformParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(CreateTransform, parameters);
         }
 
@@ -160,6 +196,8 @@ namespace CloudinaryDotNet
         /// <returns>Result of sprite generation</returns>
         public Task<SpriteResult> MakeSpriteAsync(SpriteParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(MakeSprite, parameters);
         }
 
@@ -170,6 +208,8 @@ namespace CloudinaryDotNet
         /// <returns>Result of operation</returns>
         public Task<MultiResult> MultiAsync(MultiParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(Multi, parameters);
         }
 
@@ -180,6 +220,8 @@ namespace CloudinaryDotNet
         /// <returns>Result of operation</returns>
         public Task<ExplodeResult> ExplodeAsync(ExplodeParams parameters)
         {
+            parameters.Check();
+
             return CallAsync(Explode, parameters);
         }
 

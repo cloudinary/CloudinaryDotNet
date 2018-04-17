@@ -42,10 +42,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (DerivedResources == null && m_tranformations == null)
-                throw new ArgumentException("One from DerivedResources or Tranformations can't be null!");
-
-            if (DerivedResources != null && DerivedResources.Count == 0 || m_tranformations != null && m_tranformations.Count == 0)
+            if ((DerivedResources == null || DerivedResources.Count == 0) && (m_tranformations == null || m_tranformations.Count == 0))
                 throw new ArgumentException("At least one derived resource or transformation must be specified!");
 
             if (m_tranformations != null && (m_tranformations.Count > 0 && string.IsNullOrWhiteSpace(m_publicId)))

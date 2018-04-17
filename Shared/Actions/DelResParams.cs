@@ -88,8 +88,14 @@ namespace CloudinaryDotNet.Actions
                 throw new ArgumentException("Either PublicIds or Prefix or Tag must be specified!");
             }
 
-            if (!String.IsNullOrEmpty(Tag) && !String.IsNullOrEmpty(Type))
-                throw new ArgumentException("Type of resource cannot specified when tag is given!");
+            /*
+             * Even though Type and Tag parameters are mutually exclusive, we can't add this check now. 
+             * Otherwise we'll break backward compatibility as previous SDK versions work with both parameters set and customer's code can rely on it. 
+             * Uncomment the check below in the next major version of SDK
+             */
+
+            //if (!String.IsNullOrEmpty(Tag) && !String.IsNullOrEmpty(Type))
+            //    throw new ArgumentException("Type of resource cannot be specified when tag is given!");
         }
 
         /// <summary>
