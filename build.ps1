@@ -1,5 +1,7 @@
 param([switch]$sign)
 
+$ErrorActionPreference = "Stop"
+
 $baseOutputPath = "BuildResult"
 $netCorePath = "$baseOutputPath\NetCore"
 $netClassicPath = "$baseOutputPath\NetClassic"
@@ -10,6 +12,7 @@ $targetFrameworks = @{
  "\netstandard1.3" = $netCorePath;
  "\netcore" = $netCorePath;
 }
+
 
 function Get-MSBuild-Path {
 
@@ -39,17 +42,17 @@ function Get-MSBuild-Path {
 }
 
 function Build-Net-Classic($outPath) {
-
+    
   $msbuildExe = Get-MSBuild-Path
-  &$msbuildExe Cloudinary\Cloudinary.csproj /t:"Build" /p:"Configuration="Release";OutDir=$outPath;TargetFrameworkVersion="v4.0";Sign="$sign""
-
+  &$msbuildExe Cloudinary\Cloudinary.csproj /t:"Clean,Build" /p:"Configuration="Release";OutDir=$outPath;TargetFrameworkVersion="v4.0";Sign="$sign""
+  if (-not $?) { exit 1 }
 }
 
 
 function Build-Net-Core($outPath) {
 
-  dotnet build --configuration Release .\Core\CloudinaryDotNet.Core.csproj --output $outPath
-
+  dotnet build --no-incremental --configuration Release .\Core\CloudinaryDotNet.Core.csproj --output $outPath /p:"Sign="$sign""
+  if (-not $?) { exit 1 }
 }
 
 function Create-Package-Structure($basePath, $targets) {
@@ -63,14 +66,13 @@ function Create-Package-Structure($basePath, $targets) {
         $destPath = "{0}\*.*" -f  $target.Value
         New-Item -ItemType directory $targetPath
         Copy-Item -Path $destPath -Destination $targetPath -Recurse
-        
    }
 }
 
 function Create-Package {
   
   .nuget\NuGet.exe pack CloudinaryDotNet.nuspec
-
+  if (-not $?) { exit 1 }
 }
 
 Write-Host "Building cloudinary net classic library..."

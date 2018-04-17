@@ -28,6 +28,11 @@
     <DefineConstants>TRACE;DEBUG;NETSTANDARD1_0</DefineConstants>
     <OutputPath></OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Sign)' == 'true' ">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\CloudinaryDotNet.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>SIGN_ASSEMBLY</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Transforms\**" />
     <EmbeddedResource Remove="Transforms\**" />

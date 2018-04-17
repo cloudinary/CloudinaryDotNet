@@ -23,9 +23,6 @@
     <RootNamespace>CloudinaryDotNet</RootNamespace>
     <AssemblyName>CloudinaryDotNet</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v3.5' ">
-    <DefineConstants>NET35</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">
     <DefineConstants>NET40</DefineConstants>
   </PropertyGroup>
@@ -51,6 +48,7 @@
   <PropertyGroup Condition=" '$(Sign)' == 'true' ">
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\CloudinaryDotNet.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>SIGN_ASSEMBLY</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <!--<PackageReference Include="Newtonsoft.Json">-->

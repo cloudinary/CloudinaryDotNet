@@ -57,6 +57,11 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Sign)' == 'true' ">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\CloudinaryDotNet.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>SIGN_ASSEMBLY</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.2.1510.2205" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
