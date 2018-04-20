@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace CloudinaryDotNet.Test
@@ -10,6 +11,13 @@ namespace CloudinaryDotNet.Test
         public virtual void Initialize()
         {
             Initialize(Assembly.GetExecutingAssembly());
+        }
+
+        protected virtual string GetMethodTag(string memberName = "")
+        {
+            var stackTrace = new StackTrace();
+            memberName = stackTrace.GetFrame(1).GetMethod().Name;
+            return $"{m_apiTag}_{memberName}";
         }
 
         ///// <summary>

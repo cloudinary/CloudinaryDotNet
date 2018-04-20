@@ -11,9 +11,8 @@ namespace CloudinaryDotNet.Test
     [TestFixture]
     public partial class IntegrationTestBase
     {
-        protected const string m_config_place = "appsettings.json";
+        protected const string CONFIG_PLACE = "appsettings.json";
 
-        protected static string m_appveyor_job_id = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
         protected string m_suffix;
 
         protected string m_testImagePath;
@@ -36,10 +35,23 @@ namespace CloudinaryDotNet.Test
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
 
+        protected const string FILE_FORMAT_PDF = "pdf";
+        protected const string FILE_FORMAT_PNG = "png";
+        protected const string FILE_FORMAT_JPG = "jpg";
+        protected const string FILE_FORMAT_BMP = "bmp";
+        protected const string FILE_FORMAT_GIF = "gif";
+        protected const string FILE_FORMAT_MP4 = "mp4";
+        protected const string FILE_FORMAT_ICO = "ico";
+        protected const string FILE_FORMAT_ZIP = "zip";
+
         protected const int TEST_PDF_PAGES_COUNT = 3;
+        protected const int MAX_RESULTS = 500;                                                                         
 
         protected const string TOKEN_KEY = "00112233FF99";
         protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
+
+        protected const string TRANSFORM_W_512 = "w_512";
+        protected const string TRANSFORM_A_45 = "a_45";
 
         protected string m_apiTest;
         protected string m_apiTest1;
@@ -61,6 +73,10 @@ namespace CloudinaryDotNet.Test
         protected Account m_account;
         protected Cloudinary m_cloudinary;
 
+        protected Dictionary<ResourceParameterType, List<string>> m_publicIdsToClear;
+
+        protected enum ResourceParameterType { text, sprite, multi, facebook, upload}
+
         private void Initialize(Assembly assembly)
         {
             Settings settings = new Settings(Path.GetDirectoryName(assembly.Location));
@@ -75,12 +91,23 @@ namespace CloudinaryDotNet.Test
             SaveTestResources(assembly);
 
             InitializeUniqueNames(assembly.GetName().Name);
+
+            m_publicIdsToClear = new Dictionary<ResourceParameterType, List<string>>
+            {
+                { ResourceParameterType.multi, new List<string>() },
+                { ResourceParameterType.text, new List<string>() },
+                { ResourceParameterType.sprite, new List<string>() },
+                { ResourceParameterType.facebook, new List<string>() },
+                { ResourceParameterType.upload, new List<string>() }
+            };
+
         }
 
         protected void InitializeUniqueNames(string assemblyName)
         {
+            string appveyorJobId = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
             m_suffix = assemblyName.Replace('.', '_');
-            m_suffix += String.IsNullOrEmpty(m_appveyor_job_id) ? new Random().Next(100000, 999999).ToString() : m_appveyor_job_id;
+            m_suffix += String.IsNullOrEmpty(appveyorJobId) ? new Random().Next(100000, 999999).ToString() : appveyorJobId;
             m_apiTest = m_test_prefix + m_suffix;
             m_apiTest1 = m_apiTest + "_1";
             m_apiTest2 = m_apiTest + "_2";
@@ -155,13 +182,13 @@ namespace CloudinaryDotNet.Test
             Account account = new Account(m_cloudName, m_apiKey, m_apiSecret);
 
             if (String.IsNullOrEmpty(account.Cloud))
-                Console.WriteLine($"Cloud name must be specified in {m_config_place}!");
+                Console.WriteLine($"Cloud name must be specified in {CONFIG_PLACE}!");
 
             if (String.IsNullOrEmpty(account.ApiKey))
-                Console.WriteLine($"Cloudinary API key must be specified in {m_config_place}!");
+                Console.WriteLine($"Cloudinary API key must be specified in {CONFIG_PLACE}!");
 
             if (String.IsNullOrEmpty(account.ApiSecret))
-                Console.WriteLine($"Cloudinary API secret must be specified in {m_config_place}!");
+                Console.WriteLine($"Cloudinary API secret must be specified in {CONFIG_PLACE}!");
 
             Assert.IsFalse(String.IsNullOrEmpty(account.Cloud));
             Assert.IsFalse(String.IsNullOrEmpty(account.ApiKey));
@@ -199,16 +226,47 @@ namespace CloudinaryDotNet.Test
             return resources;
         }
 
+        protected string GetUniquePublicId()
+        {
+            return GetUniquePublicId(ResourceParameterType.upload);
+        }
+
+        protected virtual string GetUniquePublicId(ResourceParameterType actionType, string suffix="")
+        {
+            var publicId = $"{m_apiTest}_{m_publicIdsToClear[actionType].Count + 1}{suffix}";
+
+            m_publicIdsToClear[actionType].Add(publicId);
+
+            return publicId;
+        }
+
+        protected void AddCreatedPublicId(ResourceParameterType actionType, string publicId)
+        {
+            if (!string.IsNullOrEmpty(publicId))
+                m_publicIdsToClear[actionType].Add(publicId);
+        }
+
         [OneTimeTearDown]
         public virtual void Cleanup()
         {
             m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Image });
             m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Raw });
             m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Video });
-            m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Raw, Type = "private" });
+            m_cloudinary.DeleteResources(
+                new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Raw, Type = "private" });
             m_cloudinary.DeleteResourcesByPrefix(m_folderPrefix);
             m_cloudinary.DeleteResourcesByPrefix(m_apiTest);
-            m_cloudinary.DeleteResources(new DelResParams() { PublicIds = { m_apiTest, m_apiTest1, m_apiTest2 }, Prefix = m_test_prefix });
+            m_cloudinary.DeleteResourcesByPrefix(m_apiTag);
+
+            foreach (var item in m_publicIdsToClear)
+            {
+                m_cloudinary.DeleteResources(new DelResParams()
+                {
+                    Type = item.Key.ToString(),
+                    PublicIds = item.Value,
+                    ResourceType = ResourceType.Image
+                });
+            }
         }
     }
 }
