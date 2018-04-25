@@ -9,14 +9,6 @@ namespace CloudinaryDotNet.Test
 {
     class AsyncMethodsTest : IntegrationTestBase
     {
-        private string m_transformationName;
-
-        public override void Initialize()
-        {
-            base.Initialize();
-            m_transformationName = $"{m_apiTest2}_ASYNC";
-        }
-
         [Test]
         public void TestUploadLocalImageAsync()
         {
@@ -51,7 +43,7 @@ namespace CloudinaryDotNet.Test
             {
                 Background = "red",
                 FontStyle = "italic",
-                PublicId = GetUniquePublicId(ResourceParameterType.text)                 
+                PublicId = GetUniquePublicId(StorageType.text)
             };
 
             TextResult textResult = m_cloudinary.TextAsync(tParams).Result;
@@ -130,7 +122,7 @@ namespace CloudinaryDotNet.Test
         {
             // should allow deleting resources
             var publicId = GetUniquePublicId();
-            var rndString = GetUniquePublicId();
+            var nonExistingPublicId = GetUniquePublicId();
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
@@ -141,14 +133,14 @@ namespace CloudinaryDotNet.Test
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);                                           
+            GetResourceResult resource = m_cloudinary.GetResource(publicId);
 
             Assert.IsNotNull(resource);
             Assert.AreEqual(publicId, resource.PublicId);
 
             List<string> pubIds = new List<string>
             {
-                rndString,
+                nonExistingPublicId,
                 publicId
             };
 
@@ -159,19 +151,19 @@ namespace CloudinaryDotNet.Test
 
             DelResResult delResult = m_cloudinary.DeleteResourcesAsync(delResParams).Result;
 
-            Assert.AreEqual("not_found", delResult.Deleted[rndString]);
+            Assert.AreEqual("not_found", delResult.Deleted[nonExistingPublicId]);
             Assert.AreEqual("deleted", delResult.Deleted[publicId]);
 
             resource = m_cloudinary.GetResource(publicId);
 
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
         }
-        
+
         [Test]
         public void TestListTagsAsync()
         {
             // should allow listing tags
-            var testTag = $"{m_apiTag}_TestListTagsAsync";
+            var testTag = GetMethodTag();
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
@@ -207,7 +199,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Transformations);
-            Assert.NotNull(result.Transformations.FirstOrDefault(t => t.Name == m_simpleTransformationName));
+            Assert.NotNull(result.Transformations.FirstOrDefault(t => t.Name == m_simpleTransformationAsString));
         }
 
         [Test]
@@ -226,7 +218,7 @@ namespace CloudinaryDotNet.Test
 
             var result = m_cloudinary.GetTransformAsync(new GetTransformParams
             {
-                Transformation = m_resizeTransformationName
+                Transformation = m_resizeTransformationAsString
             }).Result;
 
             Assert.IsNotNull(result);
@@ -248,13 +240,13 @@ namespace CloudinaryDotNet.Test
 
             var updateParams = new UpdateTransformParams()
             {
-                Transformation = m_simpleTransformationName,
+                Transformation = m_simpleTransformationAsString,
                 Strict = true
             };
 
             UpdateTransformResult result = m_cloudinary.UpdateTransformAsync(updateParams).Result;
 
-            GetTransformResult getResult = m_cloudinary.GetTransform(m_simpleTransformationName);
+            GetTransformResult getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual(true, getResult.Strict);
@@ -262,7 +254,7 @@ namespace CloudinaryDotNet.Test
             updateParams.Strict = false;
             m_cloudinary.UpdateTransform(updateParams);
 
-            getResult = m_cloudinary.GetTransform(m_simpleTransformationName);
+            getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual(false, getResult.Strict);
@@ -275,7 +267,7 @@ namespace CloudinaryDotNet.Test
 
             CreateTransformParams create = new CreateTransformParams()
             {
-                Name = m_transformationName,
+                Name = GetUniqueTransformationName(),
                 Transform = m_simpleTransformation
             };
 
@@ -294,14 +286,14 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(true, getResult.Strict);
             Assert.AreEqual(false, getResult.Used);
             Assert.AreEqual(1, getResult.Info.Length);
-            Assert.AreEqual(m_simpleTransformationName, new Transformation(getResult.Info[0]).Generate());
+            Assert.AreEqual(m_simpleTransformationAsString, new Transformation(getResult.Info[0]).Generate());
         }
 
         [Test]
         public void TestExplicitAsync()
         {
             var cloudinary = "cloudinary";
-            var type = ResourceParameterType.facebook.ToString();
+            var type = StorageType.facebook.ToString();
 
             ExplicitParams exp = new ExplicitParams(cloudinary)
             {
@@ -311,7 +303,7 @@ namespace CloudinaryDotNet.Test
             };
 
             ExplicitResult expResult = m_cloudinary.ExplicitAsync(exp).Result;
-            AddCreatedPublicId(ResourceParameterType.facebook, expResult.PublicId);
+            AddCreatedPublicId(StorageType.facebook, expResult.PublicId);
 
             string url = new Url(m_account.Cloud).ResourceType(Api.GetCloudinaryParam(ResourceType.Image)).Add(type).
                 Transform(m_simpleTransformation).
@@ -323,11 +315,11 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestSpriteAsync()
         {
-            var publicId1 = GetUniquePublicId(ResourceParameterType.sprite);
-            var publicId2 = GetUniquePublicId(ResourceParameterType.sprite);
-            var publicId3 = GetUniquePublicId(ResourceParameterType.sprite);
+            var publicId1 = GetUniquePublicId(StorageType.sprite);
+            var publicId2 = GetUniquePublicId(StorageType.sprite);
+            var publicId3 = GetUniquePublicId(StorageType.sprite);
 
-            var spriteTag = $"{GetMethodTag()}_ASYNC";
+            var spriteTag = GetMethodTag();
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
@@ -348,7 +340,7 @@ namespace CloudinaryDotNet.Test
 
             SpriteParams sprite = new SpriteParams(spriteTag);
             SpriteResult result = m_cloudinary.MakeSpriteAsync(sprite).Result;
-            AddCreatedPublicId(ResourceParameterType.sprite, result.PublicId);
+            AddCreatedPublicId(StorageType.sprite, result.PublicId);
 
             Assert.NotNull(result);
             Assert.NotNull(result.ImageInfos);
@@ -385,35 +377,35 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestMultiTransformationAsync()
         {
-            var multiTag = $"{GetMethodTag()}_ASYNC";
+            var multiTag = GetMethodTag();
 
             ImageUploadParams uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 Tags = $"{multiTag},{m_apiTag}",
-                PublicId = GetUniquePublicId(ResourceParameterType.multi)
+                PublicId = GetUniquePublicId(StorageType.multi)
             };
             m_cloudinary.Upload(uploadParams);
 
-            uploadParams.PublicId = GetUniquePublicId(ResourceParameterType.multi);
+            uploadParams.PublicId = GetUniquePublicId(StorageType.multi);
             uploadParams.Transformation = m_simpleTransformation;
             m_cloudinary.Upload(uploadParams);
 
             MultiParams multi = new MultiParams(multiTag);
-            
+
             MultiResult result = m_cloudinary.MultiAsync(multi).Result;
-            AddCreatedPublicId(ResourceParameterType.multi, result.PublicId);
+            AddCreatedPublicId(StorageType.multi, result.PublicId);
             Assert.True(result.Uri.AbsoluteUri.EndsWith($".{FILE_FORMAT_GIF}"));
 
             multi.Transformation = m_resizeTransformation;
             result = m_cloudinary.MultiAsync(multi).Result;
-            AddCreatedPublicId(ResourceParameterType.multi, result.PublicId);
+            AddCreatedPublicId(StorageType.multi, result.PublicId);
             Assert.True(result.Uri.AbsoluteUri.Contains(TRANSFORM_W_512));
 
             multi.Transformation = m_simpleTransformationAngle;
             multi.Format = FILE_FORMAT_PDF;
             result = m_cloudinary.MultiAsync(multi).Result;
-            AddCreatedPublicId(ResourceParameterType.multi, result.PublicId);
+            AddCreatedPublicId(StorageType.multi, result.PublicId);
             Assert.True(result.Uri.AbsoluteUri.Contains(TRANSFORM_A_45));
             Assert.True(result.Uri.AbsoluteUri.EndsWith($".{FILE_FORMAT_PDF}"));
         }
@@ -426,7 +418,7 @@ namespace CloudinaryDotNet.Test
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testPdfPath),
-                PublicId = publicId, 
+                PublicId = publicId,
                 Tags = m_apiTag
             };
             m_cloudinary.Upload(uploadParams);
@@ -467,16 +459,14 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
         }
 
-        protected override string GetUniquePublicId(ResourceParameterType actionType, string suffix = "")
+        protected override string GetUniquePublicId(StorageType storageType, string suffix = "")
         {
-            return base.GetUniquePublicId(actionType, "_async");
+            return base.GetUniquePublicId(storageType, "ASYNC");
         }
 
-        [OneTimeTearDown]
-        public override void Cleanup()
+        protected override string GetUniqueTransformationName(string suffix = "")
         {
-            base.Cleanup();
-            m_cloudinary.DeleteTransform(m_transformationName);
+            return base.GetUniqueTransformationName("ASYNC");
         }
     }
 }
