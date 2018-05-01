@@ -19,7 +19,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Validate object model
         /// </summary>
-        public abstract void Check();
+        public virtual void Check() { }
 
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
@@ -27,6 +27,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns></returns>
         public virtual SortedDictionary<string, object> ToParamsDictionary()
         {
+            Check();
             return new SortedDictionary<string, object>(CustomParams);
         }
 

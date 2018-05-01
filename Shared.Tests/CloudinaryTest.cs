@@ -1238,6 +1238,26 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestEagerTransformationList()
+        {
+            List<Transformation> list = new List<Transformation>(){
+                new EagerTransformation().SetFormat("jpg").Crop("scale").Width(2.0),
+                new EagerTransformation(new Transformation().Width(10),new Transformation().Angle(10)),
+                new Transformation().Width(20).Height(20)
+            };
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = list
+            };
+
+            SortedDictionary<string, object> dict = uploadParams.ToParamsDictionary();
+
+            Assert.AreEqual("c_scale,w_2.0/jpg|w_10/a_10|h_20,w_20", dict["eager"]);
+        }
+
+        [Test]
         public void TestRename()
         {
             var toPublicId = GetUniquePublicId();
