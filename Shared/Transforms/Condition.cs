@@ -1,43 +1,13 @@
-﻿  using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
 {
-    public class Condition
+    public class Condition : BaseExpression<Condition>
     {
-        public static Dictionary<string, string> Operators = new Dictionary<string, string>()
-        {
-            { "=", "eq" },
-            { "!=", "ne" },
-            { "<", "lt" },
-            { ">", "gt" },
-            { "<=", "lte" },
-            { ">=", "gte" },
-            { "&&", "and" },
-            { "||", "or" }
-        };
 
-        public static Dictionary<string, string> Parameters = new Dictionary<string, string>()
-        {
-            { "width", "w" },
-            { "height", "h" },
-            { "initial_width", "iw" },
-            { "initial_height", "ih" },
-            { "aspect_ratio", "ar" },
-            { "aspectRatio", "ar" },
-            { "page_count", "pc" },
-            { "pageCount", "pc" },
-            { "face_count", "fc" },
-            { "faceCount", "fc" }
-        };
-
-        protected List<string> predicateList = null;
-
-        public Condition()
-        {
-            predicateList = new List<string>();
-        }
+        public Condition() : base() { }
 
         /// <summary>
         /// Create a Condition object. The condition string will be translated to a serialized condition.
@@ -46,85 +16,20 @@ namespace CloudinaryDotNet
         public Condition(string condition) : this()
         {
             if (!string.IsNullOrEmpty(condition))
-            {
-                predicateList.Add(Literal(condition));
-            }
+                m_expressions.Add(Normalize(condition));
         }
 
-        /// <summary>
-        /// Convert incoming condition string into Literal in the URL format.
-        /// e.g. "width > 0" => "w_lt_0"
-        /// </summary>
-        /// <param name="condition">Condition in string format.</param>
-        private string Literal(string condition)
-        {
-            condition = Regex.Replace(condition, "[ _]+", "_");
-            string pattern = string.Format("({0}|[=<>&|!]+)", string.Join("|", Parameters.Keys.ToArray()));
-            return Regex.Replace(condition, pattern, m => GetOperatorReplacement(m.Value));
-        }
-
-        private string GetOperatorReplacement(string value)
-        {
-            if (Operators.ContainsKey(value))
-            {
-                return Operators[value];
-            }
-            else if (Parameters.ContainsKey(value))
-            {
-                return Parameters[value];
-            }
-            else
-            {
-                return value;
-            }
-        }
-
-        /// <summary>
-        /// Parent transformation this condition belongs to.
-        /// </summary>
-        public Transformation Parent { get; private set; }
-
-        public Condition SetParent(Transformation parent)
-        {
-            Parent = parent;
-            return this;
-        }
-
-        /// <summary>
-        /// Serialize a list of predicates.
-        /// </summary>
-        public string Serialize()
-        {
-            return string.Join("_", predicateList.ToArray());
-        }
-
-        public override string ToString()
-        {
-            return Serialize();
-        }
 
         /// <summary>
         /// Create a predicate for binary operators
         /// </summary>
-        protected Condition Predicate(string name, string @operator, string value)
+        protected Condition Predicate(string name, string @operator, object value)
         {
             if (Operators.ContainsKey(@operator))
             {
                 @operator = Operators[@operator];
             }
-            predicateList.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
-            return this;
-        }
-
-        public Condition And()
-        {
-            predicateList.Add("and");
-            return this;
-        }
-
-        public Condition Or()
-        {
-            predicateList.Add("or");
+            m_expressions.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
             return this;
         }
 
@@ -140,44 +45,37 @@ namespace CloudinaryDotNet
 
         public Condition Width(string @operator, object value)
         {
-            predicateList.Add(string.Format("w_{0}_{1}", @operator, value));
-            return this;
+            return Predicate("w", @operator, value);
         }
 
         public Condition InitialWidth(string @operator, object value)
         {
-            predicateList.Add(string.Format("iw_{0}_{1}", @operator, value));
-            return this;
+            return Predicate("iw", @operator, value);
         }
 
         public Condition Height(string @operator, object value)
         {
-            predicateList.Add(string.Format("h_{0}_{1}", @operator, value));
-            return this;
+            return Predicate("h", @operator, value);
         }
 
         public Condition InitialHeight(string @operator, object value)
         {
-            predicateList.Add(string.Format("ih_{0}_{1}", @operator, value));
-            return this;
+            return Predicate("ih", @operator, value);
         }
 
         public Condition AspectRatio(string @operator, string value)
         {
-            predicateList.Add(string.Format("ar_{0}_{1}", @operator, value));
-            return this;
+            return Predicate("ar", @operator, value);
         }
 
         public Condition FaceCount(string @operator, object value)
         {
-            predicateList.Add(string.Format("fc_{0}_{1}", @operator, value));
-            return this;
+            return Predicate("fc", @operator, value);
         }
 
         public Condition PageCount(string @operator, object value)
         {
-            predicateList.Add(string.Format("pc_{0}_{1}", @operator, value));
-            return this;
+            return Predicate("pc", @operator, value);
         }
     }
 }

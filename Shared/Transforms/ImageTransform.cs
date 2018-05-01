@@ -173,6 +173,16 @@ namespace CloudinaryDotNet
             return Add("if", condition);
         }
 
+        /// <summary>
+        /// Define a conditional transformation
+        /// </summary>
+        /// <param name="expression">An expression</param>
+        /// <returns>The transformation for chaining</returns>
+        public Transformation IfCondition(BaseExpression expression)
+        {
+            return IfCondition(expression.ToString());
+        }
+
         public Transformation IfElse()
         {
             Chain();
