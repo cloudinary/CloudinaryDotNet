@@ -63,13 +63,13 @@ namespace CloudinaryDotNet.Test
         protected static string m_folderPrefix;
         protected string m_apiTag;
 
-        protected const string m_simpleTransformationAsString = "c_scale,w_2.0";
-        protected readonly Transformation m_simpleTransformation = new Transformation().Crop("scale").Width(2.0);
+        protected const string m_simpleTransformationAsString = "c_scale,w_0.5";
+        protected readonly Transformation m_simpleTransformation = new Transformation().Crop("scale").Width(0.5);
 
         protected const int m_resizeTransformationWidth = 512;
         protected const int m_resizeTransformationHeight = 512;
 
-        protected const string m_resizeTransformationAsString = "w_512,h_512";
+        protected const string m_resizeTransformationAsString = "h_512,w_512";
         protected readonly Transformation m_resizeTransformation = new Transformation().Width(m_resizeTransformationWidth).Height(m_resizeTransformationHeight);
 
         protected string m_updateTransformationAsString;

@@ -2373,7 +2373,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(creationResult.Name, preset.Name);
             Assert.AreEqual(true, preset.Unsigned);
             Assert.AreEqual(folder, preset.Settings.Folder);
-            Assert.AreEqual("2", preset.Settings.Transformation[0]["width"].ToString());
+            Assert.AreEqual("0.5", preset.Settings.Transformation[0]["width"].ToString());
             Assert.AreEqual("scale", preset.Settings.Transformation[0]["crop"].ToString());
         }
 

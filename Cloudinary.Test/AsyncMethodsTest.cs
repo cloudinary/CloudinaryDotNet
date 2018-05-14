@@ -195,7 +195,7 @@ namespace CloudinaryDotNet.Test
 
             var uploadResult = m_cloudinary.UploadAsync(uploadParams).Result;
 
-            ListTransformsResult result = m_cloudinary.ListTransformationsAsync(new ListTransformsParams()).Result;
+            ListTransformsResult result = m_cloudinary.ListTransformationsAsync(new ListTransformsParams() { MaxResults = MAX_RESULTS }).Result;
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Transformations);
