@@ -170,8 +170,13 @@ namespace CloudinaryDotNet.Test
         /// </summary>
         /// <param name="id">The ID of the resource</param>
         /// <returns>The upload results</returns>
-        protected ImageUploadResult UploadTestResource(String id)
+        protected ImageUploadResult UploadTestResource(String id = null)
         {
+            if (String.IsNullOrEmpty(id))
+            {
+                id = GetUniquePublicId();
+            }
+
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),

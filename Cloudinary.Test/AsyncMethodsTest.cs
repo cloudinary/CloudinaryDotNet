@@ -163,22 +163,11 @@ namespace CloudinaryDotNet.Test
         public void TestListTagsAsync()
         {
             // should allow listing tags
-            var testTag = GetMethodTag();
+            UploadTestResource();
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = $"{m_apiTag},{testTag}"
-            };
+            ListTagsResult result = m_cloudinary.ListTagsAsync(new ListTagsParams()).Result;
 
-            var res = m_cloudinary.UploadAsync(uploadParams).Result;
-
-            ListTagsResult result = m_cloudinary.ListTagsAsync(new ListTagsParams()
-            {
-                MaxResults = MAX_RESULTS
-            }).Result;
-
-            Assert.IsTrue(result.Tags.Contains(testTag));
+            Assert.Greater(result.Tags.Length, 0);
         }
 
         [Test]
