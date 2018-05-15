@@ -13,5 +13,10 @@ namespace CloudinaryDotNet.Test
             Initialize(typeof(IntegrationTestBase).GetTypeInfo().Assembly);
         }
 
+        protected virtual string GetMethodTag([System.Runtime.CompilerServices.CallerMemberName]string memberName = "")
+        {
+            return $"{m_apiTag}_{memberName}";
+        }
+
     }
 }
