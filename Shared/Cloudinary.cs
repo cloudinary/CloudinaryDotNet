@@ -558,10 +558,9 @@ namespace CloudinaryDotNet
             while (!parameters.File.EOF)
             {
                 long currentBufferSize = Math.Min(bufferSize, fileLength - parameters.File.BytesSent);
-                var apiParams = parameters.ToParamsDictionary();
                 string range = string.Format("bytes {0}-{1}/{2}", parameters.File.BytesSent, parameters.File.BytesSent + currentBufferSize - 1, fileLength);
                 extraHeaders["Content-Range"] = range;
-                result = m_api.CallAndParse<T>(HttpMethod.POST, uri, apiParams, parameters.File, extraHeaders);
+                result = m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File, extraHeaders);
 
                 if (result.StatusCode != HttpStatusCode.OK)
                     throw new Exception(String.Format(
@@ -1010,18 +1009,11 @@ namespace CloudinaryDotNet
         /// </summary>
         private UploadMappingResults CallUploadMappingsAPI(HttpMethod httpMethod, UploadMappingParams parameters)
         {
-            string url;
-            SortedDictionary<string, object> body = null;
-            if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-            {
-                url = GetUploadMappingUrl();
-                body = parameters.ToParamsDictionary();
-            }
-            else
-            {
-                url = GetUploadMappingUrl(parameters);
-            }
-            return m_api.CallAndParse<UploadMappingResults>(httpMethod, url, body, null);
+            string url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
+                ? GetUploadMappingUrl()
+                : GetUploadMappingUrl(parameters);
+
+            return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
         }
 
         /// <summary>
