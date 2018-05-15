@@ -420,7 +420,6 @@ namespace CloudinaryDotNet.Test
                 EagerTransforms = new List<Transformation>() { m_simpleTransformation },
                 EagerAsync = true,
                 UseFilename = true,
-                NotificationUrl = "http://www.google.com",
                 Tags = m_apiTag
             };
 
@@ -439,7 +438,6 @@ namespace CloudinaryDotNet.Test
                 EagerAsync = true,
                 UseFilename = true,
                 UniqueFilename = false,
-                NotificationUrl = "http://www.google.com",
                 Tags = m_apiTag
             };
 
