@@ -11,10 +11,10 @@ namespace CloudinaryDotNet.Actions
     public class TagParams : BaseParams
     {
 
-		public TagParams()
-		{
-			ResourceType = ResourceType.Image;
-		}
+        public TagParams()
+        {
+            ResourceType = ResourceType.Image;
+        }
 
         List<string> m_publicIds = new List<string>();
 
@@ -32,10 +32,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Tag { get; set; }
 
-		/// <summary>
-		/// The type of resource to tag
-		/// </summary>
-		public ResourceType ResourceType { get; set; }
+        /// <summary>
+        /// The type of resource to tag
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
 
         /// <summary>
         /// Type

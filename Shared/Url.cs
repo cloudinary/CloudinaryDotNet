@@ -1,10 +1,9 @@
-﻿using System;
+﻿using CloudinaryDotNet.HtmlTags;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 #if NET40
 using System.Web;
@@ -14,7 +13,6 @@ namespace CloudinaryDotNet
 {
     public class Url : Core.ICloneable
     {
-        protected const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         protected static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };
         protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
 
@@ -270,6 +268,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="keyValuePairs">Array of strings in form of "key=value".</param>
+        [Obsolete("Please use HtmlTags.ImageTag instead")]
         public string BuildImageTag(string source, params string[] keyValuePairs)
         {
             return BuildImageTag(source, new StringDictionary(keyValuePairs));
@@ -280,48 +279,29 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="dict">Additional parameters.</param>
+        [Obsolete("Please use HtmlTags.ImageTag instead")]
         public string BuildImageTag(string source, StringDictionary dict = null)
         {
+            m_source = source;
+
             if (dict == null)
+            {
                 dict = new StringDictionary();
-
-            string url = BuildUrl(source);
-
-            if (!string.IsNullOrEmpty(Transformation.HtmlWidth))
-                dict.Add("width", Transformation.HtmlWidth);
-
-            if (!string.IsNullOrEmpty(Transformation.HtmlHeight))
-                dict.Add("height", Transformation.HtmlHeight);
-
-            if (Transformation.HiDpi || Transformation.IsResponsive)
-            {
-                var extraClass = Transformation.IsResponsive ? "cld-responsive" : "cld-hidpi";
-                var userClass = dict["class"];
-                dict["class"] = userClass == null ? extraClass : userClass + " " + extraClass;
-                dict.Add("data-src", url);
-                var responsivePlaceholder = dict.Remove("responsive_placeholder");
-                if (responsivePlaceholder == "blank")
-                    responsivePlaceholder = CL_BLANK;
-                url = responsivePlaceholder;
             }
 
-            var sb = new StringBuilder();
-            sb.Append("<img");
-            if (!string.IsNullOrEmpty(url))
-                sb.Append(" src=\"").Append(url).Append("\"");
-
-            foreach (var item in dict)
+            var tag = new ImageTag(this);
+            var responsivePlaceholder = dict.Remove("responsive_placeholder");
+            if (responsivePlaceholder != null)
             {
-#if NET40
-                sb.Append(" ").Append(item.Key).Append("=\"").Append(HttpUtility.HtmlAttributeEncode(item.Value)).Append("\"");
-#else
-                sb.Append(" ").Append(item.Key).Append("=\"").Append(System.Net.WebUtility.HtmlEncode(item.Value)).Append("\"");
-#endif
+                tag.Option("responsive_placeholder", responsivePlaceholder);
             }
 
-            sb.Append("/>");
+            foreach (var attr in dict)
+            {
+                tag.Attr(attr);
+            }
 
-            return sb.ToString();
+            return tag.ToString();
         }
 
         #endregion
@@ -474,12 +454,7 @@ namespace CloudinaryDotNet
 
         #region BuildUrl
 
-        public string BuildUrl()
-        {
-            return BuildUrl(null);
-        }
-
-        public string BuildUrl(string source)
+        public string BuildUrl(string source = null)
         {
             if (String.IsNullOrEmpty(m_cloudName))
                 throw new ArgumentException("cloudName must be specified!");
@@ -546,7 +521,7 @@ namespace CloudinaryDotNet
                 signedPart = m_signProvider.SignUriPart(signedPart);
                 urlParts.Add(signedPart);
             }
-            
+
             urlParts.Add(transformationStr);
             urlParts.Add(version);
             urlParts.Add(src.Source);
@@ -558,7 +533,7 @@ namespace CloudinaryDotNet
             if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
             {
                 AuthToken token = m_AuthToken != null ? m_AuthToken : (CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken : null);
-                    
+
                 if (token != null && token != CloudinaryDotNet.AuthToken.NULL_AUTH_TOKEN)
                 {
                     string tokenStr = token.Generate();

@@ -19,6 +19,18 @@ namespace CloudinaryDotNet
         public StringDictionary() { }
 
         /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="other"></param>
+        public StringDictionary(StringDictionary other)
+        {
+            foreach (var item in other)
+            {
+                m_list.Add(item);
+            }
+        }
+
+        /// <summary>
         /// Constructs a new instance from an array of strings.
         /// </summary>
         /// <param name="keyValuePairs">Array of strings in form of "key=value". A string could also contain only a key ("key"). Only the first '=' character is used to split string.</param>
@@ -50,6 +62,15 @@ namespace CloudinaryDotNet
         {
             var newItem = new KeyValuePair<string, string>(key, value);
             m_list.Add(newItem);
+        }
+
+        /// <summary>
+        /// Insert a new par of key and value at index
+        /// </summary>
+        public void Insert(int index, string key, string value)
+        {
+            var newItem = new KeyValuePair<string, string>(key, value);
+            m_list.Insert(index, newItem);
         }
 
         /// <summary>
@@ -254,6 +275,16 @@ namespace CloudinaryDotNet
         public void Add(KeyValuePair<string, string> item)
         {
             m_list.Add(item);
+        }
+
+        /// <summary>
+        /// Insert an item to the <see cref="T:System.Collections.Generic.ICollection`1" />.
+        /// </summary>
+        /// <param name="index">The zero-based index at which item should be inserted.</param>
+        /// <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
+        public void Insert(int index, KeyValuePair<string, string> item)
+        {
+            m_list.Insert(index, item);
         }
 
         /// <summary>

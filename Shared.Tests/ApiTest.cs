@@ -158,14 +158,6 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestDifferentHtmlDimensions()
-        {
-            var trans = new Transformation().Width(100).Height(101).SetHtmlWidth(50).SetHtmlHeight(51);
-            var tag = m_api.UrlImgUp.Transform(trans).BuildImageTag("test").ToString();
-            Assert.AreEqual("<img src=\"http://res.cloudinary.com/testcloud/image/upload/h_101,w_100/test\" width=\"50\" height=\"51\"/>", tag);
-        }
-
-        [Test]
         public void TestTransformations()
         {
             // should use x, y, radius, prefix, gravity and quality from options
@@ -416,7 +408,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestMultipleLayers()
         {
-            
+
             Transformation t = new Transformation()
                 .Overlay("One").Chain()
                 .Overlay("Two").Chain()
@@ -425,7 +417,7 @@ namespace CloudinaryDotNet.Test
                 .Overlay("Two").Chain();
             var actual = m_api.UrlImgUp.Transform(t).BuildUrl("sample.jpg");
             Assert.AreEqual(m_defaultImgUpPath + "l_One/l_Two/l_Three/l_One/l_Two/sample.jpg", actual);
-            
+
         }
 
         [Test]
@@ -569,14 +561,14 @@ namespace CloudinaryDotNet.Test
         {
             CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary("cloudinary://a:b@test123");
         }
-        
+
         [Test]
         public void TestInitFromEnvironmentVariable()
         {
             Environment.SetEnvironmentVariable("CLOUDINARY_URL", "cloudinary://a:b@test123");
             CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary();
         }
-        
+
         [Test]
         public void TestSecureDistributionFromUrl()
         {
@@ -586,70 +578,6 @@ namespace CloudinaryDotNet.Test
             string url = cloudinary.Api.UrlImgUp.BuildUrl("test");
 
             Assert.AreEqual("https://config.secure.distribution.com/image/upload/test", url);
-        }
-
-        [Test]
-        public void TestImageTag()
-        {
-            var transformation = new Transformation().Width(100).Height(101).Crop("crop");
-
-            var dict = new StringDictionary();
-            dict["alt"] = "my image";
-
-            var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", dict).ToString();
-            Assert.AreEqual("<img src=\"http://res.cloudinary.com/testcloud/image/upload/c_crop,h_101,w_100/test\" alt=\"my image\" width=\"100\" height=\"101\"/>", result);
-        }
-
-        [Test]
-        public void TestResponsiveWidth()
-        {
-            var transformation = new Transformation().Width(0.9).Height(0.9).Crop("crop").ResponsiveWidth(true);
-            var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", new StringDictionary("alt=my image"));
-            Assert.AreEqual(
-                    "<img alt=\"my image\" class=\"cld-responsive\" data-src=\"http://res.cloudinary.com/testcloud/image/upload/c_crop,h_0.9,w_0.9/c_limit,w_auto/test\"/>",
-                    result.ToString());
-            result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", new StringDictionary("alt=my image", "class=extra"));
-            Assert.AreEqual(
-                    "<img alt=\"my image\" class=\"extra cld-responsive\" data-src=\"http://res.cloudinary.com/testcloud/image/upload/c_crop,h_0.9,w_0.9/c_limit,w_auto/test\"/>",
-                    result.ToString());
-            transformation = new Transformation().Width("auto").Crop("crop");
-            result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", new StringDictionary("alt=my image", "responsive_placeholder=blank"));
-            Assert.AreEqual(
-                    "<img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\" alt=\"my image\" class=\"cld-responsive\" data-src=\"http://res.cloudinary.com/testcloud/image/upload/c_crop,w_auto/test\"/>",
-                    result.ToString());
-            result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", new StringDictionary("alt=my image", "responsive_placeholder=other.gif"));
-            Assert.AreEqual(
-                    "<img src=\"other.gif\" alt=\"my image\" class=\"cld-responsive\" data-src=\"http://res.cloudinary.com/testcloud/image/upload/c_crop,w_auto/test\"/>",
-                    result.ToString());
-        }
-
-        [Test]
-        public void TestImageTagAutoDpr()
-        {
-            var transform = new Transformation().Width(100).Height(101).Crop("crop").Dpr("auto");
-
-            var result = m_api.UrlImgUp.Transform(transform).BuildImageTag("test").ToString();
-
-            Assert.True(transform.HiDpi);
-            Assert.AreEqual("<img width=\"100\" height=\"101\" class=\"cld-hidpi\" data-src=\"http://res.cloudinary.com/testcloud/image/upload/c_crop,dpr_auto,h_101,w_100/test\"/>", result);
-        }
-
-        [Test]
-        public void TestImageTagNoParams()
-        {
-            Transformation transformation = new Transformation().Width(100).Height(101).Crop("crop");
-
-            var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test").ToString();
-            Assert.AreEqual("<img src=\"http://res.cloudinary.com/testcloud/image/upload/c_crop,h_101,w_100/test\" width=\"100\" height=\"101\"/>", result);
-        }
-
-        [Test]
-        public void TestImageTagParams()
-        {
-            Transformation transformation = new Transformation().Width(100).Height(101).Crop("crop");
-
-            var result = m_api.UrlImgUp.Transform(transformation).BuildImageTag("test", "alt=my image name \"TestImg\"", "test=My image name is 'Test2'").ToString();
-            Assert.AreEqual("<img src=\"http://res.cloudinary.com/testcloud/image/upload/c_crop,h_101,w_100/test\" alt=\"my image name &quot;TestImg&quot;\" test=\"My image name is &#39;Test2&#39;\" width=\"100\" height=\"101\"/>", result);
         }
 
         [Test]
@@ -1025,7 +953,7 @@ namespace CloudinaryDotNet.Test
             var transformationUrl = m_api.UrlVideoUp.Transform(spTransformation).BuildUrl();
             Assert.AreEqual(m_defaultVideoUpPath + "sp_some-profile", transformationUrl);
         }
-        
+
         [Test]
         public void TestVideoSampling()
         {

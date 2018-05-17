@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -87,6 +87,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Crc32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileDescriptionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HtmlTags\HtmlTag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HtmlTags\ImageTag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Search.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\BaseLayer.cs" />

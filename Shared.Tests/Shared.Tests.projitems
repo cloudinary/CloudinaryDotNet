@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AuthTokenTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudinaryTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HtmlTags\ImageTagTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HtmlTags\HtmlTagTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IntegrationTestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TransformationApiTest.cs" />

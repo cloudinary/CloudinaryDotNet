@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using CloudinaryDotNet.HtmlTags;
 
 namespace CloudinaryDotNet.Test
 {
@@ -22,11 +23,11 @@ namespace CloudinaryDotNet.Test
         public void GenerateTokenWithDuration()
         {
             //should generate an authorization token with startTime and duration
-            long firstExp = DateTime.UtcNow.Ticks / 1000L + 300; 
+            long firstExp = DateTime.UtcNow.Ticks / 1000L + 300;
             System.Threading.Thread.Sleep(600);
             string token = new AuthToken(KEY).Acl("*").Duration(300).Generate();
             System.Threading.Thread.Sleep(600);
-            long secondExp = DateTime.UtcNow.Ticks / 1000L + 300; 
+            long secondExp = DateTime.UtcNow.Ticks / 1000L + 300;
             Regex r = new Regex("exp=(\\d+)");
             Assert.True(r.IsMatch(token));
             string expString = r.Matches(token)[0].ToString().Replace("exp=", string.Empty);
@@ -42,7 +43,7 @@ namespace CloudinaryDotNet.Test
             var token = new AuthToken(KEY).Acl("*").Duration(300);
             token.StartTime(11111111);
             CloudinaryConfiguration.AuthToken = token;
-            
+
             //should add token if authToken is globally set and signed = true;
             string url = m_cloudinary.Api.Url.Signed(true).ResourceType("image").Version("1486020273").BuildUrl();
             Assert.AreEqual("http://res.cloudinary.com/" + m_account.Cloud + "/image/v1486020273?__cld_token__=st=11111111~exp=11111411~acl=*~hmac=67c908ea11bde7bced81926fe6dfa683f116a4f24714f150844b0160352588ba", url);
@@ -85,8 +86,8 @@ namespace CloudinaryDotNet.Test
             //should add token to an image tag url";
             AuthToken t = new AuthToken(TOKEN_KEY);
             t.StartTime(1111111111).Acl("/image/*").Duration(300);
-            string url = m_cloudinary.Api.Url.AuthToken(t).Signed(true).ResourceType("image").Version("1486020273").BuildImageTag("sample.jpg");
-            Assert.AreEqual("<img src=\"http://res.cloudinary.com/" + m_account.Cloud + "/image/v1486020273/sample.jpg?__cld_token__=st=1111111111~exp=1111111411~acl=%2fimage%2f*~hmac=1751370bcc6cfe9e03f30dd1a9722ba0f2cdca283fa3e6df3342a00a7528cc51\"/>", url);
+            string url = new ImageTag(m_cloudinary.Api.Url.AuthToken(t).Signed(true).ResourceType("image").Version("1486020273").Source("sample.jpg")).ToString();
+            Assert.AreEqual("<img src=\"http://res.cloudinary.com/" + m_account.Cloud + "/image/v1486020273/sample.jpg?__cld_token__=st=1111111111~exp=1111111411~acl=%2fimage%2f*~hmac=1751370bcc6cfe9e03f30dd1a9722ba0f2cdca283fa3e6df3342a00a7528cc51\">", url);
 
         }
 

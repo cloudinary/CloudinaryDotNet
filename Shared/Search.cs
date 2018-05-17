@@ -60,8 +60,10 @@ namespace CloudinaryDotNet
 
         public Search SortBy(string field, string dir)
         {
-            Dictionary<string, object> sortBucket = new Dictionary<string, object>();
-            sortBucket.Add(field, dir);
+            Dictionary<string, object> sortBucket = new Dictionary<string, object>
+            {
+                { field, dir }
+            };
             sortByParam.Add(sortBucket);
 
             return this;
@@ -85,17 +87,21 @@ namespace CloudinaryDotNet
 
         private SortedDictionary<string, object> PrepareSearchParams()
         {
-            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
-            sParams.Add("unsigned", string.Empty);
-            sParams.Add("removeUnsignedParam", string.Empty);
+            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery())
+            {
+                { "unsigned", string.Empty },
+                { "removeUnsignedParam", string.Empty }
+            };
 
             return sParams;
         }
 
         private Dictionary<string, string> PrepareHeaders()
         {
-            Dictionary<string, string> extraHeaders = new Dictionary<string, string>();
-            extraHeaders.Add("Content-Type", "application/json");
+            Dictionary<string, string> extraHeaders = new Dictionary<string, string>
+            {
+                { "Content-Type", "application/json" }
+            };
 
             return extraHeaders;
         }

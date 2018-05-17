@@ -599,8 +599,8 @@ namespace CloudinaryDotNet
         public RenameResult Rename(RenameParams parameters)
         {
             string uri = m_api.ApiUrlImgUpV.ResourceType(
-				    Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
-				    Action("rename").BuildUrl();
+                    Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
+                    Action("rename").BuildUrl();
             return m_api.CallAndParse<RenameResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
         }
 

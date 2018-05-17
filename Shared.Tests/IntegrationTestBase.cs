@@ -48,13 +48,16 @@ namespace CloudinaryDotNet.Test
         protected const string STORAGE_TYPE_PRIVATE = "private";
 
         protected const int TEST_PDF_PAGES_COUNT = 3;
-        protected const int MAX_RESULTS = 500;                                                                         
+        protected const int MAX_RESULTS = 500;
 
         protected const string TOKEN_KEY = "00112233FF99";
         protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
 
         protected const string TRANSFORM_W_512 = "w_512";
         protected const string TRANSFORM_A_45 = "a_45";
+
+        protected const int RESIZE_TRANSFORM_W = 512;
+        protected const int RESIZE_TRANSFORM_H = 512;
 
         protected string m_apiTest;
         protected string m_apiTest1;
@@ -66,11 +69,11 @@ namespace CloudinaryDotNet.Test
         protected const string m_simpleTransformationAsString = "c_scale,w_0.5";
         protected readonly Transformation m_simpleTransformation = new Transformation().Crop("scale").Width(0.5);
 
-        protected const int m_resizeTransformationWidth = 512;
-        protected const int m_resizeTransformationHeight = 512;
+        protected static readonly string m_cropTransformationAsString = $"c_crop,h_{RESIZE_TRANSFORM_H},w_{RESIZE_TRANSFORM_W}";
+        protected readonly Transformation m_cropTransformation = new Transformation().Crop("crop").Width(RESIZE_TRANSFORM_W).Height(RESIZE_TRANSFORM_H);
 
-        protected const string m_resizeTransformationAsString = "h_512,w_512";
-        protected readonly Transformation m_resizeTransformation = new Transformation().Width(m_resizeTransformationWidth).Height(m_resizeTransformationHeight);
+        protected readonly string m_resizeTransformationAsString = $"h_{RESIZE_TRANSFORM_H},w_{RESIZE_TRANSFORM_W}";
+        protected readonly Transformation m_resizeTransformation = new Transformation().Width(RESIZE_TRANSFORM_W).Height(RESIZE_TRANSFORM_H);
 
         protected string m_updateTransformationAsString;
         protected Transformation m_updateTransformation;
@@ -144,14 +147,14 @@ namespace CloudinaryDotNet.Test
             m_testLargeImagePath = Path.Combine(filePrefix, TEST_LARGEIMAGE);
             m_testPdfPath = Path.Combine(filePrefix, TEST_PDF);
             m_testIconPath = Path.Combine(filePrefix, TEST_FAVICON);
-            
+
             SaveEmbeddedToDisk(assembly, TEST_IMAGE, m_testImagePath);
             SaveEmbeddedToDisk(assembly, TEST_LARGEIMAGE, m_testLargeImagePath);
             SaveEmbeddedToDisk(assembly, TEST_MOVIE, m_testVideoPath);
             SaveEmbeddedToDisk(assembly, TEST_FAVICON, m_testIconPath);
             SaveEmbeddedToDisk(assembly, TEST_PDF, m_testPdfPath);
         }
-        
+
         private void SaveEmbeddedToDisk(Assembly assembly, string sourcePath, string destPath)
         {
             var resName = assembly.GetManifestResourceNames().FirstOrDefault(s => s.EndsWith(sourcePath));
@@ -312,31 +315,53 @@ namespace CloudinaryDotNet.Test
         {
             foreach (ResourceType resourceType in Enum.GetValues(typeof(ResourceType)))
             {
-                m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = resourceType });
+                try
+                {
+                    m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = resourceType });
+                }
+                catch { }
             }
-
-            m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Raw, Type = STORAGE_TYPE_PRIVATE });
+            try
+            {
+                m_cloudinary.DeleteResources(new DelResParams() { Tag = m_apiTag, ResourceType = ResourceType.Raw, Type = STORAGE_TYPE_PRIVATE });
+            }
+            catch { }
 
             foreach (var prefix in new[]{ m_folderPrefix, m_apiTest })
             {
-                m_cloudinary.DeleteResourcesByPrefix(prefix);
+                try
+                {
+                    m_cloudinary.DeleteResourcesByPrefix(prefix);
+                }
+                catch { }
             }
 
             foreach (var item in m_publicIdsToClear)
             {
                 if (item.Value.Count == 0)
                     continue;
-
-                m_cloudinary.DeleteResources(new DelResParams()
+                try
                 {
-                    Type = item.Key.ToString(),
-                    PublicIds = item.Value,
-                    ResourceType = ResourceType.Image
-                });
+                    m_cloudinary.DeleteResources(new DelResParams()
+                    {
+                        Type = item.Key.ToString(),
+                        PublicIds = item.Value,
+                        ResourceType = ResourceType.Image
+                    });
+                }
+                catch { }
             }
 
-            m_transformationsToClear.ForEach(t => m_cloudinary.DeleteTransform(t.ToString()));
-            m_presetsToClear.ForEach(p => m_cloudinary.DeleteUploadPreset(p));
+            try
+            {
+                m_transformationsToClear.ForEach(t => m_cloudinary.DeleteTransform(t.ToString()));
+            }
+            catch { }
+            try
+            {
+                m_presetsToClear.ForEach(p => m_cloudinary.DeleteUploadPreset(p));
+            }
+            catch { }
         }
     }
 }
