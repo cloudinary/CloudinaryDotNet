@@ -48,7 +48,7 @@ namespace CloudinaryDotNet.Test
         protected const string STORAGE_TYPE_PRIVATE = "private";
 
         protected const int TEST_PDF_PAGES_COUNT = 3;
-        protected const int MAX_RESULTS = 500;                                                                         
+        protected const int MAX_RESULTS = 500;
 
         protected const string TOKEN_KEY = "00112233FF99";
         protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
@@ -144,14 +144,14 @@ namespace CloudinaryDotNet.Test
             m_testLargeImagePath = Path.Combine(filePrefix, TEST_LARGEIMAGE);
             m_testPdfPath = Path.Combine(filePrefix, TEST_PDF);
             m_testIconPath = Path.Combine(filePrefix, TEST_FAVICON);
-            
+
             SaveEmbeddedToDisk(assembly, TEST_IMAGE, m_testImagePath);
             SaveEmbeddedToDisk(assembly, TEST_LARGEIMAGE, m_testLargeImagePath);
             SaveEmbeddedToDisk(assembly, TEST_MOVIE, m_testVideoPath);
             SaveEmbeddedToDisk(assembly, TEST_FAVICON, m_testIconPath);
             SaveEmbeddedToDisk(assembly, TEST_PDF, m_testPdfPath);
         }
-        
+
         private void SaveEmbeddedToDisk(Assembly assembly, string sourcePath, string destPath)
         {
             var resName = assembly.GetManifestResourceNames().FirstOrDefault(s => s.EndsWith(sourcePath));
