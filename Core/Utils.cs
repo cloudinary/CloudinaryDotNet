@@ -5,7 +5,7 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Implement platform specific functions
     /// </summary>
-    internal static class Utils
+    internal static partial class Utils
     {
         internal static string EncodedUrl(string url)
         {
