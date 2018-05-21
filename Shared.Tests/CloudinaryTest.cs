@@ -94,19 +94,24 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUploadLocalImageTimeout()
         {
-            var timeout = 3000;
+            const int TIMEOUT = 1000;
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 Tags = m_apiTag
             };
 
+            // Save original values
             var origAddr = m_cloudinary.Api.ApiBaseAddress;
-            Stopwatch stopWatch = new Stopwatch();
-            m_cloudinary.Api.ApiBaseAddress = "https://10.255.255.1";
-            m_cloudinary.Api.Timeout = timeout;
+            var origTimeout = m_cloudinary.Api.Timeout;
+
+            var stopWatch = new Stopwatch();
+
             try
             {
+                m_cloudinary.Api.ApiBaseAddress = "https://10.255.255.1";
+                m_cloudinary.Api.Timeout = TIMEOUT;
+
                 stopWatch.Start();
                 m_cloudinary.Upload(uploadParams);
             }
@@ -117,11 +122,14 @@ namespace CloudinaryDotNet.Test
             finally
             {
                 m_cloudinary.Api.ApiBaseAddress = origAddr;
+                m_cloudinary.Api.Timeout = origTimeout;
                 stopWatch.Stop();
             }
-            
-            Assert.LessOrEqual(timeout - 2000, stopWatch.ElapsedMilliseconds);
-            Assert.GreaterOrEqual(timeout + 2000, stopWatch.ElapsedMilliseconds);
+
+            // It should take no longer than twice the timeout that we gave + 1 second (it should respect timeout)
+            Assert.LessOrEqual(stopWatch.ElapsedMilliseconds, 2 * TIMEOUT + 1000);
+            // It should take at least timeout we provided, otherwise some other error occurred before
+            Assert.GreaterOrEqual(stopWatch.ElapsedMilliseconds, TIMEOUT);
         }
 
         [Test]
