@@ -1,4 +1,15 @@
 
+1.3.1 / 2018-05-22
+==================
+
+Other Changes
+-------------
+  * Fix `AuthToken` default `startTime` calculation (#115)
+  * Fix package references
+  * Add `set_version.ps1` helper script
+  * Fix timeout issue in `TestUploadLocalImageTimeout`
+  * Fix account cleanup after tests (#110)
+
 1.3.0 / 2018-04-17
 ==================
 
