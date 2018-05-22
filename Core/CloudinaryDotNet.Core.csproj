@@ -42,7 +42,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.WebEncoders" Version="1.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.*" />
   </ItemGroup>
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />
 </Project>

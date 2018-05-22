@@ -21,12 +21,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="Moq" Version="4.8.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-    <PackageReference Include="NUnit" Version="3.10.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\TestImage.jpg;Resources\favicon.ico;Resources\movie.mp4;Resources\multipage.pdf;Resources\TestLargeImage.jpg" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.*" />
+    <PackageReference Include="NUnit" Version="3.10.*" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.*" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\CloudinaryDotNet.Core.csproj" />
@@ -47,19 +44,4 @@
     <Copy SourceFiles="$(ProjectDir)appsettings.json" DestinationFolder="$(ProjectDir)bin/Release/$(TargetFramework)" />
   </Target>
   <Import Project="..\Shared.Tests\Shared.Tests.projitems" Label="Shared" />
-  <ItemGroup>
-    <EmbeddedResource Remove="Resources\favicon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Resources\movie.mp4" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Resources\multipage.pdf" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Resources\TestImage.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Resources\TestLargeImage.jpg" />
-  </ItemGroup>
 </Project>
