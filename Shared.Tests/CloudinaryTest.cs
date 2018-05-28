@@ -2998,6 +2998,8 @@ namespace CloudinaryDotNet.Test
                 Type = STORAGE_TYPE_UPLOAD,
                 ResourceType = ResourceType.Image
             });
+        }
+
         [Test]
         public void TestArchiveParamsCheck()
         {

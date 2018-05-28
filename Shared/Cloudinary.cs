@@ -331,15 +331,15 @@ namespace CloudinaryDotNet
         /// <returns></returns>
         public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters)
         {
-            var @params = parameters.ToParamsDictionary();
-            @params.Remove("name");
+            var paramsCopy = (UploadPresetParams)parameters.Copy();
+            paramsCopy.Name = null;
 
             var url = m_api.ApiUrlV
                 .Add("upload_presets")
                 .Add(parameters.Name)
                 .BuildUrl();
 
-            return m_api.CallAndParse<UploadPresetResult>(HttpMethod.PUT, url, @params, null);
+            return m_api.CallApi<UploadPresetResult>(HttpMethod.PUT, url, paramsCopy, null);
         }
 
         /// <summary>

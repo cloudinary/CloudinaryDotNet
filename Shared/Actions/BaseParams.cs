@@ -22,6 +22,15 @@ namespace CloudinaryDotNet.Actions
         public abstract void Check();
 
         /// <summary>
+        /// Make a shallow copy of parameters
+        /// </summary>
+        /// <returns></returns>
+        public virtual BaseParams Copy()
+        {
+            return (BaseParams)MemberwiseClone();
+        }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
         /// </summary>
         /// <returns></returns>
