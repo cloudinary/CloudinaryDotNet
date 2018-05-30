@@ -262,7 +262,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace CloudinaryDotNet
                 .BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallApi<ListUploadPresetsResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<ListUploadPresetsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         /// <summary>
@@ -810,7 +810,7 @@ namespace CloudinaryDotNet
                 url.BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallApi<ListResourcesResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<ListResourcesResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public ListTagsResult ListTags()
@@ -832,7 +832,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallApi<ListTagsResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<ListTagsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public ListTransformsResult ListTransformations()
@@ -848,7 +848,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallApi<ListTransformsResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<ListTransformsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public GetTransformResult GetTransform(string transform)
@@ -865,7 +865,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallApi<GetTransformResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<GetTransformResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public GetResourceResult UpdateResource(string publicId, ModerationStatus moderationStatus)
@@ -900,7 +900,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallApi<GetResourceResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<GetResourceResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public DelDerivedResResult DeleteDerivedResources(params string[] ids)
@@ -918,7 +918,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
         }
 
         public DelResResult DeleteResources(ResourceType type, params string[] publicIds)
@@ -983,7 +983,7 @@ namespace CloudinaryDotNet
 
             UrlBuilder urlBuilder = new UrlBuilder(url.BuildUrl(), parameters.ToParamsDictionary());
 
-            return m_api.CallApi<DelResResult>(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<DelResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
         }
 
         public RestoreResult Restore(params string[] publicIds)

@@ -91,7 +91,11 @@ namespace CloudinaryDotNet
             if (parameters != null)
                 parameters.Check();
 
-            return CallAndParse<T>(method, url, parameters?.ToParamsDictionary(), file, extraHeaders);
+            return CallAndParse<T>(method, 
+                                   url, 
+                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null, 
+                                   file, 
+                                   extraHeaders);
         }
 
         public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
