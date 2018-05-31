@@ -88,13 +88,12 @@ namespace CloudinaryDotNet
 
         internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
         {
-            if (parameters != null)
-                parameters.Check();
+            parameters?.Check();
 
-            return CallAndParse<T>(method, 
-                                   url, 
-                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null, 
-                                   file, 
+            return CallAndParse<T>(method,
+                                   url,
+                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                                   file,
                                    extraHeaders);
         }
 
@@ -418,7 +417,7 @@ namespace CloudinaryDotNet
         {
             return string.Empty;
         }
-        
+
         protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
         {
             if (parameters == null)
