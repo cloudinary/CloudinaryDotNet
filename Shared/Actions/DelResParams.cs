@@ -59,7 +59,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Delete all resources. Optional (default: false). 
+        /// Delete all resources. Optional (default: false).
         /// </summary>
         public bool All
         {
@@ -87,9 +87,6 @@ namespace CloudinaryDotNet.Actions
             {
                 throw new ArgumentException("Either PublicIds or Prefix or Tag must be specified!");
             }
-
-            if (!String.IsNullOrEmpty(Tag) && !String.IsNullOrEmpty(Type))
-                throw new ArgumentException("Type of resource cannot specified when tag is given!");
         }
 
         /// <summary>

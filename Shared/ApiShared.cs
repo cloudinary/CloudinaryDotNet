@@ -86,11 +86,22 @@ namespace CloudinaryDotNet
             throw new Exception("Please call overriden method");
         }
 
+        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        {
+            parameters?.Check();
+
+            return CallAndParse<T>(method,
+                                   url,
+                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                                   file,
+                                   extraHeaders);
+        }
+
         public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
         {
             throw new NotImplementedException();
         }
-       
+
         /// <summary>
         /// Parametrized constructor
         /// </summary>
@@ -406,7 +417,7 @@ namespace CloudinaryDotNet
         {
             return string.Empty;
         }
-        
+
         protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
         {
             if (parameters == null)

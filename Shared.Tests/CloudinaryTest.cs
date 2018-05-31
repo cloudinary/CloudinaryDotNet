@@ -619,7 +619,7 @@ namespace CloudinaryDotNet.Test
         public void TestUploadAccessControl()
         {
             var start = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var end   = new DateTime(3000, 12, 31, 23, 59, 59, DateTimeKind.Utc);
+            var end = new DateTime(3000, 12, 31, 23, 59, 59, DateTimeKind.Utc);
 
             var accessControl = new List<AccessControlRule> { new AccessControlRule
                 {
@@ -644,14 +644,14 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(start, uploadResult.AccessControl[0].Start);
             Assert.AreEqual(end, uploadResult.AccessControl[0].End);
 
-            uploadParams.AccessControl.Add(new AccessControlRule{AccessType = AccessType.Token});
+            uploadParams.AccessControl.Add(new AccessControlRule { AccessType = AccessType.Token });
 
             uploadResult = m_cloudinary.Upload(uploadParams);
 
             Assert.AreEqual(2, uploadResult.AccessControl.Count);
 
             Assert.AreEqual(AccessType.Anonymous, uploadResult.AccessControl[0].AccessType);
-            Assert.AreEqual(start,  uploadResult.AccessControl[0].Start);
+            Assert.AreEqual(start, uploadResult.AccessControl[0].Start);
             Assert.AreEqual(end, uploadResult.AccessControl[0].End);
 
             Assert.AreEqual(AccessType.Token, uploadResult.AccessControl[1].AccessType);
@@ -753,7 +753,7 @@ namespace CloudinaryDotNet.Test
         public void TestUpdateAccessControl()
         {
             var start = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var end   = new DateTime(3000, 12, 31, 23, 59, 59, DateTimeKind.Utc);
+            var end = new DateTime(3000, 12, 31, 23, 59, 59, DateTimeKind.Utc);
 
             var accessControl = new List<AccessControlRule> { new AccessControlRule {
                     AccessType = AccessType.Anonymous,
@@ -783,7 +783,7 @@ namespace CloudinaryDotNet.Test
             }};
 
             var updateResult = m_cloudinary.UpdateResource(
-                new UpdateParams(uploadResult.PublicId) {AccessControl = newAccessControl}
+                new UpdateParams(uploadResult.PublicId) { AccessControl = newAccessControl }
             );
 
             Assert.AreEqual(1, updateResult.AccessControl.Count);
@@ -2998,6 +2998,144 @@ namespace CloudinaryDotNet.Test
                 Type = STORAGE_TYPE_UPLOAD,
                 ResourceType = ResourceType.Image
             });
+        }
+
+        [Test]
+        public void TestArchiveParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new ArchiveParams().Check, "Should require atleast on option specified: PublicIds, Tags or Prefixes");
+        }
+        [Test]
+        public void TestCreateTransformParamsCheck()
+        {
+            var p = new CreateTransformParams();
+            Assert.Throws<ArgumentException>(p.Check, "Should require Name");
+            p.Name = "some_name";
+            Assert.Throws<ArgumentException>(p.Check, "Should require Transformation");
+        }
+
+        [Test]
+        public void TestDelDerivedResParamsCheck()
+        {
+            var p = new DelDerivedResParams();
+            Assert.Throws<ArgumentException>(p.Check, "Should require either DerivedResources or Tranformations not null");
+
+            p.DerivedResources = new List<string>();
+            Assert.Throws<ArgumentException>(p.Check, "Should require at least on item in either DerivedResources or Tranformations specified");
+
+            p.Transformations = new List<Transformation>() { new Transformation() };
+            Assert.Throws<ArgumentException>(p.Check, "Should require PublicId");
+        }
+
+        [Test]
+        public void TestDeletionParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new DeletionParams("").Check, "Should require PublicId");
+        }
+
+        [Test]
+        public void TestDelResParamsCheck()
+        {
+            var p = new DelResParams();
+            Assert.Throws<ArgumentException>(p.Check, "Should require either PublicIds or Prefix or Tag specified");
+        }
+
+        [Test]
+        public void TestExplicitParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new ExplicitParams("").Check, "Should require PublicId");
+        }
+
+        [Test]
+        public void TestExplodeParamsCheck()
+        {
+            var p = new ExplodeParams("",null);
+            Assert.Throws<ArgumentException>(p.Check, "Should require PublicId");
+
+            p.PublicId = "publicId";
+            Assert.Throws<ArgumentException>(p.Check, "Should require Transformation");
+        }
+
+        [Test]
+        public void TestGetResourceParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new GetResourceParams("").Check, "Should require PublicId");
+        }
+
+        [Test]
+        public void TestGetTransformParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new GetTransformParams().Check, "Should require Transformation");
+        }
+
+        [Test]
+        public void TestMultiParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new MultiParams("").Check, "Should require Tag");
+        }
+
+        [Test]
+        public void TestRawUploadParamsCheck()
+        {
+            var p = new RawUploadParams();
+            Assert.Throws<ArgumentException>(p.Check, "Should require File");
+
+            p.File = new FileDescription("", null);
+            Assert.Throws<ArgumentException>(p.Check, "Should require FilePath and Stream specified for local file");
+        }
+
+        [Test]
+        public void TestRenameParamsCheck()
+        {
+            var p = new RenameParams("", "");
+            Assert.Throws<ArgumentException>(p.Check, "Should require FromPublicId");
+
+            p.FromPublicId = "FromPublicId";
+            Assert.Throws<ArgumentException>(p.Check,"Should require ToPublicId");
+        }
+
+        [Test]
+        public void TestRestoreParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new RestoreParams().Check, "Should require at least one PublicId");
+        }
+
+        [Test]
+        public void TestSpriteParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new SpriteParams("").Check, "Should require Tag");
+        }
+
+        [Test]
+        public void TestTextParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new TextParams().Check, "Should require Text");
+        }
+
+        [Test]
+        public void TestUpdateParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new UpdateParams("").Check, "Should require PublicId");
+        }
+
+        [Test]
+        public void TestUpdateTransformParamsCheck()
+        {
+            Assert.Throws<ArgumentException>(new UpdateTransformParams().Check, "Should require Transformation");
+        }
+
+        [Test]
+        public void UploadMappingParamsCheckTest()
+        {
+            var p = new UploadMappingParams { MaxResults = 1000 };
+            Assert.Throws<ArgumentException>(p.Check, "Should require MaxResults value less or equal 500");
+        }
+
+        [Test]
+        public void UploadPresetParamsCheckTest()
+        {
+            var p = new UploadPresetParams { Overwrite = true, Unsigned = true };
+            Assert.Throws<ArgumentException>(p.Check, "Should require only one property set to true: Overwrite or Unsigned");
         }
     }
 }

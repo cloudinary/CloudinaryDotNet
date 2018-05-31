@@ -160,75 +160,71 @@ namespace CloudinaryDotNet
         /// Publish resources by prefix.
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>
-        /// <param name="publishResourceParams">Parameters for publishing of resources.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
         /// <returns></returns>
-        public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams publishResourceParams)
+        public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams parameters)
         {
-            return PublishResource("prefix", prefix, publishResourceParams);
+            return PublishResource("prefix", prefix, parameters);
         }
 
         /// <summary>
         /// Publish resources by tag.
         /// </summary>
         /// <param name="prefix">The tag for publishing resources.</param>
-        /// <param name="publishResourceParams">Parameters for publishing of resources.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
         /// <returns></returns>
-        public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams publishResourceParams)
+        public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams parameters)
         {
-            return PublishResource("tag", tag, publishResourceParams);
+            return PublishResource("tag", tag, parameters);
         }
 
-        public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams publishResourceParams)
+        public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams parameters)
         {
-            return PublishResource(string.Empty, string.Empty, publishResourceParams);
+            return PublishResource(string.Empty, string.Empty, parameters);
         }
 
-        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams publishResourceParams)
+        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams parameters)
         {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+                parameters.AddCustomParam(byKey, value);
+
             Url url = m_api.ApiUrlV
                 .Add("resources")
-                .Add(publishResourceParams.ResourceType.ToString().ToLower())
+                .Add(parameters.ResourceType.ToString().ToLower())
                 .Add("publish_resources");
 
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                publishResourceParams.AddCustomParam(byKey, value);
-            }
-
-            return m_api.CallAndParse<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), publishResourceParams.ToParamsDictionary(), null);
+            return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
 
         }
 
-        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
         {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+                parameters.AddCustomParam(byKey, value);
 
             Url url = m_api.ApiUrlV
                  .Add(Constants.RESOURCES_API_URL)
-                 .Add(updateResourceAccessModeParams.ResourceType.ToString().ToLower())
-                 .Add(updateResourceAccessModeParams.Type)
+                 .Add(parameters.ResourceType.ToString().ToLower())
+                 .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                updateResourceAccessModeParams.AddCustomParam(byKey, value);
-            }
 
-            return m_api.CallAndParse<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), updateResourceAccessModeParams.ToParamsDictionary(), null);
+            return m_api.CallApi<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
 
-        public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams parameters)
         {
-            return UpdateResourceAccessMode(Constants.TAG_PARAM_NAME, tag, updateResourceAccessModeParams);
+            return UpdateResourceAccessMode(Constants.TAG_PARAM_NAME, tag, parameters);
         }
 
-        public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(string prefix, UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(string prefix, UpdateResourceAccessModeParams parameters)
         {
-            return UpdateResourceAccessMode(Constants.PREFIX_PARAM_NAME, prefix, updateResourceAccessModeParams);
+            return UpdateResourceAccessMode(Constants.PREFIX_PARAM_NAME, prefix, parameters);
         }
 
-        public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams updateResourceAccessModeParams)
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams parameters)
         {
-            return UpdateResourceAccessMode(string.Empty, string.Empty, updateResourceAccessModeParams);
+            return UpdateResourceAccessMode(string.Empty, string.Empty, parameters);
         }
 
         /// <summary>
@@ -243,7 +239,7 @@ namespace CloudinaryDotNet
                 .Action(Constants.TAGS_MANGMENT)
                 .BuildUrl();
             
-            return m_api.CallAndParse<TagResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<TagResult>(HttpMethod.POST, uri, parameters, null);
         }
 
         /// <summary>
@@ -255,7 +251,7 @@ namespace CloudinaryDotNet
         {
             string uri = m_api.ApiUrlImgUpV.Action(Constants.CONTEXT_MANAGMENT).BuildUrl();
 
-            return m_api.CallAndParse<ContextResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<ContextResult>(HttpMethod.POST, uri, parameters, null);
         }
 
         public DelDerivedResResult DeleteDerivedResourcesByTransform(DelDerivedResParams parameters)
@@ -266,7 +262,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
         }
 
         /// <summary>
@@ -277,13 +273,12 @@ namespace CloudinaryDotNet
         public ArchiveResult CreateArchive(ArchiveParams parameters)
         {
             Url url = m_api.ApiUrlV.ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
+
             if (!String.IsNullOrEmpty(parameters.ResourceType()))
-            {
                 url.ResourceType(parameters.ResourceType());
-            }
 
             parameters.Mode(ArchiveCallMode.Create);
-            return m_api.CallAndParse<ArchiveResult>(HttpMethod.POST, url.BuildUrl(), parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<ArchiveResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
         
         /// <summary>
@@ -310,7 +305,7 @@ namespace CloudinaryDotNet
                 .Action("explicit")
                 .BuildUrl();
 
-            return m_api.CallAndParse<ExplicitResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<ExplicitResult>(HttpMethod.POST, uri, parameters, null);
         }
 
         /// <summary>
@@ -325,7 +320,7 @@ namespace CloudinaryDotNet
                 Add("upload_presets").
                 BuildUrl();
 
-            return m_api.CallAndParse<UploadPresetResult>(HttpMethod.POST, url, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<UploadPresetResult>(HttpMethod.POST, url, parameters, null);
         }
 
         /// <summary>
@@ -336,15 +331,15 @@ namespace CloudinaryDotNet
         /// <returns></returns>
         public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters)
         {
-            var @params = parameters.ToParamsDictionary();
-            @params.Remove("name");
+            var paramsCopy = (UploadPresetParams)parameters.Copy();
+            paramsCopy.Name = null;
 
             var url = m_api.ApiUrlV
                 .Add("upload_presets")
                 .Add(parameters.Name)
                 .BuildUrl();
 
-            return m_api.CallAndParse<UploadPresetResult>(HttpMethod.PUT, url, @params, null);
+            return m_api.CallApi<UploadPresetResult>(HttpMethod.PUT, url, paramsCopy, null);
         }
 
         /// <summary>
@@ -359,7 +354,7 @@ namespace CloudinaryDotNet
                 .Add(name)
                 .BuildUrl();
 
-            return m_api.CallAndParse<GetUploadPresetResult>(HttpMethod.GET, url, null, null);
+            return m_api.CallApi<GetUploadPresetResult>(HttpMethod.GET, url, null, null);
         }
 
         /// <summary>
@@ -383,7 +378,7 @@ namespace CloudinaryDotNet
                 .BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<ListUploadPresetsResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<ListUploadPresetsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         /// <summary>
@@ -398,7 +393,7 @@ namespace CloudinaryDotNet
                 .Add(name)
                 .BuildUrl();
 
-            return m_api.CallAndParse<DeleteUploadPresetResult>(HttpMethod.DELETE, url, null, null);
+            return m_api.CallApi<DeleteUploadPresetResult>(HttpMethod.DELETE, url, null, null);
         }
 
         /// <summary>
@@ -412,7 +407,7 @@ namespace CloudinaryDotNet
 
             ResetInternalFileDescription(parameters.File);
 
-            return m_api.CallAndParse<ImageUploadResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File);
+            return m_api.CallApi<ImageUploadResult>(HttpMethod.POST, uri, parameters, parameters.File);
         }
 
         /// <summary>
@@ -426,7 +421,7 @@ namespace CloudinaryDotNet
 
             ResetInternalFileDescription(parameters.File);
 
-            return m_api.CallAndParse<VideoUploadResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File);
+            return m_api.CallApi<VideoUploadResult>(HttpMethod.POST, uri, parameters, parameters.File);
         }
 
         /// <summary>
@@ -455,7 +450,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public GetFoldersResult RootFolders()
         {
-            return m_api.CallAndParse<GetFoldersResult>(HttpMethod.GET, m_api.ApiUrlV.Add("folders").BuildUrl(), null, null);
+            return m_api.CallApi<GetFoldersResult>(HttpMethod.GET, m_api.ApiUrlV.Add("folders").BuildUrl(), null, null);
         }
 
         /// <summary>
@@ -466,14 +461,14 @@ namespace CloudinaryDotNet
             if (String.IsNullOrEmpty(folder))
                 throw new ArgumentException("folder must be set! Please use RootFolders() to get list of folders in root!");
 
-            return m_api.CallAndParse<GetFoldersResult>(HttpMethod.GET, m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl(), null, null);
+            return m_api.CallApi<GetFoldersResult>(HttpMethod.GET, m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl(), null, null);
         }
 
         public UsageResult GetUsage()
         {
             string uri = m_api.ApiUrlV.Action("usage").BuildUrl();
 
-            return m_api.CallAndParse<UsageResult>(HttpMethod.GET, uri, null, null);
+            return m_api.CallApi<UsageResult>(HttpMethod.GET, uri, null, null);
         }
 
         /// <summary>
@@ -487,7 +482,7 @@ namespace CloudinaryDotNet
 
             ResetInternalFileDescription(parameters.File);
 
-            return m_api.CallAndParse<RawUploadResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), parameters.File);
+            return m_api.CallApi<RawUploadResult>(HttpMethod.POST, uri, parameters, parameters.File);
         }
 
         /// <summary>
@@ -503,8 +498,6 @@ namespace CloudinaryDotNet
         /// </exception>
         public RawUploadResult UploadLargeRaw(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
         {
-            parameters.Check();
-
             if (parameters.File.IsRemote)
                 throw new ArgumentException("The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!");
             return UploadLarge<RawUploadResult>(parameters, bufferSize);
@@ -531,6 +524,7 @@ namespace CloudinaryDotNet
         {
             return UploadLarge<VideoUploadResult>(parameters, bufferSize);
         }
+
         [Obsolete("Use UploadLarge(parameters, bufferSize) instead.")]
         public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024, bool isRaw = false)
         {
@@ -544,7 +538,6 @@ namespace CloudinaryDotNet
             }
 
         }
-
 
         public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
         {
@@ -565,10 +558,9 @@ namespace CloudinaryDotNet
             while (!parameters.File.EOF)
             {
                 long currentBufferSize = Math.Min(bufferSize, fileLength - parameters.File.BytesSent);
-                var apiParams = parameters.ToParamsDictionary();
                 string range = string.Format("bytes {0}-{1}/{2}", parameters.File.BytesSent, parameters.File.BytesSent + currentBufferSize - 1, fileLength);
                 extraHeaders["Content-Range"] = range;
-                result = m_api.CallAndParse<T>(HttpMethod.POST, uri, apiParams, parameters.File, extraHeaders);
+                result = m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File, extraHeaders);
 
                 if (result.StatusCode != HttpStatusCode.OK)
                     throw new Exception(String.Format(
@@ -599,9 +591,9 @@ namespace CloudinaryDotNet
         public RenameResult Rename(RenameParams parameters)
         {
             string uri = m_api.ApiUrlImgUpV.ResourceType(
-				    Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
-				    Action("rename").BuildUrl();
-            return m_api.CallAndParse<RenameResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+                    Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
+                    Action("rename").BuildUrl();
+            return m_api.CallApi<RenameResult>(HttpMethod.POST, uri, parameters, null);
         }
 
         /// <summary>
@@ -615,7 +607,7 @@ namespace CloudinaryDotNet
                 Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
                 Action("destroy").BuildUrl();
 
-            return m_api.CallAndParse<DeletionResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<DeletionResult>(HttpMethod.POST, uri, parameters, null);
         }
 
         /// <summary>
@@ -637,7 +629,7 @@ namespace CloudinaryDotNet
         {
             string uri = m_api.ApiUrlImgUpV.Action("text").BuildUrl();
 
-            return m_api.CallAndParse<TextResult>(HttpMethod.POST, uri, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<TextResult>(HttpMethod.POST, uri, parameters, null);
         }
 
         /// <summary>
@@ -645,7 +637,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public ListResourceTypesResult ListResourceTypes()
         {
-            return m_api.CallAndParse<ListResourceTypesResult>(HttpMethod.GET, m_api.ApiUrlV.Add("resources").BuildUrl(), null, null);
+            return m_api.CallApi<ListResourceTypesResult>(HttpMethod.GET, m_api.ApiUrlV.Add("resources").BuildUrl(), null, null);
         }
 
         /// <summary>
@@ -818,7 +810,7 @@ namespace CloudinaryDotNet
                 url.BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<ListResourcesResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<ListResourcesResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public ListTagsResult ListTags()
@@ -840,7 +832,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<ListTagsResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<ListTagsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public ListTransformsResult ListTransformations()
@@ -856,7 +848,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<ListTransformsResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<ListTransformsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public GetTransformResult GetTransform(string transform)
@@ -873,7 +865,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<GetTransformResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<GetTransformResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public GetResourceResult UpdateResource(string publicId, ModerationStatus moderationStatus)
@@ -889,7 +881,7 @@ namespace CloudinaryDotNet
                 Add(parameters.Type).Add(parameters.PublicId).
                 BuildUrl();
 
-            return m_api.CallAndParse<GetResourceResult>(HttpMethod.POST, url, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<GetResourceResult>(HttpMethod.POST, url, parameters, null);
         }
 
         public GetResourceResult GetResource(string publicId)
@@ -903,11 +895,12 @@ namespace CloudinaryDotNet
                 m_api.ApiUrlV.
                 ResourceType("resources").
                 Add(Api.GetCloudinaryParam(parameters.ResourceType)).
-                Add(parameters.Type).Add(parameters.PublicId).
+                Add(parameters.Type).
+                Add(parameters.PublicId).
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<GetResourceResult>(HttpMethod.GET, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<GetResourceResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
         }
 
         public DelDerivedResResult DeleteDerivedResources(params string[] ids)
@@ -925,7 +918,7 @@ namespace CloudinaryDotNet
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
         }
 
         public DelResResult DeleteResources(ResourceType type, params string[] publicIds)
@@ -990,7 +983,7 @@ namespace CloudinaryDotNet
 
             UrlBuilder urlBuilder = new UrlBuilder(url.BuildUrl(), parameters.ToParamsDictionary());
 
-            return m_api.CallAndParse<DelResResult>(HttpMethod.DELETE, urlBuilder.ToString(), null, null);
+            return m_api.CallApi<DelResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
         }
 
         public RestoreResult Restore(params string[] publicIds)
@@ -1008,7 +1001,7 @@ namespace CloudinaryDotNet
                 Add("upload").
                 Add("restore").BuildUrl();
 
-            return m_api.CallAndParse<RestoreResult>(HttpMethod.POST, url, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<RestoreResult>(HttpMethod.POST, url, parameters, null);
         }
 
         /// <summary>
@@ -1016,21 +1009,11 @@ namespace CloudinaryDotNet
         /// </summary>
         private UploadMappingResults CallUploadMappingsAPI(HttpMethod httpMethod, UploadMappingParams parameters)
         {
-            string url;
-            SortedDictionary<string, object> body = null;
-            if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-            {
-                url = GetUploadMappingUrl();
-                if (parameters != null)
-                {
-                    body = parameters.ToParamsDictionary();
-                }
-            }
-            else
-            {
-                url = GetUploadMappingUrl(parameters);
-            }
-            return m_api.CallAndParse<UploadMappingResults>(httpMethod, url, body, null);
+            string url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
+                ? GetUploadMappingUrl()
+                : GetUploadMappingUrl(parameters);
+
+            return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
         }
 
         /// <summary>
@@ -1132,7 +1115,7 @@ namespace CloudinaryDotNet
                 Add(parameters.Transformation).
                 BuildUrl();
 
-            return m_api.CallAndParse<UpdateTransformResult>(HttpMethod.PUT, url, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<UpdateTransformResult>(HttpMethod.PUT, url, parameters, null);
         }
 
         public TransformResult CreateTransform(CreateTransformParams parameters)
@@ -1142,7 +1125,7 @@ namespace CloudinaryDotNet
                 Add(parameters.Name).
                 BuildUrl();
 
-            return m_api.CallAndParse<TransformResult>(HttpMethod.POST, url, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<TransformResult>(HttpMethod.POST, url, parameters, null);
         }
 
         public TransformResult DeleteTransform(string transformName)
@@ -1152,7 +1135,7 @@ namespace CloudinaryDotNet
                 Add(transformName).
                 BuildUrl();
 
-            return m_api.CallAndParse<TransformResult>(HttpMethod.DELETE, url, null, null);
+            return m_api.CallApi<TransformResult>(HttpMethod.DELETE, url, null, null);
         }
 
         /// <summary>
@@ -1166,7 +1149,7 @@ namespace CloudinaryDotNet
                 Action("sprite").
                 BuildUrl();
 
-            return m_api.CallAndParse<SpriteResult>(HttpMethod.POST, url, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<SpriteResult>(HttpMethod.POST, url, parameters, null);
         }
 
         /// <summary>
@@ -1180,7 +1163,7 @@ namespace CloudinaryDotNet
                 Action("multi").
                 BuildUrl();
 
-            return m_api.CallAndParse<MultiResult>(HttpMethod.POST, url, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<MultiResult>(HttpMethod.POST, url, parameters, null);
         }
 
         /// <summary>
@@ -1194,7 +1177,7 @@ namespace CloudinaryDotNet
                 Action("explode").
                 BuildUrl();
 
-            return m_api.CallAndParse<ExplodeResult>(HttpMethod.POST, url, parameters.ToParamsDictionary(), null);
+            return m_api.CallApi<ExplodeResult>(HttpMethod.POST, url, parameters, null);
         }
 
         /// <summary>
