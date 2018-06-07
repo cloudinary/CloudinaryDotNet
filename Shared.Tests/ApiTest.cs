@@ -1009,13 +1009,18 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestKeyframeInterval()
         {
-            // should support an integer value
-            String actual = m_api.UrlVideoUp.Transform(new Transformation().KeyframeInterval(100)).BuildUrl("video_id");
-            Assert.AreEqual(m_defaultVideoUpPath + "ki_100/video_id", actual);
+            Assert.AreEqual("ki_10.0", new Transformation().KeyframeInterval(10).ToString());
+            Assert.AreEqual("ki_0.05", new Transformation().KeyframeInterval(0.05f).ToString());
+            Assert.AreEqual("ki_3.45", new Transformation().KeyframeInterval(3.45f).ToString());
+            Assert.AreEqual("ki_300.0", new Transformation().KeyframeInterval(300).ToString());
+            Assert.AreEqual("ki_10", new Transformation().KeyframeInterval("10").ToString());
+            Assert.AreEqual("", new Transformation().KeyframeInterval("").ToString());
+            Assert.AreEqual("", new Transformation().KeyframeInterval(null).ToString());
 
-            // should support a string value
-            actual = m_api.UrlVideoUp.Transform(new Transformation().KeyframeInterval("100")).BuildUrl("video_id");
-            Assert.AreEqual(m_defaultVideoUpPath + "ki_100/video_id", actual);
+            Assert.That(() => new Transformation().KeyframeInterval(-10).ToString(),
+                Throws.TypeOf<ArgumentException>(), "Should throw an exception when keyframe interval is less than 0.");
+            Assert.That(() => new Transformation().KeyframeInterval(0f).ToString(),
+                Throws.TypeOf<ArgumentException>(), "Should throw an exception when keyframe interval equals 0.");
         }
 
         [Test]

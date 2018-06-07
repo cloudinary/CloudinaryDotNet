@@ -214,6 +214,13 @@ namespace CloudinaryDotNet
 
         public Transformation KeyframeInterval(int value)
         {
+            if(value <= 0) throw new ArgumentException("The range for keyframe interval should be greater than 0.");
+            return Add("keyframe_interval", string.Format("{0:0.0}", value));
+        }
+
+        public Transformation KeyframeInterval(float value)
+        {
+            if (value <= 0) throw new ArgumentException("The range for keyframe interval should be greater than 0.");
             return Add("keyframe_interval", value);
         }
 
@@ -226,7 +233,6 @@ namespace CloudinaryDotNet
         {
             return Add("streaming_profile", value);
         }
-
 
         private static void ProcessVideoCodec(SortedDictionary<string, string> parameters, Dictionary<string, object> m_transformParams)
         {
