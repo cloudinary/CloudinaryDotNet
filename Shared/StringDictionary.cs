@@ -9,7 +9,7 @@ namespace CloudinaryDotNet
     /// This class is based on list so is very slow but allows not unique keys.
     /// This behavior is required for DeleteResources and ListResources commands.
     /// </summary>
-    public class StringDictionary : IEnumerable<KeyValuePair<string, string>>, IDictionary<string, string>
+    public class StringDictionary : IDictionary<string, string>
     {
         List<KeyValuePair<string, string>> m_list = new List<KeyValuePair<string, string>>();
 
@@ -133,10 +133,23 @@ namespace CloudinaryDotNet
             {
                 return m_list.Select(pair => pair.Value == null
                     ? pair.Key
-                    : String.Format("{0}={1}", pair.Key, pair.Value)).ToArray();
+                    : $"{pair.Key}={pair.Value}").ToArray();
             }
         }
 
+        /// <summary>
+        /// Returns all keys and values with escaped "|", "\" and "=" symbols
+        /// </summary>
+        public string[] SafePairs
+        {
+            get
+            {
+                return m_list.Select(pair => string.IsNullOrEmpty(pair.Value)
+                    ? Utils.EncodeContextString(pair.Key)
+                    : $"{Utils.EncodeContextString(pair.Key)}={Utils.EncodeContextString(pair.Value)}").ToArray();
+            }
+        }
+        
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>

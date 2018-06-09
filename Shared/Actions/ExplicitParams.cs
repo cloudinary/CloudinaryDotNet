@@ -134,7 +134,7 @@ namespace CloudinaryDotNet.Actions
 
             if (Context != null && Context.Count > 0)
             {
-                AddParam(dict, "context", string.Join("|", Context.Pairs));
+                AddParam(dict, Constants.CONTEXT_PARAM_NAME, string.Join("|", Context.SafePairs));
             }
 
             if (ResponsiveBreakpoints != null && ResponsiveBreakpoints.Count > 0)

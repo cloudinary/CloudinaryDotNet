@@ -123,7 +123,7 @@ namespace CloudinaryDotNet.Actions
                 AddParam(dict, "notification_url", NotificationUrl);
 
             if (ModerationStatus != Actions.ModerationStatus.Pending)
-                AddParam(dict, "moderation_status", Api.GetCloudinaryParam<ModerationStatus>(ModerationStatus));
+                AddParam(dict, "moderation_status", ApiShared.GetCloudinaryParam(ModerationStatus));
 
             if (AutoTagging.HasValue)
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
@@ -132,7 +132,7 @@ namespace CloudinaryDotNet.Actions
 
             if (Context != null && Context.Count > 0)
             {
-                AddParam(dict, "context", String.Join("|", Context.Pairs));
+                AddParam(dict, Constants.CONTEXT_PARAM_NAME, string.Join("|", Context.SafePairs));
             }
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);

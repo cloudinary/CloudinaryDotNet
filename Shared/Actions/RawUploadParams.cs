@@ -196,9 +196,9 @@ namespace CloudinaryDotNet.Actions
 
             if (Context != null && Context.Count > 0)
             {
-                AddParam(dict, "context", String.Join("|", Context.Pairs));
+                AddParam(dict, Constants.CONTEXT_PARAM_NAME, string.Join("|", Context.SafePairs));
             }
-
+            
             if (Headers != null && Headers.Count > 0)
             {
                 StringBuilder sb = new StringBuilder();

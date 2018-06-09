@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
 {
@@ -36,6 +38,18 @@ namespace CloudinaryDotNet
         internal static long UnixTimeNowSeconds()
         {
             return ToUnixTimeSeconds(DateTime.UtcNow);
+        }
+
+        /// <summary>
+        /// Escape "|", "\" and "=" symbols
+        /// </summary>
+        /// <param name="contextString"></param>
+        /// <returns></returns>
+        internal static string EncodeContextString(string contextString)
+        {
+            return string.IsNullOrEmpty(contextString)
+                ? contextString
+                : Regex.Replace(contextString, "([=\\|])", "\\\\$1");
         }
     }
 }

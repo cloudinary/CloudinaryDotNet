@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -26,6 +27,11 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Context { get; set; }
 
+        /// <summary>
+        /// General textual context metadata
+        /// </summary>
+        public StringDictionary ContextDict { get; set; }
+        
         /// <summary>
         /// Type
         /// </summary>
@@ -52,9 +58,24 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
-            AddParam(dict, Constants.CONTEXT_PARAM_NAME, Context);
+            var sbContext = new StringBuilder();
+            
+            if (ContextDict != null && ContextDict.Count > 0)
+                sbContext.Append(string.Join("|", ContextDict.SafePairs));
+
+            if (!string.IsNullOrEmpty(Context))
+            {
+                if (sbContext.Length > 0)
+                    sbContext.Append("|");
+                
+                sbContext.Append(Context);
+            }
+
+            if(sbContext.Length > 0)
+                AddParam(dict, Constants.CONTEXT_PARAM_NAME, sbContext.ToString());    
+            
             AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
-            AddParam(dict, Constants.COMMAND, Api.GetCloudinaryParam<ContextCommand>(Command));
+            AddParam(dict, Constants.COMMAND, ApiShared.GetCloudinaryParam(Command));
 
             return dict;
         }
