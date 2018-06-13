@@ -46,6 +46,7 @@ namespace CloudinaryDotNet.Test
 
         protected const string STORAGE_TYPE_UPLOAD = "upload";
         protected const string STORAGE_TYPE_PRIVATE = "private";
+        protected const string STORAGE_TYPE_AUTHENTICATED = "authenticated";
 
         protected const int TEST_PDF_PAGES_COUNT = 3;
         protected const int MAX_RESULTS = 500;
