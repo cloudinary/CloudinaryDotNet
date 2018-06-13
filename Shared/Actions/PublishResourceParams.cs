@@ -7,7 +7,7 @@ namespace CloudinaryDotNet.Actions
     {
         List<string> m_publicIds = new List<string>();
         ResourceType m_resourceType = ResourceType.Image;
-        string m_toType = string.Empty;
+        string m_type = string.Empty;
 
         public PublishResourceParams() { }
 
@@ -34,10 +34,13 @@ namespace CloudinaryDotNet.Actions
             set { m_resourceType = value; }
         }
 
-        public string ToType
+        /// <summary>
+        /// Gets or sets privacy mode of the image. Valid values: 'private' and 'authenticated'. Default: 'authenticated'.
+        /// </summary>
+        public string Type
         {
-            get { return m_toType; }
-            set { m_toType = value; }
+            get { return m_type; }
+            set { m_type = value; }
         }
 
         /// <summary>
@@ -57,11 +60,10 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (PublicIdsExist)
-            {
                 dict.Add("public_ids", PublicIds);
-            }
-            if (!string.IsNullOrWhiteSpace(this.m_toType))
-                dict.Add("to_type", this.m_toType);
+
+            if (!string.IsNullOrWhiteSpace(m_type))
+                dict.Add("type", m_type);
 
             return dict;
         }
