@@ -1348,5 +1348,25 @@ namespace CloudinaryDotNet.Test
 
             StringAssert.AreNotEqualIgnoringCase(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo), "The signatures are equal.");
         }
+
+        [Test]
+        public void TestClientHints()
+        {
+            const string assertMessage = "Should not implement responsive behaviour if client hints is true.";
+            m_api.ClientHints = true;
+
+            Transformation trans = new Transformation()
+                   .Crop("scale")
+                   .Width("auto")
+                   .Dpr("auto");
+
+            string testTag = m_api.UrlImgUp.Transform(trans).BuildImageTag("sample.jpg");
+            m_api.ClientHints = false; //reset to default value to prevent the impact on other tests
+            Assert.IsTrue(testTag.StartsWith("<img"), assertMessage);
+            Assert.IsFalse(testTag.Contains("class="), assertMessage);
+            Assert.IsFalse(testTag.Contains("data-src"), assertMessage);
+            Assert.IsTrue(testTag.Contains("src=\"http://res.cloudinary.com/testcloud/image/upload" +
+                                           "/c_scale,dpr_auto,w_auto/sample.jpg\""), assertMessage);
+        }
     }
 }
