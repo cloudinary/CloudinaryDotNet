@@ -15,11 +15,13 @@ namespace CloudinaryDotNet.Test
         protected string m_defaultVideoUpPath;
         protected string m_defaultImgFetchPath;
 
+        private Account m_account;
+
         [OneTimeSetUp]
         public void Init()
         {
-            Account account = new Account("testcloud", "1234", "abcd");
-            m_api = new Api(account);
+            m_account = new Account("testcloud", "1234", "abcd");
+            m_api = new Api(m_account);
             m_defaultRootPath = "http://res.cloudinary.com/testcloud/";
             m_defaultImgUpPath = m_defaultRootPath + "image/upload/";
             m_defaultVideoUpPath = m_defaultRootPath + "video/upload/";
@@ -1353,15 +1355,17 @@ namespace CloudinaryDotNet.Test
         public void TestClientHints()
         {
             const string assertMessage = "Should not implement responsive behaviour if client hints is true.";
-            m_api.ClientHints = true;
+            Api localApi = new Api(m_account)
+            {
+                ClientHints = true
+            };
 
             Transformation trans = new Transformation()
                    .Crop("scale")
                    .Width("auto")
                    .Dpr("auto");
 
-            string testTag = m_api.UrlImgUp.Transform(trans).BuildImageTag("sample.jpg");
-            m_api.ClientHints = false; //reset to default value to prevent the impact on other tests
+            string testTag = localApi.UrlImgUp.Transform(trans).BuildImageTag("sample.jpg");
             Assert.IsTrue(testTag.StartsWith("<img"), assertMessage);
             Assert.IsFalse(testTag.Contains("class="), assertMessage);
             Assert.IsFalse(testTag.Contains("data-src"), assertMessage);
