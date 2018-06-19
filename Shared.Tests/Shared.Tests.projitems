@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AuthTokenTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudinaryTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IntegrationTestBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SearchApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TransformationApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadMappingApiTest.cs" />

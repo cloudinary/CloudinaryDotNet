@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Converters;
 
 namespace CloudinaryDotNet
 {
@@ -474,6 +475,34 @@ namespace CloudinaryDotNet
             return string.Empty;
         }
 
+        protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
+        {
+            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+                FinalizeUploadParameters(parameters);
+            else if (parameters.ContainsKey("removeUnsignedParam"))
+            {
+                parameters.Remove("unsigned");
+                parameters.Remove("removeUnsignedParam");
+            }
+        }
+        
+        protected string ParamsToJson(SortedDictionary<string, object> parameters)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+
+            using (var writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, parameters);
+            }
+
+            return sb.ToString();
+        }
+        
         internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
         {
             parameters.Add("timestamp", GetTime());
