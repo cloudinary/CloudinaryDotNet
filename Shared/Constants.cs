@@ -36,5 +36,10 @@ namespace CloudinaryDotNet
         public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
         public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
         public const string SHARED_CDN = AKAMAI_SHARED_CDN;
+        
+        //HTTP protocol related constants
+        public const string HEADER_CONTENT_TYPE = "Content-Type";
+        public const string CONTENT_TYPE_APPLICATION_JSON = "application/json";
+
     }
 }

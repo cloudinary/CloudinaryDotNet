@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet
@@ -157,29 +158,29 @@ namespace CloudinaryDotNet
 
         private void PrepareRequestContent(HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            //HttpRequestMessage req = (HttpRequestMessage) request;
-            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
+            HandleUnsignedParameters(parameters);
+
+            HttpContent content = extraHeaders != null &&
+                                  extraHeaders.ContainsKey(Constants.HEADER_CONTENT_TYPE) &&
+                                  extraHeaders[Constants.HEADER_CONTENT_TYPE] == Constants.CONTENT_TYPE_APPLICATION_JSON
+                ? new StringContent(ParamsToJson(parameters), Encoding.UTF8, Constants.CONTENT_TYPE_APPLICATION_JSON)
+                : PrepareMultipartFormDataContent(parameters, file, extraHeaders);
+
             if (extraHeaders != null)
             {
                 foreach (var header in extraHeaders)
                 {
                     content.Headers.TryAddWithoutValidation(header.Key, header.Value);
-
-                }
-                
-            }
-            
-            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
-                FinalizeUploadParameters(parameters);
-            else
-            {
-                if (parameters.ContainsKey("removeUnsignedParam"))
-                {
-                    parameters.Remove("unsigned");
-                    parameters.Remove("removeUnsignedParam");
                 }
             }
 
+            request.Content = content;
+        }
+
+        private HttpContent PrepareMultipartFormDataContent(SortedDictionary<string, object> parameters,
+            FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
             foreach (var param in parameters)
             {
                 if (param.Value != null)
@@ -236,9 +237,8 @@ namespace CloudinaryDotNet
                 }
             }
 
-            request.Content = content;
+            return content;
         }
-
 
         public override string BuildCallbackUrl(string path = "")
         {
