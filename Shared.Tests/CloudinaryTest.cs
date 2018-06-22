@@ -529,7 +529,7 @@ namespace CloudinaryDotNet.Test
         {
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription("http://cloudinary.com/images/old_logo.png"),
+                File = new FileDescription(TEST_REMOTE_IMG),
                 Tags = m_apiTag
             };
 
@@ -794,19 +794,32 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestUploadLargeFromWeb()
+        public void TestUploadLargeVideoFromWeb()
         {
-            // support uploading large image
-
-            var largeFilePath = "http://res.cloudinary.com/demo/video/upload/v1496743637/dog.mp4";
-            var result = m_cloudinary.UploadLarge(new ImageUploadParams()
+            // support uploading large video
+            var result = m_cloudinary.UploadLarge(new VideoUploadParams()
             {
-                File = new FileDescription(largeFilePath),
+                File = new FileDescription(TEST_REMOTE_VIDEO),
                 Tags = m_apiTag
             }, 5 * 1024 * 1024);
 
             Assert.AreEqual(result.StatusCode, System.Net.HttpStatusCode.OK);
             Assert.AreEqual(result.Format, FILE_FORMAT_MP4);
+        }
+
+        [Test]
+        public void TestUploadLargeImageFromWeb()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(TEST_REMOTE_IMG),
+                Tags = m_apiTag
+            };
+
+            var uploadResult = m_cloudinary.UploadLarge(uploadParams);
+
+            Assert.AreEqual(uploadResult.StatusCode, HttpStatusCode.OK);
+            Assert.AreEqual(FILE_FORMAT_PNG, uploadResult.Format);
         }
 
         [Test]
