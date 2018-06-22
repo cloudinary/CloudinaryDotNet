@@ -397,17 +397,34 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Uploads a resource to cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of uploading .</param>
+        /// <returns>Results of uploading.</returns>
+        private T Upload<T, P>(P parameters) where T : UploadResult, new()
+                                             where P : BasicRawUploadParams, new()
+        {
+            if (parameters == null)
+                throw new ArgumentNullException("parameters", "Upload parameters should be defined");
+
+            string uri = m_api.ApiUrlV
+                .Action(Constants.ACTION_NAME_UPLOAD)
+                .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
+                .BuildUrl();
+
+            ResetInternalFileDescription(parameters.File);
+
+            return m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File);
+        }
+
+        /// <summary>
         /// Uploads an image file to cloudinary.
         /// </summary>
         /// <param name="parameters">Parameters of image uploading .</param>
         /// <returns>Results of image uploading.</returns>
         public ImageUploadResult Upload(ImageUploadParams parameters)
         {
-            string uri = m_api.ApiUrlImgUpV.BuildUrl();
-
-            ResetInternalFileDescription(parameters.File);
-
-            return m_api.CallApi<ImageUploadResult>(HttpMethod.POST, uri, parameters, parameters.File);
+            return Upload<ImageUploadResult, ImageUploadParams>(parameters);
         }
 
         /// <summary>
@@ -417,11 +434,7 @@ namespace CloudinaryDotNet
         /// <returns>Results of video uploading.</returns>
         public VideoUploadResult Upload(VideoUploadParams parameters)
         {
-            string uri = m_api.ApiUrlVideoUpV.BuildUrl();
-
-            ResetInternalFileDescription(parameters.File);
-
-            return m_api.CallApi<VideoUploadResult>(HttpMethod.POST, uri, parameters, parameters.File);
+            return Upload<VideoUploadResult, VideoUploadParams>(parameters);
         }
 
         /// <summary>
@@ -432,7 +445,7 @@ namespace CloudinaryDotNet
         /// <param name="fileDescription">File description.</param>
         public RawUploadResult Upload(string resourceType, IDictionary<string, object> parameters, FileDescription fileDescription)
         {
-            string uri = m_api.ApiUrlV.Action("upload").ResourceType(resourceType).BuildUrl();
+            string uri = m_api.ApiUrlV.Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
 
             ResetInternalFileDescription(fileDescription);
 
@@ -485,6 +498,13 @@ namespace CloudinaryDotNet
             return m_api.CallApi<RawUploadResult>(HttpMethod.POST, uri, parameters, parameters.File);
         }
 
+        private string RandomPublicId()
+        {
+            byte[] buffer = new byte[8];
+            m_random.NextBytes(buffer);
+            return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+        }
+
         /// <summary>
         /// Uploads large file to cloudinary by dividing it to chunks.
         /// </summary>
@@ -498,16 +518,7 @@ namespace CloudinaryDotNet
         /// </exception>
         public RawUploadResult UploadLargeRaw(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
         {
-            if (parameters.File.IsRemote)
-                throw new ArgumentException("The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!");
             return UploadLarge<RawUploadResult>(parameters, bufferSize);
-        }
-
-        private string RandomPublicId()
-        {
-            byte[] buffer = new byte[8];
-            m_random.NextBytes(buffer);
-            return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
         }
 
         public RawUploadResult UploadLarge(RawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
@@ -536,11 +547,16 @@ namespace CloudinaryDotNet
             {
                 return UploadLarge<ImageUploadResult>(parameters, bufferSize);
             }
-
         }
 
         public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
         {
+            if (parameters == null)
+                throw new ArgumentNullException("parameters", "Upload parameters should be defined");
+
+            if (parameters.File != null && parameters.File.IsRemote)
+                return Upload<T, BasicRawUploadParams>(parameters);
+
             Url url = m_api.ApiUrlImgUpV;
             var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
             if (name != null)
