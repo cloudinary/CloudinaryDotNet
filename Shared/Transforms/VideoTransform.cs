@@ -121,6 +121,11 @@ namespace CloudinaryDotNet
             return Add("start_offset", ToString(value) + "p");
         }
 
+        public Transformation StartOffsetAuto()
+        {
+            return StartOffset("auto");
+        }
+
         public Transformation EndOffset(string value)
         {
             return Add("end_offset", value);
@@ -261,6 +266,14 @@ namespace CloudinaryDotNet
             }
 
             parameters.Add("vc", sb.ToString());
+        }
+
+        private static string NormAutoRangeValue(object objectValue)
+        {
+
+            return objectValue != null && string.Equals(objectValue.ToString(), "auto")
+                              ? objectValue.ToString()
+                              : NormRangeValue(objectValue);
         }
 
         private static string NormRangeValue(object objectValue)

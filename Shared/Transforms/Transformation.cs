@@ -215,7 +215,7 @@ namespace CloudinaryDotNet
             string endOffset = null;
 
             if (m_transformParams.TryGetValue("start_offset", out obj))
-                startOffset = NormRangeValue(obj);
+                startOffset = NormAutoRangeValue(obj);
 
             if (m_transformParams.TryGetValue("end_offset", out obj))
                 endOffset = NormRangeValue(obj);
@@ -223,7 +223,7 @@ namespace CloudinaryDotNet
             if (m_transformParams.TryGetValue("offset", out obj)) {
                 var offset = SplitRange(m_transformParams["offset"]);
                 if (offset != null && offset.Length == 2) {
-                    startOffset = NormRangeValue(offset[0]);
+                    startOffset = NormAutoRangeValue(offset[0]);
                     endOffset = NormRangeValue(offset[1]);
                 }
             }
