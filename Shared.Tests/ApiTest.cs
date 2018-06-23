@@ -1055,6 +1055,10 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(m_defaultVideoUpPath + "so_2.63p/video_id", actual);
             actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffsetPercent(2.63)).BuildUrl("video_id");
             Assert.AreEqual(m_defaultVideoUpPath + "so_2.63p/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffset("auto")).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "so_auto/video_id", actual);
+            actual = m_api.UrlVideoUp.Transform(new Transformation().StartOffsetAuto()).BuildUrl("video_id");
+            Assert.AreEqual(m_defaultVideoUpPath + "so_auto/video_id", actual);
         }
 
         [Test]
