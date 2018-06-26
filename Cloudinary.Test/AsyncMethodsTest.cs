@@ -286,7 +286,7 @@ namespace CloudinaryDotNet.Test
 
             ExplicitParams exp = new ExplicitParams(cloudinary)
             {
-                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                EagerTransforms = new List<Transformation>() { m_explicitTransformation },
                 Type = type,
                 Tags = m_apiTag
             };
@@ -295,7 +295,7 @@ namespace CloudinaryDotNet.Test
             AddCreatedPublicId(StorageType.facebook, expResult.PublicId);
 
             string url = new Url(m_account.Cloud).ResourceType(Api.GetCloudinaryParam(ResourceType.Image)).Add(type).
-                Transform(m_simpleTransformation).
+                Transform(m_explicitTransformation).
                 Format(FILE_FORMAT_PNG).Version(expResult.Version).BuildUrl(cloudinary);
 
             Assert.AreEqual(url, expResult.Eager[0].Uri.AbsoluteUri);

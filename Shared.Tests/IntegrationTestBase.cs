@@ -130,7 +130,7 @@ namespace CloudinaryDotNet.Test
 
             m_updateTransformationAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100";
             m_updateTransformation = new Transformation().Width(100).Crop("scale").Overlay(new TextLayer().Text(m_suffix + "_update").FontFamily("Arial").FontSize(60));
-            m_explicitTransformation = new Transformation().Width(100).Crop("scale").Overlay(new TextLayer().Text(m_suffix).FontFamily("Arial").FontSize(60));
+            m_explicitTransformation = new Transformation().Width(100).Crop("scale").FetchFormat("png").Overlay(new TextLayer().Text(m_suffix).FontFamily("Arial").FontSize(60));
 
             AddCreatedTransformation(m_simpleTransformation, m_resizeTransformation, m_updateTransformation, m_updateTransformationAsString,
                 m_explicitTransformation, m_explodeTransformation, m_simpleTransformationAngle);
