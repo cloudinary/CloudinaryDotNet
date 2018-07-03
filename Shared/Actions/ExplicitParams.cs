@@ -37,6 +37,8 @@ namespace CloudinaryDotNet.Actions
 
         public string Type { get; set; }
 
+        public string Ocr { get; set; }
+        
         /// <summary>
         /// The type of resource
         /// </summary>
@@ -115,6 +117,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "tags", Tags);
             AddParam(dict, "type", Type);
+            AddParam(dict, "ocr", Ocr);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
             AddParam(dict, "invalidate", Invalidate);

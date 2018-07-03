@@ -217,6 +217,47 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestOcrUpdateResult()
+        {
+            // should support requesting ocr info
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag,
+                Transformation = m_implicitTransformation
+            });
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            {
+                Ocr = "adv_ocr"
+            });
+
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            Assert.IsTrue(updateResult.Info.Ocr.AdvOcr.Data.Any());
+        }
+
+        [Test]
+        public void TestExplicitOcr()
+        {
+            // should support requesting ocr info
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag,
+                Transformation = m_implicitTransformation
+            });
+
+            var updateResult = m_cloudinary.Explicit(new ExplicitParams(uploadResult.PublicId)
+            {
+                Ocr = "adv_ocr", 
+                Type = STORAGE_TYPE_UPLOAD
+            });
+
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+        }
+
+        [Test]
         public void TestRawConvertUpdate()
         {
             // should support requesting raw conversion

@@ -35,6 +35,9 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "status")]
         public string Status { get; protected set; }
+        
+        [DataMember(Name = "info")]
+        public Info Info { get; protected set; }
     }
 
     [DataContract]
