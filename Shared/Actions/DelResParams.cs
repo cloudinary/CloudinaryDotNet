@@ -76,6 +76,13 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
+        /// List of transformations. When provided, only derived resources matched by the transformations
+        /// would be deleted.
+        /// </summary>
+        /// <returns></returns>
+        public List<Transformation> Transformations { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -97,9 +104,15 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
-            AddParam(dict, "keep_original", KeepOriginal);
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "next_cursor", NextCursor);
+
+            if (Transformations != null && Transformations.Count > 0)
+            {
+                AddParam(dict, "transformations", string.Join("|", Transformations));
+            }
+
+            AddParam(dict, "keep_original", KeepOriginal);
 
             if (!String.IsNullOrEmpty(Tag))
             {
