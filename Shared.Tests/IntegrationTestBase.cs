@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace CloudinaryDotNet.Test
 {
@@ -341,4 +342,31 @@ namespace CloudinaryDotNet.Test
             m_presetsToClear.ForEach(p => m_cloudinary.DeleteUploadPreset(p));
         }
     }
+
+    public class IgnoreAddonAttribute : Attribute, ITestAction
+    {
+        private readonly string m_addonName;
+
+        public IgnoreAddonAttribute(string name)
+        {
+            m_addonName = name;
+        }
+
+        public ActionTargets Targets { get; private set; }
+
+        public void AfterTest(ITest test) { }
+
+        public void BeforeTest(ITest test)
+        {
+            var addonsToRun = Environment.GetEnvironmentVariable("CLD_TEST_ADDONS");
+            if (string.IsNullOrEmpty(addonsToRun) ||
+                !addonsToRun.Contains(m_addonName) &&
+                !addonsToRun.ToLower().Equals("all"))
+            {
+                Assert.Ignore(
+                    $"Please enable {m_addonName} plugin in your account and set CLD_TEST_ADDONS environment variable");
+            }
+        }
+    }
+
 }

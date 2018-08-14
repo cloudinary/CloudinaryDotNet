@@ -36,11 +36,14 @@ namespace CloudinaryDotNet.Test
         protected readonly Transformation m_eagerTransformation = new EagerTransformation(
             new Transformation().Width(512).Height(512), new Transformation().Width(100).Crop("scale")).SetFormat(FILE_FORMAT_PNG);
 
+        protected string m_implicitTransformationText;
+
         public override void Initialize()
         {
             base.Initialize();
 
-            m_implicitTransformation = new Transformation().Crop("scale").Overlay(new TextLayer().Text(m_suffix + "_implicit").FontFamily("Arial").FontSize(60));
+            m_implicitTransformationText = m_suffix + "_implicit";
+            m_implicitTransformation = new Transformation().Crop("scale").Overlay(new TextLayer().Text(m_implicitTransformationText).FontFamily("Arial").FontSize(60));
 
             AddCreatedTransformation(
                 m_implicitTransformation, m_transformationAngleExtended,
@@ -200,7 +203,6 @@ namespace CloudinaryDotNet.Test
         public void TestOcrUpdate()
         {
             // should support requesting ocr info
-
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
@@ -216,11 +218,10 @@ namespace CloudinaryDotNet.Test
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
-        [Test]
+        [Test, IgnoreAddon("adv_ocr")]
         public void TestOcrUpdateResult()
         {
-            // should support requesting ocr info
-
+            // should support requesting ocr info from adv_ocr addon
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
@@ -234,27 +235,11 @@ namespace CloudinaryDotNet.Test
             });
 
             Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
-            Assert.IsTrue(updateResult.Info.Ocr.AdvOcr.Data.Any());
-        }
 
-        [Test]
-        public void TestExplicitOcr()
-        {
-            // should support requesting ocr info
-            var uploadResult = m_cloudinary.Upload(new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag,
-                Transformation = m_implicitTransformation
-            });
-
-            var updateResult = m_cloudinary.Explicit(new ExplicitParams(uploadResult.PublicId)
-            {
-                Ocr = "adv_ocr", 
-                Type = STORAGE_TYPE_UPLOAD
-            });
-
-            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            StringAssert.AreEqualIgnoringCase(
+                m_implicitTransformationText,
+                // OCR sometimes replaces `_` with space and adds newline at the end, ignore those
+                updateResult.Info.Ocr.AdvOcr.Data[0].FullTextAnnotation.Text.Replace(" ", "_").Replace("\n", ""));
         }
 
         [Test]
@@ -317,7 +302,7 @@ namespace CloudinaryDotNet.Test
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
-        [Test, Ignore("Requires Rekognition plugin")]
+        [Test, IgnoreAddon("rekognition")]
         public void TestRekognitionFace()
         {
             // should support rekognition face
@@ -337,6 +322,11 @@ namespace CloudinaryDotNet.Test
             {
                 Detection = rekognitionFace
             });
+
+            if (updateResult.Error.Message.StartsWith("You don't have an active"))
+            {
+                Assert.Ignore(updateResult.Error.Message);
+            }
 
             Assert.NotNull(updateResult.Info);
             Assert.NotNull(updateResult.Info.Detection);
