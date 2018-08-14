@@ -94,6 +94,8 @@ namespace CloudinaryDotNet
         /// Decides which part of the image to keep while 'crop', 'pad' and 'fill' crop modes are used. For overlays, this decides where to place the overlay.
         /// </summary>
         public Transformation Gravity(string value) { return Add("gravity", value); }
+        public Transformation Gravity(string value, string param) { return Gravity($"{value}:{param}"); }
+        
         public Transformation ColorSpace(string value) { return Add("color_space", value); }
         public Transformation Prefix(string value) { return Add("prefix", value); }
 

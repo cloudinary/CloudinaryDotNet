@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions
@@ -135,7 +133,147 @@ namespace CloudinaryDotNet.Actions
     {
         [DataMember(Name = "detection")]
         public Detection Detection { get; protected set; }
+
+        [DataMember(Name = "ocr")]
+        public Ocr Ocr { get; protected set; }
     }
+
+    #region OCR
+
+    [DataContract]
+    public class Ocr
+    {
+        [DataMember(Name = "adv_ocr")] 
+        public AdvOcr AdvOcr { get; protected set; }
+    }
+
+    [DataContract]
+    public class AdvOcr
+    {
+        [DataMember(Name = "status")] 
+        public string Status { get; protected set; }
+
+        [DataMember (Name = "data")]
+        public List<AdvOcrData> Data { get; protected set; }
+    }
+
+    [DataContract]
+    public class AdvOcrData
+    {
+        [DataMember(Name = "textAnnotations")]
+        public List<TextAnnotation> TextAnnotations { get; protected set; }
+        
+        [DataMember(Name = "fullTextAnnotation")]
+        public FullTextAnnotation FullTextAnnotation { get; protected set; }
+    }
+
+    [DataContract]
+    public class TextAnnotation
+    {
+        [DataMember(Name = "locale")]
+        public string Locale { get; protected set; }
+
+        [DataMember(Name = "description")]
+        public string Description { get; protected set; }
+
+        [DataMember (Name="boundingPoly")]
+        public BoundingBlock BoundingPoly { get; protected set; }
+    }
+
+    [DataContract]
+    public class BoundingBlock
+    {
+        [DataMember(Name = "vertices")]
+        public List<Point> Vertices { get; private set; }
+    }
+
+    [DataContract]
+    public class FullTextAnnotation
+    {
+        [DataMember(Name = "pages")]
+        public List<Page> Pages { get; protected set; }
+        
+        [DataMember(Name = "text")]
+        public string Text { get; protected set; }
+    }
+
+    [DataContract]
+    public class Page
+    {
+        [DataMember(Name = "property")]
+        public PageProperty Property { get; protected set; }
+        
+        [DataMember(Name = "width")]
+        public int? Width { get; protected set; }
+        
+        [DataMember(Name = "height")]
+        public int? Height { get; protected set; }
+        
+        [DataMember(Name = "blocks")]
+        public List<TextBlock> Blocks { get; protected set; }
+    }
+
+    [DataContract]
+    public class PageProperty
+    {
+        [DataMember(Name = "detectedLanguages")]
+        public List<DetectedLanguage> DetectedLanguages { get; protected set; }
+    }
+
+    [DataContract]
+    public class DetectedLanguage
+    {
+        [DataMember(Name = "languageCode")]
+        public string LanguageCode { get; protected set; }
+    }
+
+    [DataContract]
+    public abstract class Block
+    {
+        [DataMember(Name = "property")]
+        public PageProperty Property { get; protected set; }
+        
+        [DataMember(Name = "boundingBox")]
+        public BoundingBlock BoundingBox { get; protected set; }
+    }
+
+    [DataContract]
+    public class TextBlock : Block
+    {
+        [DataMember(Name = "paragraphs")] 
+        public List<Paragraph> Paragraphs { get; protected set; }
+
+        [DataMember(Name = "blockType")] 
+        public string BlockType { get; protected set; }
+    }
+
+    [DataContract]
+    public class Paragraph : Block
+    {
+        [DataMember(Name = "words")]
+        public List<Word> Words { get; protected set; }
+        
+        [DataMember(Name = "text")]
+        public string Text { get; protected set; }
+    }
+
+    [DataContract]
+    public class Word : Block
+    {
+        [DataMember(Name = "symbols")]
+        public List<Symbol> Symbols { get; protected set; }
+    }
+
+    [DataContract]
+    public class Symbol : Block
+    {
+        [DataMember(Name = "text")]
+        public string Text { get; protected set; }
+    }
+
+    #endregion
+
+    #region Rekognition face
 
     [DataContract]
     public class Detection
@@ -358,4 +496,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "height")]
         public double Height { get; protected set; }
     }
+
+    #endregion
 }

@@ -134,5 +134,37 @@ namespace CloudinaryDotNet.Test
             transformation = new Transformation().IfCondition().Width("gt", 100).And().Width("lt", 200).Then().Width(50).Crop("scale").IfElse().Width(100).Crop("crop").EndIf();
             Assert.AreEqual("if_w_gt_100_and_w_lt_200/c_scale,w_50/if_else/c_crop,w_100/if_end", transformation.ToString(), "force the if_else clause to be chained");
         }
+
+        [Test]
+        public void TestOcrGravityTransformation()
+        {
+            var transformation = new Transformation().Gravity("west");
+            Assert.AreEqual("g_west", transformation.ToString());
+
+            transformation = new Transformation().Gravity("auto");
+            Assert.AreEqual("g_auto", transformation.ToString());
+            
+            transformation = new Transformation().Gravity("auto:good");
+            Assert.AreEqual("g_auto:good", transformation.ToString());
+
+            transformation = new Transformation().Gravity("ocr_text");
+            Assert.AreEqual("g_ocr_text", transformation.ToString());
+
+            transformation = new Transformation().Gravity("auto", "ocr_text");
+            Assert.AreEqual("g_auto:ocr_text", transformation.ToString());
+
+            transformation = new Transformation().Gravity("ocr_text", "adv_ocr");
+            Assert.AreEqual("g_ocr_text:adv_ocr", transformation.ToString());
+        }
+
+        [Test]
+        public void TestBlurPixelateEffectsTransformation()
+        {
+            var transformation = new Transformation().Effect("blur_region");
+            Assert.AreEqual("e_blur_region", transformation.ToString());
+            
+            transformation = new Transformation().Effect("pixelate_region");
+            Assert.AreEqual("e_pixelate_region", transformation.ToString());
+        }
     }
 }
