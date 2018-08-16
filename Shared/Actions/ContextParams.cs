@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -31,7 +32,7 @@ namespace CloudinaryDotNet.Actions
         /// General textual context metadata
         /// </summary>
         public StringDictionary ContextDict { get; set; }
-        
+
         /// <summary>
         /// Type
         /// </summary>
@@ -50,30 +51,33 @@ namespace CloudinaryDotNet.Actions
             // ok
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation
         /// </summary>
         /// <returns>Sorted dictionary of parameters</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
-            var sbContext = new StringBuilder();
+            var contextPairs = new List<string>();
+
+            if (ContextDict?.SafePairs != null)
+            {
+                contextPairs.AddRange(ContextDict.SafePairs);
+            }
             
-            if (ContextDict != null && ContextDict.Count > 0)
-                sbContext.Append(string.Join("|", ContextDict.SafePairs));
-
             if (!string.IsNullOrEmpty(Context))
             {
-                if (sbContext.Length > 0)
-                    sbContext.Append("|");
-                
-                sbContext.Append(Context);
+                contextPairs.Add(Context);
             }
 
-            if(sbContext.Length > 0)
-                AddParam(dict, Constants.CONTEXT_PARAM_NAME, sbContext.ToString());    
-            
+            if (contextPairs.Count > 0)
+            {
+                AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", contextPairs));
+            }
+           
+
             AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
             AddParam(dict, Constants.COMMAND, ApiShared.GetCloudinaryParam(Command));
 
@@ -92,7 +96,7 @@ namespace CloudinaryDotNet.Actions
         [EnumMember(Value = "add")]
         Add,
         /// <summary>
-        /// Remove all contexts from resources with the given Public IDs. 
+        /// Remove all contexts from resources with the given Public IDs.
         /// </summary>
         [EnumMember(Value = "remove_all")]
         RemoveAll

@@ -1063,17 +1063,23 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestContextEscaping()
         {
-            var uploadParams = new ImageUploadParams { Context = new StringDictionary(@"key=val\=ue") };
-            Assert.AreEqual(uploadParams.ToParamsDictionary()["context"], @"key=val\\\=ue");
+            var context = new StringDictionary();
+            context.Add("key", "val=ue");
+
+            var uploadParams = new ImageUploadParams { Context=context };
+            Assert.AreEqual(@"key=val\=ue", uploadParams.ToParamsDictionary()["context"]);
+
+            context.Add(@"hello=world|2", "goodbye|wo=rld2");
 
             var contextParams = new ContextParams()
             {
-                Context = @"val\=ue", 
-                ContextDict = new StringDictionary(@"key2=va\=lue2")
+                Context = @"val\=ue",
+                ContextDict = context
             };
-            Assert.AreEqual(contextParams.ToParamsDictionary()["context"], @"key2=va\\\=lue2|val\=ue");
+
+            Assert.AreEqual(@"key=val\=ue|hello\=world\|2=goodbye\|wo\=rld2|val\=ue", contextParams.ToParamsDictionary()["context"]);
         }
-        
+
         [Test, Ignore("test needs to be re-written with mocking - it fails when there are many resources")]
         public void TestResourcesListingDirection()
         {

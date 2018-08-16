@@ -83,7 +83,7 @@ namespace CloudinaryDotNet.Actions
         /// Optional. Pass a list of AccessControlRule parameters
         /// </summary>
         public List<AccessControlRule> AccessControl { get; set; }
-        
+
         /// <summary>
         /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
         /// </summary>
@@ -91,7 +91,7 @@ namespace CloudinaryDotNet.Actions
         ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
         /// </value>
         public bool Invalidate { get; set; }
-        
+
         /// <summary>
         /// Perform asynchronous processing on the server in explicit API calls. Default: false.
         /// </summary>
@@ -134,14 +134,14 @@ namespace CloudinaryDotNet.Actions
 
             if (Context != null && Context.Count > 0)
             {
-                AddParam(dict, Constants.CONTEXT_PARAM_NAME, string.Join("|", Context.SafePairs));
+                AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", Context.SafePairs));
             }
 
             if (ResponsiveBreakpoints != null && ResponsiveBreakpoints.Count > 0)
             {
                 AddParam(dict, "responsive_breakpoints", JsonConvert.SerializeObject(ResponsiveBreakpoints));
             }
-            
+
             if (AccessControl != null && AccessControl.Count > 0)
             {
                 AddParam(dict, "access_control", JsonConvert.SerializeObject(AccessControl));

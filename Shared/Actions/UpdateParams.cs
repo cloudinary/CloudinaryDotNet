@@ -87,7 +87,7 @@ namespace CloudinaryDotNet.Actions
         /// The moderation status.
         /// </value>
         public ModerationStatus ModerationStatus { get; set; }
-        
+
         /// <summary>
         /// Optional. Pass a list of AccessControlRule parameters
         /// </summary>
@@ -132,7 +132,7 @@ namespace CloudinaryDotNet.Actions
 
             if (Context != null && Context.Count > 0)
             {
-                AddParam(dict, Constants.CONTEXT_PARAM_NAME, string.Join("|", Context.SafePairs));
+                AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", Context.SafePairs));
             }
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
@@ -151,7 +151,7 @@ namespace CloudinaryDotNet.Actions
 
                 dict.Add("headers", sb.ToString());
             }
-            
+
             if (AccessControl != null && AccessControl.Count > 0)
             {
                 AddParam(dict, "access_control", JsonConvert.SerializeObject(AccessControl));

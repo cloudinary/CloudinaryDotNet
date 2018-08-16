@@ -136,20 +136,29 @@ namespace CloudinaryDotNet
                     : $"{pair.Key}={pair.Value}").ToArray();
             }
         }
+        /// <summary>
+        /// Escape safe pair delimiter
+        /// </summary>
+        /// <param name="value">Value to escape</param>
+        /// <returns>Escaped value</returns>
+        private string EscapeSafePairString(string value)
+        {
+            return value.Replace(@"=", @"\=");
+        }
 
         /// <summary>
-        /// Returns all keys and values with escaped "|", "\" and "=" symbols
+        /// Returns all keys and values with escaped "=" symbol
         /// </summary>
         public string[] SafePairs
         {
             get
             {
                 return m_list.Select(pair => string.IsNullOrEmpty(pair.Value)
-                    ? Utils.EncodeContextString(pair.Key)
-                    : $"{Utils.EncodeContextString(pair.Key)}={Utils.EncodeContextString(pair.Value)}").ToArray();
+                    ? EscapeSafePairString(pair.Key)
+                    : $"{EscapeSafePairString(pair.Key)}={EscapeSafePairString(pair.Value)}").ToArray();
             }
         }
-        
+
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
