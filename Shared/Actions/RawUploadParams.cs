@@ -160,7 +160,7 @@ namespace CloudinaryDotNet.Actions
         /// Tells Cloudinary whether to perform the upload request in the background (asynchronously).
         /// </summary>
         public string Async { get; set; }
-        
+
         /// <summary>
         /// Optional. Pass a list of AccessControlRule parameters
         /// </summary>
@@ -196,7 +196,7 @@ namespace CloudinaryDotNet.Actions
 
             if (Context != null && Context.Count > 0)
             {
-                AddParam(dict, "context", String.Join("|", Context.Pairs));
+                AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", Context.SafePairs));
             }
 
             if (Headers != null && Headers.Count > 0)
@@ -209,7 +209,7 @@ namespace CloudinaryDotNet.Actions
 
                 dict.Add("headers", sb.ToString());
             }
-            
+
             if (AccessControl != null && AccessControl.Count > 0)
             {
                 AddParam(dict, "access_control", JsonConvert.SerializeObject(AccessControl));

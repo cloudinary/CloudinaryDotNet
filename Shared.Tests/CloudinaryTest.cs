@@ -1060,6 +1060,26 @@ namespace CloudinaryDotNet.Test
                 .Count() > 0);
         }
 
+        [Test]
+        public void TestContextEscaping()
+        {
+            var context = new StringDictionary();
+            context.Add("key", "val=ue");
+
+            var uploadParams = new ImageUploadParams { Context=context };
+            Assert.AreEqual(@"key=val\=ue", uploadParams.ToParamsDictionary()["context"]);
+
+            context.Add(@"hello=world|2", "goodbye|wo=rld2");
+
+            var contextParams = new ContextParams()
+            {
+                Context = @"val\=ue",
+                ContextDict = context
+            };
+
+            Assert.AreEqual(@"key=val\=ue|hello\=world\|2=goodbye\|wo\=rld2|val\=ue", contextParams.ToParamsDictionary()["context"]);
+        }
+
         [Test, Ignore("test needs to be re-written with mocking - it fails when there are many resources")]
         public void TestResourcesListingDirection()
         {

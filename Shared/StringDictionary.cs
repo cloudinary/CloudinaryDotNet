@@ -9,7 +9,7 @@ namespace CloudinaryDotNet
     /// This class is based on list so is very slow but allows not unique keys.
     /// This behavior is required for DeleteResources and ListResources commands.
     /// </summary>
-    public class StringDictionary : IEnumerable<KeyValuePair<string, string>>, IDictionary<string, string>
+    public class StringDictionary : IDictionary<string, string>
     {
         List<KeyValuePair<string, string>> m_list = new List<KeyValuePair<string, string>>();
 
@@ -133,7 +133,29 @@ namespace CloudinaryDotNet
             {
                 return m_list.Select(pair => pair.Value == null
                     ? pair.Key
-                    : String.Format("{0}={1}", pair.Key, pair.Value)).ToArray();
+                    : $"{pair.Key}={pair.Value}").ToArray();
+            }
+        }
+        /// <summary>
+        /// Escape safe pair delimiter
+        /// </summary>
+        /// <param name="value">Value to escape</param>
+        /// <returns>Escaped value</returns>
+        private string EscapeSafePairString(string value)
+        {
+            return value.Replace(@"=", @"\=");
+        }
+
+        /// <summary>
+        /// Returns all keys and values with escaped "=" symbol
+        /// </summary>
+        public string[] SafePairs
+        {
+            get
+            {
+                return m_list.Select(pair => string.IsNullOrEmpty(pair.Value)
+                    ? EscapeSafePairString(pair.Key)
+                    : $"{EscapeSafePairString(pair.Key)}={EscapeSafePairString(pair.Value)}").ToArray();
             }
         }
 

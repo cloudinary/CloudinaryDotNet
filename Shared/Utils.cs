@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
 {
@@ -36,6 +39,16 @@ namespace CloudinaryDotNet
         internal static long UnixTimeNowSeconds()
         {
             return ToUnixTimeSeconds(DateTime.UtcNow);
+        }
+        /// <summary>
+        /// Concatenates items using provided separator, escaping separtor character in each item
+        /// </summary>
+        /// <param name="separator"> The string to use as a separator</param>
+        /// <param name="items">IEnumerable to join</param>
+        /// <returns></returns>
+        internal static string SafeJoin(string separator, IEnumerable<string> items)
+        {
+            return String.Join(separator, items.Select(item => Regex.Replace(item, $"([{separator}])", "\\$1")));
         }
     }
 }
