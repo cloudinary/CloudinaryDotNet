@@ -23,6 +23,8 @@ namespace CloudinaryDotNet.Test
 
         private const string ACCESS_MODE_PUBLIC = "public";
         private const string MODERATION_MANUAL = "manual";
+        private const string MODERATION_AWS_REK = "aws_rek";
+        private const string MODERATION_WEBPURIFY = "webpurify";
 
         private Transformation m_implicitTransformation;
 
@@ -199,6 +201,29 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(ModerationStatus.Pending, getResult.Moderation[0].Status);
         }
 
+        [Test]
+        public void TestModerationResult()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Moderation = MODERATION_AWS_REK,
+                Tags = m_apiTag
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+            Assert.IsNotNull(uploadResult.Moderation);
+            Assert.AreEqual(1, uploadResult.Moderation.Count);
+            Assert.AreEqual(ModerationStatus.Approved, uploadResult.Moderation[0].Status);
+            Assert.AreEqual(MODERATION_AWS_REK, uploadResult.Moderation[0].Kind);
+
+            uploadParams.Moderation = MODERATION_WEBPURIFY;
+            uploadResult = m_cloudinary.Upload(uploadParams);
+            Assert.IsNotNull(uploadResult.Moderation);
+            Assert.AreEqual(1, uploadResult.Moderation.Count);
+            Assert.AreEqual(MODERATION_WEBPURIFY, uploadResult.Moderation[0].Kind);
+        }
+        
         [Test]
         public void TestOcrUpdate()
         {
