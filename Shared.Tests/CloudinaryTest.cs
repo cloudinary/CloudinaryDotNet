@@ -175,7 +175,7 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestModeration()
+        public void TestModerationManual()
         {
             var uploadParams = new RawUploadParams()
             {
@@ -201,8 +201,8 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(ModerationStatus.Pending, getResult.Moderation[0].Status);
         }
 
-        [Test]
-        public void TestModerationResult()
+        [Test, IgnoreAddon("aws_rek")]
+        public void TestModerationAwsRek()
         {
             var uploadParams = new ImageUploadParams()
             {
@@ -216,9 +216,19 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(1, uploadResult.Moderation.Count);
             Assert.AreEqual(ModerationStatus.Approved, uploadResult.Moderation[0].Status);
             Assert.AreEqual(MODERATION_AWS_REK, uploadResult.Moderation[0].Kind);
+        }
+        
+        [Test, IgnoreAddon("webpurify")]
+        public void TestModerationWebpurify()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Moderation = MODERATION_WEBPURIFY,
+                Tags = m_apiTag
+            };
 
-            uploadParams.Moderation = MODERATION_WEBPURIFY;
-            uploadResult = m_cloudinary.Upload(uploadParams);
+            var uploadResult = m_cloudinary.Upload(uploadParams);
             Assert.IsNotNull(uploadResult.Moderation);
             Assert.AreEqual(1, uploadResult.Moderation.Count);
             Assert.AreEqual(MODERATION_WEBPURIFY, uploadResult.Moderation[0].Kind);
