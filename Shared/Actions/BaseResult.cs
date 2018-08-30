@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions
@@ -161,9 +163,53 @@ namespace CloudinaryDotNet.Actions
         public string Kind;
 
         [DataMember(Name = "response")]
-        public string Response;
+        [JsonConverter(typeof(ModerationResponseConverter))]
+        public ModerationResponse Response;
 
         [DataMember(Name = "updated_at")]
         public DateTime UpdatedAt;
+    }
+
+    [DataContract]
+    public class ModerationResponse
+    {
+        [DataMember(Name = "moderation_labels")]
+        public ModerationLabel[] ModerationLabels;
+    }
+
+    [DataContract]
+    public class ModerationLabel
+    {
+        [DataMember(Name = "confidence")]
+        public float Confidence;
+
+        [DataMember(Name = "name")]
+        public string Name;
+        
+        [DataMember(Name = "parent_name")]
+        public string ParentName;
+    }
+
+    /// <summary>
+    /// Custom JSON converter to handle responses from moderation plugins properly
+    /// </summary>
+    public class ModerationResponseConverter : JsonConverter
+    {
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
+        {
+            return reader.TokenType == JsonToken.StartObject
+                ? serializer.Deserialize(reader, objectType)
+                : null;
+        }
+
+        public override bool CanConvert(Type objectType) => true;
+
+        public override bool CanWrite => false;
+
+        public override void WriteJson(JsonWriter writer, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException("Unnecessary because of using just for Deserialization");
+        }
     }
 }
