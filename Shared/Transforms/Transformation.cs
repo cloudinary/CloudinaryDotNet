@@ -66,8 +66,6 @@ namespace CloudinaryDotNet
         protected string m_htmlWidth = null;
         protected string m_htmlHeight = null;
 
-        protected bool m_isVariableTransform = false;
-
         /// <summary>
         /// Creates empty transformation object.
         /// </summary>
@@ -145,7 +143,7 @@ namespace CloudinaryDotNet
 
         public Transformation Variable(string name, string[] values)
         {
-            return Variable(name, string.Format("!{0}!", values != null ? string.Join(":", values) : string.Empty));
+            return Variable(name, $"!{(values != null ? string.Join(":", values) : string.Empty)}!");
         }
 
         public Transformation Variables(params Expression[] variables)
@@ -198,15 +196,23 @@ namespace CloudinaryDotNet
             var crop = GetString(m_transformParams, "crop");
             var angle = string.Join(".", GetStringArray(m_transformParams, "angle"));
 
-            bool isResponsive = false;
+            bool isResponsive;
             if (!bool.TryParse(GetString(m_transformParams, "responsive_width"), out isResponsive))
                 isResponsive = DefaultIsResponsive;
 
-            bool no_html_sizes = hasLayer || !String.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
+            bool noHtmlSizes = hasLayer || !string.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
 
-            if (width != null && (width.StartsWith("$") || width.IndexOf("auto") != -1 || Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
+            if (!string.IsNullOrEmpty(width) && (Expression.ValueContainsVariable(width) ||
+                                                 width.IndexOf("auto", StringComparison.OrdinalIgnoreCase) != -1 ||
+                                                 float.TryParse(width, out var wResult) && wResult < 1 ||
+                                                 noHtmlSizes ||
+                                                 isResponsive))
                 m_htmlWidth = null;
-            if (height != null && (height.StartsWith("$") || Single.Parse(height, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
+
+            if (!string.IsNullOrEmpty(height) && (Expression.ValueContainsVariable(height) ||
+                                                  float.TryParse(height, out var hResult) && hResult < 1 ||
+                                                  noHtmlSizes ||
+                                                  isResponsive))
                 m_htmlHeight = null;
 
             string background = GetString(m_transformParams, "background");
@@ -314,8 +320,8 @@ namespace CloudinaryDotNet
                 components.Add(string.Join(",", varParams));
             }
 
-            string vars = m_transformParams.TryGetValue(VARIABLES_PARAM_KEY, out obj) && obj is Expression[]
-                ? ProcessVariables((Expression[])obj)
+            string vars = m_transformParams.TryGetValue(VARIABLES_PARAM_KEY, out obj) && obj is Expression[] expressions
+                ? ProcessVariables(expressions)
                 : null;
 
             if (!string.IsNullOrEmpty(vars))

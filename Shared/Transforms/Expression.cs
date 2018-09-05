@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
@@ -10,7 +11,7 @@ namespace CloudinaryDotNet
     {
         public const string VARIABLE_NAME_REGEX = "^\\$[a-zA-Z][a-zA-Z0-9]*$";
 
-        public Expression() : base() { }
+        public Expression() { }
 
         public Expression(string name) : this()
         {
@@ -22,9 +23,9 @@ namespace CloudinaryDotNet
         {
             CheckVariableName(name);
 
-            Expression var = new Expression(name);
-            var.m_expressions.Add(value.ToString());
-            return var;
+            var expression = new Expression(name);
+            expression.m_expressions.Add(value.ToString());
+            return expression;
         }
 
         public static void CheckVariableName(string name)
@@ -35,7 +36,17 @@ namespace CloudinaryDotNet
                 );
         }
 
-        #region Expressions with predefined variables
+        /// <summary>
+        /// Check if the value contains user defined variable or predefined variable
+        /// </summary>
+        public static bool ValueContainsVariable(string value)
+        {
+            return !string.IsNullOrEmpty(value) &&
+                   (value.IndexOf("$", StringComparison.Ordinal) != -1 ||
+                    Parameters.Any(v => value.Contains($"_{v.Value}") || value.Contains($"{v.Value}_")));
+        }
+
+        #region Predefined variables
         public static Expression Width()
         {
             return new Expression("w");
@@ -71,7 +82,7 @@ namespace CloudinaryDotNet
             return new Expression("ils");
         }
 
-        public static Expression CurentPageIndex()
+        public static Expression CurrentPageIndex()
         {
             return new Expression("cp");
         }
@@ -96,7 +107,7 @@ namespace CloudinaryDotNet
             return new Expression("ar");
         }
 
-        public static Expression AspectRatioInitial()
+        public static Expression AspectRatioOfInitialImage()
         {
             return new Expression("iar");
         }

@@ -16,7 +16,7 @@ namespace CloudinaryDotNet
     /// </summary>
     public abstract class BaseExpression<T>: BaseExpression where T: BaseExpression<T>
     {
-        public static Dictionary<string, string> Operators = new Dictionary<string, string>()
+        protected static Dictionary<string, string> Operators = new Dictionary<string, string>()
         {
             { "=", "eq" },
             { "!=", "ne" },
@@ -32,7 +32,7 @@ namespace CloudinaryDotNet
             { "-", "sub" }
         };
 
-        public static Dictionary<string, string> Parameters = new Dictionary<string, string>()
+        protected static Dictionary<string, string> Parameters = new Dictionary<string, string>()
         {
             { "width", "w" },
             { "height", "h" },
@@ -48,6 +48,8 @@ namespace CloudinaryDotNet
             { "pageCount", "pc" },
             { "face_count", "fc" },
             { "faceCount", "fc" },
+            { "illustration_score", "ils" },
+            { "illustrationScore", "ils" },
             { "current_page", "cp" },
             { "currentPage", "cp" },
             { "tags", "tags" },
@@ -57,7 +59,7 @@ namespace CloudinaryDotNet
 
         protected List<string> m_expressions;
 
-        public BaseExpression()
+        protected BaseExpression()
         {
             m_expressions = new List<string>();
         }
@@ -78,20 +80,12 @@ namespace CloudinaryDotNet
             return Regex.Replace(expression, pattern, m => GetOperatorReplacement(m.Value));
         }
 
-        private static string GetOperatorReplacement(string value)
+        protected static string GetOperatorReplacement(string value)
         {
             if (Operators.ContainsKey(value))
-            {
                 return Operators[value];
-            }
-            else if (Parameters.ContainsKey(value))
-            {
-                return Parameters[value];
-            }
-            else
-            {
-                return value;
-            }
+
+            return Parameters.ContainsKey(value) ? Parameters[value] : value;
         }
 
         /// <summary>
@@ -100,18 +94,16 @@ namespace CloudinaryDotNet
         /// <returns>A regex pattern</returns>
         private static string GetPattern()
         {
-            string pattern;
-            List<string> operators = new List<string>(Operators.Keys);
+            var operators = new List<string>(Operators.Keys);
             operators.Reverse();
-            StringBuilder sb = new StringBuilder("((");
+            var sb = new StringBuilder("((");
             foreach (string op in operators)
             {
                 sb.Append(Regex.Escape(op)).Append("|");
             }
             sb.Remove(sb.Length - 1, 1);
             sb.Append(")(?=[ _])|").Append(string.Join("|", Parameters.Keys.ToArray())).Append(")");
-            pattern = sb.ToString();
-            return pattern;
+            return sb.ToString();
         }
 
         /// <summary>
@@ -128,7 +120,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Serialize a list of predicates.
         /// </summary>
-        public string Serialize()
+        protected string Serialize()
         {
             return Normalize(string.Join("_", m_expressions));
         }

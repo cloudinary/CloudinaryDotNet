@@ -7,7 +7,7 @@ namespace CloudinaryDotNet
     public class Condition : BaseExpression<Condition>
     {
 
-        public Condition() : base() { }
+        public Condition() { }
 
         /// <summary>
         /// Create a Condition object. The condition string will be translated to a serialized condition.
