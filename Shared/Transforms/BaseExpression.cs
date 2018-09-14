@@ -270,6 +270,28 @@ namespace CloudinaryDotNet
             return (T)this;
         }
 
+        public T In()
+        {
+            m_expressions.Add("in");
+            return (T) this;
+        }
+
+        public T In(object value)
+        {
+            return In().Value(value);
+        }
+
+        public T Nin()
+        {
+            m_expressions.Add("nin");
+            return (T) this;
+        }
+
+        public T Nin(object value)
+        {
+            return Nin().Value(value);
+        }
+        
         #endregion
     }
 }
