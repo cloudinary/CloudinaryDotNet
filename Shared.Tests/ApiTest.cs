@@ -15,11 +15,13 @@ namespace CloudinaryDotNet.Test
         protected string m_defaultVideoUpPath;
         protected string m_defaultImgFetchPath;
 
+        private Account m_account;
+
         [OneTimeSetUp]
         public void Init()
         {
-            Account account = new Account("testcloud", "1234", "abcd");
-            m_api = new Api(account);
+            m_account = new Account("testcloud", "1234", "abcd");
+            m_api = new Api(m_account);
             m_defaultRootPath = "http://res.cloudinary.com/testcloud/";
             m_defaultImgUpPath = m_defaultRootPath + "image/upload/";
             m_defaultVideoUpPath = m_defaultRootPath + "video/upload/";
@@ -1351,6 +1353,28 @@ namespace CloudinaryDotNet.Test
             paramsSetTwo.Add("Param4", "test");
 
             StringAssert.AreNotEqualIgnoringCase(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo), "The signatures are equal.");
+        }
+
+        [Test]
+        public void TestClientHints()
+        {
+            const string assertMessage = "Should not implement responsive behaviour if client hints is true.";
+            Api localApi = new Api(m_account)
+            {
+                ClientHints = true
+            };
+
+            Transformation trans = new Transformation()
+                   .Crop("scale")
+                   .Width("auto")
+                   .Dpr("auto");
+
+            string testTag = localApi.UrlImgUp.Transform(trans).BuildImageTag("sample.jpg");
+            Assert.IsTrue(testTag.StartsWith("<img"), assertMessage);
+            Assert.IsFalse(testTag.Contains("class="), assertMessage);
+            Assert.IsFalse(testTag.Contains("data-src"), assertMessage);
+            Assert.IsTrue(testTag.Contains("src=\"http://res.cloudinary.com/testcloud/image/upload" +
+                                           "/c_scale,dpr_auto,w_auto/sample.jpg\""), assertMessage);
         }
     }
 }
