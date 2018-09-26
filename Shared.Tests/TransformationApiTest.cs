@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using CloudinaryDotNet;
 
 namespace CloudinaryDotNet.Test
 {
@@ -240,8 +239,8 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestExpressionOperators()
         {
-            var transformationStr = "$foo_10,$foostr_!my:str:ing!/if_fc_gt_2_and" +
-                                    "_pc_lt_300_and" +
+            const string transformationStr = "$foo_10,$foostr_!my:str:ing!/if_fc_gt_2_and" +
+                                    "_pc_lt_300_or" +
                                     "_!myTag1!_in_tags_and" +
                                     "_!myTag2!_nin_tags_and" +
                                     "_w_gte_200_and" +
@@ -253,9 +252,64 @@ namespace CloudinaryDotNet.Test
                                     "_cp_eq_10_and" +
                                     "_px_lt_300_and" +
                                     "_py_lt_300_and" +
+                                    "_py_ne_400_and" +
                                     "_ar_gt_3:4_and" +
                                     "_iar_gt_3:4_and" +
-                                    "_h_lt_iw_and" +
+                                    "_h_lt_iw_div_2_add_1_and" +
+                                    "_w_lt_ih_sub_$foo" +
+                                    "/c_scale,l_$foostr,w_$foo_mul_200_div_fc/if_end";
+
+            var transformation = new Transformation()
+                .Variable("$foo", 10)
+                .Variable("$foostr", new[] { "my", "str", "ing" })
+                .Chain()
+                .IfCondition(
+                    Expression.FaceCount().Gt().Value(2)
+                        .And().Value(Expression.PageCount().Lt().Value(300))
+                        .Or().Value("!myTag1!").In().Value(Expression.Tags())
+                        .And().Value("!myTag2!").Nin().Value(Expression.Tags())
+                        .And().Value(Expression.Width().Gte().Value(200))
+                        .And().Value(Expression.Height().Eq().Value("$foo"))
+                        .And().Value(Expression.Width().Ne().Value("$foo").Mul().Value(2))
+                        .And().Value(Expression.Height().Lt().Value("$foo"))
+                        .Or().Value(Expression.Width().Lte().Value(500))
+                        .And().Value(Expression.IllustrationScore().Lt().Value(0))
+                        .And().Value(Expression.CurrentPageIndex().Eq().Value(10))
+                        .And().Value(Expression.XOffset().Lt().Value(300))
+                        .And().Value(Expression.YOffset().Lt().Value(300))
+                        .And().Value(Expression.YOffset().Ne().Value(400))
+                        .And().Value(Expression.AspectRatio().Gt().Value("3:4"))
+                        .And().Value(Expression.AspectRatioOfInitialImage().Gt().Value("3:4"))
+                        .And().Value(Expression.Height().Lt(Expression.InitialWidth().Div().Value(2).Add().Value(1)))
+                        .And().Value(Expression.Width().Lt(Expression.InitialHeight().Sub().Value("$foo")))
+                )
+                .Crop("scale")
+                .Width(new Condition("$foo * 200 / faceCount"))
+                .Overlay("$foostr")
+                .EndIf();
+            Assert.AreEqual(transformationStr, transformation.ToString());
+        }
+
+        [Test]
+        public void TestExpressionOperatorsWithValues()
+        {
+            const string transformationStr = "$foo_10,$foostr_!my:str:ing!/if_fc_gt_2_and" +
+                                    "_pc_lt_300_or" +
+                                    "_!myTag1!_in_tags_and" +
+                                    "_!myTag2!_nin_tags_and" +
+                                    "_w_gte_200_and" +
+                                    "_h_eq_$foo_and" +
+                                    "_w_ne_$foo_mul_2_and" +
+                                    "_h_lt_$foo_or" +
+                                    "_w_lte_500_and" +
+                                    "_ils_lt_0_and" +
+                                    "_cp_eq_10_and" +
+                                    "_px_lt_300_and" +
+                                    "_py_lt_300_and" +
+                                    "_py_ne_400_and" +
+                                    "_ar_gt_3:4_and" +
+                                    "_iar_gt_3:4_and" +
+                                    "_h_lt_iw_div_2_add_1_and" +
                                     "_w_lt_ih_sub_$foo" +
                                     "/c_scale,l_$foostr,w_$foo_mul_200_div_fc/if_end";
             
@@ -265,38 +319,23 @@ namespace CloudinaryDotNet.Test
                 .Chain()
                 .IfCondition(
                     Expression.FaceCount().Gt(2)
-                        .And()
-                        .Value(Expression.PageCount().Lt(300))
-                        .And()
-                        .Value("!myTag1!").In(Expression.Tags())
-                        .And()
-                        .Value("!myTag2!").Nin(Expression.Tags())
-                        .And()
-                        .Value(Expression.Width().Gte(200))
-                        .And()
-                        .Value(Expression.Height().Eq().Value("$foo"))
-                        .And()
-                        .Value(Expression.Width().Ne().Value("$foo").Mul(2))
-                        .And()
-                        .Value(Expression.Height().Lt("$foo"))
-                        .Or()
-                        .Value(Expression.Width().Lte(500))
-                        .And()
-                        .Value(Expression.IllustrationScore().Lt(0))
-                        .And()
-                        .Value(Expression.CurrentPageIndex().Eq(10))
-                        .And()
-                        .Value(Expression.XOffset().Lt(300))
-                        .And()
-                        .Value(Expression.YOffset().Lt(300))
-                        .And()
-                        .Value(Expression.AspectRatio().Gt("3:4"))
-                        .And()
-                        .Value(Expression.AspectRatioOfInitialImage().Gt("3:4"))
-                        .And()
-                        .Value(Expression.Height().Lt(Expression.InitialWidth()))
-                        .And()
-                        .Value(Expression.Width().Lt(Expression.InitialHeight().Sub("$foo")))
+                        .And(Expression.PageCount().Lt(300))
+                        .Or("!myTag1!").In(Expression.Tags())
+                        .And("!myTag2!").Nin(Expression.Tags())
+                        .And(Expression.Width().Gte(200))
+                        .And(Expression.Height().Eq("$foo"))
+                        .And(Expression.Width().Ne("$foo").Mul(2))
+                        .And(Expression.Height().Lt("$foo"))
+                        .Or(Expression.Width().Lte(500))
+                        .And(Expression.IllustrationScore().Lt(0))
+                        .And(Expression.CurrentPageIndex().Eq(10))
+                        .And(Expression.XOffset().Lt(300))
+                        .And(Expression.YOffset().Lt(300))
+                        .And(Expression.YOffset().Ne(400))
+                        .And(Expression.AspectRatio().Gt("3:4"))
+                        .And(Expression.AspectRatioOfInitialImage().Gt("3:4"))
+                        .And(Expression.Height().Lt(Expression.InitialWidth().Div(2).Add(1)))
+                        .And(Expression.Width().Lt(Expression.InitialHeight().Sub("$foo")))
                 )
                 .Crop("scale")
                 .Width(new Condition("$foo * 200 / faceCount"))
