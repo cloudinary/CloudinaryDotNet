@@ -109,7 +109,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Parent transformation this expression belongs to.
         /// </summary>
-        public Transformation Parent { get; private set; }
+        protected Transformation Parent { get; private set; }
 
         public T SetParent(Transformation parent)
         {
