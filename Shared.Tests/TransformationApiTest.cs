@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
+using CloudinaryDotNet;
 
 namespace CloudinaryDotNet.Test
 {
@@ -135,6 +136,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual("if_w_gt_100_and_w_lt_200/c_scale,w_50/if_else/c_crop,w_100/if_end", transformation.ToString(), "force the if_else clause to be chained");
         }
 
+
         [Test]
         public void TestOcrGravityTransformation()
         {
@@ -165,6 +167,142 @@ namespace CloudinaryDotNet.Test
             
             transformation = new Transformation().Effect("pixelate_region");
             Assert.AreEqual("e_pixelate_region", transformation.ToString());
+        }
+        // User-defined variables
+
+        [Test]
+        public void TestArrayShouldDefineASetOfVariables()
+        {
+            // using methods
+            var t = new Transformation();
+            t.IfCondition("face_count > 2")
+                    .Variables(Expression.Variable("$z", 5), Expression.Variable("$foo", "$z * 2"))
+                    .Crop("scale")
+                    .Width("$foo * 200");
+            Assert.AreEqual("if_fc_gt_2,$z_5,$foo_$z_mul_2,c_scale,w_$foo_mul_200", t.ToString());
+        }
+
+        [Test]
+        public void TestShouldSortDefinedVariable()
+        {
+            var t = new Transformation().Variable("$second", 1).Variable("$first", 2);
+            Assert.AreEqual("$first_2,$second_1", t.ToString());
+        }
+
+        [Test]
+        public void TestShouldPlaceDefinedVariablesBeforeOrdered()
+        {
+            var t = new Transformation()
+                    .Variables(Expression.Variable("$z", 5), Expression.Variable("$foo", "$z * 2"))
+                    .Variable("$second", 1)
+                    .Variable("$first", 2);
+            Assert.AreEqual("$first_2,$second_1,$z_5,$foo_$z_mul_2", t.ToString());
+        }
+
+        [Test]
+        public void TestVariable()
+        {
+            // using strings
+            var t = new Transformation()
+                    .Variable("$foo", 10)
+                    .Chain()
+                    .IfCondition(Expression.FaceCount().Gt(2))
+                    .Crop("scale")
+                    .Width(new Condition("$foo * 200 / faceCount"))
+                    .IfElse()
+                    .Width(Expression.InitialHeight().Mul(2))
+                    .EndIf();
+            Assert.AreEqual("$foo_10/if_fc_gt_2/c_scale,w_$foo_mul_200_div_fc/if_else/w_ih_mul_2/if_end", t.ToString());
+        }
+
+        [Test]
+        public void TestShouldSupportTextVariableValues()
+        {
+            var t = new Transformation()
+                .Effect("$efname", 100)
+                .Variable("$efname", "!blur!");
+
+            Assert.AreEqual("$efname_!blur!,e_$efname:100", t.ToString());
+        }
+
+        [Test]
+        public void TestSupportStringInterpolation()
+        {
+            Transformation t = new Transformation()
+                    .Crop("scale")
+                    .Overlay(new TextLayer().Text("$(start)Hello $(name)$(ext), $(no ) $( no)$(end)")
+                            .FontFamily("Arial")
+                            .FontSize(18));
+
+            StringAssert.AreEqualIgnoringCase("c_scale,l_text:Arial_18:$(start)Hello%20$(name)$(ext)%252C%20%24%28no%20%29%20%24%28%20no%29$(end)", t.ToString());
+        }
+
+        [Test]
+        public void TestExpressionOperators()
+        {
+            var transformationStr = "$foo_10,$foostr_!my:str:ing!/if_fc_gt_2_and" +
+                                    "_pc_lt_300_and" +
+                                    "_!myTag1!_in_tags_and" +
+                                    "_!myTag2!_nin_tags_and" +
+                                    "_w_gte_200_and" +
+                                    "_h_eq_$foo_and" +
+                                    "_w_ne_$foo_mul_2_and" +
+                                    "_h_lt_$foo_or" +
+                                    "_w_lte_500_and" +
+                                    "_ils_lt_0_and" +
+                                    "_cp_eq_10_and" +
+                                    "_px_lt_300_and" +
+                                    "_py_lt_300_and" +
+                                    "_ar_gt_3:4_and" +
+                                    "_iar_gt_3:4_and" +
+                                    "_h_lt_iw_and" +
+                                    "_w_lt_ih_sub_$foo" +
+                                    "/c_scale,l_$foostr,w_$foo_mul_200_div_fc/if_end";
+            
+            var transformation = new Transformation()
+                .Variable("$foo", 10)
+                .Variable("$foostr", new []{"my", "str", "ing"})
+                .Chain()
+                .IfCondition(
+                    Expression.FaceCount().Gt(2)
+                        .And()
+                        .Value(Expression.PageCount().Lt(300))
+                        .And()
+                        .Value("!myTag1!").In(Expression.Tags())
+                        .And()
+                        .Value("!myTag2!").Nin(Expression.Tags())
+                        .And()
+                        .Value(Expression.Width().Gte(200))
+                        .And()
+                        .Value(Expression.Height().Eq().Value("$foo"))
+                        .And()
+                        .Value(Expression.Width().Ne().Value("$foo").Mul(2))
+                        .And()
+                        .Value(Expression.Height().Lt("$foo"))
+                        .Or()
+                        .Value(Expression.Width().Lte(500))
+                        .And()
+                        .Value(Expression.IllustrationScore().Lt(0))
+                        .And()
+                        .Value(Expression.CurrentPageIndex().Eq(10))
+                        .And()
+                        .Value(Expression.XOffset().Lt(300))
+                        .And()
+                        .Value(Expression.YOffset().Lt(300))
+                        .And()
+                        .Value(Expression.AspectRatio().Gt("3:4"))
+                        .And()
+                        .Value(Expression.AspectRatioOfInitialImage().Gt("3:4"))
+                        .And()
+                        .Value(Expression.Height().Lt(Expression.InitialWidth()))
+                        .And()
+                        .Value(Expression.Width().Lt(Expression.InitialHeight().Sub("$foo")))
+                )
+                .Crop("scale")
+                .Width(new Condition("$foo * 200 / faceCount"))
+                .Overlay("$foostr")
+                .EndIf();
+            Assert.AreEqual(transformationStr, transformation.ToString());
         }
     }
 }

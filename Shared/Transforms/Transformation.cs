@@ -1,40 +1,35 @@
-﻿using CloudinaryDotNet.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
 {
     public partial class Transformation : Core.ICloneable
     {
         static readonly string[] SimpleParams = new string[] {
-            "x", "x",
-            "y", "y",
-            "r", "radius",
-            "d", "default_image",
-            "g", "gravity",
-            "cs", "color_space",
-            "p", "prefix",
-            "l", "overlay",
-            "u", "underlay",
-            "f", "fetch_format",
-            "dn", "density",
-            "pg", "page",
-            "dl", "delay",
-            "e", "effect",
-            "bo", "border",
-            "q", "quality",
-            "o", "opacity",
-            "ki", "keyframe_interval",
-            "z", "zoom",
             "ac", "audio_codec",
-            "br", "bit_rate",
             "af", "audio_frequency",
-            "ar", "aspect_ratio",
+            "bo", "border",
+            "br", "bit_rate",
+            "cs", "color_space",
+            "d", "default_image",
+            "dl", "delay",
+            "dn", "density",
+            "f", "fetch_format",
+            "fps", "fps",
+            "g", "gravity",
+            "ki", "keyframe_interval",
+            "l", "overlay",
+            "p", "prefix",
+            "pg", "page",
+            "u", "underlay",
             "vs", "video_sampling",
             "sp", "streaming_profile"
         };
+
+        private const string VARIABLES_PARAM_KEY = "variables";
 
         /// <summary>
         /// Default Device Pixel Ratio (float, integer and "auto" values are allowed").
@@ -139,7 +134,26 @@ namespace CloudinaryDotNet
             return transform;
         }
 
-        public Transformation Add(string key, object value) {
+        public Transformation Variable(string name, object value)
+        {
+            Expression.CheckVariableName(name);
+            Add(name, value);
+            return this;
+        }
+
+        public Transformation Variable(string name, string[] values)
+        {
+            return Variable(name, $"!{(values != null ? string.Join(":", values) : string.Empty)}!");
+        }
+
+        public Transformation Variables(params Expression[] variables)
+        {
+            Add(VARIABLES_PARAM_KEY, variables);
+            return this;
+        }
+
+        public Transformation Add(string key, object value)
+        {
             if (m_transformParams.ContainsKey(key))
                 m_transformParams[key] = value;
             else
@@ -182,14 +196,23 @@ namespace CloudinaryDotNet
             var crop = GetString(m_transformParams, "crop");
             var angle = string.Join(".", GetStringArray(m_transformParams, "angle"));
 
-            bool isResponsive = false;
+            bool isResponsive;
             if (!bool.TryParse(GetString(m_transformParams, "responsive_width"), out isResponsive))
                 isResponsive = DefaultIsResponsive;
 
-            bool no_html_sizes = hasLayer || !String.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
-            if (width != null && (width.IndexOf("auto") != -1 || Single.Parse(width, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
+            bool noHtmlSizes = hasLayer || !string.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
+
+            if (!string.IsNullOrEmpty(width) && (Expression.ValueContainsVariable(width) ||
+                                                 width.IndexOf("auto", StringComparison.OrdinalIgnoreCase) != -1 ||
+                                                 float.TryParse(width, out var wResult) && wResult < 1 ||
+                                                 noHtmlSizes ||
+                                                 isResponsive))
                 m_htmlWidth = null;
-            if (height != null && (Single.Parse(height, CultureInfo.InvariantCulture) < 1 || no_html_sizes || isResponsive))
+
+            if (!string.IsNullOrEmpty(height) && (Expression.ValueContainsVariable(height) ||
+                                                  float.TryParse(height, out var hResult) && hResult < 1 ||
+                                                  noHtmlSizes ||
+                                                  isResponsive))
                 m_htmlHeight = null;
 
             string background = GetString(m_transformParams, "background");
@@ -211,75 +234,111 @@ namespace CloudinaryDotNet
             string flags = string.Join(".", GetStringArray(m_transformParams, "flags"));
 
             object obj = null;
-            string startOffset = null;
-            string endOffset = null;
 
+            string startOffset = null;
             if (m_transformParams.TryGetValue("start_offset", out obj))
                 startOffset = NormAutoRangeValue(obj);
 
+            string endOffset = null;
             if (m_transformParams.TryGetValue("end_offset", out obj))
                 endOffset = NormRangeValue(obj);
 
-            if (m_transformParams.TryGetValue("offset", out obj)) {
+            if (m_transformParams.TryGetValue("offset", out obj))
+            {
                 var offset = SplitRange(m_transformParams["offset"]);
-                if (offset != null && offset.Length == 2) {
+                if (offset != null && offset.Length == 2)
+                {
                     startOffset = NormAutoRangeValue(offset[0]);
                     endOffset = NormRangeValue(offset[1]);
                 }
             }
 
-            var parameters = new SortedDictionary<string, string>();
-            parameters.Add("w", width);
-            parameters.Add("h", height);
-            parameters.Add("t", namedTransformation);
-            parameters.Add("c", crop);
-            parameters.Add("b", background);
-            parameters.Add("co", color);
-            parameters.Add("a", angle);
-            parameters.Add("fl", flags);
-            parameters.Add("so", startOffset);
-            parameters.Add("eo", endOffset);
-
+            string duration = null;
             if (m_transformParams.TryGetValue("duration", out obj))
-                parameters.Add("du", NormRangeValue(obj));
+                duration = NormRangeValue(obj);
 
-            ProcessVideoCodec(parameters, m_transformParams);
+            string videoCodec = m_transformParams.TryGetValue("video_codec", out obj) ? ProcessVideoCodec(obj) : null;
 
-            for (int i = 0; i < SimpleParams.Length; i += 2) {
+            if (!m_transformParams.TryGetValue("dpr", out object dpr))
+                dpr = DefaultDpr;
+            var dprStr = ToString(dpr);
+            if (!string.IsNullOrEmpty(dprStr))
+            {
+                if (dprStr.ToLower() == "auto")
+                    HiDpi = true;
+            }
+
+            var parameters = new SortedList<string, string>();
+
+            parameters.Add("a", Expression.Normalize(angle));
+            parameters.Add("ar", Expression.Normalize(GetString(m_transformParams, "aspect_ratio")));
+            parameters.Add("b", background);
+            parameters.Add("c", crop);
+            parameters.Add("co", color);
+            parameters.Add("dpr", dprStr);
+            parameters.Add("du", duration);
+            parameters.Add("e", Expression.Normalize(GetString(m_transformParams, "effect")));
+            parameters.Add("eo", endOffset);
+            parameters.Add("fl", flags);
+            parameters.Add("h", Expression.Normalize(height));
+            parameters.Add("o", Expression.Normalize(GetString(m_transformParams, "opacity")));
+            parameters.Add("q", Expression.Normalize(GetString(m_transformParams, "quality")));
+            parameters.Add("r", Expression.Normalize(GetString(m_transformParams, "radius")));
+            parameters.Add("so", startOffset);
+            parameters.Add("t", namedTransformation);
+            parameters.Add("vc", videoCodec);
+            parameters.Add("w", Expression.Normalize(width));
+            parameters.Add("x", Expression.Normalize(GetString(m_transformParams, "x")));
+            parameters.Add("y", Expression.Normalize(GetString(m_transformParams, "y")));
+            parameters.Add("z", Expression.Normalize(GetString(m_transformParams, "zoom")));
+
+            for (int i = 0; i < SimpleParams.Length; i += 2)
+            {
                 if (m_transformParams.TryGetValue(SimpleParams[i + 1], out obj))
                     parameters.Add(SimpleParams[i], ToString(obj));
             }
 
-            object dpr = null;
-            if (!m_transformParams.TryGetValue("dpr", out dpr))
-                dpr = DefaultDpr;
+            List<string> components = new List<string>();
 
-            var dprStr = ToString(dpr);
-
-            if (dprStr != null) {
-                if (dprStr.ToLower() == "auto")
-                    HiDpi = true;
-
-                parameters.Add("dpr", dprStr);
+            string ifValue = GetString(m_transformParams, "if");
+            if (!string.IsNullOrEmpty(ifValue))
+            {
+                components.Insert(0, string.Format("if_{0}", new Condition(ifValue).ToString()));
             }
 
-            if (width == "auto" || isResponsive)
-                IsResponsive = true;
+            SortedSet<string> varParams = new SortedSet<string>();
+            foreach (var key in m_transformParams.Keys)
+            {
+                if(Regex.IsMatch(key, Expression.VARIABLE_NAME_REGEX))
+                {
+                    varParams.Add($"{key}_{GetString(m_transformParams, key)}");
+                }
+            }
 
-            List<string> components = new List<string>();
-            foreach (var param in parameters) {
+            if(varParams.Count > 0)
+            {
+                components.Add(string.Join(",", varParams));
+            }
+
+            string vars = m_transformParams.TryGetValue(VARIABLES_PARAM_KEY, out obj) && obj is Expression[] expressions
+                ? ProcessVariables(expressions)
+                : null;
+
+            if (!string.IsNullOrEmpty(vars))
+            {
+                components.Add(string.Join(",", vars));
+            }
+
+            foreach (var param in parameters)
+            {
                 if (!string.IsNullOrEmpty(param.Value))
                     components.Add(string.Format("{0}_{1}", param.Key, param.Value));
             }
 
             string rawTransformation = GetString(m_transformParams, "raw_transformation");
-            if (rawTransformation != null) {
+            if (rawTransformation != null)
+            {
                 components.Add(rawTransformation);
-            }
-
-            string ifValue = GetString(m_transformParams, "if");
-            if (!string.IsNullOrEmpty(ifValue)) {
-                components.Insert(0, string.Format("if_{0}", new Condition(ifValue).ToString()));
             }
 
             if (components.Count > 0) {
@@ -289,10 +348,22 @@ namespace CloudinaryDotNet
             if (isResponsive)
                 transformations.Add(ResponsiveWidthTransform.Generate());
 
+            if (width == "auto" || isResponsive)
+                IsResponsive = true;
+
             return string.Join("/", transformations.ToArray());
         }
 
-        public string HtmlWidth {
+        private string ProcessVariables(Expression[] variables)
+        {
+            if(variables == null || variables.Length == 0)
+                return null;
+
+            return string.Join(",", variables.Select(v => v.ToString()).ToArray());
+        }
+
+        public string HtmlWidth
+        {
             get { return m_htmlWidth; }
         }
 
@@ -350,7 +421,8 @@ namespace CloudinaryDotNet
                 if (value is Array) {
                     t.Add(key, ((Array)value).Clone());
                 }
-                else if (value is String || value is ValueType) {
+                else if (value is String || value is ValueType || value is BaseExpression)
+                {
                     t.Add(key, value);
                 }
                 else if (value is Dictionary<string, string>) {

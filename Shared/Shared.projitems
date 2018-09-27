@@ -91,6 +91,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)StringDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\BaseLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Condition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\BaseExpression.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\Expression.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\FetchLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\ImageTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Layer.cs" />

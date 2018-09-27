@@ -239,11 +239,8 @@ namespace CloudinaryDotNet
             return Add("streaming_profile", value);
         }
 
-        private static void ProcessVideoCodec(SortedDictionary<string, string> parameters, Dictionary<string, object> m_transformParams)
+        private static string ProcessVideoCodec(object codecParam)
         {
-            object codecParam = null;
-            if (!m_transformParams.TryGetValue("video_codec", out codecParam)) return;
-
             var sb = new StringBuilder();
             if (codecParam is string)
             {
@@ -253,7 +250,7 @@ namespace CloudinaryDotNet
             {
                 string s = null;
                 var @params = (Dictionary<string, string>)codecParam;
-                if (!@params.TryGetValue("codec", out s)) return;
+                if (!@params.TryGetValue("codec", out s)) return null;
                 sb.Append(s);
                 if (@params.TryGetValue("profile", out s))
                 {
@@ -264,8 +261,7 @@ namespace CloudinaryDotNet
                     }
                 }
             }
-
-            parameters.Add("vc", sb.ToString());
+            return sb.ToString();
         }
 
         private static string NormAutoRangeValue(object objectValue)
