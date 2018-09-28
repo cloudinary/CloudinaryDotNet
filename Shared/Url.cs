@@ -39,6 +39,7 @@ namespace CloudinaryDotNet
         protected bool m_useSubDomain;
         protected Dictionary<string, Transformation> m_sourceTransforms;
         protected List<string> m_customParts = new List<string>();
+        protected VideoSource[] m_videoSources;
         protected Transformation m_posterTransformation;
         protected string m_posterSource;
         protected Url m_posterUrl;
@@ -95,6 +96,13 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        public Url VideoSources(params VideoSource[] videoSources)
+        {
+            if (videoSources != null && videoSources.Length > 0)
+                m_videoSources = videoSources;
+            return this;
+        }
+        
         public Url Action(string action)
         {
             m_action = action;
@@ -350,31 +358,28 @@ namespace CloudinaryDotNet
 
             source = VIDEO_EXTENSION_RE.Replace(source, "", 1);
 
-            if (String.IsNullOrEmpty(m_resourceType))
+            if (string.IsNullOrEmpty(m_resourceType))
                 m_resourceType = "video";
 
-            var sourceTypes = m_sourceTypes;
-            if (sourceTypes == null)
-                sourceTypes = DEFAULT_VIDEO_SOURCE_TYPES;
+            string posterUrl = FinalizePosterUrl(source);
 
-            var posterUrl = FinalizePosterUrl(source);
-
-            if (!String.IsNullOrEmpty(posterUrl))
+            if (!string.IsNullOrEmpty(posterUrl))
                 dict.Add("poster", posterUrl);
 
+            List<string> tags = GetVideoSourceTags(source);
+            
             var sb = new StringBuilder("<video");
 
-            string url = null;
-
-            var multiSource = sourceTypes.Length > 1;
-            if (!multiSource)
+            bool multiSource = tags.Count > 1;
+            if (multiSource)
             {
-                url = BuildUrl(source + "." + sourceTypes[0]);
-                dict.Add("src", url);
+                BuildUrl(source);
             }
             else
             {
-                BuildUrl(source);
+                var sourceTypes = GetSourceTypes();
+                string url = BuildUrl(source + "." + sourceTypes[0]);
+                dict.Add("src", url);
             }
 
             if (dict.ContainsKey("html_height"))
@@ -401,48 +406,155 @@ namespace CloudinaryDotNet
 
             if (multiSource)
             {
-                foreach (string sourceType in sourceTypes)
-                {
-                    AppendVideoSources(sb, source, sourceType);
-                }
+                tags.ForEach(t => sb.Append(t));
             }
 
-            if (!String.IsNullOrEmpty(m_fallbackContent))
+            if (!string.IsNullOrEmpty(m_fallbackContent))
+            {
                 sb.Append(m_fallbackContent);
+            }
 
             sb.Append("</video>");
             return sb.ToString();
         }
 
-        private void AppendVideoSources(StringBuilder sb, string source, string sourceType)
+        private string[] GetSourceTypes()
+        {
+            if (m_sourceTypes != null && m_sourceTypes.Length > 0)
+            {
+                return m_sourceTypes;
+            }
+            return DEFAULT_VIDEO_SOURCE_TYPES;
+        }
+        
+        /// <summary>
+        /// Recommended sources for video tag
+        /// </summary>
+        /// <returns>Array of default video sources</returns>
+        internal static VideoSource[] GetDefaultVideoSources()
+        {
+            return new[]
+            {
+                new VideoSource
+                {
+                    Type = "mp4", Codecs = new[]{"hev1"}, Transformation = new Transformation().VideoCodec("h265")
+                },
+                new VideoSource
+                {
+                    Type = "webm", Codecs = new[]{"vp9"}, Transformation = new Transformation().VideoCodec("vp9")
+                },
+                new VideoSource
+                {
+                    Type = "mp4", Transformation = new Transformation().VideoCodec("auto")
+                },
+                new VideoSource
+                {
+                    Type = "webm", Transformation = new Transformation().VideoCodec("auto")
+                }
+            };
+        }
+
+        /// <summary>
+        /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs 
+        /// </summary>
+        /// <param name="sourceType">The type of the source</param>
+        /// <param name="codecs">Codecs</param>
+        /// <returns>Resulting mime type</returns>
+        private static string VideoMimeType(string sourceType, params string[] codecs)
+        {
+            sourceType = sourceType == "ogv" ? "ogg" : sourceType;
+
+            if (string.IsNullOrEmpty(sourceType))
+            {
+                return string.Empty;
+            }
+            
+            string codecsStr = string.Empty;
+            if (codecs == null || codecs.Length == 0)
+            {
+                codecsStr = string.Empty;
+            }
+            else
+            {
+                string codecsJoined = string.Join(", ", codecs.Where(c => !string.IsNullOrEmpty(c)));
+                codecsStr = !string.IsNullOrEmpty(codecsJoined) ? $"; codecs={codecsJoined}" : codecsStr;
+            }
+            return $"video/{sourceType}{codecsStr}";
+        }
+
+        private static void AppendTransformation(Url url, Transformation transform)
+        {
+            if (url.m_transformation == null)
+            {
+                url.Transform(transform);
+            }
+            else
+            {
+                url.m_transformation.Chain();
+                transform.NestedTransforms.AddRange(url.m_transformation.NestedTransforms);
+                url.Transform(transform);
+            }
+        }
+
+        /// <summary>
+        /// Helper method to merge transformation for the URL
+        /// </summary>
+        /// <param name="url">The URL with transformation to be merged</param>
+        /// <param name="transformationSrc">Transformation to merge</param>
+        private static void MergeUrlTransformation(Url url, Transformation transformationSrc)
+        {
+            if (transformationSrc == null)
+            {
+                return;
+            }
+            if (url.m_transformation == null)
+            {
+                url.Transform(transformationSrc);
+            }
+            else
+            {
+                foreach (var param in transformationSrc.Params)
+                {
+                    url.m_transformation.Add(param.Key, param.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Helper method for BuildVideoTag, returns source tags from provided options
+        ///
+        /// Source types and video sources are mutually exclusive, only one of them can be used.
+        /// If both are not provided, default source types are used
+        /// 
+        /// </summary>
+        /// <param name="source">The public ID of the video</param>
+        /// <returns>Resulting source tags (may be empty)</returns>
+        private List<string> GetVideoSourceTags(string source)
+        {
+            if (m_videoSources != null && m_videoSources.Length > 0)
+            {
+                return m_videoSources.Select(x => GetSourceTag(source, x.Type, x.Codecs, x.Transformation)).ToList();
+            }
+            return GetSourceTypes().Select(x => GetSourceTag(source, x)).ToList();
+        }
+        
+        private string GetSourceTag(string source, string sourceType, 
+            string[] codecs = null, Transformation transformation = null)
         {
             var sourceUrl = Clone();
+            MergeUrlTransformation(sourceUrl, transformation);
 
             if (m_sourceTransforms != null)
             {
-                Transformation sourceTransformation = null;
-                if (m_sourceTransforms.TryGetValue(sourceType, out sourceTransformation) && sourceTransformation != null)
+                if (m_sourceTransforms.TryGetValue(sourceType, out var sourceTransformation) &&
+                    sourceTransformation != null)
                 {
-                    if (sourceUrl.m_transformation == null)
-                    {
-                        sourceUrl.Transform(sourceTransformation.Clone());
-                    }
-                    else
-                    {
-                        sourceUrl.m_transformation.Chain();
-                        var newTransform = sourceTransformation.Clone();
-                        newTransform.NestedTransforms.AddRange(sourceUrl.m_transformation.NestedTransforms);
-                        sourceUrl.Transform(newTransform);
-                    }
+                    AppendTransformation(sourceUrl, sourceTransformation.Clone());
                 }
             }
 
-            var src = sourceUrl.Format(sourceType).BuildUrl(source);
-            var videoType = sourceType;
-            if (sourceType.Equals("ogv", StringComparison.OrdinalIgnoreCase))
-                videoType = "ogg";
-            string mimeType = "video/" + videoType;
-            sb.Append("<source src='").Append(src).Append("' type='").Append(mimeType).Append("'>");
+            string src = sourceUrl.Format(sourceType).BuildUrl(source);
+            return $"<source src='{src}' type='{VideoMimeType(sourceType, codecs)}'>";
         }
 
         private string FinalizePosterUrl(string source)
@@ -968,5 +1080,12 @@ namespace CloudinaryDotNet
 
             base.Query = string.Join("&", pairs);
         }
+    }
+
+    public class VideoSource
+    {
+        public string Type { get; set; }
+        public string[] Codecs { get; set; }
+        public Transformation Transformation { get; set; }
     }
 }
