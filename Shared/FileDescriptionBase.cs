@@ -56,7 +56,7 @@ namespace CloudinaryDotNet
         /// <param name="filePath">Either URL (http/https/s3/data) or local path to file</param>
         public FileDescriptionBase(string filePath)
         {
-            m_isRemote = Regex.IsMatch(filePath, "^ftp:.*|https?:.*|s3:.*|data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
+            m_isRemote = Utils.IsRemoteFile(filePath);
             bool isBase64 = Regex.IsMatch(filePath, "data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
             m_path = filePath;
 

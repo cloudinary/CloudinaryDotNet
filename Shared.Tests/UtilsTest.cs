@@ -37,5 +37,31 @@ namespace CloudinaryDotNet.Test
             Assert.LessOrEqual(start, now);
             Assert.GreaterOrEqual(end, now);
         }
+
+        [Test]
+        public void TestIsRemoteFile()
+        {
+            string[] remoteFiles =
+            {
+                "ftp://ftp.cloudinary.com/images/old_logo.png",
+                "http://cloudinary.com/images/old_logo.png",
+                "https://cloudinary.com/images/old_logo.png",
+                "s3://s3-us-west-2.amazonaws.com/cloudinary/images/old_logo.png",
+                "gs://cloudinary/images/old_logo.png",
+            };
+            string[] localFiles =
+            {
+                @"c:\s3\test.txt",
+                @"..\https.png",
+            };
+            foreach (var path in remoteFiles)
+            {
+                Assert.IsTrue(Utils.IsRemoteFile(path), $"Path '${path}' should be remote");
+            }
+            foreach (var path in localFiles)
+            {
+                Assert.IsFalse(Utils.IsRemoteFile(path), $"Path '${path}' should be local");
+            }
+        }
     }
 }
