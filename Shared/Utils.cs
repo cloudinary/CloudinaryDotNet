@@ -50,5 +50,10 @@ namespace CloudinaryDotNet
         {
             return String.Join(separator, items.Select(item => Regex.Replace(item, $"([{separator}])", "\\$1")));
         }
+
+        internal static bool IsRemoteFile(string filePath)
+        {
+            return Regex.IsMatch(filePath, "^((ftp|https?|s3|gs):.*)|data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
+        }
     }
 }
