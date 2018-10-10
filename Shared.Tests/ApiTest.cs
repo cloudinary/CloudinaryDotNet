@@ -1203,7 +1203,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestVideoTagWithDefaultSources()
         {
-            string expectedTag =
+            var expectedTag =
                 $"<video poster=\'{m_defaultVideoUpPath}{SOURCE_MOVIE}.jpg\'>" +
                 $"<source src=\'{m_defaultVideoUpPath}vc_h265/{SOURCE_MOVIE}.mp4\' type=\'video/mp4; codecs=hev1\'>" +
                 $"<source src=\'{m_defaultVideoUpPath}vc_vp9/{SOURCE_MOVIE}.webm\' type=\'video/webm; codecs=vp9\'>" +
@@ -1211,7 +1211,7 @@ namespace CloudinaryDotNet.Test
                 $"<source src=\'{m_defaultVideoUpPath}vc_auto/{SOURCE_MOVIE}.webm\' type=\'video/webm\'>" +
                 "</video>";
 
-            string actualTag = m_api.UrlVideoUp.VideoSources(Url.GetDefaultVideoSources()).BuildVideoTag(SOURCE_MOVIE);
+            var actualTag = m_api.UrlVideoUp.VideoSources(Url.DefaultVideoSources).BuildVideoTag(SOURCE_MOVIE);
             
             Assert.AreEqual(expectedTag, actualTag);
         }
@@ -1235,7 +1235,7 @@ namespace CloudinaryDotNet.Test
                 }
             };
 
-            string expectedTag =
+            var expectedTag =
                 $"<video poster=\'{m_defaultVideoUpPath}{SOURCE_MOVIE}.jpg\'>" +
                 $"<source src=\'{m_defaultVideoUpPath}vc_auto/{SOURCE_MOVIE}.mp4\'" +
                 " type=\'video/mp4; codecs=vp8, vorbis\'>" +
@@ -1243,7 +1243,7 @@ namespace CloudinaryDotNet.Test
                 " type=\'video/webm; codecs=avc1.4D401E, mp4a.40.2\'>" +
                 "</video>";
 
-            string actualTag = m_api.UrlVideoUp.VideoSources(customSources).BuildVideoTag(SOURCE_MOVIE);
+            var actualTag = m_api.UrlVideoUp.VideoSources(customSources).BuildVideoTag(SOURCE_MOVIE);
             
             Assert.AreEqual(expectedTag, actualTag);
         }
@@ -1257,9 +1257,9 @@ namespace CloudinaryDotNet.Test
                 {"html_width", "200"}, 
             };
 
-            string urlPrefix = $"{m_defaultVideoUpPath}ac_acc,so_3,";
+            var urlPrefix = $"{m_defaultVideoUpPath}ac_acc,so_3,";
             
-            string expectedTag =
+            var expectedTag =
                 $"<video height='100' poster=\'{urlPrefix}vc_h264/{SOURCE_MOVIE}.jpg\' width='200'>" +
                 $"<source src=\'{urlPrefix}vc_h265/{SOURCE_MOVIE}.mp4\' type=\'video/mp4; codecs=hev1\'>" +
                 $"<source src=\'{urlPrefix}vc_vp9/{SOURCE_MOVIE}.webm\' type=\'video/webm; codecs=vp9\'>" +
@@ -1267,8 +1267,8 @@ namespace CloudinaryDotNet.Test
                 $"<source src=\'{urlPrefix}vc_auto/{SOURCE_MOVIE}.webm\' type=\'video/webm\'>" +
                 "</video>";
 
-            string actualTag = m_api.UrlVideoUp
-                .VideoSources(Url.GetDefaultVideoSources())
+            var actualTag = m_api.UrlVideoUp
+                .VideoSources(Url.DefaultVideoSources)
                 .SourceTypes("mp4")
                 .Transform(new Transformation().VideoCodec("h264").AudioCodec("acc").StartOffset("3"))
                 .BuildVideoTag(SOURCE_MOVIE, paramsDict);

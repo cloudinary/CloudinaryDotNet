@@ -14,6 +14,28 @@ namespace CloudinaryDotNet
 {
     public class Url : Core.ICloneable
     {
+        /// <summary>
+        /// Recommended sources for video tag
+        /// </summary>
+        public static readonly VideoSource[] DefaultVideoSources = {
+            new VideoSource
+            {
+                Type = "mp4", Codecs = new[]{"hev1"}, Transformation = new Transformation().VideoCodec("h265")
+            },
+            new VideoSource
+            {
+                Type = "webm", Codecs = new[]{"vp9"}, Transformation = new Transformation().VideoCodec("vp9")
+            },
+            new VideoSource
+            {
+                Type = "mp4", Transformation = new Transformation().VideoCodec("auto")
+            },
+            new VideoSource
+            {
+                Type = "webm", Transformation = new Transformation().VideoCodec("auto")
+            }
+        };
+        
         protected const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         protected static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };
         protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
@@ -100,6 +122,7 @@ namespace CloudinaryDotNet
         {
             if (videoSources != null && videoSources.Length > 0)
                 m_videoSources = videoSources;
+            
             return this;
         }
         
@@ -428,33 +451,6 @@ namespace CloudinaryDotNet
         }
         
         /// <summary>
-        /// Recommended sources for video tag
-        /// </summary>
-        /// <returns>Array of default video sources</returns>
-        internal static VideoSource[] GetDefaultVideoSources()
-        {
-            return new[]
-            {
-                new VideoSource
-                {
-                    Type = "mp4", Codecs = new[]{"hev1"}, Transformation = new Transformation().VideoCodec("h265")
-                },
-                new VideoSource
-                {
-                    Type = "webm", Codecs = new[]{"vp9"}, Transformation = new Transformation().VideoCodec("vp9")
-                },
-                new VideoSource
-                {
-                    Type = "mp4", Transformation = new Transformation().VideoCodec("auto")
-                },
-                new VideoSource
-                {
-                    Type = "webm", Transformation = new Transformation().VideoCodec("auto")
-                }
-            };
-        }
-
-        /// <summary>
         /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs 
         /// </summary>
         /// <param name="sourceType">The type of the source</param>
@@ -469,16 +465,14 @@ namespace CloudinaryDotNet
                 return string.Empty;
             }
             
-            string codecsStr = string.Empty;
             if (codecs == null || codecs.Length == 0)
             {
-                codecsStr = string.Empty;
+                return $"video/{sourceType}";
             }
-            else
-            {
-                string codecsJoined = string.Join(", ", codecs.Where(c => !string.IsNullOrEmpty(c)));
-                codecsStr = !string.IsNullOrEmpty(codecsJoined) ? $"; codecs={codecsJoined}" : codecsStr;
-            }
+            
+            var codecsJoined = string.Join(", ", codecs.Where(c => !string.IsNullOrEmpty(c)));
+            var codecsStr = !string.IsNullOrEmpty(codecsJoined) ? $"; codecs={codecsJoined}" : string.Empty;
+
             return $"video/{sourceType}{codecsStr}";
         }
 
@@ -507,6 +501,7 @@ namespace CloudinaryDotNet
             {
                 return;
             }
+            
             if (url.m_transformation == null)
             {
                 url.Transform(transformationSrc);
@@ -525,9 +520,10 @@ namespace CloudinaryDotNet
         ///
         /// Source types and video sources are mutually exclusive, only one of them can be used.
         /// If both are not provided, default source types are used
-        /// 
         /// </summary>
+        /// 
         /// <param name="source">The public ID of the video</param>
+        /// 
         /// <returns>Resulting source tags (may be empty)</returns>
         private List<string> GetVideoSourceTags(string source)
         {
@@ -535,6 +531,7 @@ namespace CloudinaryDotNet
             {
                 return m_videoSources.Select(x => GetSourceTag(source, x.Type, x.Codecs, x.Transformation)).ToList();
             }
+            
             return GetSourceTypes().Select(x => GetSourceTag(source, x)).ToList();
         }
         
@@ -553,7 +550,8 @@ namespace CloudinaryDotNet
                 }
             }
 
-            string src = sourceUrl.Format(sourceType).BuildUrl(source);
+            var src = sourceUrl.Format(sourceType).BuildUrl(source);
+            
             return $"<source src='{src}' type='{VideoMimeType(sourceType, codecs)}'>";
         }
 
