@@ -1,4 +1,28 @@
 
+1.4.0 / 2018-10-11
+==================
+
+New functionality
+-----------------
+  * Add support of custom codecs in video tag
+  * Add Google Cloud Storage protocol support in upload
+  * Add support of user defined variables and expressions
+  * Add support of deleting resources by transformations
+  * Support advanced OCR
+  * Add support of "auto" value for `start_offset` transformation parameter
+  * Support remote URLs in UploadLarge API
+
+Other Changes
+-------------
+  * Fix moderation plugins response support
+  * Fix sort_by and aggregate in advanced search
+  * Test passing expression operators' value via fluent API
+  * Fix Nuget dependency warning (fixes #116)
+  * Rename type param in PublishResourceParams
+  * Escape parameters in context values
+  * Update keyframe_interval param serialization
+  * Fix `TestExplicit` dependency on the file format of the remote image
+
 1.3.1 / 2018-05-22
 ==================
 
