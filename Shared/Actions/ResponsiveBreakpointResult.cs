@@ -10,6 +10,9 @@ namespace CloudinaryDotNet.Actions
     {
         [JsonProperty("breakpoints")]
         public List<Breakpoint> Breakpoints { get; set; }
+
+        [JsonProperty("transformation")]
+        public string Transformation { get; set; }
     }
     
     /// <summary>
