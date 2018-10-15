@@ -2982,14 +2982,41 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestResponsiveBreakpointsFormat()
+        {
+            var breakpoint = new ResponsiveBreakpoint()
+                                .Transformation(m_simpleTransformationAngle)
+                                .MaxImages(1)
+                                .Format(FILE_FORMAT_GIF);
+
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = GetUniquePublicId(),
+                Tags = m_apiTag,
+                ResponsiveBreakpoints = new List<ResponsiveBreakpoint> { breakpoint }
+            };
+
+            ImageUploadResult result = m_cloudinary.Upload(uploadParams);
+
+            Assert.Null(result.Error);
+            Assert.NotNull(result.ResponsiveBreakpoints, "result should include 'ResponsiveBreakpoints'");
+            Assert.AreEqual(1, result.ResponsiveBreakpoints.Count);
+
+            Assert.AreEqual(TRANSFORM_A_45, result.ResponsiveBreakpoints[0].Transformation);
+            StringAssert.EndsWith(FILE_FORMAT_GIF, result.ResponsiveBreakpoints[0].Breakpoints[0].Url,
+                $"generated breakpoint should have '{FILE_FORMAT_GIF}' extension");
+        }
+
+        [Test]
         public void TestResponsiveBreakpoints()
         {
             var publicId = GetUniquePublicId();
             var breakpoint = new ResponsiveBreakpoint().MaxImages(5).BytesStep(20)
                                 .MinWidth(200).MaxWidth(1000).CreateDerived(false);
 
-            var breakpoint2 = new ResponsiveBreakpoint().Transformation(m_simpleTransformation).MaxImages(4).BytesStep(20)
-                                .MinWidth(100).MaxWidth(900).CreateDerived(false);
+            var breakpoint2 = new ResponsiveBreakpoint().Transformation(m_simpleTransformation).MaxImages(4)
+                                .BytesStep(20).MinWidth(100).MaxWidth(900).CreateDerived(false);
 
             // An array of breakpoints
             ImageUploadParams uploadParams = new ImageUploadParams()

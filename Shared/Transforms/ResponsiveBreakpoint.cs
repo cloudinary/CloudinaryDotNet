@@ -14,6 +14,7 @@ namespace CloudinaryDotNet
         private const string MIN_WIDTH = "min_width";
         private const string BYTES_STEP = "bytes_step";
         private const string MAX_IMAGES = "max_images";
+        private const string FORMAT = "format";
 
         public ResponsiveBreakpoint()
         {
@@ -118,6 +119,23 @@ namespace CloudinaryDotNet
         public ResponsiveBreakpoint MaxImages(int maxImages)
         {
             this[MAX_IMAGES] = maxImages;
+            return this;
+        }
+
+        /// <summary>
+        /// Get format of the generated images
+        /// </summary>
+        public string Format()
+        {
+            return Value<string>(FORMAT);
+        }
+
+        /// <summary>
+        /// Set format of images to generate
+        /// </summary>
+        public ResponsiveBreakpoint Format(string format)
+        {
+            this[FORMAT] = format;
             return this;
         }
     }
