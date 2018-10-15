@@ -18,6 +18,7 @@ namespace CloudinaryDotNet
             "dl", "delay",
             "dn", "density",
             "f", "fetch_format",
+            "fn", "custom_function",
             "fps", "fps",
             "g", "gravity",
             "ki", "keyframe_interval",
@@ -149,6 +150,12 @@ namespace CloudinaryDotNet
         public Transformation Variables(params Expression[] variables)
         {
             Add(VARIABLES_PARAM_KEY, variables);
+            return this;
+        }
+
+        public Transformation CustomFunction(CustomFunction function)
+        {
+            Add("custom_function", function.ToString());
             return this;
         }
 

@@ -63,5 +63,18 @@ namespace CloudinaryDotNet.Test
                 Assert.IsFalse(Utils.IsRemoteFile(path), $"Path '${path}' should be local");
             }
         }
+
+        [Test]
+        public void TestEncodeUrlSafeBase64String()
+        {
+            Assert.AreEqual(
+                "aHR0cHM6Ly9kZjM0cmE0YS5leGVjdXRlLWFwaS51cy13ZXN0LTIuYW1hem9uYXdzLmNvbS9kZWZhdWx0L2Ns" +
+                "b3VkaW5hcnlGdW5jdGlvbg==",
+                Utils.EncodeUrlSafe(
+                    "https://df34ra4a.execute-api.us-west-2.amazonaws.com/default/cloudinaryFunction"
+                    ));
+
+            Assert.AreEqual("YWQ_Lix4MDl-IUAhYQ==", Utils.EncodeUrlSafe("ad?.,x09~!@!a"));
+        }
     }
 }

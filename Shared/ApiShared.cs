@@ -373,7 +373,7 @@ namespace CloudinaryDotNet
 
             signBase.Append(Account.ApiSecret);
 
-            var hash = ComputeHash(signBase.ToString());
+            var hash = Utils.ComputeHash(signBase.ToString());
             StringBuilder sign = new StringBuilder();
             foreach (byte b in hash) sign.Append(b.ToString("x2"));
 
@@ -387,18 +387,8 @@ namespace CloudinaryDotNet
         /// <returns></returns>
         public string SignUriPart(string uriPart)
         {
-
-            var hash = ComputeHash(uriPart + Account.ApiSecret);
-            var sign = Convert.ToBase64String(hash);
-            return "s--" + sign.Substring(0, 8).Replace("+", "-").Replace("/", "_") + "--/";
-        }
-
-        private byte[] ComputeHash(string s)
-        {
-            using (var sha1 = SHA1.Create())
-            {
-                return sha1.ComputeHash(Encoding.UTF8.GetBytes(s));
-            }
+            var hash = Utils.ComputeHash(uriPart + Account.ApiSecret);
+            return "s--" + Utils.EncodeUrlSafe(hash).Substring(0, 8) + "--/";
         }
 
         /// <summary>
