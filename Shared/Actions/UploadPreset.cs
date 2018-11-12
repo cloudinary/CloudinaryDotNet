@@ -118,6 +118,7 @@ namespace CloudinaryDotNet.Actions
             Exif = preset.Settings.Exif;
             Colors = preset.Settings.Colors;
             Faces = preset.Settings.Faces;
+            QualityAnalysis = preset.Settings.QualityAnalysis;
 
             if (preset.Settings.FaceCoordinates != null)
             {
@@ -271,6 +272,11 @@ namespace CloudinaryDotNet.Actions
         public bool Faces { get; set; }
 
         /// <summary>
+        /// Whether to retrieve the quality analysis of the image. Default: false.
+        /// </summary>
+        public bool QualityAnalysis { get; set; }
+
+        /// <summary>
         /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>/>.
         /// </summary>
         public object FaceCoordinates { get; set; }
@@ -338,6 +344,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "format", Format);
             AddParam(dict, "exif", Exif);
             AddParam(dict, "faces", Faces);
+            AddParam(dict, "quality_analysis", QualityAnalysis);
             AddParam(dict, "colors", Colors);
             AddParam(dict, "image_metadata", Metadata);
             AddParam(dict, "eager_async", EagerAsync);

@@ -177,6 +177,12 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "faces")]
         public bool Faces { get; protected set; }
+        
+        /// <summary>
+        /// Whether to retrieve the quality analysis of the image. Default: false.
+        /// </summary>
+        [DataMember(Name = "quality_analysis")]
+        public bool QualityAnalysis { get; protected set; }
 
         /// <summary>
         /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>/>.

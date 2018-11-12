@@ -56,6 +56,9 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "faces")]
         public int[][] Faces { get; protected set; }
+        
+        [DataMember(Name = "quality_analysis")]
+        public QualityAnalysis QualityAnalysis { get; protected set; }
 
         [DataMember(Name = "colors")]
         public string[][] Colors { get; protected set; }
@@ -466,7 +469,7 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "m_d")]
         public Point MouthDown { get; protected set; }
     }
-
+    
     [DataContract]
     public class BoundingBox
     {
@@ -498,4 +501,11 @@ namespace CloudinaryDotNet.Actions
     }
 
     #endregion
+    
+    [DataContract]
+    public class QualityAnalysis
+    {
+        [DataMember(Name = "focus")]
+        public double Focus { get; protected set; }
+    }
 }

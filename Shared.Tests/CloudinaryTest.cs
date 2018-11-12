@@ -217,7 +217,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(ModerationStatus.Approved, uploadResult.Moderation[0].Status);
             Assert.AreEqual(MODERATION_AWS_REK, uploadResult.Moderation[0].Kind);
         }
-        
+
         [Test, IgnoreAddon("webpurify")]
         public void TestModerationWebpurify()
         {
@@ -233,7 +233,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(1, uploadResult.Moderation.Count);
             Assert.AreEqual(MODERATION_WEBPURIFY, uploadResult.Moderation[0].Kind);
         }
-        
+
         [Test]
         public void TestOcrUpdate()
         {
@@ -485,6 +485,39 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(152, res.Faces[0][3]);
         }
 
+        [Test]
+        public void TestQualityAnalysis()
+        {
+            //should return quality analysis information
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                QualityAnalysis = true,
+                Tags = m_apiTag
+            };
+
+            var uploadRes = m_cloudinary.Upload(uploadParams);
+
+            Assert.NotNull(uploadRes.QualityAnalysis);
+            Assert.IsInstanceOf<double>(uploadRes.QualityAnalysis.Focus);
+
+            var explicitParams = new ExplicitParams(uploadRes.PublicId)
+            {
+                QualityAnalysis = true,
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            var explicitResult = m_cloudinary.Explicit(explicitParams);
+
+            Assert.NotNull(explicitResult.QualityAnalysis);
+            Assert.IsInstanceOf<double>(explicitResult.QualityAnalysis.Focus);
+
+            var res = m_cloudinary.GetResource(new GetResourceParams(uploadRes.PublicId) { QualityAnalysis = true });
+
+            Assert.NotNull(res.QualityAnalysis);
+            Assert.IsInstanceOf<double>(res.QualityAnalysis.Focus);
+        }
         [Test]
         public void TestUploadLocalImageUseFilename()
         {
@@ -1610,7 +1643,7 @@ namespace CloudinaryDotNet.Test
                 m_simpleTransformationAngle,
                 m_explicitTransformation
             };
-            
+
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
@@ -1628,11 +1661,11 @@ namespace CloudinaryDotNet.Test
 
             var delParams = new DelResParams {Transformations = transformations};
             delParams.PublicIds.Add(publicId);
-            
+
             DelResResult delResult = m_cloudinary.DeleteResources(delParams);
             Assert.IsNotNull(delResult.Deleted);
             Assert.AreEqual(1, delResult.Deleted.Count);
-            
+
             resource = m_cloudinary.GetResource(publicId);
             Assert.IsNotNull(resource);
             Assert.AreEqual(resource.Derived.Length, 0);
@@ -1674,13 +1707,13 @@ namespace CloudinaryDotNet.Test
                 m_simpleTransformationAngle,
                 m_explicitTransformation
             };
-            
+
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = publicId,
                 Tags = m_apiTag,
-                EagerTransforms = transformations 
+                EagerTransforms = transformations
             };
             m_cloudinary.Upload(uploadParams);
 
@@ -1690,12 +1723,12 @@ namespace CloudinaryDotNet.Test
 
             var delResult = m_cloudinary.DeleteResources(new DelResParams
             {
-                Prefix = prefix, 
+                Prefix = prefix,
                 Transformations = transformations
             });
             Assert.NotNull(delResult.Deleted);
             Assert.AreEqual(delResult.Deleted.Count, 1);
-            
+
             resource = m_cloudinary.GetResource(publicId);
             Assert.IsNotNull(resource);
             Assert.AreEqual(resource.Derived.Length, 0);
@@ -1732,7 +1765,7 @@ namespace CloudinaryDotNet.Test
         public void TestDeleteByTagAndTransformation()
         {
             // should allow deleting resources
-            string publicId = GetUniquePublicId(); 
+            string publicId = GetUniquePublicId();
             string tag = GetMethodTag();
 
             var uploadParams = new ImageUploadParams()
@@ -1742,8 +1775,8 @@ namespace CloudinaryDotNet.Test
                 Tags = tag,
                 EagerTransforms = new List<Transformation>()
                 {
-                    m_simpleTransformation, 
-                    m_simpleTransformationAngle, 
+                    m_simpleTransformation,
+                    m_simpleTransformationAngle,
                     m_explicitTransformation
                 },
             };
@@ -1766,7 +1799,7 @@ namespace CloudinaryDotNet.Test
             });
 
             Assert.NotNull(delResult.Deleted);
-            
+
             GetResourceResult resource = m_cloudinary.GetResource(publicId);
             Assert.IsNotNull(resource);
             Assert.AreEqual(resource.Derived.Length, 0);
@@ -2669,8 +2702,9 @@ namespace CloudinaryDotNet.Test
                 EagerTransforms = new List<object>() { m_resizeTransformation },
                 FaceCoordinates = "1,2,3,4",
                 Unsigned = true,
+                QualityAnalysis = true,
                 Folder = folder,
-                AllowedFormats = new string[] { FILE_FORMAT_JPG, FILE_FORMAT_PDF }
+                AllowedFormats = new[] { FILE_FORMAT_JPG, FILE_FORMAT_PDF }
             };
 
             var creationResult = m_cloudinary.CreateUploadPreset(@params);
@@ -2679,6 +2713,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(creationResult.Name, preset.Name);
             Assert.AreEqual(true, preset.Unsigned);
+            Assert.IsTrue(preset.Settings.QualityAnalysis);
             Assert.AreEqual(folder, preset.Settings.Folder);
             Assert.AreEqual("0.5", preset.Settings.Transformation[0]["width"].ToString());
             Assert.AreEqual("scale", preset.Settings.Transformation[0]["crop"].ToString());
@@ -2728,7 +2763,8 @@ namespace CloudinaryDotNet.Test
             {
                 Colors = true,
                 Unsigned = true,
-                DisallowPublicId = true
+                DisallowPublicId = true,
+                QualityAnalysis = true
             };
 
             var result = m_cloudinary.UpdateUploadPreset(presetToUpdate);
@@ -2739,7 +2775,8 @@ namespace CloudinaryDotNet.Test
             preset = m_cloudinary.GetUploadPreset(presetName);
 
             Assert.AreEqual(presetName, preset.Name);
-            Assert.AreEqual(true, preset.Unsigned);
+            Assert.IsTrue(preset.Unsigned);
+            Assert.IsTrue(preset.Settings.QualityAnalysis);
 
             // TODO: compare settings of preset and presetToUpdate
         }

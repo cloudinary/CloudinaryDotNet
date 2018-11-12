@@ -96,6 +96,11 @@ namespace CloudinaryDotNet.Actions
         /// Perform asynchronous processing on the server in explicit API calls. Default: false.
         /// </summary>
         public bool? Async { get; set; }
+        
+        /// <summary>
+        /// Whether to retrieve the quality analysis of the image. Default: false.
+        /// </summary>
+        public bool QualityAnalysis { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -122,6 +127,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "async", Async);
+            AddParam(dict, "quality_analysis", QualityAnalysis);
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);

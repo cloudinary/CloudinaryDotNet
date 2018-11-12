@@ -38,6 +38,9 @@ namespace CloudinaryDotNet.Actions
         
         [DataMember(Name = "info")]
         public Info Info { get; protected set; }
+        
+        [DataMember(Name = "quality_analysis")]
+        public QualityAnalysis QualityAnalysis{ get; protected set; }
     }
 
     [DataContract]
