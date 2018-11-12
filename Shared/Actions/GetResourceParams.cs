@@ -34,6 +34,11 @@ namespace CloudinaryDotNet.Actions
         /// Whether to include faces coordinates in result.
         /// </summary>
         public bool Faces { get; set; }
+        
+        /// <summary>
+        /// Whether to include quality analysis in result.
+        /// </summary>
+        public bool QualityAnalysis { get; set; }
 
         /// <summary>
         /// Whether to include metadata in result.
@@ -75,6 +80,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "exif", Exif);
             AddParam(dict, "colors", Colors);
             AddParam(dict, "faces", Faces);
+            AddParam(dict, "quality_analysis", QualityAnalysis);
             AddParam(dict, "image_metadata", Metadata);
             AddParam(dict, "phash", Phash);
             AddParam(dict, "coordinates", Coordinates);

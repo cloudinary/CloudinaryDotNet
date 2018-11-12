@@ -33,6 +33,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "faces")]
         public int[][] Faces { get; protected set; }
 
+        [DataMember(Name = "quality_analysis")]
+        public QualityAnalysis QualityAnalysis{ get; protected set; }
+        
         [DataMember(Name = "colors")]
         public string[][] Colors { get; protected set; }
 
