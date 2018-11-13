@@ -15,8 +15,11 @@ namespace CloudinaryDotNet.Test
 
         protected virtual string GetMethodTag(string memberName = "")
         {
-            var stackTrace = new StackTrace();
-            memberName = stackTrace.GetFrame(1).GetMethod().Name;
+            if (string.IsNullOrEmpty(memberName))
+            {
+                memberName = new StackTrace().GetFrame(1)?.GetMethod().Name;
+            }
+
             return $"{m_apiTag}_{memberName}";
         }
 
