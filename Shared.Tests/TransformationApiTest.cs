@@ -343,5 +343,22 @@ namespace CloudinaryDotNet.Test
                 .EndIf();
             Assert.AreEqual(transformationStr, transformation.ToString());
         }
+
+        [Test]
+        public void TestCustomFunction()
+        {
+            var customFunc = new Transformation().CustomFunction(CustomFunction.Wasm("blur_wasm")).Generate();
+            
+            Assert.AreEqual("fn_wasm:blur_wasm", customFunc);
+
+            customFunc = new Transformation()
+                .CustomFunction(
+                    CustomFunction.Remote("https://df34ra4a.execute-api.us-west-2.amazonaws.com/default/cloudinaryFunction"))
+                .Generate();
+            
+            Assert.AreEqual(
+                "fn_remote:aHR0cHM6Ly9kZjM0cmE0YS5leGVjdXRlLWFwaS51cy13ZXN0LTIuYW1hem9uYXdzLmNvbS9kZWZhdWx0L2Nsb3VkaW5hcnlGdW5jdGlvbg==",
+                customFunc);
+        }
     }
 }

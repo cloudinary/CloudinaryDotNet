@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
@@ -54,6 +56,31 @@ namespace CloudinaryDotNet
         internal static bool IsRemoteFile(string filePath)
         {
             return Regex.IsMatch(filePath, "^((ftp|https?|s3|gs):.*)|data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
+        }
+
+        /// <summary>
+        /// Encode string to URL-safe Base64 string
+        /// </summary>
+        internal static string EncodeUrlSafe(string s)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(s);
+            return EncodeUrlSafe(bytes);
+        }
+
+        /// <summary>
+        /// Encode bytes to URL-safe Base64 string
+        /// </summary>
+        internal static string EncodeUrlSafe(byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes).Replace('+', '-').Replace('/', '_');
+        }
+
+        internal static byte[] ComputeHash(string s)
+        {
+            using (var sha1 = SHA1.Create())
+            {
+                return sha1.ComputeHash(Encoding.UTF8.GetBytes(s));
+            }
         }
     }
 }
