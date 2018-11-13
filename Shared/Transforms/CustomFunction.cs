@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
     public class CustomFunction
     {
-        private readonly string m_params;
+        private readonly string _params;
 
         private CustomFunction(params string[] components)
         {
-            m_params = string.Join(":", components);
+            _params = string.Join(":", components);
         }
 
         /// <summary>
-        /// Generate a web-assembly custom function param to send to CustomAction(customFunction) transformation 
+        /// Generate a web-assembly custom function param to send to CustomFunction(customFunction) transformation 
         /// </summary>
         /// <param name="publicId">The public id of the web-assembly file</param>
         /// <returns>A new instance of custom function param</returns>
-        public static CustomFunction WASM(string publicId)
+        public static CustomFunction Wasm(string publicId)
         {
             return new CustomFunction("wasm", publicId);
         }
 
         /// <summary>
-        /// Generate a remote lambda custom action function to send to CustomAction(customFunction) transformation 
+        /// Generate a remote lambda custom action function to send to CustomFunction(customFunction) transformation 
         /// </summary>
         /// <param name="url">The public url of the aws lambda function</param>
         /// <returns>A new instance of custom function param</returns>
@@ -35,7 +31,7 @@ namespace CloudinaryDotNet
 
         public override string ToString()
         {
-            return m_params.ToString();
+            return _params;
         }
     }
 }
