@@ -1,4 +1,19 @@
 
+1.5.0 / 2018-11-14
+==================
+
+New functionality
+-----------------
+
+  * Add support for web assembly and lambda functions in transformations
+  * Add `QualityAnalysis` parameter
+  * Add `Format` parameter to `ResponsiveBreakpoint`
+
+Other Changes
+-------------
+
+  * Fix possible NullReferenceException in tests
+
 1.4.1 / 2018-10-11
 ==================
 
