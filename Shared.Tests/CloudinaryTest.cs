@@ -271,10 +271,11 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
 
-            StringAssert.AreEqualIgnoringCase(
+            // OCR sometimes replaces `_`,`-` with space or empty string and adds newline at the end, ignore those
+            CloudinaryAssert.StringsAreEqualIgnoringCaseAndChars(
                 m_implicitTransformationText,
-                // OCR sometimes replaces `_` with space and adds newline at the end, ignore those
-                updateResult.Info.Ocr.AdvOcr.Data[0].FullTextAnnotation.Text.Replace(" ", "_").Replace("\n", ""));
+                updateResult.Info.Ocr.AdvOcr.Data[0].FullTextAnnotation.Text,
+                "_- \n");
         }
 
         [Test]
