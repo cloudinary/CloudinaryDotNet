@@ -370,4 +370,20 @@ namespace CloudinaryDotNet.Test
         }
     }
 
+    public static class CloudinaryAssert
+    {
+        public static void StringsAreEqualIgnoringCaseAndChars(string expected, string actual, string chars)
+        {
+            expected = expected.Replace(chars.ToCharArray(), "");
+            actual = actual.Replace(chars.ToCharArray(), "");
+
+            StringAssert.AreEqualIgnoringCase(expected, actual);
+        }
+
+        private static string Replace(this string s, char[] oldChars, string newChar)
+        {
+            return string.Join(newChar, s.Split(oldChars, StringSplitOptions.RemoveEmptyEntries));
+        }
+    }
+
 }
