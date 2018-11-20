@@ -36,6 +36,32 @@ namespace CloudinaryDotNet
             return Add("video_codec", codecParams);
         }
 
+        public Transformation Fps(string value)
+        {
+            return Add("fps", value);
+        }
+
+        public Transformation Fps(double value)
+        {
+            return Fps($"{value}");
+        }
+
+        public Transformation Fps(double? min, double? max)
+        {
+            if (!min.HasValue && !max.HasValue)
+                throw new ArgumentException("Both arguments 'min' and 'max' can not be null.");
+
+            return Fps($"{min}-{max}");
+        }
+
+        public Transformation Fps(string min, string max)
+        {
+            if (string.IsNullOrEmpty(min) && string.IsNullOrEmpty(max))
+                throw new ArgumentException("Both arguments 'min' and 'max' can not be null.");
+
+            return Fps($"{min}-{max}");
+        }
+
         public Transformation AudioCodec(string codec)
         {
             return Add("audio_codec", codec);

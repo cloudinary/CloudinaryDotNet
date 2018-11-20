@@ -1371,6 +1371,27 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestVideoFps()
+        {
+            Dictionary<Transformation, string> testPairs = new Dictionary<Transformation, string>()
+            {
+                {new Transformation().Fps(24, 29.97), "fps_24-29.97"},
+                {new Transformation().Fps(29.97), "fps_29.97"},
+                {new Transformation().Fps(24), "fps_24"},
+                {new Transformation().Fps(null, 29.97), "fps_-29.97"},
+                {new Transformation().Fps(24, null), "fps_24-"},
+                {new Transformation().Fps("$v"), "fps_$v"},
+                {new Transformation().Fps("$min", "$max"), "fps_$min-$max"},
+                {new Transformation().Fps("24-29.97"), "fps_24-29.97"},
+            };
+            foreach (var pair in testPairs)
+            {
+                var actual = m_api.UrlVideoUp.Transform(pair.Key).BuildUrl("video_id");
+                Assert.AreEqual(m_defaultVideoUpPath + pair.Value + "/video_id", actual);
+            }
+        }
+
+        [Test]
         public void TestEmptySource()
         {
             var url = m_api.UrlImgUp.BuildUrl();
