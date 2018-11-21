@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -17,6 +18,8 @@ namespace CloudinaryDotNet
 
         protected string m_fontWeight;
         protected string m_fontStyle;
+        protected string m_fontAntialiasing;
+        protected string m_fontHinting;
         protected string m_textDecoration;
         protected string m_textAlign;
         protected string m_stroke;
@@ -91,6 +94,24 @@ namespace CloudinaryDotNet
             result.Append(Encode(text.Substring(start)));
 
             return result.ToString();
+        }
+
+        /// <summary>
+        /// Type of font antialiasing to use
+        /// </summary>
+        public TextLayer FontAntialiasing(FontAntialiasing value)
+        {
+            m_fontAntialiasing = ApiShared.GetCloudinaryParam(value);
+            return this;
+        }
+
+        /// <summary>
+        /// Type of font hinting to use
+        /// </summary>
+        public TextLayer FontHinting(FontHinting value)
+        {
+            m_fontHinting = ApiShared.GetCloudinaryParam(value);
+            return this;
         }
 
         /// <summary>
@@ -211,6 +232,10 @@ namespace CloudinaryDotNet
                 components.Add(m_fontWeight);
             if (!string.IsNullOrEmpty(m_fontStyle) && !m_fontStyle.Equals("normal"))
                 components.Add(m_fontStyle);
+            if (!string.IsNullOrEmpty(m_fontAntialiasing))
+                components.Add($"antialias_{m_fontAntialiasing}");
+            if (!string.IsNullOrEmpty(m_fontHinting))
+                components.Add($"hinting_{m_fontHinting}");
             if (!string.IsNullOrEmpty(m_textDecoration) && !m_textDecoration.Equals("none"))
                 components.Add(m_textDecoration);
             if (!string.IsNullOrEmpty(m_textAlign))
@@ -218,9 +243,9 @@ namespace CloudinaryDotNet
             if (!string.IsNullOrEmpty(m_stroke) && !m_stroke.Equals("none"))
                 components.Add(m_stroke);
             if (!string.IsNullOrEmpty(m_letterSpacing))
-                components.Add(string.Format("letter_spacing_{0}", m_letterSpacing));
+                components.Add($"letter_spacing_{m_letterSpacing}");
             if (!string.IsNullOrEmpty(m_lineSpacing))
-                components.Add(string.Format("line_spacing_{0}", m_lineSpacing));
+                components.Add($"line_spacing_{m_lineSpacing}");
 
             if (string.IsNullOrEmpty(m_fontFamily) && components.Count == 0)
             {
@@ -237,5 +262,33 @@ namespace CloudinaryDotNet
 
             return string.Join("_", components);
         }
+    }
+
+    public enum FontAntialiasing
+    {
+        [EnumMember(Value = "none")]
+        None,
+        [EnumMember(Value = "gray")]
+        Gray,
+        [EnumMember(Value = "subpixel")]
+        Subpixel,
+        [EnumMember(Value = "fast")]
+        Fast,
+        [EnumMember(Value = "good")]
+        Good,
+        [EnumMember(Value = "best")]
+        Best
+    }
+
+    public enum FontHinting
+    {
+        [EnumMember(Value = "none")]
+        None,
+        [EnumMember(Value = "slight")]
+        Slight,
+        [EnumMember(Value = "medium")]
+        Medium,
+        [EnumMember(Value = "full")]
+        Full
     }
 }
