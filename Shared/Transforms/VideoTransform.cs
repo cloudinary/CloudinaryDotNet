@@ -38,7 +38,7 @@ namespace CloudinaryDotNet
 
         public Transformation Fps(string value)
         {
-            return Add("fps", value);
+            return Add("fps", Expression.Normalize(value));
         }
 
         public Transformation Fps(double value)
