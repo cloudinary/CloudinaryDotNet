@@ -264,30 +264,66 @@ namespace CloudinaryDotNet
         }
     }
 
+    /// <summary>
+    /// Type of font antialiasing
+    /// </summary>
     public enum FontAntialiasing
     {
+        /// <summary>
+        /// Use a bi-level alpha mask
+        /// </summary>
         [EnumMember(Value = "none")]
         None,
+        /// <summary>
+        /// Perform single-color antialiasing. For example, using shades of gray for black text on a white background
+        /// </summary>
         [EnumMember(Value = "gray")]
         Gray,
+        /// <summary>
+        /// Perform antialiasing by taking advantage of the order of subpixel elements on devices such as LCD panels
+        /// </summary>
         [EnumMember(Value = "subpixel")]
         Subpixel,
+        /// <summary>
+        /// Some antialiasing is performed, but speed is prioritized over quality
+        /// </summary>
         [EnumMember(Value = "fast")]
         Fast,
+        /// <summary>
+        /// Antialiasing that balances quality and performance 
+        /// </summary>
         [EnumMember(Value = "good")]
         Good,
+        /// <summary>
+        /// Renders at the highest quality, sacrificing speed if necessary
+        /// </summary>
         [EnumMember(Value = "best")]
         Best
     }
 
+    /// <summary>
+    /// Type of font hinting
+    /// </summary>
     public enum FontHinting
     {
+        /// <summary>
+        /// Do not hint outlines
+        /// </summary>
         [EnumMember(Value = "none")]
         None,
+        /// <summary>
+        /// Hint outlines slightly to improve contrast while retaining good fidelity to the original shapes
+        /// </summary>
         [EnumMember(Value = "slight")]
         Slight,
+        /// <summary>
+        /// Hint outlines with medium strength, providing a compromise between fidelity to the original shapes and contrast
+        /// </summary>
         [EnumMember(Value = "medium")]
         Medium,
+        /// <summary>
+        /// Hint outlines to the maximize contrast
+        /// </summary>
         [EnumMember(Value = "full")]
         Full
     }
