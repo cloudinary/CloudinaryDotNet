@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -17,6 +18,8 @@ namespace CloudinaryDotNet
 
         protected string m_fontWeight;
         protected string m_fontStyle;
+        protected string m_fontAntialiasing;
+        protected string m_fontHinting;
         protected string m_textDecoration;
         protected string m_textAlign;
         protected string m_stroke;
@@ -91,6 +94,24 @@ namespace CloudinaryDotNet
             result.Append(Encode(text.Substring(start)));
 
             return result.ToString();
+        }
+
+        /// <summary>
+        /// Type of font antialiasing to use
+        /// </summary>
+        public TextLayer FontAntialiasing(FontAntialiasing value)
+        {
+            m_fontAntialiasing = ApiShared.GetCloudinaryParam(value);
+            return this;
+        }
+
+        /// <summary>
+        /// Type of font hinting to use
+        /// </summary>
+        public TextLayer FontHinting(FontHinting value)
+        {
+            m_fontHinting = ApiShared.GetCloudinaryParam(value);
+            return this;
         }
 
         /// <summary>
@@ -211,6 +232,10 @@ namespace CloudinaryDotNet
                 components.Add(m_fontWeight);
             if (!string.IsNullOrEmpty(m_fontStyle) && !m_fontStyle.Equals("normal"))
                 components.Add(m_fontStyle);
+            if (!string.IsNullOrEmpty(m_fontAntialiasing))
+                components.Add($"antialias_{m_fontAntialiasing}");
+            if (!string.IsNullOrEmpty(m_fontHinting))
+                components.Add($"hinting_{m_fontHinting}");
             if (!string.IsNullOrEmpty(m_textDecoration) && !m_textDecoration.Equals("none"))
                 components.Add(m_textDecoration);
             if (!string.IsNullOrEmpty(m_textAlign))
@@ -218,9 +243,9 @@ namespace CloudinaryDotNet
             if (!string.IsNullOrEmpty(m_stroke) && !m_stroke.Equals("none"))
                 components.Add(m_stroke);
             if (!string.IsNullOrEmpty(m_letterSpacing))
-                components.Add(string.Format("letter_spacing_{0}", m_letterSpacing));
+                components.Add($"letter_spacing_{m_letterSpacing}");
             if (!string.IsNullOrEmpty(m_lineSpacing))
-                components.Add(string.Format("line_spacing_{0}", m_lineSpacing));
+                components.Add($"line_spacing_{m_lineSpacing}");
 
             if (string.IsNullOrEmpty(m_fontFamily) && components.Count == 0)
             {
@@ -237,5 +262,69 @@ namespace CloudinaryDotNet
 
             return string.Join("_", components);
         }
+    }
+
+    /// <summary>
+    /// Type of font antialiasing
+    /// </summary>
+    public enum FontAntialiasing
+    {
+        /// <summary>
+        /// Use a bi-level alpha mask
+        /// </summary>
+        [EnumMember(Value = "none")]
+        None,
+        /// <summary>
+        /// Perform single-color antialiasing. For example, using shades of gray for black text on a white background
+        /// </summary>
+        [EnumMember(Value = "gray")]
+        Gray,
+        /// <summary>
+        /// Perform antialiasing by taking advantage of the order of subpixel elements on devices such as LCD panels
+        /// </summary>
+        [EnumMember(Value = "subpixel")]
+        Subpixel,
+        /// <summary>
+        /// Some antialiasing is performed, but speed is prioritized over quality
+        /// </summary>
+        [EnumMember(Value = "fast")]
+        Fast,
+        /// <summary>
+        /// Antialiasing that balances quality and performance 
+        /// </summary>
+        [EnumMember(Value = "good")]
+        Good,
+        /// <summary>
+        /// Renders at the highest quality, sacrificing speed if necessary
+        /// </summary>
+        [EnumMember(Value = "best")]
+        Best
+    }
+
+    /// <summary>
+    /// Type of font hinting
+    /// </summary>
+    public enum FontHinting
+    {
+        /// <summary>
+        /// Do not hint outlines
+        /// </summary>
+        [EnumMember(Value = "none")]
+        None,
+        /// <summary>
+        /// Hint outlines slightly to improve contrast while retaining good fidelity to the original shapes
+        /// </summary>
+        [EnumMember(Value = "slight")]
+        Slight,
+        /// <summary>
+        /// Hint outlines with medium strength, providing a compromise between fidelity to the original shapes and contrast
+        /// </summary>
+        [EnumMember(Value = "medium")]
+        Medium,
+        /// <summary>
+        /// Hint outlines to the maximize contrast
+        /// </summary>
+        [EnumMember(Value = "full")]
+        Full
     }
 }
