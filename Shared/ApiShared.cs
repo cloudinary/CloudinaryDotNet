@@ -249,6 +249,11 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Default cloudinary API URL for streaming profiles
+        /// </summary>
+        public Url ApiUrlStreamingProfileV => ApiUrlV.Add(Constants.STREAMING_PROFILE_API_URL);
+
+        /// <summary>
         /// Default cloudinary API URL for uploading images with version
         /// </summary>
         public Url ApiUrlImgUpV

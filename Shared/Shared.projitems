@@ -19,6 +19,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\BaseResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileBaseParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileUpdateParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileCreateParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\CreateTransformParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\DelDerivedResParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\DelDerivedResResult.cs" />
@@ -79,6 +83,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\VideoUploadResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApiShared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AuthToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cloudinary.StreamingProfiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cloudinary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudinaryConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
