@@ -348,8 +348,15 @@ namespace CloudinaryDotNet
             using (StreamReader reader = new StreamReader(stream))
             {
                 string s = reader.ReadToEnd();
-                result = JsonConvert.DeserializeObject<T>(s);
-                result.JsonObj = JToken.Parse(s);
+                try
+                {
+                    result = JsonConvert.DeserializeObject<T>(s);
+                    result.JsonObj = JToken.Parse(s);
+                }
+                catch (JsonException jex)
+                {
+                    throw new Exception($"Failed to deserialize response with status code: {message.StatusCode}", jex);
+                }
             }
 
             if (message.Headers != null)
