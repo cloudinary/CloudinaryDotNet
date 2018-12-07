@@ -23,23 +23,5 @@ namespace CloudinaryDotNet
         public FileDescription(string filePath) : base(filePath)
         { }
 
-        protected override Stream GetStream(string url)
-        {
-            var memStream = new MemoryStream();
-            using (HttpClient client = new HttpClient())
-            {
-                var request = new HttpRequestMessage();
-                request.Method = System.Net.Http.HttpMethod.Get;
-                request.RequestUri = new Uri(url);
-                var task = client.SendAsync(request);
-                task.Wait();
-                if (task.IsCanceled) { }
-                if (task.IsFaulted) { throw task.Exception; }
-                task.Result.Content.ReadAsStreamAsync().Result.CopyTo(memStream);
-            }
-            memStream.Position = 0;
-
-            return memStream;
-        }
     }
 }

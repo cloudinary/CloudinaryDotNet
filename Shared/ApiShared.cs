@@ -513,7 +513,7 @@ namespace CloudinaryDotNet
 
         protected void WriteFile(StreamWriter writer, FileDescription file)
         {
-            if (file.IsRemote && file.Stream == null)
+            if (file.IsRemote)
             {
                 WriteParam(writer, "file", file.FilePath);
             }

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using CloudinaryDotNet.Actions;
+using NUnit.Framework;
 using System;
 
 namespace CloudinaryDotNet.Test
@@ -62,6 +63,20 @@ namespace CloudinaryDotNet.Test
             {
                 Assert.IsFalse(Utils.IsRemoteFile(path), $"Path '${path}' should be local");
             }
+        }
+
+        [Test]
+        public void TestRemoteStream()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(TEST_S3_URL),
+                Tags = m_apiTag
+            };
+            
+            // remote files should not be streamed 
+            Assert.IsNull(uploadParams.File.Stream);
+            Assert.IsTrue(uploadParams.File.IsRemote);
         }
 
         [Test]

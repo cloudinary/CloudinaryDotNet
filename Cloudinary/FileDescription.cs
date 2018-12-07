@@ -23,19 +23,5 @@ namespace CloudinaryDotNet
         /// <param name="filePath">Either URL (http/https/s3/data) or local path to file</param>
         public FileDescription(string filePath) : base(filePath)
         {}
-
-        protected override Stream GetStream(string url)
-        {
-            HttpWebRequest aRequest = (HttpWebRequest)WebRequest.Create(url);
-            HttpWebResponse aResponse = (HttpWebResponse)aRequest.GetResponse();
-
-            Stream webStream = aResponse.GetResponseStream();
-            var memStream = new MemoryStream();
-            webStream.CopyTo(memStream);
-            memStream.Position = 0;
-            webStream.Dispose();
-
-            return memStream;
-        }
     }
 }

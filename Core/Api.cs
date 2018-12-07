@@ -201,7 +201,7 @@ namespace CloudinaryDotNet
 
             if (file != null)
             {
-                if (file.IsRemote && file.Stream == null)
+                if (file.IsRemote)
                 {
                     StringContent strContent = new StringContent(file.FilePath);
                     strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));

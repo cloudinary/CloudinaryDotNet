@@ -45,11 +45,6 @@ namespace CloudinaryDotNet
             m_stream = stream;
         }
 
-        protected virtual Stream GetStream(string url)
-        {
-            throw new Exception("Please call overridden method.");
-        }
-        
         /// <summary>
         /// Constructor to upload file by path
         /// </summary>
@@ -57,18 +52,8 @@ namespace CloudinaryDotNet
         public FileDescriptionBase(string filePath)
         {
             m_isRemote = Utils.IsRemoteFile(filePath);
-            bool isBase64 = Regex.IsMatch(filePath, "data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
             m_path = filePath;
-
-            if (!m_isRemote)
-            {
-                m_name = Path.GetFileName(m_path);
-            }
-            else
-            {
-                m_name = m_path;
-                m_stream = isBase64 ? null : GetStream(m_name);
-            }
+            m_name = m_isRemote ? filePath : Path.GetFileName(m_path);
         }
 
         /// <summary>
