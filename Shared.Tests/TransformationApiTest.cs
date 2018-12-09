@@ -359,6 +359,11 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(
                 "fn_remote:aHR0cHM6Ly9kZjM0cmE0YS5leGVjdXRlLWFwaS51cy13ZXN0LTIuYW1hem9uYXdzLmNvbS9kZWZhdWx0L2Nsb3VkaW5hcnlGdW5jdGlvbg==",
                 customFunc);
+            
+            customFunc = new Transformation()
+                .CustomFunction(null)
+                .Generate();
+            Assert.AreEqual("", customFunc);
         }
     }
 }

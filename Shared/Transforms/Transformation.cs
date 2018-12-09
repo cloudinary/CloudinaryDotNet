@@ -155,7 +155,7 @@ namespace CloudinaryDotNet
 
         public Transformation CustomFunction(CustomFunction function)
         {
-            Add("custom_function", function.ToString());
+            Add("custom_function", function);
             return this;
         }
 
