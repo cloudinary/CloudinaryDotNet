@@ -18,7 +18,6 @@ namespace CloudinaryDotNet
             "dl", "delay",
             "dn", "density",
             "f", "fetch_format",
-            "fn", "custom_function",
             "fps", "fps",
             "g", "gravity",
             "ki", "keyframe_interval",
@@ -159,6 +158,16 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        public Transformation CustomPreFunction(CustomFunction function)
+        {
+            string serialized = ToString(function);
+            if (!string.IsNullOrEmpty(serialized))
+            {
+                Add("custom_pre_function", $"pre:{function}");
+            }
+            return this;
+        }
+
         public Transformation Add(string key, object value)
         {
             if (m_transformParams.ContainsKey(key))
@@ -287,6 +296,8 @@ namespace CloudinaryDotNet
             parameters.Add("e", Expression.Normalize(GetString(m_transformParams, "effect")));
             parameters.Add("eo", endOffset);
             parameters.Add("fl", flags);
+            parameters.Add("fn", GetString(m_transformParams, "custom_function") ??
+                                 GetString(m_transformParams, "custom_pre_function"));
             parameters.Add("h", Expression.Normalize(height));
             parameters.Add("o", Expression.Normalize(GetString(m_transformParams, "opacity")));
             parameters.Add("q", Expression.Normalize(GetString(m_transformParams, "quality")));
