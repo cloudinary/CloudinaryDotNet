@@ -66,20 +66,6 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestRemoteStream()
-        {
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(TEST_S3_URL),
-                Tags = m_apiTag
-            };
-            
-            // remote files should not be streamed 
-            Assert.IsNull(uploadParams.File.Stream);
-            Assert.IsTrue(uploadParams.File.IsRemote);
-        }
-
-        [Test]
         public void TestEncodeUrlSafeBase64String()
         {
             Assert.AreEqual(

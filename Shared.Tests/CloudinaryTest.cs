@@ -632,6 +632,10 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(TEST_REMOTE_IMG),
                 Tags = m_apiTag
             };
+            
+            // remote files should not be streamed 
+            Assert.IsNull(uploadParams.File.Stream);
+            Assert.IsTrue(uploadParams.File.IsRemote);
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
