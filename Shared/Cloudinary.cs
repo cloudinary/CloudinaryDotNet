@@ -240,7 +240,7 @@ namespace CloudinaryDotNet
                 .ResourceType(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType))
                 .Action(Constants.TAGS_MANGMENT)
                 .BuildUrl();
-            
+
             return m_api.CallApi<TagResult>(HttpMethod.POST, uri, parameters, null);
         }
 
@@ -282,7 +282,7 @@ namespace CloudinaryDotNet
             parameters.Mode(ArchiveCallMode.Create);
             return m_api.CallApi<ArchiveResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
-        
+
         /// <summary>
         /// Create a zip archive and store it as a raw resource in your Cloudinary
         /// </summary>
@@ -296,7 +296,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// This method can be used to force refresh facebook and twitter profile pictures. The response of this method includes the image's version. Use this version to bypass previously cached CDN copies.
-        /// Also it can be used to generate transformed versions of an uploaded image. This is useful when Strict Transformations are allowed for your account and you wish to create custom derived images for already uploaded images. 
+        /// Also it can be used to generate transformed versions of an uploaded image. This is useful when Strict Transformations are allowed for your account and you wish to create custom derived images for already uploaded images.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
@@ -555,10 +555,10 @@ namespace CloudinaryDotNet
         {
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
-            
+
             if (parameters.File == null)
                 throw new ArgumentNullException(nameof(parameters.File), "File parameter should be defined");
-              
+
             if(parameters.File.IsRemote)
                 return Upload<T, BasicRawUploadParams>(parameters);
 
@@ -566,28 +566,28 @@ namespace CloudinaryDotNet
             var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
             if (name != null)
                 url.ResourceType(name.ToLower());
-            
+
             string uri = url.BuildUrl();
-            
+
             parameters.File.Reset(bufferSize);
-            
+
             var extraHeaders = new Dictionary<string, string>
             {
                 ["X-Unique-Upload-Id"] = RandomPublicId()
             };
-            
-     
+
+
             var fileLength = parameters.File.GetFileLength();
-            
+
             T result = null;
 
             while (!parameters.File.Eof)
             {
                 var startOffset = parameters.File.BytesSent;
                 var endOffset = startOffset + Math.Min(bufferSize, fileLength - startOffset) - 1;
-                
+
                 extraHeaders["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
-                
+
                 result = m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File, extraHeaders);
 
                 if (result.StatusCode != HttpStatusCode.OK)
@@ -597,7 +597,7 @@ namespace CloudinaryDotNet
                         $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
                 }
             }
-            
+
             return result;
         }
 
@@ -1116,7 +1116,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes all upload mappings 
+        /// Deletes all upload mappings
         /// </summary>
         public UploadMappingResults DeleteUploadMapping()
         {
