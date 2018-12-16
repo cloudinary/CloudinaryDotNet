@@ -590,12 +590,12 @@ namespace CloudinaryDotNet
                 
                 result = m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File, extraHeaders);
 
-                if (result.StatusCode == HttpStatusCode.OK) continue;
-                
-                var error = result.Error != null ? result.Error.Message : "Unknown error";
-                throw new Exception(
-                    $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
-
+                if (result.StatusCode != HttpStatusCode.OK)
+                {
+                    var error = result.Error != null ? result.Error.Message : "Unknown error";
+                    throw new Exception(
+                        $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
+                }
             }
             
             return result;
