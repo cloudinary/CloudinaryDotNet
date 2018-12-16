@@ -201,7 +201,7 @@ namespace CloudinaryDotNet
 
             if (file != null)
             {
-                if (file.IsRemote && file.Stream == null)
+                if (file.IsRemote)
                 {
                     StringContent strContent = new StringContent(file.FilePath);
                     strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));
@@ -302,7 +302,7 @@ namespace CloudinaryDotNet
 
             int bytesSent = 0;
             stream.Seek(file.BytesSent, SeekOrigin.Begin);
-            file.EOF = ReadBytes(writer, stream, file.BufferLength, file.FileName, out bytesSent);
+            file.Eof = ReadBytes(writer, stream, file.BufferLength, file.FileName, out bytesSent);
             file.BytesSent += bytesSent;
             writer.BaseStream.Seek(0, SeekOrigin.Begin);
             

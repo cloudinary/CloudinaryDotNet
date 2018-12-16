@@ -17,6 +17,8 @@ namespace CloudinaryDotNet
         protected const string ACTION_GENERATE_ARCHIVE = "generate_archive";
         protected static Random m_random = new Random();
 
+        protected const int DEFAULT_CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB
+
         protected Api m_api;
 
         /// <summary>
@@ -238,7 +240,7 @@ namespace CloudinaryDotNet
                 .ResourceType(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType))
                 .Action(Constants.TAGS_MANGMENT)
                 .BuildUrl();
-            
+
             return m_api.CallApi<TagResult>(HttpMethod.POST, uri, parameters, null);
         }
 
@@ -280,7 +282,7 @@ namespace CloudinaryDotNet
             parameters.Mode(ArchiveCallMode.Create);
             return m_api.CallApi<ArchiveResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
-        
+
         /// <summary>
         /// Create a zip archive and store it as a raw resource in your Cloudinary
         /// </summary>
@@ -294,7 +296,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// This method can be used to force refresh facebook and twitter profile pictures. The response of this method includes the image's version. Use this version to bypass previously cached CDN copies.
-        /// Also it can be used to generate transformed versions of an uploaded image. This is useful when Strict Transformations are allowed for your account and you wish to create custom derived images for already uploaded images. 
+        /// Also it can be used to generate transformed versions of an uploaded image. This is useful when Strict Transformations are allowed for your account and you wish to create custom derived images for already uploaded images.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
@@ -412,7 +414,7 @@ namespace CloudinaryDotNet
                 .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
                 .BuildUrl();
 
-            ResetInternalFileDescription(parameters.File);
+            parameters.File.Reset();
 
             return m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File);
         }
@@ -447,7 +449,7 @@ namespace CloudinaryDotNet
         {
             string uri = m_api.ApiUrlV.Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
 
-            ResetInternalFileDescription(fileDescription);
+            fileDescription.Reset();
 
             if (parameters == null)
                 parameters = new SortedDictionary<string, object>();
@@ -493,7 +495,7 @@ namespace CloudinaryDotNet
         {
             string uri = m_api.ApiUrlImgUpV.ResourceType(type).BuildUrl();
 
-            ResetInternalFileDescription(parameters.File);
+            parameters.File.Reset();
 
             return m_api.CallApi<RawUploadResult>(HttpMethod.POST, uri, parameters, parameters.File);
         }
@@ -516,28 +518,28 @@ namespace CloudinaryDotNet
         /// or
         /// The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!
         /// </exception>
-        public RawUploadResult UploadLargeRaw(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
+        public RawUploadResult UploadLargeRaw(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
         {
             return UploadLarge<RawUploadResult>(parameters, bufferSize);
         }
 
-        public RawUploadResult UploadLarge(RawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
+        public RawUploadResult UploadLarge(RawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
         {
             return UploadLarge<RawUploadResult>(parameters, bufferSize);
         }
 
-        public ImageUploadResult UploadLarge(ImageUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
+        public ImageUploadResult UploadLarge(ImageUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
         {
             return UploadLarge<ImageUploadResult>(parameters, bufferSize);
         }
 
-        public VideoUploadResult UploadLarge(VideoUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
+        public VideoUploadResult UploadLarge(VideoUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
         {
             return UploadLarge<VideoUploadResult>(parameters, bufferSize);
         }
 
         [Obsolete("Use UploadLarge(parameters, bufferSize) instead.")]
-        public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024, bool isRaw = false)
+        public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE, bool isRaw = false)
         {
             if (isRaw)
             {
@@ -549,41 +551,53 @@ namespace CloudinaryDotNet
             }
         }
 
-        public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024) where T : UploadResult, new()
+        public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE) where T : UploadResult, new()
         {
             if (parameters == null)
-                throw new ArgumentNullException("parameters", "Upload parameters should be defined");
+                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
 
-            if (parameters.File != null && parameters.File.IsRemote)
+            if (parameters.File == null)
+                throw new ArgumentNullException(nameof(parameters.File), "File parameter should be defined");
+
+            if(parameters.File.IsRemote)
                 return Upload<T, BasicRawUploadParams>(parameters);
 
             Url url = m_api.ApiUrlImgUpV;
             var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
             if (name != null)
                 url.ResourceType(name.ToLower());
+
             string uri = url.BuildUrl();
-            ResetInternalFileDescription(parameters.File, bufferSize);
+
+            parameters.File.Reset(bufferSize);
+
             var extraHeaders = new Dictionary<string, string>
             {
                 ["X-Unique-Upload-Id"] = RandomPublicId()
             };
-            parameters.File.BufferLength = bufferSize;
+
+
             var fileLength = parameters.File.GetFileLength();
+
             T result = null;
 
-            while (!parameters.File.EOF)
+            while (!parameters.File.Eof)
             {
-                long currentBufferSize = Math.Min(bufferSize, fileLength - parameters.File.BytesSent);
-                string range = string.Format("bytes {0}-{1}/{2}", parameters.File.BytesSent, parameters.File.BytesSent + currentBufferSize - 1, fileLength);
-                extraHeaders["Content-Range"] = range;
+                var startOffset = parameters.File.BytesSent;
+                var endOffset = startOffset + Math.Min(bufferSize, fileLength - startOffset) - 1;
+
+                extraHeaders["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
+
                 result = m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File, extraHeaders);
 
                 if (result.StatusCode != HttpStatusCode.OK)
-                    throw new Exception(String.Format(
-                        "An error has occured while uploading file (status code: {0}). {1}",
-                        result.StatusCode,
-                        result.Error != null ? result.Error.Message : "Unknown error"));
+                {
+                    var error = result.Error != null ? result.Error.Message : "Unknown error";
+                    throw new Exception(
+                        $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
+                }
             }
+
             return result;
         }
 
@@ -1102,7 +1116,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes all upload mappings 
+        /// Deletes all upload mappings
         /// </summary>
         public UploadMappingResults DeleteUploadMapping()
         {
@@ -1270,13 +1284,6 @@ namespace CloudinaryDotNet
             m_api.FinalizeUploadParameters(parameters);
             builder.SetParameters(parameters);
             return builder.ToString();
-        }
-
-        private static void ResetInternalFileDescription(FileDescription file, int bufferSize = Int32.MaxValue)
-        {
-            file.BufferLength = bufferSize;
-            file.EOF = false;
-            file.BytesSent = 0;
         }
     }
 }

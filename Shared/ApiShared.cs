@@ -513,7 +513,7 @@ namespace CloudinaryDotNet
 
         protected void WriteFile(StreamWriter writer, FileDescription file)
         {
-            if (file.IsRemote && file.Stream == null)
+            if (file.IsRemote)
             {
                 WriteParam(writer, "file", file.FilePath);
             }
@@ -525,13 +525,13 @@ namespace CloudinaryDotNet
                     using (FileStream stream = new FileStream(file.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         stream.Seek(file.BytesSent, SeekOrigin.Begin);
-                        file.EOF = WriteFile(writer, stream, file.BufferLength, file.FileName, out bytesSent);
+                        file.Eof = WriteFile(writer, stream, file.BufferLength, file.FileName, out bytesSent);
                         file.BytesSent += bytesSent;
                     }
                 }
                 else
                 {
-                    file.EOF = WriteFile(writer, file.Stream, file.BufferLength, file.FileName, out bytesSent);
+                    file.Eof = WriteFile(writer, file.Stream, file.BufferLength, file.FileName, out bytesSent);
                     file.BytesSent += bytesSent;
                 }
             }

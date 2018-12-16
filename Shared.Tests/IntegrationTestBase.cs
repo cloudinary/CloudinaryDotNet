@@ -36,6 +36,7 @@ namespace CloudinaryDotNet.Test
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
         protected const string TEST_REMOTE_IMG = "http://cloudinary.com/images/old_logo.png";
+        protected const string TEST_S3_URL = "s3://s3-us-west-2.amazonaws.com/cloudinary/images/old_logo.png";
         protected const string TEST_REMOTE_VIDEO = "http://res.cloudinary.com/demo/video/upload/v1496743637/dog.mp4";
 
         protected const string FILE_FORMAT_PDF = "pdf";
