@@ -443,6 +443,10 @@ namespace CloudinaryDotNet
                 {
                     t.Add(key, value);
                 }
+                else if (value is Core.ICloneable)
+                {
+                    t.Add(key, ((Core.ICloneable)value).Clone());
+                }
                 else if (value is Dictionary<string, string>) {
                     t.Add(key, new Dictionary<string, string>((Dictionary<string, string>)value));
                 }

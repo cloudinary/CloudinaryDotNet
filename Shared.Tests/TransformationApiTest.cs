@@ -387,5 +387,71 @@ namespace CloudinaryDotNet.Test
                 .Generate();
             Assert.AreEqual("", customFunc);
         }
+        
+        [Test]
+        public void TestCloneWithNested()
+        {
+            // transformation should be cloneable, including nested transformations
+            Transformation transformation = new Transformation().X(100).Y(100).Width(200)
+                .Crop("fill").Chain().Radius(10).Chain().Crop("crop").Width(100).Angle("12", "13", "14");
+
+            Transformation clone = transformation.Clone();
+            transformation.NestedTransforms[0].Width(300);
+            transformation = transformation.Angle("22", "23").Chain().Crop("fill");
+
+            Assert.AreEqual(transformation.Generate(), 
+                "c_fill,w_300,x_100,y_100/r_10/a_22.23,c_crop,w_100/c_fill");
+            Assert.AreEqual(clone.Generate(), 
+                "c_fill,w_200,x_100,y_100/r_10/a_12.13.14,c_crop,w_100");
+        }
+        
+        [Test]
+        public void TestDictionaryParamsDeepClone()
+        {
+            // dictionary params should be cloned
+            var codecParams = new Dictionary<string, string>
+            {
+                {"codec", "h264"}, {"profile", "basic"}, {"level", "3.1"}
+            };
+            Transformation transform = new Transformation().VideoCodec(codecParams);
+            
+            Transformation clone = transform.Clone();
+            codecParams["codec"] = "h265";
+            
+            Assert.AreEqual(transform.Generate(), "vc_h265:basic:3.1");
+            Assert.AreEqual(clone.Generate(), "vc_h264:basic:3.1");
+        }
+
+        [Test]
+        public void TestTransformationLayersDeepClone()
+        {
+            // layers should be cloned
+            var layer = new TextLayer("Hello").FontSize(10).FontFamily("Arial");
+            var transformation = new Transformation().Overlay(layer);
+            
+            var clone = transformation.Clone();
+            layer.FontSize(20);
+            
+            Assert.AreEqual(transformation.Generate(), "l_text:Arial_20:Hello");
+            Assert.AreEqual(clone.Generate(), "l_text:Arial_10:Hello");
+        }
+
+        [Test]
+        public void TestExpressionsClone()
+        {
+            const string transformationStr = "if_pc_lt_300/c_scale/if_end";
+            var expression = Expression.PageCount().Lt(300);
+            var transformation = new Transformation()
+                .IfCondition(expression)
+                .Crop("scale")
+                .EndIf();
+
+            var clone = transformation.Clone();
+            expression.Gt(2);
+
+            Assert.AreEqual(transformationStr, clone.ToString());
+        }
+
+
     }
 }
