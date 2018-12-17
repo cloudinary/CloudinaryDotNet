@@ -8,6 +8,7 @@ namespace CloudinaryDotNet.Test
 {
     public class StreamingProfileApiTest : IntegrationTestBase
     {
+        private List<string> m_streamingProfilesToClear;
         private readonly List<string> PREDEFINED_PROFILES =
             new List<string> { "4k", "full_hd", "hd", "sd", "full_hd_wifi", "full_hd_lean", "hd_lean" };
 
@@ -26,7 +27,32 @@ namespace CloudinaryDotNet.Test
                     }
                 });
         }
+        
+        [OneTimeSetUp]
+        public override void Initialize()
+        {
+            base.Initialize();
+            m_streamingProfilesToClear = new List<string>();
+        }
 
+        [OneTimeTearDown]
+        public override void Cleanup()
+        {
+            base.Cleanup();
+            m_streamingProfilesToClear.ForEach(p => m_cloudinary.DeleteStreamingProfile(p));
+        }
+
+        private string GetUniqueStreamingProfileName(string suffix = "")
+        {
+            var name = $"{m_apiTest}_streaming_profile_{m_streamingProfilesToClear.Count + 1}";
+            
+            if (!string.IsNullOrEmpty(suffix))
+                name = $"{name}_{suffix}";
+            
+            m_streamingProfilesToClear.Add(name);
+            return name;
+        }
+        
         [Test]
         public void TestCreateStreamingProfile()
         {

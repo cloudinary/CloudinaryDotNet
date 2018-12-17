@@ -91,7 +91,6 @@ namespace CloudinaryDotNet.Test
         protected Dictionary<StorageType, List<string>> m_publicIdsToClear;
         protected List<object> m_transformationsToClear;
         protected List<string> m_presetsToClear;
-        protected List<string> m_streamingProfilesToClear;
 
         protected enum StorageType { text, sprite, multi, facebook, upload }
 
@@ -119,7 +118,6 @@ namespace CloudinaryDotNet.Test
 
             m_transformationsToClear = new List<object>();
             m_presetsToClear = new List<string>();
-            m_streamingProfilesToClear = new List<string>();
 
             InitializeUniqueNames(assembly.GetName().Name);
         }
@@ -309,21 +307,6 @@ namespace CloudinaryDotNet.Test
 
         #endregion
 
-        #region Unique Streaming Profiles
-
-        protected virtual string GetUniqueStreamingProfileName(string suffix = "")
-        {
-            var name = $"{m_apiTest}_streaming_profile_{m_streamingProfilesToClear.Count + 1}";
-            
-            if (!string.IsNullOrEmpty(suffix))
-                name = $"{name}_{suffix}";
-            
-            m_streamingProfilesToClear.Add(name);
-            return name;
-        }
-
-        #endregion
-
         private int GetUniqueNumber()
         {
             return Guid.NewGuid().GetHashCode();
@@ -359,7 +342,6 @@ namespace CloudinaryDotNet.Test
 
             m_transformationsToClear.ForEach(t => m_cloudinary.DeleteTransform(t.ToString()));
             m_presetsToClear.ForEach(p => m_cloudinary.DeleteUploadPreset(p));
-            m_streamingProfilesToClear.ForEach(p => m_cloudinary.DeleteStreamingProfile(p));
         }
     }
 

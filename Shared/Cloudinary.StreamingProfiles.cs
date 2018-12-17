@@ -5,8 +5,6 @@ namespace CloudinaryDotNet
 {
     public partial class Cloudinary
     {
-        private const string CANT_BE_NULL = "The argument can not be null";
-
         /// <summary>
         /// Create a new streaming profile
         /// </summary>
@@ -22,10 +20,10 @@ namespace CloudinaryDotNet
         public StreamingProfileResult UpdateStreamingProfile(string name, StreamingProfileUpdateParams parameters)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name), CANT_BE_NULL);
+                throw new ArgumentNullException(nameof(name));
 
             if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters), CANT_BE_NULL);
+                throw new ArgumentNullException(nameof(parameters));
 
             return m_api.CallApi<StreamingProfileResult>(
                 HttpMethod.PUT,
@@ -41,7 +39,7 @@ namespace CloudinaryDotNet
         public StreamingProfileResult DeleteStreamingProfile(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name), CANT_BE_NULL);
+                throw new ArgumentNullException(nameof(name));
 
             return m_api.CallApi<StreamingProfileResult>(
                 HttpMethod.DELETE, m_api.ApiUrlStreamingProfileV.Add(name).BuildUrl(), null, null);
@@ -54,7 +52,7 @@ namespace CloudinaryDotNet
         public StreamingProfileResult GetStreamingProfile(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name), CANT_BE_NULL);
+                throw new ArgumentNullException(nameof(name));
 
             return m_api.CallApi<StreamingProfileResult>(
                 HttpMethod.GET, m_api.ApiUrlStreamingProfileV.Add(name).BuildUrl(), null, null);
