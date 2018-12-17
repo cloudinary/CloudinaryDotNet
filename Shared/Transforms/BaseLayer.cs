@@ -6,7 +6,10 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Base abstract non-generic class for creating Layers.
     /// </summary>
-    public abstract class BaseLayer { }
+    public abstract class BaseLayer : Core.ICloneable
+    {
+        public abstract object Clone();
+    }
 
     /// <summary>
     /// Base abstract generic class for creating Layers.
@@ -86,5 +89,11 @@ namespace CloudinaryDotNet
 
             return transientPublicId;
         }
+
+        #region ICloneable
+
+        public override object Clone() => MemberwiseClone();
+
+        #endregion
     }
 }

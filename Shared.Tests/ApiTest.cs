@@ -562,31 +562,24 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestTransformationClone()
-        {
-            // transformation should be cloneable
-            Transformation transform1 = new Transformation().X(100).Y(100).Width(200).Crop("fill").Chain().Radius(10).Chain().Crop("crop").Width(100).Angle("12", "13", "14");
-            Transformation transform2 = transform1.Clone();
-            transform1 = transform1.Angle("22", "23").Chain().Crop("fill");
-
-            Assert.AreEqual(3, transform1.NestedTransforms.Count);
-            Assert.AreEqual(1, transform1.Params.Count);
-            Assert.AreEqual(2, transform2.NestedTransforms.Count);
-            Assert.AreEqual(3, transform2.Params.Count);
-        }
-
-        [Test]
         public void TestUrlClone()
         {
             // url should be cloneable
-            Transformation t1 = new Transformation().Angle(12);
-            Transformation t2 = new Transformation().Crop("fill");
-            Url url1 = m_api.UrlImgUp.Transform(t1);
-            Url url2 = url1.Clone().Action("go").Transform(t2);
+            var layer = new TextLayer("Hello").FontFamily("Arial").FontSize(10);
+            var transformation = new Transformation().Angle(12).Overlay(layer);
+
+            Url url1 = m_api.UrlImgUp.Transform(transformation);
+            Url url2 = url1.Clone().Action("go");
+            transformation.Angle(14);
+            layer.FontSize(20);
+            
             string result1 = url1.BuildUrl("test");
             string result2 = url2.BuildUrl("test");
-            Assert.AreEqual(m_defaultImgUpPath + "a_12/test", result1);
-            Assert.AreEqual(m_defaultRootPath + "image/go/c_fill/test", result2);
+            
+            Assert.AreEqual(m_defaultImgUpPath + "a_14,l_text:Arial_20:Hello/test", result1, 
+                "Original Url should not be affected by changes to a cloned Url");
+            Assert.AreEqual(m_defaultRootPath + "image/go/a_12,l_text:Arial_10:Hello/test", result2, 
+                "Cloned Url should not be affected by changes to source Url params and layers");
         }
 
         [Test]
