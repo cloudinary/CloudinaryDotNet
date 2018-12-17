@@ -12,6 +12,12 @@ namespace CloudinaryDotNet.Test
         private readonly List<string> PREDEFINED_PROFILES =
             new List<string> { "4k", "full_hd", "hd", "sd", "full_hd_wifi", "full_hd_lean", "hd_lean" };
 
+        private readonly Transformation PROFILE_TRANSFORMATION_1 = new Transformation()
+            .Crop("limit").Width(1200).Height(1200).BitRate("5m");
+
+        private readonly Transformation PROFILE_TRANSFORMATION_2 = new Transformation()
+            .Crop("scale").Width(100).Height(200).BitRate("10m");
+        
         private StreamingProfileResult CreateStreamingProfileWith2Transforms(string name)
         {
             return m_cloudinary.CreateStreamingProfile(
@@ -20,10 +26,8 @@ namespace CloudinaryDotNet.Test
                     Name = name,
                     Representations = new List<Representation>
                     {
-                        new Representation { Transformation = new Transformation()
-                            .Crop("limit").Width(1200).Height(1200).BitRate("5m")},
-                        new Representation { Transformation = new Transformation()
-                            .Crop("scale").Width(100).Height(200).BitRate("10m")}
+                        new Representation { Transformation = PROFILE_TRANSFORMATION_1},
+                        new Representation { Transformation = PROFILE_TRANSFORMATION_2}
                     }
                 });
         }
@@ -63,8 +67,8 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(result.Data);
             Assert.AreEqual(name, result.Data.Name);
             Assert.AreEqual(2, result.Data.Representations.Count);
-            StringAssert.Contains("c_scale", string.Join(";", result.Data.Representations.Select(
-                r => r.Transformation.ToString())));
+            Assert.AreEqual(PROFILE_TRANSFORMATION_1.ToString(), result.Data.Representations[0].Transformation.ToString());
+            Assert.AreEqual(PROFILE_TRANSFORMATION_2.ToString(), result.Data.Representations[1].Transformation.ToString());
         }
 
         [Test]
@@ -121,7 +125,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(2, representations.Count);
 
             representations.RemoveAt(1);
-            representations[0].Transformation.Width(1000).Height(1000).Crop("scale");
+            representations[0].Transformation.Crop("limit").Width(800).Height(800).BitRate("5m");
 
             Assert.Throws<ArgumentNullException>(() =>
                 m_cloudinary.UpdateStreamingProfile(null,
@@ -145,7 +149,9 @@ namespace CloudinaryDotNet.Test
             Assert.NotNull(result.Data);
             Assert.AreEqual(displayName, result.Data.DisplayName);
             Assert.AreEqual(1, result.Data.Representations.Count);
-            StringAssert.Contains("c_scale", result.Data.Representations[0].Transformation.ToString());
+            Assert.AreEqual(
+                representations[0].Transformation.ToString(), 
+                result.Data.Representations[0].Transformation.ToString());
         }
     }
 }
