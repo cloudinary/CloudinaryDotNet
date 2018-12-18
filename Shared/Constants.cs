@@ -9,6 +9,7 @@ namespace CloudinaryDotNet
         //API url patterns
         public const string RESOURCES_API_URL = "resources";
         public const string TAG_API_URL = "tag";
+        public const string STREAMING_PROFILE_API_URL = "streaming_profiles";
 
         //Api URL action names
         public const string UPDATE_ACESS_MODE = "update_access_mode";
