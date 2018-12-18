@@ -1,4 +1,4 @@
-﻿using CloudinaryDotNet;
+﻿
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
 using System;
@@ -7,9 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Converters;
 
 namespace CloudinaryDotNet
@@ -28,6 +26,7 @@ namespace CloudinaryDotNet
         public bool ShortenUrl;
         public bool UseRootPath;
         public bool UsePrivateCdn;
+        public bool Secure;
         public string PrivateCdn;
         public string Suffix;
         public string UserPlatform;
@@ -78,6 +77,7 @@ namespace CloudinaryDotNet
             if (UsePrivateCdn)
             {
                 PrivateCdn = cloudinaryUri.AbsolutePath;
+                Secure = true;
             }
 
         }
@@ -103,6 +103,7 @@ namespace CloudinaryDotNet
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Parametrized constructor
         /// </summary>
@@ -115,6 +116,7 @@ namespace CloudinaryDotNet
             : this(account)
         {
             UsePrivateCdn = usePrivateCdn;
+            Secure = usePrivateCdn; // for backwards compatibility
             PrivateCdn = privateCdn;
             ShortenUrl = shortenUrl;
             CSubDomain = cSubDomain;
@@ -161,7 +163,7 @@ namespace CloudinaryDotNet
                     .CSubDomain(CSubDomain)
                     .Shorten(ShortenUrl)
                     .PrivateCdn(UsePrivateCdn)
-                    .Secure(UsePrivateCdn)
+                    .Secure(Secure)
                     .SecureDistribution(PrivateCdn);
             }
         }
@@ -480,7 +482,7 @@ namespace CloudinaryDotNet
                 parameters.Remove("removeUnsignedParam");
             }
         }
-        
+
         protected string ParamsToJson(SortedDictionary<string, object> parameters)
         {
             var serializer = new JsonSerializer();
@@ -497,7 +499,7 @@ namespace CloudinaryDotNet
 
             return sb.ToString();
         }
-        
+
         internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
         {
             parameters.Add("timestamp", GetTime());

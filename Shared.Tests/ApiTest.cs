@@ -16,7 +16,7 @@ namespace CloudinaryDotNet.Test
         protected string m_defaultImgFetchPath;
 
         private const string SOURCE_MOVIE = "movie";
-        
+
         [OneTimeSetUp]
         public void Init()
         {
@@ -74,6 +74,29 @@ namespace CloudinaryDotNet.Test
 
             string uri = m_api.UrlImgUp.Secure(true).BuildUrl("test");
             Assert.AreEqual("https://res.cloudinary.com/testcloud/image/upload/test", uri);
+        }
+
+        [Test]
+        public void TestSecureDistributionApiSettings()
+        {
+            var exprectedNonSecure = "http://res.cloudinary.com/testcloud/image/upload/test";
+            var exprectedSecure = "https://res.cloudinary.com/testcloud/image/upload/test";
+
+            var api = new Api(m_api.Account);
+
+            // should be non-secure by default
+            string uri = api.UrlImgUp.BuildUrl("test");
+            Assert.AreEqual(exprectedNonSecure, uri);
+
+            api.Secure = true;
+
+            // should use api settings
+            uri = api.UrlImgUp.BuildUrl("test");
+            Assert.AreEqual(exprectedSecure, uri);
+
+            // should override api settings
+            uri = api.UrlImgUp.Secure(false).BuildUrl("test");
+            Assert.AreEqual(exprectedNonSecure, uri);
         }
 
         [Test]
@@ -441,7 +464,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestMultipleLayers()
         {
-            
+
             Transformation t = new Transformation()
                 .Overlay("One").Chain()
                 .Overlay("Two").Chain()
@@ -450,7 +473,7 @@ namespace CloudinaryDotNet.Test
                 .Overlay("Two").Chain();
             var actual = m_api.UrlImgUp.Transform(t).BuildUrl("sample.jpg");
             Assert.AreEqual(m_defaultImgUpPath + "l_One/l_Two/l_Three/l_One/l_Two/sample.jpg", actual);
-            
+
         }
 
         [Test]
@@ -594,14 +617,14 @@ namespace CloudinaryDotNet.Test
         {
             CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary("cloudinary://a:b@test123");
         }
-        
+
         [Test]
         public void TestInitFromEnvironmentVariable()
         {
             Environment.SetEnvironmentVariable("CLOUDINARY_URL", "cloudinary://a:b@test123");
             CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary();
         }
-        
+
         [Test]
         public void TestSecureDistributionFromUrl()
         {
@@ -1055,7 +1078,7 @@ namespace CloudinaryDotNet.Test
             var transformationUrl = m_api.UrlVideoUp.Transform(spTransformation).BuildUrl();
             Assert.AreEqual(m_defaultVideoUpPath + "sp_some-profile", transformationUrl);
         }
-        
+
         [Test]
         public void TestVideoSampling()
         {
@@ -1235,7 +1258,7 @@ namespace CloudinaryDotNet.Test
                 "</video>";
 
             var actualTag = m_api.UrlVideoUp.VideoSources(Url.DefaultVideoSources).BuildVideoTag(SOURCE_MOVIE);
-            
+
             Assert.AreEqual(expectedTag, actualTag);
         }
 
@@ -1267,7 +1290,7 @@ namespace CloudinaryDotNet.Test
                 "</video>";
 
             var actualTag = m_api.UrlVideoUp.VideoSources(customSources).BuildVideoTag(SOURCE_MOVIE);
-            
+
             Assert.AreEqual(expectedTag, actualTag);
         }
 
@@ -1276,12 +1299,12 @@ namespace CloudinaryDotNet.Test
         {
             var paramsDict = new StringDictionary()
             {
-                {"html_height", "100"}, 
-                {"html_width", "200"}, 
+                {"html_height", "100"},
+                {"html_width", "200"},
             };
 
             var urlPrefix = $"{m_defaultVideoUpPath}ac_acc,so_3,";
-            
+
             var expectedTag =
                 $"<video height='100' poster=\'{urlPrefix}vc_h264/{SOURCE_MOVIE}.jpg\' width='200'>" +
                 $"<source src=\'{urlPrefix}vc_h265/{SOURCE_MOVIE}.mp4\' type=\'video/mp4; codecs=hev1\'>" +
