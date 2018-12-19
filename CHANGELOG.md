@@ -1,4 +1,26 @@
 
+1.6.0 / 2018-12-19
+==================
+
+New functionality
+-----------------
+
+* Add custom `pre` function support
+* Add streaming profile API
+* Add `fps` transformation parameter
+* Add support for font antialiasing and font hinting for text overlays
+
+Other Changes
+-------------
+
+  * Fix transformation cloning
+  * Fix remote file upload
+  * Fix handling of null custom functions
+  * Handle errors on server response parsing
+  * Fix `SecurityException` on restricted environments
+  * Fix `TestOcrUpdateResult` unit test
+  * Remove `DotNetZip` unused vulnerable dependency
+
 1.5.0 / 2018-11-14
 ==================
 
