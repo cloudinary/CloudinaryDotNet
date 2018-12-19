@@ -64,12 +64,9 @@ namespace CloudinaryDotNet
         /// </summary>
         static Api()
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
-            var frameworkDisplayName = Assembly.GetExecutingAssembly().GetCustomAttributes(true).
-                OfType<System.Runtime.Versioning.TargetFrameworkAttribute>().First().FrameworkDisplayName;
+            var version = new AssemblyName(typeof(Api).Assembly.FullName).Version;
 
-            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2} ({3})",
-                version.Major, version.Minor, version.Build, frameworkDisplayName);
+            USER_AGENT = $"CloudinaryDotNet/{version.Major}.{version.Minor}.{version.Build} (.NET Framework 4)";
         }
 
         public override T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file,
@@ -81,10 +78,10 @@ namespace CloudinaryDotNet
                 file,
                 extraHeaders))
             {
-           
+
                 return Parse<T>(response);
             }
-            
+
         }
 
         /// <summary>
@@ -106,7 +103,7 @@ namespace CloudinaryDotNet
             }
 
             PrepareRequestBody(request, method, parameters, file, extraHeaders);
-            
+
             try
             {
                 response = (HttpWebResponse)request.GetResponse();
@@ -185,7 +182,7 @@ namespace CloudinaryDotNet
         private void PrepareMultipartFormDataContent(HttpWebRequest request, SortedDictionary<string, object> parameters, FileDescription file)
         {
             request.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
-            
+
             using (Stream requestStream = request.GetRequestStream())
             {
                 using (StreamWriter writer = new StreamWriter(requestStream))
@@ -258,7 +255,7 @@ namespace CloudinaryDotNet
         {
             return HttpUtility.HtmlEncode(value);
         }
-        
+
         private static void SetHttpMethod(HttpMethod method, HttpWebRequest req)
         {
             req.Method = Enum.GetName(typeof(HttpMethod), method);
