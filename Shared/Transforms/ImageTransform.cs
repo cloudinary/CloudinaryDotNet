@@ -1,6 +1,9 @@
 ﻿using CloudinaryDotNet.Core;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
@@ -82,7 +85,30 @@ namespace CloudinaryDotNet
         /// Vertical position for custom-coordinates based cropping and overlay placement.
         /// </summary>
         public Transformation Y(object value) { return Add("y", value); }
-        public Transformation Radius(object value) { return Add("radius", value); }
+        
+        /// <summary>
+        /// Defines radius value for corners rounding.
+        /// </summary>
+        /// <param name="value">
+        /// Can be string, number or collection with 1..4 values
+        /// </param>
+        public Transformation Radius(object value) { return Add("radius", GetRadius(value)); }
+
+        /// <summary>
+        /// Defines radius value for corners rounding.
+        /// </summary>
+        /// <param name="values">
+        /// Between 1 and 4 values defining the rounding amount (in pixels).
+        /// One value: Symmetrical. All four corners are rounded equally according to the specified value.
+        /// Two values: Opposites are symmetrical. The first value applies to the top-left and bottom-right corners.
+        /// The second value applies to the top-right and bottom-left corners.
+        /// Three values: One set of corners is symmetrical. The first value applies to the top-left.
+        /// The second value applies to the top-right and bottom-left corners.
+        /// The third value applies to the bottom-right.
+        /// Four values: The rounding for each corner is specified separately, in clockwise order, starting with
+        /// the top-left.
+        /// </param>
+        public Transformation Radius(params object[] values) { return Add("radius", GetRadius(values)); }
 
         /// <summary>
         /// Control the JPG compression quality. 1 is the lowest quality and 100 is the highest. The default is the original image's quality or 90% if not available. Reducing quality generates JPG images much smaller in file size.
@@ -217,6 +243,20 @@ namespace CloudinaryDotNet
             Add("if", "end");
             return Chain();
         }
+
+        private object GetRadius(object radius)
+        {
+            if (radius is ICollection radiusCollection)
+            {
+                if (radiusCollection.Count == 0 || radiusCollection.Count > 4)
+                    throw new ArgumentException("Radius array should contain between 1 and 4 values");
+                var strings = from object item in radiusCollection select item.ToString();
+                return string.Join(":", strings);
+            }
+
+            return radius;
+        }
+
 
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 
 namespace CloudinaryDotNet.Test
 {
@@ -452,6 +454,33 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(transformationStr, clone.ToString());
         }
 
+        [Test]
+        public void TestRadius()
+        {
+            var radiusTestValues = new Dictionary<Transformation, string>
+            {
+                {new Transformation().Radius(10), "r_10"},
+                {new Transformation().Radius("10"), "r_10"},
+                {new Transformation().Radius("$v"), "r_$v"},
+                {new Transformation().Radius(new[] {10, 20, 30}), "r_10:20:30"},
+                {new Transformation().Radius(new List<object> {10, 20, "$v"}), "r_10:20:$v"},
+                {new Transformation().Radius(new object[] {10, 20, "$v", 40}), "r_10:20:$v:40"},
+                {new Transformation().Radius(new string[] {"10:20"}), "r_10:20"},
+                {new Transformation().Radius(new List<string> {"10:20:$v:40"}), "r_10:20:$v:40"},
+                {new Transformation().Radius(10, 20, 30), "r_10:20:30"},
+                {new Transformation().Radius(10, 20, "$v", 40), "r_10:20:$v:40"}
+            };
 
+            foreach (var test in radiusTestValues)
+                Assert.AreEqual(test.Key.ToString(), test.Value);
+
+            var transform = new Transformation();
+            ExactTypeConstraint ThrowsException() => Throws.TypeOf<ArgumentException>();
+
+            Assert.That(() => transform.Radius(new List<object> {1, 2, 3, 4, 5}), ThrowsException());
+            Assert.That(() => transform.Radius(1, 2, "$v", 4, 5), ThrowsException());
+            Assert.That(() => transform.Radius(new List<object>()), ThrowsException());
+            Assert.That(() => transform.Radius(), ThrowsException());
+        }
     }
 }
