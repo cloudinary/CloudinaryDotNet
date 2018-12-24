@@ -79,24 +79,24 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestSecureDistributionApiSettings()
         {
-            var exprectedNonSecure = "http://res.cloudinary.com/testcloud/image/upload/test";
-            var exprectedSecure = "https://res.cloudinary.com/testcloud/image/upload/test";
+            const string expectedNonSecure = "http://res.cloudinary.com/testcloud/image/upload/test";
+            const string expectedSecure = "https://res.cloudinary.com/testcloud/image/upload/test";
 
             var api = new Api(m_api.Account);
 
             // should be non-secure by default
             string uri = api.UrlImgUp.BuildUrl("test");
-            Assert.AreEqual(exprectedNonSecure, uri);
+            Assert.AreEqual(expectedNonSecure, uri);
 
             api.Secure = true;
 
             // should use api settings
             uri = api.UrlImgUp.BuildUrl("test");
-            Assert.AreEqual(exprectedSecure, uri);
+            Assert.AreEqual(expectedSecure, uri);
 
             // should override api settings
             uri = api.UrlImgUp.Secure(false).BuildUrl("test");
-            Assert.AreEqual(exprectedNonSecure, uri);
+            Assert.AreEqual(expectedNonSecure, uri);
         }
 
         [Test]
