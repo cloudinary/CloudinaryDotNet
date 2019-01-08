@@ -108,7 +108,8 @@ namespace CloudinaryDotNet
 
             List<string> toSign = new List<string>(tokenParts);
 
-            if (!string.IsNullOrWhiteSpace(url))
+            // Add URL only if ACL is not provided
+            if (!string.IsNullOrWhiteSpace(url) && string.IsNullOrWhiteSpace(acl))
             {
                 toSign.Add(string.Format("url={0}", EscapeToLower(url)));
             }

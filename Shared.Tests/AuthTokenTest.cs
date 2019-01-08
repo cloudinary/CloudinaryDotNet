@@ -137,6 +137,21 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestIgnoreUrlIfAclIsProvided()
+        {
+            var aclToken = new AuthToken(KEY).Duration(DURATION).Acl(ACL_CUSTOM_USER).StartTime(START_TIME2)
+                .Generate();
+
+            var aclTokenUrlIgnored = new AuthToken(KEY).Duration(DURATION).Acl(ACL_CUSTOM_USER).StartTime(START_TIME2)
+                .Generate(m_ImageUrl);
+
+            Assert.AreEqual(
+                aclToken,
+                aclTokenUrlIgnored
+            );
+        }
+
+        [Test]
         public void TestTokenGeneration()
         {
             var cookieToken = new AuthToken(KEY).Duration(DURATION).Acl(ACL_CUSTOM_USER).StartTime(START_TIME2)
@@ -146,7 +161,7 @@ namespace CloudinaryDotNet.Test
                 $"__cld_token__=st={START_TIME2}~exp={EXPIRATION2A}~acl=%2f*%2ft_{CUSTOM_USER}" +
                 "~hmac=8e39600cc18cec339b21fe2b05fcb64b98de373355f8ce732c35710d8b10259f",
                 cookieToken
-           );
+            );
         }
 
         [Test]
