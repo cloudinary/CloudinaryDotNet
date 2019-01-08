@@ -121,7 +121,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(
                 $"{m_ImageUrl}/{m_simpleTransformationAsString}/v{VERSION}?__cld_token__=st={START_TIME2}" +
-                $"~exp={EXPIRATION2}~hmac=91f3401f8ff19755194b386010f3577a6d2fd7f72c44c793fa498419ad8633b6",
+                $"~exp={EXPIRATION2}~hmac=d8d04456a9aa4a5cbb935a54754dfaf8074e270a1833bfbe1e1482e04b91bb81",
                 url
             );
 
@@ -131,7 +131,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(
                 $"{m_cloudUrl}/v{VERSION}/{TEST_IMAGE}?__cld_token__=st={START_TIME3}~exp={EXPIRATION3}" +
-                "~hmac=a72618e343a488898732429b74e4a8cbb5767e2372421b8351d5381b8c6451ed",
+                "~hmac=3785d689ca03ca90afaac68920bc79c7cfd0bcec486da7d35dd39d1e98de03ae",
                 url
             );
         }

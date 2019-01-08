@@ -668,11 +668,12 @@ namespace CloudinaryDotNet
             if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
             {
                 AuthToken token = m_AuthToken != null ? m_AuthToken : (CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken : null);
-                    
-                if (token != null && token != CloudinaryDotNet.AuthToken.NULL_AUTH_TOKEN)
+
+                if (token != null && !Equals(token, CloudinaryDotNet.AuthToken.NULL_AUTH_TOKEN))
                 {
-                    string tokenStr = token.Generate();
-                    uriStr = string.Format("{0}?{1}", uriStr, tokenStr);
+                    var path = new Uri(uriStr).AbsolutePath;
+                    var tokenStr = token.Generate(path);
+                    uriStr = $"{uriStr}?{tokenStr}";
                 }
             }
 
