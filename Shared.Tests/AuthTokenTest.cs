@@ -27,18 +27,34 @@ namespace CloudinaryDotNet.Test
 
         private const string CUSTOM_USER = "foobar";
 
+        private const string SAMPLE_JPG = "sample.jpg";
+
         private const string    ACL_ALL         = "*";
         private readonly string ACL_IMAGE       = $"/{Constants.RESOURCE_TYPE_IMAGE}/*";
         private readonly string ACL_CUSTOM_USER = $"/*/t_{CUSTOM_USER}";
 
+        protected const string authTokenTestTransformationAsString = "c_scale,w_300";
+        protected readonly Transformation authTokenTestTransformation = new Transformation().Crop("scale").Width(300);
+
         private string m_cloudUrl;
         private string m_ImageUrl;
+        private string m_AuthenticatedImageUrl;
+
+        private Api _api;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            m_cloudUrl = $"http://res.cloudinary.com/{m_account.Cloud}";
+            m_account = new Account("test123", "a", "b");
+            _api = new Api(m_account)
+            {
+                UsePrivateCdn = true,
+                PrivateCdn = "test123"
+            };
+
+            m_cloudUrl = $"http://{m_account.Cloud}-res.cloudinary.com";
             m_ImageUrl = $"{m_cloudUrl}/{Constants.RESOURCE_TYPE_IMAGE}";
+            m_AuthenticatedImageUrl = $"{m_ImageUrl}/{STORAGE_TYPE_AUTHENTICATED}";
         }
 
         [TearDown]
@@ -93,45 +109,46 @@ namespace CloudinaryDotNet.Test
             CloudinaryConfiguration.AuthToken = token;
 
             //should add token if authToken is globally set and signed = true;
-            string url = m_cloudinary.Api.Url.Signed(true).ResourceType(Constants.RESOURCE_TYPE_IMAGE).
-                Version(VERSION).BuildUrl();
+            string url = _api.Url.Signed(true).ResourceType(Constants.RESOURCE_TYPE_IMAGE).
+                Version(VERSION).BuildUrl(SAMPLE_JPG);
 
             Assert.AreEqual(
-                $"{m_ImageUrl}/v{VERSION}?__cld_token__=st={START_TIME3}~exp={EXPIRATION3}~acl=*" +
+                $"{m_ImageUrl}/v{VERSION}/{SAMPLE_JPG}?__cld_token__=st={START_TIME3}~exp={EXPIRATION3}~acl=*" +
                 "~hmac=67c908ea11bde7bced81926fe6dfa683f116a4f24714f150844b0160352588ba",
                 url
             );
 
             // should not add token if signed is false
-            url = m_cloudinary.Api.Url.Signed(false).ResourceType(Constants.RESOURCE_TYPE_IMAGE).
-                Version(VERSION).BuildUrl();
+            url = _api.Url.Signed(false).ResourceType(Constants.RESOURCE_TYPE_IMAGE).
+                Version(VERSION).BuildUrl(SAMPLE_JPG);
 
-            Assert.AreEqual($"{m_ImageUrl}/v{VERSION}", url);
+            Assert.AreEqual($"{m_ImageUrl}/v{VERSION}/{SAMPLE_JPG}", url);
 
             //should not add token if authToken is globally set but null auth token is explicitly set and signed = true
-            url = m_cloudinary.Api.Url.Signed(true).AuthToken(AuthToken.NULL_AUTH_TOKEN).
-                ResourceType(Constants.RESOURCE_TYPE_IMAGE).Version(VERSION).BuildUrl();
+            url = _api.Url.Signed(true).AuthToken(AuthToken.NULL_AUTH_TOKEN).
+                ResourceType(Constants.RESOURCE_TYPE_IMAGE).Version(VERSION).BuildUrl(SAMPLE_JPG);
 
-            Assert.AreEqual($"{m_ImageUrl}/v{VERSION}", url);
+            Assert.AreEqual($"{m_ImageUrl}/v{VERSION}/{SAMPLE_JPG}", url);
 
             //explicit authToken should override global setting
             token = new AuthToken(ALT_KEY).StartTime(START_TIME2).Duration(DURATION2);
-            url = m_cloudinary.Api.Url.Signed(true).AuthToken(token).ResourceType(Constants.RESOURCE_TYPE_IMAGE)
-                .Version(VERSION).Transform(m_simpleTransformation).BuildUrl();
+            url = _api.Url.Signed(true).AuthToken(token).ResourceType(Constants.RESOURCE_TYPE_IMAGE)
+                .Transform(authTokenTestTransformation).Action(STORAGE_TYPE_AUTHENTICATED).BuildUrl(SAMPLE_JPG);
 
             Assert.AreEqual(
-                $"{m_ImageUrl}/{m_simpleTransformationAsString}/v{VERSION}?__cld_token__=st={START_TIME2}" +
-                $"~exp={EXPIRATION2}~hmac=d8d04456a9aa4a5cbb935a54754dfaf8074e270a1833bfbe1e1482e04b91bb81",
+                $"{m_AuthenticatedImageUrl}/{authTokenTestTransformationAsString}/{SAMPLE_JPG}?__cld_token__=st={START_TIME2}" +
+                $"~exp={EXPIRATION2}~hmac=7d276841d70c4ecbd0708275cd6a82e1f08e47838fbb0bceb2538e06ddfa3029",
                 url
             );
 
             //should compute expiration as start time + duration
             token = new AuthToken(ALT_KEY).StartTime(START_TIME3).Duration(DURATION);
-            url = m_cloudinary.Api.Url.Signed(true).AuthToken(token).Version(VERSION).BuildUrl(TEST_IMAGE);
+            url = _api.Url.Signed(true).AuthToken(token).Version(VERSION).Action(STORAGE_TYPE_AUTHENTICATED)
+                .ResourceType(Constants.RESOURCE_TYPE_IMAGE).BuildUrl(SAMPLE_JPG);
 
             Assert.AreEqual(
-                $"{m_cloudUrl}/v{VERSION}/{TEST_IMAGE}?__cld_token__=st={START_TIME3}~exp={EXPIRATION3}" +
-                "~hmac=3785d689ca03ca90afaac68920bc79c7cfd0bcec486da7d35dd39d1e98de03ae",
+                $"{m_AuthenticatedImageUrl}/v{VERSION}/{SAMPLE_JPG}?__cld_token__=st={START_TIME3}~exp={EXPIRATION3}" +
+                "~hmac=4e6979377bf65734f3b9a1d984b0c8c393ca804520b0f74d1688be0cce80dbc1",
                 url
             );
         }
@@ -169,11 +186,11 @@ namespace CloudinaryDotNet.Test
         {
             //should add token to an image tag url
             AuthToken t = new AuthToken(TOKEN_KEY).StartTime(START_TIME).Acl(ACL_IMAGE).Duration(DURATION);
-            string url = m_cloudinary.Api.Url.AuthToken(t).Signed(true).ResourceType(Constants.RESOURCE_TYPE_IMAGE)
-                .Version(VERSION).BuildImageTag(TEST_IMAGE);
+            string url = _api.Url.AuthToken(t).Signed(true).ResourceType(Constants.RESOURCE_TYPE_IMAGE)
+                .Version(VERSION).BuildImageTag(SAMPLE_JPG);
 
             Assert.AreEqual(
-                $"<img src=\"{m_ImageUrl}/v{VERSION}/{TEST_IMAGE}?__cld_token__=st={START_TIME}~exp={EXPIRATION}" +
+                $"<img src=\"{m_ImageUrl}/v{VERSION}/{SAMPLE_JPG}?__cld_token__=st={START_TIME}~exp={EXPIRATION}" +
                 $"~acl=%2f{Constants.RESOURCE_TYPE_IMAGE}%2f*" +
                 "~hmac=1751370bcc6cfe9e03f30dd1a9722ba0f2cdca283fa3e6df3342a00a7528cc51\"/>",
                 url
