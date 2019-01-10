@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IntegrationTestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SearchApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RadiusTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TransformationApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamingProfileApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadMappingApiTest.cs" />

@@ -455,56 +455,19 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestRadius()
+        public void TestRadiusTransformation()
         {
             var radiusTestValues = new Dictionary<Transformation, string>
             {
                 {new Transformation().Radius(10), "r_10"},
-                {new Transformation().Radius("10"), "r_10"},
-                {new Transformation().Radius("$v"), "r_$v"},
                 {new Transformation().Radius("10:20"), "r_10:20"},
-
-                {new Transformation().Radius(new[] {10, 20, 30}), "r_10:20:30"},
                 {new Transformation().Radius(new List<object> {10, 20, "$v"}), "r_10:20:$v"},
-                {new Transformation().Radius(new object[] {10, 20, "$v", 40}), "r_10:20:$v:40"},
-                {new Transformation().Radius(new string[] {"10:20"}), "r_10:20"},
-                {new Transformation().Radius(new List<string> {"10:20:$v:40"}), "r_10:20:$v:40"},
-
-                { new Transformation().Radius(new Radius(10)), "r_10"},
-                {new Transformation().Radius(new Radius("10")), "r_10"},
-                {new Transformation().Radius(new Radius("$v")), "r_$v"},
-                {new Transformation().Radius(new Radius("10:20")), "r_10:20"},
-                {new Transformation().Radius(new Radius(10, 20)), "r_10:20"},
-                {new Transformation().Radius(new Radius(10, 20, 30)), "r_10:20:30"},
-                {new Transformation().Radius(new Radius("10:20:$v:40")), "r_10:20:$v:40"},
-                {new Transformation().Radius(new Radius(10, 20, "$v", 40)), "r_10:20:$v:40"},
+                {new Transformation().Radius(new Radius(10)), "r_10"},
                 {new Transformation().Radius(null), ""}
             };
 
             foreach (var test in radiusTestValues)
                 Assert.AreEqual(test.Value, test.Key.ToString());
-
-            var transform = new Transformation();
-            ExactTypeConstraint ThrowsArgumentException() => Throws.TypeOf<ArgumentException>();
-            ExactTypeConstraint ThrowsArgumentNullException() => Throws.TypeOf<ArgumentNullException>();
-
-            Assert.That(() => transform.Radius(new List<object> { 1, 2, 3, 4, 5 }), ThrowsArgumentException());
-            Assert.That(() => transform.Radius(new List<object>()), ThrowsArgumentException());
-            
-            Assert.That(() => transform.Radius(new Radius(null)), ThrowsArgumentNullException());
-            Assert.That(() => transform.Radius(new Radius(null, 10)), ThrowsArgumentNullException());
-            Assert.That(() => transform.Radius(new Radius(null, 10, 20)), ThrowsArgumentNullException());
-            Assert.That(() => transform.Radius(new Radius(null, 10, 20, 30)), ThrowsArgumentNullException());
-        }
-
-        [Test]
-        public void TestRadiusClone()
-        {
-            const string radiusStr = "10:20.5:$v:40";
-            var radius = new Radius(10, 20.5f, "$v", 40);
-            var cloned = radius.Clone();
-            Assert.AreEqual(radiusStr, radius.ToString());
-            Assert.AreEqual(radiusStr, cloned.ToString());
         }
     }
 }
