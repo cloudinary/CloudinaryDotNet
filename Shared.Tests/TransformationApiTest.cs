@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 
 namespace CloudinaryDotNet.Test
 {
@@ -452,6 +454,20 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(transformationStr, clone.ToString());
         }
 
+        [Test]
+        public void TestRadiusTransformation()
+        {
+            var radiusTestValues = new Dictionary<Transformation, string>
+            {
+                {new Transformation().Radius(10), "r_10"},
+                {new Transformation().Radius("10:20"), "r_10:20"},
+                {new Transformation().Radius(new List<object> {10, 20, "$v"}), "r_10:20:$v"},
+                {new Transformation().Radius(new Radius(10)), "r_10"},
+                {new Transformation().Radius(null), ""}
+            };
 
+            foreach (var test in radiusTestValues)
+                Assert.AreEqual(test.Value, test.Key.ToString());
+        }
     }
 }

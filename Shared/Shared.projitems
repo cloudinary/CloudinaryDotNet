@@ -103,6 +103,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\FetchLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\ImageTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Layer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\Radius.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\ResponsiveBreakpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\SubtitlesLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\TextLayer.cs" />

@@ -1,6 +1,9 @@
 ﻿using CloudinaryDotNet.Core;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
@@ -82,7 +85,20 @@ namespace CloudinaryDotNet
         /// Vertical position for custom-coordinates based cropping and overlay placement.
         /// </summary>
         public Transformation Y(object value) { return Add("y", value); }
-        public Transformation Radius(object value) { return Add("radius", value); }
+        
+        /// <summary>
+        /// Defines radius value for corners rounding.
+        /// </summary>
+        /// <param name="value">
+        /// Can be string, number or collection with 1..4 values
+        /// </param>
+        public Transformation Radius(object value) => Add("radius", new Radius(value));
+
+        /// <summary>
+        /// Defines radius value for corners rounding.
+        /// </summary>
+        /// <param name="radius">Object for the advanced definition of the radius.</param>
+        public Transformation Radius(Radius radius) => Add("radius", radius);
 
         /// <summary>
         /// Control the JPG compression quality. 1 is the lowest quality and 100 is the highest. The default is the original image's quality or 90% if not available. Reducing quality generates JPG images much smaller in file size.
@@ -217,6 +233,5 @@ namespace CloudinaryDotNet
             Add("if", "end");
             return Chain();
         }
-
     }
 }
