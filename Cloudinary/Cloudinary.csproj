@@ -23,6 +23,9 @@
     <RootNamespace>CloudinaryDotNet</RootNamespace>
     <AssemblyName>CloudinaryDotNet</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">
     <DefineConstants>NET40</DefineConstants>
   </PropertyGroup>
