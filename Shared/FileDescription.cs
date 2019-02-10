@@ -4,7 +4,7 @@ using System.IO;
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// Represents a file for uploading to cloudinary
+    /// Represents a file for uploading to cloudinary.
     /// </summary>
     public class FileDescription
     {
@@ -25,10 +25,10 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Constructor to upload file from stream
+        /// Constructor to upload file from stream.
         /// </summary>
-        /// <param name="name">Resource name</param>
-        /// <param name="stream">Stream to read from (will be disposed with this object)</param>
+        /// <param name="name">Resource name.</param>
+        /// <param name="stream">Stream to read from (will be disposed with this object).</param>
         public FileDescription(string name, Stream stream)
         {
             FileName = name;
@@ -47,9 +47,9 @@ namespace CloudinaryDotNet
         }
         /// <inheritdoc />
         /// <summary>
-        /// Constructor to upload file by path
+        /// Constructor to upload file by path.
         /// </summary>
-        /// <param name="filePath">Either URL (http/https/s3/data) or local path to file</param>
+        /// <param name="filePath">Either URL (http/https/s3/data) or local path to file.</param>
         public FileDescription(string filePath)
         {
             IsRemote = Utils.IsRemoteFile(filePath);

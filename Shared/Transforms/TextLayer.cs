@@ -7,54 +7,116 @@ using System.Text.RegularExpressions;
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// Represents property of the overlay parameter (l_text: in URLs)
-    /// for placing text as an overlay.
+    /// Represents property of the overlay parameter (l_text: in URLs) for placing text as an overlay.
     /// </summary>
     public class TextLayer : BaseLayer<TextLayer>
     {
+        /// <summary>
+        /// The text to generate an image for.
+        /// </summary>
         protected string m_text;
+
+        /// <summary>
+        /// Required name of the font family. e.g. "arial".
+        /// </summary>
         protected string m_fontFamily;
+
+        /// <summary>
+        /// Font size in pixels. Default: 12.
+        /// </summary>
         protected int m_fontSize;
 
+        /// <summary>
+        /// Whether to use a "normal" or a "bold" font. Default: "normal".
+        /// </summary>
         protected string m_fontWeight;
+
+        /// <summary>
+        /// Whether to use a "normal" or an "italic" font style. Default: "normal".
+        /// </summary>
         protected string m_fontStyle;
+        
+        /// <summary>
+        /// Type of font antialiasing to use.
+        /// </summary>
         protected string m_fontAntialiasing;
+
+        /// <summary>
+        /// Type of font hinting to use.
+        /// </summary>
         protected string m_fontHinting;
+
+        /// <summary>
+        /// Text decoration: underline or strikethrough. Default: "none".
+        /// </summary>
         protected string m_textDecoration;
+
+        /// <summary>
+        /// Text alignment: left, center, right, end, start or justify. Default: "left".
+        /// </summary>
         protected string m_textAlign;
+
+        /// <summary>
+        /// Font Stroke(border) for the text. Possible values: "none" or "stroke". Default: "none".
+        /// Set the color and weight of the stroke with the border parameter.
+        /// </summary>
         protected string m_stroke;
+
+        /// <summary>
+        /// Spacing between the letters in pixels. Can be a positive or negative, integer or decimal value.
+        /// </summary>
         protected string m_letterSpacing;
+
+        /// <summary>
+        /// Spacing between the lines in pixels (only relevant for multi-line text). 
+        /// Can be a positive or negative, integer or decimal value.
+        /// </summary>
         protected string m_lineSpacing;
 
+        /// <summary>
+        /// Default parameterless constructor. Instantiates the <see cref="TextLayer"/> object.
+        /// </summary>
         public TextLayer()
         {
             m_resourceType = "text";
             FontSize(12);
         }
 
+        /// <summary>
+        /// Instantiates the <see cref="TextLayer"/> object with text.
+        /// </summary>
         /// <param name="text">The text to generate an image for.</param>
         public TextLayer(string text) : this()
         {
             Text(text);
         }
 
+        /// <summary>
+        /// Overridden method. Restricted to use for text layers.
+        /// </summary>
         public new TextLayer ResourceType(string resourceType)
         {
             throw new InvalidOperationException("Cannot modify resourceType for text layers");
         }
 
+        /// <summary>
+        /// Overridden method. Restricted to use for text layers.
+        /// </summary>
         public new TextLayer Type(string type)
         {
             throw new InvalidOperationException("Cannot modify type for text layers");
         }
 
+        /// <summary>
+        /// Overridden method. Restricted to use for text layers.
+        /// </summary>
         public new TextLayer Format(string format)
         {
             throw new InvalidOperationException("Cannot modify format for text layers");
         }
 
         /// <summary>
-        /// The text to generate an image for.
+        /// Set the text to generate an image for.
         /// </summary>
         public TextLayer Text(string text)
         {
@@ -73,7 +135,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Prepare text for Overlay
+        /// Prepare text for Overlay.
         /// </summary>
         private string OverlayTextEncode(string text)
         {
@@ -97,7 +159,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Type of font antialiasing to use
+        /// Type of font antialiasing to use.
         /// </summary>
         public TextLayer FontAntialiasing(FontAntialiasing value)
         {
@@ -106,7 +168,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Type of font hinting to use
+        /// Type of font hinting to use.
         /// </summary>
         public TextLayer FontHinting(FontHinting value)
         {
@@ -115,7 +177,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Required name of the font family. e.g. "arial"
+        /// Required name of the font family. e.g. "arial".
         /// </summary>
         public TextLayer FontFamily(string fontFamily)
         {
@@ -179,8 +241,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Spacing between the letters in pixels. 
-        /// Can be a positive or negative, integer or decimal value.
+        /// Spacing between the letters in pixels. Can be a positive or negative, integer or decimal value.
         /// </summary>
         public TextLayer LetterSpacing(string letterSpacing)
         {
@@ -198,6 +259,9 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        /// <summary>
+        /// Get an additional parameters for the text layer.
+        /// </summary>
         public override string AdditionalParams()
         {
             List<string> components = new List<string>();
@@ -215,6 +279,9 @@ namespace CloudinaryDotNet
             return string.Join(":", components);
         }
 
+        /// <summary>
+        /// Get this text layer represented as string.
+        /// </summary>
         public override string ToString()
         {
             if (string.IsNullOrEmpty(m_publicId) && string.IsNullOrEmpty(m_text))
@@ -265,64 +332,65 @@ namespace CloudinaryDotNet
     }
 
     /// <summary>
-    /// Type of font antialiasing
+    /// Type of font antialiasing.
     /// </summary>
     public enum FontAntialiasing
     {
         /// <summary>
-        /// Use a bi-level alpha mask
+        /// Use a bi-level alpha mask.
         /// </summary>
         [EnumMember(Value = "none")]
         None,
         /// <summary>
-        /// Perform single-color antialiasing. For example, using shades of gray for black text on a white background
+        /// Perform single-color antialiasing. For example, using shades of gray for black text on a white background.
         /// </summary>
         [EnumMember(Value = "gray")]
         Gray,
         /// <summary>
-        /// Perform antialiasing by taking advantage of the order of subpixel elements on devices such as LCD panels
+        /// Perform antialiasing by taking advantage of the order of subpixel elements on devices such as LCD panels.
         /// </summary>
         [EnumMember(Value = "subpixel")]
         Subpixel,
         /// <summary>
-        /// Some antialiasing is performed, but speed is prioritized over quality
+        /// Some antialiasing is performed, but speed is prioritized over quality.
         /// </summary>
         [EnumMember(Value = "fast")]
         Fast,
         /// <summary>
-        /// Antialiasing that balances quality and performance 
+        /// Antialiasing that balances quality and performance.
         /// </summary>
         [EnumMember(Value = "good")]
         Good,
         /// <summary>
-        /// Renders at the highest quality, sacrificing speed if necessary
+        /// Renders at the highest quality, sacrificing speed if necessary.
         /// </summary>
         [EnumMember(Value = "best")]
         Best
     }
 
     /// <summary>
-    /// Type of font hinting
+    /// Type of font hinting.
     /// </summary>
     public enum FontHinting
     {
         /// <summary>
-        /// Do not hint outlines
+        /// Do not hint outlines.
         /// </summary>
         [EnumMember(Value = "none")]
         None,
         /// <summary>
-        /// Hint outlines slightly to improve contrast while retaining good fidelity to the original shapes
+        /// Hint outlines slightly to improve contrast while retaining good fidelity to the original shapes.
         /// </summary>
         [EnumMember(Value = "slight")]
         Slight,
         /// <summary>
-        /// Hint outlines with medium strength, providing a compromise between fidelity to the original shapes and contrast
+        /// Hint outlines with medium strength, providing a compromise between fidelity to the original shapes and 
+        /// contrast.
         /// </summary>
         [EnumMember(Value = "medium")]
         Medium,
         /// <summary>
-        /// Hint outlines to the maximize contrast
+        /// Hint outlines to the maximize contrast.
         /// </summary>
         [EnumMember(Value = "full")]
         Full

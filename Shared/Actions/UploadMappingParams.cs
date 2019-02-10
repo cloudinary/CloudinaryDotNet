@@ -4,20 +4,21 @@ using System.Collections.Generic;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters for Mapping of folders to URL prefixes
+    /// Parameters for Mapping of folders to URL prefixes for dynamic image fetching from existing online locations.
     /// </summary>
     public class UploadMappingParams : BaseParams
     {
         /// <summary>
-        /// Default constructor
+        /// Default constructor.
         /// </summary>
         public UploadMappingParams()
         {
         }
 
         /// <summary>
-        /// Optional. When a listing request has more results to return than <see cref="MaxResults"/>, the <see cref="NextCursor"/> value is returned as part of the response. 
-        /// You can then specify this value as the <see cref="NextCursor"/> parameter of the following listing request.
+        /// Optional. When a listing request has more results to return than <see cref="MaxResults"/>, the
+        /// <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as the
+        /// <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
         public string NextCursor { get; set; }
 
@@ -27,17 +28,17 @@ namespace CloudinaryDotNet.Actions
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// The name for the Folder to map
+        /// The name for the Folder to map.
         /// </summary>
         public string Folder { get; set; }
 
         /// <summary>
-        /// The URL to be mapped to the <see cref="Folder"/>
+        /// The URL to be mapped to the <see cref="Folder"/>.
         /// </summary>
         public string Template { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -46,9 +47,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
