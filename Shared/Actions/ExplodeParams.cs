@@ -5,15 +5,17 @@ using System.ComponentModel;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of tag management
+    /// Parameters for the Explode method.
     /// </summary>
     public class ExplodeParams : BaseParams
     {
         /// <summary>
-        /// Default constructor
+        /// Instantiates the <see cref="ExplodeParams"/> object.
         /// </summary>
-        /// <param name="publicId">The public id.</param>
-        /// <param name="transformation">The transformation.</param>
+        /// <param name="publicId">The identifier of the uploaded multi-page file (PDF or animated GIF). 
+        /// Note: The public ID for images does not include a file extension.</param>
+        /// <param name="transformation">A transformation to run on all the pages before storing them as derived 
+        /// images.</param>
         public ExplodeParams(string publicId, Transformation transformation)
         {
             PublicId = publicId;
@@ -21,36 +23,29 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// The tag name assigned to images that we should merge into the sprite.
+        /// The identifier of the uploaded multi-page file (PDF or animated GIF). 
+        /// Note: The public ID for images does not include a file extension.
         /// </summary>
         public string PublicId { get; set; }
 
         /// <summary>
-        /// Gets or sets the transformation.
+        /// A transformation to run on all the pages before storing them as derived images.
         /// </summary>
-        /// <value>
-        /// The transformation.
-        /// </value>
         public Transformation Transformation { get; set; }
 
         /// <summary>
-        /// Gets or sets the notification URL.
+        /// (Optional) An HTTP or HTTPS URL to notify your application (a webhook) when the process has completed.
         /// </summary>
-        /// <value>
-        /// The notification URL.
-        /// </value>
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the format.
+        /// (Optional) An optional format to convert the images before storing them in your Cloudinary account. 
+        /// Default: png.
         /// </summary>
-        /// <value>
-        /// The format.
-        /// </value>
         public string Format { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -62,9 +57,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

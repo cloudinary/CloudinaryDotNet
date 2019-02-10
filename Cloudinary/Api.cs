@@ -23,8 +23,7 @@ namespace CloudinaryDotNet
         private Func<string, HttpWebRequest> RequestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
 
         /// <summary>
-        /// Default parameterless constructor.
-        /// Assumes that environment variable CLOUDINARY_URL is set.
+        /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public Api() : base()
         {
@@ -32,35 +31,36 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Parameterized constructor
+        /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary Url.
         /// </summary>
-        /// <param name="cloudinaryUrl">Cloudinary URL</param>
+        /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public Api(string cloudinaryUrl) : base(cloudinaryUrl)
         {
         }
 
         /// <summary>
-        /// Parametrized constructor
+        /// Instantiates the cloudinary <see cref="Api"/> object with initial parameters.
         /// </summary>
-        /// <param name="account">Cloudinary account</param>
-        /// <param name="usePrivateCdn">Whether to use private Content Delivery Network</param>
-        /// <param name="privateCdn">Private Content Delivery Network</param>
+        /// <param name="account">Cloudinary account.</param>
+        /// <param name="usePrivateCdn">Whether to use private Content Delivery Network.</param>
+        /// <param name="privateCdn">Private Content Delivery Network.</param>
         /// <param name="shortenUrl">Whether to use shorten url when possible.</param>
-        /// <param name="cSubDomain">if set to <c>true</c> [c sub domain].</param>
-        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain) : base(account, usePrivateCdn, privateCdn, shortenUrl, cSubDomain)
+        /// <param name="cSubDomain">Whether to use sub domain.</param>
+        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain) 
+            : base(account, usePrivateCdn, privateCdn, shortenUrl, cSubDomain)
         {
         }
 
         /// <summary>
-        /// Parametrized constructor
+        /// Instantiates the cloudinary <see cref="Api"/> object with account.
         /// </summary>
-        /// <param name="account">Cloudinary account</param>
+        /// <param name="account">Cloudinary account.</param>
         public Api(Account account) : base(account)
         {
         }
 
         /// <summary>
-        /// Initializes the <see cref="Api"/> class.
+        /// Default static parameterless constructor.
         /// </summary>
         static Api()
         {
@@ -85,7 +85,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Custom call to cloudinary API
+        /// Makes custom call to Cloudinary API.
         /// </summary>
         /// <param name="method">HTTP method of call</param>
         /// <param name="url">URL to call</param>
@@ -234,18 +234,29 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Builds HTML form
+        /// Builds HTML file input tag for unsigned upload an asset.
         /// </summary>
-        /// <returns>HTML form</returns>
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata. 
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="preset">The name of upload preset.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
         public IHtmlString BuildUnsignedUploadForm(string field, string preset, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
             return BuildUploadForm(field, resourceType, BuildUnsignedUploadParams(preset, parameters), htmlOptions);
         }
 
         /// <summary>
-        /// Builds HTML form
+        /// Builds HTML file input tag for upload an asset.
         /// </summary>
-        /// <returns>HTML form</returns>
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata. 
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
         public IHtmlString BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
             return new HtmlString(BuildUploadFormShared(field, resourceType, parameters, htmlOptions));

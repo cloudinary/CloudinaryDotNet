@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
 {
+    /// <summary>
+    /// The building blocks for assets transformation.
+    /// </summary>
     public partial class Transformation : Core.ICloneable
     {
         static readonly string[] SimpleParams = new string[] {
@@ -38,7 +41,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Whether to enable automatic adaptation of website images by default.
-        /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for further info.
+        /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for
+        /// further info.
         /// </summary>
         public static bool DefaultIsResponsive { get; set; }
 
@@ -57,13 +61,29 @@ namespace CloudinaryDotNet
             }
         }
 
-        private static readonly Transformation DEFAULT_RESPONSIVE_WIDTH_TRANSFORM = new Transformation().Width("auto").Crop("limit");
+        private static readonly Transformation DEFAULT_RESPONSIVE_WIDTH_TRANSFORM 
+            = new Transformation().Width("auto").Crop("limit");
+
         private static Transformation m_responsiveWidthTransform = null;
 
+        /// <summary>
+        /// A dictionary of transformation parameters.
+        /// </summary>
         protected Dictionary<string, object> m_transformParams = new Dictionary<string, object>();
+
+        /// <summary>
+        /// A list of nested transformations.
+        /// </summary>
         protected List<Transformation> m_nestedTransforms = new List<Transformation>();
 
+        /// <summary>
+        /// HTML width attribute.
+        /// </summary>
         protected string m_htmlWidth = null;
+
+        /// <summary>
+        /// HTML height attribute.
+        /// </summary>
         protected string m_htmlHeight = null;
 
         /// <summary>
@@ -74,11 +94,16 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Creates transformation object chained with other transformations.
         /// </summary>
+        /// <param name="transforms">List of transformations to chain with.</param>
         public Transformation(List<Transformation> transforms) {
             if (transforms != null)
                 m_nestedTransforms = transforms;
         }
 
+        /// <summary>
+        /// Creates transformation object initialized with array of transformation parameters.
+        /// </summary>
+        /// <param name="transformParams">List of transformation parameters represented as pairs 'name=value'.</param>
         public Transformation(params string[] transformParams) {
             foreach (var pair in transformParams) {
                 string[] splittedPair = pair.Split('=');
@@ -92,7 +117,9 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Creates transformation object from single result of  <seealso cref="Actions.GetTransformResult"/>.
         /// </summary>
-        /// <param name="transformParams">One can use an element of <seealso cref="Actions.GetTransformResult.Info"/> array.</param>
+        /// <param name="transformParams">
+        /// One can use an element of <seealso cref="Actions.GetTransformResult.Info"/> array.
+        /// </param>
         public Transformation(Dictionary<string, object> transformParams) {
             foreach (var key in transformParams.Keys) {
                 m_transformParams.Add(key, transformParams[key]);
@@ -114,17 +141,33 @@ namespace CloudinaryDotNet
             }
         }
 
+        /// <summary>
+        /// Get the transformation parameters dictionary.
+        /// </summary>
         public Dictionary<string, object> Params {
             get { return m_transformParams; }
         }
 
+        /// <summary>
+        /// Get list of nested transformations.
+        /// </summary>
         public List<Transformation> NestedTransforms {
             get { return m_nestedTransforms; }
         }
 
+        /// <summary>
+        /// Whether to support a HiDPI devices.
+        /// </summary>
         public bool HiDpi { get; private set; }
+
+        /// <summary>
+        /// Whether to support a responsive layout.
+        /// </summary>
         public bool IsResponsive { get; private set; }
 
+        /// <summary>
+        /// Chain transformation.
+        /// </summary>
         public Transformation Chain() {
             Transformation nested = this.Clone();
             nested.m_nestedTransforms = null;
@@ -134,6 +177,11 @@ namespace CloudinaryDotNet
             return transform;
         }
 
+        /// <summary>
+        /// Define a user defined variable.
+        /// </summary>
+        /// <param name="name">The name of variable.</param>
+        /// <param name="value">The value.</param>
         public Transformation Variable(string name, object value)
         {
             Expression.CheckVariableName(name);
@@ -141,23 +189,40 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        /// <summary>
+        /// Define a string user defined variable.
+        /// </summary>
+        /// <param name="name">The name of variable.</param>
+        /// <param name="values">A list of values.</param>
         public Transformation Variable(string name, string[] values)
         {
             return Variable(name, $"!{(values != null ? string.Join(":", values) : string.Empty)}!");
         }
 
+        /// <summary>
+        /// Add user defined variables to the transformatio.
+        /// </summary>
+        /// <param name="variables">A list of variables.</param>
         public Transformation Variables(params Expression[] variables)
         {
             Add(VARIABLES_PARAM_KEY, variables);
             return this;
         }
 
+        /// <summary>
+        /// Add custom function to the transformation.
+        /// </summary>
+        /// <param name="function">The custom function.</param>
         public Transformation CustomFunction(CustomFunction function)
         {
             Add("custom_function", function);
             return this;
         }
 
+        /// <summary>
+        /// Add custom pre-function to the transformation.
+        /// </summary>
+        /// <param name="function">The custom pre-function.</param>
         public Transformation CustomPreFunction(CustomFunction function)
         {
             string serialized = ToString(function);
@@ -168,6 +233,11 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        /// <summary>
+        /// Add transformation parameter.
+        /// </summary>
+        /// <param name="key">The name.</param>
+        /// <param name="value">The value.</param>
         public Transformation Add(string key, object value)
         {
             if (m_transformParams.ContainsKey(key))
@@ -178,6 +248,10 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        /// <summary>
+        /// Get this transformation represented as string.
+        /// </summary>
+        /// <returns>The transformation represented as string.</returns>
         public virtual string Generate()
         {
             List<string> parts = new List<string>(m_nestedTransforms.Select(t => t.GenerateThis()).ToList());
@@ -189,6 +263,10 @@ namespace CloudinaryDotNet
             return string.Join("/", parts.ToArray());
         }
 
+        /// <summary>
+        /// Generate transformation string.
+        /// </summary>
+        /// <returns>Generated transformation.</returns>
         public string GenerateThis() {
             string size = GetString(m_transformParams, "size");
             if (size != null) {
@@ -380,11 +458,17 @@ namespace CloudinaryDotNet
             return string.Join(",", variables.Select(v => v.ToString()).ToArray());
         }
 
+        /// <summary>
+        /// Get the HTML width parameter.
+        /// </summary>
         public string HtmlWidth
         {
             get { return m_htmlWidth; }
         }
 
+        /// <summary>
+        /// Get the HTML height parameter.
+        /// </summary>
         public string HtmlHeight {
             get { return m_htmlHeight; }
         }
@@ -422,12 +506,20 @@ namespace CloudinaryDotNet
             return String.Format(CultureInfo.InvariantCulture, "{0}", obj);
         }
 
+        /// <summary>
+        /// Get this transformation represented as string.
+        /// </summary>
+        /// <returns>The transformation represented as string.</returns>
         public override string ToString() {
             return Generate();
         }
 
         #region ICloneable
 
+        /// <summary>
+        /// Get a deep cloned copy of this transformation.
+        /// </summary>
+        /// <returns>A deep cloned copy of this transformation.</returns>
         public Transformation Clone() {
             Transformation t = (Transformation)this.MemberwiseClone();
 
@@ -472,24 +564,49 @@ namespace CloudinaryDotNet
         #endregion
     }
 
+    /// <summary>
+    /// Class that represents an Eager transformation.
+    /// </summary>
     public class EagerTransformation : Transformation
     {
+        /// <summary>
+        /// Creates eager transformation object chained with other transformations.
+        /// </summary>
+        /// <param name="transforms">A list of transformations to chain with.</param>
         public EagerTransformation(params Transformation[] transforms)
             : base(transforms.ToList()) { }
 
+        /// <summary>
+        /// Creates eager transformation object chained with other transformations.
+        /// </summary>
+        /// <param name="transforms">A list of transformations to chain with.</param>
         public EagerTransformation(List<Transformation> transforms)
             : base(transforms) { }
 
+        /// <summary>
+        /// Creates an empty eager transformation object.
+        /// </summary>
         public EagerTransformation() : base() { }
 
+        /// <summary>
+        /// Set file format for the transformation.
+        /// </summary>
+        /// <param name="format">The file format to set.</param>
         public EagerTransformation SetFormat(string format)
         {
             Format = format;
             return this;
         }
 
+        /// <summary>
+        /// Gets or sets a file format for the transformation.
+        /// </summary>
         public string Format { get; set; }
 
+        /// <summary>
+        /// Get this transformation represented as string.
+        /// </summary>
+        /// <returns>The transformation represented as string.</returns>
         public override string Generate()
         {
             string s = base.Generate();

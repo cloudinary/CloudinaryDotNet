@@ -7,43 +7,43 @@ using CloudinaryDotNet.Core;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of request to cloudinary
+    /// Parameters of request to cloudinary.
     /// </summary>
     public abstract class BaseParams
     {
         /// <summary>
-        /// The dictionary with custom parameters
+        /// The dictionary with custom parameters.
         /// </summary>
         private SortedDictionary<string, object> CustomParams = new SortedDictionary<string, object>();
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public abstract void Check();
 
         /// <summary>
-        /// Make a shallow copy of parameters
+        /// Make a shallow copy of parameters.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The shallow copy of parameters.</returns>
         public virtual BaseParams Copy()
         {
             return (BaseParams)MemberwiseClone();
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The dictionary of parameters in cloudinary notation.</returns>
         public virtual SortedDictionary<string, object> ToParamsDictionary()
         {
             return new SortedDictionary<string, object>(CustomParams);
         }
 
         /// <summary>
-        /// Allow passing ad-hoc parameters in each method (mainly to allow work-around solutions until a fix is published)
+        /// Allow passing ad-hoc parameters in each method (mainly to allow work-around solutions until a fix is published).
         /// </summary>
-        /// <param name="key">The key</param>
-        /// <param name="value">The value</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         public void AddCustomParam(string key, string value)
         {
             if (!string.IsNullOrEmpty(value))
@@ -53,7 +53,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Adds the parameter.
+        /// Add parameter to the dictionary.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
@@ -65,7 +65,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Adds the parameter.
+        /// Add parameter to the dictionary.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
@@ -77,7 +77,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Adds the parameter.
+        /// Add parameter to the dictionary.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
@@ -88,7 +88,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Adds the parameter.
+        /// Add parameter to the dictionary.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
@@ -100,7 +100,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Adds the parameter.
+        /// Add parameter to the dictionary.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
@@ -111,7 +111,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Adds the parameter.
+        /// Add parameter to the dictionary.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
@@ -124,7 +124,8 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Adds a coordinate object (plain string or Rectangle or List of Rectangles or FaceCoordinates)
+        /// Add a coordinate object (plain string or Rectangle or List of Rectangles or FaceCoordinates)
+        /// to the dictionary.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>

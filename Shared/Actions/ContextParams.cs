@@ -8,14 +8,14 @@ using System.Text;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of context management
+    /// Parameters of context management.
     /// </summary>
     public class ContextParams : BaseParams
     {
         List<string> m_publicIds = new List<string>();
 
         /// <summary>
-        /// A list of Public IDs of images uploaded to Cloudinary.
+        /// A list of Public IDs of assets uploaded to Cloudinary.
         /// </summary>
         public List<string> PublicIds
         {
@@ -29,17 +29,19 @@ namespace CloudinaryDotNet.Actions
         public string Context { get; set; }
 
         /// <summary>
-        /// General textual context metadata
+        /// (Only relevant when adding context) A list of the key-value pairs of general textual context metadata to
+        /// add to the asset.
         /// </summary>
         public StringDictionary ContextDict { get; set; }
 
         /// <summary>
-        /// Type
+        /// (Optional) The specific type of the asset. 
+        /// Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// The action to perform on image resources using the given context.
+        /// The action to perform on assets using the given context.
         /// </summary>
         public ContextCommand Command { get; set; }
 
@@ -53,9 +55,9 @@ namespace CloudinaryDotNet.Actions
 
         /// <inheritdoc />
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             var dict = base.ToParamsDictionary();
