@@ -92,7 +92,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Crc32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileDescription.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FileDescriptionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Search.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\BaseLayer.cs" />
