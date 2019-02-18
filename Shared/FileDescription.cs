@@ -50,8 +50,11 @@ namespace CloudinaryDotNet
         /// Constructor to upload file by path
         /// </summary>
         /// <param name="filePath">Either URL (http/https/s3/data) or local path to file</param>
-        public FileDescription(string filePath): this(Path.GetFileName(filePath), filePath)
+        public FileDescription(string filePath)
         {
+            IsRemote = Utils.IsRemoteFile(filePath);
+            FilePath = filePath;
+            FileName = IsRemote ? filePath : Path.GetFileName(filePath);
         }
 
         /// <summary>
