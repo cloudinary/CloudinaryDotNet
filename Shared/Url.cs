@@ -35,7 +35,7 @@ namespace CloudinaryDotNet
                 Type = "webm", Transformation = new Transformation().VideoCodec("auto")
             }
         };
-        
+
         protected const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         protected static readonly string[] DEFAULT_VIDEO_SOURCE_TYPES = { "webm", "mp4", "ogv" };
         protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
@@ -122,10 +122,10 @@ namespace CloudinaryDotNet
         {
             if (videoSources != null && videoSources.Length > 0)
                 m_videoSources = videoSources;
-            
+
             return this;
         }
-        
+
         public Url Action(string action)
         {
             m_action = action;
@@ -390,7 +390,7 @@ namespace CloudinaryDotNet
                 dict.Add("poster", posterUrl);
 
             List<string> tags = GetVideoSourceTags(source);
-            
+
             var sb = new StringBuilder("<video");
 
             bool multiSource = tags.Count > 1;
@@ -449,9 +449,9 @@ namespace CloudinaryDotNet
             }
             return DEFAULT_VIDEO_SOURCE_TYPES;
         }
-        
+
         /// <summary>
-        /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs 
+        /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs
         /// </summary>
         /// <param name="sourceType">The type of the source</param>
         /// <param name="codecs">Codecs</param>
@@ -464,12 +464,12 @@ namespace CloudinaryDotNet
             {
                 return string.Empty;
             }
-            
+
             if (codecs == null || codecs.Length == 0)
             {
                 return $"video/{sourceType}";
             }
-            
+
             var codecsJoined = string.Join(", ", codecs.Where(c => !string.IsNullOrEmpty(c)));
             var codecsStr = !string.IsNullOrEmpty(codecsJoined) ? $"; codecs={codecsJoined}" : string.Empty;
 
@@ -501,7 +501,7 @@ namespace CloudinaryDotNet
             {
                 return;
             }
-            
+
             if (url.m_transformation == null)
             {
                 url.Transform(transformationSrc);
@@ -521,9 +521,9 @@ namespace CloudinaryDotNet
         /// Source types and video sources are mutually exclusive, only one of them can be used.
         /// If both are not provided, default source types are used
         /// </summary>
-        /// 
+        ///
         /// <param name="source">The public ID of the video</param>
-        /// 
+        ///
         /// <returns>Resulting source tags (may be empty)</returns>
         private List<string> GetVideoSourceTags(string source)
         {
@@ -531,11 +531,11 @@ namespace CloudinaryDotNet
             {
                 return m_videoSources.Select(x => GetSourceTag(source, x.Type, x.Codecs, x.Transformation)).ToList();
             }
-            
+
             return GetSourceTypes().Select(x => GetSourceTag(source, x)).ToList();
         }
-        
-        private string GetSourceTag(string source, string sourceType, 
+
+        private string GetSourceTag(string source, string sourceType,
             string[] codecs = null, Transformation transformation = null)
         {
             var sourceUrl = Clone();
@@ -551,7 +551,7 @@ namespace CloudinaryDotNet
             }
 
             var src = sourceUrl.Format(sourceType).BuildUrl(source);
-            
+
             return $"<source src='{src}' type='{VideoMimeType(sourceType, codecs)}'>";
         }
 
@@ -656,7 +656,7 @@ namespace CloudinaryDotNet
                 signedPart = m_signProvider.SignUriPart(signedPart);
                 urlParts.Add(signedPart);
             }
-            
+
             urlParts.Add(transformationStr);
             urlParts.Add(version);
             urlParts.Add(src.Source);
@@ -668,11 +668,12 @@ namespace CloudinaryDotNet
             if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
             {
                 AuthToken token = m_AuthToken != null ? m_AuthToken : (CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken : null);
-                    
-                if (token != null && token != CloudinaryDotNet.AuthToken.NULL_AUTH_TOKEN)
+
+                if (token != null && !Equals(token, CloudinaryDotNet.AuthToken.NULL_AUTH_TOKEN))
                 {
-                    string tokenStr = token.Generate();
-                    uriStr = string.Format("{0}?{1}", uriStr, tokenStr);
+                    var path = new Uri(uriStr).AbsolutePath;
+                    var tokenStr = token.Generate(path);
+                    uriStr = $"{uriStr}?{tokenStr}";
                 }
             }
 
