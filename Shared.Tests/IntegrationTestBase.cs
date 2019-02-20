@@ -255,12 +255,8 @@ namespace CloudinaryDotNet.Test
         }
 
         #region Unique PublicId's
-        protected string GetUniquePublicId()
-        {
-            return GetUniquePublicId(StorageType.upload);
-        }
 
-        protected virtual string GetUniquePublicId(StorageType storageType, string suffix = "")
+        protected virtual string GetUniquePublicId(StorageType storageType = StorageType.upload, string suffix = "")
         {
             var publicId = $"{m_apiTest}_{m_publicIdsToClear[storageType].Count + 1}_{suffix}";
             AddCreatedPublicId(storageType, publicId);

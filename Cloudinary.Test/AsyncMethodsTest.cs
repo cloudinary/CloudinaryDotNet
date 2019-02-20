@@ -448,7 +448,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
         }
 
-        protected override string GetUniquePublicId(StorageType storageType, string suffix = "")
+        protected override string GetUniquePublicId(StorageType storageType = StorageType.upload, string suffix = "")
         {
             return base.GetUniquePublicId(storageType, "ASYNC");
         }

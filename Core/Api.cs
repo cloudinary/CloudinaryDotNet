@@ -26,7 +26,7 @@ namespace CloudinaryDotNet
 
         private Func<string, HttpRequestMessage> RequestBuilder =
             (url) => new HttpRequestMessage {RequestUri = new Uri(url)};
-        
+
         /// <summary>
         /// Default parameterless constructor.
         /// Assumes that environment variable CLOUDINARY_URL is set.
@@ -70,7 +70,7 @@ namespace CloudinaryDotNet
         static Api()
         {
             var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
-  
+
             var frameworkDescription = RuntimeInformation.FrameworkDescription;
 
             USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2} ({3})",
@@ -152,7 +152,7 @@ namespace CloudinaryDotNet
 
                 PrepareRequestContent(request, parameters, file, extraHeaders);
             }
-            
+
             return request;
         }
 
@@ -222,18 +222,16 @@ namespace CloudinaryDotNet
 
                     if (extraHeaders != null && extraHeaders.ContainsKey("Content-Range"))
                     {
-                        // Unfortunately we don't have ByteRangeStreamContent here, 
+                        // Unfortunately we don't have ByteRangeStreamContent here,
                         // let's create another stream from the original one
                         stream =  GetRangeFromFile(file, stream);
                     }
 
-                    string fileName = string.IsNullOrWhiteSpace(file.FilePath) ? file.FileName : Path.GetFileName(file.FilePath);
-
                     var streamContent = new StreamContent(stream);
-                  
+
                     streamContent.Headers.Add("Content-Type", "application/octet-stream");
-                    streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + fileName + "\"");
-                    content.Add(streamContent, "file", fileName);
+                    streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + file.FileName + "\"");
+                    content.Add(streamContent, "file", file.FileName);
                 }
             }
 
@@ -271,7 +269,7 @@ namespace CloudinaryDotNet
         {
             return HtmlEncoder.Default.Encode(value);
         }
-        
+
         private static void SetHttpMethod(HttpMethod method, HttpRequestMessage req)
         {
             switch (method)
@@ -305,13 +303,13 @@ namespace CloudinaryDotNet
             file.Eof = ReadBytes(writer, stream, file.BufferLength, file.FileName, out bytesSent);
             file.BytesSent += bytesSent;
             writer.BaseStream.Seek(0, SeekOrigin.Begin);
-            
+
             return memStream;
         }
 
         private bool ReadBytes(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
         {
-            
+
             bytesSent = 0;
             int toSend = 0;
             byte[] buf = new byte[ChunkSize];

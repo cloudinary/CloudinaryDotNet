@@ -82,6 +82,32 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUploadLocalCustomFilename()
+        {
+            var imageFileName = GetUniquePublicId(StorageType.upload, FILE_FORMAT_JPG);
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(imageFileName, m_testImagePath),
+                Tags = m_apiTag,
+                UseFilename = true,
+                UniqueFilename = false
+            };
+
+            var uploadResultImage = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(imageFileName, uploadResultImage.PublicId);
+
+            var pdfFileName = GetUniquePublicId(StorageType.upload, FILE_FORMAT_PDF);
+            var filePdf = new FileDescription(m_testPdfPath) {FileName = pdfFileName };
+
+            uploadParams.File = filePdf;
+
+            var uploadResultPdf = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(pdfFileName, uploadResultPdf.PublicId);
+        }
+
+        [Test]
         public void TestUploadLocalPDFPages()
         {
             var uploadParams = new ImageUploadParams()
@@ -632,8 +658,8 @@ namespace CloudinaryDotNet.Test
                 File = new FileDescription(TEST_REMOTE_IMG),
                 Tags = m_apiTag
             };
-            
-            // remote files should not be streamed 
+
+            // remote files should not be streamed
             Assert.IsNull(uploadParams.File.Stream);
             Assert.IsTrue(uploadParams.File.IsRemote);
 
@@ -3391,7 +3417,7 @@ namespace CloudinaryDotNet.Test
             var p = new RawUploadParams();
             Assert.Throws<ArgumentException>(p.Check, "Should require File");
 
-            p.File = new FileDescription("", null);
+            p.File = new FileDescription("", new MemoryStream());
             Assert.Throws<ArgumentException>(p.Check, "Should require FilePath and Stream specified for local file");
         }
 
