@@ -55,7 +55,9 @@ namespace CloudinaryDotNet
 
         internal static bool IsRemoteFile(string filePath)
         {
-            return Regex.IsMatch(filePath, "^((ftp|https?|s3|gs):.*)|data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)");
+            return Regex.IsMatch(
+                filePath, 
+                @"^((ftp|https?|s3|gs):.*)|data:([\w-]+/[\w-]+)?(;[\w-]+=[\w-]+)*;base64,([a-zA-Z0-9/+\n=]+)");
         }
 
         /// <summary>
