@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
@@ -12,6 +12,7 @@ namespace CloudinaryDotNet.Actions
             Exif = false;
             Colors = false;
             Faces = false;
+            Pages = false;
         }
 
         public string PublicId { get; set; }
@@ -58,6 +59,11 @@ namespace CloudinaryDotNet.Actions
         public bool Phash { get; set; }
 
         /// <summary>
+        /// Gets a value indicating the number of pages of a multi-page document.
+        /// </summary>
+        public bool Pages { get; set; }
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -84,6 +90,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "image_metadata", Metadata);
             AddParam(dict, "phash", Phash);
             AddParam(dict, "coordinates", Coordinates);
+            AddParam(dict, "pages", Pages);
 
             return dict;
         }
