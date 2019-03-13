@@ -1627,6 +1627,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(uploadResult.PublicId, getResult.PublicId);
             Assert.NotNull(getResult.Metadata);
             Assert.AreEqual(uploadResult.Pages, getResult.Pages);
+            Assert.AreEqual(getResult.Pages, TEST_PDF_PAGES_COUNT);
         }
 
         [Test]
