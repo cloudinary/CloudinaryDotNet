@@ -89,7 +89,10 @@ namespace CloudinaryDotNet.Actions
         
         [DataMember(Name = "access_control")]
         public List<AccessControlRule> AccessControl { get; protected set; }
-        
+
+        [DataMember(Name = "pages")]
+        public int Pages { get; protected set; }
+
     }
 
     [DataContract]

@@ -1603,6 +1603,33 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestGetPdfResourceWithNumberOfPages()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testPdfPath),
+                Tags = m_apiTag
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(FILE_FORMAT_PDF, uploadResult.Format);
+            Assert.AreEqual(TEST_PDF_PAGES_COUNT, uploadResult.Pages);
+
+            GetResourceResult getResult = m_cloudinary.GetResource(
+                new GetResourceParams(uploadResult.PublicId)
+                {
+                    Metadata = true,
+                    Pages = true
+                });
+
+            Assert.IsNotNull(getResult);
+            Assert.AreEqual(uploadResult.PublicId, getResult.PublicId);
+            Assert.NotNull(getResult.Metadata);
+            Assert.AreEqual(uploadResult.Pages, getResult.Pages);
+        }
+
+        [Test]
         public void TestDeleteDerived()
         {
             // should allow deleting derived resource
