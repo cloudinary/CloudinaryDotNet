@@ -1,4 +1,22 @@
 
+1.7.0 / 2019-03-14
+==================
+
+New functionality
+-----------------
+
+  * Add `Pages` to `GetResourceParams`
+  * Add public setter for `FileName` attribute of the `FileDescription`
+  * Support per corner values in Radius transformation param
+  * Ignore URL in AuthToken generation if ACL is provided
+  * Add global `secure` flag (fixes #30)
+
+Other Changes
+-------------
+
+  * Fix base64 regex validation template
+  * Fix url auth token generation
+
 1.6.0 / 2018-12-19
 ==================
 
