@@ -2971,7 +2971,7 @@ namespace CloudinaryDotNet.Test
             //should update quality
             string publicId = GetUniquePublicId();
             var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId, Overwrite = true, Tags = m_apiTag });
-            var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOveride = "auto:best" });
+            var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOverride = "auto:best" });
             Assert.AreEqual(updResult.StatusCode, HttpStatusCode.OK);
             Assert.Null(updResult.Error);
             Assert.AreEqual(updResult.PublicId, publicId);
