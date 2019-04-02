@@ -29,6 +29,7 @@ namespace CloudinaryDotNet
         public bool Secure;
         public string PrivateCdn;
         public string Suffix;
+        public bool ExcludeVersion;
         public string UserPlatform;
 
         public int Timeout = 0;
@@ -164,6 +165,7 @@ namespace CloudinaryDotNet
                     .Shorten(ShortenUrl)
                     .PrivateCdn(UsePrivateCdn)
                     .Secure(Secure)
+                    .ExcludeVersion(ExcludeVersion)
                     .SecureDistribution(PrivateCdn);
             }
         }
