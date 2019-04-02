@@ -15,7 +15,10 @@ namespace CloudinaryDotNet.Test
         protected string m_defaultVideoUpPath;
         protected string m_defaultImgFetchPath;
 
+        private const string TestVersion = "1234";
+        private const string TestVersionStr = "v1234";
         private const string SOURCE_MOVIE = "movie";
+        private const string TestImageId = "image.jpg";
 
         [OneTimeSetUp]
         public void Init()
@@ -768,6 +771,41 @@ namespace CloudinaryDotNet.Test
 
             string result = m_api.UrlImgUp.BuildUrl("v1234/test");
             Assert.AreEqual(m_defaultImgUpPath + "v1234/test", result);
+        }
+
+        [Test]
+        public void TestExcludeVersion()
+        {
+            var api = new Api(m_api.Account);
+
+            // Should ignore the version parameter if ExcludeVersion is set to true
+            var result = api.UrlImgUp.ExcludeVersion().BuildUrl(TestImageId);
+            Assert.AreEqual($"{m_defaultImgUpPath}{TestImageId}", result);
+
+            result = api.UrlImgUp.Version(TestVersion).ExcludeVersion().BuildUrl(TestImageId);
+            Assert.AreEqual($"{m_defaultImgUpPath}{TestImageId}", result);
+
+            result = api.UrlImgUp.ExcludeVersion(false).BuildUrl(TestImageId);
+            Assert.AreEqual($"{m_defaultImgUpPath}{TestImageId}", result);
+
+            result = api.UrlImgUp.Version(TestVersion).ExcludeVersion(false).BuildUrl(TestImageId);
+            Assert.AreEqual($"{m_defaultImgUpPath}{TestVersionStr}/{TestImageId}", result);
+
+            // Should use ExcludeVersion from Api instance
+            api.ExcludeVersion = true;
+
+            result = api.UrlImgUp.BuildUrl(TestImageId);
+            Assert.AreEqual($"{m_defaultImgUpPath}{TestImageId}", result);
+
+            result = api.UrlImgUp.Version(TestVersion).BuildUrl(TestImageId);
+            Assert.AreEqual($"{m_defaultImgUpPath}{TestImageId}", result);
+
+            // Should override ExcludeVersion from Api instance
+            result = api.UrlImgUp.ExcludeVersion(false).BuildUrl(TestImageId);
+            Assert.AreEqual($"{m_defaultImgUpPath}{TestImageId}", result);
+
+            result = api.UrlImgUp.Version(TestVersion).ExcludeVersion(false).BuildUrl(TestImageId);
+            Assert.AreEqual($"{m_defaultImgUpPath}{TestVersionStr}/{TestImageId}", result);
         }
 
         [Test]

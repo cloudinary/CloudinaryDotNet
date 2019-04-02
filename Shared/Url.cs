@@ -55,6 +55,7 @@ namespace CloudinaryDotNet
         protected string m_suffix;
         protected string m_privateCdn;
         protected string m_version;
+        protected bool m_excludeVersion;
         protected string m_cName;
         protected string m_source;
         protected string m_fallbackContent;
@@ -141,6 +142,12 @@ namespace CloudinaryDotNet
         public Url Version(string version)
         {
             m_version = version;
+            return this;
+        }
+
+        public Url ExcludeVersion(bool excludeVersion = true)
+        {
+            m_excludeVersion = excludeVersion;
             return this;
         }
 
@@ -641,7 +648,7 @@ namespace CloudinaryDotNet
                 m_version = "1";
             }
 
-            var version = String.IsNullOrEmpty(m_version) ? String.Empty : String.Format("v{0}", m_version);
+            var version = string.IsNullOrEmpty(m_version) || m_excludeVersion ? string.Empty : $"v{m_version}";
 
             if (m_signed && (m_AuthToken == null && CloudinaryConfiguration.AuthToken == null))
             {
