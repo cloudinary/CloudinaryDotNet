@@ -343,11 +343,11 @@ namespace CloudinaryDotNet.Test
 
     public class IgnoreAddonAttribute : Attribute, ITestAction
     {
-        private readonly string m_addonName;
+        private readonly string _mAddonName;
 
         public IgnoreAddonAttribute(string name)
         {
-            m_addonName = name;
+            _mAddonName = name;
         }
 
         public ActionTargets Targets { get; private set; }
@@ -358,11 +358,37 @@ namespace CloudinaryDotNet.Test
         {
             var addonsToRun = Environment.GetEnvironmentVariable("CLD_TEST_ADDONS");
             if (string.IsNullOrEmpty(addonsToRun) ||
-                !addonsToRun.Contains(m_addonName) &&
+                !addonsToRun.Contains(_mAddonName) &&
                 !addonsToRun.ToLower().Equals("all"))
             {
                 Assert.Ignore(
-                    $"Please enable {m_addonName} plugin in your account and set CLD_TEST_ADDONS environment variable");
+                    $"Please enable {_mAddonName} plugin in your account and set CLD_TEST_ADDONS environment variable");
+            }
+        }
+    }
+
+    public class IgnoreFeatureAttribute : Attribute, ITestAction
+    {
+        private readonly string _mFeatureName;
+
+        public IgnoreFeatureAttribute(string name)
+        {
+            _mFeatureName = name;
+        }
+
+        public ActionTargets Targets { get; private set; }
+
+        public void AfterTest(ITest test) { }
+
+        public void BeforeTest(ITest test)
+        {
+            var featuresToRun = Environment.GetEnvironmentVariable("CLD_TEST_FEATURES");
+            if (string.IsNullOrEmpty(featuresToRun) ||
+                !featuresToRun.Contains(_mFeatureName) &&
+                !featuresToRun.ToLower().Equals("all"))
+            {
+                Assert.Ignore(
+                    $"Please enable {_mFeatureName} feature in your account and set CLD_TEST_FEATURES environment variable");
             }
         }
     }

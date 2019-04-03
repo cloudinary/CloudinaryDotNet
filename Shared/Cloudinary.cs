@@ -479,6 +479,15 @@ namespace CloudinaryDotNet
             return m_api.CallApi<GetFoldersResult>(HttpMethod.GET, m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl(), null, null);
         }
 
+        /// <summary>
+        /// Deletes folder
+        /// </summary>
+        public DeleteFolderResult DeleteFolder(string folder)
+        {
+            var uri = m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl();
+            return m_api.CallApi<DeleteFolderResult>(HttpMethod.DELETE, uri, null, null);
+        }
+
         public UsageResult GetUsage()
         {
             string uri = m_api.ApiUrlV.Action("usage").BuildUrl();

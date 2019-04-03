@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\CreateTransformParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\DelDerivedResParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\DelDerivedResResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\DeleteFolderResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\DeleteUploadPreset.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\DeletionParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\DeletionResult.cs" />
