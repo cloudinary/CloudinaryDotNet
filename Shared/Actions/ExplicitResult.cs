@@ -11,9 +11,6 @@ namespace CloudinaryDotNet.Actions
     [DataContract]
     public class ExplicitResult : RawUploadResult
     {
-        [DataMember(Name = "type")]
-        public string Type { get; protected set; }
-
         [DataMember(Name = "eager")]
         public Eager[] Eager { get; protected set; }
 
@@ -35,10 +32,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "status")]
         public string Status { get; protected set; }
-        
+
         [DataMember(Name = "info")]
         public Info Info { get; protected set; }
-        
+
         [DataMember(Name = "quality_analysis")]
         public QualityAnalysis QualityAnalysis{ get; protected set; }
     }

@@ -13,7 +13,6 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
-        
     }
 
     [DataContract]
@@ -45,5 +44,7 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "context")]
         public JToken Context { get; protected set; }
+
+        public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
     }
 }

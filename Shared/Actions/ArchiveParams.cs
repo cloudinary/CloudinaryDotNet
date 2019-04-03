@@ -10,6 +10,7 @@ namespace CloudinaryDotNet.Actions
     public class ArchiveParams : BaseParams
     {
         private List<string> m_publicIds;
+        private List<string> m_fullyQualifiedPublicIds;
         private List<string> m_tags;
         private List<string> m_prefixes;
 
@@ -45,6 +46,23 @@ namespace CloudinaryDotNet.Actions
         public ArchiveParams PublicIds(List<string> publicIds)
         {
             m_publicIds = publicIds;
+            return this;
+        }
+
+        /// <summary>
+        /// Get a list of Fully Qualified Public IDs for the specific assets to be included in the archive
+        /// </summary>
+        public List<string> FullyQualifiedPublicIds()
+        {
+            return m_publicIds;
+        }
+
+        /// <summary>
+        /// Set a list of Fully Qualified Public IDs for the specific assets to be included in the archive
+        /// </summary>
+        public ArchiveParams FullyQualifiedPublicIds(List<string> fullyQualifiedPublicIds)
+        {
+            m_fullyQualifiedPublicIds = fullyQualifiedPublicIds;
             return this;
         }
 
@@ -89,13 +107,14 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if ((m_publicIds == null || m_publicIds.Count == 0) &&
+                (m_fullyQualifiedPublicIds == null || m_fullyQualifiedPublicIds.Count == 0) &&
                 (m_prefixes == null || m_prefixes.Count == 0) &&
                 (m_tags == null || m_tags.Count == 0))
-                throw new ArgumentException("At least one of the following \"filtering\" parameters needs to be specified: PublicIds, Tags or Prefixes.");
+                throw new ArgumentException("At least one of the following \"filtering\" parameters needs to be specified: PublicIds, FullyQualifiedPublicIds, Tags or Prefixes.");
         }
 
         /// <summary>
-        /// Get Mode whether to return the generated archive file (download) 
+        /// Get Mode whether to return the generated archive file (download)
         /// or to store it as a raw resource (create)
         /// </summary>
         public virtual ArchiveCallMode Mode()
@@ -104,7 +123,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Determines whether to return the generated archive file (download) 
+        /// Determines whether to return the generated archive file (download)
         /// or to store it as a raw resource in your Cloudinary account and return a JSON with the URLs for accessing the archive file (create)
         /// </summary>
         /// <param name="mode"></param>
@@ -246,7 +265,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set the Unix time in seconds when the generated download URL expires (e.g., 1415060076). 
+        /// Set the Unix time in seconds when the generated download URL expires (e.g., 1415060076).
         /// If this parameter is omitted then the generated download URL expires after 1 hour.
         /// Note: Relevant only for download call.
         /// </summary>
@@ -381,6 +400,9 @@ namespace CloudinaryDotNet.Actions
 
             if (m_publicIds != null && m_publicIds.Count > 0)
                 AddParam(dict, "public_ids", m_publicIds);
+
+            if (m_fullyQualifiedPublicIds != null && m_fullyQualifiedPublicIds.Count > 0)
+                AddParam(dict, "fully_qualified_public_ids", m_fullyQualifiedPublicIds);
 
             if (m_prefixes != null && m_prefixes.Count > 0)
                 AddParam(dict, "prefixes", m_prefixes);
