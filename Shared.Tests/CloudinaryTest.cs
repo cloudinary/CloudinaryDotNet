@@ -1498,10 +1498,10 @@ namespace CloudinaryDotNet.Test
 
             Assert.IsNotNull(result.Resources);
             Assert.AreEqual(1, result.Resources.Length);
-            
+
             var res = result.Resources[0];
             var expectedFullQualifiedPublicId = $"{res.ResourceType}/{res.Type}/{res.PublicId}";
-            
+
             Assert.AreEqual(expectedFullQualifiedPublicId, res.FullyQualifiedPublicId);
         }
 
@@ -3331,11 +3331,31 @@ namespace CloudinaryDotNet.Test
                 upRes2.FullyQualifiedPublicId,
                 upRes3.FullyQualifiedPublicId
             };
+
             var parameters = new ArchiveParams()
-                                            .FullyQualifiedPublicIds(fQPublicIds)
-                                            .ResourceType("auto")
-                                            .UseOriginalFilename(true)
-                                            .TargetTags(new List<string> { tag, m_apiTag });
+                .UseOriginalFilename(true)
+                .TargetTags(new List<string> { tag, m_apiTag });
+
+            var ex = Assert.Throws<ArgumentException>(() => m_cloudinary.CreateArchive(parameters));
+
+            StringAssert.StartsWith("At least one of the following", ex.Message);
+
+            parameters.ResourceType("auto").Tags(new List<string> {"tag"});
+
+            ex = Assert.Throws<ArgumentException>(() => m_cloudinary.CreateArchive(parameters));
+
+            Assert.AreEqual("Resource type \"auto\" can be used only with FullyQualifiedPublicIds", ex.Message);
+
+            parameters.ResourceType("").Tags(null).FullyQualifiedPublicIds(fQPublicIds);
+
+            ex = Assert.Throws<ArgumentException>(() => m_cloudinary.CreateArchive(parameters));
+
+            Assert.AreEqual("FullyQualifiedPublicIds can be used only with resource type \"auto\"", ex.Message);
+
+            Assert.AreEqual(fQPublicIds, parameters.FullyQualifiedPublicIds());
+
+            parameters.ResourceType("auto");
+
             var result = m_cloudinary.CreateArchive(parameters);
 
             Assert.AreEqual(3, result.FileCount);

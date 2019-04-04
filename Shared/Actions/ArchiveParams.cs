@@ -54,7 +54,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public List<string> FullyQualifiedPublicIds()
         {
-            return m_publicIds;
+            return m_fullyQualifiedPublicIds;
         }
 
         /// <summary>
@@ -101,16 +101,29 @@ namespace CloudinaryDotNet.Actions
             return this;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
         {
-            if ((m_publicIds == null || m_publicIds.Count == 0) &&
-                (m_fullyQualifiedPublicIds == null || m_fullyQualifiedPublicIds.Count == 0) &&
-                (m_prefixes == null || m_prefixes.Count == 0) &&
-                (m_tags == null || m_tags.Count == 0))
-                throw new ArgumentException("At least one of the following \"filtering\" parameters needs to be specified: PublicIds, FullyQualifiedPublicIds, Tags or Prefixes.");
+            if (m_publicIds?.Any() != true &&
+                m_fullyQualifiedPublicIds?.Any() != true &&
+                m_prefixes?.Any() != true &&
+                m_tags?.Any() != true)
+                throw new ArgumentException("At least one of the following \"filtering\" parameters needs " +
+                                            "to be specified: PublicIds, FullyQualifiedPublicIds, Tags or Prefixes.");
+
+            if (m_resourceType == "auto")
+            {
+                if (m_fullyQualifiedPublicIds?.Any() != true)
+                    throw new ArgumentException("Resource type \"auto\" can be used only with FullyQualifiedPublicIds");
+            }
+            else
+            {
+                if (m_fullyQualifiedPublicIds?.Any() == true)
+                    throw new ArgumentException("FullyQualifiedPublicIds can be used only with resource type \"auto\"");
+            }
         }
 
         /// <summary>
