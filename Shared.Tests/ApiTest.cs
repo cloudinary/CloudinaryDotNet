@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -1489,6 +1490,54 @@ namespace CloudinaryDotNet.Test
             paramsSetTwo.Add("Param4", "test");
 
             StringAssert.AreNotEqualIgnoringCase(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo), "The signatures are equal.");
+        }
+
+        [Test]
+        public void TestVerifyApiResponseSignature()
+        {
+            const string publicId = "resource id";
+            const string version = "resource version";
+            var responseParameters = new SortedDictionary<string, object>() {
+                { "public_id", publicId},
+                { "version", version},
+            };
+            var correctSignature = m_api.SignParameters(responseParameters);
+
+            Assert.IsTrue(m_api.VerifyApiResponseSignature(publicId, version, correctSignature), "The response signature is valid for the same parameters");
+
+            responseParameters["version"] = "new version";
+            var newVersionSignature = m_api.SignParameters(responseParameters);
+
+            Assert.IsFalse(m_api.VerifyApiResponseSignature(publicId, version, newVersionSignature), "The response signature is invalid for the wrong version");
+
+            responseParameters["version"] = version;
+            responseParameters["public_id"] = "another id";
+            var anotherResourceSignature = m_api.SignParameters(responseParameters);
+
+            Assert.IsFalse(m_api.VerifyApiResponseSignature(publicId, version, anotherResourceSignature), "The response signature is invalid for the wrong resource");
+        }
+
+        [Test]
+        public void TestVerifyNotificationSignature()
+        {
+            const string body = "some response body";
+
+            var currentTimestamp = Utils.UnixTimeNowSeconds();
+            var validResponseTimestamp = currentTimestamp - 5000;
+
+            var payload = $"{body}{validResponseTimestamp}{m_api.Account.ApiSecret}";
+            var payloadHash = Utils.ComputeHash(payload);
+            var signedPayload = new StringBuilder();
+            foreach (var b in payloadHash) signedPayload.Append(b.ToString("x2"));
+            var responseSignature = signedPayload.ToString();
+
+            Assert.IsTrue(m_api.VerifyNotificationSignature(body, validResponseTimestamp, responseSignature), "The notification signature is valid for matching and not expired signature");
+
+            Assert.IsFalse(m_api.VerifyNotificationSignature(body, validResponseTimestamp, responseSignature, 4000), "The notification signature is invalid for matching but expired signature");
+
+            Assert.IsFalse(m_api.VerifyNotificationSignature(body, validResponseTimestamp, responseSignature + "chars"), "The notification signature is invalid for non matching and not expired signature");
+
+            Assert.IsFalse(m_api.VerifyNotificationSignature(body, validResponseTimestamp, responseSignature + "chars", 4000), "The notification signature is invalid for non matching and expired signature");
         }
     }
 }
