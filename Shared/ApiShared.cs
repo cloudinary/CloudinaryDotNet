@@ -522,16 +522,9 @@ namespace CloudinaryDotNet
             if (isSignatureExpired)
                 return false;
 
-            var payloadHash = Utils.ComputeHash($"{body}{timestamp}{Account.ApiSecret}");
-            var sign = new StringBuilder();
-            foreach (var b in payloadHash)
-            {
-                sign.Append(b.ToString("x2"));
-            }
-
-            var payloadSignature = sign.ToString();
-
-            return signature.Equals(payloadSignature);
+            var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}");
+            
+            return signature.Equals(payloadHash);
         }
 
         /// <summary>

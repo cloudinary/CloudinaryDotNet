@@ -80,5 +80,17 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual("YWQ_Lix4MDl-IUAhYQ==", Utils.EncodeUrlSafe("ad?.,x09~!@!a"));
         }
+
+        [Test]
+        public void TestComputeHexHash()
+        {
+            var originalValue = Guid.NewGuid().ToString();
+
+            Assert.AreEqual(Utils.ComputeHexHash(originalValue), Utils.ComputeHexHash(originalValue), 
+                "Equal inputs should be hashed the same way");
+
+            Assert.AreNotEqual(Utils.ComputeHexHash(originalValue), Utils.ComputeHexHash("some string"), 
+                "Unequal inputs hashes should not match");
+        }
     }
 }
