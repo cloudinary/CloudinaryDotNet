@@ -29,10 +29,17 @@ namespace CloudinaryDotNet
         public bool Secure;
         public string PrivateCdn;
         public string Suffix;
-        public bool ExcludeVersion;
         public string UserPlatform;
 
         public int Timeout = 0;
+
+        /// <summary>
+        /// Indicates whether to add '/v1/' to the URL when the public ID includes folders and a 'version' value was
+        /// not defined.
+        /// When no version is explicitly specified and the public id contains folders, a default v1 version
+        /// is added to the url. Set this boolean as false to prevent that behaviour.
+        /// </summary>
+        public bool ForceVersion = true;
 
         /// <summary>
         /// Sets whether to use the use chunked encoding. See http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1 for further info.
@@ -165,7 +172,7 @@ namespace CloudinaryDotNet
                     .Shorten(ShortenUrl)
                     .PrivateCdn(UsePrivateCdn)
                     .Secure(Secure)
-                    .ExcludeVersion(ExcludeVersion)
+                    .ForceVersion(ForceVersion)
                     .SecureDistribution(PrivateCdn);
             }
         }
