@@ -55,7 +55,7 @@ namespace CloudinaryDotNet
         protected string m_suffix;
         protected string m_privateCdn;
         protected string m_version;
-        protected bool m_excludeVersion;
+        protected bool m_forceVersion;
         protected string m_cName;
         protected string m_source;
         protected string m_fallbackContent;
@@ -145,9 +145,9 @@ namespace CloudinaryDotNet
             return this;
         }
 
-        public Url ExcludeVersion(bool excludeVersion = true)
+        public Url ForceVersion(bool forceVersion = true)
         {
-            m_excludeVersion = excludeVersion;
+            m_forceVersion = forceVersion;
             return this;
         }
 
@@ -643,12 +643,14 @@ namespace CloudinaryDotNet
             urlParts.Add(m_action);
             urlParts.AddRange(m_customParts);
 
-            if (src.SourceToSign.Contains("/") && !Regex.IsMatch(src.SourceToSign, "^v[0-9]+/") && !Regex.IsMatch(src.SourceToSign, "https?:/.*") && String.IsNullOrEmpty(m_version))
+            if (m_forceVersion && 
+                src.SourceToSign.Contains("/") && !Regex.IsMatch(src.SourceToSign, "^v[0-9]+/") && 
+                !Regex.IsMatch(src.SourceToSign, "https?:/.*") && string.IsNullOrEmpty(m_version))
             {
                 m_version = "1";
             }
 
-            var version = string.IsNullOrEmpty(m_version) || m_excludeVersion ? string.Empty : $"v{m_version}";
+            var version = string.IsNullOrEmpty(m_version) ? string.Empty : $"v{m_version}";
 
             if (m_signed && (m_AuthToken == null && CloudinaryConfiguration.AuthToken == null))
             {
