@@ -34,7 +34,10 @@ namespace CloudinaryDotNet
         public int Timeout = 0;
 
         /// <summary>
-        /// Whether to force default v1 version in the url when public id contains a folder path
+        /// Indicates whether to add '/v1/' to the URL when the public ID includes folders and a 'version' value was
+        /// not defined.
+        /// When no version is explicitly specified and the public id contains folders, a default v1 version
+        /// is added to the url. Set this boolean as false to prevent that behaviour.
         /// </summary>
         public bool ForceVersion = true;
 

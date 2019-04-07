@@ -145,6 +145,14 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        /// <summary>
+        /// Indicates whether to add '/v1/' to the URL when the public ID includes folders and a 'version' value was
+        /// not defined.
+        /// When no version is explicitly specified and the public id contains folders, a default v1 version
+        /// is added to the url. Set this boolean as false to prevent that behaviour.
+        /// </summary>
+        /// <param name="forceVersion">A boolean parameter indicating whether or not to add the version.</param>
+        /// <returns>Url</returns>
         public Url ForceVersion(bool forceVersion = true)
         {
             m_forceVersion = forceVersion;
@@ -643,8 +651,8 @@ namespace CloudinaryDotNet
             urlParts.Add(m_action);
             urlParts.AddRange(m_customParts);
 
-            if (m_forceVersion && 
-                src.SourceToSign.Contains("/") && !Regex.IsMatch(src.SourceToSign, "^v[0-9]+/") && 
+            if (m_forceVersion &&
+                src.SourceToSign.Contains("/") && !Regex.IsMatch(src.SourceToSign, "^v[0-9]+/") &&
                 !Regex.IsMatch(src.SourceToSign, "https?:/.*") && string.IsNullOrEmpty(m_version))
             {
                 m_version = "1";

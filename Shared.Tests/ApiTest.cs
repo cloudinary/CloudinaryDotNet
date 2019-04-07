@@ -783,7 +783,7 @@ namespace CloudinaryDotNet.Test
             var result = api.UrlImgUp.BuildUrl(TestFolder);
             Assert.AreEqual($"{m_defaultImgUpPath}{DefaultVersionStr}/{TestFolder}", result);
 
-            // Should ignore the version parameter if ForceVersion is set to false
+            // Should not add default version if ForceVersion is set to false
             result = api.UrlImgUp.ForceVersion(false).BuildUrl(TestFolder);
             Assert.AreEqual($"{m_defaultImgUpPath}{TestFolder}", result);
 
