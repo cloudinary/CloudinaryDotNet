@@ -408,6 +408,47 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Validates API response signature against Cloudinary configuration
+        /// </summary>
+        /// <param name="publicId">Public ID of resource</param>
+        /// <param name="version">Version of resource</param>
+        /// <param name="signature">Response signature</param>
+        /// <returns>Boolean result of the validation</returns>
+        public bool VerifyApiResponseSignature(string publicId, string version, string signature)
+        {
+            var parametersToSign = new SortedDictionary<string, object>() {
+                { "public_id", publicId},
+                { "version", version}
+            };
+            var signedParameters = SignParameters(parametersToSign);
+
+            return signature.Equals(signedParameters);
+        }
+
+        /// <summary>
+        /// Validates notification signature against Cloudinary configuration
+        /// </summary>
+        /// <param name="body">Request body</param>
+        /// <param name="timestamp">Request timestamp</param>
+        /// <param name="signature">Notification signature</param>
+        /// <param name="validFor">For how long the signature is valid, in seconds</param>
+        /// <returns>Boolean result of the validation</returns>
+        public bool VerifyNotificationSignature(string body, long timestamp, string signature, int validFor = 7200)
+        {
+            var currentTimestamp = Utils.UnixTimeNowSeconds();
+            var isSignatureExpired = timestamp <= currentTimestamp - validFor;
+            if (isSignatureExpired)
+                return false;
+
+            var payloadHash = Utils.ComputeHash($"{body}{timestamp}{Account.ApiSecret}");
+            var sign = new StringBuilder();
+            foreach (var b in payloadHash) sign.Append(b.ToString("x2"));
+            var payloadSignature = sign.ToString();
+
+            return signature.Equals(payloadSignature);
+        }
+
+        /// <summary>
         /// Calculates current UNIX time
         /// </summary>
         /// <returns>Amount of seconds from 1 january 1970</returns>
