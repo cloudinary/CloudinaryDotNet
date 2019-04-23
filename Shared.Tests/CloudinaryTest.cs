@@ -3344,13 +3344,13 @@ namespace CloudinaryDotNet.Test
 
             ex = Assert.Throws<ArgumentException>(() => m_cloudinary.CreateArchive(parameters));
 
-            Assert.AreEqual("Resource type \"auto\" can be used only with FullyQualifiedPublicIds", ex.Message);
+            StringAssert.StartsWith("To create an archive with multiple types of assets", ex.Message);
 
             parameters.ResourceType("").Tags(null).FullyQualifiedPublicIds(fQPublicIds);
 
             ex = Assert.Throws<ArgumentException>(() => m_cloudinary.CreateArchive(parameters));
 
-            Assert.AreEqual("FullyQualifiedPublicIds can be used only with resource type \"auto\"", ex.Message);
+            StringAssert.StartsWith("To create an archive with multiple types of assets", ex.Message);
 
             Assert.AreEqual(fQPublicIds, parameters.FullyQualifiedPublicIds());
 

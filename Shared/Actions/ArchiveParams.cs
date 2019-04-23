@@ -114,15 +114,11 @@ namespace CloudinaryDotNet.Actions
                 throw new ArgumentException("At least one of the following \"filtering\" parameters needs " +
                                             "to be specified: PublicIds, FullyQualifiedPublicIds, Tags or Prefixes.");
 
-            if (m_resourceType == "auto")
+            if (m_resourceType == "auto" ^ (m_fullyQualifiedPublicIds?.Any() ?? false))
             {
-                if (m_fullyQualifiedPublicIds?.Any() != true)
-                    throw new ArgumentException("Resource type \"auto\" can be used only with FullyQualifiedPublicIds");
-            }
-            else
-            {
-                if (m_fullyQualifiedPublicIds?.Any() == true)
-                    throw new ArgumentException("FullyQualifiedPublicIds can be used only with resource type \"auto\"");
+                throw new ArgumentException(
+                    "To create an archive with multiple types of assets, you must set ResourceType to \"auto\" " +
+                    "and provide FullyQualifiedPublicIds (For example, 'video/upload/my_video.mp4')");
             }
         }
 
