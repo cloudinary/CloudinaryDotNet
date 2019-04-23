@@ -1475,6 +1475,37 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestResourceFullyQualifiedPublicId()
+        {
+            // should return correct FullyQualifiedPublicId
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = GetUniquePublicId(),
+                Tags = m_apiTag
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            var listParams = new ListResourcesParams()
+            {
+                ResourceType = ResourceType.Image,
+                MaxResults = 1
+            };
+
+            var result = m_cloudinary.ListResources(listParams);
+
+            Assert.IsNotNull(result.Resources);
+            Assert.AreEqual(1, result.Resources.Length);
+
+            var res = result.Resources[0];
+            var expectedFullQualifiedPublicId = $"{res.ResourceType}/{res.Type}/{res.PublicId}";
+
+            Assert.AreEqual(expectedFullQualifiedPublicId, res.FullyQualifiedPublicId);
+        }
+
+        [Test]
         public void TestEager()
         {
             ImageUploadParams uploadParams = new ImageUploadParams()
@@ -3284,6 +3315,73 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual($"{parameters.TargetPublicId()}.{FILE_FORMAT_ZIP}", result.PublicId);
             Assert.AreEqual(1, result.FileCount);
+        }
+
+        [Test]
+        public void TestCreateArchiveMultipleResourceTypes()
+        {
+            var raw = ApiShared.GetCloudinaryParam(ResourceType.Raw);
+
+            var tag = GetMethodTag();
+
+            var rawUploadParams = new RawUploadParams()
+            {
+                File = new FileDescription(m_testPdfPath),
+                Tags = $"{tag},{m_apiTag}"
+            };
+
+            var upRes1 = m_cloudinary.Upload(rawUploadParams, raw);
+
+            var imageUploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = $"{tag},{m_apiTag}"
+            };
+
+            var upRes2 = m_cloudinary.Upload(imageUploadParams);
+
+            var videoUploadParams = new VideoUploadParams()
+            {
+                File = new FileDescription(m_testVideoPath),
+                Tags = $"{tag},{m_apiTag}"
+            };
+
+            var upRes3 = m_cloudinary.Upload(videoUploadParams);
+
+            var fQPublicIds = new List<string>
+            {
+                upRes1.FullyQualifiedPublicId,
+                upRes2.FullyQualifiedPublicId,
+                upRes3.FullyQualifiedPublicId
+            };
+
+            var parameters = new ArchiveParams()
+                .UseOriginalFilename(true)
+                .TargetTags(new List<string> { tag, m_apiTag });
+
+            var ex = Assert.Throws<ArgumentException>(() => m_cloudinary.CreateArchive(parameters));
+
+            StringAssert.StartsWith("At least one of the following", ex.Message);
+
+            parameters.ResourceType("auto").Tags(new List<string> {"tag"});
+
+            ex = Assert.Throws<ArgumentException>(() => m_cloudinary.CreateArchive(parameters));
+
+            StringAssert.StartsWith("To create an archive with multiple types of assets", ex.Message);
+
+            parameters.ResourceType("").Tags(null).FullyQualifiedPublicIds(fQPublicIds);
+
+            ex = Assert.Throws<ArgumentException>(() => m_cloudinary.CreateArchive(parameters));
+
+            StringAssert.StartsWith("To create an archive with multiple types of assets", ex.Message);
+
+            Assert.AreEqual(fQPublicIds, parameters.FullyQualifiedPublicIds());
+
+            parameters.ResourceType("auto");
+
+            var result = m_cloudinary.CreateArchive(parameters);
+
+            Assert.AreEqual(3, result.FileCount);
         }
 
         /// <summary>

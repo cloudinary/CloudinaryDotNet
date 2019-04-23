@@ -17,6 +17,12 @@ namespace CloudinaryDotNet.Actions
         public string Signature { get; protected set; }
 
         /// <summary>
+        /// Storage type
+        /// </summary>
+        [DataMember(Name = "type")]
+        public string Type { get; protected set; }
+
+        /// <summary>
         /// Resource type
         /// </summary>
         [DataMember(Name = "resource_type")]
@@ -30,10 +36,11 @@ namespace CloudinaryDotNet.Actions
 
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
-        
+
         [DataMember(Name = "access_control")]
         public List<AccessControlRule> AccessControl { get; protected set; }
-        
+
+        public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
     }
 
     /// <summary>
@@ -47,6 +54,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "upload_id")]
         public string UploadId { get; protected set; }
-        
     }
 }
