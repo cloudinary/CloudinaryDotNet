@@ -1,3 +1,12 @@
+1.8.0 / 2019-04-23
+==================
+
+New functionality
+-----------------
+
+  * Allow generating archive with multiple resource types
+  * Add `DeleteFolder` admin API
+  * Add `ForceVersion` parameter to `Url`
 
 1.7.0 / 2019-03-14
 ==================
