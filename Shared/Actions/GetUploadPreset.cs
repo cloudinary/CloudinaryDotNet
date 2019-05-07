@@ -88,7 +88,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at
-        /// the end of the filename that guarantee its uniqueness.
+        /// the end of the filename to guarantee uniqueness.
         /// </summary>
         [DataMember(Name = "unique_filename")]
         public bool? UniqueFilename { get; protected set; }
@@ -125,7 +125,7 @@ namespace CloudinaryDotNet.Actions
         public bool? Overwrite { get; protected set; }
 
         /// <summary>
-        /// If set to "aspose" Cloudinary will automatically convert Office documents to PDF files and other image
+        /// If set to "aspose", Cloudinary will automatically convert Office documents to PDF files and other image
         /// formats using the Aspose Document Conversion add-on.
         /// </summary>
         [DataMember(Name = "raw_convert")]
@@ -208,7 +208,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Whether to generate the eager transformations asynchronously in the background after the upload request is 
-        /// completed rather than online as part of the upload call. Default: false.
+        /// completed, rather than online as part of the upload call. Default: false.
         /// </summary>
         [DataMember(Name = "eager_async")]
         public bool EagerAsync { get; protected set; }

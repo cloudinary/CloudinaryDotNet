@@ -234,7 +234,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Builds HTML file input tag for unsigned upload an asset.
+        /// Builds HTML file input tag for unsigned uploading of an asset.
         /// </summary>
         /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata. 
         /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>

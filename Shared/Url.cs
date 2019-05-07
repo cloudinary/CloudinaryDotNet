@@ -13,7 +13,7 @@ using System.Web;
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// The builbing blocks for generating an https delivery URL for assets.
+    /// The building blocks for generating an https delivery URL for assets.
     /// </summary>
     public class Url : Core.ICloneable
     {

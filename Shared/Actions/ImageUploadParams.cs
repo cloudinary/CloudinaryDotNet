@@ -33,7 +33,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// A list of transformations to create for the uploaded image during the upload process, instead of lazily
-        /// creating them when being accessed by your site's visitors.
+        /// creating them when accessed by your site's visitors.
         /// </summary>
         public List<Transformation> EagerTransforms { get; set; }
 

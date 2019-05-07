@@ -190,7 +190,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Define a string user defined variable.
+        /// Define a user defined string variable.
         /// </summary>
         /// <param name="name">The name of variable.</param>
         /// <param name="values">A list of values.</param>
@@ -200,7 +200,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Add user defined variables to the transformatio.
+        /// Add user defined variables to the transformation.
         /// </summary>
         /// <param name="variables">A list of variables.</param>
         public Transformation Variables(params Expression[] variables)

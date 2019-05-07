@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of the request of transformation details.
+    /// Parameters of the request for transformation details.
     /// </summary>
     public class GetTransformParams : BaseParams
     {

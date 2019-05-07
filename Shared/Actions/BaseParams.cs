@@ -7,7 +7,7 @@ using CloudinaryDotNet.Core;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of request to cloudinary.
+    /// Parameters for request to cloudinary.
     /// </summary>
     public abstract class BaseParams
     {

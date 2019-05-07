@@ -126,7 +126,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Description of server-side error (if one has occured).
+        /// Description of server-side error (if one has occurred).
         /// </summary>
         [DataMember(Name = "error")]
         public Error Error { get; internal set; }
