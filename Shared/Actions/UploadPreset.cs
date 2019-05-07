@@ -197,7 +197,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at
-        /// the end of the filename that guarantee its uniqueness.
+        /// the end of the filename to guarantee uniqueness.
         /// </summary>
         public bool? UniqueFilename { get; set; }
 
@@ -263,7 +263,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// A list of transformations to create for the uploaded image during the upload process, instead of lazily
-        /// creating them when being accessed by your site's visitors.
+        /// creating them when accessed by your site's visitors.
         /// One may use string representation or <see cref="Transformation"/> class.
         /// </summary>
         public ICollection<object> EagerTransforms { get; set; }

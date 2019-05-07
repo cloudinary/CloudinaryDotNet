@@ -8,7 +8,7 @@ using System.Text;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of context management.
+    /// Parameters for context management.
     /// </summary>
     public class ContextParams : BaseParams
     {

@@ -45,12 +45,12 @@ namespace CloudinaryDotNet
         string m_apiAddr = "https://" + ADDR_API;
 
         /// <summary>
-        /// Whether to use sub domain.
+        /// Whether to use a sub domain.
         /// </summary>
         public bool CSubDomain;
 
         /// <summary>
-        /// Whether to use shorten url when possible.
+        /// Whether to use a shortened url when possible.
         /// </summary>
         public bool ShortenUrl;
 
@@ -139,7 +139,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Virtual method to call the cloudinary API. This method should be overriden in child classes.
+        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
         /// </summary>
         /// <param name="method">Http request method.</param>
         /// <param name="url">API Url.</param>
@@ -164,7 +164,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Virtual method to call the cloudinary API and return the parsed response. This method should be overriden
+        /// Virtual method to call the cloudinary API and return the parsed response. This method should be overridden
         /// in child classes.
         /// </summary>
         /// <typeparam name="T">Type of the response.</typeparam>
@@ -181,7 +181,7 @@ namespace CloudinaryDotNet
 
         /// <inheritdoc />
         /// <summary>
-        /// Parametrized constructor.
+        /// Parameterized constructor.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network.</param>
@@ -199,7 +199,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Parametrized constructor.
+        /// Parameterized constructor.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         public ApiShared(Account account)
@@ -490,7 +490,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Virtual build callback url method. This method should be overriden in child classes.
+        /// Virtual build callback url method. This method should be overridden in child classes.
         /// </summary>
         /// <returns>Callback url.</returns>
         public virtual string BuildCallbackUrl(string path = "")
@@ -565,7 +565,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Virtual encode API Url method. This method should be overriden in child classes.
+        /// Virtual encode API Url method. This method should be overridden in child classes.
         /// </summary>
         /// <param name="value">Url to be encoded.</param>
         /// <returns>Encoded Url.</returns>

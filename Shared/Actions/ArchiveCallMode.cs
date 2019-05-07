@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// The definition of either return a URL to the generated archive file ('download') or to store it as a raw asset
+    /// Either return a URL to the generated archive file ('download') or store it as a raw asset
     /// in your Cloudinary account('create').
     /// </summary>
     public enum ArchiveCallMode

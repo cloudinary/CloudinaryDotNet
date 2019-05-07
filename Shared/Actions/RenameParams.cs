@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters for renaming assets immediately and permanently update in your cloud storage. 
+    /// Parameters for renaming assets immediately and permanently updating them in your cloud storage. 
     /// </summary>
     public class RenameParams : BaseParams
     {

@@ -110,8 +110,8 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Determines whether to return a URL to dynamically generate and download the archive file ('download') or to
-        /// create and store it as a raw asset in your Cloudinary account and return a JSON with the URLs for accessing
+        /// Determines whether to return a URL to dynamically generate and download the archive file ('download'), or to
+        /// create and store it as a raw asset in your Cloudinary account and return JSON with the URLs to access
         /// the archive file ('create').
         /// </summary> 
         /// <returns>The instance of Archive parameters with set parameter.</returns>

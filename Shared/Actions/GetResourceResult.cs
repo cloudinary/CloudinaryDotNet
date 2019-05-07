@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.Actions
         public string PublicId { get; protected set; }
 
         /// <summary>
-        /// The format this resource delivered in. 
+        /// The format this resource is delivered in. 
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
@@ -806,7 +806,6 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Y - coordinate.
         /// </summary>
-        [DataMember(Name = "y")]
         public double Y { get; protected set; }
     }
 

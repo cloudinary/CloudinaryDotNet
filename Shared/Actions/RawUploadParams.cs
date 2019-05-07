@@ -116,7 +116,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at
-        /// the end of the filename that guarantee its uniqueness.
+        /// the end of the filename to guarantee its uniqueness.
         /// </summary>
         public bool? UniqueFilename { get; set; }
 
