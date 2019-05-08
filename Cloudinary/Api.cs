@@ -31,7 +31,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary Url.
+        /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary URL.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public Api(string cloudinaryUrl) : base(cloudinaryUrl)
@@ -44,7 +44,7 @@ namespace CloudinaryDotNet
         /// <param name="account">Cloudinary account.</param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network.</param>
         /// <param name="privateCdn">Private Content Delivery Network.</param>
-        /// <param name="shortenUrl">Whether to use shorten url when possible.</param>
+        /// <param name="shortenUrl">Whether to use shortened URL when possible.</param>
         /// <param name="cSubDomain">Whether to use sub domain.</param>
         public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain) 
             : base(account, usePrivateCdn, privateCdn, shortenUrl, cSubDomain)

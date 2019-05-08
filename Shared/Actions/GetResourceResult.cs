@@ -74,7 +74,7 @@ namespace CloudinaryDotNet.Actions
         public int Height { get; protected set; }
 
         /// <summary>
-        /// Url to the resource.
+        /// URL to the resource.
         /// </summary>
         [DataMember(Name = "url")]
         public string Url { get; protected set; }

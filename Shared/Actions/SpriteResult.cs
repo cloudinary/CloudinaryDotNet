@@ -11,25 +11,25 @@ namespace CloudinaryDotNet.Actions
     public class SpriteResult : BaseResult
     {
         /// <summary>
-        /// Url to css file for the sprite.
+        /// URL to css file for the sprite.
         /// </summary>
         [DataMember(Name = "css_url")]
         public Uri CssUri { get; protected set; }
 
         /// <summary>
-        /// Secure Url to css file for the sprite.
+        /// Secure URL to css file for the sprite.
         /// </summary>
         [DataMember(Name = "secure_css_url")]
         public Uri SecureCssUri { get; protected set; }
 
         /// <summary>
-        /// Url to access the created sprite.
+        /// URL to access the created sprite.
         /// </summary>
         [DataMember(Name = "image_url")]
         public Uri ImageUri { get; protected set; }
 
         /// <summary>
-        /// Url to json file with detailed parameters of the created sprite.
+        /// URL to json file with detailed parameters of the created sprite.
         /// </summary>
         [DataMember(Name = "json_url")]
         public Uri JsonUri { get; protected set; }

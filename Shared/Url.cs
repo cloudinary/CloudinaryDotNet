@@ -70,7 +70,7 @@ namespace CloudinaryDotNet
         protected string m_cloudName;
 
         /// <summary>
-        /// The cloud url address to access the resources.
+        /// The cloud URL address to access the resources.
         /// </summary>
         protected string m_cloudinaryAddr = Api.ADDR_RES;
 
@@ -80,7 +80,7 @@ namespace CloudinaryDotNet
         protected string m_apiVersion;
 
         /// <summary>
-        /// Whether to use shorten url when possible.
+        /// Whether to use shortened URL when possible.
         /// </summary>
         protected bool m_shorten;
 
@@ -112,7 +112,7 @@ namespace CloudinaryDotNet
         protected string m_suffix;
 
         /// <summary>
-        /// Private CDN prefix to be added to the Url.
+        /// Private CDN prefix to be added to the URL.
         /// </summary>
         protected string m_privateCdn;
 
@@ -123,12 +123,12 @@ namespace CloudinaryDotNet
         protected string m_version;
 
         /// <summary>
-        /// Custom domain for your Url.
+        /// Custom domain for your URL.
         /// </summary>
         protected string m_cName;
 
         /// <summary>
-        /// Source part of the Url.
+        /// Source part of the URL.
         /// </summary>
         protected string m_source;
 
@@ -180,7 +180,7 @@ namespace CloudinaryDotNet
         protected string[] m_sourceTypes;
 
         /// <summary>
-        /// The action to be added to the Url.
+        /// The action to be added to the URL.
         /// </summary>
         protected string m_action = String.Empty;
 
@@ -190,7 +190,7 @@ namespace CloudinaryDotNet
         protected string m_resourceType = String.Empty;
 
         /// <summary>
-        /// The transformation to be added to the Url.
+        /// The transformation to be added to the URL.
         /// </summary>
         protected Transformation m_transformation;
 
@@ -220,7 +220,7 @@ namespace CloudinaryDotNet
         public string FormatValue { get; set; }
 
         /// <summary>
-        /// The transformation to be added to the Url.
+        /// The transformation to be added to the URL.
         /// </summary>
         public Transformation Transformation
         {
@@ -232,9 +232,9 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set whether to use shorten Url when possible.
+        /// Set whether to use shortened URL when possible.
         /// </summary>
-        /// <param name="shorten">True - to use shorten Url.</param>
+        /// <param name="shorten">True - to use shorten URL.</param>
         public Url Shorten(bool shorten)
         {
             m_shorten = shorten;
@@ -242,9 +242,9 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set the cloudinary Url to access the resources.
+        /// Set the cloudinary URL to access the resources.
         /// </summary>
-        /// <param name="cloudinaryAddr">Cloud Url.</param>
+        /// <param name="cloudinaryAddr">Cloud URL.</param>
         public Url CloudinaryAddr(string cloudinaryAddr)
         {
             m_cloudinaryAddr = cloudinaryAddr;
@@ -262,9 +262,9 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Add custom part to the Url.
+        /// Add custom part to the URL.
         /// </summary>
-        /// <param name="part">Custom Url part.</param>
+        /// <param name="part">Custom URL part.</param>
         public Url Add(string part)
         {
             if (!String.IsNullOrEmpty(part))
@@ -286,7 +286,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Add action to the Url.
+        /// Add action to the URL.
         /// </summary>
         /// <param name="action">The action.</param>
         public Url Action(string action)
@@ -412,7 +412,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Force Url builder to use HTTPS urls. Default: true.
+        /// Force Url builder to use HTTPS URLs. Default: true.
         /// </summary>
         /// <param name="secure">Whether to use HTTPS Url.</param>
         public Url Secure(bool secure = true)

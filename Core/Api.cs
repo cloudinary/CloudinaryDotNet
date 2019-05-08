@@ -35,7 +35,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary Url.
+        /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary URL.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public Api(string cloudinaryUrl) : base(cloudinaryUrl)
@@ -406,7 +406,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <typeparam name="T">The type of the parsed response.</typeparam>
         /// <param name="method">HTTP method.</param>
-        /// <param name="url">A generated Url.</param>
+        /// <param name="url">A generated URL.</param>
         /// <param name="parameters">A dictionary of parameters in cloudinary notation.</param>
         /// <param name="file">The file to upload.</param>
         /// <param name="extraHeaders">The extra headers to pass into the request.</param>
