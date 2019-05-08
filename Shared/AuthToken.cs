@@ -143,9 +143,9 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Generate authentication token for the Url.
+        /// Generate authentication token for the URL.
         /// </summary>
-        /// <param name="url">Url to generate authentication token.</param>
+        /// <param name="url">URL to generate authentication token.</param>
         /// <returns>Generated authentication token.</returns>
         public string Generate(string url)
         {
@@ -250,10 +250,10 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Encode and lowercase the Url.
+        /// Encode and lowercase the URL.
         /// </summary>
-        /// <param name="url">Url for escaping.</param>
-        /// <returns>Escaped Url in lowercase.</returns>
+        /// <param name="url">URL for escaping.</param>
+        /// <returns>Escaped URL in lowercase.</returns>
         protected string EscapeToLower(string url)
         {
             string escaped = string.Empty;

@@ -64,7 +64,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Cloudinary"/> object with Cloudinary Url.
+        /// Instantiates the <see cref="Cloudinary"/> object with Cloudinary URL.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public Cloudinary(string cloudinaryUrl)
@@ -161,10 +161,10 @@ namespace CloudinaryDotNet
 
 
         /// <summary>
-        ///  Returns Url on archive file.
+        ///  Returns URL on archive file.
         /// </summary>
         /// <param name="parameters">Parameters of generated archive.</param>
-        /// <returns>Url on archive file.</returns>
+        /// <returns>URL on archive file.</returns>
         public string DownloadArchiveUrl(ArchiveParams parameters)
         {
             parameters.Mode(ArchiveCallMode.Download);
@@ -1326,7 +1326,7 @@ namespace CloudinaryDotNet
         /// Creates a new upload mapping folder and its template (URL).
         /// </summary>
         /// <param name="folder">Folder name to create.</param>
-        /// <param name="template">Url template for mapping to the <paramref name="folder"/>.</param>
+        /// <param name="template">URL template for mapping to the <paramref name="folder"/>.</param>
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public UploadMappingResults CreateUploadMapping(string folder, string template)
         {
@@ -1348,7 +1348,7 @@ namespace CloudinaryDotNet
         /// Updates existing upload mapping.
         /// </summary>
         /// <param name="folder">Existing Folder to be updated.</param>
-        /// <param name="newTemplate">New value of Template Url.</param>
+        /// <param name="newTemplate">New value of Template URL.</param>
         /// <returns>Parsed response after Upload mappings update.</returns>
         public UploadMappingResults UpdateUploadMapping(string folder, string newTemplate)
         {

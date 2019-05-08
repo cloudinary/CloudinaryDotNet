@@ -9,7 +9,7 @@ namespace CloudinaryDotNet
     public class FetchLayer: BaseLayer<FetchLayer>
     {
         /// <summary>
-        /// The url to fetch an image for.
+        /// The URL to fetch an image for.
         /// </summary>
         protected string m_url;
 
@@ -22,7 +22,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// The url to fetch an image for.
+        /// The URL to fetch an image for.
         /// </summary>
         public FetchLayer Url(string url)
         {

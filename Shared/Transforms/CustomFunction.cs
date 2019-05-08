@@ -25,7 +25,7 @@
         /// <summary>
         /// Generate a remote lambda custom action function to send to CustomFunction(customFunction) transformation.
         /// </summary>
-        /// <param name="url">The public url of the aws lambda function.</param>
+        /// <param name="url">The public URL of the aws lambda function.</param>
         /// <returns>A new instance of custom function param.</returns>
         public static CustomFunction Remote(string url)
         {

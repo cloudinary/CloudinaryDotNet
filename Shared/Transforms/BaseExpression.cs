@@ -93,10 +93,10 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Helper method to replace the operator to the Cloudinary Url syntax.
+        /// Helper method to replace the operator to the Cloudinary URL syntax.
         /// </summary>
         /// <param name="value">An operator to replace.</param>
-        /// <returns>An operator replaced to the Cloudinary Url syntax.</returns>
+        /// <returns>An operator replaced to the Cloudinary URL syntax.</returns>
         protected static string GetOperatorReplacement(string value)
         {
             if (Operators.ContainsKey(value))

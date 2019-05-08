@@ -63,7 +63,7 @@ namespace CloudinaryDotNet.Actions
     public class Eager
     {
         /// <summary>
-        /// Url for accessing the asset.
+        /// URL for accessing the asset.
         /// </summary>
         [DataMember(Name = "url")]
         public Uri Uri { get; protected set; }
