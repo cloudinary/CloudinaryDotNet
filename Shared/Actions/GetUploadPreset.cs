@@ -163,7 +163,7 @@ namespace CloudinaryDotNet.Actions
         public JToken Transformation { get; protected set; }
 
         /// <summary>
-        /// A list of transformations to create for the uploaded image during the upload process, instead of lazily 
+        /// A list of transformations to create for the uploaded image during the upload process, instead of lazily
         /// creating them when being accessed by your site's visitors.
         /// </summary>
         [DataMember(Name = "eager")]
@@ -182,12 +182,12 @@ namespace CloudinaryDotNet.Actions
         public bool Colors { get; protected set; }
 
         /// <summary>
-        /// Whether to retrieve a list of coordinates of automatically detected faces in the uploaded photo. 
+        /// Whether to retrieve a list of coordinates of automatically detected faces in the uploaded photo.
         /// Default: false.
         /// </summary>
         [DataMember(Name = "faces")]
         public bool Faces { get; protected set; }
-        
+
         /// <summary>
         /// Whether to retrieve the quality analysis of the image. Default: false.
         /// </summary>
@@ -207,7 +207,7 @@ namespace CloudinaryDotNet.Actions
         public bool Metadata { get; protected set; }
 
         /// <summary>
-        /// Whether to generate the eager transformations asynchronously in the background after the upload request is 
+        /// Whether to generate the eager transformations asynchronously in the background after the upload request is
         /// completed, rather than online as part of the upload call. Default: false.
         /// </summary>
         [DataMember(Name = "eager_async")]
@@ -220,7 +220,7 @@ namespace CloudinaryDotNet.Actions
         public string EagerNotificationUrl { get; protected set; }
 
         /// <summary>
-        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene 
+        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene
         /// Categorization add-on.
         /// </summary>
         [DataMember(Name = "categorization")]
@@ -229,7 +229,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// By providing the AutoTagging parameter, uploaded images are automatically assigned tags based on the
         /// detected scene categories. The value of the AutoTagging parameter is the minimum score of a detected
-        /// category that should be automatically used as an assigned tag. 
+        /// category that should be automatically used as an assigned tag.
         /// See also http://cloudinary.com/documentation/rekognition_scene_categorization_addon#automatic_image_tagging.
         /// </summary>
         [DataMember(Name = "auto_tagging")]
@@ -241,6 +241,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "detection")]
         public string Detection { get; protected set; }
 
+        /// <summary>
+        /// Used similarity search add-on.
+        /// </summary>
         [DataMember(Name = "similarity_search")]
         public string SimilaritySearch { get; protected set; }
 

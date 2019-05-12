@@ -46,7 +46,7 @@ namespace CloudinaryDotNet
         /// <param name="privateCdn">Private Content Delivery Network.</param>
         /// <param name="shortenUrl">Whether to use shortened URL when possible.</param>
         /// <param name="cSubDomain">Whether to use sub domain.</param>
-        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain) 
+        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain)
             : base(account, usePrivateCdn, privateCdn, shortenUrl, cSubDomain)
         {
         }
@@ -69,16 +69,12 @@ namespace CloudinaryDotNet
             USER_AGENT = $"CloudinaryDotNet/{version.Major}.{version.Minor}.{version.Build} (.NET Framework 4)";
         }
 
+        /// <inheritdoc />
         public override T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
-            using (var response = Call(method,
-                url,
-                parameters,
-                file,
-                extraHeaders))
+            using (var response = Call(method, url, parameters, file, extraHeaders))
             {
-
                 return Parse<T>(response);
             }
 
@@ -215,6 +211,12 @@ namespace CloudinaryDotNet
                 }
             }
         }
+
+        /// <summary>
+        /// Check file path for callback url.
+        /// </summary>
+        /// <param name="path">File path to check.</param>
+        /// <returns>Provided path if it matches the callback url format.</returns>
         public override string BuildCallbackUrl(string path = "")
         {
             if (String.IsNullOrEmpty(path))
@@ -236,7 +238,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Builds HTML file input tag for unsigned uploading of an asset.
         /// </summary>
-        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata. 
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
         /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
         /// <param name="preset">The name of upload preset.</param>
         /// <param name="resourceType">Type of the uploaded resource.</param>
@@ -251,7 +253,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Builds HTML file input tag for upload an asset.
         /// </summary>
-        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata. 
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
         /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
         /// <param name="resourceType">Type of the uploaded resource.</param>
         /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
@@ -262,6 +264,11 @@ namespace CloudinaryDotNet
             return new HtmlString(BuildUploadFormShared(field, resourceType, parameters, htmlOptions));
         }
 
+        /// <summary>
+        /// Encode url to a representation that is unambiguous and universally accepted by web browsers and servers.
+        /// </summary>
+        /// <param name="value">The url to encode.</param>
+        /// <returns>Encoded url.</returns>
         protected override string EncodeApiUrl(string value)
         {
             return HttpUtility.HtmlEncode(value);

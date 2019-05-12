@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.Actions
         public string PublicId { get; protected set; }
 
         /// <summary>
-        /// The format this resource is delivered in. 
+        /// The format this resource is delivered in.
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
@@ -35,7 +35,7 @@ namespace CloudinaryDotNet.Actions
         public string Version { get; protected set; }
 
         /// <summary>
-        /// The type of resource. Possible values: image, raw, video. 
+        /// The type of resource. Possible values: image, raw, video.
         /// </summary>
         public ResourceType ResourceType
         {
@@ -62,13 +62,13 @@ namespace CloudinaryDotNet.Actions
         public long Length { get; protected set; }
 
         /// <summary>
-        /// Parameter "width" of the resource. Not relevant for raw files. 
+        /// Parameter "width" of the resource. Not relevant for raw files.
         /// </summary>
         [DataMember(Name = "width")]
         public int Width { get; protected set; }
 
         /// <summary>
-        /// Parameter "height" of the resource. Not relevant for raw files. 
+        /// Parameter "height" of the resource. Not relevant for raw files.
         /// </summary>
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
@@ -86,7 +86,7 @@ namespace CloudinaryDotNet.Actions
         public string SecureUrl { get; protected set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="GetResourceParams.MaxResults"/>, 
+        /// When a listing request has more results to return than <see cref="GetResourceParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
@@ -118,7 +118,7 @@ namespace CloudinaryDotNet.Actions
         public QualityAnalysis QualityAnalysis { get; protected set; }
 
         /// <summary>
-        /// Color information: predominant colors and histogram of 32 leading colors. 
+        /// Color information: predominant colors and histogram of 32 leading colors.
         /// </summary>
         [DataMember(Name = "colors")]
         public string[][] Colors { get; protected set; }
@@ -130,7 +130,7 @@ namespace CloudinaryDotNet.Actions
         public Derived[] Derived { get; protected set; }
 
         /// <summary>
-        /// A list of tag names assigned to resource. 
+        /// A list of tag names assigned to resource.
         /// </summary>
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
@@ -142,7 +142,7 @@ namespace CloudinaryDotNet.Actions
         public List<Moderation> Moderation { get; protected set; }
 
         /// <summary>
-        /// A key-value pairs of context associated with the resource. 
+        /// A key-value pairs of context associated with the resource.
         /// </summary>
         [DataMember(Name = "context")]
         public JToken Context { get; protected set; }
@@ -171,13 +171,16 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "info")]
         public Info Info { get; protected set; }
-        
+
         /// <summary>
         /// Parameters of the asset access management.
         /// </summary>
         [DataMember(Name = "access_control")]
         public List<AccessControlRule> AccessControl { get; protected set; }
 
+        /// <summary>
+        /// The number of pages in the asset: included if the asset has multiple pages (e.g., PDF or animated GIF).
+        /// </summary>
         [DataMember(Name = "pages")]
         public int Pages { get; protected set; }
 
@@ -185,7 +188,7 @@ namespace CloudinaryDotNet.Actions
 
     /// <summary>
     /// The coordinates of a single region contained in an image that is subsequently used for cropping the image using
-    /// the custom gravity mode. 
+    /// the custom gravity mode.
     /// </summary>
     [DataContract]
     public class Coordinates
@@ -197,7 +200,7 @@ namespace CloudinaryDotNet.Actions
         public int[][] Custom { get; protected set; }
 
         /// <summary>
-        /// A list of coordinates of detected faces. 
+        /// A list of coordinates of detected faces.
         /// </summary>
         [DataMember(Name = "faces")]
         public int[][] Faces { get; protected set; }
@@ -289,7 +292,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Details of executing an ADV_OCR engine.
         /// </summary>
-        [DataMember(Name = "adv_ocr")] 
+        [DataMember(Name = "adv_ocr")]
         public AdvOcr AdvOcr { get; protected set; }
     }
 
@@ -302,7 +305,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// The status of the OCR operation.
         /// </summary>
-        [DataMember(Name = "status")] 
+        [DataMember(Name = "status")]
         public string Status { get; protected set; }
 
         /// <summary>
@@ -325,7 +328,7 @@ namespace CloudinaryDotNet.Actions
         public List<TextAnnotation> TextAnnotations { get; protected set; }
 
         /// <summary>
-        /// This annotation provides the structural hierarchy for the OCR detected text. 
+        /// This annotation provides the structural hierarchy for the OCR detected text.
         /// If present, text (OCR) detection or document (OCR) text detection has completed successfully.
         /// </summary>
         [DataMember(Name = "fullTextAnnotation")]
@@ -333,7 +336,7 @@ namespace CloudinaryDotNet.Actions
     }
 
     /// <summary>
-    /// TextAnnotation contains a structured representation of OCR extracted text. 
+    /// TextAnnotation contains a structured representation of OCR extracted text.
     /// </summary>
     [DataContract]
     public class TextAnnotation
@@ -382,7 +385,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "pages")]
         public List<Page> Pages { get; protected set; }
-        
+
         /// <summary>
         /// Recognized text.
         /// </summary>
@@ -428,7 +431,7 @@ namespace CloudinaryDotNet.Actions
     public class PageProperty
     {
         /// <summary>
-        /// A list of detected languages together with confidence. 
+        /// A list of detected languages together with confidence.
         /// </summary>
         [DataMember(Name = "detectedLanguages")]
         public List<DetectedLanguage> DetectedLanguages { get; protected set; }
@@ -442,7 +445,7 @@ namespace CloudinaryDotNet.Actions
     {
         /// <summary>
         /// The BCP-47 language code, such as "en-US" or "sr-Latn".
-        /// For more information, see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier. 
+        /// For more information, see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.
         /// </summary>
         [DataMember(Name = "languageCode")]
         public string LanguageCode { get; protected set; }
@@ -461,7 +464,7 @@ namespace CloudinaryDotNet.Actions
         public PageProperty Property { get; protected set; }
 
         /// <summary>
-        /// The bounding box for the block. 
+        /// The bounding box for the block.
         /// The vertices are in the order of top-left, top-right, bottom-right, bottom-left.
         /// </summary>
         [DataMember(Name = "boundingBox")]
@@ -475,15 +478,15 @@ namespace CloudinaryDotNet.Actions
     public class TextBlock : Block
     {
         /// <summary>
-        /// List of paragraphs in this block. 
+        /// List of paragraphs in this block.
         /// </summary>
-        [DataMember(Name = "paragraphs")] 
+        [DataMember(Name = "paragraphs")]
         public List<Paragraph> Paragraphs { get; protected set; }
 
         /// <summary>
         /// Detected block type (text, image etc) for this block.
         /// </summary>
-        [DataMember(Name = "blockType")] 
+        [DataMember(Name = "blockType")]
         public string BlockType { get; protected set; }
     }
 
@@ -494,13 +497,13 @@ namespace CloudinaryDotNet.Actions
     public class Paragraph : Block
     {
         /// <summary>
-        /// List of words in this paragraph. 
+        /// List of words in this paragraph.
         /// </summary>
         [DataMember(Name = "words")]
         public List<Word> Words { get; protected set; }
 
         /// <summary>
-        /// The actual text representation of this paragraph. 
+        /// The actual text representation of this paragraph.
         /// </summary>
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
@@ -513,7 +516,7 @@ namespace CloudinaryDotNet.Actions
     public class Word : Block
     {
         /// <summary>
-        /// List of symbols in the word. The order of the symbols follows the natural reading order. 
+        /// List of symbols in the word. The order of the symbols follows the natural reading order.
         /// </summary>
         [DataMember(Name = "symbols")]
         public List<Symbol> Symbols { get; protected set; }
@@ -526,7 +529,7 @@ namespace CloudinaryDotNet.Actions
     public class Symbol : Block
     {
         /// <summary>
-        /// The actual UTF-8 representation of the symbol. 
+        /// The actual UTF-8 representation of the symbol.
         /// </summary>
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
@@ -550,7 +553,7 @@ namespace CloudinaryDotNet.Actions
     }
 
     /// <summary>
-    /// Details of each face found in the image. 
+    /// Details of each face found in the image.
     /// </summary>
     [DataContract]
     public class RekognitionFace
@@ -581,7 +584,7 @@ namespace CloudinaryDotNet.Actions
         public BoundingBox BoundingBox { get; protected set; }
 
         /// <summary>
-        /// Confidence level that the bounding box contains a face (and not a different object such as a tree). 
+        /// Confidence level that the bounding box contains a face (and not a different object such as a tree).
         /// Valid Range: Minimum value of 0. Maximum value of 100.
         /// </summary>
         [DataMember(Name = "confidence")]
@@ -655,8 +658,8 @@ namespace CloudinaryDotNet.Actions
         public Dictionary<string, double> Race { get; protected set; }
 
         /// <summary>
-        /// The emotions detected on the face, and the confidence level in the determination. 
-        /// For example, HAPPY, SAD, and ANGRY. 
+        /// The emotions detected on the face, and the confidence level in the determination.
+        /// For example, HAPPY, SAD, and ANGRY.
         /// </summary>
         [DataMember(Name = "emotion")]
         public Dictionary<string, double> Emotion { get; protected set; }
@@ -833,7 +836,7 @@ namespace CloudinaryDotNet.Actions
     }
 
     #endregion
-    
+
     /// <summary>
     /// Details of the quality analysis.
     /// </summary>

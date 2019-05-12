@@ -53,6 +53,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "access_control")]
         public List<AccessControlRule> AccessControl { get; protected set; }
 
+        /// <summary>
+        /// The Fully Qualified Public ID.
+        /// </summary>
         public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
     }
 

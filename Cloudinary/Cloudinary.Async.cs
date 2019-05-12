@@ -5,7 +5,7 @@ using CloudinaryDotNet.Actions;
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// Provides asynchronous methods for interaction with cloudinary.
+    /// Provides asynchronous methods for interaction with Cloudinary.
     /// </summary>
     public partial class Cloudinary
     {
@@ -25,7 +25,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads a file to cloudinary asynchronously.
+        /// Uploads a file to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="type">The type ("raw" or "auto", last by default).</param>
@@ -40,7 +40,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads an image file to cloudinary asynchronously.
+        /// Uploads an image file to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of image uploading.</param>
         /// <returns>Results of image uploading.</returns>
@@ -50,8 +50,11 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// This method can be used to force refresh facebook and twitter profile pictures. The response of this method includes the image's version. Use this version to bypass previously cached CDN copies.
-        /// Also it can be used to generate transformed versions of an uploaded image. This is useful when Strict Transformations are allowed for your account and you wish to create custom derived images for already uploaded images. 
+        /// This method can be used to force refresh facebook and twitter profile pictures.
+        /// The response of this method includes the image's version. Use this version to bypass previously
+        /// cached CDN copies. Also it can be used to generate transformed versions of an uploaded image.
+        /// This is useful when Strict Transformations are allowed for your account and you wish to create
+        /// custom derived images for already uploaded images.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public Task<ExplicitResult> ExplicitAsync(ExplicitParams parameters)
@@ -70,7 +73,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Delete file from cloudinary asynchronously.
+        /// Delete file from Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of resource deletion.</param>
         /// <returns>Results of deletion.</returns>
@@ -80,7 +83,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Generate an image of a given textual string
+        /// Generate an image of a given textual string asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of generating an image of a given textual string</param>
         /// <returns>Results of generating an image of a given textual string</returns>
@@ -90,7 +93,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Manage tag assignments
+        /// Manage tag assignments asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of tag management</param>
         /// <returns>Results of tags management</returns>
@@ -100,7 +103,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists resources.
+        /// Lists resources asynchronously.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public Task<ListResourcesResult> ListResourcesAsync(ListResourcesParams parameters)
@@ -108,56 +111,101 @@ namespace CloudinaryDotNet
             return CallAsync(ListResources, parameters);
         }
 
+        /// <summary>
+        /// Gets a list of tags asynchronously.
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public Task<ListTagsResult> ListTagsAsync(ListTagsParams parameters)
         {
             return CallAsync(ListTags, parameters);
         }
 
+        /// <summary>
+        /// Gets a list of transformations asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of the request for a list of transformation.</param>
+        /// <returns>Parsed list of transformations details.</returns>
         public Task<ListTransformsResult> ListTransformationsAsync(ListTransformsParams parameters)
         {
             return CallAsync(ListTransformations, parameters);
         }
 
+        /// <summary>
+        /// Gets details of a single transformation asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of the request of transformation details.</param>
+        /// <returns>Parsed details of a single transformation.</returns>
         public Task<GetTransformResult> GetTransformAsync(GetTransformParams parameters)
         {
             return CallAsync(GetTransform, parameters);
         }
 
+        /// <summary>
+        /// Updates details of an existing resource asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to update details of an existing resource.</param>
+        /// <returns>Parsed response of the detailed resource information.</returns>
         public Task<GetResourceResult> UpdateResourceAsync(UpdateParams parameters)
         {
             return CallAsync(UpdateResource, parameters);
         }
 
+        /// <summary>
+        /// Gets details of the requested resource as well as all its derived resources asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of the request of resource.</param>
+        /// <returns>Parsed response with the detailed resource information.</returns>
         public Task<GetResourceResult> GetResourceAsync(GetResourceParams parameters)
         {
             return CallAsync(GetResource, parameters);
         }
 
+        /// <summary>
+        /// Deletes all derived resources with the given parameters asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to delete derived resources.</param>
+        /// <returns>Parsed result of deletion derived resources.</returns>
         public Task<DelDerivedResResult> DeleteDerivedResourcesAsync(DelDerivedResParams parameters)
         {
             return CallAsync(DeleteDerivedResources, parameters);
         }
 
+        /// <summary>
+        /// Deletes all resources with parameters asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters for deletion resources.</param>
+        /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesAsync(DelResParams parameters)
         {
             return CallAsync(DeleteResources, parameters);
         }
 
+        /// <summary>
+        /// Updates Cloudinary transformation resource asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters for transformation update.</param>
+        /// <returns>Parsed response after transformation manipulation.</returns>
         public Task<UpdateTransformResult> UpdateTransformAsync(UpdateTransformParams parameters)
         {
             return CallAsync(UpdateTransform, parameters);
         }
 
+        /// <summary>
+        /// Creates Cloudinary transformation resource asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of the new transformation.</param>
+        /// <returns>Parsed response after transformation manipulation.</returns>
         public Task<TransformResult> CreateTransformAsync(CreateTransformParams parameters)
         {
             return CallAsync(CreateTransform, parameters);
         }
 
         /// <summary>
-        /// Eagerly generate sprites
+        /// Eagerly generate sprites asynchronously.
         /// </summary>
-        /// <param name="parameters">Parameters for sprite generation</param>
-        /// <returns>Result of sprite generation</returns>
+        /// <param name="parameters">Parameters for sprite generation.</param>
+        /// <returns>Result of sprite generation.</returns>
         public Task<SpriteResult> MakeSpriteAsync(SpriteParams parameters)
         {
             return CallAsync(MakeSprite, parameters);
@@ -183,6 +231,10 @@ namespace CloudinaryDotNet
             return CallAsync(Explode, parameters);
         }
 
+        /// <summary>
+        /// Gets the Cloudinary account usage details asynchronously.
+        /// </summary>
+        /// <returns>Result of operation</returns>
         public Task<UsageResult> GetUsageAsync()
         {
             return Task.Factory.StartNew<UsageResult>(GetUsage);

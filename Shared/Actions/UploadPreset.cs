@@ -164,7 +164,7 @@ namespace CloudinaryDotNet.Actions
         public bool DisallowPublicId { get; set; }
 
         /// <summary>
-        /// Tell Cloudinary whether to backup the uploaded image. 
+        /// Tell Cloudinary whether to backup the uploaded image.
         /// Overrides the default backup settings of your account.
         /// </summary>
         public bool? Backup { get; set; }
@@ -318,9 +318,9 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// By providing the AutoTagging parameter, uploaded images are automatically assigned tags based on the
-        /// detected scene categories. The value of the AutoTagging parameter is the minimum score of a detected 
-        /// category that should be automatically used as an assigned tag. 
-        /// See http://cloudinary.com/documentation/rekognition_scene_categorization_addon#automatic_image_tagging 
+        /// detected scene categories. The value of the AutoTagging parameter is the minimum score of a detected
+        /// category that should be automatically used as an assigned tag.
+        /// See http://cloudinary.com/documentation/rekognition_scene_categorization_addon#automatic_image_tagging
         /// for comments.
         /// </summary>
         public float? AutoTagging { get; set; }
@@ -331,11 +331,14 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Detection { get; set; }
 
+        /// <summary>
+        /// Set to "tineye" to use the TinEye add-on.
+        /// </summary>
         public string SimilaritySearch { get; set; }
 
         /// <summary>
         /// Optional. If you are subscribed to the OCR Text Detection and Extraction add-on and you set this parameter
-        /// to adv_ocr, the response includes the content and bounding box coordinates of all detected text on the 
+        /// to adv_ocr, the response includes the content and bounding box coordinates of all detected text on the
         /// image as well as the content and bounding box of each individual detected text element.
         /// </summary>
         public string Ocr { get; set; }

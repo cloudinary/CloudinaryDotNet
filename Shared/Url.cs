@@ -122,6 +122,9 @@ namespace CloudinaryDotNet
         /// </summary>
         protected string m_version;
 
+        /// <summary>
+        /// Indicates whether to add '/v1/' to the URL when a 'version' value was not defined.
+        /// </summary>
         protected bool m_forceVersion;
 
         /// <summary>
@@ -458,7 +461,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Use the resource type and type parameters are set to the default values 'image' and 'upload' respectively, 
+        /// Use the resource type and type parameters are set to the default values 'image' and 'upload' respectively,
         /// which means that any URL without the resource type and type parameters.
         /// </summary>
         /// <param name="useRootPath">Whether to use root path.</param>
@@ -1087,7 +1090,7 @@ namespace CloudinaryDotNet
                     throw new NotSupportedException("Root path only supported for image/upload!");
                 }
             }
-            
+
             if (m_shorten && m_resourceType == "image" && m_action == "upload")
             {
                 m_resourceType = String.Empty;
@@ -1212,7 +1215,7 @@ namespace CloudinaryDotNet
     }
 
     /// <summary>
-    /// Provides a custom constructor for uniform resource identifiers (URIs) and modifies URIs 
+    /// Provides a custom constructor for uniform resource identifiers (URIs) and modifies URIs
     /// for the <see cref="Url"/> class.
     /// </summary>
     public class UrlBuilder : UriBuilder
@@ -1272,7 +1275,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified URI and dictionary with cloudinary 
+        /// Instantiates the <see cref="UrlBuilder"/> object with the specified URI and dictionary with cloudinary
         /// parameters.
         /// </summary>
         /// <param name="uri">A URI string.</param>
@@ -1440,7 +1443,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// A single value, or a comma-separated list of values identifying the codec(s) that should be used to
-        /// generate the video. The codec definition can include additional properties,separated with a dot. 
+        /// generate the video. The codec definition can include additional properties,separated with a dot.
         /// For example, codecs="avc1.42E01E,mp4a.40.2"
         /// </summary>
         public string[] Codecs { get; set; }

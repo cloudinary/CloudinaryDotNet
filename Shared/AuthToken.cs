@@ -16,7 +16,7 @@ namespace CloudinaryDotNet
     public class AuthToken
     {
         /// <summary>
-        /// Name of the cloudinary cookie with token. 
+        /// Name of the cloudinary cookie with token.
         /// </summary>
         public static string AUTH_TOKEN_NAME = "__cld_token__";
 
@@ -26,10 +26,10 @@ namespace CloudinaryDotNet
         public static AuthToken NULL_AUTH_TOKEN = new AuthToken().SetNull();
 
         /// <summary>
-        /// Name of the cookie token. 
+        /// Name of the cookie token.
         /// </summary>
         public string tokenName = AUTH_TOKEN_NAME;
-        
+
         /// <summary>
         /// The encryption key received from Cloudinary to sign token with.
         /// </summary>
@@ -39,8 +39,6 @@ namespace CloudinaryDotNet
         /// Timestamp in UNIX time when the cookie becomes valid. Default value: the current time.
         /// </summary>
         public long startTime;
-
-        public long endTime;
 
         /// <summary>
         /// Timestamp in UNIX time when the cookie will expire.
@@ -53,11 +51,9 @@ namespace CloudinaryDotNet
         public string ip;
 
         /// <summary>
-        /// An Access Control List for limiting the allowed URL path (e.g., /image/authenticated/*). 
+        /// An Access Control List for limiting the allowed URL path (e.g., /image/authenticated/*).
         /// </summary>
         public string acl;
-
-        public long window;
 
         /// <summary>
         /// Duration that the cookie is valid in seconds.

@@ -243,7 +243,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Updates access mode for the resources selected by tag.
         /// </summary>
-        /// <param name="tag">Update all resources with the given tag (up to a maximum 
+        /// <param name="tag">Update all resources with the given tag (up to a maximum
         /// of 100 matching original resources).</param>
         /// <param name="parameters">Parameters for updating of resources.</param>
         /// <returns>Structure with the results of update.</returns>
@@ -267,7 +267,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Updates access mode for the resources selected by public ids.
         /// </summary>
-        /// <param name="parameters">Parameters for updating of resources. Update all resources with the given public IDs 
+        /// <param name="parameters">Parameters for updating of resources. Update all resources with the given public IDs
         /// (array of up to 100 public_ids).</param>
         /// <returns>Structure with the results of update.</returns>
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams parameters)
@@ -347,8 +347,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// This method can be used to force refresh facebook and twitter profile pictures. The response of this method
-        /// includes the image's version. Use this version to bypass previously cached CDN copies. Also it can be used 
-        /// to generate transformed versions of an uploaded image. This is useful when Strict Transformations are 
+        /// includes the image's version. Use this version to bypass previously cached CDN copies. Also it can be used
+        /// to generate transformed versions of an uploaded image. This is useful when Strict Transformations are
         /// allowed for your account and you wish to create custom derived images for already uploaded images.
         /// </summary>
         /// <param name="parameters">The parameters for explicit method.</param>
@@ -634,7 +634,7 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
         /// <param name="isRaw">Whether the file is raw.</param>
-        /// <returns>Parsed result of uploading.</returns>        
+        /// <returns>Parsed result of uploading.</returns>
         [Obsolete("Use UploadLarge(parameters, bufferSize) instead.")]
         public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE, bool isRaw = false)
         {
@@ -973,7 +973,7 @@ namespace CloudinaryDotNet
         /// Gets a list of tags.
         /// </summary>
         /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <returns>Parsed list of tags.</returns>
         public ListTagsResult ListTags(ListTagsParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
@@ -1177,7 +1177,7 @@ namespace CloudinaryDotNet
         /// Deletes resources by the given tag name.
         /// </summary>
         /// <param name="tag">
-        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of 
+        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
         /// 1000 original resources).
         /// </param>
         /// <returns>Parsed result of deletion resources.</returns>
@@ -1191,7 +1191,7 @@ namespace CloudinaryDotNet
         /// Deletes resources by the given tag name.
         /// </summary>
         /// <param name="tag">
-        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of 
+        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
         /// 1000 original resources).
         /// </param>
         /// <param name="keepOriginal">If true, delete only the derived images of the matching resources.</param>

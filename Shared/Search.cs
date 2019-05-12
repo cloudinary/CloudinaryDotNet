@@ -52,7 +52,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set value of NextCursor. 
+        /// Set value of NextCursor.
         /// </summary>
         /// <param name="value">The value of NextCursor.</param>
         public Search NextCursor(string value)
@@ -61,6 +61,10 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        /// <summary>
+        /// Set value of Direction.
+        /// </summary>
+        /// <param name="value">The value of Direction.</param>
         public Search Direction(string value)
         {
             searchParams.Add("direction", value);
@@ -68,7 +72,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set name of field (attribute) for which aggregation counts should be calculated and returned in the 
+        /// Set name of field (attribute) for which aggregation counts should be calculated and returned in the
         /// response. Supported parameters: resource_type, type, pixels, duration, format, and bytes.
         /// </summary>
         /// <param name="field">The name of field.</param>
@@ -79,7 +83,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// The name of an additional asset attribute to include for each asset in the response. 
+        /// The name of an additional asset attribute to include for each asset in the response.
         /// Possible value: context, tags, image_metadata and image_analysis.
         /// </summary>
         /// <param name="field">The name of field.</param>
@@ -148,7 +152,7 @@ namespace CloudinaryDotNet
         public SearchResult Execute()
         {
             Url url = m_api.ApiUrlV.Add("resources").Add("search");
-            
+
             return m_api.CallAndParse<SearchResult>(HttpMethod.POST, url.BuildUrl(), PrepareSearchParams(), null, PrepareHeaders());
         }
     }

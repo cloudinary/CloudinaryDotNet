@@ -18,9 +18,9 @@ namespace CloudinaryDotNet.Actions
         public Resource[] Resources { get; protected set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>, 
+        /// When a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
-        /// the <see cref="ListResourcesParams.NextCursor"/> parameter of the following listing request. 
+        /// the <see cref="ListResourcesParams.NextCursor"/> parameter of the following listing request.
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
@@ -40,7 +40,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// The storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
-        /// youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion. 
+        /// youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         [DataMember(Name = "type")]
         public string Type { get; protected set; }
@@ -52,7 +52,7 @@ namespace CloudinaryDotNet.Actions
         public string Created { get; protected set; }
 
         /// <summary>
-        /// The width of the media asset in pixels. 
+        /// The width of the media asset in pixels.
         /// </summary>
         [DataMember(Name = "width")]
         public int Width { get; protected set; }
@@ -87,6 +87,9 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "context")]
         public JToken Context { get; protected set; }
 
+        /// <summary>
+        /// The Fully Qualified Public ID.
+        /// </summary>
         public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
     }
 }

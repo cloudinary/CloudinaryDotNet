@@ -110,7 +110,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// A comma-separated list of the categorization add-ons to run on the asset. Set to google_tagging,
         /// google_video_tagging, imagga_tagging and/or aws_rek_tagging to automatically classify the scenes of the
-        /// uploaded asset. 
+        /// uploaded asset.
         /// </summary>
         public string Categorization { get; set; }
 
@@ -123,7 +123,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Whether to assign tags to an asset according to detected scene categories with a confidence score higher
-        /// than the given value (between 0.0 and 1.0). 
+        /// than the given value (between 0.0 and 1.0).
         /// </summary>
         public float? AutoTagging { get; set; }
 
@@ -134,6 +134,9 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Detection { get; set; }
 
+        /// <summary>
+        /// Set to "tineye" to use the TinEye add-on.
+        /// </summary>
         public string SimilaritySearch { get; set; }
 
         /// <summary>
