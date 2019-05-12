@@ -6,7 +6,7 @@ using System.Linq;
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// This class is based on list so is very slow but allows not unique keys.
+    /// This class is based on list so is very slow but allows non unique keys.
     /// This behavior is required for DeleteResources and ListResources commands.
     /// </summary>
     public class StringDictionary : IEnumerable<KeyValuePair<string, string>>, IDictionary<string, string>
@@ -44,7 +44,7 @@ namespace CloudinaryDotNet
         public bool Sort { get; set; }
 
         /// <summary>
-        /// Add a new pair of key and value.
+        /// Adds a new pair of key and value.
         /// </summary>
         public void Add(string key, string value)
         {

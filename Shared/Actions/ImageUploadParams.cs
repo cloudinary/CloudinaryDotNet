@@ -7,14 +7,12 @@ using System.Linq;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters for uploading image to cloudinary
+    /// Parameters of image file uploading.
     /// </summary>
     public class ImageUploadParams : RawUploadParams
     {
-        
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageUploadParams"/> class.
+        /// Instantiates the <see cref="ImageUploadParams"/> object.
         /// </summary>
         public ImageUploadParams()
         {
@@ -28,17 +26,20 @@ namespace CloudinaryDotNet.Actions
         public string Format { get; set; }
 
         /// <summary>
-        /// A transformation to run on the uploaded image before saving it in the cloud. For example: limit the dimension of the uploaded image to 512x512 pixels.
+        /// A transformation to run on the uploaded image before saving it in the cloud. For example: limit the
+        /// dimension of the uploaded image to 512x512 pixels.
         /// </summary>
         public Transformation Transformation { get; set; }
 
         /// <summary>
-        /// A list of transformations to create for the uploaded image during the upload process, instead of lazily creating them when being accessed by your site's visitors.
+        /// A list of transformations to create for the uploaded image during the upload process, instead of lazily
+        /// creating them when accessed by your site's visitors.
         /// </summary>
         public List<Transformation> EagerTransforms { get; set; }
 
         /// <summary>
-        /// Gets or sets privacy mode of the image. Valid values: 'private', 'upload' and 'authenticated'. Default: 'upload'.
+        /// Gets or sets privacy mode of the image. Valid values: 'private', 'upload' and 'authenticated'.
+        /// Default: 'upload'.
         /// </summary>
         public new string Type
         {
@@ -46,10 +47,14 @@ namespace CloudinaryDotNet.Actions
             set { base.Type = value; }
         }
 
+        /// <summary>
+        ///  Get the type of image asset you are uploading.
+        /// </summary>
         public override ResourceType ResourceType
         {
             get { return Actions.ResourceType.Image; }
         }
+
         /// <summary>
         /// Whether to retrieve the Exif metadata of the uploaded photo. Default: false.
         /// </summary>
@@ -61,7 +66,8 @@ namespace CloudinaryDotNet.Actions
         public bool? Colors { get; set; }
 
         /// <summary>
-        /// Whether to retrieve a list of coordinates of automatically detected faces in the uploaded photo. Default: false.
+        /// Whether to retrieve a list of coordinates of automatically detected faces in the uploaded photo.
+        /// Default: false.
         /// </summary>
         public bool? Faces { get; set; }
 
@@ -69,14 +75,19 @@ namespace CloudinaryDotNet.Actions
         /// Whether to retrieve the quality analysis of the image. Default: false.
         /// </summary>
         public bool? QualityAnalysis { get; set; }
-        
+
         /// <summary>
-        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="Rectangle"/> or <see cref="List{Rectangle}"/>.
+        /// Sets the coordinates of faces contained in an uploaded image and overrides the automatically detected
+        /// faces. Format: x,y,w,h|x,y,w,h. For example: string "10,20,150,130❘213,345,82,61" or <see cref="Rectangle"/>.
+        /// Relevant for images only.
         /// </summary>
         public object FaceCoordinates { get; set; }
 
         /// <summary>
-        /// Coordinates of an interesting region contained in an uploaded image. The given coordinates are used for cropping uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates of the top left corner and the width and height of the region. For example: "85,120,220,310". Otherwise, one can use <see cref="Rectangle"/> structure.
+        /// Coordinates of an interesting region contained in an uploaded image. The given coordinates are used for
+        /// cropping uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates
+        /// of the top left corner and the width and height of the region. For example: "85,120,220,310". Otherwise,
+        /// one can use <see cref="Rectangle"/> structure.
         /// </summary>
         public object CustomCoordinates { get; set; }
 
@@ -86,7 +97,8 @@ namespace CloudinaryDotNet.Actions
         public bool? Metadata { get; set; }
 
         /// <summary>
-        /// Whether to generate the eager transformations asynchronously in the background after the upload request is completed rather than online as part of the upload call. Default: false.
+        /// Whether to generate the eager transformations asynchronously in the background after the upload request is
+        /// completed rather than online as part of the upload call. Default: false.
         /// </summary>
         public bool? EagerAsync { get; set; }
 
@@ -96,31 +108,47 @@ namespace CloudinaryDotNet.Actions
         public string EagerNotificationUrl { get; set; }
 
         /// <summary>
-        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
+        /// A comma-separated list of the categorization add-ons to run on the asset. Set to google_tagging,
+        /// google_video_tagging, imagga_tagging and/or aws_rek_tagging to automatically classify the scenes of the
+        /// uploaded asset.
         /// </summary>
         public string Categorization { get; set; }
 
         /// <summary>
-        /// Set to "remove_the_background" to remove the background from the image.
+        /// Set to remove_the_background to automatically clear the background of an image using the
+        /// Remove-The-Background Editing add-on.
+        /// Relevant for images only.
         /// </summary>
         public string BackgroundRemoval { get; set; }
 
         /// <summary>
-        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
+        /// Whether to assign tags to an asset according to detected scene categories with a confidence score higher
+        /// than the given value (between 0.0 and 1.0).
         /// </summary>
         public float? AutoTagging { get; set; }
 
         /// <summary>
-        /// Set to "rekognition_face" to automatically extract advanced face attributes of photos using the ReKognition Detect Face Attributes add-on.
+        /// Set to adv_face or aws_rek_face to extract an extensive list of face attributes from an image using the
+        /// Advanced Facial Attribute Detection or Amazon Rekognition Celebrity Detection add-ons.
+        /// Relevant for images only.
         /// </summary>
         public string Detection { get; set; }
 
+        /// <summary>
+        /// Set to "tineye" to use the TinEye add-on.
+        /// </summary>
         public string SimilaritySearch { get; set; }
 
+        /// <summary>
+        /// Set to "adv_ocr" to extract all text elements in an image as well as the bounding box coordinates of each
+        /// detected element using the OCR text detection and extraction add-on.
+        /// Relevant for images only.
+        /// </summary>
         public string Ocr { get; set; }
 
         /// <summary>
-        /// Whether to return delete token.
+        /// Whether to return a deletion token in the upload response. The token can be used to delete the uploaded
+        /// asset within 10 minutes using an unauthenticated API request. Default: false.
         /// </summary>
         public bool? ReturnDeleteToken { get; set; }
 
@@ -135,12 +163,15 @@ namespace CloudinaryDotNet.Actions
         public bool? Unsigned { get; set; }
 
         /// <summary>
-        /// Gets or sets the phash flag.
+        /// Optional (Boolean, default: false). If true, include the perceptual hash (pHash) of the uploaded photo for
+        /// image similarity detection.
         /// </summary>
         public bool? Phash { get; set; }
 
         /// <summary>
-        /// Optional. Allows to pass a list of ResponsiveBreakpoints parameters
+        /// Optional. Allows to pass a list of ResponsiveBreakpoints parameters to request Cloudinary to automatically
+        /// find the best breakpoints.
+        /// Relevant for images only.
         /// </summary>
         public List<ResponsiveBreakpoint> ResponsiveBreakpoints { get; set; }
 
@@ -194,9 +225,17 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
+    /// <summary>
+    /// The coordinates of faces contained in an uploaded image.
+    /// </summary>
     [Obsolete("One could use List<Rectangle>")]
     public class FaceCoordinates : List<Rectangle>
     {
+        /// <summary>
+        /// Represents the face coordinates as string "x,y,w,h|x,y,w,h" separated with a pipe (❘).
+        /// For example: "10,20,150,130❘213,345,82,61".
+        /// </summary>
+        /// <returns>The string representation of face coordinates.</returns>
         public override string ToString()
         {
             return string.Join("|",

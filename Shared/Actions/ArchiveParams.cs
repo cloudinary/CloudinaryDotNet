@@ -5,7 +5,7 @@ using System.Linq;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters for working with archives, common for both of the methods (create and download)
+    /// Parameters for working with archives, common for both of the methods (create and download).
     /// </summary>
     public class ArchiveParams : BaseParams
     {
@@ -33,7 +33,7 @@ namespace CloudinaryDotNet.Actions
 
 
         /// <summary>
-        /// Get a list of Public IDs for the specific images to be included in the archive
+        /// Get a list of Public IDs for the specific assets to be included in the archive.
         /// </summary>
         public List<string> PublicIds()
         {
@@ -41,8 +41,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set a list of Public IDs for the specific images to be included in the archive
+        /// Set a list of Public IDs for the specific assets to be included in the archive. 
+        /// Up to 1000 public IDs are supported.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams PublicIds(List<string> publicIds)
         {
             m_publicIds = publicIds;
@@ -67,7 +69,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get a list of tag names. All images with this tag(s) will be included in the archive
+        /// Get a list of tag names. All assets with the specified tags are included in the archive.
         /// </summary>
         public List<string> Tags()
         {
@@ -75,8 +77,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set a list of tag names. All images with this tag(s) will be included in the archive
+        /// Set a list of tag names. All assets with the specified tags are included in the archive. 
+        /// Up to 20 tags are supported.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Tags(List<string> tags)
         {
             m_tags = tags;
@@ -92,9 +96,11 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set a list of prefixes of Public IDs (e.g., folders). All images with this tag(s) will be included in the archive.
-        /// Setting this parameter to a slash (/) is a shortcut for including all images in the account for the given resource type and type (up to the max files limit).
+        /// Set a list of prefixes of Public IDs (e.g., folders). Setting this parameter to a slash (/) is a shortcut
+        /// for including all assets in the account for the given ResourceType and Type (up to the max files limit).
+        /// Up to 20 prefixes are supported.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Prefixes(List<string> prefixes)
         {
             m_prefixes = prefixes;
@@ -103,7 +109,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <inheritdoc />
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -123,8 +129,8 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get Mode whether to return the generated archive file (download)
-        /// or to store it as a raw resource (create)
+        /// Get Mode whether to return the generated archive file ('download') or to store it as a raw resource 
+        /// ('create').
         /// </summary>
         public virtual ArchiveCallMode Mode()
         {
@@ -132,11 +138,11 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Determines whether to return the generated archive file (download)
-        /// or to store it as a raw resource in your Cloudinary account and return a JSON with the URLs for accessing the archive file (create)
-        /// </summary>
-        /// <param name="mode"></param>
-        /// <returns></returns>
+        /// Determines whether to return a URL to dynamically generate and download the archive file ('download'), or to
+        /// create and store it as a raw asset in your Cloudinary account and return JSON with the URLs to access
+        /// the archive file ('create').
+        /// </summary> 
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Mode(ArchiveCallMode mode)
         {
             this.m_mode = mode;
@@ -154,6 +160,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Set the resource type (image, video or raw) of files to include in the archive: Default: image.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams ResourceType(string resourceType)
         {
             this.m_resourceType = resourceType;
@@ -161,7 +168,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get the specific file type of resources to include in the archive (upload/private/authenticated).
+        /// Get the specific file type of assets to include in the archive (upload/private/authenticated).
         /// </summary>
         public string Type()
         {
@@ -169,8 +176,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set the specific file type of resources to include in the archive (upload/private/authenticated). Default: upload.
+        /// Set the specific file type of assets to include in the archive (upload/private/authenticated). If tags are
+        /// specified as a filter then all types are included. Default: upload.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Type(string type)
         {
             this.m_type = type;
@@ -178,17 +187,19 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get a list of transformations applied to the images before they are included in the generated archive.
+        /// Get a list of transformations to run on all the derived assets before storing them in your Cloudinary 
+        /// account.
         /// </summary>
-        /// <returns></returns>
         public List<Transformation> Transformations()
         {
             return m_transformations;
         }
 
         /// <summary>
-        /// Set a list of transformations to apply to the images before they are included in the generated archive.
+        /// Set a list of transformations to run on all the derived assets before storing them in your Cloudinary
+        /// account. 
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Transformations(List<Transformation> transformations)
         {
             this.m_transformations = transformations;
@@ -204,8 +215,11 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set the format for the generated archive. Currently only 'zip' is supported.
+        /// Set the format for the generated archive: zip or tgz. 
+        /// Currently only 'zip' is supported.
+        /// Default: zip.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams TargetFormat(ArchiveFormat targetFormat)
         {
             this.m_targetFormat = targetFormat;
@@ -221,9 +235,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set the Public ID to assign to the generated archive.
-        /// relevant only for create call.
+        /// Set the Public ID to assign to the generated archive. If not specified, a random Public ID is generated.
+        /// Only relevant when using the 'create' method.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams TargetPublicId(string targetPublicId)
         {
             this.m_targetPublicId = targetPublicId;
@@ -239,8 +254,11 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Determines whether to flatten all files to be in the root of the archive file (no sub-folders).
+        /// Determines whether to flatten all files to be in the root of the archive file (no sub-folders). Any folder
+        /// information included in the Public ID is stripped and a numeric counter is added to the file name in the
+        /// case of a name conflict. Default: false.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams FlattenFolders(bool flattenFolders)
         {
             this.m_flattenFolders = flattenFolders;
@@ -248,7 +266,8 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get whether to flatten the folder structure of the derived images and store the transformation details on the file name instead.
+        /// Get whether to flatten the folder structure of the derived assets and store the transformation details on
+        /// the file name instead.
         /// </summary>
         /// <returns></returns>
         public bool IsFlattenTransformations()
@@ -257,8 +276,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Determines whether to flatten the folder structure of the derived images and store the transformation details on the file name instead.
+        /// If multiple transformations are also applied, determines whether to flatten the folder structure of the
+        /// derived assets and store the transformation details on the file name instead. Default: false.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams FlattenTransformations(bool flattenTransformations)
         {
             this.m_flattenTransformations = flattenTransformations;
@@ -266,7 +287,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get the Unix time in seconds when the generated download URL expires.
+        /// Get the date (UNIX time in seconds) of the URL expiration.
         /// </summary>
         public int ExpiresAt()
         {
@@ -274,10 +295,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set the Unix time in seconds when the generated download URL expires (e.g., 1415060076).
-        /// If this parameter is omitted then the generated download URL expires after 1 hour.
-        /// Note: Relevant only for download call.
+        /// Set the date (UNIX time in seconds) of the URL expiration (e.g., 1415060076). Only relevant when using the
+        /// 'download' SDK methods. Default: 1 hour from the time that the URL is generated.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams ExpiresAt(int expiresAt)
         {
             this.m_expiresAt = expiresAt;
@@ -285,7 +306,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get whether to use the original file name of the included images (if available) instead of the Public ID.
+        /// Get whether to use the original file name of the included assets (if available) instead of the public ID.
         /// </summary>
         public bool IsUseOriginalFilename()
         {
@@ -293,10 +314,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set whether to use the original file name of the included images (if available) instead of the Public ID.
+        /// Whether to use the original file name of the included assets (if available) instead of the public ID.
+        /// Default: false.
         /// </summary>
-        /// <param name="useOriginalFilename"></param>
-        /// <returns></returns>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams UseOriginalFilename(bool useOriginalFilename)
         {
             this.m_useOriginalFilename = useOriginalFilename;
@@ -312,9 +333,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set whether to perform the archive generation in the background (asynchronously). Default: false.
-        /// Relevant only for create call.
+        /// Set whether to perform the archive generation in the background (asynchronously). 
+        /// Only relevant when using the 'create' SDK methods. Default: false.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Async(bool async)
         {
             this.m_async = async;
@@ -322,7 +344,8 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get an HTTP or HTTPS URL to notify your application (a webhook) when the process has completed.
+        /// Get an HTTP or HTTPS URL to notify your application (a webhook) when the archive creation process has
+        /// completed.
         /// </summary>
         public string NotificationUrl()
         {
@@ -330,8 +353,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set an HTTP or HTTPS URL to notify your application (a webhook) when the process has completed.
+        /// Set an HTTP or HTTPS URL to notify your application (a webhook) when the archive creation process has
+        /// completed. Only relevant when using the 'create' methods.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams NotificationUrl(string notificationUrl)
         {
             this.m_notificationUrl = notificationUrl;
@@ -339,7 +364,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get a list of tag names to assign to the generated archive.
+        /// Get a list of tag names to assign to the generated archive. 
         /// </summary>
         public List<string> TargetTags()
         {
@@ -347,9 +372,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set a list of tag names to assign to the generated archive.
-        /// Relevant only for create call.
+        /// Set a list of tag names to assign to the generated archive. 
+        /// Only relevant when using the 'create' SDK methods.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams TargetTags(List<string> targetTags)
         {
             this.m_targetTags = targetTags;
@@ -357,7 +383,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get whether to keep the derived images used for generating the archive or not.
+        /// Get whether to keep the derived assets used for generating the archive.
         /// </summary>
         public bool IsKeepDerived()
         {
@@ -365,8 +391,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set whether to keep the derived images used for generating the archive or not.
+        /// Set whether to keep the derived assets used for generating the archive.
         /// </summary>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams KeepDerived(bool keepDerived)
         {
             this.m_keepDerived = keepDerived;
@@ -374,7 +401,8 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get whether to strip all transformation details from file names and add a numeric counter to a file name in the case of a name conflict. Default: false.
+        /// Get whether to strip all transformation details from file names and add a numeric counter to a file name
+        /// in the case of a name conflict.
         /// </summary>
         public bool IsSkipTransformationName()
         {
@@ -382,10 +410,10 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set whether to strip all transformation details from file names and add a numeric counter to a file name in the case of a name conflict. Default: false.
+        /// Determine whether to strip all transformation details from file names and add a numeric counter to a file
+        /// name in the case of a name conflict. Default: false.
         /// </summary>
-        /// <param name="useOriginalFilename"></param>
-        /// <returns></returns>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams SkipTransformationName(bool skipTransformationName)
         {
             this.m_skipTransformationName = skipTransformationName;
@@ -393,9 +421,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             Check();

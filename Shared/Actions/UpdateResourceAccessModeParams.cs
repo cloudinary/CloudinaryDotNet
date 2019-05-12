@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
+    /// <summary>
+    /// Stores a set of parameters for updating the access_mode of resources.
+    /// </summary>
     public class UpdateResourceAccessModeParams : BaseParams
     {
         List<string> m_publicIds = new List<string>();
@@ -10,10 +13,13 @@ namespace CloudinaryDotNet.Actions
         string m_accessMode = "public";
         string m_type = "upload";
 
+        /// <summary>
+        /// Instantiates the <see cref="UpdateResourceAccessModeParams"/> object.
+        /// </summary>
         public UpdateResourceAccessModeParams() { }
 
         /// <summary>
-        /// Restore all resources with the given public IDs
+        /// Update all resources with the given public IDs (array of up to 100 public_ids).
         /// </summary>
         public List<string> PublicIds
         {
@@ -21,6 +27,9 @@ namespace CloudinaryDotNet.Actions
             set { m_publicIds = value; }
         }
 
+        /// <summary>
+        /// The new access mode to be set ("public" or "authenticated").
+        /// </summary>
         public string AccessMode
         {
             get { return m_accessMode; }
@@ -33,7 +42,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Update resources with the given resource type. Default resource type: "image"
+        /// Update resources with the given resource type. Default resource type: "image".
         /// </summary>
         public ResourceType ResourceType
         {
@@ -42,7 +51,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Update resources with the given type. Default resource type: "upload"
+        /// Update resources with the given type. Default resource type: "upload".
         /// </summary>
         public string Type
         {
@@ -51,7 +60,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -59,9 +68,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

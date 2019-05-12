@@ -121,7 +121,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Parse provided radius value and make it normalized.
         /// </summary>
-        /// <param name="radius">Can be string, number, float or collection with 1..4 values.</param>
+        /// <param name="value">Can be string, number, float or collection with 1..4 values.</param>
         /// <exception cref="ArgumentException" />
         private string Normalize(object value)
         {
@@ -138,12 +138,17 @@ namespace CloudinaryDotNet
 
         #region ICloneable
 
+        /// <summary>
+        /// Creates a new Radius object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>A new Radius object that is a copy of this instance.</returns>
         public Radius Clone() => (Radius)MemberwiseClone();
 
         object Core.ICloneable.Clone() => Clone();
 
         #endregion
 
+        ///  <inheritdoc />
         public override string ToString()
         {
             return m_radius;

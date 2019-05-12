@@ -4,13 +4,14 @@ using System.Collections.Generic;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters for deletion of resource from cloudinary
+    /// Parameters for deletion of a single asset from your Cloudinary account.
     /// </summary>
     public class DeletionParams : BaseParams
     {
         /// <summary>
-        /// Default constructor
+        /// Instantiates the <see cref="DeletionParams"/> object.
         /// </summary>
+        /// <param name="publicId">The identifier of the uploaded asset. </param>
         public DeletionParams(string publicId)
         {
             Type = "upload";
@@ -19,30 +20,29 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// The identifier of the uploaded image
+        /// The identifier of the uploaded asset. 
         /// </summary>
         public string PublicId { get; set; }
 
         /// <summary>
-        /// The type of the image you want to delete. Default: "upload".
+        /// The specific type of the asset. Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// If true, invalidates CDN cached copies of the asset (and all its transformed versions). Default: false.
+        /// Note that it usually takes a few minutes (although it might take up to an hour) for the invalidation to
+        /// fully propagate through the CDN.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
-        /// </value>
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// The type of resource to delete
+        /// The type of asset to destroy. Valid values: image, raw, and video. Default: image. 
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -51,9 +51,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

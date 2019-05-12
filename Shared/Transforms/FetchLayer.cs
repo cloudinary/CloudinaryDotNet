@@ -3,17 +3,26 @@ using System.Collections.Generic;
 
 namespace CloudinaryDotNet
 {
+    /// <summary>
+    /// Represents property of the overlay parameter to specify the Url on another image to be added as an overlay.
+    /// </summary>
     public class FetchLayer: BaseLayer<FetchLayer>
     {
+        /// <summary>
+        /// The URL to fetch an image for.
+        /// </summary>
         protected string m_url;
 
+        /// <summary>
+        /// Default parameterless constructor. Instantiates the <see cref="FetchLayer"/> object.
+        /// </summary>
         public FetchLayer()
         {
             m_resourceType = Constants.RESOURCE_TYPE_FETCH;
         }
 
         /// <summary>
-        /// The url to fetch an image for.
+        /// The URL to fetch an image for.
         /// </summary>
         public FetchLayer Url(string url)
         {
@@ -21,6 +30,9 @@ namespace CloudinaryDotNet
             return this;
         }
 
+        /// <summary>
+        /// Get an additional parameters for the fetch layer.
+        /// </summary>
         public override string AdditionalParams()
         {
             List<string> components = new List<string>();
@@ -31,6 +43,9 @@ namespace CloudinaryDotNet
             return string.Join(":", components.ToArray());
         }
 
+        /// <summary>
+        /// Get this layer represented as string.
+        /// </summary>
         public override string ToString()
         {
             if (string.IsNullOrEmpty(m_url))
@@ -41,7 +56,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Prepare text for Overlay
+        /// Prepare text for Overlay.
         /// </summary>
         private string UrlEncode(string url)
         {

@@ -18,15 +18,22 @@
     <PackageIconUrl>http://res.cloudinary.com/cloudinary/image/upload/c_scale,w_64/v1/logo/for_white_bg/cloudinary_icon_for_white_bg.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/cloudinary/CloudinaryDotNet/</RepositoryUrl>
   </PropertyGroup>
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath></OutputPath>
     <DebugType>none</DebugType>
     <DebugSymbols>False</DebugSymbols>
     <DefineConstants>TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NETSTANDARD1_0</DefineConstants>
     <OutputPath></OutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Sign)' == 'true' ">
     <SignAssembly>true</SignAssembly>

@@ -3,8 +3,16 @@ using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
+    /// <summary>
+    /// Parameters for renaming assets immediately and permanently updating them in your cloud storage. 
+    /// </summary>
     public class RenameParams : BaseParams
     {
+        /// <summary>
+        /// Instantiates the <see cref="RenameParams"/> object.
+        /// </summary>
+        /// <param name="fromPublicId">The current identifier of the uploaded asset.</param>
+        /// <param name="toPublicId">The new identifier to assign to the uploaded asset.</param>
         public RenameParams(string fromPublicId, string toPublicId)
         {
             FromPublicId = fromPublicId;
@@ -13,7 +21,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Gets or sets existing public id.
+        /// The current identifier of the uploaded asset.
         /// </summary>
         /// <value>
         /// Existing public id.
@@ -21,7 +29,7 @@ namespace CloudinaryDotNet.Actions
         public string FromPublicId { get; set; }
 
         /// <summary>
-        /// Gets or sets target public id.
+        /// The new identifier to assign to the uploaded asset.
         /// </summary>
         /// <value>
         /// Target public id.
@@ -29,7 +37,7 @@ namespace CloudinaryDotNet.Actions
         public string ToPublicId { get; set; }
 
         /// <summary>
-        /// The type of file to rename. 
+        /// The type of asset to rename. 
         /// Valid values: image, raw, and video. 
         /// </summary>
         public ResourceType ResourceType { get; set; }
@@ -47,7 +55,7 @@ namespace CloudinaryDotNet.Actions
         public string ToType { get; set; }
 
         /// <summary>
-        /// Whether to overwrite ToPublicId if such id already exists
+        /// Whether to overwrite an existing asset with the target public ID. Default: false.
         /// </summary>
         /// <value>
         ///   <c>true</c> to overwrite; otherwise, <c>false</c>.
@@ -63,9 +71,9 @@ namespace CloudinaryDotNet.Actions
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -80,7 +88,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         /// <exception cref="System.ArgumentException">
         /// FromPublicId can't be null!

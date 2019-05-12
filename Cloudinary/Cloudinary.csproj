@@ -8,7 +8,6 @@
     <!--<OutputPath>bin\net\</OutputPath>-->
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NoWarn>$(NoWarn);1591</NoWarn>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <EnableDefaultItems>false</EnableDefaultItems>
     <Description>Official client library for easy integrating with the Cloudinary service</Description>
@@ -23,6 +22,9 @@
     <RootNamespace>CloudinaryDotNet</RootNamespace>
     <AssemblyName>CloudinaryDotNet</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">
     <DefineConstants>NET40</DefineConstants>
   </PropertyGroup>
@@ -35,6 +37,8 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputPath></OutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -44,6 +48,8 @@
     <DocumentationFile></DocumentationFile>
     <OutputPath></OutputPath>
     <DefineConstants />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Sign)' == 'true' ">
     <SignAssembly>true</SignAssembly>

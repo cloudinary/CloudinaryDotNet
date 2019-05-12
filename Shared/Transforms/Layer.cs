@@ -6,7 +6,7 @@ using System.Text;
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// Common not abstract class for Layers
+    /// Common not abstract class for Layers.
     /// </summary>
     public class Layer : BaseLayer<Layer>
     {
