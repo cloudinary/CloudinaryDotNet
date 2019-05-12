@@ -84,5 +84,20 @@ namespace CloudinaryDotNet
                 return sha1.ComputeHash(Encoding.UTF8.GetBytes(s));
             }
         }
+
+        /// <summary>
+        /// Compute hash and convert the result to HEX string
+        /// </summary>
+        internal static string ComputeHexHash(string s)
+        {
+            var bytesHash = ComputeHash(s);
+            var signature = new StringBuilder();
+            foreach (var b in bytesHash)
+            {
+                signature.Append(b.ToString("x2"));
+            }
+
+            return signature.ToString();
+        }
     }
 }

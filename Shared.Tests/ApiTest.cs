@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CloudinaryDotNet.Test
@@ -21,6 +23,11 @@ namespace CloudinaryDotNet.Test
         private const string SOURCE_MOVIE = "movie";
         private const string TestFolder = "folder/test";
         private const string TestImageId = "image.jpg";
+        
+        private const string PUBLIC_ID1 = "b8sjhoslj8cq8ovoa0ma";
+        private const string PUBLIC_ID2 = "z5sjhoskl2cq8ovoa0mv";
+        private const string VERSION1 = "1555337587";
+        private const string VERSION2 = "1555337588";
 
         [OneTimeSetUp]
         public void Init()
@@ -1524,6 +1531,64 @@ namespace CloudinaryDotNet.Test
             paramsSetTwo.Add("Param4", "test");
 
             StringAssert.AreNotEqualIgnoringCase(m_api.SignParameters(paramsSetOne), m_api.SignParameters(paramsSetTwo), "The signatures are equal.");
+        }
+
+        [Test]
+        public void TestVerifyApiResponseSignature()
+        {
+            var responseParameters = new SortedDictionary<string, object> {
+                { "public_id", PUBLIC_ID1},
+                { "version", VERSION1}
+            };
+            var correctSignature = m_api.SignParameters(responseParameters);
+
+            Assert.IsTrue(m_api.VerifyApiResponseSignature(PUBLIC_ID1, VERSION1, correctSignature), 
+                "The response signature is valid for the same parameters");
+
+            responseParameters["version"] = VERSION2;
+            var newVersionSignature = m_api.SignParameters(responseParameters);
+
+            Assert.IsFalse(m_api.VerifyApiResponseSignature(PUBLIC_ID1, VERSION1, newVersionSignature), 
+                "The response signature is invalid for the wrong version");
+
+            responseParameters["version"] = VERSION1;
+            responseParameters["public_id"] = PUBLIC_ID2;
+            var anotherResourceSignature = m_api.SignParameters(responseParameters);
+
+            Assert.IsFalse(m_api.VerifyApiResponseSignature(PUBLIC_ID1, VERSION1, anotherResourceSignature), 
+                "The response signature is invalid for the wrong resource");
+        }
+
+        [Test]
+        public void TestVerifyNotificationSignature()
+        {
+            var responseParameters = new SortedDictionary<string, object> {
+                { "public_id", PUBLIC_ID1},
+                { "version", VERSION1},
+                { "width", "1000"},
+                { "height", "800"}
+            };
+            var responseJson = JsonConvert.SerializeObject(responseParameters);
+
+            var currentTimestamp = Utils.UnixTimeNowSeconds();
+            var validResponseTimestamp = currentTimestamp - 5000;
+
+            var payload = $"{responseJson}{validResponseTimestamp}{m_api.Account.ApiSecret}";
+            var responseSignature = Utils.ComputeHexHash(payload);
+
+            const string testMessagePart = "The notification signature is";
+
+            Assert.IsTrue(m_api.VerifyNotificationSignature(responseJson, validResponseTimestamp, 
+                responseSignature), $"{testMessagePart} valid for matching and not expired signature");
+
+            Assert.IsFalse(m_api.VerifyNotificationSignature(responseJson, validResponseTimestamp, 
+                responseSignature, 4000), $"{testMessagePart} is invalid for matching but expired signature");
+
+            Assert.IsFalse(m_api.VerifyNotificationSignature(responseJson, validResponseTimestamp, 
+                responseSignature + "chars"), $"{testMessagePart} invalid for non matching and not expired signature");
+
+            Assert.IsFalse(m_api.VerifyNotificationSignature(responseJson, validResponseTimestamp, 
+                responseSignature + "chars", 4000), $"{testMessagePart} invalid for non matching and expired signature");
         }
     }
 }
