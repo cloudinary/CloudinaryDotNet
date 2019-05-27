@@ -78,7 +78,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Override the default quality defined in the account level for a specific resource.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Property QualityOveride is deprecated, please use QualityOverride instead")]
         public string QualityOveride
         {
             get { return QualityOverride; }
