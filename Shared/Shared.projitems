@@ -101,6 +101,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\CustomFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Expression.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\FetchLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\Gravity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\ImageTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Layer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Radius.cs" />

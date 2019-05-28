@@ -207,7 +207,7 @@ namespace CloudinaryDotNet.Test
         {
             // should use x, y, radius, prefix, gravity and quality from options
 
-            Transformation transformation = new Transformation().X(1).Y(2).Radius(3).Gravity("center").Quality(0.4).Prefix("a");
+            Transformation transformation = new Transformation().X(1).Y(2).Radius(3).Gravity(Gravity.Center).Quality(0.4).Prefix("a");
             string uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
             Assert.AreEqual(m_defaultImgUpPath + "g_center,p_a,q_0.4,r_3,x_1,y_2/test", uri);
         }
@@ -555,7 +555,7 @@ namespace CloudinaryDotNet.Test
         public void TestZoom()
         {
             // should support zooming
-            var transformation = new Transformation().Crop("crop").Gravity("face").Zoom(3);
+            var transformation = new Transformation().Crop("crop").Gravity(Gravity.Face).Zoom(3);
             var result = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
             Assert.AreEqual(m_defaultImgUpPath + "c_crop,g_face,z_3/test", result);
         }
@@ -1430,7 +1430,7 @@ namespace CloudinaryDotNet.Test
             expectedTag = "<video poster='{0}' src='{1}.mp4'></video>";
             expectedTag = String.Format(expectedTag, posterUrl, expectedUrl);
             actualTag = m_api.UrlVideoUp.SourceTypes("mp4")
-                    .Poster(new Transformation().Gravity("north"))
+                    .Poster(new Transformation().Gravity(Gravity.North))
                     .BuildVideoTag(SOURCE_MOVIE).ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
@@ -1438,7 +1438,7 @@ namespace CloudinaryDotNet.Test
             expectedTag = "<video poster='{0}' src='{1}.mp4'></video>";
             expectedTag = String.Format(expectedTag, posterUrl, expectedUrl);
             actualTag = m_api.UrlVideoUp.SourceTypes("mp4")
-                .Poster(m_api.UrlVideoUp.Source("my_poster").Format("jpg").Transform(new Transformation().Gravity("north")))
+                .Poster(m_api.UrlVideoUp.Source("my_poster").Format("jpg").Transform(new Transformation().Gravity(Gravity.North)))
                 .BuildVideoTag(SOURCE_MOVIE).ToString();
             Assert.AreEqual(expectedTag, actualTag);
 
