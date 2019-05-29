@@ -2472,13 +2472,20 @@ namespace CloudinaryDotNet.Test
             uploadParams.Transformation = m_simpleTransformation;
             m_cloudinary.Upload(uploadParams);
 
-            SpriteParams sprite = new SpriteParams(spriteTag);
+            SpriteParams sprite = new SpriteParams(spriteTag)
+            {
+                Format = FILE_FORMAT_JPG
+            };
+
             SpriteResult result = m_cloudinary.MakeSprite(sprite);
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
 
             Assert.NotNull(result);
             Assert.NotNull(result.ImageInfos);
             Assert.AreEqual(3, result.ImageInfos.Count);
+
+            StringAssert.EndsWith(FILE_FORMAT_JPG, result.ImageUri.ToString());
+
             Assert.Contains(publicId1, result.ImageInfos.Keys);
             Assert.Contains(publicId2, result.ImageInfos.Keys);
             Assert.Contains(publicId3, result.ImageInfos.Keys);
