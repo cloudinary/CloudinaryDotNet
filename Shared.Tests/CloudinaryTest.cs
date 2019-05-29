@@ -2135,6 +2135,7 @@ namespace CloudinaryDotNet.Test
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Transformations);
             TransformDesc td = result.Transformations.Where(t => t.Name == m_simpleTransformationAsString).First();
+            Assert.IsFalse(td.Named);
             Assert.IsTrue(td.Used);
         }
 
@@ -2217,6 +2218,7 @@ namespace CloudinaryDotNet.Test
             var getResult = m_cloudinary.GetTransform(transformationName);
 
             Assert.IsNotNull(getResult.Info);
+            Assert.IsTrue(getResult.Named);
             Assert.AreEqual(updateParams.UnsafeTransform.Generate(), new Transformation(getResult.Info).Generate());
         }
 
@@ -3002,7 +3004,7 @@ namespace CloudinaryDotNet.Test
             //should update quality
             string publicId = GetUniquePublicId();
             var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId, Overwrite = true, Tags = m_apiTag });
-            var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOveride = "auto:best" });
+            var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOverride = "auto:best" });
             Assert.AreEqual(updResult.StatusCode, HttpStatusCode.OK);
             Assert.Null(updResult.Error);
             Assert.AreEqual(updResult.PublicId, publicId);
