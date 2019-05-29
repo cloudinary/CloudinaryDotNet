@@ -87,6 +87,13 @@ namespace CloudinaryDotNet
         /// <returns>HTTP response on call.</returns>
         public HttpResponseMessage Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
+            if (parameters != null && (method == HttpMethod.GET || method == HttpMethod.DELETE))
+            {
+                UrlBuilder urlBuilder = new UrlBuilder(url, parameters);
+
+                url = urlBuilder.ToString();
+            }
+
             var request = RequestBuilder(url);
             HttpResponseMessage response = null;
             using (request)
@@ -144,7 +151,12 @@ namespace CloudinaryDotNet
                 }
             }
 
-            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
+            if (parameters == null)
+            {
+                return request;
+            }
+
+            if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.DELETE)
             {
                 if (UseChunkedEncoding)
                     request.Headers.Add("Transfer-Encoding", "chunked");
