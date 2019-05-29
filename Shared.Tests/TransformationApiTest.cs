@@ -413,15 +413,27 @@ namespace CloudinaryDotNet.Test
             // dictionary params should be cloned
             var codecParams = new Dictionary<string, string>
             {
-                {"codec", "h264"}, {"profile", "basic"}, {"level", "3.1"}
+                {"codec", VideoCodec.H264}, {"profile", "basic"}, {"level", "3.1"}
             };
             Transformation transform = new Transformation().VideoCodec(codecParams);
             
             Transformation clone = transform.Clone();
-            codecParams["codec"] = "h265";
+            codecParams["codec"] = VideoCodec.H265;
             
             Assert.AreEqual(transform.Generate(), "vc_h265:basic:3.1");
             Assert.AreEqual(clone.Generate(), "vc_h264:basic:3.1");
+        }
+
+        [TestCase(VideoCodec.Auto, "vc_auto")]
+        [TestCase(VideoCodec.Vp8, "vc_vp8")]
+        [TestCase(VideoCodec.Vp9, "vc_vp9")]
+        [TestCase(VideoCodec.Prores, "vc_prores")]
+        [TestCase(VideoCodec.H264, "vc_h264")]
+        [TestCase(VideoCodec.H265, "vc_h265")]
+        [TestCase(VideoCodec.Theora, "vc_theora")]
+        public void TestVideoCodecsConstantValues(string actual, string expected)
+        {
+            Assert.AreEqual(expected, new Transformation().VideoCodec(actual).ToString());
         }
 
         [Test]
