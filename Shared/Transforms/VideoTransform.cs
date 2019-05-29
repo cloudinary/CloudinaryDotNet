@@ -266,8 +266,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Offset in seconds or percent of a video, used to specify the end of the video to be kept after trimming or
         /// when an overlay ends displaying.
-        /// 
-        /// Normally used together with the start_offset and duration parameters. 
+        ///
+        /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">String representing an end_offset value.</param>
         public Transformation EndOffset(string value)
@@ -278,8 +278,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Offset in seconds or percent of a video, used to specify the end of the video to be kept after trimming or
         /// when an overlay ends displaying.
-        /// 
-        /// Normally used together with the start_offset and duration parameters. 
+        ///
+        /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Float representing an end_offset value.</param>
         public Transformation EndOffset(float value)
@@ -290,8 +290,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Offset in seconds or percent of a video, used to specify the end of the video to be kept after trimming or
         /// when an overlay ends displaying.
-        /// 
-        /// Normally used together with the start_offset and duration parameters. 
+        ///
+        /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Double representing an end_offset value.</param>
         public Transformation EndOffset(double value)
@@ -302,8 +302,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Offset in percent of a video, used to specify the end of the video to be kept after trimming or
         /// when an overlay ends displaying.
-        /// 
-        /// Normally used together with the start_offset and duration parameters. 
+        ///
+        /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Float representing an end_offset value.</param>
         public Transformation EndOffsetPercent(float value)
@@ -314,8 +314,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Offset in percent of a video, used to specify the end of the video to be kept after trimming or
         /// when an overlay ends displaying.
-        /// 
-        /// Normally used together with the start_offset and duration parameters. 
+        ///
+        /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Double representing an end_offset value.</param>
         public Transformation EndOffsetPercent(double value)
@@ -326,8 +326,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Offset in percent of a video, used to specify the end of the video to be kept after trimming or
         /// when an overlay ends displaying.
-        /// 
-        /// Normally used together with the start_offset and duration parameters. 
+        ///
+        /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Object representing an end_offset value.</param>
         private Transformation EndOffsetPercent(object value)
@@ -337,7 +337,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set a shortcut to set video cutting using a combination of start_offset and end_offset values.
-        /// 
+        ///
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">String representing an offset value.</param>
@@ -348,7 +348,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set a shortcut to set video cutting using a combination of start_offset and end_offset values.
-        /// 
+        ///
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">Range of strings representing an offset value.</param>
@@ -360,7 +360,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set a shortcut to set video cutting using a combination of start_offset and end_offset values.
-        /// 
+        ///
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">Range of floats representing an offset value.</param>
@@ -373,7 +373,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set a shortcut to set video cutting using a combination of start_offset and end_offset values.
-        /// 
+        ///
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">Range of doubles representing an offset value.</param>
@@ -386,7 +386,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set a shortcut to set video cutting using a combination of start_offset and end_offset values.
-        /// 
+        ///
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">Range of objects representing an offset value.</param>
@@ -398,8 +398,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set the duration the video/overlay displays.
-        /// 
-        /// Offset in seconds or percent of a video, normally used together with the start_offset and end_offset 
+        ///
+        /// Offset in seconds or percent of a video, normally used together with the start_offset and end_offset
         /// parameters.
         /// </summary>
         /// <param name="value">String representing a duration value.</param>
@@ -410,8 +410,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set the duration the video/overlay displays.
-        /// 
-        /// Offset in seconds or percent of a video, normally used together with the start_offset and end_offset 
+        ///
+        /// Offset in seconds or percent of a video, normally used together with the start_offset and end_offset
         /// parameters.
         /// </summary>
         /// <param name="value">Float representing a duration value.</param>
@@ -422,8 +422,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set the duration the video/overlay displays.
-        /// 
-        /// Offset in seconds or percent of a video, normally used together with the start_offset and end_offset 
+        ///
+        /// Offset in seconds or percent of a video, normally used together with the start_offset and end_offset
         /// parameters.
         /// </summary>
         /// <param name="value">Double representing a duration value.</param>
@@ -434,8 +434,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set the duration the video/overlay displays.
-        /// 
-        /// Offset in percent of a video, normally used together with the start_offset and end_offset 
+        ///
+        /// Offset in percent of a video, normally used together with the start_offset and end_offset
         /// parameters.
         /// </summary>
         /// <param name="value">Float representing a duration value.</param>
@@ -446,8 +446,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set the duration the video/overlay displays.
-        /// 
-        /// Offset in percent of a video, normally used together with the start_offset and end_offset 
+        ///
+        /// Offset in percent of a video, normally used together with the start_offset and end_offset
         /// parameters.
         /// </summary>
         /// <param name="value">Double representing a duration value.</param>
@@ -458,8 +458,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set the duration the video/overlay displays.
-        /// 
-        /// Offset in percent of a video, normally used together with the start_offset and end_offset 
+        ///
+        /// Offset in percent of a video, normally used together with the start_offset and end_offset
         /// parameters.
         /// </summary>
         /// <param name="value">Object representing a duration value.</param>

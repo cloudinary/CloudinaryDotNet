@@ -18,12 +18,12 @@ namespace CloudinaryDotNet
     public class ApiShared : ISignProvider
     {
         /// <summary>
-        /// Url of the cloudinary API.
+        /// URL of the cloudinary API.
         /// </summary>
         public const string ADDR_API = "api.cloudinary.com";
 
         /// <summary>
-        /// Url of the cloudinary shared CDN.
+        /// URL of the cloudinary shared CDN.
         /// </summary>
         public const string ADDR_RES = "res.cloudinary.com";
 
@@ -50,7 +50,7 @@ namespace CloudinaryDotNet
         public bool CSubDomain;
 
         /// <summary>
-        /// Whether to use a shortened url when possible.
+        /// Whether to use a shortened URL when possible.
         /// </summary>
         public bool ShortenUrl;
 
@@ -65,17 +65,17 @@ namespace CloudinaryDotNet
         public bool UsePrivateCdn;
 
         /// <summary>
-        /// Whether to use secure Url.
+        /// Whether to use secure URL.
         /// </summary>
         public bool Secure;
 
         /// <summary>
-        /// The private CDN prefix for the Url.
+        /// The private CDN prefix for the URL.
         /// </summary>
         public string PrivateCdn;
 
         /// <summary>
-        /// The descriptive suffix to add to the Public ID in the delivery Url.
+        /// The descriptive suffix to add to the Public ID in the delivery URL.
         /// </summary>
         public string Suffix;
 
@@ -93,7 +93,7 @@ namespace CloudinaryDotNet
         /// Indicates whether to add '/v1/' to the URL when the public ID includes folders and a 'version' value was
         /// not defined.
         /// When no version is explicitly specified and the public id contains folders, a default v1 version
-        /// is added to the url. Set this boolean as false to prevent that behaviour.
+        /// is added to the URL. Set this boolean as false to prevent that behaviour.
         /// </summary>
         public bool ForceVersion = true;
 
@@ -150,7 +150,7 @@ namespace CloudinaryDotNet
         /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
         /// </summary>
         /// <param name="method">Http request method.</param>
-        /// <param name="url">API Url.</param>
+        /// <param name="url">API URL.</param>
         /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
         /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
@@ -177,7 +177,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <typeparam name="T">Type of the response.</typeparam>
         /// <param name="method">Http request method.</param>
-        /// <param name="url">API Url.</param>
+        /// <param name="url">API URL.</param>
         /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
         /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
@@ -194,7 +194,7 @@ namespace CloudinaryDotNet
         /// <param name="account">Cloudinary account.</param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network.</param>
         /// <param name="privateCdn">Private Content Delivery Network.</param>
-        /// <param name="shortenUrl">Whether to use shorten url when possible.</param>
+        /// <param name="shortenUrl">Whether to use shorten URL when possible.</param>
         /// <param name="cSubDomain">Whether to use sub domain.</param>
         public ApiShared(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain)
             : this(account)
@@ -460,9 +460,9 @@ namespace CloudinaryDotNet
         /// <returns>Signature of parameters.</returns>
         public string SignParameters(IDictionary<string, object> parameters)
         {
-			List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
+            List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
             StringBuilder signBase = new StringBuilder(String.Join("&", parameters.
-			                                                       Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
+                                                                   Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
                 .Select(pair => String.Format("{0}={1}", pair.Key,
                     pair.Value is IEnumerable<string>
                     ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
@@ -523,7 +523,7 @@ namespace CloudinaryDotNet
                 return false;
 
             var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}");
-            
+
             return signature.Equals(payloadHash);
         }
 
@@ -537,9 +537,9 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Virtual build callback url method. This method should be overridden in child classes.
+        /// Virtual build callback URL method. This method should be overridden in child classes.
         /// </summary>
-        /// <returns>Callback url.</returns>
+        /// <returns>Callback URL.</returns>
         public virtual string BuildCallbackUrl(string path = "")
         {
             return string.Empty;
@@ -565,7 +565,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Build file input html tag.
         /// </summary>
-        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata. 
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
         /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
         /// <param name="resourceType">Type of the uploaded resource.</param>
         /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
@@ -612,10 +612,10 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Virtual encode API Url method. This method should be overridden in child classes.
+        /// Virtual encode API URL method. This method should be overridden in child classes.
         /// </summary>
-        /// <param name="value">Url to be encoded.</param>
-        /// <returns>Encoded Url.</returns>
+        /// <param name="value">URL to be encoded.</param>
+        /// <returns>Encoded URL.</returns>
         protected virtual string EncodeApiUrl(string value)
         {
             return string.Empty;

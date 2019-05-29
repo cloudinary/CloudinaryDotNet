@@ -109,6 +109,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\SubtitlesLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\TextLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\Transformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoCodec.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Url.cs" />

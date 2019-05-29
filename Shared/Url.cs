@@ -23,19 +23,19 @@ namespace CloudinaryDotNet
         public static readonly VideoSource[] DefaultVideoSources = {
             new VideoSource
             {
-                Type = "mp4", Codecs = new[]{"hev1"}, Transformation = new Transformation().VideoCodec("h265")
+                Type = "mp4", Codecs = new[]{"hev1"}, Transformation = new Transformation().VideoCodec(VideoCodec.H265)
             },
             new VideoSource
             {
-                Type = "webm", Codecs = new[]{"vp9"}, Transformation = new Transformation().VideoCodec("vp9")
+                Type = "webm", Codecs = new[]{"vp9"}, Transformation = new Transformation().VideoCodec(VideoCodec.Vp9)
             },
             new VideoSource
             {
-                Type = "mp4", Transformation = new Transformation().VideoCodec("auto")
+                Type = "mp4", Transformation = new Transformation().VideoCodec(VideoCodec.Auto)
             },
             new VideoSource
             {
-                Type = "webm", Transformation = new Transformation().VideoCodec("auto")
+                Type = "webm", Transformation = new Transformation().VideoCodec(VideoCodec.Auto)
             }
         };
 
