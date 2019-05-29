@@ -309,13 +309,11 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of deletion derived resources.</returns>
         public DelDerivedResResult DeleteDerivedResourcesByTransform(DelDerivedResParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+            var url = m_api.ApiUrlV.
                 Add("derived_resources").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
+                BuildUrl();
 
-            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
+            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, url, parameters, null);
         }
 
         /// <summary>
@@ -428,13 +426,12 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of upload presets listing.</returns>
         public ListUploadPresetsResult ListUploadPresets(ListUploadPresetsParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
+            var url =
                 m_api.ApiUrlV
                 .Add("upload_presets")
-                .BuildUrl(),
-                parameters.ToParamsDictionary());
+                .BuildUrl();
 
-            return m_api.CallApi<ListUploadPresetsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return m_api.CallApi<ListUploadPresetsResult>(HttpMethod.GET, url, parameters, null);
         }
 
         /// <summary>
@@ -943,11 +940,7 @@ namespace CloudinaryDotNet
                 }
             }
 
-            UrlBuilder urlBuilder = new UrlBuilder(
-                url.BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApi<ListResourcesResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return m_api.CallApi<ListResourcesResult>(HttpMethod.GET, url.BuildUrl(), parameters, null);
         }
 
         /// <summary>
@@ -1002,13 +995,12 @@ namespace CloudinaryDotNet
         /// <returns>Parsed list of transformations details.</returns>
         public ListTransformsResult ListTransformations(ListTransformsParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
+            var url =
                 m_api.ApiUrlV.
                 ResourceType("transformations").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
+                BuildUrl();                
 
-            return m_api.CallApi<ListTransformsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return m_api.CallApi<ListTransformsResult>(HttpMethod.GET, url, parameters, null);
         }
 
         /// <summary>
@@ -1082,16 +1074,14 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response with the detailed resource information.</returns>
         public GetResourceResult GetResource(GetResourceParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+            string url = m_api.ApiUrlV.
                 ResourceType("resources").
                 Add(Api.GetCloudinaryParam(parameters.ResourceType)).
                 Add(parameters.Type).
                 Add(parameters.PublicId).
-                BuildUrl(),
-                parameters.ToParamsDictionary());
+                BuildUrl();
 
-            return m_api.CallApi<GetResourceResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return m_api.CallApi<GetResourceResult>(HttpMethod.GET, url, parameters, null);
         }
 
         /// <summary>
@@ -1113,13 +1103,12 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of deletion derived resources.</returns>
         public DelDerivedResResult DeleteDerivedResources(DelDerivedResParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
+            var url =
                 m_api.ApiUrlV.
                 Add("derived_resources").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
+                BuildUrl();
 
-            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
+            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, url, parameters, null);
         }
 
         /// <summary>

@@ -77,7 +77,6 @@ namespace CloudinaryDotNet
             {
                 return Parse<T>(response);
             }
-
         }
 
         /// <summary>
@@ -91,8 +90,16 @@ namespace CloudinaryDotNet
         /// <returns>HTTP response on call</returns>
         public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
+            if (parameters != null && (method == HttpMethod.GET || method == HttpMethod.DELETE))
+            {                
+                UrlBuilder urlBuilder = new UrlBuilder(url, parameters);
+
+                url = urlBuilder.ToString();
+            }
+
             HttpWebRequest request = RequestBuilder(url);
             HttpWebResponse response = null;
+            
             if (Timeout > 0)
             {
                 request.Timeout = Timeout;
@@ -138,7 +145,12 @@ namespace CloudinaryDotNet
                 }
             }
 
-            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
+            if (parameters == null)
+            {
+                return request;
+            }
+
+            if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.DELETE)
             {
                 request.AllowWriteStreamBuffering = false;
                 request.AllowAutoRedirect = false;
