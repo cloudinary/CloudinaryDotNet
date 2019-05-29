@@ -3,15 +3,22 @@ using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
+    /// <summary>
+    /// Parameters of restore a deleted resources request.
+    /// </summary>
     public class RestoreParams : BaseParams
     {
         List<string> m_publicIds = new List<string>();
         ResourceType m_resourceType = ResourceType.Image;
 
+        /// <summary>
+        /// Instantiates the <see cref="RestoreParams"/> object.
+        /// </summary>
         public RestoreParams() { }
 
         /// <summary>
-        /// Restore all resources with the given public IDs
+        /// The public IDs of (deleted or existing) backed up resources to restore. Reverts to the latest backed up
+        /// version of the resource.
         /// </summary>
         public List<string> PublicIds
         {
@@ -25,7 +32,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Restore resources with the given resource type. Default resource type: "image"
+        /// Restore resources with the given resource type. Default: image.
         /// </summary>
         public ResourceType ResourceType
         {
@@ -34,7 +41,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -45,9 +52,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

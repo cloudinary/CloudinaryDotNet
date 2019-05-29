@@ -12,25 +12,81 @@ using Newtonsoft.Json.Converters;
 
 namespace CloudinaryDotNet
 {
+    /// <summary>
+    /// Provider for the API calls.
+    /// </summary>
     public class ApiShared : ISignProvider
     {
+        /// <summary>
+        /// Url of the cloudinary API.
+        /// </summary>
         public const string ADDR_API = "api.cloudinary.com";
+
+        /// <summary>
+        /// Url of the cloudinary shared CDN.
+        /// </summary>
         public const string ADDR_RES = "res.cloudinary.com";
+
+        /// <summary>
+        /// Version of the API.
+        /// </summary>
         public const string API_VERSION = "v1_1";
+
+        /// <summary>
+        /// The boundary string to split form-data content.
+        /// </summary>
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
+
+        /// <summary>
+        /// User agent for cloudinary API requests.
+        /// </summary>
         public static string USER_AGENT;
 
         string m_apiAddr = "https://" + ADDR_API;
 
+        /// <summary>
+        /// Whether to use a sub domain.
+        /// </summary>
         public bool CSubDomain;
+
+        /// <summary>
+        /// Whether to use a shortened url when possible.
+        /// </summary>
         public bool ShortenUrl;
+
+        /// <summary>
+        /// Whether to use root path.
+        /// </summary>
         public bool UseRootPath;
+
+        /// <summary>
+        /// Set this parameter to true if you are an Advanced plan user with a private CDN distribution.
+        /// </summary>
         public bool UsePrivateCdn;
+
+        /// <summary>
+        /// Whether to use secure Url.
+        /// </summary>
         public bool Secure;
+
+        /// <summary>
+        /// The private CDN prefix for the Url.
+        /// </summary>
         public string PrivateCdn;
+
+        /// <summary>
+        /// The descriptive suffix to add to the Public ID in the delivery Url.
+        /// </summary>
         public string Suffix;
+
+        /// <summary>
+        /// User platform information.
+        /// </summary>
         public string UserPlatform;
 
+        /// <summary>
+        /// Timeout for the API requests,
+        /// </summary>
         public int Timeout = 0;
 
         /// <summary>
@@ -61,9 +117,9 @@ namespace CloudinaryDotNet
             : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL")) { }
 
         /// <summary>
-        /// Parameterized constructor
+        /// Parameterized constructor.
         /// </summary>
-        /// <param name="cloudinaryUrl">Cloudinary URL</param>
+        /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public ApiShared(string cloudinaryUrl)
         {
             if (String.IsNullOrEmpty(cloudinaryUrl))
@@ -90,6 +146,15 @@ namespace CloudinaryDotNet
 
         }
 
+        /// <summary>
+        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
+        /// </summary>
+        /// <param name="method">Http request method.</param>
+        /// <param name="url">API Url.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Parsed response from the cloudinary API.</returns>
         public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             throw new Exception("Please call overriden method");
@@ -106,6 +171,17 @@ namespace CloudinaryDotNet
                                    extraHeaders);
         }
 
+        /// <summary>
+        /// Virtual method to call the cloudinary API and return the parsed response. This method should be overridden
+        /// in child classes.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">Http request method.</param>
+        /// <param name="url">API Url.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Parsed response from the cloudinary API.</returns>
         public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
         {
             throw new NotImplementedException();
@@ -113,13 +189,13 @@ namespace CloudinaryDotNet
 
         /// <inheritdoc />
         /// <summary>
-        /// Parametrized constructor
+        /// Parameterized constructor.
         /// </summary>
-        /// <param name="account">Cloudinary account</param>
-        /// <param name="usePrivateCdn">Whether to use private Content Delivery Network</param>
-        /// <param name="privateCdn">Private Content Delivery Network</param>
+        /// <param name="account">Cloudinary account.</param>
+        /// <param name="usePrivateCdn">Whether to use private Content Delivery Network.</param>
+        /// <param name="privateCdn">Private Content Delivery Network.</param>
         /// <param name="shortenUrl">Whether to use shorten url when possible.</param>
-        /// <param name="cSubDomain">if set to <c>true</c> [c sub domain].</param>
+        /// <param name="cSubDomain">Whether to use sub domain.</param>
         public ApiShared(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain)
             : this(account)
         {
@@ -131,9 +207,9 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Parametrized constructor
+        /// Parameterized constructor.
         /// </summary>
-        /// <param name="account">Cloudinary account</param>
+        /// <param name="account">Cloudinary account.</param>
         public ApiShared(Account account)
         {
             if (account == null)
@@ -161,7 +237,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default URL for working with resources
+        /// Default URL for working with resources.
         /// </summary>
         public Url Url
         {
@@ -178,7 +254,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default URL for working with uploaded images
+        /// Default URL for working with uploaded images.
         /// </summary>
         public Url UrlImgUp
         {
@@ -193,7 +269,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default URL for working with fetched images
+        /// Default URL for working with fetched images.
         /// </summary>
         public Url UrlImgFetch
         {
@@ -208,7 +284,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default URL for working with uploaded videos
+        /// Default URL for working with uploaded videos.
         /// </summary>
         public Url UrlVideoUp
         {
@@ -223,7 +299,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default cloudinary API URL
+        /// Default cloudinary API URL.
         /// </summary>
         public Url ApiUrl
         {
@@ -235,7 +311,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default cloudinary API URL for uploading images
+        /// Default cloudinary API URL for uploading images.
         /// </summary>
         public Url ApiUrlImgUp
         {
@@ -248,7 +324,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default cloudinary API URL with version
+        /// Default cloudinary API URL with version.
         /// </summary>
         public Url ApiUrlV
         {
@@ -260,12 +336,12 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default cloudinary API URL for streaming profiles
+        /// Default cloudinary API URL for streaming profiles.
         /// </summary>
         public Url ApiUrlStreamingProfileV => ApiUrlV.Add(Constants.STREAMING_PROFILE_API_URL);
 
         /// <summary>
-        /// Default cloudinary API URL for uploading images with version
+        /// Default cloudinary API URL for uploading images with version.
         /// </summary>
         public Url ApiUrlImgUpV
         {
@@ -278,7 +354,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Default cloudinary API URL for uploading images with version
+        /// Default cloudinary API URL for uploading video resources with version.
         /// </summary>
         public Url ApiUrlVideoUpV
         {
@@ -291,11 +367,11 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Gets cloudinary parameter from enumeration
+        /// Gets cloudinary parameter from enumeration.
         /// </summary>
-        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute</typeparam>
-        /// <param name="e">Field of enum</param>
-        /// <returns>Cloudinary-compatible parameter</returns>
+        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
+        /// <param name="e">Field of enum.</param>
+        /// <returns>Cloudinary-compatible parameter.</returns>
         public static string GetCloudinaryParam<T>(T e)
         {
             Type eType = typeof(T);
@@ -309,6 +385,12 @@ namespace CloudinaryDotNet
             return attrs[0].Value;
         }
 
+        /// <summary>
+        /// Parse cloudinary-compatible parameter as enum field.
+        /// </summary>
+        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
+        /// <param name="s">Field of enum represented as string.</param>
+        /// <returns>Field of enum.</returns>
         public static T ParseCloudinaryParam<T>(string s)
         {
             Type eType = typeof(T);
@@ -328,7 +410,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Gets the upload URL.
+        /// Gets the upload URL for resource.
         /// </summary>
         /// <param name="resourceType">Type of the resource.</param>
         /// <returns>
@@ -372,15 +454,15 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Calculates signature of parameters
+        /// Calculates signature of parameters.
         /// </summary>
-        /// <param name="parameters">Parameters to sign</param>
-        /// <returns>Signature of parameters</returns>
+        /// <param name="parameters">Parameters to sign.</param>
+        /// <returns>Signature of parameters.</returns>
         public string SignParameters(IDictionary<string, object> parameters)
         {
-			List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
+            List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
             StringBuilder signBase = new StringBuilder(String.Join("&", parameters.
-			                                                       Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
+                                                                   Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
                 .Select(pair => String.Format("{0}={1}", pair.Key,
                     pair.Value is IEnumerable<string>
                     ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
@@ -400,7 +482,7 @@ namespace CloudinaryDotNet
         /// Signs the specified URI part.
         /// </summary>
         /// <param name="uriPart">The URI part.</param>
-        /// <returns></returns>
+        /// <returns>Signature of the URI part.</returns>
         public string SignUriPart(string uriPart)
         {
             var hash = Utils.ComputeHash(uriPart + Account.ApiSecret);
@@ -440,32 +522,35 @@ namespace CloudinaryDotNet
             if (isSignatureExpired)
                 return false;
 
-            var payloadHash = Utils.ComputeHash($"{body}{timestamp}{Account.ApiSecret}");
-            var sign = new StringBuilder();
-            foreach (var b in payloadHash) sign.Append(b.ToString("x2"));
-            var payloadSignature = sign.ToString();
+            var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}");
 
-            return signature.Equals(payloadSignature);
+            return signature.Equals(payloadHash);
         }
 
         /// <summary>
-        /// Calculates current UNIX time
+        /// Calculates current UNIX time.
         /// </summary>
-        /// <returns>Amount of seconds from 1 january 1970</returns>
+        /// <returns>Amount of seconds from 1 january 1970.</returns>
         private string GetTime()
         {
             return Convert.ToInt64(((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
         }
 
         /// <summary>
-        /// Virtual build callback url method. This metot should be override in child classes
+        /// Virtual build callback url method. This method should be overridden in child classes.
         /// </summary>
-        /// <returns>Callback url</returns>
+        /// <returns>Callback url.</returns>
         public virtual string BuildCallbackUrl(string path = "")
         {
             return string.Empty;
         }
 
+        /// <summary>
+        /// Build unsigned upload params with defined preset.
+        /// </summary>
+        /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
+        /// <param name="parameters">Cloudinary upload parameters.</param>
+        /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
         protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
         {
             if (parameters == null)
@@ -477,6 +562,15 @@ namespace CloudinaryDotNet
             return parameters;
         }
 
+        /// <summary>
+        /// Build file input html tag.
+        /// </summary>
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
         public string BuildUploadFormShared(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
             if (htmlOptions == null)
@@ -517,11 +611,20 @@ namespace CloudinaryDotNet
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Virtual encode API Url method. This method should be overridden in child classes.
+        /// </summary>
+        /// <param name="value">Url to be encoded.</param>
+        /// <returns>Encoded Url.</returns>
         protected virtual string EncodeApiUrl(string value)
         {
             return string.Empty;
         }
 
+        /// <summary>
+        /// Check 'unsigned' parameter value and add signature into parameters if unsigned=false or not specified.
+        /// </summary>
+        /// <param name="parameters">Parameters to check signature.</param>
         protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
         {
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
@@ -533,6 +636,11 @@ namespace CloudinaryDotNet
             }
         }
 
+        /// <summary>
+        /// Serialize the cloudinary parameters to JSON.
+        /// </summary>
+        /// <param name="parameters">Parameters to serialize.</param>
+        /// <returns>Serialized parameters as JSON string.</returns>
         protected string ParamsToJson(SortedDictionary<string, object> parameters)
         {
             var serializer = new JsonSerializer();
@@ -557,6 +665,12 @@ namespace CloudinaryDotNet
             parameters.Add("api_key", Account.ApiKey);
         }
 
+        /// <summary>
+        /// Write cloudinary parameter to the request stream.
+        /// </summary>
+        /// <param name="writer">Stream writer.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The parameter value.</param>
         protected void WriteParam(StreamWriter writer, string key, string value)
         {
 #if DEBUG
@@ -568,6 +682,11 @@ namespace CloudinaryDotNet
             WriteLine(writer, value);
         }
 
+        /// <summary>
+        /// Write cloudinary parameter to the request stream.
+        /// </summary>
+        /// <param name="writer">Stream writer.</param>
+        /// <param name="file">File to be written to the stream.</param>
         protected void WriteFile(StreamWriter writer, FileDescription file)
         {
             if (file.IsRemote)
@@ -648,14 +767,28 @@ namespace CloudinaryDotNet
         }
     }
 
+    /// <summary>
+    /// Digital signature provider.
+    /// </summary>
     public interface ISignProvider
     {
+        /// <summary>
+        /// Generate digital signature for parameters.
+        /// </summary>
+        /// <param name="parameters">The parameters to sign.</param>
+        /// <returns>Generated signature.</returns>
         string SignParameters(IDictionary<string, object> parameters);
+
+        /// <summary>
+        /// Generate digital signature for part of an URI.
+        /// </summary>
+        /// <param name="uriPart">The part of an URI to sign.</param>
+        /// <returns>Generated signature.</returns>
         string SignUriPart(string uriPart);
     }
 
     /// <summary>
-    /// HTTP method
+    /// HTTP method.
     /// </summary>
     public enum HttpMethod
     {

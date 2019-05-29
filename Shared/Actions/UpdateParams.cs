@@ -1,26 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CloudinaryDotNet.Core;
 using Newtonsoft.Json;
 
 namespace CloudinaryDotNet.Actions
 {
+    /// <summary>
+    /// Parameters to update details of an existing resource.
+    /// </summary>
     public class UpdateParams : BaseParams
     {
+        /// <summary>
+        /// Instantiates the <see cref="UpdateParams"/> object with public ID.
+        /// </summary>
+        /// <param name="publicId">The public ID of the resource to update.</param>
         public UpdateParams(string publicId)
         {
             PublicId = publicId;
             Type = "upload";
         }
 
+        /// <summary>
+        /// The public ID of the resource to update.
+        /// </summary>
         public string PublicId { get; set; }
 
+        /// <summary>
+        /// The type of file. Possible values: image, raw, video. Default: image.
+        /// </summary>
         public ResourceType ResourceType { get; set; }
 
+        /// <summary>
+        /// The storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
+        /// youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion. Default: upload.
+        /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'. For example 'X-Robots-Tag: noindex'.
+        /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the
+        /// uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'.
+        /// For example 'X-Robots-Tag: noindex'.
         /// </summary>
         public Dictionary<string, string> Headers { get; set; }
 
@@ -35,22 +55,28 @@ namespace CloudinaryDotNet.Actions
         public StringDictionary Context { get; set; }
 
         /// <summary>
-        /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the Aspose Document Conversion add-on.
+        /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the
+        /// Aspose Document Conversion add-on.
         /// </summary>
         public string RawConvert { get; set; }
 
         /// <summary>
-        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="Rectangle"/> or <see cref="List{Rectangle}"/>.
+        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="Rectangle"/>
+        /// or <see cref="List{Rectangle}"/>.
         /// </summary>
         public object FaceCoordinates { get; set; }
 
         /// <summary>
-        /// Coordinates of an interesting region contained in an uploaded image. The given coordinates are used for cropping uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates of the top left corner and the width and height of the region. For example: "85,120,220,310". Otherwise, one can use <see cref="Rectangle"/> structure.
+        /// Coordinates of an interesting region contained in an uploaded image. The given coordinates are used for
+        /// cropping uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates
+        /// of the top left corner and the width and height of the region. For example: "85,120,220,310".
+        /// Otherwise, one can use <see cref="Rectangle"/> structure.
         /// </summary>
         public object CustomCoordinates { get; set; }
 
         /// <summary>
-        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
+        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene
+        /// Categorization add-on.
         /// </summary>
         public string Categorization { get; set; }
 
@@ -60,19 +86,31 @@ namespace CloudinaryDotNet.Actions
         public string BackgroundRemoval { get; set; }
 
         /// <summary>
-        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
+        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene
+        /// Categorization add-on.
         /// </summary>
         public float? AutoTagging { get; set; }
 
         /// <summary>
-        /// Set to "rekognition_face" to automatically extract advanced face attributes of photos using the ReKognition Detect Face Attributes add-on.
+        /// Set to "rekognition_face" to automatically extract advanced face attributes of photos using the ReKognition
+        /// Detect Face Attributes add-on.
         /// </summary>
         public string Detection { get; set; }
 
+        /// <summary>
+        /// Set to "tineye" to use the TinEye add-on.
+        /// </summary>
         public string SimilaritySearch { get; set; }
 
+        /// <summary>
+        /// Optional. Set to 'adv_ocr' to extract all text elements in an image as well as the bounding box coordinates
+        /// of each detected element using the OCR Text Detection and Extraction Add-on add-on.
+        /// </summary>
         public string Ocr { get; set; }
 
+        /// <summary>
+        /// An HTTP or HTTPS URL to notify your application (a webhook) when the process has completed.
+        /// </summary>
         public string NotificationUrl { get; set; }
 
         /// <summary>
@@ -83,18 +121,15 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Gets or sets the moderation status.
         /// </summary>
-        /// <value>
-        /// The moderation status.
-        /// </value>
         public ModerationStatus ModerationStatus { get; set; }
 
         /// <summary>
-        /// Optional. Pass a list of AccessControlRule parameters
+        /// Optional. Pass a list of AccessControlRule parameters.
         /// </summary>
         public List<AccessControlRule> AccessControl { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -103,9 +138,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

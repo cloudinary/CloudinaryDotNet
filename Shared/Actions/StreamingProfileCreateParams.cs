@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
+    /// <summary>
+    /// Parameters of create streaming profile request.
+    /// </summary>
     public class StreamingProfileCreateParams : StreamingProfileBaseParams
     {
         /// <summary>
@@ -12,7 +15,7 @@ namespace CloudinaryDotNet.Actions
         public string Name { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -23,9 +26,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

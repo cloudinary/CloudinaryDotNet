@@ -6,6 +6,9 @@
     /// </summary>
     public class SubtitlesLayer : TextLayer
     {
+        /// <summary>
+        /// Instantiates the <see cref="SubtitlesLayer"/> object.
+        /// </summary>
         public SubtitlesLayer()
         {
             m_resourceType = "subtitles";

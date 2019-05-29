@@ -3,13 +3,22 @@ using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Actions
 {
+    /// <summary>
+    /// Parameters for transformation update.
+    /// </summary>
     public class UpdateTransformParams : BaseParams
     {
+        /// <summary>
+        /// Instantiates the <see cref="UpdateTransformParams"/> object.
+        /// </summary>
         public UpdateTransformParams()
         {
             Transformation = String.Empty;
         }
 
+        /// <summary>
+        /// Transformation represented as string.
+        /// </summary>
         public string Transformation { get; set; }
 
         /// <summary>
@@ -26,7 +35,7 @@ namespace CloudinaryDotNet.Actions
         public bool Strict { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -35,9 +44,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

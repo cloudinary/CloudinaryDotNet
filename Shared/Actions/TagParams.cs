@@ -6,11 +6,13 @@ using System.Runtime.Serialization;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of tag management
+    /// Parameters of tag management request.
     /// </summary>
     public class TagParams : BaseParams
     {
-
+        /// <summary>
+        /// Instantiates the <see cref="TagParams"/> object.
+        /// </summary>
 		public TagParams()
 		{
 			ResourceType = ResourceType.Image;
@@ -19,7 +21,7 @@ namespace CloudinaryDotNet.Actions
         List<string> m_publicIds = new List<string>();
 
         /// <summary>
-        /// A list of Public IDs of images uploaded to Cloudinary.
+        /// A list of public IDs (up to 1000) of assets uploaded to Cloudinary.
         /// </summary>
         public List<string> PublicIds
         {
@@ -28,27 +30,27 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// The tag name to assign or remove.
+        /// The tag to assign, remove, or replace. Not relevant when removing all tags.
         /// </summary>
         public string Tag { get; set; }
 
-		/// <summary>
-		/// The type of resource to tag
-		/// </summary>
-		public ResourceType ResourceType { get; set; }
+        /// <summary>
+        /// The type of asset. Valid values: image, raw, and video. Default: image. 
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// Type
+        ///The specific type of the asset. Valid values: upload, private and authenticated.Default: upload.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// The action to perform on image resources using the given tag.
+        /// The action to perform on the assets.
         /// </summary>
         public TagCommand Command { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -56,9 +58,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Map object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -87,20 +89,21 @@ namespace CloudinaryDotNet.Actions
         [EnumMember(Value = "remove")]
         Remove,
         /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs while clearing all other tags assigned to these resources.
+        /// Assign the given tag to the resources with the given Public IDs while clearing all other tags assigned
+        /// to these resources.
         /// </summary>
         [EnumMember(Value = "replace")]
         Replace,
         /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other resources. This means that only the resources with the given Public IDs will have the given tag.
+        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other 
+        /// resources. This means that only the resources with the given Public IDs will have the given tag.
         /// </summary>
         [EnumMember(Value = "set_exclusive")]
         SetExclusive,
         /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other resources. This means that only the resources with the given Public IDs will have the given tag.
+        /// Remove all the tags assigned to the resources with the given Public IDs.
         /// </summary>
         [EnumMember(Value = "remove_all")]
         RemoveAll
-
     }
 }

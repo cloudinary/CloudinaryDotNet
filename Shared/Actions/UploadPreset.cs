@@ -9,17 +9,18 @@ using CloudinaryDotNet.Core;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of upload preset.
+    /// Parameters of upload preset, which enable you to centrally define a set of image upload options instead of
+    /// specifying them in each upload call.
     /// </summary>
     public class UploadPresetParams : BaseParams
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UploadPresetParams"/> class.
+        /// Default parameterless constructor. Instantiates the <see cref="UploadPresetParams"/> object.
         /// </summary>
         public UploadPresetParams() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UploadPresetParams"/> class.
+        /// Instantiates the <see cref="UploadPresetParams"/> object with result object.
         /// </summary>
         /// <param name="preset">The preset returned from API.</param>
         public UploadPresetParams(GetUploadPresetResult preset)
@@ -157,17 +158,20 @@ namespace CloudinaryDotNet.Actions
         public bool Unsigned { get; set; }
 
         /// <summary>
-        /// Only relevant when using unsigned presets this setting prevents specifying public_id as one of the extra parameters for upload.
+        /// Only relevant when using unsigned presets this setting prevents specifying public_id as one of the extra
+        /// parameters for upload.
         /// </summary>
         public bool DisallowPublicId { get; set; }
 
         /// <summary>
-        /// Tell Cloudinary whether to backup the uploaded image. Overrides the default backup settings of your account.
+        /// Tell Cloudinary whether to backup the uploaded image.
+        /// Overrides the default backup settings of your account.
         /// </summary>
         public bool? Backup { get; set; }
 
         /// <summary>
-        /// Gets or sets privacy mode of the image. Valid values: 'private', 'upload' and 'authenticated'. Default: 'upload'.
+        /// Gets or sets privacy mode of the image. Valid values: 'private', 'upload' and 'authenticated'.
+        /// Default: 'upload'.
         /// </summary>
         public string Type { get; set; }
 
@@ -177,7 +181,8 @@ namespace CloudinaryDotNet.Actions
         public string Tags { get; set; }
 
         /// <summary>
-        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID.
+        /// Default: false.
         /// </summary>
         /// <value>
         ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
@@ -185,17 +190,20 @@ namespace CloudinaryDotNet.Actions
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// Whether to use the original file name of the uploaded image if available for the public ID. The file name is normalized and random characters are appended to ensure uniqueness. Default: false.
+        /// Whether to use the original file name of the uploaded image if available for the public ID. The file name
+        /// is normalized and random characters are appended to ensure uniqueness. Default: false.
         /// </summary>
         public bool UseFilename { get; set; }
 
         /// <summary>
-        /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at the end of the filename that guarantee its uniqueness.
+        /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at
+        /// the end of the filename to guarantee uniqueness.
         /// </summary>
         public bool? UniqueFilename { get; set; }
 
         /// <summary>
-        /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments (setting the 'flags' transformation parameter to 'attachment'). Default: false.
+        /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments
+        /// (setting the 'flags' transformation parameter to 'attachment'). Default: false.
         /// </summary>
         public bool DiscardOriginalFilename { get; set; }
 
@@ -220,7 +228,8 @@ namespace CloudinaryDotNet.Actions
         public bool? Overwrite { get; set; }
 
         /// <summary>
-        /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the Aspose Document Conversion add-on.
+        /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the
+        /// Aspose Document Conversion add-on.
         /// </summary>
         public string RawConvert { get; set; }
 
@@ -235,7 +244,8 @@ namespace CloudinaryDotNet.Actions
         public string[] AllowedFormats { get; set; }
 
         /// <summary>
-        /// Set to "manual" to add the uploaded image to a queue of pending moderation images. Set to "webpurify" to automatically moderate the uploaded image using the WebPurify Image Moderation add-on.
+        /// Set to "manual" to add the uploaded image to a queue of pending moderation images. Set to "webpurify" to
+        /// automatically moderate the uploaded image using the WebPurify Image Moderation add-on.
         /// </summary>
         public string Moderation { get; set; }
 
@@ -245,13 +255,15 @@ namespace CloudinaryDotNet.Actions
         public string Format { get; set; }
 
         /// <summary>
-        /// A transformation to run on the uploaded image before saving it in the cloud. For example: limit the dimension of the uploaded image to 512x512 pixels.
+        /// A transformation to run on the uploaded image before saving it in the cloud. For example: limit the
+        /// dimension of the uploaded image to 512x512 pixels.
         /// One may use string representation or <see cref="Transformation"/> class.
         /// </summary>
         public object Transformation { get; set; }
 
         /// <summary>
-        /// A list of transformations to create for the uploaded image during the upload process, instead of lazily creating them when being accessed by your site's visitors.
+        /// A list of transformations to create for the uploaded image during the upload process, instead of lazily
+        /// creating them when accessed by your site's visitors.
         /// One may use string representation or <see cref="Transformation"/> class.
         /// </summary>
         public ICollection<object> EagerTransforms { get; set; }
@@ -267,7 +279,8 @@ namespace CloudinaryDotNet.Actions
         public bool Colors { get; set; }
 
         /// <summary>
-        /// Whether to retrieve a list of coordinates of automatically detected faces in the uploaded photo. Default: false.
+        /// Whether to retrieve a list of coordinates of automatically detected faces in the uploaded photo.
+        /// Default: false.
         /// </summary>
         public bool Faces { get; set; }
 
@@ -277,7 +290,7 @@ namespace CloudinaryDotNet.Actions
         public bool QualityAnalysis { get; set; }
 
         /// <summary>
-        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>/>.
+        /// Sets the face coordinates. Use plain string (x,y,w,h|x,y,w,h) or <see cref="FaceCoordinates"> object</see>.
         /// </summary>
         public object FaceCoordinates { get; set; }
 
@@ -287,7 +300,8 @@ namespace CloudinaryDotNet.Actions
         public bool Metadata { get; set; }
 
         /// <summary>
-        /// Whether to generate the eager transformations asynchronously in the background after the upload request is completed rather than online as part of the upload call. Default: false.
+        /// Whether to generate the eager transformations asynchronously in the background after the upload request is
+        /// completed rather than online as part of the upload call. Default: false.
         /// </summary>
         public bool EagerAsync { get; set; }
 
@@ -297,22 +311,36 @@ namespace CloudinaryDotNet.Actions
         public string EagerNotificationUrl { get; set; }
 
         /// <summary>
-        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene Categorization add-on.
+        /// Set to "rekognition_scene" to automatically detect scene categories of photos using the ReKognition Scene
+        /// Categorization add-on.
         /// </summary>
         public string Categorization { get; set; }
 
         /// <summary>
-        /// By providing the AutoTagging parameter, uploaded images are automatically assigned tags based on the detected scene categories. The value of the AutoTagging parameter is the minimum score of a detected category that should be automatically used as an assigned tag. See http://cloudinary.com/documentation/rekognition_scene_categorization_addon#automatic_image_tagging for comments.
+        /// By providing the AutoTagging parameter, uploaded images are automatically assigned tags based on the
+        /// detected scene categories. The value of the AutoTagging parameter is the minimum score of a detected
+        /// category that should be automatically used as an assigned tag.
+        /// See http://cloudinary.com/documentation/rekognition_scene_categorization_addon#automatic_image_tagging
+        /// for comments.
         /// </summary>
         public float? AutoTagging { get; set; }
 
         /// <summary>
-        /// Set to "rekognition_face" to automatically extract advanced face attributes of photos using the ReKognition Detect Face Attributes add-on.
+        /// Set to "rekognition_face" to automatically extract advanced face attributes of photos using the ReKognition
+        /// Detect Face Attributes add-on.
         /// </summary>
         public string Detection { get; set; }
 
+        /// <summary>
+        /// Set to "tineye" to use the TinEye add-on.
+        /// </summary>
         public string SimilaritySearch { get; set; }
 
+        /// <summary>
+        /// Optional. If you are subscribed to the OCR Text Detection and Extraction add-on and you set this parameter
+        /// to adv_ocr, the response includes the content and bounding box coordinates of all detected text on the
+        /// image as well as the content and bounding box of each individual detected text element.
+        /// </summary>
         public string Ocr { get; set; }
 
         /// <summary>
@@ -401,20 +429,29 @@ namespace CloudinaryDotNet.Actions
         }
     }
 
+    /// <summary>
+    /// Parsed response after manipulation of upload presets.
+    /// </summary>
     [DataContract]
     public class UploadPresetResult : BaseResult
     {
+        /// <summary>
+        /// Response message.
+        /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }
 
+        /// <summary>
+        /// Name assigned to the upload preset.
+        /// </summary>
         [DataMember(Name = "name")]
         public string Name { get; protected set; }
 
         /// <summary>
-        /// Parses HTTP response and creates new instance of this class
+        /// Parses HTTP response and creates new instance of this class.
         /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
+        /// <param name="response">HTTP response.</param>
+        /// <returns>New instance of this class.</returns>
         internal static UploadPresetResult Parse(Object response)
         {
             return Api.Parse<UploadPresetResult>(response);

@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of generating an image of a given textual string
+    /// Parameters of generating an image of a given textual string.
     /// </summary>
     public class TextParams : BaseParams
     {
         /// <summary>
-        /// Default constructor
+        /// Instantiates the <see cref="TextParams"/> object.
         /// </summary>
         public TextParams()
         {
@@ -17,9 +17,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Parameterized constructor
+        /// Parameterized constructor.
         /// </summary>
-        /// <param name="text">Text to draw</param>
+        /// <param name="text">The text string to generate an image for.</param>
         public TextParams(string text)
             : this()
         {
@@ -27,17 +27,26 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// The text to generate an image for.
+        /// The text string to generate an image for.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
-        /// The identifier that is used for accessing the generated image. If not specified, a unique identifier is generated, persistently mapped to the given text and style settings. This way, you can keep using Cloudinary’s API for generating texts. Cloudinary will make sure not to generate multiple images for the same text and style.
+        /// The identifier that is used for accessing the generated image. If not specified, a unique identifier is
+        /// generated, persistently mapped to the given text and style settings. This way, you can keep using
+        /// Cloudinary’s API for generating texts. Cloudinary will make sure not to generate multiple images for the
+        /// same text and style.
         /// </summary>
         public string PublicId { get; set; }
 
         /// <summary>
-        /// The name of the font family. Supported font families: Andale Mono, Arial, Arial Black, AvantGarde, Bookman, Century Schoolbook, Comic Sans MS, Courier, Courier New, DejaVu Sans, DejaVu Sans Mono, DejaVu Serif, Dingbats, Georgia, Helvetica, Helvetica Narrow, Impact, Liberation Mono, Liberation Sans, Liberation Sans Narrow, Liberation Serif, NewCenturySchlbk, Nimbus Mono, Nimbus Roman No9, Nimbus Sans, Palatino, Standard Symbols, Symbol, Times, Times New Roman, Trebuchet MS, URW Bookman, URW Chancery, URW Gothic, URW Palladio, Verdana, Webdings.
+        /// The name of the font family. 
+        /// Supported font families: Andale Mono, Arial, Arial Black, AvantGarde, Bookman, Century Schoolbook, 
+        /// Comic Sans MS, Courier, Courier New, DejaVu Sans, DejaVu Sans Mono, DejaVu Serif, Dingbats, Georgia, 
+        /// Helvetica, Helvetica Narrow, Impact, Liberation Mono, Liberation Sans, Liberation Sans Narrow, 
+        /// Liberation Serif, NewCenturySchlbk, Nimbus Mono, Nimbus Roman No9, Nimbus Sans, Palatino, Standard Symbols,
+        /// Symbol, Times, Times New Roman, Trebuchet MS, URW Bookman, URW Chancery, URW Gothic, URW Palladio, Verdana,
+        /// Webdings.
         /// </summary>
         public string FontFamily { get; set; }
 
@@ -72,7 +81,8 @@ namespace CloudinaryDotNet.Actions
         public string FontStyle { get; set; }
 
         /// <summary>
-        /// Name or RGB representation of the background color of the generated image. For example: "red", "#ff0000". Default: "transparent".
+        /// Name or RGB representation of the background color of the generated image. 
+        /// For example: "red", "#ff0000". Default: "transparent".
         /// </summary>
         public string Background { get; set; }
 
@@ -92,7 +102,7 @@ namespace CloudinaryDotNet.Actions
         public string TextAlign { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -101,9 +111,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

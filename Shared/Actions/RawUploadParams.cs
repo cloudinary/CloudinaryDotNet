@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Basic parameters of file upload
+    /// Base parameters of file upload request.
     /// </summary>
     public class BasicRawUploadParams : BaseParams
     {
@@ -16,7 +16,8 @@ namespace CloudinaryDotNet.Actions
         public FileDescription File { get; set; }
 
         /// <summary>
-        /// The identifier that is used for accessing the uploaded resource. A randomly generated ID is assigned if not specified.
+        /// The identifier that is used for accessing the uploaded resource. 
+        /// A randomly generated ID is assigned if not specified.
         /// </summary>
         public string PublicId { get; set; }
 
@@ -30,12 +31,16 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Type { get; set; }
 
+        /// <summary>
+        /// Defines the 'raw' type of file you are uploading.
+        /// </summary>
         public virtual ResourceType ResourceType
         {
             get { return Actions.ResourceType.Raw; }
         }
+
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -49,6 +54,10 @@ namespace CloudinaryDotNet.Actions
                 throw new ArgumentException("File name must be specified in UploadParams!");
         }
 
+        /// <summary>
+        /// Map object model to dictionary of parameters in cloudinary notation.
+        /// </summary>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -64,12 +73,12 @@ namespace CloudinaryDotNet.Actions
     }
 
     /// <summary>
-    /// Extended Parameters of file upload
+    /// Extended Parameters of file uploading.
     /// </summary>
     public class RawUploadParams : BasicRawUploadParams
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RawUploadParams"/> class.
+        /// Instantiates the <see cref="RawUploadParams"/> object.
         /// </summary>
         public RawUploadParams()
         {
@@ -84,7 +93,8 @@ namespace CloudinaryDotNet.Actions
         public string Tags { get; set; }
 
         /// <summary>
-        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID.
+        /// Default: false.
         /// </summary>
         /// <value>
         ///   <c>true</c> to invalidate; otherwise, <c>false</c>.
@@ -92,42 +102,49 @@ namespace CloudinaryDotNet.Actions
         public bool? Invalidate { get; set; }
 
         /// <summary>
-        /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'. For example 'X-Robots-Tag: noindex'.
+        /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the
+        /// uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'.
+        /// For example 'X-Robots-Tag: noindex'.
         /// </summary>
         public Dictionary<string, string> Headers { get; set; }
 
         /// <summary>
-        /// Whether to use the original file name of the uploaded image if available for the public ID. The file name is normalized and random characters are appended to ensure uniqueness. Default: false.
+        /// Whether to use the original file name of the uploaded image if available for the public ID. The file name
+        /// is normalized and random characters are appended to ensure uniqueness. Default: false.
         /// </summary>
         public bool? UseFilename { get; set; }
 
         /// <summary>
-        /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at the end of the filename that guarantee its uniqueness.
+        /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at
+        /// the end of the filename to guarantee its uniqueness.
         /// </summary>
         public bool? UniqueFilename { get; set; }
 
         /// <summary>
-        /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments (setting the 'flags' transformation parameter to 'attachment'). Default: false.
+        /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments
+        /// (setting the 'flags' transformation parameter to 'attachment'). Default: false.
         /// </summary>
         public bool? DiscardOriginalFilename { get; set; }
 
         /// <summary>
-        /// An HTTP URL to send notification to (a webhook) when the upload is completed.
+        /// An HTTP or HTTPS URL to receive the upload response (a webhook) when the upload is completed or a
+        /// notification when any requested asynchronous action is completed.
         /// </summary>
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// Allows the resource to behave as if it's of the authenticated 'type' while still using the default 'upload' type in delivery URLs
+        /// Allows the resource to behave as if it's of the authenticated 'type' while still using the default 'upload'
+        /// type in delivery URLs
         /// </summary>
         public string AccessMode { get; set; }
 
         /// <summary>
-        /// Proxy to use when Cloudinary accesses remote folders
+        /// Proxy to use when Cloudinary accesses remote folders.
         /// </summary>
         public string Proxy { get; set; }
 
         /// <summary>
-        /// Base Folder to use when building the Cloudinary public_id
+        /// Base Folder to use when building the Cloudinary public_id.
         /// </summary>
         public string Folder { get; set; }
 
@@ -137,7 +154,8 @@ namespace CloudinaryDotNet.Actions
         public bool? Overwrite { get; set; }
 
         /// <summary>
-        /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the Aspose Document Conversion add-on.
+        /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the
+        /// Aspose Document Conversion add-on.
         /// </summary>
         public string RawConvert { get; set; }
 
@@ -152,7 +170,8 @@ namespace CloudinaryDotNet.Actions
         public string[] AllowedFormats { get; set; }
 
         /// <summary>
-        /// Set to "manual" to add the uploaded image to a queue of pending moderation images. Set to "webpurify" to automatically moderate the uploaded image using the WebPurify Image Moderation add-on.
+        /// Set to "manual" to add the uploaded image to a queue of pending moderation images. Set to "webpurify"
+        /// to automatically moderate the uploaded image using the WebPurify Image Moderation add-on.
         /// </summary>
         public string Moderation { get; set; }
 
@@ -162,7 +181,7 @@ namespace CloudinaryDotNet.Actions
         public string Async { get; set; }
 
         /// <summary>
-        /// Optional. Pass a list of AccessControlRule parameters
+        /// Optional. Pass a list of AccessControlRule parameters.
         /// </summary>
         public List<AccessControlRule> AccessControl { get; set; }
 

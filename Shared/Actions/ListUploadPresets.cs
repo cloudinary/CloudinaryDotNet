@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    ///  Allows to list upload presets.
+    ///  Parameters of list upload presets request.
     /// </summary>
     public class ListUploadPresetsParams : BaseParams
     {
@@ -21,7 +21,7 @@ namespace CloudinaryDotNet.Actions
         public string NextCursor { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -29,9 +29,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -46,7 +46,7 @@ namespace CloudinaryDotNet.Actions
     }
 
     /// <summary>
-    /// Response to <see cref="ListUploadPresetsParams"/>.
+    /// Parsed result of upload presets listing.
     /// </summary>
     [DataContract]
     public class ListUploadPresetsResult : BaseResult
@@ -64,10 +64,10 @@ namespace CloudinaryDotNet.Actions
         public string NextCursor { get; protected set; }
 
         /// <summary>
-        /// Parses HTTP response and creates new instance of this class
+        /// Parses HTTP response and creates new instance of this class.
         /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
+        /// <param name="response">HTTP response.</param>
+        /// <returns>New instance of this class.</returns>
         internal static ListUploadPresetsResult Parse(Object response)
         {
             return Api.Parse<ListUploadPresetsResult>(response);

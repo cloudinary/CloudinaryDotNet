@@ -4,7 +4,7 @@ namespace CloudinaryDotNet
 {
     /// <summary>
     /// Allows to generate images for your responsive website in various width dimensions, 
-    /// and to define the minimum file size step (performance budget)
+    /// and to define the minimum file size step (performance budget).
     /// </summary>
     public class ResponsiveBreakpoint : JObject
     {
@@ -16,13 +16,16 @@ namespace CloudinaryDotNet
         private const string MAX_IMAGES = "max_images";
         private const string FORMAT = "format";
 
+        /// <summary>
+        /// Instantiates the <see cref="ResponsiveBreakpoint"/> object.
+        /// </summary>
         public ResponsiveBreakpoint()
         {
             Add(CREATE_DERIVED, true);
         }
 
         /// <summary>
-        /// Get value of the create_derived flag
+        /// Get value of the create_derived flag.
         /// </summary>
         public bool IsCreateDerived()
         {
@@ -31,7 +34,8 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set create_derived flag.
-        /// If create_derived flag is enabled, the derived images don't need to be regenerated when first accessed by your users
+        /// If true, create and keep the derived images of the selected breakpoints during the API call. 
+        /// If false, images generated during the analysis process are thrown away.
         /// </summary>
         public ResponsiveBreakpoint CreateDerived(bool createDerived)
         {
@@ -40,7 +44,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set transformation to apply on the original image
+        /// The base transformation to first apply to the image before finding the best breakpoints.
         /// </summary>
         public ResponsiveBreakpoint Transformation(Transformation transformation)
         {
@@ -51,17 +55,16 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Get maximal width in pixels
         /// </summary>
-        /// <returns></returns>
         public int MaxWidth()
         {
             return Value<int>(MAX_WIDTH);
         }
 
         /// <summary>
-        /// Set maximal boundary of Width
+        /// The maximum width needed for this image. If specifying a width bigger than the original image, the width
+        /// of the original image is used instead. Default: 1000.
         /// </summary>
-        /// <param name="maxWidth">Maximal width in pixels</param>
-        /// <returns></returns>
+        /// <param name="maxWidth">Maximum width in pixels.</param>
         public ResponsiveBreakpoint MaxWidth(int maxWidth)
         {
             this[MAX_WIDTH] = maxWidth;
@@ -69,7 +72,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Get minimal Width in pixels
+        /// Get minimum width in pixels.
         /// </summary>
         public int MinWidth()
         {
@@ -77,9 +80,9 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set minimal boundary of Width
+        /// Set the minimum width needed for this image. Default: 50.
         /// </summary>
-        /// <param name="minWidth">Minimal width in pixels</param>
+        /// <param name="minWidth">Minimum width in pixels.</param>
         public ResponsiveBreakpoint MinWidth(int minWidth)
         {
             this[MIN_WIDTH] = minWidth;
@@ -87,7 +90,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Get minimal file size step
+        /// Get minimum number of bytes between two consecutive breakpoints (images).
         /// </summary>
         public int BytesStep()
         {
@@ -95,7 +98,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set minimal file size step to generate images
+        /// Set the minimum number of bytes between two consecutive breakpoints (images). Default: 20000.
         /// </summary>
         /// <param name="bytesStep">File size step in bytes</param>
         /// <returns></returns>
@@ -106,7 +109,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Get maximal number of images to generate
+        /// Get maximum number of breakpoints(images) to find.
         /// </summary>
         public int MaxImages()
         {
@@ -114,7 +117,8 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set maximum number of images to generate
+        /// Set the maximum number of breakpoints to find, between 3 and 200. This means that there might be size
+        /// differences bigger than the given bytes_step value between consecutive images. Default: 20.
         /// </summary>
         public ResponsiveBreakpoint MaxImages(int maxImages)
         {
@@ -123,7 +127,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Get format of the generated images
+        /// Get the file extension of the derived resources to the format indicated.
         /// </summary>
         public string Format()
         {
@@ -131,7 +135,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Set format of images to generate
+        /// Sets the file extension of the derived resources to the format indicated.
         /// </summary>
         public ResponsiveBreakpoint Format(string format)
         {

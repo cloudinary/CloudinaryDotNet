@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Allows to list resources.
+    /// Parameters of list resources request.
     /// </summary>
     public class ListResourcesParams : BaseParams
     {
@@ -39,7 +39,9 @@ namespace CloudinaryDotNet.Actions
         public bool Context { get; set; }
 
         /// <summary>
-        /// Optional.
+        /// When a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>, 
+        /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
+        /// the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
         public string NextCursor { get; set; }
 
@@ -89,6 +91,9 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class ListSpecificResourcesParams : ListResourcesParams
     {
+        /// <summary>
+        /// Instantiates the <see cref="ListSpecificResourcesParams"/> object.
+        /// </summary>
         public ListSpecificResourcesParams()
         {
             PublicIds = new List<string>();
@@ -101,9 +106,9 @@ namespace CloudinaryDotNet.Actions
         public List<string> PublicIds { get; set; }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -131,9 +136,9 @@ namespace CloudinaryDotNet.Actions
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -155,7 +160,7 @@ namespace CloudinaryDotNet.Actions
         public string Tag { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         /// <exception cref="System.ArgumentException">Tag must be set to list resource by tag!</exception>
         public override void Check()
@@ -167,9 +172,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -197,7 +202,7 @@ namespace CloudinaryDotNet.Actions
         public ModerationStatus ModerationStatus { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -208,9 +213,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();

@@ -6,7 +6,7 @@ namespace CloudinaryDotNet
 {
     static class Constants
     {
-        //API url patterns
+        //API URL patterns
         public const string RESOURCES_API_URL = "resources";
         public const string TAG_API_URL = "tag";
         public const string STREAMING_PROFILE_API_URL = "streaming_profiles";

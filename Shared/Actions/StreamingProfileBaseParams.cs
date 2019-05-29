@@ -7,6 +7,9 @@ using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions
 {
+    /// <summary>
+    /// Base parameters of update streaming profile request.
+    /// </summary>
     public class StreamingProfileBaseParams : BaseParams
     {
         /// <summary>
@@ -20,7 +23,7 @@ namespace CloudinaryDotNet.Actions
         public List<Representation> Representations { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -29,9 +32,9 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -55,7 +58,10 @@ namespace CloudinaryDotNet.Actions
             return dict;
         }
     }
-    
+
+    /// <summary>
+    /// Details of the transformation parameters for the representation.
+    /// </summary>
     [DataContract]
     public class Representation
     {

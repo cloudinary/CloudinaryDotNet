@@ -18,7 +18,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Parametrized constructor
+        /// Parameterized constructor
         /// </summary>
         /// <param name="cloud">Cloud name</param>
         /// <param name="apiKey">API key</param>
@@ -31,7 +31,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Parametrized constructor
+        /// Parameterized constructor
         /// </summary>
         /// <param name="cloud">Cloud name</param>
         public Account(string cloud)
