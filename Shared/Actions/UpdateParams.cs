@@ -116,7 +116,17 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Override the default quality defined in the account level for a specific resource.
         /// </summary>
-        public string QualityOveride { get; set; }
+        [Obsolete("Property QualityOveride is deprecated, please use QualityOverride instead")]
+        public string QualityOveride
+        {
+            get { return QualityOverride; }
+            set { QualityOverride = value; }
+        }
+
+        /// <summary>
+        /// Override the default quality defined in the account level for a specific resource.
+        /// </summary>
+        public string QualityOverride { get; set; }
 
         /// <summary>
         /// Gets or sets the moderation status.
@@ -173,8 +183,8 @@ namespace CloudinaryDotNet.Actions
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
 
-            if (!string.IsNullOrWhiteSpace(QualityOveride))
-                AddParam(dict, "quality_override", QualityOveride);
+            if (!string.IsNullOrWhiteSpace(QualityOverride))
+                AddParam(dict, "quality_override", QualityOverride);
 
             if (Headers != null && Headers.Count > 0)
             {
