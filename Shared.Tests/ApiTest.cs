@@ -1090,7 +1090,7 @@ namespace CloudinaryDotNet.Test
 
             // should support an enum value
 
-            actual = m_api.UrlVideoUp.Transform(new Transformation().AudioFrequency(AudioFrequency.AF_44100)).BuildUrl("video_id");
+            actual = m_api.UrlVideoUp.Transform(new Transformation().AudioFrequency(AudioFrequency.AF44100)).BuildUrl("video_id");
             Assert.AreEqual(m_defaultVideoUpPath + "af_44100/video_id", actual);
         }
 
