@@ -202,6 +202,16 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Deletes transformation by name.
+        /// </summary>
+        /// <param name="transformName">The name of transformation to delete.</param>
+        /// <returns>Parsed response after transformation manipulation.</returns>
+        public Task<TransformResult> DeleteTransformAsync(string transformName)
+        {
+            return CallAsync(DeleteTransform, transformName);
+        }
+
+        /// <summary>
         /// Eagerly generate sprites asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters for sprite generation.</param>

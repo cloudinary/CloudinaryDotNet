@@ -19,6 +19,11 @@ namespace CloudinaryDotNet.Actions
         public Transformation Transform { get; set; }
 
         /// <summary>
+        /// [optional] The transformation's extension. 
+        /// </summary>
+        public string Format { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -37,7 +42,17 @@ namespace CloudinaryDotNet.Actions
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
-            dict.Add("transformation", Transform.Generate());
+
+            string transformationStr = Transform.Generate();
+
+            if (Format != null)
+            {
+                transformationStr = Transform.Generate() + "/" + Format;
+            }
+           
+            dict.Add("transformation", transformationStr);
+            dict.Add("name", Name);
+
             return dict;
         }
     }

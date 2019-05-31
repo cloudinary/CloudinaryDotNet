@@ -1020,14 +1020,12 @@ namespace CloudinaryDotNet
         /// <returns>Parsed details of a single transformation.</returns>
         public GetTransformResult GetTransform(GetTransformParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
+            var url =
                 m_api.ApiUrlV.
-                ResourceType("transformations").
-                Add(parameters.Transformation).
-                BuildUrl(),
-                parameters.ToParamsDictionary());
+                ResourceType("transformations").                
+                BuildUrl();
 
-            return m_api.CallApi<GetTransformResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return m_api.CallApi<GetTransformResult>(HttpMethod.GET, url, parameters, null);
         }
 
         /// <summary>
@@ -1387,7 +1385,6 @@ namespace CloudinaryDotNet
         {
             var url = m_api.ApiUrlV.
                 ResourceType("transformations").
-                Add(parameters.Transformation).
                 BuildUrl();
 
             return m_api.CallApi<UpdateTransformResult>(HttpMethod.PUT, url, parameters, null);
@@ -1401,8 +1398,7 @@ namespace CloudinaryDotNet
         public TransformResult CreateTransform(CreateTransformParams parameters)
         {
             var url = m_api.ApiUrlV.
-                ResourceType("transformations").
-                Add(parameters.Name).
+                ResourceType("transformations").                
                 BuildUrl();
 
             return m_api.CallApi<TransformResult>(HttpMethod.POST, url, parameters, null);
@@ -1415,12 +1411,18 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after transformation manipulation.</returns>
         public TransformResult DeleteTransform(string transformName)
         {
-            var url = m_api.ApiUrlV.
-                ResourceType("transformations").
-                Add(transformName).
-                BuildUrl();
+            var delTransParam = new DeleteTransformParams();
 
-            return m_api.CallApi<TransformResult>(HttpMethod.DELETE, url, null, null);
+            if (!string.IsNullOrEmpty(transformName))
+            {
+               delTransParam.Name = transformName;
+            }
+
+            var url = m_api.ApiUrlV.
+            ResourceType("transformations").                
+            BuildUrl();
+
+            return m_api.CallApi<TransformResult>(HttpMethod.DELETE, url, delTransParam, null);
         }
 
         /// <summary>

@@ -2141,7 +2141,7 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestGetTransform()
         {
-            // should allow getting transformation metadata
+            // should allow getting transformation data.
 
             var uploadParams = new ImageUploadParams()
             {
@@ -2221,6 +2221,68 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestUpdateTransformWithExtension()
+        {
+            // should allow updating a transformation string contains a format extension
+
+            string transformationName = m_updateTransformationWithExtAsString;
+
+            m_cloudinary.CreateTransform(
+                new CreateTransformParams()
+                {
+                    Name = transformationName,
+                    Transform = m_simpleTransformation,
+                    Format = m_extension
+                });
+
+            var updateParams = new UpdateTransformParams()
+            {
+                Transformation = transformationName,
+                UnsafeTransform = m_updateTransformation,
+                Strict = true,
+                Format = m_extension
+            };
+
+            m_cloudinary.UpdateTransform(updateParams);
+
+            var getResult = m_cloudinary.GetTransform(transformationName);
+
+            Assert.IsNotNull(getResult.Info);
+            Assert.AreEqual(updateParams.UnsafeTransform.Generate(), new Transformation(getResult.Info).Generate());
+        }
+
+        [Test]
+        public void TestUpdateTransformWithEmptyExtension()
+        {
+            // should allow updating a transformation string contains an empty string (e.g., w_150,h_150/)
+
+            string transformationName = m_updateTransformationWithEmptyExtAsString;
+                        
+            m_cloudinary.CreateTransform(
+                new CreateTransformParams()
+                {
+                    Name = transformationName,
+                    Transform = m_simpleTransformation,
+                    Format = String.Empty
+                });
+
+            var updateParams = new UpdateTransformParams()
+            {
+                Transformation = transformationName,
+                UnsafeTransform = m_updateTransformation,
+                Strict = true,
+                Format = String.Empty
+            };
+
+            m_cloudinary.UpdateTransform(updateParams);
+
+            var getResult = m_cloudinary.GetTransform(transformationName);
+
+            Assert.IsNotNull(getResult.Info);
+            Assert.AreEqual(updateParams.UnsafeTransform.Generate(), new Transformation(getResult.Info).Generate());
+        }
+
+        [Test]
         public void TestCreateTransform()
         {
             // should allow creating named transformation
@@ -2248,6 +2310,84 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestCreateTransformWithExt()
+        {
+            // should allow creating a transformation containing an extension suffix (e.g., w_150,h_150/jpg)
+
+            CreateTransformParams create = new CreateTransformParams()
+            {
+                Name = m_updateTransformationWithExtAsString,
+                Transform = m_updateTransformation,
+                Format = m_extension
+            };
+
+            m_cloudinary.CreateTransform(create);
+
+            GetTransformParams get = new GetTransformParams()
+            {
+                Transformation = create.Transform.Generate(),
+                Format = m_extension
+            };
+
+            GetTransformResult getResult = m_cloudinary.GetTransform(get);
+
+            Assert.IsNotNull(getResult);
+            Assert.AreEqual(true, getResult.Strict);
+            Assert.AreEqual(false, getResult.Used);
+            Assert.AreEqual(1, getResult.Info.Length);
+
+            object format;
+            string formatStr = null;
+
+            if (getResult.Info[0].TryGetValue("format", out format))
+            {
+                formatStr = format.ToString();
+            }
+
+            Assert.AreEqual(m_extension, formatStr);
+            Assert.AreEqual(m_updateTransformation.Generate(), new Transformation(getResult.Info[0]).Generate());
+        }
+
+        [Test]
+        public void TestCreateTransformWithEmptyExt()
+        {
+            // should allow creating a transformation ending with a slash (e.g., w_150,h_150/)
+
+            CreateTransformParams create = new CreateTransformParams()
+            {
+                Name = m_updateTransformationWithEmptyExtAsString,
+                Transform = m_updateTransformation,
+                Format = String.Empty
+            };
+
+            m_cloudinary.CreateTransform(create);
+
+            GetTransformParams get = new GetTransformParams()
+            {
+                Transformation = create.Transform.Generate(),
+                Format = String.Empty
+            };
+
+            GetTransformResult getResult = m_cloudinary.GetTransform(get);
+
+            Assert.IsNotNull(getResult);
+            Assert.AreEqual(true, getResult.Strict);
+            Assert.AreEqual(false, getResult.Used);
+            Assert.AreEqual(1, getResult.Info.Length);
+
+            object extension;
+            string extensionStr = null;
+
+            if (getResult.Info[0].TryGetValue("extension", out extension))
+            {
+                extensionStr = extension.ToString();
+            }
+
+            Assert.AreEqual("none", extensionStr);
+            Assert.AreEqual(m_updateTransformation.Generate(), new Transformation(getResult.Info[0]).Generate());
+        }
+
+        [Test]
         public void TestDeleteTransform()
         {
             // should allow deleting named transformation
@@ -2259,6 +2399,62 @@ namespace CloudinaryDotNet.Test
             {
                 Name = transformationName,
                 Transform = m_simpleTransformation
+            };
+
+            TransformResult createResult = m_cloudinary.CreateTransform(create);
+
+            Assert.AreEqual("created", createResult.Message);
+
+
+
+            var res = m_cloudinary.DeleteTransform(transformationName);
+
+            GetTransformResult getResult = m_cloudinary.GetTransform(
+                new GetTransformParams() { Transformation = transformationName });
+
+            Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode);
+        }
+
+        [Test]
+        public void TestDeleteTransformWithExt()
+        {
+            // should allow deleting a transformation containing an extension suffix (e.g., w_150,h_150/jpg)
+            string transformationName = m_simpleTransformationWithExtAsString;
+
+            m_cloudinary.DeleteTransform(transformationName);
+
+            CreateTransformParams create = new CreateTransformParams()
+            {
+                Name = transformationName,
+                Transform = m_simpleTransformation,
+                Format = m_extension
+            };
+
+            TransformResult createResult = m_cloudinary.CreateTransform(create);
+
+            Assert.AreEqual("created", createResult.Message);
+
+            m_cloudinary.DeleteTransform(transformationName);
+
+            GetTransformResult getResult = m_cloudinary.GetTransform(
+                new GetTransformParams() { Transformation = transformationName });
+
+            Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode);
+        }
+
+        [Test]
+        public void TestDeleteTransformWithEmptyExtension()
+        {
+            // should allow deleting a transformation ending with a slash (e.g., w_150,h_150/)
+            string transformationName = m_simpleTransformationWithEmptyExtAsString;
+
+            m_cloudinary.DeleteTransform(transformationName);
+
+            CreateTransformParams create = new CreateTransformParams()
+            {
+                Name = transformationName,
+                Transform = m_simpleTransformation,
+                Format = String.Empty
             };
 
             TransformResult createResult = m_cloudinary.CreateTransform(create);

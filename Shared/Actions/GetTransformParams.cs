@@ -16,10 +16,16 @@ namespace CloudinaryDotNet.Actions
             Transformation = String.Empty;
         }
 
+      
         /// <summary>
-        /// Name of the transformation.
+        /// The Name of the transformation.
         /// </summary>
         public string Transformation { get; set; }
+
+        /// <summary>
+        /// [optional] The transformation's extention. 
+        /// </summary>
+        public string Format { get; set; }
 
         /// <summary>
         /// Max number of derived resources to return. Default=10. Maximum=100.
@@ -43,6 +49,15 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
+            string transformationStr = Transformation;
+
+            if (Format != null)
+            {
+                transformationStr = Transformation + "/" + Format;
+            }
+            
+            dict.Add("transformation", transformationStr);
+            
             if (MaxResults > 0)
                 AddParam(dict, "max_results", MaxResults.ToString());
 

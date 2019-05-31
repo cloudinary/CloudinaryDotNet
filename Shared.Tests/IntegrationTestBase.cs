@@ -69,6 +69,9 @@ namespace CloudinaryDotNet.Test
         protected string m_apiTag;
 
         protected const string m_simpleTransformationAsString = "c_scale,w_0.5";
+        protected const string m_simpleTransformationWithExtAsString = "c_scale,w_0.5/jpg";
+        protected const string m_extension = "jpg";        
+        protected const string m_simpleTransformationWithEmptyExtAsString = "c_scale,w_0.5/";
         protected readonly Transformation m_simpleTransformation = new Transformation().Crop("scale").Width(0.5);
 
         protected const int m_resizeTransformationWidth = 512;
@@ -78,6 +81,8 @@ namespace CloudinaryDotNet.Test
         protected readonly Transformation m_resizeTransformation = new Transformation().Width(m_resizeTransformationWidth).Height(m_resizeTransformationHeight);
 
         protected string m_updateTransformationAsString;
+        protected string m_updateTransformationWithExtAsString;
+        protected string m_updateTransformationWithEmptyExtAsString;
         protected Transformation m_updateTransformation;
 
         protected Transformation m_explicitTransformation;
@@ -134,10 +139,12 @@ namespace CloudinaryDotNet.Test
             m_apiTag = $"{m_test_tag}{m_suffix}_api";
 
             m_updateTransformationAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100";
+            m_updateTransformationWithExtAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100/" + m_extension;
+            m_updateTransformationWithEmptyExtAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100/";
             m_updateTransformation = new Transformation().Width(100).Crop("scale").Overlay(new TextLayer().Text(m_suffix + "_update").FontFamily("Arial").FontSize(60));
             m_explicitTransformation = new Transformation().Width(100).Crop("scale").FetchFormat("png").Overlay(new TextLayer().Text(m_suffix).FontFamily("Arial").FontSize(60));
 
-            AddCreatedTransformation(m_simpleTransformation, m_resizeTransformation, m_updateTransformation, m_updateTransformationAsString,
+            AddCreatedTransformation(m_simpleTransformation, m_simpleTransformationWithExtAsString, m_simpleTransformationWithEmptyExtAsString, m_resizeTransformation, m_updateTransformation, m_updateTransformationAsString, m_updateTransformationWithEmptyExtAsString, m_updateTransformationWithExtAsString,
                 m_explicitTransformation, m_explodeTransformation, m_simpleTransformationAngle);
         }
 
