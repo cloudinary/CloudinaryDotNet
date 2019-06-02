@@ -141,6 +141,15 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Control audio sample frequency.
+        /// </summary>
+        /// <param name="frequency">An enum value, that represents frequency value in Hz.</param>
+        public Transformation AudioFrequency(AudioFrequency frequency)
+        {
+            return Add("audio_frequency", ApiShared.GetCloudinaryParam(frequency));
+        }
+
+        /// <summary>
         /// Relevant when converting videos to animated GIF or WebP format. If not specified, the resulting GIF or WebP
         /// samples the whole video (up to 400 frames, at up to 10 frames per second).
         /// </summary>
