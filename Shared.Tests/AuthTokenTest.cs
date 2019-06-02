@@ -137,7 +137,7 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual(
                 $"{m_AuthenticatedImageUrl}/{authTokenTestTransformationAsString}/{SAMPLE_JPG}?__cld_token__=st={START_TIME2}" +
-                $"~exp={EXPIRATION2}~hmac=7d276841d70c4ecbd0708275cd6a82e1f08e47838fbb0bceb2538e06ddfa3029",
+                $"~exp={EXPIRATION2}~hmac=55cfe516530461213fe3b3606014533b1eca8ff60aeab79d1bb84c9322eebc1f",
                 url
             );
 

@@ -21,6 +21,11 @@ namespace CloudinaryDotNet
         public static string AUTH_TOKEN_NAME = "__cld_token__";
 
         /// <summary>
+        /// Reqular expression pattern to match special characters in URL.
+        /// </summary>
+        public static string UNSAFE_RE = "[ \"#%&\\'\\/:;<=>?@\\[\\\\\\]^`{\\|}~]";
+
+        /// <summary>
         /// Authentication token explicitly set to NULL.
         /// </summary>
         public static AuthToken NULL_AUTH_TOKEN = new AuthToken().SetNull();
@@ -175,7 +180,7 @@ namespace CloudinaryDotNet
 
             if (!string.IsNullOrWhiteSpace(acl))
             {
-                tokenParts.Add(string.Format("acl={0}", EscapeToLower(acl)));
+                tokenParts.Add(string.Format("acl={0}", EscapeUrlToLower(acl)));
             }
 
             List<string> toSign = new List<string>(tokenParts);
@@ -183,7 +188,7 @@ namespace CloudinaryDotNet
             // Add URL only if ACL is not provided
             if (!string.IsNullOrWhiteSpace(url) && string.IsNullOrWhiteSpace(acl))
             {
-                toSign.Add(string.Format("url={0}", EscapeToLower(url)));
+                toSign.Add(string.Format("url={0}", EscapeUrlToLower(url)));
             }
             string auth = Digest(string.Join("~", toSign));
             tokenParts.Add(string.Format("hmac={0}", auth));
@@ -240,33 +245,19 @@ namespace CloudinaryDotNet
             }
         }
 
-        private string EscapeUrl(string url)
-        {
-            return Uri.EscapeDataString(url);
-        }
-
         /// <summary>
         /// Encode and lowercase the URL.
         /// </summary>
         /// <param name="url">URL for escaping.</param>
         /// <returns>Escaped URL in lowercase.</returns>
-        protected string EscapeToLower(string url)
+        protected string EscapeUrlToLower(string url)
         {
-            string escaped = string.Empty;
-
-            var encodedUrl = Utils.EncodedUrl(url);
-            StringBuilder sb = new StringBuilder(encodedUrl);
-            string result = sb.ToString();
-            string regex = "%..";
-            Regex r = new Regex(regex, RegexOptions.Compiled);
-            foreach (Match ItemMatch in r.Matches(sb.ToString()))
+            var r = new Regex(UNSAFE_RE, RegexOptions.Compiled | RegexOptions.RightToLeft);
+            return r.Replace(url, m =>
             {
-                string buf = sb.ToString().Substring(ItemMatch.Index, ItemMatch.Length).ToLower();
-                sb.Remove(ItemMatch.Index, ItemMatch.Length);
-                sb.Insert(ItemMatch.Index, buf);
-            }
-
-            return sb.ToString();
+                var encodedItem = string.Join("", m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2")));
+                return encodedItem.ToLower();
+            });
         }
 
         private string Digest(string message)
