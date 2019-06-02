@@ -166,8 +166,6 @@ namespace CloudinaryDotNet.Test
             // should allow deleting named transformation
             string transformationName = GetUniqueTransformationName();
 
-            m_cloudinary.DeleteTransform(transformationName);
-
             CreateTransformParams create = new CreateTransformParams()
             {
                 Name = transformationName,
@@ -178,9 +176,9 @@ namespace CloudinaryDotNet.Test
 
             Assert.AreEqual("created", createResult.Message);
 
-
-
             var res = m_cloudinary.DeleteTransformAsync(transformationName);
+
+            Assert.AreEqual("deleted", res.Result.Message);
 
             GetTransformResult getResult = m_cloudinary.GetTransformAsync(
                 new GetTransformParams() { Transformation = transformationName }).Result;
@@ -279,81 +277,46 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestUpdateTransformWithExtensionAsync()
+        public void TestUpdateTransformWithImplicitExtensionAsync()
         {
-            // should allow updating a transformation string contains a format extension
+            // should allow updating a transformation string contains a format extension (e.g., w_150,h_150/jpg) or an empty extnetion (e.g., w_150,h_150/)
 
-            string transformationName = m_updateTransformationWithExtAsString;
+            string transformationNameWithExt = m_updateTransformationWithExtAsString;
+            string transformationNameWithEmptyExt = m_updateTransformationWithEmptyExtAsString;
 
-            m_cloudinary.CreateTransform(
-                new CreateTransformParams()
-                {
-                    Name = transformationName,
-                    Transform = m_simpleTransformation,
-                    Format = m_extension
-                });           
+            var create = new CreateTransformParams() { Transform = m_updateTransformation };
 
-            var updateParams = new UpdateTransformParams()
-            {
-                Transformation = transformationName,
-                UnsafeTransform = m_updateTransformation,
-                Strict = true,
-                Format = m_extension
-            };
+            create.Name = transformationNameWithExt;
+            create.Format = FILE_FORMAT_JPG;
 
-            UpdateTransformResult result = m_cloudinary.UpdateTransformAsync(updateParams).Result;
+            m_cloudinary.CreateTransform(create);
 
-            GetTransformResult getResult = m_cloudinary.GetTransform(transformationName);
+            create.Name = transformationNameWithEmptyExt;
+            create.Format = String.Empty;
 
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(true, getResult.Strict);
+            m_cloudinary.CreateTransform(create);
 
-            updateParams.Strict = false;
-            m_cloudinary.UpdateTransform(updateParams);
+            var updateParams = new UpdateTransformParams() { Strict = true };
 
-            getResult = m_cloudinary.GetTransform(transformationName);
+            updateParams.Transformation = transformationNameWithExt;
+            updateParams.Format = FILE_FORMAT_JPG;
 
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(false, getResult.Strict);
-        }
+            m_cloudinary.UpdateTransformAsync(updateParams);
 
-        [Test]
-        public void TestUpdateTransformWithEmptyExtensionAsync()
-        {
-            // should allow updating a transformation string contains an empty string (e.g., w_150,h_150/)
+            updateParams.Transformation = transformationNameWithEmptyExt;
+            updateParams.Format = String.Empty;
 
-            string transformationName = m_updateTransformationWithEmptyExtAsString;
+            m_cloudinary.UpdateTransformAsync(updateParams);
 
-            m_cloudinary.CreateTransform(
-                new CreateTransformParams()
-                {
-                    Name = transformationName,
-                    Transform = m_simpleTransformation,
-                    Format = String.Empty
-                });
+            var getResultWithExt = m_cloudinary.GetTransform(transformationNameWithExt);
 
-            var updateParams = new UpdateTransformParams()
-            {
-                Transformation = transformationName,
-                UnsafeTransform = m_updateTransformation,
-                Strict = true,
-                Format = String.Empty
-            };
+            Assert.IsNotNull(getResultWithExt.Info);
+            Assert.AreEqual(true, getResultWithExt.Strict);
 
-            UpdateTransformResult result = m_cloudinary.UpdateTransformAsync(updateParams).Result;
+            var getResultWithEmptyExt = m_cloudinary.GetTransform(transformationNameWithEmptyExt);
 
-            GetTransformResult getResult = m_cloudinary.GetTransform(transformationName);
-
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(true, getResult.Strict);
-
-            updateParams.Strict = false;
-            m_cloudinary.UpdateTransform(updateParams);
-
-            getResult = m_cloudinary.GetTransform(transformationName);
-
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(false, getResult.Strict);
+            Assert.IsNotNull(getResultWithEmptyExt.Info);
+            Assert.AreEqual(true, getResultWithEmptyExt.Strict);
         }
 
         [Test]
@@ -394,7 +357,7 @@ namespace CloudinaryDotNet.Test
             {
                 Name = m_updateTransformationWithExtAsString,
                 Transform = m_updateTransformation,
-                Format = m_extension
+                Format = FILE_FORMAT_JPG
             };
 
             var result = m_cloudinary.CreateTransformAsync(create).Result;
@@ -404,7 +367,7 @@ namespace CloudinaryDotNet.Test
             GetTransformParams get = new GetTransformParams()
             {
                 Transformation = create.Transform.Generate(),
-                Format = m_extension
+                Format = FILE_FORMAT_JPG
             };
 
             GetTransformResult getResult = m_cloudinary.GetTransformAsync(get).Result;
@@ -414,15 +377,14 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(false, getResult.Used);
             Assert.AreEqual(1, getResult.Info.Length);
 
-            object format;
             string formatStr = null;
 
-            if (getResult.Info[0].TryGetValue("format", out format))
+            if (getResult.Info[0].TryGetValue("format", out var format))
             {
                 formatStr = format.ToString();
             }
 
-            Assert.AreEqual(m_extension, formatStr);
+            Assert.AreEqual(FILE_FORMAT_JPG, formatStr);
             Assert.AreEqual(m_updateTransformation.Generate(), new Transformation(getResult.Info[0]).Generate());
         }
 
@@ -455,10 +417,9 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(false, getResult.Used);
             Assert.AreEqual(1, getResult.Info.Length);
 
-            object extension;
             string extensionStr = null;
 
-            if (getResult.Info[0].TryGetValue("extension", out extension))
+            if (getResult.Info[0].TryGetValue("extension", out var extension))
             {
                 extensionStr = extension.ToString();
             }

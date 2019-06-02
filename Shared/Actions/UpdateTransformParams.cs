@@ -17,12 +17,12 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Transformation represented as string.
+        /// The name of the transformation. 
         /// </summary>
         public string Transformation { get; set; }
 
         /// <summary>
-        /// [optional] The transformation's extention.
+        /// [optional] The transformation's extension.
         /// </summary>
         public string Format { get; set; }
 
@@ -66,11 +66,12 @@ namespace CloudinaryDotNet.Actions
 
                 if (Format != null)
                 {
-                    unsafeTransformationStr = unsafeTransformationStr + "/" + Format;
+                    unsafeTransformationStr += $"/{Format}";
                 }
 
                 AddParam(dict, "unsafe_update", unsafeTransformationStr);
             }
+
             return dict;
         }
     }

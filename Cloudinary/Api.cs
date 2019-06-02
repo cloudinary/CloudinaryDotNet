@@ -92,9 +92,7 @@ namespace CloudinaryDotNet
         {
             if (parameters != null && (method == HttpMethod.GET || method == HttpMethod.DELETE))
             {                
-                UrlBuilder urlBuilder = new UrlBuilder(url, parameters);
-
-                url = urlBuilder.ToString();
+                url = new UrlBuilder(url, parameters).ToString();
             }
 
             HttpWebRequest request = RequestBuilder(url);
@@ -145,12 +143,7 @@ namespace CloudinaryDotNet
                 }
             }
 
-            if (parameters == null)
-            {
-                return request;
-            }
-
-            if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.DELETE)
+            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
             {
                 request.AllowWriteStreamBuffering = false;
                 request.AllowAutoRedirect = false;

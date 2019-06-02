@@ -1413,11 +1413,8 @@ namespace CloudinaryDotNet
         {
             var delTransParam = new DeleteTransformParams();
 
-            if (!string.IsNullOrEmpty(transformName))
-            {
-               delTransParam.Name = transformName;
-            }
-
+            delTransParam.Name = transformName;
+            
             var url = m_api.ApiUrlV.
             ResourceType("transformations").                
             BuildUrl();

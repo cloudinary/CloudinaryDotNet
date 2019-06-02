@@ -9,7 +9,7 @@ namespace CloudinaryDotNet.Actions
     public class DeleteTransformParams : BaseParams
     {
         /// <summary>
-        /// The transformation object.
+        /// The transformation name.
         /// </summary>
         public string Name { get; set; }
 
@@ -20,7 +20,6 @@ namespace CloudinaryDotNet.Actions
         {
             if (Name == null)
                 throw new ArgumentException("Name must be set!");
-
         }
 
         /// <summary>
@@ -31,6 +30,7 @@ namespace CloudinaryDotNet.Actions
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
             dict.Add("transformation", Name);
+
             return dict;
         }
     }

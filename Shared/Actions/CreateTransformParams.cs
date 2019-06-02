@@ -47,7 +47,7 @@ namespace CloudinaryDotNet.Actions
 
             if (Format != null)
             {
-                transformationStr = Transform.Generate() + "/" + Format;
+                transformationStr += $"/{ Format}";
             }
            
             dict.Add("transformation", transformationStr);

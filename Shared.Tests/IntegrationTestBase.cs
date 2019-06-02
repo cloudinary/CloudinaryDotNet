@@ -70,7 +70,6 @@ namespace CloudinaryDotNet.Test
 
         protected const string m_simpleTransformationAsString = "c_scale,w_0.5";
         protected const string m_simpleTransformationWithExtAsString = "c_scale,w_0.5/jpg";
-        protected const string m_extension = "jpg";        
         protected const string m_simpleTransformationWithEmptyExtAsString = "c_scale,w_0.5/";
         protected readonly Transformation m_simpleTransformation = new Transformation().Crop("scale").Width(0.5);
 
@@ -139,8 +138,8 @@ namespace CloudinaryDotNet.Test
             m_apiTag = $"{m_test_tag}{m_suffix}_api";
 
             m_updateTransformationAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100";
-            m_updateTransformationWithExtAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100/" + m_extension;
-            m_updateTransformationWithEmptyExtAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100/";
+            m_updateTransformationWithExtAsString = $"{m_updateTransformationAsString}/{FILE_FORMAT_JPG}";
+            m_updateTransformationWithEmptyExtAsString = $"{m_updateTransformationAsString}/";
             m_updateTransformation = new Transformation().Width(100).Crop("scale").Overlay(new TextLayer().Text(m_suffix + "_update").FontFamily("Arial").FontSize(60));
             m_explicitTransformation = new Transformation().Width(100).Crop("scale").FetchFormat("png").Overlay(new TextLayer().Text(m_suffix).FontFamily("Arial").FontSize(60));
 
