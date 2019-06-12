@@ -145,6 +145,7 @@ namespace CloudinaryDotNet.Actions
             Detection = preset.Settings.Detection;
             SimilaritySearch = preset.Settings.SimilaritySearch;
             Ocr = preset.Settings.Ocr;
+            Live = preset.Settings.Live;
         }
 
         /// <summary>
@@ -344,6 +345,12 @@ namespace CloudinaryDotNet.Actions
         public string Ocr { get; set; }
 
         /// <summary>
+        /// Whether to use the upload preset for live streaming. Default: false.
+        /// </summary>
+        public bool Live { get; set; }
+
+
+        /// <summary>
         /// Validate object model
         /// </summary>
         public override void Check()
@@ -390,6 +397,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "backup", Backup);
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "unique_filename", UniqueFilename);
+            AddParam(dict, "live", Live);
 
             AddParam(dict, "transformation", GetTransformation(Transformation));
 
