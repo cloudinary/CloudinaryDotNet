@@ -2849,21 +2849,25 @@ namespace CloudinaryDotNet.Test
                 Context = new StringDictionary("a=b", "b=c"),
                 Transformation = m_simpleTransformation,
                 EagerTransforms = new List<object>() { m_resizeTransformation, m_updateTransformation },
-                AllowedFormats = new string[] { FILE_FORMAT_JPG, FILE_FORMAT_PNG },
+                AllowedFormats = new[] { FILE_FORMAT_JPG, FILE_FORMAT_PNG },
                 Tags = $"a,b,c,{m_apiTag}",
-                FaceCoordinates = "1,2,3,4"
+                FaceCoordinates = "1,2,3,4",
+                Live = false
             };
 
             var presetName = m_cloudinary.CreateUploadPreset(presetToCreate).Name;
 
             var preset = m_cloudinary.GetUploadPreset(presetName);
+            
+            Assert.IsFalse(preset.Settings.Live);
 
             var presetToUpdate = new UploadPresetParams(preset)
             {
                 Colors = true,
                 Unsigned = true,
                 DisallowPublicId = true,
-                QualityAnalysis = true
+                QualityAnalysis = true,
+                Live = true
             };
 
             var result = m_cloudinary.UpdateUploadPreset(presetToUpdate);
@@ -2876,6 +2880,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(presetName, preset.Name);
             Assert.IsTrue(preset.Unsigned);
             Assert.IsTrue(preset.Settings.QualityAnalysis);
+            Assert.IsTrue(preset.Settings.Live);
 
             // TODO: compare settings of preset and presetToUpdate
         }
