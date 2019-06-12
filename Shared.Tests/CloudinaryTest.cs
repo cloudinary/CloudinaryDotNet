@@ -2849,7 +2849,7 @@ namespace CloudinaryDotNet.Test
                 Context = new StringDictionary("a=b", "b=c"),
                 Transformation = m_simpleTransformation,
                 EagerTransforms = new List<object>() { m_resizeTransformation, m_updateTransformation },
-                AllowedFormats = new[] { FILE_FORMAT_JPG, FILE_FORMAT_PNG },
+                AllowedFormats = new string[] { FILE_FORMAT_JPG, FILE_FORMAT_PNG },
                 Tags = $"a,b,c,{m_apiTag}",
                 FaceCoordinates = "1,2,3,4",
                 Live = false
