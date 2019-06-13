@@ -2942,6 +2942,35 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
+        public void TestResourceDerivedNextCursor()
+        {
+            var eagerTransforms = new List<Transformation> { m_simpleTransformation, m_resizeTransformation };
+            var eagerTransformStrings = new List<string> {
+                m_simpleTransformationAsString,
+                m_resizeTransformationAsString };
+
+            var upResult = m_cloudinary.Upload(new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag,
+                EagerTransforms = eagerTransforms
+            });
+
+            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { MaxResults = 1 });
+
+            Assert.NotNull(result.DerivedNextCursor);
+            CollectionAssert.Contains(eagerTransformStrings, result.Derived[0].Transformation);
+
+            var derivedResult = m_cloudinary.GetResource(
+                new GetResourceParams(upResult.PublicId) { DerivedNextCursor = result.DerivedNextCursor });
+
+            Assert.IsNull(derivedResult.DerivedNextCursor);
+            CollectionAssert.Contains(eagerTransformStrings, derivedResult.Derived[0].Transformation);
+
+            Assert.AreNotEqual(result.Derived[0].Transformation, derivedResult.Derived[0].Transformation);
+        }
+
+        [Test]
         public void TestCustomCoordinates()
         {
             //should allow sending custom coordinates

@@ -92,15 +92,10 @@ namespace CloudinaryDotNet.Actions
         public bool Pages { get; set; }
 
         /// <summary>
-        /// If there are more derived images than max_results, this is returned as part of the response. 
+        /// If there are more derived images than max_results, this is returned as part of the response.
         /// You can then specify this value as the derived_next_cursor parameter of the following listing request.
         /// </summary>
         public string DerivedNextCursor { get; set; }
-
-        /// <summary>
-        /// A pointer to the previous resource uploaded to your Cloudinary account.
-        /// </summary>
-        public string NextCursor { get; set; }
 
         /// <summary>
         /// Validate object model
@@ -131,7 +126,6 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "coordinates", Coordinates);
             AddParam(dict, "pages", Pages);
             AddParam(dict, "derived_next_cursor", DerivedNextCursor);
-            AddParam(dict, "next_cursor", NextCursor);
 
             return dict;
         }
