@@ -26,6 +26,10 @@ namespace CloudinaryDotNet.Test
         private const string MODERATION_AWS_REK = "aws_rek";
         private const string MODERATION_WEBPURIFY = "webpurify";
 
+        private const string CONTEXT_KEY1 = "context_key1";
+        private const string CONTEXT_KEY2 = "context_key2";
+        private const string CONTEXT_VALUE_TEMPLATE = "context_value";
+
         private Transformation m_implicitTransformation;
 
         protected readonly Transformation m_transformationAngleExtended =
@@ -1295,6 +1299,54 @@ namespace CloudinaryDotNet.Test
             {
                 Assert.AreEqual(list1[i], list2[i]);
             }
+        }
+
+        [Test]
+        public void TestListResourcesByContextMetadata_Exception_If_Key_Not_Specified()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => m_cloudinary.ListResourcesByContextMetadata(null));
+
+            StringAssert.AreEqualIgnoringCase("Key must be set to list resources by context metadata.", ex.Message);
+        }
+
+        [Test]
+        public void TestListResourcesByContextMetadataKeysAndValues()
+        {
+            var publicId1 = GetUniquePublicId();
+            var contextValue1 = $"{CONTEXT_VALUE_TEMPLATE}_{publicId1}";
+            var uploaded = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId1,
+                Context = new StringDictionary($"{CONTEXT_KEY1}={contextValue1}", $"{CONTEXT_KEY2}={contextValue1}"),
+                Tags = m_apiTag
+            });
+
+            var publicId2 = GetUniquePublicId();
+            var contextValue2 = $"{CONTEXT_VALUE_TEMPLATE}_{publicId2}";
+            uploaded = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId2,
+                Context = new StringDictionary($"{CONTEXT_KEY1}={contextValue2}"),
+                Tags = m_apiTag
+            });
+
+            // by key
+            var result = m_cloudinary.ListResourcesByContextMetadata(CONTEXT_KEY1);
+
+            var resource1 = result.Resources.First(x => x.PublicId == publicId1);
+            Assert.AreEqual(contextValue1, resource1.Context["custom"][CONTEXT_KEY1].ToString());
+            Assert.AreEqual(contextValue1, resource1.Context["custom"][CONTEXT_KEY2].ToString());
+
+            var resource2 = result.Resources.First(x => x.PublicId == publicId2);
+            Assert.AreEqual(contextValue2, resource2.Context["custom"][CONTEXT_KEY1].ToString());
+
+            // by key and value
+            result = m_cloudinary.ListResourcesByContextMetadata(CONTEXT_KEY1, contextValue2);
+
+            resource1 = result.Resources.First(x => x.PublicId == publicId2);
+            Assert.AreEqual(contextValue2, resource1.Context["custom"][CONTEXT_KEY1].ToString());
         }
 
         [Test]
