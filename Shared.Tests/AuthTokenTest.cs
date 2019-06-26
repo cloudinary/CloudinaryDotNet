@@ -4,7 +4,8 @@ using NUnit.Framework;
 
 namespace CloudinaryDotNet.Test
 {
-    class AuthTokenTest : IntegrationTestBase
+    [TestFixture]
+    public class AuthTokenTest
     {
         public const string KEY = "00112233FF99";
         public const string ALT_KEY = "CCBB2233FF00";
@@ -33,14 +34,17 @@ namespace CloudinaryDotNet.Test
         private readonly string ACL_IMAGE       = $"/{Constants.RESOURCE_TYPE_IMAGE}/*";
         private readonly string ACL_CUSTOM_USER = $"/*/t_{CUSTOM_USER}";
 
+        protected const string STORAGE_TYPE_AUTHENTICATED = "authenticated";
+        protected const string TOKEN_KEY = "00112233FF99";
         protected const string authTokenTestTransformationAsString = "c_scale,w_300";
         protected readonly Transformation authTokenTestTransformation = new Transformation().Crop("scale").Width(300);
-
+        
         private string m_cloudUrl;
         private string m_ImageUrl;
         private string m_AuthenticatedImageUrl;
-
+        
         private Api _api;
+        private Account m_account;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -195,7 +199,6 @@ namespace CloudinaryDotNet.Test
                 "~hmac=1751370bcc6cfe9e03f30dd1a9722ba0f2cdca283fa3e6df3342a00a7528cc51\"/>",
                 url
             );
-
         }
 
         [Test]

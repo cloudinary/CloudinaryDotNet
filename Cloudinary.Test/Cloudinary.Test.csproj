@@ -9,7 +9,7 @@
     <ProjectGuid>{16C07542-4726-4AE7-9FDD-62DB823B449E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CloudinaryDotNet.Test</RootNamespace>
+    <RootNamespace>Cloudinary.Test</RootNamespace>
     <AssemblyName>Cloudinary.Test</AssemblyName>
     <TargetFramework>net40</TargetFramework>
     <FileAlignment>512</FileAlignment>
@@ -80,8 +80,6 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncMethodsTest.cs" />
-    <Compile Include="IntegrationTestBase.cs" />
     <!--<Compile Include="Properties\AssemblyInfo.cs" />-->
     <Compile Include="ApiTest.cs" />
   </ItemGroup>

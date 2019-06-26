@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using CloudinaryDotNet.Test;
 using NUnit.Framework;
 
-namespace Shared.Tests
+namespace CloudinaryDotNet.IntegrationTest.SearchApi
 {
     class SearchApiTest : IntegrationTestBase
     {

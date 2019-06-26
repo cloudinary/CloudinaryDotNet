@@ -3,10 +3,10 @@ using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 
-namespace CloudinaryDotNet.Test
+namespace CloudinaryDotNet.Test.Transforms
 {
     [TestFixture]
-    public partial class ApiTest
+    public class RadiusTest
     {
         [Test]
         public void TestRadius()
@@ -44,7 +44,6 @@ namespace CloudinaryDotNet.Test
 
             Assert.That(() => new Radius(new List<object> { 1, 2, 3, 4, 5 }), ThrowsArgumentException());
             Assert.That(() => new Radius(new List<object>()), ThrowsArgumentException());
-
         }
 
         [Test]
@@ -55,6 +54,22 @@ namespace CloudinaryDotNet.Test
             var cloned = radius.Clone();
             Assert.AreEqual(radiusStr, radius.ToString());
             Assert.AreEqual(radiusStr, cloned.ToString());
+        }
+
+        [Test]
+        public void TestRadiusTransformation()
+        {
+            var radiusTestValues = new Dictionary<Transformation, string>
+            {
+                {new Transformation().Radius(10), "r_10"},
+                {new Transformation().Radius("10:20"), "r_10:20"},
+                {new Transformation().Radius(new List<object> {10, 20, "$v"}), "r_10:20:$v"},
+                {new Transformation().Radius(new Radius(10)), "r_10"},
+                {new Transformation().Radius(null), ""}
+            };
+
+            foreach (var test in radiusTestValues)
+                Assert.AreEqual(test.Value, test.Key.ToString());
         }
     }
 }

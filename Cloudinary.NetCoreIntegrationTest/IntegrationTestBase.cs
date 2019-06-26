@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test
+namespace CloudinaryDotNet.IntegrationTest
 {
     [TestFixture]
     public partial class IntegrationTestBase

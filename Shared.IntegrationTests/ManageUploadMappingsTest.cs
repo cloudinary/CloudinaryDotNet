@@ -2,9 +2,9 @@
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test
+namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
-    public class UploadMappingTest : IntegrationTestBase
+    public class ManageUploadMappingsTest : IntegrationTestBase
     {
         string[] FOLDERS = { "api_test_upload_mapping_000", "api_test_upload_mapping_001", "api_test_upload_mapping_002"};
         const string TEMPLATE = "http://upload.wikimedia.org/wikipedia";

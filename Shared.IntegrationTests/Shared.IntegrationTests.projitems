@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>fccb6349-bfbb-41e4-af03-3c04e4df6764</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Shared.IntegrationTests</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)appsettings.json.sample" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)PublishMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MultiMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JsConfigTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExplodeMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DestroyMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TextMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExplicitMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RenameMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TagMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ContextMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpriteMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BrowseResourcesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ManageUploadPresetsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ManageFoldersTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArchiveMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UpdateAccessModeTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RestoreResourcesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ManageTransformationsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntegrationTestBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SearchApiTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ManageStreamingProfilesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeleteResourcesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UsageReportTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UpdateResourcesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ManageUploadMappingsTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\favicon.ico" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\movie.mp4" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\multipage.pdf" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestImage.jpg" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestLargeImage.jpg" />
+  </ItemGroup>
+</Project>

@@ -9,29 +9,23 @@
     <Import_RootNamespace>Shared.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ApiTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParametersTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomFunctionTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExpressionTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GravityTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpriteTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UrlTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AuthTokenTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CloudinaryTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IntegrationTestBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SearchApiTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImageTagTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImageTransformTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RadiusTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TransformationApiTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StreamingProfileApiTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UploadMappingApiTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ApiTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TransformationTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UrlSuffixTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UtilsTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(MSBuildThisFileDirectory)appsettings.json.sample" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\favicon.ico" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\movie.mp4" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\multipage.pdf" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestImage.jpg" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestLargeImage.jpg" />
+    <Compile Include="$(MSBuildThisFileDirectory)VideoCodecTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VideoTagTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VideoTransformTest.cs" />
   </ItemGroup>
 </Project>

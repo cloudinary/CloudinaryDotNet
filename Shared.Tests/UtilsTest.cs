@@ -1,10 +1,10 @@
-﻿using CloudinaryDotNet.Actions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 
 namespace CloudinaryDotNet.Test
 {
-    class UtilsTest : IntegrationTestBase
+    [TestFixture]
+    public class UtilsTest
     {
         private static readonly DateTime dateTime       = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private static readonly DateTime localDateTime  = dateTime.ToLocalTime();

@@ -7,7 +7,7 @@ using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace CloudinaryDotNet.Test
+namespace CloudinaryDotNet.IntegrationTest
 {
     [TestFixture]
     public partial class IntegrationTestBase
@@ -35,10 +35,7 @@ namespace CloudinaryDotNet.Test
         protected const string TEST_LARGEIMAGE = "TestLargeImage.jpg";
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
-        protected const string TEST_REMOTE_IMG = "http://cloudinary.com/images/old_logo.png";
-        protected const string TEST_S3_URL = "s3://s3-us-west-2.amazonaws.com/cloudinary/images/old_logo.png";
-        protected const string TEST_REMOTE_VIDEO = "http://res.cloudinary.com/demo/video/upload/v1496743637/dog.mp4";
-
+        
         protected const string FILE_FORMAT_PDF = "pdf";
         protected const string FILE_FORMAT_PNG = "png";
         protected const string FILE_FORMAT_JPG = "jpg";
@@ -50,13 +47,9 @@ namespace CloudinaryDotNet.Test
 
         protected const string STORAGE_TYPE_UPLOAD = "upload";
         protected const string STORAGE_TYPE_PRIVATE = "private";
-        protected const string STORAGE_TYPE_AUTHENTICATED = "authenticated";
-
+        
         protected const int TEST_PDF_PAGES_COUNT = 3;
         protected const int MAX_RESULTS = 500;
-
-        protected const string TOKEN_KEY = "00112233FF99";
-        protected const string TOKEN_ALT_KEY = "CCBB2233FF00";
 
         protected const string TRANSFORM_W_512 = "w_512";
         protected const string TRANSFORM_A_45 = "a_45";
@@ -74,7 +67,6 @@ namespace CloudinaryDotNet.Test
         protected const int m_resizeTransformationWidth = 512;
         protected const int m_resizeTransformationHeight = 512;
 
-        protected const string m_resizeTransformationAsString = "h_512,w_512";
         protected readonly Transformation m_resizeTransformation = new Transformation().Width(m_resizeTransformationWidth).Height(m_resizeTransformationHeight);
 
         protected string m_updateTransformationAsString;

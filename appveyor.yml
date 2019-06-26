@@ -100,6 +100,8 @@ test:
   assemblies:
     - Cloudinary.Test.dll
     - Cloudinary.NetCoreTest.dll
+    - Cloudinary.IntegrationTest.dll
+    - Cloudinary.NetCoreIntegrationTest.dll
 
 # scripts to run before build
 before_build:

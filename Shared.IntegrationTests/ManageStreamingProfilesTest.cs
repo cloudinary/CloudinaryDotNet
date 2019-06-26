@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CloudinaryDotNet.Test
+namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
-    public class StreamingProfileApiTest : IntegrationTestBase
+    public class ManageStreamingProfilesTest : IntegrationTestBase
     {
         private List<string> m_streamingProfilesToClear;
         private readonly List<string> PREDEFINED_PROFILES =
