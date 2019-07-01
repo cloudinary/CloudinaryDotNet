@@ -1302,15 +1302,7 @@ namespace CloudinaryDotNet.Test
         }
 
         [Test]
-        public void TestListResourcesByContextMetadata_Exception_If_Key_Not_Specified()
-        {
-            var ex = Assert.Throws<InvalidOperationException>(() => m_cloudinary.ListResourcesByContextMetadata(null));
-
-            StringAssert.AreEqualIgnoringCase("Key must be set to list resources by context metadata.", ex.Message);
-        }
-
-        [Test]
-        public void TestListResourcesByContextMetadataKeysAndValues()
+        public void TestListResourcesByContextKeysAndValues()
         {
             var publicId1 = GetUniquePublicId();
             var contextValue1 = $"{CONTEXT_VALUE_TEMPLATE}_{publicId1}";
@@ -1333,7 +1325,7 @@ namespace CloudinaryDotNet.Test
             });
 
             // by key
-            var result = m_cloudinary.ListResourcesByContextMetadata(CONTEXT_KEY1);
+            var result = m_cloudinary.ListResourcesByContext(CONTEXT_KEY1);
 
             var resource1 = result.Resources.First(x => x.PublicId == publicId1);
             Assert.AreEqual(contextValue1, resource1.Context["custom"][CONTEXT_KEY1].ToString());
@@ -1343,7 +1335,7 @@ namespace CloudinaryDotNet.Test
             Assert.AreEqual(contextValue2, resource2.Context["custom"][CONTEXT_KEY1].ToString());
 
             // by key and value
-            result = m_cloudinary.ListResourcesByContextMetadata(CONTEXT_KEY1, contextValue2);
+            result = m_cloudinary.ListResourcesByContext(CONTEXT_KEY1, contextValue2);
 
             resource1 = result.Resources.First(x => x.PublicId == publicId2);
             Assert.AreEqual(contextValue2, resource1.Context["custom"][CONTEXT_KEY1].ToString());
@@ -2910,7 +2902,7 @@ namespace CloudinaryDotNet.Test
             var presetName = m_cloudinary.CreateUploadPreset(presetToCreate).Name;
 
             var preset = m_cloudinary.GetUploadPreset(presetName);
-            
+
             Assert.IsFalse(preset.Settings.Live);
 
             var presetToUpdate = new UploadPresetParams(preset)
@@ -3688,6 +3680,13 @@ namespace CloudinaryDotNet.Test
         {
             var p = new UploadPresetParams { Overwrite = true, Unsigned = true };
             Assert.Throws<ArgumentException>(p.Check, "Should require only one property set to true: Overwrite or Unsigned");
+        }
+
+        [Test]
+        public void TestListResourcesByContextParamsCheck()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => m_cloudinary.ListResourcesByContext(null));
+            StringAssert.AreEqualIgnoringCase("Key must be set to list resources by context.", ex.Message);
         }
     }
 }

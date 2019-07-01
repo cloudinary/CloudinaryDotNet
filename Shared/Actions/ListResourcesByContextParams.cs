@@ -25,10 +25,7 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(Key))
-                throw new InvalidOperationException("Key must be set to list resources by context metadata.");
-
-            if (MaxResults > 500)
-                throw new InvalidOperationException($"MaxResults should not exceed 500, but the current value is {MaxResults}.");
+                throw new InvalidOperationException("Key must be set to list resources by context.");
         }
 
         /// <summary>
@@ -41,9 +38,6 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "key", Key);
             AddParam(dict, "value", Value);
-
-            dict.Remove("direction");
-            dict.Remove("type");
 
             return dict;
         }

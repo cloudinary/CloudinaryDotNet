@@ -921,25 +921,17 @@ namespace CloudinaryDotNet
         /// <param name="key">Only resources with the given key should be returned.</param>
         /// <param name="value">When provided should only return resources with this given value for the context key.
         /// When not provided, return all resources for which the context key exists.</param>
-        /// <param name="resourceType">Type of resource.</param>
         /// <param name="tags">If true, include list of tag names assigned for each resource.</param>
         /// <param name="context">If true, include context assigned to each resource.</param>
-        /// <param name="maxResults">Max number of resources to return. Default=50. Maximum=500.</param>
-        /// <param name="nextCursor">The next cursor.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByContextMetadata(string key, string value = "",
-            ResourceType resourceType = ResourceType.Image, bool tags = true, bool context = true,
-            int maxResults = 50, string nextCursor = null)
+        public ListResourcesResult ListResourcesByContext(string key, string value = "", bool tags = false, bool context = false)
         {
             return ListResources(new ListResourcesByContextParams()
             {
                 Key = key,
                 Value = value,
-                ResourceType = resourceType,
                 Tags = tags,
-                Context = context,
-                MaxResults = maxResults,
-                NextCursor = nextCursor
+                Context = context
             });
         }
 
