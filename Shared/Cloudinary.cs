@@ -923,15 +923,17 @@ namespace CloudinaryDotNet
         /// When not provided, return all resources for which the context key exists.</param>
         /// <param name="tags">If true, include list of tag names assigned for each resource.</param>
         /// <param name="context">If true, include context assigned to each resource.</param>
+        /// <param name="nextCursor">The next cursor.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByContext(string key, string value = "", bool tags = false, bool context = false)
+        public ListResourcesResult ListResourcesByContext(string key, string value = "", bool tags = false, bool context = false, string nextCursor = null)
         {
             return ListResources(new ListResourcesByContextParams()
             {
                 Key = key,
                 Value = value,
                 Tags = tags,
-                Context = context
+                Context = context,
+                NextCursor = nextCursor
             });
         }
 
