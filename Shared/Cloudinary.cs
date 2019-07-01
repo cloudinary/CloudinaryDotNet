@@ -916,6 +916,28 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// List resources by context metadata keys and values.
+        /// </summary>
+        /// <param name="key">Only resources with the given key should be returned.</param>
+        /// <param name="value">When provided should only return resources with this given value for the context key.
+        /// When not provided, return all resources for which the context key exists.</param>
+        /// <param name="tags">If true, include list of tag names assigned for each resource.</param>
+        /// <param name="context">If true, include context assigned to each resource.</param>
+        /// <param name="nextCursor">The next cursor.</param>
+        /// <returns>Parsed result of the resources listing.</returns>
+        public ListResourcesResult ListResourcesByContext(string key, string value = "", bool tags = false, bool context = false, string nextCursor = null)
+        {
+            return ListResources(new ListResourcesByContextParams()
+            {
+                Key = key,
+                Value = value,
+                Tags = tags,
+                Context = context,
+                NextCursor = nextCursor
+            });
+        }
+
+        /// <summary>
         /// Gets a list of resources.
         /// </summary>
         /// <param name="parameters">Parameters to list resources.</param>
@@ -924,26 +946,33 @@ namespace CloudinaryDotNet
         {
             var url = m_api.ApiUrlV.
                 ResourceType("resources").
-                Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType));
+                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
 
-            if (parameters is ListResourcesByTagParams tagParams)
+
+            switch (parameters)
             {
-                if (!String.IsNullOrEmpty(tagParams.Tag))
-                    url.Add("tags").Add(tagParams.Tag);
+                case ListResourcesByTagParams tagParams:
+                    if (!string.IsNullOrEmpty(tagParams.Tag))
+                    {
+                        url.Add("tags").Add(tagParams.Tag);
+                    }
+                    break;
+                case ListResourcesByModerationParams modParams:
+                    if (!string.IsNullOrEmpty(modParams.ModerationKind))
+                    {
+                        url.Add("moderations")
+                           .Add(modParams.ModerationKind)
+                           .Add(Api.GetCloudinaryParam<ModerationStatus>(modParams.ModerationStatus));
+                    }
+                    break;
+                case ListResourcesByContextParams _:
+                    {
+                        url.Add("context");
+                    }
+                    break;
             }
 
-            if (parameters is ListResourcesByModerationParams modParams)
-            {
-                if (!String.IsNullOrEmpty(modParams.ModerationKind))
-                {
-                    url
-                        .Add("moderations")
-                        .Add(modParams.ModerationKind)
-                        .Add(Api.GetCloudinaryParam<ModerationStatus>(modParams.ModerationStatus));
-                }
-            }
-
-            UrlBuilder urlBuilder = new UrlBuilder(
+            var urlBuilder = new UrlBuilder(
                 url.BuildUrl(),
                 parameters.ToParamsDictionary());
 
