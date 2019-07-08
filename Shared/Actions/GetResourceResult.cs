@@ -94,6 +94,14 @@ namespace CloudinaryDotNet.Actions
         public string NextCursor { get; protected set; }
 
         /// <summary>
+        /// If there are more derived images than <see cref="GetResourceParams.MaxResults"/>,
+        /// the <see cref="DerivedNextCursor"/> value is returned as part of the response. You can then specify this value as
+        /// the <see cref="DerivedNextCursor"/> parameter of the following listing request.
+        /// </summary>
+        [DataMember(Name = "derived_next_cursor")]
+        public string DerivedNextCursor { get; protected set; }
+
+        /// <summary>
         /// Exif metadata of the resource.
         /// </summary>
         [DataMember(Name = "exif")]

@@ -9,8 +9,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     class AsyncMethodsTest : IntegrationTestBase
     {
-        private const string m_resizeTransformationAsString = "h_512,w_512";
-
         [Test]
         public void TestUploadLocalImageAsync()
         {

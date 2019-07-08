@@ -66,6 +66,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
         protected const int m_resizeTransformationWidth = 512;
         protected const int m_resizeTransformationHeight = 512;
+        protected const string m_resizeTransformationAsString = "h_512,w_512";
 
         protected readonly Transformation m_resizeTransformation = new Transformation().Width(m_resizeTransformationWidth).Height(m_resizeTransformationHeight);
 
