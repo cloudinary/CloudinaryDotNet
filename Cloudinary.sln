@@ -16,9 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudinary", "Cloudinary\Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudinaryDotNet.Core", "Core\CloudinaryDotNet.Core.csproj", "{3E57DBDE-EC6F-42D0-AF8A-7B86FE7EC0BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudinary.Test", "Cloudinary.Test\Cloudinary.Test.csproj", "{16C07542-4726-4AE7-9FDD-62DB823B449E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudinaryDotNet.Test", "Cloudinary.Test\CloudinaryDotNet.Test.csproj", "{16C07542-4726-4AE7-9FDD-62DB823B449E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudinary.NetCoreTest", "Cloudinary.NetCoreTest\Cloudinary.NetCoreTest.csproj", "{52E04D73-E860-4867-A453-21103A3361BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudinaryDotNet.Core.Test", "Cloudinary.NetCoreTest\CloudinaryDotNet.Core.Test.csproj", "{52E04D73-E860-4867-A453-21103A3361BC}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{70382BCB-A323-4D61-A428-947DE01A14E9}"
 EndProject
@@ -26,9 +26,9 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.Tests", "Shared.Test
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.IntegrationTests", "Shared.IntegrationTests\Shared.IntegrationTests.shproj", "{FCCB6349-BFBB-41E4-AF03-3C04E4DF6764}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudinary.IntegrationTest", "Cloudinary.IntegrationTest\Cloudinary.IntegrationTest.csproj", "{0E0E97A2-5113-4C3F-B9A4-4232D4FA02A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudinaryDotNet.IntegrationTest", "Cloudinary.IntegrationTest\CloudinaryDotNet.IntegrationTest.csproj", "{0E0E97A2-5113-4C3F-B9A4-4232D4FA02A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudinary.NetCoreIntegrationTest", "Cloudinary.NetCoreIntegrationTest\Cloudinary.NetCoreIntegrationTest.csproj", "{58F451AA-9732-42E2-834A-6A9178263004}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudinaryDotNet.Core.IntegrationTest", "Cloudinary.NetCoreIntegrationTest\CloudinaryDotNet.Core.IntegrationTest.csproj", "{58F451AA-9732-42E2-834A-6A9178263004}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

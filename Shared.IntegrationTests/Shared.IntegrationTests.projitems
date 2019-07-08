@@ -15,33 +15,32 @@
     <Content Include="$(MSBuildThisFileDirectory)appsettings.json.sample" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)PublishMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MultiMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)JsConfigTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ExplodeMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DestroyMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TextMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ExplicitMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RenameMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TagMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ContextMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SpriteMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BrowseResourcesTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UploadMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ManageUploadPresetsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ManageFoldersTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ArchiveMethodsTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UpdateAccessModeTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RestoreResourcesTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ManageTransformationsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\PublishMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\MultiMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\ExplodeMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\DestroyMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\TextMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\ExplicitMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\RenameMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\TagMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\ContextMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\SpriteMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\BrowseResourcesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\UploadMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\ManageUploadPresetsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\ManageFoldersTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadApi\ArchiveMethodsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\UpdateAccessModeTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\RestoreResourcesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\ManageTransformationsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IntegrationTestBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SearchApiTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SearchApi\SearchApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ManageStreamingProfilesTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DeleteResourcesTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UsageReportTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UpdateResourcesTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ManageUploadMappingsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\ManageStreamingProfilesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\DeleteResourcesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\UsageReportTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\UpdateResourcesTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdminApi\ManageUploadMappingsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\favicon.ico" />
@@ -49,5 +48,10 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\multipage.pdf" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestImage.jpg" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestLargeImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)AdminApi\" />
+    <Folder Include="$(MSBuildThisFileDirectory)SearchApi\" />
+    <Folder Include="$(MSBuildThisFileDirectory)UploadApi\" />
   </ItemGroup>
 </Project>
