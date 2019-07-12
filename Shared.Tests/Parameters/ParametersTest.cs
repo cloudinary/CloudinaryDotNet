@@ -4,7 +4,7 @@ using System.IO;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Asset
+namespace CloudinaryDotNet.Test.Parameters
 {
     [TestFixture]
     public class ParametersTest
@@ -14,6 +14,7 @@ namespace CloudinaryDotNet.Test.Asset
         {
             Assert.Throws<ArgumentException>(new ArchiveParams().Check, "Should require atleast on option specified: PublicIds, Tags or Prefixes");
         }
+
         [Test]
         public void TestCreateTransformParamsCheck()
         {

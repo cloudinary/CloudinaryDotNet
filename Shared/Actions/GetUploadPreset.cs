@@ -252,5 +252,11 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "ocr")]
         public string Ocr { get; protected set; }
-    }
+
+        /// <summary>
+        /// Indicates whether the upload preset is used for live streaming. Default: false.
+        /// </summary>
+        [DataMember(Name = "live")]
+        public bool Live { get; protected set; }
+   }
 }
