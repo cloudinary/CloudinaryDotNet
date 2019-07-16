@@ -9,29 +9,32 @@
     <Import_RootNamespace>Shared.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ApiTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AuthTokenTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CloudinaryTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IntegrationTestBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SearchApiTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RadiusTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TransformationApiTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StreamingProfileApiTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UploadMappingApiTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UtilsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parameters\ParametersTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Image\GravityTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Image\ImageTransformationTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Image\RadiusTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Image\SpriteTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Common\CustomFunctionTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Common\ExpressionTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Asset\UrlBuilderTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Asset\AuthTokenTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tag\ImageTagTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Asset\SignatureTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Common\TransformationTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Asset\UrlSuffixTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\UtilsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Video\VideoCodecTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tag\VideoTagTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transformations\Video\VideoTransformationTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(MSBuildThisFileDirectory)appsettings.json.sample" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\favicon.ico" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\movie.mp4" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\multipage.pdf" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestImage.jpg" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestLargeImage.jpg" />
+    <Folder Include="$(MSBuildThisFileDirectory)Asset\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Parameters\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Transformations\Image\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Transformations\Video\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Util\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Tag\" />
   </ItemGroup>
 </Project>

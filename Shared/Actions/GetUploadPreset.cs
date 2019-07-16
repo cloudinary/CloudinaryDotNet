@@ -258,6 +258,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "live")]
         public bool Live { get; protected set; }
-
-    }
+   }
 }

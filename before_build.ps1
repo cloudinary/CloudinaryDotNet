@@ -1,7 +1,7 @@
 Write-Host "Setting up appsettings.json for tests"
 
-$strConfigSource = "$env:APPVEYOR_BUILD_FOLDER\Shared.Tests\appsettings.json.sample"
-$strConfigDest = "$env:APPVEYOR_BUILD_FOLDER\Shared.Tests\appsettings.json"      
+$strConfigSource = "$env:APPVEYOR_BUILD_FOLDER\Shared.IntegrationTests\appsettings.json.sample"
+$strConfigDest = "$env:APPVEYOR_BUILD_FOLDER\Shared.IntegrationTests\appsettings.json"      
 
 Copy-Item $strConfigSource -Destination $strConfigDest
 

@@ -349,7 +349,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public bool Live { get; set; }
 
-
         /// <summary>
         /// Validate object model
         /// </summary>
