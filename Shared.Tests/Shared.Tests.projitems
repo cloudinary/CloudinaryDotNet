@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RadiusTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TransformationApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamingProfileApiTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TransformationsAdminApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadMappingApiTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UtilsTest.cs" />
   </ItemGroup>
