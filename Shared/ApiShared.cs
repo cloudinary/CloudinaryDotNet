@@ -1,14 +1,21 @@
 ﻿
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
-using Newtonsoft.Json.Converters;
+using System.Text.Encodings.Web;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet
 {
@@ -85,7 +92,7 @@ namespace CloudinaryDotNet
         public string UserPlatform;
 
         /// <summary>
-        /// Timeout for the API requests,
+        /// Timeout for the API requests, milliseconds.
         /// </summary>
         public int Timeout = 0;
 
@@ -108,6 +115,23 @@ namespace CloudinaryDotNet
         /// </summary>
         public int ChunkSize = 65000;
 
+        private static readonly HttpClient client = new HttpClient();
+
+        private readonly Func<string, HttpRequestMessage> RequestBuilder =
+            (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
+
+        /// <summary>
+        /// Default static parameterless constructor.
+        /// </summary>
+        static ApiShared()
+        {
+            var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
+
+            var frameworkDescription = RuntimeInformation.FrameworkDescription;
+
+            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2} ({3})",
+                version.Major, version.Minor, version.Build, frameworkDescription);
+        }
 
         /// <summary>
         /// Default parameterless constructor.
@@ -144,47 +168,6 @@ namespace CloudinaryDotNet
                 Secure = true;
             }
 
-        }
-
-        /// <summary>
-        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
-        /// </summary>
-        /// <param name="method">Http request method.</param>
-        /// <param name="url">API URL.</param>
-        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
-        /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
-        /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-        {
-            throw new Exception("Please call overriden method");
-        }
-
-        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
-        {
-            parameters?.Check();
-
-            return CallAndParse<T>(method,
-                                   url,
-                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
-                                   file,
-                                   extraHeaders);
-        }
-
-        /// <summary>
-        /// Virtual method to call the cloudinary API and return the parsed response. This method should be overridden
-        /// in child classes.
-        /// </summary>
-        /// <typeparam name="T">Type of the response.</typeparam>
-        /// <param name="method">Http request method.</param>
-        /// <param name="url">API URL.</param>
-        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
-        /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
-        /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
-        {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -363,6 +346,574 @@ namespace CloudinaryDotNet
                 return ApiUrlV.
                     Action(Constants.ACTION_NAME_UPLOAD).
                     ResourceType(Constants.RESOURCE_TYPE_VIDEO);
+            }
+        }
+
+        /// <summary>
+        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
+        /// </summary>
+        /// <param name="method">Http request method.</param>
+        /// <param name="url">API URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Parsed response from the cloudinary API.</returns>
+        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            throw new Exception("Please call overriden method");
+        }
+
+        internal virtual Task<T> CallApiAsync<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        {
+            parameters?.Check();
+
+            var callParams = (method == HttpMethod.PUT || method == HttpMethod.POST)
+                ? parameters?.ToParamsDictionary()
+                : null;
+
+            return CallAndParseAsync<T>(method, url, callParams, file, extraHeaders);
+        }
+
+        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        {
+            parameters?.Check();
+
+            return CallAndParse<T>(method,
+                                   url,
+                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                                   file,
+                                   extraHeaders);
+        }
+
+        /// <summary>
+        /// Call the Cloudinary API and parse HTTP response.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">A generated URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Instance of the parsed response from the cloudinary API.</returns>
+        public async Task<T> CallAndParseAsync<T>(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        {
+            using (var response = await CallAsync(method,
+                url,
+                parameters,
+                file,
+                extraHeaders))
+            {
+                return await ParseAsync<T>(response);
+            }
+        }
+
+        /// <summary>
+        /// Call the Cloudinary API and parse HTTP response.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">A generated URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Instance of the parsed response from the cloudinary API.</returns>
+        public T CallAndParse<T>(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        {
+            using (var response = Call(method,
+                url,
+                parameters,
+                file,
+                extraHeaders))
+            {
+                return Parse<T>(response);
+            }
+        }
+
+        /// <summary>
+        /// Parses HTTP response and creates new instance of this class.
+        /// </summary>
+        /// <param name="response">HTTP response.</param>
+        /// <returns>New instance of this class.</returns>
+        internal static async Task<T> ParseAsync<T>(HttpResponseMessage response) where T : BaseResult
+        {
+            if (response == null)
+                throw new ArgumentNullException("response");
+
+            T result;
+
+            using (Stream stream = await response.Content.ReadAsStreamAsync())
+            using (var reader = new StreamReader(stream))
+            {
+                string s = await reader.ReadToEndAsync();
+                try
+                {
+                    result = JsonConvert.DeserializeObject<T>(s);
+                    result.JsonObj = JToken.Parse(s);
+                }
+                catch (JsonException jex)
+                {
+                    throw new Exception($"Failed to deserialize response with status code: {response.StatusCode}", jex);
+                }
+            }
+
+            if (response.Headers != null)
+                foreach (var header in response.Headers)
+                {
+                    if (header.Key.StartsWith("X-FeatureRateLimit"))
+                    {
+
+                        if (header.Key.EndsWith("Limit") && long.TryParse(header.Value.First(), out long l))
+                            result.Limit = l;
+
+                        if (header.Key.EndsWith("Remaining") && long.TryParse(header.Value.First(), out l))
+                            result.Remaining = l;
+
+                        if (header.Key.EndsWith("Reset") && DateTime.TryParse(header.Value.First(), out DateTime t))
+                            result.Reset = t;
+                    }
+                }
+
+            result.StatusCode = response.StatusCode;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Parses HTTP response and creates new instance of this class.
+        /// </summary>
+        /// <param name="response">HTTP response.</param>
+        /// <returns>New instance of this class.</returns>
+        internal static T Parse<T>(HttpResponseMessage response) where T : BaseResult
+        {
+            if (response == null)
+                throw new ArgumentNullException("response");
+
+            T result;
+
+            var task = response.Content.ReadAsStreamAsync();
+            task.Wait();
+            using (Stream stream = task.Result)
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string s = reader.ReadToEnd();
+                try
+                {
+                    result = JsonConvert.DeserializeObject<T>(s);
+                    result.JsonObj = JToken.Parse(s);
+                }
+                catch (JsonException jex)
+                {
+                    throw new Exception($"Failed to deserialize response with status code: {response.StatusCode}", jex);
+                }
+            }
+
+            if (response.Headers != null)
+                foreach (var header in response.Headers)
+                {
+                    if (header.Key.StartsWith("X-FeatureRateLimit"))
+                    {
+                        long l;
+                        DateTime t;
+
+                        if (header.Key.EndsWith("Limit") && long.TryParse(header.Value.First(), out l))
+                            result.Limit = l;
+
+                        if (header.Key.EndsWith("Remaining") && long.TryParse(header.Value.First(), out l))
+                            result.Remaining = l;
+
+                        if (header.Key.EndsWith("Reset") && DateTime.TryParse(header.Value.First(), out t))
+                            result.Reset = t;
+                    }
+                }
+
+            result.StatusCode = response.StatusCode;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Makes custom call to Cloudinary API.
+        /// </summary>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="url">URL to call.</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null).</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <returns>HTTP response on call.</returns>
+        public async Task<HttpResponseMessage> CallAsync(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null)
+        {
+            using (var requestPrepared =
+                await PrepareRequestBodyAsync(RequestBuilder(url), method, parameters, file, extraHeaders))
+            {
+                return await (Timeout > 0
+                            ? client.SendAsync(requestPrepared, new CancellationTokenSource(Timeout).Token)
+                            : client.SendAsync(requestPrepared));
+            }
+        }
+
+        /// <summary>
+        /// Makes custom call to Cloudinary API.
+        /// </summary>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="url">URL to call.</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null).</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <returns>HTTP response on call.</returns>
+        public HttpResponseMessage Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            var request = RequestBuilder(url);
+            HttpResponseMessage response = null;
+            using (request)
+            {
+                PrepareRequestBody(request, method, parameters, file, extraHeaders);
+
+                System.Threading.Tasks.Task<HttpResponseMessage> task2;
+
+                if (Timeout > 0)
+                {
+                    var cancellationTokenSource = new CancellationTokenSource(Timeout);
+                    task2 = client.SendAsync(request, cancellationTokenSource.Token);
+                }
+                else
+                {
+                    task2 = client.SendAsync(request);
+                }
+
+                task2.Wait();
+                if (task2.IsFaulted) { throw task2.Exception; }
+                response = task2.Result;
+
+                if (task2.IsCanceled) { }
+                if (task2.IsFaulted) { throw task2.Exception; }
+
+                return response;
+            }
+
+        }
+
+        internal async Task<HttpRequestMessage> PrepareRequestBodyAsync(
+            HttpRequestMessage request,
+            HttpMethod method,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null)
+        {
+            SetHttpMethod(method, request);
+
+            // Add platform information to the USER_AGENT header
+            // This is intended for platform information and not individual applications!
+            request.Headers.Add("User-Agent", string.IsNullOrEmpty(UserPlatform)
+                ? USER_AGENT
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT));
+
+            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+
+            if (extraHeaders != null)
+            {
+                if (extraHeaders.ContainsKey("Accept"))
+                {
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(extraHeaders["Accept"]));
+                    extraHeaders.Remove("Accept");
+                }
+
+                foreach (var header in extraHeaders)
+                {
+                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
+
+            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
+            {
+                if (UseChunkedEncoding)
+                    request.Headers.Add("Transfer-Encoding", "chunked");
+
+                await PrepareRequestContentAsync(request, parameters, file, extraHeaders);
+            }
+
+            return request;
+        }
+
+        internal HttpRequestMessage PrepareRequestBody(HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            SetHttpMethod(method, request);
+
+            // Add platform information to the USER_AGENT header
+            // This is intended for platform information and not individual applications!
+            request.Headers.Add("User-Agent", string.IsNullOrEmpty(UserPlatform)
+                ? USER_AGENT
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT));
+
+            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+
+            if (extraHeaders != null)
+            {
+                if (extraHeaders.ContainsKey("Accept"))
+                {
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(extraHeaders["Accept"]));
+                    extraHeaders.Remove("Accept");
+                }
+
+                foreach (var header in extraHeaders)
+                {
+                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
+
+            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
+            {
+                if (UseChunkedEncoding)
+                    request.Headers.Add("Transfer-Encoding", "chunked");
+
+                PrepareRequestContent(request, parameters, file, extraHeaders);
+            }
+
+            return request;
+        }
+
+        private async Task PrepareRequestContentAsync(HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            HandleUnsignedParameters(parameters);
+
+            HttpContent content = extraHeaders != null &&
+                                  extraHeaders.ContainsKey(Constants.HEADER_CONTENT_TYPE) &&
+                                  extraHeaders[Constants.HEADER_CONTENT_TYPE] == Constants.CONTENT_TYPE_APPLICATION_JSON
+                ? new StringContent(ParamsToJson(parameters), Encoding.UTF8, Constants.CONTENT_TYPE_APPLICATION_JSON)
+                : await PrepareMultipartFormDataContentAsync(parameters, file, extraHeaders);
+
+            if (extraHeaders != null)
+            {
+                foreach (var header in extraHeaders)
+                {
+                    content.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
+
+            request.Content = content;
+        }
+
+        private void PrepareRequestContent(HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            HandleUnsignedParameters(parameters);
+
+            HttpContent content = extraHeaders != null &&
+                                  extraHeaders.ContainsKey(Constants.HEADER_CONTENT_TYPE) &&
+                                  extraHeaders[Constants.HEADER_CONTENT_TYPE] == Constants.CONTENT_TYPE_APPLICATION_JSON
+                ? new StringContent(ParamsToJson(parameters), Encoding.UTF8, Constants.CONTENT_TYPE_APPLICATION_JSON)
+                : PrepareMultipartFormDataContent(parameters, file, extraHeaders);
+
+            if (extraHeaders != null)
+            {
+                foreach (var header in extraHeaders)
+                {
+                    content.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
+
+            request.Content = content;
+        }
+
+        private async Task<HttpContent> PrepareMultipartFormDataContentAsync(
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null)
+        {
+            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
+            foreach (var param in parameters)
+            {
+                if (param.Value != null)
+                {
+                    if (param.Value is IEnumerable<string>)
+                    {
+                        foreach (var item in (IEnumerable<string>)param.Value)
+                        {
+                            content.Add(new StringContent(item), string.Format("\"{0}\"", string.Concat(param.Key, "[]")));
+                        }
+                    }
+                    else
+                    {
+                        content.Add(new StringContent(param.Value.ToString()), string.Format("\"{0}\"", param.Key));
+                    }
+                }
+            }
+
+            if (file != null)
+            {
+                if (file.IsRemote)
+                {
+                    StringContent strContent = new StringContent(file.FilePath);
+                    strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));
+                    content.Add(strContent);
+                }
+                else
+                {
+                    Stream stream = file.Stream ?? File.OpenRead(file.FilePath);
+
+                    if (extraHeaders != null && extraHeaders.ContainsKey("Content-Range"))
+                    {
+                        // Unfortunately we don't have ByteRangeStreamContent here,
+                        // let's create another stream from the original one
+                        stream = await GetRangeFromFileAsync(file, stream);
+                    }
+
+                    var streamContent = new StreamContent(stream);
+
+                    streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                    streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + file.FileName + "\"");
+                    content.Add(streamContent, "file", file.FileName);
+                }
+            }
+
+            return content;
+        }
+
+        private HttpContent PrepareMultipartFormDataContent(SortedDictionary<string, object> parameters,
+            FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
+            foreach (var param in parameters)
+            {
+                if (param.Value != null)
+                {
+                    if (param.Value is IEnumerable<string>)
+                    {
+                        foreach (var item in (IEnumerable<string>)param.Value)
+                        {
+                            content.Add(new StringContent(item), String.Format("\"{0}\"", string.Concat(param.Key, "[]")));
+                        }
+                    }
+                    else
+                    {
+                        content.Add(new StringContent(param.Value.ToString()), String.Format("\"{0}\"", param.Key));
+                    }
+                }
+            }
+
+            if (file != null)
+            {
+                if (file.IsRemote)
+                {
+                    StringContent strContent = new StringContent(file.FilePath);
+                    strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));
+                    content.Add(strContent);
+                }
+                else
+                {
+                    Stream stream = file.Stream ?? File.OpenRead(file.FilePath);
+
+                    if (extraHeaders != null && extraHeaders.ContainsKey("Content-Range"))
+                    {
+                        // Unfortunately we don't have ByteRangeStreamContent here,
+                        // let's create another stream from the original one
+                        stream = GetRangeFromFile(file, stream);
+                    }
+
+                    var streamContent = new StreamContent(stream);
+
+                    streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                    streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + file.FileName + "\"");
+                    content.Add(streamContent, "file", file.FileName);
+                }
+            }
+
+            return content;
+        }
+
+        private async Task<Stream> GetRangeFromFileAsync(FileDescription file, Stream stream)
+        {
+            var memStream = new MemoryStream();
+            var writer = new StreamWriter(memStream);
+
+            stream.Seek(file.BytesSent, SeekOrigin.Begin);
+            file.BytesSent += await ReadBytesAsync(writer, stream, file.BufferLength);
+            writer.BaseStream.Seek(0, SeekOrigin.Begin);
+
+            return memStream;
+        }
+
+        private Stream GetRangeFromFile(FileDescription file, Stream stream)
+        {
+            var memStream = new MemoryStream();
+            var writer = new StreamWriter(memStream);
+
+            stream.Seek(file.BytesSent, SeekOrigin.Begin);
+            file.BytesSent += ReadBytes(writer, stream, file.BufferLength);
+            writer.BaseStream.Seek(0, SeekOrigin.Begin);
+
+            return memStream;
+        }
+
+        private async Task<int> ReadBytesAsync(StreamWriter writer, Stream stream, int length)
+        {
+            int bytesSent = 0;
+            byte[] buf = new byte[ChunkSize];
+            int toSend;
+            int cnt;
+            while ((toSend = length - bytesSent) > 0
+                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
+            {
+                await writer.BaseStream.WriteAsync(buf, 0, cnt);
+                await writer.FlushAsync();
+                bytesSent += cnt;
+            }
+
+            return bytesSent;
+        }
+
+        private int ReadBytes(StreamWriter writer, Stream stream, int length)
+        {
+
+            int bytesSent = 0;
+            byte[] buf = new byte[ChunkSize];
+            int toSend;
+            int cnt;
+            while ((toSend = length - bytesSent) > 0
+                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
+            {
+                writer.BaseStream.Write(buf, 0, cnt);
+                writer.Flush();
+                bytesSent += cnt;
+            }
+
+            return bytesSent;
+        }
+
+        private static void SetHttpMethod(HttpMethod method, HttpRequestMessage req)
+        {
+            switch (method)
+            {
+                case HttpMethod.DELETE:
+                    req.Method = System.Net.Http.HttpMethod.Delete;
+                    break;
+                case HttpMethod.GET:
+                    req.Method = System.Net.Http.HttpMethod.Get;
+                    break;
+                case HttpMethod.POST:
+                    req.Method = System.Net.Http.HttpMethod.Post;
+                    break;
+                case HttpMethod.PUT:
+                    req.Method = System.Net.Http.HttpMethod.Put;
+                    break;
+                default:
+                    req.Method = System.Net.Http.HttpMethod.Get;
+                    break;
             }
         }
 
@@ -563,6 +1114,35 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Builds HTML file input tag for unsigned upload of an asset.
+        /// </summary>
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="preset">The name of upload preset.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
+        public string BuildUnsignedUploadForm(string field, string preset, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        {
+            return BuildUploadForm(field, resourceType, BuildUnsignedUploadParams(preset, parameters), htmlOptions);
+        }
+
+        /// <summary>
+        /// Builds HTML file input tag for upload an asset.
+        /// </summary>
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
+        public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        {
+            return BuildUploadFormShared(field, resourceType, parameters, htmlOptions);
+        }
+
+        /// <summary>
         /// Build file input html tag.
         /// </summary>
         /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
@@ -616,9 +1196,9 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="value">URL to be encoded.</param>
         /// <returns>Encoded URL.</returns>
-        protected virtual string EncodeApiUrl(string value)
+        protected string EncodeApiUrl(string value)
         {
-            return string.Empty;
+            return HtmlEncoder.Default.Encode(value);
         }
 
         /// <summary>
@@ -695,24 +1275,20 @@ namespace CloudinaryDotNet
             }
             else
             {
-                int bytesSent = 0;
                 if (file.Stream == null)
                 {
                     using (FileStream stream = new FileStream(file.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         stream.Seek(file.BytesSent, SeekOrigin.Begin);
-                        file.Eof = WriteFile(writer, stream, file.BufferLength, file.FileName, out bytesSent);
-                        file.BytesSent += bytesSent;
+                        file.BytesSent += WriteFile(writer, stream, file.BufferLength, file.FileName);
                     }
                 }
                 else
                 {
-                    file.Eof = WriteFile(writer, file.Stream, file.BufferLength, file.FileName, out bytesSent);
-                    file.BytesSent += bytesSent;
+                    file.BytesSent += WriteFile(writer, file.Stream, file.BufferLength, file.FileName);
                 }
             }
         }
-
 
         /// <summary>
         /// Writes one chunk of file to stream.
@@ -721,11 +1297,8 @@ namespace CloudinaryDotNet
         /// <param name="fileName">Name of file.</param>
         /// <param name="stream">Input stream.</param>
         /// <param name="length">Maximum amount of bytes to send.</param>
-        /// <param name="bytesSent">Amount of sent bytes.</param>
-        /// <returns>
-        /// true for EOF.
-        /// </returns>
-        private bool WriteFile(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
+        /// <returns>Amount of sent bytes.</returns>
+        private int WriteFile(StreamWriter writer, Stream stream, int length, string fileName)
         {
             WriteLine(writer, "--{0}", HTTP_BOUNDARY);
             WriteLine(writer, "Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
@@ -734,11 +1307,10 @@ namespace CloudinaryDotNet
 
             writer.Flush();
 
-            bytesSent = 0;
-            int toSend = 0;
+            int bytesSent = 0;
             byte[] buf = new byte[ChunkSize];
-            int cnt = 0;
-
+            int toSend;
+            int cnt;
             while ((toSend = length - bytesSent) > 0
                 && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
             {
@@ -746,7 +1318,7 @@ namespace CloudinaryDotNet
                 bytesSent += cnt;
             }
 
-            return cnt == 0;
+            return bytesSent;
         }
 
         private void WriteLine(StreamWriter writer)

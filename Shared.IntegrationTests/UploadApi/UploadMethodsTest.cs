@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -73,6 +74,33 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var api = new Api(m_account);
             string expectedSign = api.SignParameters(checkParams);
+
+            Assert.AreEqual(expectedSign, uploadResult.Signature);
+        }
+
+        [Test]
+        public async Task TestUploadLocalImageAsync()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
+            };
+
+            var uploadResult = await m_cloudinary.UploadAsync(uploadParams);
+
+            Assert.AreEqual(1920, uploadResult.Width);
+            Assert.AreEqual(1200, uploadResult.Height);
+            Assert.AreEqual(FILE_FORMAT_JPG, uploadResult.Format);
+
+            var checkParams = new SortedDictionary<string, object>
+            {
+                { "public_id", uploadResult.PublicId },
+                { "version", uploadResult.Version }
+            };
+
+            var api = new Api(m_account);
+            var expectedSign = api.SignParameters(checkParams);
 
             Assert.AreEqual(expectedSign, uploadResult.Signature);
         }
@@ -471,6 +499,21 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var largeFilePath = m_testLargeImagePath;
             int fileLength = (int)new FileInfo(largeFilePath).Length;
             var result = m_cloudinary.UploadLarge(new RawUploadParams()
+            {
+                File = new FileDescription(largeFilePath),
+                Tags = m_apiTag
+            }, 5 * 1024 * 1024);
+
+            Assert.AreEqual(fileLength, result.Length);
+        }
+
+        [Test]
+        public async Task TestUploadLargeRawFilesAsync()
+        {
+            // support uploading large raw files
+            var largeFilePath = m_testLargeImagePath;
+            int fileLength = (int)new FileInfo(largeFilePath).Length;
+            var result = await m_cloudinary.UploadLargeAsync(new RawUploadParams()
             {
                 File = new FileDescription(largeFilePath),
                 Tags = m_apiTag

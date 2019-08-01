@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -35,7 +36,7 @@ namespace CloudinaryDotNet.IntegrationTest
         protected const string TEST_LARGEIMAGE = "TestLargeImage.jpg";
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
-        
+
         protected const string FILE_FORMAT_PDF = "pdf";
         protected const string FILE_FORMAT_PNG = "png";
         protected const string FILE_FORMAT_JPG = "jpg";
@@ -47,7 +48,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
         protected const string STORAGE_TYPE_UPLOAD = "upload";
         protected const string STORAGE_TYPE_PRIVATE = "private";
-        
+
         protected const int TEST_PDF_PAGES_COUNT = 3;
         protected const int MAX_RESULTS = 500;
 
@@ -87,8 +88,10 @@ namespace CloudinaryDotNet.IntegrationTest
 
         protected enum StorageType { text, sprite, multi, facebook, upload }
 
-        private void Initialize(Assembly assembly)
+        [OneTimeSetUp]
+        public virtual void Initialize()
         {
+            var assembly = typeof(IntegrationTestBase).GetTypeInfo().Assembly;
             Settings settings = new Settings(Path.GetDirectoryName(assembly.Location));
             m_cloudName = settings.CloudName;
             m_apiKey = settings.ApiKey;
@@ -113,6 +116,11 @@ namespace CloudinaryDotNet.IntegrationTest
             m_presetsToClear = new List<string>();
 
             InitializeUniqueNames(assembly.GetName().Name);
+        }
+
+        protected virtual string GetMethodTag([System.Runtime.CompilerServices.CallerMemberName]string memberName = "")
+        {
+            return $"{m_apiTag}_{memberName}";
         }
 
         protected void InitializeUniqueNames(string assemblyName)
@@ -173,6 +181,27 @@ namespace CloudinaryDotNet.IntegrationTest
             if (String.IsNullOrEmpty(id))
             {
                 id = GetUniquePublicId();
+            }
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = id,
+                Tags = m_apiTag
+            };
+            return m_cloudinary.Upload(uploadParams);
+        }
+
+        /// <summary>
+        /// A convenient method for uploading an image before testing
+        /// </summary>
+        /// <param name="id">The ID of the resource</param>
+        /// <returns>The upload results</returns>
+        protected ImageUploadResult UploadAsyncTestResource(string id = null)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                id = GetUniqueAsyncPublicId();
             }
 
             var uploadParams = new ImageUploadParams()
@@ -256,6 +285,11 @@ namespace CloudinaryDotNet.IntegrationTest
             return publicId;
         }
 
+        protected virtual string GetUniqueAsyncPublicId(StorageType storageType = StorageType.upload)
+        {
+            return GetUniquePublicId(storageType, "ASYNC");
+        }
+
         protected void AddCreatedPublicId(StorageType storageType, string publicId)
         {
             if (!string.IsNullOrEmpty(publicId))
@@ -270,6 +304,11 @@ namespace CloudinaryDotNet.IntegrationTest
             var transformationName = $"{m_apiTest}_transformation_{m_transformationsToClear.Count + 1}_{suffix}";
             AddCreatedTransformation(transformationName);
             return transformationName;
+        }
+
+        protected virtual string GetUniqueAsyncTransformationName()
+        {
+            return GetUniqueTransformationName("ASYNC");
         }
 
         protected void AddCreatedTransformation(object transformation)

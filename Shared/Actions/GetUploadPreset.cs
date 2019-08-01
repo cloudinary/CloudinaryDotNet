@@ -1,7 +1,6 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization;
-using Newtonsoft.Json.Linq;
-using System;
 
 namespace CloudinaryDotNet.Actions
 {
@@ -28,16 +27,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "settings")]
         public UploadSettings Settings { get; protected set; }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class
-        /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
-        internal static GetUploadPresetResult Parse(Object response)
-        {
-            return Api.Parse<GetUploadPresetResult>(response);
-        }
     }
 
     /// <summary>

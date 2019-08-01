@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -29,6 +30,33 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             tagParams.PublicIds.Add(uploadResult.PublicId);
 
             TagResult tagResult = m_cloudinary.Tag(tagParams);
+
+            Assert.AreEqual(1, tagResult.PublicIds.Length);
+            Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
+        }
+
+        [Test]
+        public async Task TestTagAddAsync()
+        {
+            var tag = GetMethodTag();
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
+            };
+
+            var uploadResult = await m_cloudinary.UploadAsync(uploadParams);
+
+            var tagParams = new TagParams()
+            {
+                Command = TagCommand.Add,
+                Tag = tag
+            };
+
+            tagParams.PublicIds.Add(uploadResult.PublicId);
+
+            var tagResult = await m_cloudinary.TagAsync(tagParams);
 
             Assert.AreEqual(1, tagResult.PublicIds.Length);
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet
 {
@@ -151,9 +152,34 @@ namespace CloudinaryDotNet
         /// <returns>Search response with information about the assets matching the search criteria.</returns>
         public SearchResult Execute()
         {
-            Url url = m_api.ApiUrlV.Add("resources").Add("search");
+            Url url = m_api.ApiUrlV
+                .Add("resources")
+                .Add("search");
 
-            return m_api.CallAndParse<SearchResult>(HttpMethod.POST, url.BuildUrl(), PrepareSearchParams(), null, PrepareHeaders());
+            return m_api.CallAndParse<SearchResult>(
+                HttpMethod.POST,
+                url.BuildUrl(),
+                PrepareSearchParams(),
+                null,
+                PrepareHeaders());
+        }
+
+        /// <summary>
+        /// Execute search request asynchronously.
+        /// </summary>
+        /// <returns>Search response with information about the assets matching the search criteria.</returns>
+        public Task<SearchResult> ExecuteAsync()
+        {
+            var url = m_api.ApiUrlV
+                .Add("resources")
+                .Add("search");
+
+            return m_api.CallAndParseAsync<SearchResult>(
+                HttpMethod.POST,
+                url.BuildUrl(),
+                PrepareSearchParams(),
+                null,
+                PrepareHeaders());
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -298,6 +299,16 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             UploadTestResource();
 
             ListTagsResult result = m_cloudinary.ListTags(new ListTagsParams());
+            Assert.Greater(result.Tags.Length, 0);
+        }
+
+        [Test]
+        public async Task TestListTagsAsync()
+        {
+            // should allow listing tags
+            UploadAsyncTestResource();
+
+            var result = await m_cloudinary.ListTagsAsync(new ListTagsParams());
             Assert.Greater(result.Tags.Length, 0);
         }
 

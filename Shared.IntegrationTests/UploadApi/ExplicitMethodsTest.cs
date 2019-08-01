@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -23,6 +24,31 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var url = new Url(m_account.Cloud).ResourceType(Api.GetCloudinaryParam(ResourceType.Image)).Add(facebook).
                 Transform(m_explicitTransformation).
                 Format(FILE_FORMAT_PNG).Version(expResult.Version).BuildUrl(cloudinary);
+
+            Assert.AreEqual(url, expResult.Eager[0].Uri.AbsoluteUri);
+        }
+
+        [Test]
+        public async Task TestExplicitAsync()
+        {
+            var facebook = StorageType.facebook.ToString();
+            var cloudinary = "cloudinary";
+            var exp = new ExplicitParams(cloudinary)
+            {
+                EagerTransforms = new List<Transformation>() { m_explicitTransformation },
+                Type = facebook,
+                Tags = m_apiTag
+            };
+
+            var expResult = await m_cloudinary.ExplicitAsync(exp);
+
+            var url = new Url(m_account.Cloud)
+                .ResourceType(ApiShared.GetCloudinaryParam(ResourceType.Image))
+                .Add(facebook)
+                .Transform(m_explicitTransformation)
+                .Format(FILE_FORMAT_PNG)
+                .Version(expResult.Version)
+                .BuildUrl(cloudinary);
 
             Assert.AreEqual(url, expResult.Eager[0].Uri.AbsoluteUri);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -198,6 +199,42 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { CustomCoordinates = coordinates });
 
             var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
+
+            Assert.NotNull(result.Coordinates);
+            Assert.NotNull(result.Coordinates.Custom);
+            Assert.AreEqual(1, result.Coordinates.Custom.Length);
+            Assert.AreEqual(4, result.Coordinates.Custom[0].Length);
+            Assert.AreEqual(coordinates.X, result.Coordinates.Custom[0][0]);
+            Assert.AreEqual(coordinates.Y, result.Coordinates.Custom[0][1]);
+            Assert.AreEqual(coordinates.Width, result.Coordinates.Custom[0][2]);
+            Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
+        }
+
+        [Test]
+        public async Task TestUpdateCustomCoordinatesAsync()
+        {
+            //should update custom coordinates
+
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
+
+            var upResult = await m_cloudinary.UploadAsync(
+                new ImageUploadParams()
+                {
+                    File = new FileDescription(m_testImagePath),
+                    Tags = m_apiTag
+                });
+
+            await m_cloudinary.UpdateResourceAsync(
+                new UpdateParams(upResult.PublicId)
+                {
+                    CustomCoordinates = coordinates
+                });
+
+            var result = await m_cloudinary.GetResourceAsync(
+                new GetResourceParams(upResult.PublicId)
+                {
+                    Coordinates = true
+                });
 
             Assert.NotNull(result.Coordinates);
             Assert.NotNull(result.Coordinates.Custom);

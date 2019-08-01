@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
@@ -29,6 +30,26 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var explodeParams = new ExplodeParams(publicId, m_transformationExplode);
             var result = m_cloudinary.Explode(explodeParams);
+
+            Assert.AreEqual("processing", result.Status);
+        }
+
+        [Test]
+        public async Task TestExplodeAsync()
+        {
+            var publicId = GetUniqueAsyncPublicId();
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testPdfPath),
+                PublicId = publicId,
+                Tags = m_apiTag
+            };
+
+            await m_cloudinary.UploadAsync(uploadParams);
+
+            var explodeParams = new ExplodeParams(publicId, m_transformationExplode);
+            var result = await m_cloudinary.ExplodeAsync(explodeParams);
 
             Assert.AreEqual("processing", result.Status);
         }

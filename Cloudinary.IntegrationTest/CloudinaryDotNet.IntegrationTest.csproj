@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CloudinaryDotNet.IntegrationTest</RootNamespace>
     <AssemblyName>Cloudinary.IntegrationTest</AssemblyName>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFramework>net45</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -63,8 +63,8 @@
     <DefineConstants>SIGN_ASSEMBLY</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.2.1510.2205" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.*" />
+    <PackageReference Include="Moq" Version="4.12.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.*" />
     <PackageReference Include="NUnit" Version="3.10.*" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.*" />
     <Reference Include="System" />
@@ -106,10 +106,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="UploadApi\AsyncMethodsTest.cs" />
-    <Compile Include="IntegrationTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />

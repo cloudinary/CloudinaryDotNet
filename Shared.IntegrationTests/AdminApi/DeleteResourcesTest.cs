@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using CloudinaryDotNet.Actions;
+﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
@@ -37,6 +38,36 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             resource = m_cloudinary.GetResource(publicId);
 
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
+        }
+
+        [Test]
+        public async Task TestDeleteAsync()
+        {
+            // should allow deleting resources
+            var publicId = GetUniqueAsyncPublicId();
+            var nonExistingPublicId = GetUniqueAsyncPublicId();
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Tags = m_apiTag
+            };
+
+            await m_cloudinary.UploadAsync(uploadParams);
+
+            var resource = await m_cloudinary.GetResourceAsync(publicId);
+
+            Assert.AreEqual(publicId, resource.PublicId);
+
+            var delResult = await m_cloudinary.DeleteResourcesAsync(nonExistingPublicId, publicId);
+
+            Assert.AreEqual("not_found", delResult.Deleted[nonExistingPublicId]);
+            Assert.AreEqual("deleted", delResult.Deleted[publicId]);
+
+            resource = await m_cloudinary.GetResourceAsync(publicId);
+
+            Assert.IsTrue(string.IsNullOrEmpty(resource.PublicId));
         }
 
         [Test]

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
@@ -17,7 +18,19 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
         private readonly Transformation PROFILE_TRANSFORMATION_2 = new Transformation()
             .Crop("scale").Width(100).Height(200).BitRate("10m");
-        
+
+        private Task<StreamingProfileResult> CreateStreamingProfileWith2TransformsAsync(string name)
+        {
+            return m_cloudinary.CreateStreamingProfileAsync(
+                new StreamingProfileCreateParams()
+                {
+                    Name = name,
+                    Representations = new[] { PROFILE_TRANSFORMATION_1, PROFILE_TRANSFORMATION_2 }
+                        .Select(t => new Representation { Transformation = t })
+                        .ToList()
+                });
+        }
+
         private StreamingProfileResult CreateStreamingProfileWith2Transforms(string name)
         {
             return m_cloudinary.CreateStreamingProfile(
@@ -31,7 +44,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                     }
                 });
         }
-        
+
         [OneTimeSetUp]
         public override void Initialize()
         {
@@ -49,14 +62,27 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         private string GetUniqueStreamingProfileName(string suffix = "")
         {
             var name = $"{m_apiTest}_streaming_profile_{m_streamingProfilesToClear.Count + 1}";
-            
+
             if (!string.IsNullOrEmpty(suffix))
                 name = $"{name}_{suffix}";
-            
+
             m_streamingProfilesToClear.Add(name);
             return name;
         }
-        
+
+        [Test]
+        public async Task TestCreateStreamingProfileAsync()
+        {
+            var name = GetUniqueStreamingProfileName("create");
+            var result = await CreateStreamingProfileWith2TransformsAsync(name);
+
+            Assert.IsNotNull(result?.Data);
+            Assert.AreEqual(name, result.Data.Name);
+            Assert.AreEqual(2, result.Data.Representations.Count);
+            Assert.AreEqual(PROFILE_TRANSFORMATION_1.ToString(), result.Data.Representations[0].Transformation.ToString());
+            Assert.AreEqual(PROFILE_TRANSFORMATION_2.ToString(), result.Data.Representations[1].Transformation.ToString());
+        }
+
         [Test]
         public void TestCreateStreamingProfile()
         {
@@ -74,8 +100,8 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public void TestGetStreamingProfile()
         {
-            Assert.Throws<ArgumentNullException>(() => m_cloudinary.GetStreamingProfile(null));
-            
+            Assert.Throws<ArgumentException>(() => m_cloudinary.GetStreamingProfile(null));
+
             StreamingProfileResult result = m_cloudinary.GetStreamingProfile(PREDEFINED_PROFILES[0]);
             Assert.NotNull(result);
             Assert.NotNull(result.Data);
@@ -150,7 +176,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(displayName, result.Data.DisplayName);
             Assert.AreEqual(1, result.Data.Representations.Count);
             Assert.AreEqual(
-                representations[0].Transformation.ToString(), 
+                representations[0].Transformation.ToString(),
                 result.Data.Representations[0].Transformation.ToString());
         }
     }

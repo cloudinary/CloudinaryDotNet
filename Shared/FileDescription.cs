@@ -9,7 +9,9 @@ namespace CloudinaryDotNet
     public class FileDescription
     {
         internal int BufferLength = Int32.MaxValue;
-        internal bool Eof;
+
+        internal bool Eof => BytesSent == GetFileLength();
+
         internal int BytesSent;
 
         internal long GetFileLength()
@@ -20,7 +22,6 @@ namespace CloudinaryDotNet
         internal void Reset(int bufferSize = int.MaxValue)
         {
             BufferLength = bufferSize;
-            Eof = false;
             BytesSent = 0;
         }
 
