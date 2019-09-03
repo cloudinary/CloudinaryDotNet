@@ -1,8 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
-using System.Collections.Generic;
-using System;
 
 namespace CloudinaryDotNet.Actions
 {
