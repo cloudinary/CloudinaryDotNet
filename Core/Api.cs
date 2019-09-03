@@ -127,9 +127,10 @@ namespace CloudinaryDotNet
 
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
-            request.Headers.Add("User-Agent", string.IsNullOrEmpty(UserPlatform)
+            var userPlatform = string.IsNullOrEmpty(UserPlatform)
                 ? USER_AGENT
-                : string.Format("{0} {1}", UserPlatform, USER_AGENT));
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
+            request.Headers.Add("User-Agent", userPlatform);
 
             byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
             request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
