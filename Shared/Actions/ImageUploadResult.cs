@@ -47,7 +47,7 @@ namespace CloudinaryDotNet.Actions
         /// and 1 means the image is sharp and in focus. 
         /// </summary>
         [DataMember(Name = "quality_analysis")]
-        public QualityAnalysis QualityAnalysis{ get; protected set; }
+        public QualityAnalysis QualityAnalysis { get; protected set; }
 
         /// <summary>
         /// The predominant colors and color histogram of the uploaded image.

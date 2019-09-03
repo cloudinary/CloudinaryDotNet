@@ -53,7 +53,7 @@ namespace CloudinaryDotNet.Actions
         /// Details of the quality analysis.
         /// </summary>
         [DataMember(Name = "quality_analysis")]
-        public QualityAnalysis QualityAnalysis{ get; protected set; }
+        public QualityAnalysis QualityAnalysis { get; protected set; }
     }
 
     /// <summary>
