@@ -159,7 +159,6 @@ namespace CloudinaryDotNet
             return new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
         }
 
-
         /// <summary>
         ///  Returns URL on archive file.
         /// </summary>
@@ -235,7 +234,6 @@ namespace CloudinaryDotNet
                  .Add(parameters.ResourceType.ToString().ToLower())
                  .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
-
 
             return m_api.CallApi<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
@@ -682,7 +680,6 @@ namespace CloudinaryDotNet
                 ["X-Unique-Upload-Id"] = RandomPublicId(),
             };
 
-
             var fileLength = parameters.File.GetFileLength();
 
             T result = null;
@@ -949,7 +946,6 @@ namespace CloudinaryDotNet
             var url = m_api.ApiUrlV.
                 ResourceType("resources").
                 Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
-
 
             switch (parameters)
             {

@@ -185,7 +185,6 @@ namespace CloudinaryDotNet.Actions
                 AddParam(dict, "access_control", JsonConvert.SerializeObject(AccessControl));
             }
 
-
             if (Headers != null && Headers.Count > 0)
             {
                 StringBuilder sb = new StringBuilder();

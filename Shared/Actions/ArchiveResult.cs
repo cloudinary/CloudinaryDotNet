@@ -34,7 +34,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public int FileCount { get; private set; }
 
-
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);

@@ -79,7 +79,6 @@ namespace CloudinaryDotNet.Actions
                 AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", contextPairs));
             }
 
-
             AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
             AddParam(dict, Constants.COMMAND, ApiShared.GetCloudinaryParam(Command));
 

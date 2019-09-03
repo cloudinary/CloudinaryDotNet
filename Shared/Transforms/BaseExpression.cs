@@ -229,7 +229,6 @@ namespace CloudinaryDotNet
             return Or().Value(value);
         }
 
-
         /// <summary>
         /// Add 'or' operation.
         /// </summary>

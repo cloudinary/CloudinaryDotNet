@@ -107,7 +107,6 @@ namespace CloudinaryDotNet
         /// </summary>
         public int ChunkSize = 65000;
 
-
         /// <summary>
         /// Default parameterless constructor.
         /// Assumes that environment variable CLOUDINARY_URL is set.
@@ -717,7 +716,6 @@ namespace CloudinaryDotNet
                 }
             }
         }
-
 
         /// <summary>
         /// Writes one chunk of file to stream.

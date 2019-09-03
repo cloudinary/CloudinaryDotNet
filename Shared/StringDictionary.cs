@@ -189,7 +189,6 @@ namespace CloudinaryDotNet
             return GetEnumerator();
         }
 
-
         /// <summary>
         /// Determines whether the <see cref="T:System.Collections.Generic.IDictionary`2" /> contains an element with the specified key.
         /// </summary>

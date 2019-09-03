@@ -322,7 +322,6 @@ namespace CloudinaryDotNet
             }
         }
 
-
         private Stream GetRangeFromFile(FileDescription file, Stream stream)
         {
             MemoryStream memStream = new MemoryStream();

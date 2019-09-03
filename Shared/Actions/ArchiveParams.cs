@@ -31,7 +31,6 @@ namespace CloudinaryDotNet.Actions
         private bool m_async;
         private List<string> m_targetTags;
 
-
         /// <summary>
         /// Get a list of Public IDs for the specific assets to be included in the archive.
         /// </summary>

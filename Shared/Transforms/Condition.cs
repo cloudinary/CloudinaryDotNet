@@ -25,7 +25,6 @@ namespace CloudinaryDotNet
                 m_expressions.Add(Normalize(condition));
         }
 
-
         /// <summary>
         /// Creates a predicate for binary operators.
         /// </summary>
