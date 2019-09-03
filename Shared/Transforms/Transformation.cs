@@ -31,7 +31,7 @@ namespace CloudinaryDotNet
             "pg", "page",
             "u", "underlay",
             "vs", "video_sampling",
-            "sp", "streaming_profile"
+            "sp", "streaming_profile",
         };
 
         /// <summary>

@@ -366,7 +366,7 @@ namespace CloudinaryDotNet
         /// Renders at the highest quality, sacrificing speed if necessary.
         /// </summary>
         [EnumMember(Value = "best")]
-        Best
+        Best,
     }
 
     /// <summary>
@@ -394,6 +394,6 @@ namespace CloudinaryDotNet
         /// Hint outlines to the maximize contrast.
         /// </summary>
         [EnumMember(Value = "full")]
-        Full
+        Full,
     }
 }

@@ -12,6 +12,6 @@ namespace CloudinaryDotNet.Actions
         /// Specifies ZIP format for an archive
         /// </summary>
         [EnumMember(Value = "zip")]
-        Zip
+        Zip,
     }
 }

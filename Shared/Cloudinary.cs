@@ -103,7 +103,7 @@ namespace CloudinaryDotNet
 
             var parameters = new SortedDictionary<string, object>
             {
-                { "public_id", publicId }
+                { "public_id", publicId },
             };
 
             if (!string.IsNullOrEmpty(format))
@@ -138,7 +138,7 @@ namespace CloudinaryDotNet
 
             var parameters = new SortedDictionary<string, object>
             {
-                { "tag", tag }
+                { "tag", tag },
             };
 
             if (transform != null)
@@ -679,7 +679,7 @@ namespace CloudinaryDotNet
 
             var extraHeaders = new Dictionary<string, string>
             {
-                ["X-Unique-Upload-Id"] = RandomPublicId()
+                ["X-Unique-Upload-Id"] = RandomPublicId(),
             };
 
 
@@ -792,7 +792,7 @@ namespace CloudinaryDotNet
                 NextCursor = nextCursor,
                 Tags = tags,
                 Context = context,
-                Moderations = moderations
+                Moderations = moderations,
             });
         }
 
@@ -820,7 +820,7 @@ namespace CloudinaryDotNet
             {
                 Type = type,
                 Prefix = prefix,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -843,7 +843,7 @@ namespace CloudinaryDotNet
                 Moderations = moderations,
                 Type = type,
                 Prefix = prefix,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -858,7 +858,7 @@ namespace CloudinaryDotNet
             return ListResources(new ListResourcesByTagParams()
             {
                 Tag = tag,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -871,7 +871,7 @@ namespace CloudinaryDotNet
         {
             return ListResources(new ListSpecificResourcesParams()
             {
-                PublicIds = new List<string>(publicIds)
+                PublicIds = new List<string>(publicIds),
             });
         }
 
@@ -890,7 +890,7 @@ namespace CloudinaryDotNet
                 PublicIds = new List<string>(publicIds),
                 Tags = tags,
                 Context = context,
-                Moderations = moderations
+                Moderations = moderations,
             });
         }
 
@@ -913,7 +913,7 @@ namespace CloudinaryDotNet
                 Tags = tags,
                 Context = context,
                 Moderations = moderations,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -935,7 +935,7 @@ namespace CloudinaryDotNet
                 Value = value,
                 Tags = tags,
                 Context = context,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -1544,7 +1544,7 @@ namespace CloudinaryDotNet
                     new JProperty("cloud_name", m_api.Account.Cloud),
                     new JProperty("api_key", m_api.Account.ApiKey),
                     new JProperty("private_cdn", m_api.UsePrivateCdn),
-                    new JProperty("cdn_subdomain", m_api.CSubDomain)
+                    new JProperty("cdn_subdomain", m_api.CSubDomain),
                 });
 
             if (!string.IsNullOrEmpty(m_api.PrivateCdn))

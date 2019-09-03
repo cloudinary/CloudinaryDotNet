@@ -101,6 +101,6 @@ namespace CloudinaryDotNet.Actions
         /// Remove all contexts from resources with the given Public IDs.
         /// </summary>
         [EnumMember(Value = "remove_all")]
-        RemoveAll
+        RemoveAll,
     }
 }

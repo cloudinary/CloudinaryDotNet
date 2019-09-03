@@ -46,6 +46,6 @@ namespace CloudinaryDotNet.Actions
         /// Requires either the token-based authentication or the cookie-based authentication for accessing the asset.
         /// </summary>
         [EnumMember(Value = "token")]
-        Token
+        Token,
     }
 }

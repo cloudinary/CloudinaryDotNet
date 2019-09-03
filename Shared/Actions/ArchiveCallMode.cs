@@ -22,6 +22,6 @@ namespace CloudinaryDotNet.Actions
         /// and can then be delivered like any other raw file uploaded to Cloudinary.
         /// </summary>
         [EnumMember(Value = "create")]
-        Create
+        Create,
     }
 }

@@ -505,7 +505,7 @@ namespace CloudinaryDotNet
         {
             var parametersToSign = new SortedDictionary<string, object>() {
                 { "public_id", publicId },
-                { "version", version }
+                { "version", version },
             };
             var signedParameters = SignParameters(parametersToSign);
 
@@ -812,7 +812,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// PUT
         /// </summary>
-        PUT
+        PUT,
     }
 }
 

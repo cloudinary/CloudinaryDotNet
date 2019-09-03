@@ -76,6 +76,6 @@ namespace CloudinaryDotNet
         /// 192000 Hz
         /// </summary>
         [EnumMember(Value = "192000")]
-        AF192000
+        AF192000,
     }
 }

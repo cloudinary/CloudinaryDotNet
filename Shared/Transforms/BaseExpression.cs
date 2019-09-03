@@ -33,7 +33,7 @@ namespace CloudinaryDotNet
             { "*", "mul" },
             { "/", "div" },
             { "+", "add" },
-            { "-", "sub" }
+            { "-", "sub" },
         };
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace CloudinaryDotNet
             { "currentPage", "cp" },
             { "tags", "tags" },
             { "pageX", "px" },
-            { "pageY", "py" }
+            { "pageY", "py" },
         };
 
         /// <summary>

@@ -31,7 +31,7 @@ namespace CloudinaryDotNet.Actions
         /// Moderation result was manually overridden.
         /// </summary>
         [EnumMember(Value = "overridden")]
-        Overridden
+        Overridden,
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ namespace CloudinaryDotNet.Actions
         /// Video files in various formats (mp4, etc.)
         /// </summary>
         [EnumMember(Value = "video")]
-        Video
+        Video,
     }
 
     /// <summary>
