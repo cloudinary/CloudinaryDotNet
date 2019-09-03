@@ -14,7 +14,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// The dictionary with custom parameters.
         /// </summary>
-        private SortedDictionary<string, object> CustomParams = new SortedDictionary<string, object>();
+        private SortedDictionary<string, object> customParams = new SortedDictionary<string, object>();
 
         /// <summary>
         /// Validate object model.
@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>The dictionary of parameters in cloudinary notation.</returns>
         public virtual SortedDictionary<string, object> ToParamsDictionary()
         {
-            return new SortedDictionary<string, object>(CustomParams);
+            return new SortedDictionary<string, object>(customParams);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace CloudinaryDotNet.Actions
         {
             if (!string.IsNullOrEmpty(value))
             {
-                CustomParams.Add(key, value);
+                customParams.Add(key, value);
             }
         }
 

@@ -30,7 +30,7 @@ namespace CloudinaryDotNet
             USER_AGENT = $"CloudinaryDotNet/{version.Major}.{version.Minor}.{version.Build} (.NET Framework 4)";
         }
 
-        private Func<string, HttpWebRequest> RequestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
+        private Func<string, HttpWebRequest> requestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
 
         /// <summary>
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
@@ -98,7 +98,7 @@ namespace CloudinaryDotNet
         /// <returns>HTTP response on call</returns>
         public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            HttpWebRequest request = RequestBuilder(url);
+            HttpWebRequest request = requestBuilder(url);
             HttpWebResponse response = null;
             if (Timeout > 0)
             {

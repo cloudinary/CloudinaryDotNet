@@ -41,7 +41,7 @@ namespace CloudinaryDotNet
                 frameworkDescription);
         }
 
-        private Func<string, HttpRequestMessage> RequestBuilder =
+        private Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace CloudinaryDotNet
         /// <returns>HTTP response on call.</returns>
         public HttpResponseMessage Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
-            var request = RequestBuilder(url);
+            var request = requestBuilder(url);
             HttpResponseMessage response = null;
             using (request)
             {

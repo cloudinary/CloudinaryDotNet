@@ -62,7 +62,7 @@ namespace CloudinaryDotNet
         {
             return !string.IsNullOrEmpty(value) &&
                    (value.IndexOf("$", StringComparison.Ordinal) != -1 ||
-                    Parameters.Any(v => value.Contains($"_{v.Value}") || value.Contains($"{v.Value}_")));
+                    parameters.Any(v => value.Contains($"_{v.Value}") || value.Contains($"{v.Value}_")));
         }
 
         /// <summary>

@@ -34,9 +34,9 @@ namespace CloudinaryDotNet
         /// <param name="value">A value.</param>
         protected Condition Predicate(string name, string @operator, object value)
         {
-            if (Operators.ContainsKey(@operator))
+            if (operators.ContainsKey(@operator))
             {
-                @operator = Operators[@operator];
+                @operator = operators[@operator];
             }
             m_expressions.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
             return this;
