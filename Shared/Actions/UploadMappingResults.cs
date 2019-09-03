@@ -57,7 +57,7 @@ namespace CloudinaryDotNet.Actions
                 if (!string.IsNullOrEmpty(folder))
                     Mappings.Add(folder, template);
 
-                //parsing NextCursor
+                // parsing NextCursor
                 NextCursor = source.Value<string>("next_cursor") ?? string.Empty;
             }
         }

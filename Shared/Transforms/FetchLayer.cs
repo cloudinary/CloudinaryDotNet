@@ -60,8 +60,8 @@ namespace CloudinaryDotNet
         /// </summary>
         private string UrlEncode(string url)
         {
-            //Microsoft.IdentityModel.Tokens
-            //return Base64UrlEncoder.Encode(StringToEncode);
+            // Microsoft.IdentityModel.Tokens
+            // return Base64UrlEncoder.Encode(StringToEncode);
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(url);
             return System.Convert.ToBase64String(plainTextBytes);
         }

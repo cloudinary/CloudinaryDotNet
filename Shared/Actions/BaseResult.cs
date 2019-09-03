@@ -105,7 +105,7 @@ namespace CloudinaryDotNet.Actions
     [DataContract]
     public abstract class BaseResult
     {
-        //protected static Dictionary<Type, DataContractJsonSerializer> m_serializers = new Dictionary<Type, DataContractJsonSerializer>();
+        // protected static Dictionary<Type, DataContractJsonSerializer> m_serializers = new Dictionary<Type, DataContractJsonSerializer>();
 
         /// <summary>
         /// HTTP status code.

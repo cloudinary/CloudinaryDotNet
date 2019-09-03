@@ -1392,7 +1392,7 @@ namespace CloudinaryDotNet
 
             queryString.Clear();
 
-            query = query.Substring(1); //remove the ?
+            query = query.Substring(1); // remove the ?
 
             string[] pairs = query.Split(new char[] { '&' });
             foreach (string s in pairs)

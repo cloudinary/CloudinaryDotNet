@@ -6,39 +6,39 @@ namespace CloudinaryDotNet
 {
     static class Constants
     {
-        //API URL patterns
+        // API URL patterns
         public const string RESOURCES_API_URL = "resources";
         public const string TAG_API_URL = "tag";
         public const string STREAMING_PROFILE_API_URL = "streaming_profiles";
 
-        //Api URL action names
+        // Api URL action names
         public const string UPDATE_ACESS_MODE = "update_access_mode";
         public const string TAGS_MANGMENT = "tags";
         public const string CONTEXT_MANAGMENT = "context";
 
-        //Param names
+        // Param names
         public const string TAG_PARAM_NAME = "tag";
         public const string CONTEXT_PARAM_NAME = "context";
         public const string PREFIX_PARAM_NAME = "prefix";
         public const string PUBLIC_IDS = "public_ids";
         public const string COMMAND = "command";
 
-        //Resource types
+        // Resource types
         public const string RESOURCE_TYPE_FETCH = "fetch";
         public const string RESOURCE_TYPE_IMAGE = "image";
         public const string RESOURCE_TYPE_VIDEO = "video";
 
-        //Action names
+        // Action names
         public const string ACTION_NAME_UPLOAD = "upload";
         public const string ACTION_NAME_FETCH = "fetch";
 
-        //URL constants
+        // URL constants
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
         public const string OLD_AKAMAI_SHARED_CDN = "cloudinary-a.akamaihd.net";
         public const string AKAMAI_SHARED_CDN = "res.cloudinary.com";
         public const string SHARED_CDN = AKAMAI_SHARED_CDN;
         
-        //HTTP protocol related constants
+        // HTTP protocol related constants
         public const string HEADER_CONTENT_TYPE = "Content-Type";
         public const string CONTENT_TYPE_APPLICATION_JSON = "application/json";
 
