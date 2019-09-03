@@ -20,7 +20,8 @@ namespace CloudinaryDotNet
         /// Instantiates the <see cref="VideoLayer"/> object with public ID.
         /// </summary>
         /// <param name="publicId">Public ID of a previously uploaded PNG image.</param>
-        public VideoLayer(string publicId) : this()
+        public VideoLayer(string publicId)
+            : this()
         {
             PublicId(publicId);
         }

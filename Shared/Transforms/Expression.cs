@@ -22,7 +22,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Instantiates the <see cref="Expression"/> object with name.
         /// </summary>
-        public Expression(string name) : this()
+        public Expression(string name)
+            : this()
         {
             if (!string.IsNullOrEmpty(name))
                 m_expressions.Add(name);

@@ -18,7 +18,8 @@ namespace CloudinaryDotNet
         /// Create a <see cref="Condition"/> object. The condition string will be translated to a serialized condition.
         /// </summary>
         /// <param name="condition">Condition in string format.</param>
-        public Condition(string condition) : this()
+        public Condition(string condition)
+            : this()
         {
             if (!string.IsNullOrEmpty(condition))
                 m_expressions.Add(Normalize(condition));

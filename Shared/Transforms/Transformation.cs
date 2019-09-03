@@ -583,7 +583,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Creates an empty eager transformation object.
         /// </summary>
-        public EagerTransformation() : base() { }
+        public EagerTransformation()
+            : base() { }
 
         /// <summary>
         /// Set file format for the transformation.

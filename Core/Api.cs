@@ -30,7 +30,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
-        public Api() : base()
+        public Api()
+            : base()
         {
         }
 
@@ -38,7 +39,8 @@ namespace CloudinaryDotNet
         /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary URL.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
-        public Api(string cloudinaryUrl) : base(cloudinaryUrl)
+        public Api(string cloudinaryUrl)
+            : base(cloudinaryUrl)
         {
         }
 
@@ -59,7 +61,8 @@ namespace CloudinaryDotNet
         /// Instantiates the cloudinary <see cref="Api"/> object with account.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
-        public Api(Account account) : base(account)
+        public Api(Account account)
+            : base(account)
         {
         }
 

@@ -14,7 +14,8 @@ namespace CloudinaryDotNet.Core
         /// <param name="y">the y-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure</param>
         /// <param name="width">the width of this <see cref="Rectangle"/> structure</param>
         /// <param name="height">the height of this <see cref="Rectangle"/> structure</param>
-        public Rectangle(int x, int y, int width, int height) : this()
+        public Rectangle(int x, int y, int width, int height)
+            : this()
         {
             X = x;
             Y = y;

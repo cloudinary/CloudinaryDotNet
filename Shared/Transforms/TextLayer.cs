@@ -86,7 +86,8 @@ namespace CloudinaryDotNet
         /// Instantiates the <see cref="TextLayer"/> object with text.
         /// </summary>
         /// <param name="text">The text to generate an image for.</param>
-        public TextLayer(string text) : this()
+        public TextLayer(string text)
+            : this()
         {
             Text(text);
         }
