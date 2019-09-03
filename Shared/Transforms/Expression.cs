@@ -64,8 +64,6 @@ namespace CloudinaryDotNet
                     Parameters.Any(v => value.Contains($"_{v.Value}") || value.Contains($"{v.Value}_")));
         }
 
-        #region Predefined variables
-
         /// <summary>
         /// Predefined variable 'width'.
         /// </summary>
@@ -169,7 +167,5 @@ namespace CloudinaryDotNet
         {
             return new Expression("iar");
         }
-
-        #endregion
     }
 }

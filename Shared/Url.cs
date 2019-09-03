@@ -572,8 +572,6 @@ namespace CloudinaryDotNet
             return BuildUrl(source);
         }
 
-        #region BuildImageTag
-
         /// <summary>
         /// Build an HTML image tag for embedding in a web view.
         /// </summary>
@@ -632,10 +630,6 @@ namespace CloudinaryDotNet
 
             return sb.ToString();
         }
-
-        #endregion
-
-        #region BuildVideoTag
 
         /// <summary>
         /// Builds a video tag for embedding in a web view.
@@ -860,10 +854,6 @@ namespace CloudinaryDotNet
 
             return posterUrl;
         }
-
-        #endregion
-
-        #region BuildUrl
 
         /// <summary>
         /// Generate a transformation URL directly, without the containing image tag.
@@ -1160,10 +1150,6 @@ namespace CloudinaryDotNet
             return "/:-_.*".IndexOf(ch) >= 0;
         }
 
-        #endregion
-
-        #region ICloneable
-
         /// <summary>
         /// Creates a new object that is a deep copy of the current instance.
         /// </summary>
@@ -1213,8 +1199,6 @@ namespace CloudinaryDotNet
         {
             return Clone();
         }
-
-        #endregion
     }
 
     /// <summary>

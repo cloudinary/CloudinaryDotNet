@@ -165,8 +165,6 @@ namespace CloudinaryDotNet
             return (T)this;
         }
 
-        #region Predefined operators
-
         /// <summary>
         /// Add 'multiply' operation with value.
         /// </summary>
@@ -419,6 +417,5 @@ namespace CloudinaryDotNet
         {
             return Nin().Value(value);
         }
-        #endregion
     }
 }

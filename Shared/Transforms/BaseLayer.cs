@@ -134,14 +134,10 @@ namespace CloudinaryDotNet
             return transientPublicId;
         }
 
-        #region ICloneable
-
         /// <summary>
         /// Creates a shallow copy of the current object.
         /// </summary>
         /// <returns>A new instance of the current object.</returns>
         public override object Clone() => MemberwiseClone();
-
-        #endregion
     }
 }

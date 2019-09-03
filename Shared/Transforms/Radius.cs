@@ -136,8 +136,6 @@ namespace CloudinaryDotNet
             return value.ToString();
         }
 
-        #region ICloneable
-
         /// <summary>
         /// Creates a new Radius object that is a copy of the current instance.
         /// </summary>
@@ -145,8 +143,6 @@ namespace CloudinaryDotNet
         public Radius Clone() => (Radius)MemberwiseClone();
 
         object Core.ICloneable.Clone() => Clone();
-
-        #endregion
 
         /// <inheritdoc />
         public override string ToString()

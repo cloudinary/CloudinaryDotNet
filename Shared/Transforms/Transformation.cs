@@ -515,8 +515,6 @@ namespace CloudinaryDotNet
             return Generate();
         }
 
-        #region ICloneable
-
         /// <summary>
         /// Get a deep cloned copy of this transformation.
         /// </summary>
@@ -561,8 +559,6 @@ namespace CloudinaryDotNet
         object Core.ICloneable.Clone() {
             return Clone();
         }
-
-        #endregion
     }
 
     /// <summary>

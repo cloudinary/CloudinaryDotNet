@@ -290,7 +290,6 @@ namespace CloudinaryDotNet.Actions
         public Ocr Ocr { get; protected set; }
     }
 
-    #region OCR
     /// <summary>
     /// Details of executing an OCR add-on.
     /// </summary>
@@ -542,10 +541,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
     }
-
-    #endregion
-
-    #region Rekognition face
 
     /// <summary>
     /// Requested information from executing a Rekognition face add-on.
@@ -842,8 +837,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "height")]
         public double Height { get; protected set; }
     }
-
-    #endregion
 
     /// <summary>
     /// Details of the quality analysis.
