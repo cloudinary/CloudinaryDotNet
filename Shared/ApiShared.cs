@@ -499,8 +499,8 @@ namespace CloudinaryDotNet
         public bool VerifyApiResponseSignature(string publicId, string version, string signature)
         {
             var parametersToSign = new SortedDictionary<string, object>() {
-                { "public_id", publicId},
-                { "version", version}
+                { "public_id", publicId },
+                { "version", version }
             };
             var signedParameters = SignParameters(parametersToSign);
 
