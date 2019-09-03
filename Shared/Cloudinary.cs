@@ -457,8 +457,9 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters of uploading .</param>
         /// <returns>Results of uploading.</returns>
-        private T Upload<T, P>(P parameters) where T : UploadResult, new()
-                                             where P : BasicRawUploadParams, new()
+        private T Upload<T, P>(P parameters)
+            where T : UploadResult, new()
+            where P : BasicRawUploadParams, new()
         {
             if (parameters == null)
                 throw new ArgumentNullException("parameters", "Upload parameters should be defined");
@@ -655,7 +656,8 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
         /// <returns>Parsed result of uploading.</returns>
-        public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE) where T : UploadResult, new()
+        public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
+            where T : UploadResult, new()
         {
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");

@@ -160,7 +160,8 @@ namespace CloudinaryDotNet
             throw new Exception("Please call overriden method");
         }
 
-        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
         {
             parameters?.Check();
 
@@ -183,7 +184,8 @@ namespace CloudinaryDotNet
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
         /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
         /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
         {
             throw new NotImplementedException();
         }

@@ -358,7 +358,8 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="response">HTTP response.</param>
         /// <returns>New instance of this class.</returns>
-        internal static T Parse<T>(object response) where T : BaseResult, new()
+        internal static T Parse<T>(object response)
+            where T : BaseResult, new()
         {
             if (response == null)
                 throw new ArgumentNullException("response");

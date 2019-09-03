@@ -18,7 +18,8 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Base abstract generic class for creating Layers.
     /// </summary>
-    public abstract class BaseLayer<T> : BaseLayer where T : BaseLayer<T>
+    public abstract class BaseLayer<T> : BaseLayer
+        where T : BaseLayer<T>
     {
         /// <summary>
         /// The type of the resource.

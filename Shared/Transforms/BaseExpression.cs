@@ -14,7 +14,8 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Represents expression object that can be used in user defined variables and conditional transformations.
     /// </summary>
-    public abstract class BaseExpression<T> : BaseExpression where T : BaseExpression<T>
+    public abstract class BaseExpression<T> : BaseExpression
+        where T : BaseExpression<T>
     {
         /// <summary>
         /// A dictionary with available operators.
