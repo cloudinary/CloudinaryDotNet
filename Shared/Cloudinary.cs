@@ -663,7 +663,7 @@ namespace CloudinaryDotNet
             if (parameters.File == null)
                 throw new ArgumentNullException(nameof(parameters.File), "File parameter should be defined");
 
-            if(parameters.File.IsRemote)
+            if (parameters.File.IsRemote)
                 return Upload<T, BasicRawUploadParams>(parameters);
 
             Url url = m_api.ApiUrlImgUpV;

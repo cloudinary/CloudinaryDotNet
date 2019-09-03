@@ -51,9 +51,9 @@ namespace CloudinaryDotNet.Actions
 
             if (MaxResults > 0)
                 AddParam(dict, "max_results", MaxResults.ToString());
-            if(Named.HasValue)
+            if (Named.HasValue)
                 AddParam(dict, "named", Named.Value.ToString());
-            if(!string.IsNullOrWhiteSpace(NextCursor))
+            if (!string.IsNullOrWhiteSpace(NextCursor))
                 AddParam(dict, "next_cursor", NextCursor);
 
             return dict;

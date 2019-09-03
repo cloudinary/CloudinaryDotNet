@@ -483,7 +483,7 @@ namespace CloudinaryDotNet
         /// <param name="value">Int representing the time between keyframes.</param>
         public Transformation KeyframeInterval(int value)
         {
-            if(value <= 0) throw new ArgumentException("The range for keyframe interval should be greater than 0.");
+            if (value <= 0) throw new ArgumentException("The range for keyframe interval should be greater than 0.");
             return Add("keyframe_interval", string.Format("{0:0.0}", value));
         }
 

@@ -6,7 +6,7 @@
   </Localization>
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1000" Action="Info" />
+    <Rule Id="SA1000" Action="Warning" />
     <Rule Id="SA1001" Action="Info" />
     <Rule Id="SA1002" Action="Info" />
     <Rule Id="SA1003" Action="Info" />

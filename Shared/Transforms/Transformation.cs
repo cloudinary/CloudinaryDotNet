@@ -405,13 +405,13 @@ namespace CloudinaryDotNet
             SortedSet<string> varParams = new SortedSet<string>();
             foreach (var key in m_transformParams.Keys)
             {
-                if(Regex.IsMatch(key, Expression.VARIABLE_NAME_REGEX))
+                if (Regex.IsMatch(key, Expression.VARIABLE_NAME_REGEX))
                 {
                     varParams.Add($"{key}_{GetString(m_transformParams, key)}");
                 }
             }
 
-            if(varParams.Count > 0)
+            if (varParams.Count > 0)
             {
                 components.Add(string.Join(",", varParams));
             }
@@ -452,7 +452,7 @@ namespace CloudinaryDotNet
 
         private string ProcessVariables(Expression[] variables)
         {
-            if(variables == null || variables.Length == 0)
+            if (variables == null || variables.Length == 0)
                 return null;
 
             return string.Join(",", variables.Select(v => v.ToString()).ToArray());

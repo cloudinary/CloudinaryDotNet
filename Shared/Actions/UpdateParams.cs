@@ -164,7 +164,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "similarity_search", SimilaritySearch);
             AddParam(dict, "background_removal", BackgroundRemoval);
 
-            if(!string.IsNullOrWhiteSpace(NotificationUrl))
+            if (!string.IsNullOrWhiteSpace(NotificationUrl))
                 AddParam(dict, "notification_url", NotificationUrl);
 
             if (ModerationStatus != Actions.ModerationStatus.Pending)

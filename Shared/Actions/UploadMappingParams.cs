@@ -42,7 +42,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if(MaxResults > 500)
+            if (MaxResults > 500)
                 throw new ArgumentException(string.Format("The maximal count of folders to return is 500, but {0} given!", MaxResults));
         }
 
