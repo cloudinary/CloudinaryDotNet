@@ -106,7 +106,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(Text))
+            if (string.IsNullOrEmpty(Text))
                 throw new ArgumentException("Text must be specified in TextParams!");
         }
 

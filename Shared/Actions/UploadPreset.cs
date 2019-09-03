@@ -39,7 +39,7 @@ namespace CloudinaryDotNet.Actions
                 if (preset.Settings.Tags.Type == JTokenType.String)
                     Tags = preset.Settings.Tags.ToString();
                 else if (preset.Settings.Tags.Type == JTokenType.Array)
-                    Tags = String.Join(",", preset.Settings.Tags.Values<string>().ToArray());
+                    Tags = string.Join(",", preset.Settings.Tags.Values<string>().ToArray());
             }
 
             Invalidate = preset.Settings.Invalidate;
@@ -411,11 +411,11 @@ namespace CloudinaryDotNet.Actions
                 AddParam(
                     dict,
                     "eager",
-                    String.Join("|", EagerTransforms.Select(GetTransformation).ToArray()));
+                    string.Join("|", EagerTransforms.Select(GetTransformation).ToArray()));
             }
 
             if (AllowedFormats != null)
-                AddParam(dict, "allowed_formats", String.Join(",", AllowedFormats));
+                AddParam(dict, "allowed_formats", string.Join(",", AllowedFormats));
 
             if (Context != null && Context.Count > 0)
             {
@@ -429,12 +429,12 @@ namespace CloudinaryDotNet.Actions
         {
             if (o == null) return null;
 
-            if (o is String)
-                return (String)o;
+            if (o is string)
+                return (string)o;
             else if (o is Transformation)
                 return ((Transformation)o).Generate();
             else
-                throw new NotSupportedException(String.Format("Instance of type {0} is not supported as Transformation!", o.GetType()));
+                throw new NotSupportedException(string.Format("Instance of type {0} is not supported as Transformation!", o.GetType()));
         }
     }
 
@@ -461,7 +461,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         /// <param name="response">HTTP response.</param>
         /// <returns>New instance of this class.</returns>
-        internal static UploadPresetResult Parse(Object response)
+        internal static UploadPresetResult Parse(object response)
         {
             return Api.Parse<UploadPresetResult>(response);
         }

@@ -34,7 +34,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         /// <param name="response">HTTP response</param>
         /// <returns>New instance of this class</returns>
-        internal static GetUploadPresetResult Parse(Object response)
+        internal static GetUploadPresetResult Parse(object response)
         {
             return Api.Parse<GetUploadPresetResult>(response);
         }

@@ -52,7 +52,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Regular expression to match video source types extensions.
         /// </summary>
-        protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
+        protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + string.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
 
         /// <summary>
         /// Digital signature provider.
@@ -187,12 +187,12 @@ namespace CloudinaryDotNet
         /// <summary>
         /// The action to be added to the URL.
         /// </summary>
-        protected string m_action = String.Empty;
+        protected string m_action = string.Empty;
 
         /// <summary>
         /// Type of the resource.
         /// </summary>
-        protected string m_resourceType = String.Empty;
+        protected string m_resourceType = string.Empty;
 
         /// <summary>
         /// The transformation to be added to the URL.
@@ -272,7 +272,7 @@ namespace CloudinaryDotNet
         /// <param name="part">Custom URL part.</param>
         public Url Add(string part)
         {
-            if (!String.IsNullOrEmpty(part))
+            if (!string.IsNullOrEmpty(part))
                 m_customParts.Add(part);
 
             return this;
@@ -553,7 +553,7 @@ namespace CloudinaryDotNet
                 return PosterTransform((Transformation)poster);
             else if (poster == null || (poster is bool && !(bool)poster))
             {
-                PosterSource(String.Empty);
+                PosterSource(string.Empty);
                 PosterUrl(null);
                 PosterTransform(null);
             }
@@ -850,7 +850,7 @@ namespace CloudinaryDotNet
             }
             else if (m_posterSource != null)
             {
-                if (!String.IsNullOrEmpty(m_posterSource))
+                if (!string.IsNullOrEmpty(m_posterSource))
                     posterUrl = Clone().Format("jpg").BuildUrl(m_posterSource);
             }
             else
@@ -881,14 +881,14 @@ namespace CloudinaryDotNet
         /// <returns>The Url without image tag.</returns>
         public string BuildUrl(string source)
         {
-            if (String.IsNullOrEmpty(m_cloudName))
+            if (string.IsNullOrEmpty(m_cloudName))
                 throw new ArgumentException("cloudName must be specified!");
 
             if (source == null)
                 source = m_source;
 
             if (source == null)
-                source = String.Empty;
+                source = string.Empty;
 
             if (Regex.IsMatch(source.ToLower(), "^https?:/.*") &&
                 (m_action == "upload" || m_action == "asset"))
@@ -896,7 +896,7 @@ namespace CloudinaryDotNet
                 return source;
             }
 
-            if (m_action == "fetch" && !String.IsNullOrEmpty(FormatValue))
+            if (m_action == "fetch" && !string.IsNullOrEmpty(FormatValue))
             {
                 Transformation.FetchFormat(FormatValue);
                 FormatValue = null;
@@ -910,7 +910,7 @@ namespace CloudinaryDotNet
             var prefix = GetPrefix(src.Source, out sharedDomain);
 
             List<string> urlParts = new List<string>(new string[] { prefix });
-            if (!String.IsNullOrEmpty(m_apiVersion))
+            if (!string.IsNullOrEmpty(m_apiVersion))
             {
                 urlParts.Add(m_apiVersion);
                 urlParts.Add(m_cloudName);
@@ -940,10 +940,10 @@ namespace CloudinaryDotNet
                 if (m_signProvider == null)
                     throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
 
-                var signedPart = String.Join("/", new string[] { transformationStr, src.SourceToSign });
-                signedPart = Regex.Replace(signedPart, "^/+", String.Empty);
+                var signedPart = string.Join("/", new string[] { transformationStr, src.SourceToSign });
+                signedPart = Regex.Replace(signedPart, "^/+", string.Empty);
                 signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
-                signedPart = Regex.Replace(signedPart, "/$", String.Empty);
+                signedPart = Regex.Replace(signedPart, "/$", string.Empty);
 
                 signedPart = m_signProvider.SignUriPart(signedPart);
                 urlParts.Add(signedPart);
@@ -953,9 +953,9 @@ namespace CloudinaryDotNet
             urlParts.Add(version);
             urlParts.Add(src.Source);
 
-            string uriStr = String.Join("/", urlParts.ToArray());
+            string uriStr = string.Join("/", urlParts.ToArray());
             uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
-            uriStr = Regex.Replace(uriStr, "/$", String.Empty);
+            uriStr = Regex.Replace(uriStr, "/$", string.Empty);
 
             if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
             {
@@ -984,7 +984,7 @@ namespace CloudinaryDotNet
             {
                 src = new CSource(Encode(Decode(source)));
 
-                if (!String.IsNullOrEmpty(m_suffix))
+                if (!string.IsNullOrEmpty(m_suffix))
                 {
                     if (Regex.IsMatch(m_suffix, "[\\./]"))
                         throw new ArgumentException("Suffix should not include . or /!");
@@ -992,7 +992,7 @@ namespace CloudinaryDotNet
                     src.Source += "/" + m_suffix;
                 }
 
-                if (!String.IsNullOrEmpty(FormatValue))
+                if (!string.IsNullOrEmpty(FormatValue))
                 {
                     src += "." + FormatValue;
                 }
@@ -1008,7 +1008,7 @@ namespace CloudinaryDotNet
             string privateCdn = m_privateCdn;
             if (m_secure)
             {
-                if (String.IsNullOrEmpty(privateCdn) || Constants.OLD_AKAMAI_SHARED_CDN == privateCdn)
+                if (string.IsNullOrEmpty(privateCdn) || Constants.OLD_AKAMAI_SHARED_CDN == privateCdn)
                 {
                     privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Constants.SHARED_CDN;
                 }
@@ -1019,7 +1019,7 @@ namespace CloudinaryDotNet
                         "res.cloudinary.com",
                         "res-" + Shard(source) + ".cloudinary.com");
 
-                prefix = String.Format("https://{0}", privateCdn);
+                prefix = string.Format("https://{0}", privateCdn);
             }
             else
             {
@@ -1029,13 +1029,13 @@ namespace CloudinaryDotNet
                 }
                 else if (m_cName != null)
                 {
-                    string subDomain = m_useSubDomain ? "a" + Shard(source) + "." : String.Empty;
+                    string subDomain = m_useSubDomain ? "a" + Shard(source) + "." : string.Empty;
                     prefix = "http://" + subDomain + m_cName;
                 }
                 else
                 {
-                    string subDomain = m_useSubDomain ? "-" + Shard(source) : String.Empty;
-                    string host = (m_usePrivateCdn ? m_cloudName + "-" : String.Empty) + "res" + subDomain + ".cloudinary.com";
+                    string subDomain = m_useSubDomain ? "-" + Shard(source) : string.Empty;
+                    string host = (m_usePrivateCdn ? m_cloudName + "-" : string.Empty) + "res" + subDomain + ".cloudinary.com";
 
                     prefix = "http://" + host;
                 }
@@ -1046,7 +1046,7 @@ namespace CloudinaryDotNet
 
         private void UpdateAction()
         {
-            if (!String.IsNullOrEmpty(m_suffix))
+            if (!string.IsNullOrEmpty(m_suffix))
             {
                 if (m_resourceType == "image" && m_action == "upload")
                 {
@@ -1083,10 +1083,10 @@ namespace CloudinaryDotNet
             if (m_useRootPath)
             {
                 if (m_resourceType == "image" && m_action == "upload"
-                    || m_resourceType == "images" && String.IsNullOrEmpty(m_action))
+                    || m_resourceType == "images" && string.IsNullOrEmpty(m_action))
                 {
-                    m_resourceType = String.Empty;
-                    m_action = String.Empty;
+                    m_resourceType = string.Empty;
+                    m_action = string.Empty;
                 }
                 else
                 {
@@ -1096,7 +1096,7 @@ namespace CloudinaryDotNet
 
             if (m_shorten && m_resourceType == "image" && m_action == "upload")
             {
-                m_resourceType = String.Empty;
+                m_resourceType = string.Empty;
                 m_action = "iu";
             }
         }
@@ -1124,7 +1124,7 @@ namespace CloudinaryDotNet
                 else
                 {
                     resultStr.Append(input.Substring(pos, ppos - pos));
-                    char ch = (char)Int16.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
+                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
                     resultStr.Append(ch);
                     pos = ppos + 3;
                 }
@@ -1141,7 +1141,7 @@ namespace CloudinaryDotNet
                 if (!IsSafe(ch))
                 {
                     resultStr.Append('%');
-                    resultStr.Append(String.Format("{0:X2}", (short)ch));
+                    resultStr.Append(string.Format("{0:X2}", (short)ch));
                 }
                 else
                 {

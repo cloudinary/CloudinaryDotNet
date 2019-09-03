@@ -125,8 +125,8 @@ namespace CloudinaryDotNet
                 ? USER_AGENT
                 : string.Format("{0} {1}", UserPlatform, USER_AGENT);
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
             {
@@ -225,7 +225,7 @@ namespace CloudinaryDotNet
         /// <returns>Provided path if it matches the callback url format.</returns>
         public override string BuildCallbackUrl(string path = "")
         {
-            if (String.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
                 path = "/Content/cloudinary_cors.html";
 
             if (Regex.IsMatch(path.ToLower(), "^https?:/.*"))
@@ -290,7 +290,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="response">HTTP response</param>
         /// <returns>New instance of this class</returns>
-        internal static T Parse<T>(Object response) where T : BaseResult, new()
+        internal static T Parse<T>(object response) where T : BaseResult, new()
         {
             if (response == null)
                 throw new ArgumentNullException("response");

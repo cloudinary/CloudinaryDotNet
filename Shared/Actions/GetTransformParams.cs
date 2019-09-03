@@ -13,7 +13,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public GetTransformParams()
         {
-            Transformation = String.Empty;
+            Transformation = string.Empty;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(Transformation))
+            if (string.IsNullOrEmpty(Transformation))
                 throw new ArgumentException("Transformation must be set!");
         }
 

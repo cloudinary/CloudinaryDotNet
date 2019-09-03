@@ -167,7 +167,7 @@ namespace CloudinaryDotNet.Actions
         {
             base.Check();
 
-            if (String.IsNullOrEmpty(Tag))
+            if (string.IsNullOrEmpty(Tag))
                 throw new ArgumentException("Tag must be set to filter resources by tag!");
         }
 
@@ -208,7 +208,7 @@ namespace CloudinaryDotNet.Actions
         {
             base.Check();
 
-            if (String.IsNullOrEmpty(ModerationKind))
+            if (string.IsNullOrEmpty(ModerationKind))
                 throw new ArgumentException("ModerationKind must be set to filter resources by moderation kind/status!");
         }
 

@@ -143,7 +143,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(PublicId))
+            if (string.IsNullOrEmpty(PublicId))
                 throw new ArgumentException("PublicId must be set!");
         }
 

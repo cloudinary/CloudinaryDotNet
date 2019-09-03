@@ -107,7 +107,7 @@ namespace CloudinaryDotNet
         /// <param name="effect">The name of the effect.</param>
         /// <param name="param">An additional parameter that controls the behavior of the specific effect.</param>
         /// <returns></returns>
-        public Transformation Effect(string effect, Object param) { return Add("effect", effect + ":" + param); }
+        public Transformation Effect(string effect, object param) { return Add("effect", effect + ":" + param); }
 
         /// <summary>
         /// Set angle to rotate the image by.

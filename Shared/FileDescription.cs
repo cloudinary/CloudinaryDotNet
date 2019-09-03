@@ -8,7 +8,7 @@ namespace CloudinaryDotNet
     /// </summary>
     public class FileDescription
     {
-        internal int BufferLength = Int32.MaxValue;
+        internal int BufferLength = int.MaxValue;
         internal bool Eof;
         internal int BytesSent;
 

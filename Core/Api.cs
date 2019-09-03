@@ -72,7 +72,7 @@ namespace CloudinaryDotNet
 
             var frameworkDescription = RuntimeInformation.FrameworkDescription;
 
-            USER_AGENT = String.Format(
+            USER_AGENT = string.Format(
                 "CloudinaryDotNet/{0}.{1}.{2} ({3})",
                 version.Major,
                 version.Minor,
@@ -132,8 +132,8 @@ namespace CloudinaryDotNet
                 : string.Format("{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
             {
@@ -195,12 +195,12 @@ namespace CloudinaryDotNet
                     {
                         foreach (var item in (IEnumerable<string>)param.Value)
                         {
-                            content.Add(new StringContent(item), String.Format("\"{0}\"", string.Concat(param.Key, "[]")));
+                            content.Add(new StringContent(item), string.Format("\"{0}\"", string.Concat(param.Key, "[]")));
                         }
                     }
                     else
                     {
-                        content.Add(new StringContent(param.Value.ToString()), String.Format("\"{0}\"", param.Key));
+                        content.Add(new StringContent(param.Value.ToString()), string.Format("\"{0}\"", param.Key));
                     }
                 }
             }
@@ -358,7 +358,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="response">HTTP response.</param>
         /// <returns>New instance of this class.</returns>
-        internal static T Parse<T>(Object response) where T : BaseResult, new()
+        internal static T Parse<T>(object response) where T : BaseResult, new()
         {
             if (response == null)
                 throw new ArgumentNullException("response");

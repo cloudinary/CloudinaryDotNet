@@ -13,8 +13,8 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ListTagsParams()
         {
-            NextCursor = String.Empty;
-            Prefix = String.Empty;
+            NextCursor = string.Empty;
+            Prefix = string.Empty;
         }
 
         /// <summary>

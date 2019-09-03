@@ -97,10 +97,10 @@ namespace CloudinaryDotNet.Actions
         /// </exception>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(FromPublicId))
+            if (string.IsNullOrEmpty(FromPublicId))
                 throw new ArgumentException("FromPublicId can't be null!");
 
-            if (String.IsNullOrEmpty(ToPublicId))
+            if (string.IsNullOrEmpty(ToPublicId))
                 throw new ArgumentException("ToPublicId can't be null!");
         }
     }

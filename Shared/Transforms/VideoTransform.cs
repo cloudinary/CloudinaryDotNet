@@ -553,13 +553,13 @@ namespace CloudinaryDotNet
             if (objectValue == null) return null;
 
             var value = ToString(objectValue);
-            if (String.IsNullOrEmpty(value)) return null;
+            if (string.IsNullOrEmpty(value)) return null;
 
             var match = RANGE_VALUE_RE.Match(value);
             if (!match.Success) return null;
 
             string modifier = "";
-            if (match.Groups.Count == 3 && !String.IsNullOrEmpty(match.Groups[2].Value))
+            if (match.Groups.Count == 3 && !string.IsNullOrEmpty(match.Groups[2].Value))
             {
                 modifier = "p";
             }

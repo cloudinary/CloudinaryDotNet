@@ -49,7 +49,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(Tag))
+            if (string.IsNullOrEmpty(Tag))
                 throw new ArgumentException("Tag must be set!");
         }
 

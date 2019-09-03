@@ -22,7 +22,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         /// <param name="response">HTTP response.</param>
         /// <returns>New instance of this class.</returns>
-        internal static DeleteUploadPresetResult Parse(Object response)
+        internal static DeleteUploadPresetResult Parse(object response)
         {
             return Api.Parse<DeleteUploadPresetResult>(response);
         }

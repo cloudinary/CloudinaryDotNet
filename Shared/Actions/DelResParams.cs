@@ -47,7 +47,7 @@ namespace CloudinaryDotNet.Actions
         /// Continue deletion from the given cursor. Notice that it doesn't have a lot of meaning unless the
         /// <see cref="KeepOriginal"/> flag is set to True.
         /// </summary>
-        public String NextCursor { get; set; }
+        public string NextCursor { get; set; }
 
         /// <summary>
         /// Delete all resources with the given public IDs (array of up to 100 public_ids).
@@ -58,8 +58,8 @@ namespace CloudinaryDotNet.Actions
             set
             {
                 m_publicIds = value;
-                m_prefix = String.Empty;
-                m_tag = String.Empty;
+                m_prefix = string.Empty;
+                m_tag = string.Empty;
                 m_all = false;
             }
         }
@@ -74,7 +74,7 @@ namespace CloudinaryDotNet.Actions
             set
             {
                 m_publicIds = null;
-                m_tag = String.Empty;
+                m_tag = string.Empty;
                 m_prefix = value;
                 m_all = false;
             }
@@ -90,7 +90,7 @@ namespace CloudinaryDotNet.Actions
             set
             {
                 m_publicIds = null;
-                m_prefix = String.Empty;
+                m_prefix = string.Empty;
                 m_tag = value;
                 m_all = false;
             }
@@ -108,8 +108,8 @@ namespace CloudinaryDotNet.Actions
                 if (value)
                 {
                     m_publicIds = null;
-                    m_prefix = String.Empty;
-                    m_tag = String.Empty;
+                    m_prefix = string.Empty;
+                    m_tag = string.Empty;
                     m_all = value;
                 }
                 else
@@ -129,8 +129,8 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if ((PublicIds == null || PublicIds.Count == 0) &&
-                String.IsNullOrEmpty(Prefix) &&
-                String.IsNullOrEmpty(Tag) &&
+                string.IsNullOrEmpty(Prefix) &&
+                string.IsNullOrEmpty(Tag) &&
                 !All)
             {
                 throw new ArgumentException("Either PublicIds or Prefix or Tag must be specified!");
@@ -155,11 +155,11 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "keep_original", KeepOriginal);
 
-            if (!String.IsNullOrEmpty(Tag))
+            if (!string.IsNullOrEmpty(Tag))
             {
                 return dict;
             }
-            if (!String.IsNullOrEmpty(Prefix))
+            if (!string.IsNullOrEmpty(Prefix))
             {
                 dict.Add("prefix", Prefix);
             }

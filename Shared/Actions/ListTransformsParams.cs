@@ -13,7 +13,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public ListTransformsParams()
         {
-            NextCursor = String.Empty;
+            NextCursor = string.Empty;
         }
 
         /// <summary>

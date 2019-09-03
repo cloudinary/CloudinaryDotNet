@@ -122,21 +122,21 @@ namespace CloudinaryDotNet
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public ApiShared(string cloudinaryUrl)
         {
-            if (String.IsNullOrEmpty(cloudinaryUrl))
+            if (string.IsNullOrEmpty(cloudinaryUrl))
                 throw new ArgumentException("Valid cloudinary init string must be provided!");
 
             Uri cloudinaryUri = new Uri(cloudinaryUrl);
 
-            if (String.IsNullOrEmpty(cloudinaryUri.Host))
+            if (string.IsNullOrEmpty(cloudinaryUri.Host))
                 throw new ArgumentException("Cloud name must be specified as host name in URL!");
 
             string[] creds = cloudinaryUri.UserInfo.Split(':');
             Account = new Account(cloudinaryUri.Host, creds[0], creds[1]);
 
-            UsePrivateCdn = !String.IsNullOrEmpty(cloudinaryUri.AbsolutePath) &&
+            UsePrivateCdn = !string.IsNullOrEmpty(cloudinaryUri.AbsolutePath) &&
                 cloudinaryUri.AbsolutePath != "/";
 
-            PrivateCdn = String.Empty;
+            PrivateCdn = string.Empty;
 
             if (UsePrivateCdn)
             {
@@ -216,7 +216,7 @@ namespace CloudinaryDotNet
             if (account == null)
                 throw new ArgumentException("Account can't be null!");
 
-            if (String.IsNullOrEmpty(account.Cloud))
+            if (string.IsNullOrEmpty(account.Cloud))
                 throw new ArgumentException("Cloud name must be specified in Account!");
 
             UsePrivateCdn = false;
@@ -462,14 +462,14 @@ namespace CloudinaryDotNet
         public string SignParameters(IDictionary<string, object> parameters)
         {
             List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
-            StringBuilder signBase = new StringBuilder(String.Join("&", parameters.
+            StringBuilder signBase = new StringBuilder(string.Join("&", parameters.
                                                                    Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
                 .Select(pair =>
                 {
                     var value = pair.Value is IEnumerable<string>
-                        ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
+                        ? string.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
                         : pair.Value.ToString();
-                    return String.Format("{0}={1}", pair.Key, value);
+                    return string.Format("{0}={1}", pair.Key, value);
                 })
                 .ToArray()));
 
@@ -580,7 +580,7 @@ namespace CloudinaryDotNet
             if (htmlOptions == null)
                 htmlOptions = new Dictionary<string, string>();
 
-            if (String.IsNullOrEmpty(resourceType))
+            if (string.IsNullOrEmpty(resourceType))
                 resourceType = "auto";
 
             StringBuilder builder = new StringBuilder();
@@ -678,7 +678,7 @@ namespace CloudinaryDotNet
         protected void WriteParam(StreamWriter writer, string key, string value)
         {
 #if DEBUG
-            Console.WriteLine(String.Format("{0}: {1}", key, value));
+            Console.WriteLine(string.Format("{0}: {1}", key, value));
 #endif
             WriteLine(writer, "--{0}", HTTP_BOUNDARY);
             WriteLine(writer, "Content-Disposition: form-data; name=\"{0}\"", key);
@@ -764,7 +764,7 @@ namespace CloudinaryDotNet
             writer.Write("\r\n");
         }
 
-        private void WriteLine(StreamWriter writer, string format, Object val)
+        private void WriteLine(StreamWriter writer, string format, object val)
         {
             writer.Write(format, val);
             writer.Write("\r\n");

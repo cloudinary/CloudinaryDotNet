@@ -201,7 +201,7 @@ namespace CloudinaryDotNet.Actions
                 AddParam(dict, "unique_filename", UniqueFilename);
 
             if (AllowedFormats != null)
-                AddParam(dict, "allowed_formats", String.Join(",", AllowedFormats));
+                AddParam(dict, "allowed_formats", string.Join(",", AllowedFormats));
 
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "discard_original_filename", DiscardOriginalFilename);

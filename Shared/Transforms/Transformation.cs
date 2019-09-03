@@ -108,7 +108,7 @@ namespace CloudinaryDotNet
             foreach (var pair in transformParams) {
                 string[] splittedPair = pair.Split('=');
                 if (splittedPair.Length != 2)
-                    throw new ArgumentException(String.Format("Couldn't parse '{0}'!", pair));
+                    throw new ArgumentException(string.Format("Couldn't parse '{0}'!", pair));
 
                 Add(splittedPair[0], splittedPair[1]);
             }
@@ -499,12 +499,12 @@ namespace CloudinaryDotNet
         private static string ToString(object obj) {
             if (obj == null) return null;
 
-            if (obj is String) return obj.ToString();
+            if (obj is string) return obj.ToString();
 
-            if (obj is Single || obj is Double)
-                return String.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
+            if (obj is float || obj is double)
+                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
 
-            return String.Format(CultureInfo.InvariantCulture, "{0}", obj);
+            return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
         }
 
         /// <summary>
@@ -532,7 +532,7 @@ namespace CloudinaryDotNet
                 if (value is Array) {
                     t.Add(key, ((Array)value).Clone());
                 }
-                else if (value is String || value is ValueType || value is BaseExpression)
+                else if (value is string || value is ValueType || value is BaseExpression)
                 {
                     t.Add(key, value);
                 }
@@ -544,7 +544,7 @@ namespace CloudinaryDotNet
                     t.Add(key, new Dictionary<string, string>((Dictionary<string, string>)value));
                 }
                 else {
-                    throw new Exception(String.Format("Couldn't clone parameter '{0}'!", key));
+                    throw new Exception(string.Format("Couldn't clone parameter '{0}'!", key));
                 }
             }
 
@@ -612,7 +612,7 @@ namespace CloudinaryDotNet
         {
             string s = base.Generate();
 
-            if (!String.IsNullOrEmpty(Format))
+            if (!string.IsNullOrEmpty(Format))
                 s += "/" + Format;
 
             return s;

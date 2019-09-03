@@ -50,7 +50,7 @@ namespace CloudinaryDotNet
         /// <returns>The safely joined string.</returns>
         internal static string SafeJoin(string separator, IEnumerable<string> items)
         {
-            return String.Join(separator, items.Select(item => Regex.Replace(item, $"([{separator}])", "\\$1")));
+            return string.Join(separator, items.Select(item => Regex.Replace(item, $"([{separator}])", "\\$1")));
         }
 
         internal static bool IsRemoteFile(string filePath)
