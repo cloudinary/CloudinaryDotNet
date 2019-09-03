@@ -813,8 +813,11 @@ namespace CloudinaryDotNet
             return GetSourceTypes().Select(x => GetSourceTag(source, x)).ToList();
         }
 
-        private string GetSourceTag(string source, string sourceType,
-            string[] codecs = null, Transformation transformation = null)
+        private string GetSourceTag(
+            string source,
+            string sourceType,
+            string[] codecs = null,
+            Transformation transformation = null)
         {
             var sourceUrl = Clone();
             MergeUrlTransformation(sourceUrl, transformation);

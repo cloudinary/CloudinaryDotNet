@@ -74,7 +74,10 @@ namespace CloudinaryDotNet
 
             USER_AGENT = String.Format(
                 "CloudinaryDotNet/{0}.{1}.{2} ({3})",
-                version.Major, version.Minor, version.Build, frameworkDescription);
+                version.Major,
+                version.Minor,
+                version.Build,
+                frameworkDescription);
         }
 
         /// <summary>
@@ -179,7 +182,8 @@ namespace CloudinaryDotNet
 
         private HttpContent PrepareMultipartFormDataContent(
             SortedDictionary<string, object> parameters,
-            FileDescription file, Dictionary<string, string> extraHeaders = null)
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null)
         {
             var content = new MultipartFormDataContent(HTTP_BOUNDARY);
             foreach (var param in parameters)
@@ -413,7 +417,11 @@ namespace CloudinaryDotNet
         /// <param name="file">The file to upload.</param>
         /// <param name="extraHeaders">The extra headers to pass into the request.</param>
         /// <returns>Instance of the parsed response from the cloudinary API.</returns>
-        public override T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file,
+        public override T CallAndParse<T>(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
             using (var response = Call(

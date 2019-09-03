@@ -408,7 +408,9 @@ namespace CloudinaryDotNet.Actions
 
             if (EagerTransforms != null && EagerTransforms.Count > 0)
             {
-                AddParam(dict, "eager",
+                AddParam(
+                    dict,
+                    "eager",
                     String.Join("|", EagerTransforms.Select(GetTransformation).ToArray()));
             }
 

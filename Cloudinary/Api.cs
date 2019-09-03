@@ -70,7 +70,11 @@ namespace CloudinaryDotNet
         }
 
         /// <inheritdoc />
-        public override T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file,
+        public override T CallAndParse<T>(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
             using (var response = Call(method, url, parameters, file, extraHeaders))
@@ -152,7 +156,9 @@ namespace CloudinaryDotNet
             return request;
         }
 
-        private void PrepareRequestContent(ref HttpWebRequest request, SortedDictionary<string, object> parameters,
+        private void PrepareRequestContent(
+            ref HttpWebRequest request,
+            SortedDictionary<string, object> parameters,
             FileDescription file)
         {
             if (request == null)
