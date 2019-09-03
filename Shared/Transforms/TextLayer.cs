@@ -147,7 +147,7 @@ namespace CloudinaryDotNet
             int start = 0;
             foreach (Match m in match)
             {
-                part = text.Substring(start, m.Index-start);
+                part = text.Substring(start, m.Index - start);
                 part = Encode(part);
                 result.Append(part);
                 result.Append(m.Value);

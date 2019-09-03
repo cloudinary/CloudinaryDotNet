@@ -14,7 +14,7 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Represents expression object that can be used in user defined variables and conditional transformations.
     /// </summary>
-    public abstract class BaseExpression<T>: BaseExpression where T: BaseExpression<T>
+    public abstract class BaseExpression<T>: BaseExpression where T : BaseExpression<T>
     {
         /// <summary>
         /// A dictionary with available operators.
@@ -135,7 +135,7 @@ namespace CloudinaryDotNet
         public T SetParent(Transformation parent)
         {
             Parent = parent;
-            return (T) this;
+            return (T)this;
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace CloudinaryDotNet
         public T In()
         {
             m_expressions.Add("in");
-            return (T) this;
+            return (T)this;
         }
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace CloudinaryDotNet
         public T Nin()
         {
             m_expressions.Add("nin");
-            return (T) this;
+            return (T)this;
         }
 
         /// <summary>
