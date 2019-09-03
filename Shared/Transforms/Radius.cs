@@ -148,7 +148,7 @@ namespace CloudinaryDotNet
 
         #endregion
 
-        ///  <inheritdoc />
+        /// <inheritdoc />
         public override string ToString()
         {
             return m_radius;

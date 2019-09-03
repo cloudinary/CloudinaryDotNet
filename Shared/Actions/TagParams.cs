@@ -40,7 +40,7 @@ namespace CloudinaryDotNet.Actions
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        ///The specific type of the asset. Valid values: upload, private and authenticated.Default: upload.
+        /// The specific type of the asset. Valid values: upload, private and authenticated.Default: upload.
         /// </summary>
         public string Type { get; set; }
 

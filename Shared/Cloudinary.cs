@@ -1154,7 +1154,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Deletes all resources of the given resource type and with the given public IDs.
         /// </summary>
-        ///<param name="type">The type of file to delete. Default: image.</param>
+        /// <param name="type">The type of file to delete. Default: image.</param>
         /// <param name="publicIds">Array of up to 100 public_ids.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public DelResResult DeleteResources(ResourceType type, params string[] publicIds)
