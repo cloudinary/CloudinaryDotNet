@@ -155,7 +155,7 @@ namespace CloudinaryDotNet
         private void PrepareRequestContent(ref HttpWebRequest request, SortedDictionary<string, object> parameters,
             FileDescription file)
         {
-            if ( request == null)
+            if (request == null)
             {
                 return;
             }

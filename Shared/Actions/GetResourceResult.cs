@@ -319,7 +319,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Data returned by OCR plugin.
         /// </summary>
-        [DataMember (Name = "data")]
+        [DataMember(Name = "data")]
         public List<AdvOcrData> Data { get; protected set; }
     }
 
@@ -365,7 +365,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// The outer bounding polygon for the detected image annotation.
         /// </summary>
-        [DataMember (Name="boundingPoly")]
+        [DataMember(Name="boundingPoly")]
         public BoundingBlock BoundingPoly { get; protected set; }
     }
 
