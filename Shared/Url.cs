@@ -998,7 +998,7 @@ namespace CloudinaryDotNet
             string privateCdn = m_privateCdn;
             if (m_secure)
             {
-                if (string.IsNullOrEmpty(privateCdn) || Constants.OLD_AKAMAI_SHARED_CDN == privateCdn)
+                if (string.IsNullOrEmpty(privateCdn) || privateCdn == Constants.OLD_AKAMAI_SHARED_CDN)
                 {
                     privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Constants.SHARED_CDN;
                 }
