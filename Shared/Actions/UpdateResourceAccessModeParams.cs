@@ -33,7 +33,7 @@ namespace CloudinaryDotNet.Actions
         public string AccessMode
         {
             get { return m_accessMode; }
-            set { m_accessMode = value;}
+            set { m_accessMode = value; }
         }
 
         private bool PublicIdsExist
