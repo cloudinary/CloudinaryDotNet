@@ -24,14 +24,14 @@ namespace CloudinaryDotNet
         protected const string ACTION_GENERATE_ARCHIVE = "generate_archive";
 
         /// <summary>
-        /// Instance of <see cref="Random"/> class.
-        /// </summary>
-        protected static Random m_random = new Random();
-
-        /// <summary>
         /// Default chunk (buffer) size for upload large files.
         /// </summary>
         protected const int DEFAULT_CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB
+
+        /// <summary>
+        /// Instance of <see cref="Random"/> class.
+        /// </summary>
+        protected static Random m_random = new Random();
 
         /// <summary>
         /// Cloudinary <see cref="Api"/> object.

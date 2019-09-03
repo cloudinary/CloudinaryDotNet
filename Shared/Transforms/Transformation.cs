@@ -11,6 +11,8 @@ namespace CloudinaryDotNet
     /// </summary>
     public partial class Transformation : Core.ICloneable
     {
+        private const string VARIABLES_PARAM_KEY = "variables";
+
         static readonly string[] SimpleParams = new string[] {
             "ac", "audio_codec",
             "af", "audio_frequency",
@@ -31,8 +33,6 @@ namespace CloudinaryDotNet
             "vs", "video_sampling",
             "sp", "streaming_profile"
         };
-
-        private const string VARIABLES_PARAM_KEY = "variables";
 
         /// <summary>
         /// Default Device Pixel Ratio (float, integer and "auto" values are allowed").
