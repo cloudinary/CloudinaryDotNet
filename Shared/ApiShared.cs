@@ -537,7 +537,7 @@ namespace CloudinaryDotNet
         /// <returns>Amount of seconds from 1 january 1970.</returns>
         private string GetTime()
         {
-            return Convert.ToInt64(((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
+            return Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
         }
 
         /// <summary>
@@ -744,7 +744,7 @@ namespace CloudinaryDotNet
             int cnt = 0;
 
             while ((toSend = length - bytesSent) > 0
-                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
+                && (cnt = stream.Read(buf, 0, toSend > buf.Length ? buf.Length : toSend)) > 0)
             {
                 writer.BaseStream.Write(buf, 0, cnt);
                 bytesSent += cnt;

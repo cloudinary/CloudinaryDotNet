@@ -343,7 +343,7 @@ namespace CloudinaryDotNet
             int cnt = 0;
 
             while ((toSend = length - bytesSent) > 0
-                   && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
+                   && (cnt = stream.Read(buf, 0, toSend > buf.Length ? buf.Length : toSend)) > 0)
             {
                 writer.BaseStream.Write(buf, 0, cnt);
                 writer.Flush();

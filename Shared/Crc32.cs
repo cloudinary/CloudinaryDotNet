@@ -22,7 +22,7 @@ namespace CloudinaryDotNet
             uint crc = 0xffffffff;
             for (int i = 0; i < bytes.Length; ++i)
             {
-                byte index = (byte)(((crc) & 0xff) ^ bytes[i]);
+                byte index = (byte)((crc & 0xff) ^ bytes[i]);
                 crc = (uint)((crc >> 8) ^ table[index]);
             }
             return ~crc;
