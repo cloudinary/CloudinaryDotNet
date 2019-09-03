@@ -25,7 +25,7 @@ namespace CloudinaryDotNet
         static HttpClient client = new HttpClient();
 
         private Func<string, HttpRequestMessage> RequestBuilder =
-            (url) => new HttpRequestMessage {RequestUri = new Uri(url)};
+            (url) => new HttpRequestMessage {RequestUri = new Uri(url) };
 
         /// <summary>
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.

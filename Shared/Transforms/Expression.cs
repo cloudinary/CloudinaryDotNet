@@ -50,8 +50,7 @@ namespace CloudinaryDotNet
         {
             if (string.IsNullOrWhiteSpace(name) || !Regex.IsMatch(name, VARIABLE_NAME_REGEX))
                 throw new ArgumentException(
-                    $"The name `{name}` can include only alphanumeric characters and must begin with a letter."
-                );
+                   $"The name `{name}` can include only alphanumeric characters and must begin with a letter.");
         }
 
         /// <summary>
