@@ -1539,10 +1539,10 @@ namespace CloudinaryDotNet
             var cloudinaryParams = new JObject(
                 new JProperty[]
                 {
-                    new JProperty("cloud_name",m_api.Account.Cloud),
-                    new JProperty("api_key",m_api.Account.ApiKey),
-                    new JProperty("private_cdn",m_api.UsePrivateCdn),
-                    new JProperty("cdn_subdomain",m_api.CSubDomain)
+                    new JProperty("cloud_name", m_api.Account.Cloud),
+                    new JProperty("api_key", m_api.Account.ApiKey),
+                    new JProperty("private_cdn", m_api.UsePrivateCdn),
+                    new JProperty("cdn_subdomain", m_api.CSubDomain)
                 });
 
             if (!String.IsNullOrEmpty(m_api.PrivateCdn))
