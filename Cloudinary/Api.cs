@@ -37,7 +37,6 @@ namespace CloudinaryDotNet
         public Api()
             : base()
         {
-
         }
 
         /// <summary>
@@ -83,7 +82,6 @@ namespace CloudinaryDotNet
             {
                 return Parse<T>(response);
             }
-
         }
 
         /// <summary>
@@ -215,7 +213,6 @@ namespace CloudinaryDotNet
                     }
 
                     writer.Write("--{0}--", HTTP_BOUNDARY);
-
                 }
             }
         }

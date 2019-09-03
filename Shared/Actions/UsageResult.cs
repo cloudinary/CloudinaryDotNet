@@ -57,7 +57,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "derived_resources")]
         public int DerivedResources { get; protected set; }
-
     }
 
     /// <summary>

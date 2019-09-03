@@ -55,7 +55,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-
         }
 
         /// <summary>

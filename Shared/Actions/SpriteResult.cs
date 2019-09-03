@@ -51,7 +51,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "image_infos")]
         public Dictionary<string, ImageInfo> ImageInfos { get; protected set; }
-
     }
 
     /// <summary>

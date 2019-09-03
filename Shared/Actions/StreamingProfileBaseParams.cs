@@ -54,7 +54,6 @@ namespace CloudinaryDotNet.Actions
                                 {
                                     NullValueHandling = NullValueHandling.Ignore,
                                 }));
-
             }
             return dict;
         }

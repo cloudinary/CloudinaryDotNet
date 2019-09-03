@@ -65,6 +65,5 @@ namespace CloudinaryDotNet
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(url);
             return System.Convert.ToBase64String(plainTextBytes);
         }
-
     }
 }

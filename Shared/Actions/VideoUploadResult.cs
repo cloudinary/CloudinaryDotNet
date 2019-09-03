@@ -51,7 +51,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "duration")]
         public double Duration { get; protected set; }
-
     }
 
     /// <summary>

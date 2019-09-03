@@ -41,6 +41,5 @@ namespace CloudinaryDotNet
         // HTTP protocol related constants
         public const string HEADER_CONTENT_TYPE = "Content-Type";
         public const string CONTENT_TYPE_APPLICATION_JSON = "application/json";
-
     }
 }

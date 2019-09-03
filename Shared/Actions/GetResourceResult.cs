@@ -191,7 +191,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "pages")]
         public int Pages { get; protected set; }
-
     }
 
     /// <summary>

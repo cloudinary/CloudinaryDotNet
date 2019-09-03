@@ -121,7 +121,6 @@ namespace CloudinaryDotNet
 
                 return response;
             }
-
         }
 
         internal HttpRequestMessage PrepareRequestBody(HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)

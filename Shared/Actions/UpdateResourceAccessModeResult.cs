@@ -21,6 +21,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "failed")]
         public List<object> Failed { get; protected set; }
-
     }
 }

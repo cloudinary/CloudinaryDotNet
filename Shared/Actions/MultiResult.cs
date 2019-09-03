@@ -32,6 +32,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "version")]
         public string Version { get; protected set; }
-
     }
 }

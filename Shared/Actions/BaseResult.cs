@@ -148,7 +148,6 @@ namespace CloudinaryDotNet.Actions
 
         internal virtual void SetValues(JToken source)
         {
-
         }
     }
 

@@ -26,6 +26,5 @@ namespace CloudinaryDotNet.Actions
         {
             return Api.Parse<DeleteUploadPresetResult>(response);
         }
-
     }
 }

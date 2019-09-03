@@ -71,7 +71,6 @@ namespace CloudinaryDotNet
         /// </summary>
         public AuthToken()
         {
-
         }
 
         /// <summary>

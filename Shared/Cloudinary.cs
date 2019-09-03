@@ -221,7 +221,6 @@ namespace CloudinaryDotNet
                 .Add("publish_resources");
 
             return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
-
         }
 
         private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)

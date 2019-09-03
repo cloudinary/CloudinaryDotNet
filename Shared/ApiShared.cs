@@ -141,7 +141,6 @@ namespace CloudinaryDotNet
                 PrivateCdn = cloudinaryUri.AbsolutePath;
                 Secure = true;
             }
-
         }
 
         /// <summary>
@@ -445,7 +444,6 @@ namespace CloudinaryDotNet
             }
             catch (Exception)
             {
-
             }
 
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")

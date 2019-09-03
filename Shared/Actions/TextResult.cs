@@ -20,6 +20,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
-
     }
 }

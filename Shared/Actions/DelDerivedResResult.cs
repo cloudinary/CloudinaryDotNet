@@ -16,6 +16,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "deleted")]
         public Dictionary<string, string> Deleted { get; protected set; }
-
     }
 }

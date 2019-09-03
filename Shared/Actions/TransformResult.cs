@@ -14,6 +14,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }
-
     }
 }

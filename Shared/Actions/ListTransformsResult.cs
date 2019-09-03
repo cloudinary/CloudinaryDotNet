@@ -22,7 +22,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
-
     }
 
     /// <summary>
