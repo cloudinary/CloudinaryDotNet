@@ -1245,14 +1245,14 @@ namespace CloudinaryDotNet
         {
             get
             {
-                string path = base.Path;
+                string path = Path;
                 return path.Substring(path.LastIndexOf("/") + 1);
             }
             set
             {
-                string path = base.Path;
+                string path = Path;
                 path = path.Substring(0, path.LastIndexOf("/"));
-                base.Path = string.Concat(path, "/", value);
+                Path = string.Concat(path, "/", value);
             }
         }
 
@@ -1373,12 +1373,12 @@ namespace CloudinaryDotNet
         {
             BuildQueryString();
 
-            return base.Uri.AbsoluteUri;
+            return Uri.AbsoluteUri;
         }
 
         private void PopulateQueryString()
         {
-            string query = base.Query;
+            string query = Query;
 
             if (query == string.Empty || query == null)
             {
@@ -1411,7 +1411,7 @@ namespace CloudinaryDotNet
 
             if (count == 0)
             {
-                base.Query = string.Empty;
+                Query = string.Empty;
                 return;
             }
 
@@ -1427,7 +1427,7 @@ namespace CloudinaryDotNet
                 pairs[i] = string.Concat(keys[i], "=", values[i]);
             }
 
-            base.Query = string.Join("&", pairs);
+            Query = string.Join("&", pairs);
         }
     }
 
