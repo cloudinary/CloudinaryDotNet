@@ -6,7 +6,7 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Represents property of the overlay parameter to specify the Url on another image to be added as an overlay.
     /// </summary>
-    public class FetchLayer: BaseLayer<FetchLayer>
+    public class FetchLayer : BaseLayer<FetchLayer>
     {
         /// <summary>
         /// The URL to fetch an image for.
