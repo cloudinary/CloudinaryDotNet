@@ -255,7 +255,7 @@ namespace CloudinaryDotNet
             var r = new Regex(UNSAFE_RE, RegexOptions.Compiled | RegexOptions.RightToLeft);
             return r.Replace(url, m =>
             {
-                var encodedItem = string.Join("", m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2")));
+                var encodedItem = string.Join(string.Empty, m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2")));
                 return encodedItem.ToLower();
             });
         }

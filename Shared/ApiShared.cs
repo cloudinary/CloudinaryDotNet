@@ -435,7 +435,7 @@ namespace CloudinaryDotNet
             if (!(parameters is SortedDictionary<string, object>))
                 parameters = new SortedDictionary<string, object>(parameters);
 
-            string path = "";
+            string path = string.Empty;
             if (parameters.ContainsKey("callback") && parameters["callback"] != null)
                 path = parameters["callback"].ToString();
 

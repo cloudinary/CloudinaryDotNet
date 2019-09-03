@@ -558,7 +558,7 @@ namespace CloudinaryDotNet
             var match = RANGE_VALUE_RE.Match(value);
             if (!match.Success) return null;
 
-            string modifier = "";
+            string modifier = string.Empty;
             if (match.Groups.Count == 3 && !string.IsNullOrEmpty(match.Groups[2].Value))
             {
                 modifier = "p";

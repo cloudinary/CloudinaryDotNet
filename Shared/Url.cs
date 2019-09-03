@@ -657,7 +657,7 @@ namespace CloudinaryDotNet
             if (dict == null)
                 dict = new StringDictionary();
 
-            source = VIDEO_EXTENSION_RE.Replace(source, "", 1);
+            source = VIDEO_EXTENSION_RE.Replace(source, string.Empty, 1);
 
             if (string.IsNullOrEmpty(m_resourceType))
                 m_resourceType = "video";

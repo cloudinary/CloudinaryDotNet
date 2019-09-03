@@ -129,7 +129,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Add a solid border around the image.
         /// </summary>
-        public Transformation Border(int width, string color) { return Add("border", "" + width + "px_solid_" + Regex.Replace(color, "^#", "rgb:")); }
+        public Transformation Border(int width, string color) { return Add("border", string.Empty + width + "px_solid_" + Regex.Replace(color, "^#", "rgb:")); }
 
         /// <summary>
         /// Horizontal position for custom-coordinates based cropping and overlay placement.
