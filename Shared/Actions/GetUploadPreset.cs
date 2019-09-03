@@ -1,7 +1,7 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace CloudinaryDotNet.Actions
 {

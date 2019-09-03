@@ -1,5 +1,5 @@
-﻿using CloudinaryDotNet.Actions;
-using System;
+﻿using System;
+using CloudinaryDotNet.Actions;
 
 namespace CloudinaryDotNet
 {

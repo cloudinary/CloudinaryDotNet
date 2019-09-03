@@ -1,7 +1,7 @@
-﻿using CloudinaryDotNet.Actions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CloudinaryDotNet.Actions;
 
 namespace CloudinaryDotNet
 {

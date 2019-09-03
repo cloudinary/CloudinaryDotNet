@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Actions

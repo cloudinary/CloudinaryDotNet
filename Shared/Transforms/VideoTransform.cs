@@ -1,8 +1,8 @@
-﻿using CloudinaryDotNet.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using CloudinaryDotNet.Core;
 
 namespace CloudinaryDotNet
 {
