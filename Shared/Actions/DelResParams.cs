@@ -55,7 +55,13 @@ namespace CloudinaryDotNet.Actions
         public List<string> PublicIds
         {
             get { return m_publicIds; }
-            set { m_publicIds = value; m_prefix = String.Empty; m_tag = String.Empty; m_all = false; }
+            set
+            {
+                m_publicIds = value;
+                m_prefix = String.Empty;
+                m_tag = String.Empty;
+                m_all = false;
+            }
         }
 
         /// <summary>
@@ -65,7 +71,13 @@ namespace CloudinaryDotNet.Actions
         public string Prefix
         {
             get { return m_prefix; }
-            set { m_publicIds = null; m_tag = String.Empty; m_prefix = value; m_all = false; }
+            set
+            {
+                m_publicIds = null;
+                m_tag = String.Empty;
+                m_prefix = value;
+                m_all = false;
+            }
         }
 
         /// <summary>
@@ -75,7 +87,13 @@ namespace CloudinaryDotNet.Actions
         public string Tag
         {
             get { return m_tag; }
-            set { m_publicIds = null; m_prefix = String.Empty; m_tag = value; m_all = false; }
+            set
+            {
+                m_publicIds = null;
+                m_prefix = String.Empty;
+                m_tag = value;
+                m_all = false;
+            }
         }
 
         /// <summary>
@@ -89,7 +107,10 @@ namespace CloudinaryDotNet.Actions
             {
                 if (value)
                 {
-                    m_publicIds = null; m_prefix = String.Empty; m_tag = String.Empty; m_all = value;
+                    m_publicIds = null;
+                    m_prefix = String.Empty;
+                    m_tag = String.Empty;
+                    m_all = value;
                 }
                 else
                     m_all = value;

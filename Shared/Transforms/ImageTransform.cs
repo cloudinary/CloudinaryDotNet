@@ -33,14 +33,22 @@ namespace CloudinaryDotNet
         /// different dimension.
         /// </summary>
         /// <param name="value">The HTML width value.</param>
-        public Transformation SetHtmlWidth(object value) { m_htmlWidth = value.ToString(); return this; }
+        public Transformation SetHtmlWidth(object value)
+        {
+            m_htmlWidth = value.ToString();
+            return this;
+        }
 
         /// <summary>
         /// Set HTML height to transform an uploaded image to a certain dimension and display it within your page in a
         /// different dimension.
         /// </summary>
         /// <param name="value">The HTML height value.</param>
-        public Transformation SetHtmlHeight(object value) { m_htmlHeight = value.ToString(); return this; }
+        public Transformation SetHtmlHeight(object value)
+        {
+            m_htmlHeight = value.ToString();
+            return this;
+        }
 
         /// <summary>
         /// Add named transformation.
