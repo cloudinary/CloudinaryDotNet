@@ -20,6 +20,16 @@ namespace CloudinaryDotNet
     /// </summary>
     public class Api : ApiShared
     {
+        /// <summary>
+        /// Default static parameterless constructor.
+        /// </summary>
+        static Api()
+        {
+            var version = new AssemblyName(typeof(Api).Assembly.FullName).Version;
+
+            USER_AGENT = $"CloudinaryDotNet/{version.Major}.{version.Minor}.{version.Build} (.NET Framework 4)";
+        }
+
         private Func<string, HttpWebRequest> RequestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
 
         /// <summary>
@@ -60,16 +70,6 @@ namespace CloudinaryDotNet
         public Api(Account account)
             : base(account)
         {
-        }
-
-        /// <summary>
-        /// Default static parameterless constructor.
-        /// </summary>
-        static Api()
-        {
-            var version = new AssemblyName(typeof(Api).Assembly.FullName).Version;
-
-            USER_AGENT = $"CloudinaryDotNet/{version.Major}.{version.Minor}.{version.Build} (.NET Framework 4)";
         }
 
         /// <inheritdoc />

@@ -24,6 +24,23 @@ namespace CloudinaryDotNet
     {
         static HttpClient client = new HttpClient();
 
+        /// <summary>
+        /// Default static parameterless constructor.
+        /// </summary>
+        static Api()
+        {
+            var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
+
+            var frameworkDescription = RuntimeInformation.FrameworkDescription;
+
+            USER_AGENT = string.Format(
+                "CloudinaryDotNet/{0}.{1}.{2} ({3})",
+                version.Major,
+                version.Minor,
+                version.Build,
+                frameworkDescription);
+        }
+
         private Func<string, HttpRequestMessage> RequestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
 
@@ -64,23 +81,6 @@ namespace CloudinaryDotNet
         public Api(Account account)
             : base(account)
         {
-        }
-
-        /// <summary>
-        /// Default static parameterless constructor.
-        /// </summary>
-        static Api()
-        {
-            var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
-
-            var frameworkDescription = RuntimeInformation.FrameworkDescription;
-
-            USER_AGENT = string.Format(
-                "CloudinaryDotNet/{0}.{1}.{2} ({3})",
-                version.Major,
-                version.Minor,
-                version.Build,
-                frameworkDescription);
         }
 
         /// <summary>

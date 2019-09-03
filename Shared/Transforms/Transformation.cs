@@ -66,6 +66,18 @@ namespace CloudinaryDotNet
 
         private static Transformation m_responsiveWidthTransform = null;
 
+        private static string ToString(object obj)
+        {
+            if (obj == null) return null;
+
+            if (obj is string) return obj.ToString();
+
+            if (obj is float || obj is double)
+                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
+
+            return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
+        }
+
         /// <summary>
         /// A dictionary of transformation parameters.
         /// </summary>
@@ -494,17 +506,6 @@ namespace CloudinaryDotNet
                 return ToString(options[key]);
             else
                 return null;
-        }
-
-        private static string ToString(object obj) {
-            if (obj == null) return null;
-
-            if (obj is string) return obj.ToString();
-
-            if (obj is float || obj is double)
-                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
-
-            return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
         }
 
         /// <summary>
