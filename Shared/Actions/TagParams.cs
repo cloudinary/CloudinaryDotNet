@@ -13,10 +13,10 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Instantiates the <see cref="TagParams"/> object.
         /// </summary>
-		public TagParams()
-		{
-			ResourceType = ResourceType.Image;
-		}
+        public TagParams()
+        {
+            ResourceType = ResourceType.Image;
+        }
 
         List<string> m_publicIds = new List<string>();
 
