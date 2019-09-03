@@ -44,7 +44,7 @@ namespace CloudinaryDotNet.Actions
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// Continue deletion from the given cursor. Notice that it doesn't have a lot of meaning unless the 
+        /// Continue deletion from the given cursor. Notice that it doesn't have a lot of meaning unless the
         /// <see cref="KeepOriginal"/> flag is set to True.
         /// </summary>
         public String NextCursor { get; set; }

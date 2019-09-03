@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters for renaming assets immediately and permanently updating them in your cloud storage. 
+    /// Parameters for renaming assets immediately and permanently updating them in your cloud storage.
     /// </summary>
     public class RenameParams : BaseParams
     {
@@ -37,19 +37,19 @@ namespace CloudinaryDotNet.Actions
         public string ToPublicId { get; set; }
 
         /// <summary>
-        /// The type of asset to rename. 
-        /// Valid values: image, raw, and video. 
+        /// The type of asset to rename.
+        /// Valid values: image, raw, and video.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// The specific type of the resource. 
+        /// The specific type of the resource.
         /// Valid values: upload, private and authenticated.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// The new type for the resource. 
+        /// The new type for the resource.
         /// Valid values: upload, private and authenticated.
         /// </summary>
         public string ToType { get; set; }

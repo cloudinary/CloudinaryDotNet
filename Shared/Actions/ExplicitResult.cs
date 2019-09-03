@@ -15,7 +15,7 @@ namespace CloudinaryDotNet.Actions
     public class ExplicitResult : RawUploadResult
     {
         /// <summary>
-        /// The specific type of asset. 
+        /// The specific type of asset.
         /// </summary>
         /// <summary>
         /// The derived images generated as per the requested eager transformations of the method call.

@@ -22,6 +22,6 @@ namespace CloudinaryDotNet.Actions
         {
             get { return Api.ParseCloudinaryParam<ResourceType>(m_resourceType); }
         }
-        
+
     }
 }

@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// The identifier of the uploaded asset. 
+        /// The identifier of the uploaded asset.
         /// </summary>
         public string PublicId { get; set; }
 
@@ -37,7 +37,7 @@ namespace CloudinaryDotNet.Actions
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// The type of asset to destroy. Valid values: image, raw, and video. Default: image. 
+        /// The type of asset to destroy. Valid values: image, raw, and video. Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 

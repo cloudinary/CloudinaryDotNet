@@ -13,7 +13,7 @@
         }
 
         /// <summary>
-        /// Generate a web-assembly custom function param to send to CustomFunction(customFunction) transformation. 
+        /// Generate a web-assembly custom function param to send to CustomFunction(customFunction) transformation.
         /// </summary>
         /// <param name="publicId">The public id of the web-assembly file.</param>
         /// <returns>A new instance of custom function param.</returns>

@@ -39,7 +39,7 @@ namespace CloudinaryDotNet.Actions
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// Tells Cloudinary whether to perform the sprite generation in the background (asynchronously). 
+        /// Tells Cloudinary whether to perform the sprite generation in the background (asynchronously).
         /// Default: false.
         /// </summary>
         public bool Async { get; set; }

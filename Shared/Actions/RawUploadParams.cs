@@ -16,7 +16,7 @@ namespace CloudinaryDotNet.Actions
         public FileDescription File { get; set; }
 
         /// <summary>
-        /// The identifier that is used for accessing the uploaded resource. 
+        /// The identifier that is used for accessing the uploaded resource.
         /// A randomly generated ID is assigned if not specified.
         /// </summary>
         public string PublicId { get; set; }

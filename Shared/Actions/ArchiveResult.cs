@@ -33,7 +33,7 @@ namespace CloudinaryDotNet.Actions
         /// Count of files in the archive.
         /// </summary>
         public int FileCount { get; private set; }
-        
+
 
         internal override void SetValues(JToken source)
         {

@@ -419,7 +419,6 @@ namespace CloudinaryDotNet
         {
             return Nin().Value(value);
         }
-        
         #endregion
     }
 }

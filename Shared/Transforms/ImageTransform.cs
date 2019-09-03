@@ -77,7 +77,7 @@ namespace CloudinaryDotNet
         public Transformation Crop(string value) { return Add("crop", value); }
 
         /// <summary>
-        /// Set the background color of the image. An opaque color can be set as an RGB hex 
+        /// Set the background color of the image. An opaque color can be set as an RGB hex
         /// triplet (e.g., '3e2222'), a 3-digit RGB hex (e.g., '777') or a named color (e.g., 'green').
         /// </summary>
         /// <param name="value"><see langword="abstract"/>A value of background color.</param>
@@ -132,7 +132,7 @@ namespace CloudinaryDotNet
         /// Vertical position for custom-coordinates based cropping and overlay placement.
         /// </summary>
         public Transformation Y(object value) { return Add("y", value); }
-        
+
         /// <summary>
         /// Defines radius value for corners rounding.
         /// </summary>
@@ -149,7 +149,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Control the JPG compression quality. 1 is the lowest quality and 100 is the highest. The default is the
-        /// original image's quality or 90% if not available. Reducing quality generates JPG images much smaller in 
+        /// original image's quality or 90% if not available. Reducing quality generates JPG images much smaller in
         /// file size.
         /// </summary>
         public Transformation Quality(object value) { return Add("quality", value); }
@@ -207,13 +207,13 @@ namespace CloudinaryDotNet
         public Transformation Overlay(BaseLayer value) { return Add("overlay", value); }
 
         /// <summary>
-        /// Add an underlay image below a base partially-transparent image. 
+        /// Add an underlay image below a base partially-transparent image.
         /// </summary>
         /// <param name="value">A value of the underlay (e.g. 'text:hello').</param>
         public Transformation Underlay(string value) { return Add("underlay", value); }
 
         /// <summary>
-        /// Add an underlay image below a base partially-transparent image. 
+        /// Add an underlay image below a base partially-transparent image.
         /// </summary>
         /// <param name="value">An object representing the underlay.</param>
         public Transformation Underlay(BaseLayer value) { return Add("underlay", value); }

@@ -20,6 +20,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "batch_id")]
         public string BatchId { get; protected set; }
-        
+
     }
 }

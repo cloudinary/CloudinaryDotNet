@@ -35,7 +35,7 @@ namespace CloudinaryDotNet.Actions
         public Uri JsonUri { get; protected set; }
 
         /// <summary>
-        /// Public ID assigned to the sprite. 
+        /// Public ID assigned to the sprite.
         /// </summary>
         [DataMember(Name = "public_id")]
         public string PublicId { get; protected set; }
@@ -51,7 +51,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "image_infos")]
         public Dictionary<string, ImageInfo> ImageInfos { get; protected set; }
-        
+
     }
 
     /// <summary>

@@ -16,7 +16,7 @@ namespace CloudinaryDotNet.Actions
         public string Message { get; protected set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [DataMember(Name = "data")]
         public StreamingProfileData Data { get; protected set; }

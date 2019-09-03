@@ -16,7 +16,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "folders")]
         public List<Folder> Folders { get; set; }
-        
+
     }
 
     /// <summary>

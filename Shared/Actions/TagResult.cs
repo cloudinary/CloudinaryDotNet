@@ -14,6 +14,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "public_ids")]
         public string[] PublicIds { get; protected set; }
-        
+
     }
 }

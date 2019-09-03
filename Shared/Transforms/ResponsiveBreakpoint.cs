@@ -3,7 +3,7 @@
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// Allows to generate images for your responsive website in various width dimensions, 
+    /// Allows to generate images for your responsive website in various width dimensions,
     /// and to define the minimum file size step (performance budget).
     /// </summary>
     public class ResponsiveBreakpoint : JObject
@@ -34,7 +34,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Set create_derived flag.
-        /// If true, create and keep the derived images of the selected breakpoints during the API call. 
+        /// If true, create and keep the derived images of the selected breakpoints during the API call.
         /// If false, images generated during the analysis process are thrown away.
         /// </summary>
         public ResponsiveBreakpoint CreateDerived(bool createDerived)

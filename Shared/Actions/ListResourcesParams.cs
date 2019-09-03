@@ -29,7 +29,7 @@ namespace CloudinaryDotNet.Actions
         public bool Tags { get; set; }
 
         /// <summary>
-        /// If true, include moderation status for each resource. 
+        /// If true, include moderation status for each resource.
         /// </summary>
         public bool Moderations { get; set; }
 
@@ -39,7 +39,7 @@ namespace CloudinaryDotNet.Actions
         public bool Context { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>, 
+        /// When a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>

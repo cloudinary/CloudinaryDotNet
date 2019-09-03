@@ -61,7 +61,7 @@ namespace CloudinaryDotNet
             }
         }
 
-        private static readonly Transformation DEFAULT_RESPONSIVE_WIDTH_TRANSFORM 
+        private static readonly Transformation DEFAULT_RESPONSIVE_WIDTH_TRANSFORM
             = new Transformation().Width("auto").Crop("limit");
 
         private static Transformation m_responsiveWidthTransform = null;

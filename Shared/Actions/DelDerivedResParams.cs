@@ -11,7 +11,7 @@ namespace CloudinaryDotNet.Actions
 
         string m_publicId = string.Empty;
         List<Transformation> m_tranformations = new List<Transformation>();
-        
+
         /// <summary>
         /// Instantiates the <see cref="DelDerivedResParams"/> object.
         /// </summary>

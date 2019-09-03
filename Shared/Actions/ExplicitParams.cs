@@ -41,9 +41,9 @@ namespace CloudinaryDotNet.Actions
         public string EagerNotificationUrl { get; set; }
 
         /// <summary>
-        /// The specific type of asset. 
-        /// Valid values for uploaded images and videos: upload, private, or authenticated. 
-        /// Valid values for remotely fetched images: fetch, facebook, twitter, gplus, instagram_name, gravatar, 
+        /// The specific type of asset.
+        /// Valid values for uploaded images and videos: upload, private, or authenticated.
+        /// Valid values for remotely fetched images: fetch, facebook, twitter, gplus, instagram_name, gravatar,
         /// youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         public string Type { get; set; }
@@ -54,14 +54,14 @@ namespace CloudinaryDotNet.Actions
         /// Relevant for images only.
         /// </summary>
         public string Ocr { get; set; }
-        
+
         /// <summary>
         /// The type of resource.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// The identifier of the uploaded asset or the URL of the remote asset. 
+        /// The identifier of the uploaded asset or the URL of the remote asset.
         /// Note: The public ID value for images and videos should not include a file extension.Include the file
         /// extension for raw files only.
         /// </summary>
@@ -69,19 +69,19 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the
-        /// uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'. 
+        /// uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'.
         /// For example 'X-Robots-Tag: noindex'.
         /// </summary>
         public Dictionary<string, string> Headers { get; set; }
 
         /// <summary>
-        /// A comma-separated list of tag names to assign to an asset that replaces any current tags assigned to 
+        /// A comma-separated list of tag names to assign to an asset that replaces any current tags assigned to
         /// the asset (if any).
         /// </summary>
         public string Tags { get; set; }
 
         /// <summary>
-        /// Sets the coordinates of faces contained in an uploaded image and overrides the automatically detected 
+        /// Sets the coordinates of faces contained in an uploaded image and overrides the automatically detected
         /// faces.
         /// Use plain string (x,y,w,h|x,y,w,h) or <see cref="Core.Rectangle"/>.
         /// </summary>
@@ -90,14 +90,14 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Sets the coordinates of a region contained in an uploaded image that is subsequently used for cropping
         /// uploaded images using the custom gravity mode. The region is specified by the X and Y coordinates of the top
-        /// left corner and the width and height of the region, as a comma-separated list. 
+        /// left corner and the width and height of the region, as a comma-separated list.
         /// For example: 85,120,220,310. Relevant for images only.
         /// </summary>
         public object CustomCoordinates { get; set; }
 
         /// <summary>
-        /// A list of the key-value pairs of general textual context metadata to attach to an uploaded asset. 
-        /// The context values of uploaded files are available for fetching using the Admin API. 
+        /// A list of the key-value pairs of general textual context metadata to attach to an uploaded asset.
+        /// The context values of uploaded files are available for fetching using the Admin API.
         /// For example: alt=My image, caption=Profile image.
         /// </summary>
         public StringDictionary Context { get; set; }

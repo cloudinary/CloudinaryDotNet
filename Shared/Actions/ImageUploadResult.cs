@@ -19,7 +19,7 @@ namespace CloudinaryDotNet.Actions
         public int Width { get; protected set; }
 
         /// <summary>
-        /// Parameter "height" of the image. 
+        /// Parameter "height" of the image.
         /// </summary>
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
@@ -44,7 +44,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Quality analysis value for the image between 0 and 1, where 0 means the image is blurry and out of focus
-        /// and 1 means the image is sharp and in focus. 
+        /// and 1 means the image is sharp and in focus.
         /// </summary>
         [DataMember(Name = "quality_analysis")]
         public QualityAnalysis QualityAnalysis { get; protected set; }
@@ -64,7 +64,7 @@ namespace CloudinaryDotNet.Actions
         public string Phash { get; protected set; }
 
         /// <summary>
-        /// The deletion token for the image. The token can be used to delete the uploaded asset within 10 minutes 
+        /// The deletion token for the image. The token can be used to delete the uploaded asset within 10 minutes
         /// using an unauthenticated API request.
         /// </summary>
         [DataMember(Name = "delete_token")]
@@ -86,7 +86,7 @@ namespace CloudinaryDotNet.Actions
         /// List of responsive breakpoints for the image.
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
-        
+
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);

@@ -18,7 +18,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Optional. The type of file for which to retrieve the tags. Possible values: image, raw, video. 
+        /// Optional. The type of file for which to retrieve the tags. Possible values: image, raw, video.
         /// Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
@@ -29,12 +29,12 @@ namespace CloudinaryDotNet.Actions
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Max number of tags to return. Default=10. Maximum=500.  
+        /// Max number of tags to return. Default=10. Maximum=500.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="MaxResults"/>, the 
+        /// When a listing request has more results to return than <see cref="MaxResults"/>, the
         /// <see cref="ListTagsResult.NextCursor"/> value is returned as part of the response. You can then specify
         /// this value as the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>

@@ -41,7 +41,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set a list of Public IDs for the specific assets to be included in the archive. 
+        /// Set a list of Public IDs for the specific assets to be included in the archive.
         /// Up to 1000 public IDs are supported.
         /// </summary>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
@@ -77,7 +77,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set a list of tag names. All assets with the specified tags are included in the archive. 
+        /// Set a list of tag names. All assets with the specified tags are included in the archive.
         /// Up to 20 tags are supported.
         /// </summary>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
@@ -129,7 +129,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get Mode whether to return the generated archive file ('download') or to store it as a raw resource 
+        /// Get Mode whether to return the generated archive file ('download') or to store it as a raw resource
         /// ('create').
         /// </summary>
         public virtual ArchiveCallMode Mode()
@@ -141,7 +141,7 @@ namespace CloudinaryDotNet.Actions
         /// Determines whether to return a URL to dynamically generate and download the archive file ('download'), or to
         /// create and store it as a raw asset in your Cloudinary account and return JSON with the URLs to access
         /// the archive file ('create').
-        /// </summary> 
+        /// </summary>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Mode(ArchiveCallMode mode)
         {
@@ -187,7 +187,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get a list of transformations to run on all the derived assets before storing them in your Cloudinary 
+        /// Get a list of transformations to run on all the derived assets before storing them in your Cloudinary
         /// account.
         /// </summary>
         public List<Transformation> Transformations()
@@ -197,7 +197,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Set a list of transformations to run on all the derived assets before storing them in your Cloudinary
-        /// account. 
+        /// account.
         /// </summary>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Transformations(List<Transformation> transformations)
@@ -215,7 +215,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set the format for the generated archive: zip or tgz. 
+        /// Set the format for the generated archive: zip or tgz.
         /// Currently only 'zip' is supported.
         /// Default: zip.
         /// </summary>
@@ -333,7 +333,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set whether to perform the archive generation in the background (asynchronously). 
+        /// Set whether to perform the archive generation in the background (asynchronously).
         /// Only relevant when using the 'create' SDK methods. Default: false.
         /// </summary>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
@@ -364,7 +364,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Get a list of tag names to assign to the generated archive. 
+        /// Get a list of tag names to assign to the generated archive.
         /// </summary>
         public List<string> TargetTags()
         {
@@ -372,7 +372,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Set a list of tag names to assign to the generated archive. 
+        /// Set a list of tag names to assign to the generated archive.
         /// Only relevant when using the 'create' SDK methods.
         /// </summary>
         /// <returns>The instance of Archive parameters with set parameter.</returns>

@@ -39,7 +39,7 @@ namespace CloudinaryDotNet.Actions
         public bool Async { get; set; }
 
         /// <summary>
-        /// Can be set to 'zip' to generate a zip file containing the images instead of an animated GIF file. 
+        /// Can be set to 'zip' to generate a zip file containing the images instead of an animated GIF file.
         /// Default: gif (deprecated - use the new CreateArchive method to create zip files).
         /// </summary>
         public string Format { get; set; }

@@ -3,8 +3,8 @@
 namespace CloudinaryDotNet
 {
     /// <summary>
-    /// Represents the video parameter (l_video: in URLs) to specify the name of another 
-    /// uploaded video to be added as an overlay.   
+    /// Represents the video parameter (l_video: in URLs) to specify the name of another
+    /// uploaded video to be added as an overlay.
     /// </summary>
     public class VideoLayer : BaseLayer<VideoLayer>
     {

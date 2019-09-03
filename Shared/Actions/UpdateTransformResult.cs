@@ -39,6 +39,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "derived")]
         public TransformDerived[] Derived { get; protected set; }
-        
+
     }
 }

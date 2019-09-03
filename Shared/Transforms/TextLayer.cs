@@ -35,7 +35,7 @@ namespace CloudinaryDotNet
         /// Whether to use a "normal" or an "italic" font style. Default: "normal".
         /// </summary>
         protected string m_fontStyle;
-        
+
         /// <summary>
         /// Type of font antialiasing to use.
         /// </summary>
@@ -68,7 +68,7 @@ namespace CloudinaryDotNet
         protected string m_letterSpacing;
 
         /// <summary>
-        /// Spacing between the lines in pixels (only relevant for multi-line text). 
+        /// Spacing between the lines in pixels (only relevant for multi-line text).
         /// Can be a positive or negative, integer or decimal value.
         /// </summary>
         protected string m_lineSpacing;
@@ -250,7 +250,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Spacing between the lines in pixels (only relevant for multi-line text). 
+        /// Spacing between the lines in pixels (only relevant for multi-line text).
         /// Can be a positive or negative, integer or decimal value.
         /// </summary>
         public TextLayer LineSpacing(string lineSpacing)
@@ -384,7 +384,7 @@ namespace CloudinaryDotNet
         [EnumMember(Value = "slight")]
         Slight,
         /// <summary>
-        /// Hint outlines with medium strength, providing a compromise between fidelity to the original shapes and 
+        /// Hint outlines with medium strength, providing a compromise between fidelity to the original shapes and
         /// contrast.
         /// </summary>
         [EnumMember(Value = "medium")]

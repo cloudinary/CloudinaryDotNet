@@ -12,9 +12,9 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Instantiates the <see cref="ExplodeParams"/> object.
         /// </summary>
-        /// <param name="publicId">The identifier of the uploaded multi-page file (PDF or animated GIF). 
+        /// <param name="publicId">The identifier of the uploaded multi-page file (PDF or animated GIF).
         /// Note: The public ID for images does not include a file extension.</param>
-        /// <param name="transformation">A transformation to run on all the pages before storing them as derived 
+        /// <param name="transformation">A transformation to run on all the pages before storing them as derived
         /// images.</param>
         public ExplodeParams(string publicId, Transformation transformation)
         {
@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// The identifier of the uploaded multi-page file (PDF or animated GIF). 
+        /// The identifier of the uploaded multi-page file (PDF or animated GIF).
         /// Note: The public ID for images does not include a file extension.
         /// </summary>
         public string PublicId { get; set; }
@@ -39,7 +39,7 @@ namespace CloudinaryDotNet.Actions
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// (Optional) An optional format to convert the images before storing them in your Cloudinary account. 
+        /// (Optional) An optional format to convert the images before storing them in your Cloudinary account.
         /// Default: png.
         /// </summary>
         public string Format { get; set; }

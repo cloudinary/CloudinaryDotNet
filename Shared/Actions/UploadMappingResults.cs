@@ -27,7 +27,7 @@ namespace CloudinaryDotNet.Actions
         /// Holds the cursor value if there are more upload mappings than <see cref="UploadMappingParams.MaxResults"/>.
         /// </summary>
         public string NextCursor { get; protected set; }
-        
+
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);

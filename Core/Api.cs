@@ -30,8 +30,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
-        public Api() : base() 
-        { 
+        public Api() : base()
+        {
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace CloudinaryDotNet
         /// <param name="privateCdn">Private Content Delivery Network.</param>
         /// <param name="shortenUrl">Whether to use shorten url when possible.</param>
         /// <param name="cSubDomain">Whether to use sub domain.</param>
-        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain) 
+        public Api(Account account, bool usePrivateCdn, string privateCdn, bool shortenUrl, bool cSubDomain)
             : base(account, usePrivateCdn, privateCdn, shortenUrl, cSubDomain)
         {
         }
@@ -254,7 +254,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Builds HTML file input tag for unsigned upload of an asset.
         /// </summary>
-        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata. 
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
         /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
         /// <param name="preset">The name of upload preset.</param>
         /// <param name="resourceType">Type of the uploaded resource.</param>
@@ -269,7 +269,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Builds HTML file input tag for upload an asset.
         /// </summary>
-        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata. 
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
         /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
         /// <param name="resourceType">Type of the uploaded resource.</param>
         /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>

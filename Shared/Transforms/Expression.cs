@@ -117,7 +117,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'illustration score'.
         /// </summary>
-        public static Expression IllustrationScore() 
+        public static Expression IllustrationScore()
         {
             return new Expression("ils");
         }

@@ -35,7 +35,7 @@ namespace CloudinaryDotNet.Actions
         public StringDictionary ContextDict { get; set; }
 
         /// <summary>
-        /// (Optional) The specific type of the asset. 
+        /// (Optional) The specific type of the asset.
         /// Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
         public string Type { get; set; }
@@ -68,7 +68,7 @@ namespace CloudinaryDotNet.Actions
             {
                 contextPairs.AddRange(ContextDict.SafePairs);
             }
-            
+
             if (!string.IsNullOrEmpty(Context))
             {
                 contextPairs.Add(Context);
@@ -78,7 +78,7 @@ namespace CloudinaryDotNet.Actions
             {
                 AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", contextPairs));
             }
-           
+
 
             AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
             AddParam(dict, Constants.COMMAND, ApiShared.GetCloudinaryParam(Command));

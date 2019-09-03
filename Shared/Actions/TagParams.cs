@@ -35,7 +35,7 @@ namespace CloudinaryDotNet.Actions
         public string Tag { get; set; }
 
         /// <summary>
-        /// The type of asset. Valid values: image, raw, and video. Default: image. 
+        /// The type of asset. Valid values: image, raw, and video. Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
@@ -95,7 +95,7 @@ namespace CloudinaryDotNet.Actions
         [EnumMember(Value = "replace")]
         Replace,
         /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other 
+        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other
         /// resources. This means that only the resources with the given Public IDs will have the given tag.
         /// </summary>
         [EnumMember(Value = "set_exclusive")]

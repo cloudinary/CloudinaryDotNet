@@ -28,15 +28,15 @@ namespace CloudinaryDotNet.Actions
         public string PublicId { get; set; }
 
         /// <summary>
-        /// Optional (String, default: image). The type of file. 
-        /// Possible values: image, raw, video. 
-        /// Note: Use the video resource type for all video resources as well as for audio files, such as .mp3. 
+        /// Optional (String, default: image). The type of file.
+        /// Possible values: image, raw, video.
+        /// Note: Use the video resource type for all video resources as well as for audio files, such as .mp3.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
         /// Optional (String, default: upload). The storage type: upload, private, authenticated, facebook, twitter,
-        /// gplus, instagram_name, gravatar, youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion. 
+        /// gplus, instagram_name, gravatar, youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         public string Type { get; set; }
 
@@ -47,25 +47,25 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Optional (Boolean, default: false). If true, include color information: predominant colors and histogram
-        /// of 32 leading colors. 
+        /// of 32 leading colors.
         /// </summary>
         public bool Colors { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, include a list of coordinates of detected faces. 
+        /// Optional (Boolean, default: false). If true, include a list of coordinates of detected faces.
         /// </summary>
         public bool Faces { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, returns a quality analysis value for the image 
-        /// between 0 and 1, where 0 means the image is blurry and out of focus and 1 means the image is sharp 
-        /// and in focus. 
+        /// Optional (Boolean, default: false). If true, returns a quality analysis value for the image
+        /// between 0 and 1, where 0 means the image is blurry and out of focus and 1 means the image is sharp
+        /// and in focus.
         /// </summary>
         public bool QualityAnalysis { get; set; }
 
         /// <summary>
         /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
-        /// Supported for images, video, and audio. 
+        /// Supported for images, video, and audio.
         /// </summary>
         public bool Metadata { get; set; }
 
@@ -76,13 +76,13 @@ namespace CloudinaryDotNet.Actions
         public bool Coordinates { get; set; }
 
         /// <summary>
-        /// Optional. The number of derived images to return. Default=10. Maximum=100. 
+        /// Optional. The number of derived images to return. Default=10. Maximum=100.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
         /// Optional (Boolean, default: false). If true, include the perceptual hash (pHash) of the uploaded photo for
-        /// image similarity detection. 
+        /// image similarity detection.
         /// </summary>
         public bool Phash { get; set; }
 

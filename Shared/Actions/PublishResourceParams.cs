@@ -41,7 +41,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Gets or sets privacy mode of the image. Valid values: 'private' and 'authenticated'. 
+        /// Gets or sets privacy mode of the image. Valid values: 'private' and 'authenticated'.
         /// Default: 'authenticated'.
         /// </summary>
         public string Type
@@ -55,7 +55,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            
+
         }
 
         /// <summary>

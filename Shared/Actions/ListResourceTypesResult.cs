@@ -21,7 +21,7 @@ namespace CloudinaryDotNet.Actions
         /// An array of the resource types.
         /// </summary>
         public ResourceType[] ResourceTypes { get; protected set; }
-        
+
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);

@@ -31,7 +31,7 @@ namespace CloudinaryDotNet
         protected string m_type;
 
         /// <summary>
-        /// The identifier of the uploaded asset. 
+        /// The identifier of the uploaded asset.
         /// </summary>
         protected string m_publicId;
 

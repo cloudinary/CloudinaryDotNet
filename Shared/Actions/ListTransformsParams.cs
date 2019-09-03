@@ -27,9 +27,9 @@ namespace CloudinaryDotNet.Actions
         public bool? Named { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="MaxResults"/>, 
+        /// When a listing request has more results to return than <see cref="MaxResults"/>,
         /// the <see cref="ListTransformsResult.NextCursor"/> value is returned as part of the response. You can then
-        /// specify this value as the <see cref="NextCursor"/> parameter of the following listing request. 
+        /// specify this value as the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
         public string NextCursor { get; set; }
 

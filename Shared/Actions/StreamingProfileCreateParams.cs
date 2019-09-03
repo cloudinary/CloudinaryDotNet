@@ -9,7 +9,7 @@ namespace CloudinaryDotNet.Actions
     public class StreamingProfileCreateParams : StreamingProfileBaseParams
     {
         /// <summary>
-        /// The identification name to assign to the new streaming profile. The name is 
+        /// The identification name to assign to the new streaming profile. The name is
         /// case-insensitive and can contain alphanumeric characters, underscores (_) and hyphens (-).
         /// </summary>
         public string Name { get; set; }
