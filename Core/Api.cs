@@ -257,6 +257,7 @@ namespace CloudinaryDotNet
             {
                 throw new Exception("Provide an absolute path to file!");
             }
+
             return path;
         }
 

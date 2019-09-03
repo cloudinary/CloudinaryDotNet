@@ -42,6 +42,7 @@ namespace CloudinaryDotNet
         {
             return ToUnixTimeSeconds(DateTime.UtcNow);
         }
+
         /// <summary>
         /// Concatenates items using provided separator, escaping separator character in each item.
         /// </summary>

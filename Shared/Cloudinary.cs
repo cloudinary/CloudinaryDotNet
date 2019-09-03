@@ -146,6 +146,7 @@ namespace CloudinaryDotNet
 
             return GetDownloadUrl(urlBuilder, parameters);
         }
+
         private string GetUploadMappingUrl()
         {
             return m_api.ApiUrlV.
@@ -953,6 +954,7 @@ namespace CloudinaryDotNet
                     {
                         url.Add("tags").Add(tagParams.Tag);
                     }
+
                     break;
                 case ListResourcesByModerationParams modParams:
                     if (!string.IsNullOrEmpty(modParams.ModerationKind))
@@ -961,11 +963,13 @@ namespace CloudinaryDotNet
                            .Add(modParams.ModerationKind)
                            .Add(Api.GetCloudinaryParam<ModerationStatus>(modParams.ModerationStatus));
                     }
+
                     break;
                 case ListResourcesByContextParams _:
                     {
                         url.Add("context");
                     }
+
                     break;
             }
 

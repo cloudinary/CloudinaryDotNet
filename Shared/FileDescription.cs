@@ -34,6 +34,7 @@ namespace CloudinaryDotNet
             FileName = name;
             Stream = stream;
         }
+
         /// <summary>
         /// Constructor to upload file by path specifying explicit filename
         /// </summary>
@@ -45,6 +46,7 @@ namespace CloudinaryDotNet
             FilePath = filePath;
             FileName = IsRemote ? filePath : name;
         }
+
         /// <inheritdoc />
         /// <summary>
         /// Constructor to upload file by path.

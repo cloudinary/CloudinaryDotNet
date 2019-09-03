@@ -37,6 +37,7 @@ namespace CloudinaryDotNet
             {
                 @operator = operators[@operator];
             }
+
             m_expressions.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
             return this;
         }

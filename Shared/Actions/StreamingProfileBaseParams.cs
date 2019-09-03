@@ -55,6 +55,7 @@ namespace CloudinaryDotNet.Actions
                                     NullValueHandling = NullValueHandling.Ignore,
                                 }));
             }
+
             return dict;
         }
     }
@@ -86,6 +87,7 @@ namespace CloudinaryDotNet.Actions
             {
                 return null;
             }
+
             var transformation = new Transformation();
             var transformationsResponse = JArray.Load(reader);
             if (transformationsResponse != null && transformationsResponse.Count > 0)
@@ -95,6 +97,7 @@ namespace CloudinaryDotNet.Actions
                     transformation.Add(jTransformProperty.Name, jTransformProperty.Value);
                 }
             }
+
             return transformation;
         }
 

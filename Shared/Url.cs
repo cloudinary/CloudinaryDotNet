@@ -151,6 +151,7 @@ namespace CloudinaryDotNet
                     resultStr.Append(ch);
                 }
             }
+
             return resultStr.ToString();
         }
 
@@ -819,6 +820,7 @@ namespace CloudinaryDotNet
                 if (item.Value != null)
                     sb.Append("='").Append(item.Value).Append("'");
             }
+
             dict.Sort = wasSorted;
 
             sb.Append(">");
@@ -843,6 +845,7 @@ namespace CloudinaryDotNet
             {
                 return m_sourceTypes;
             }
+
             return DEFAULT_VIDEO_SOURCE_TYPES;
         }
 
@@ -1061,6 +1064,7 @@ namespace CloudinaryDotNet
                 {
                     privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Constants.SHARED_CDN;
                 }
+
                 sharedDomain |= privateCdn == Constants.SHARED_CDN;
 
                 if (sharedDomain && m_useSubDomain)

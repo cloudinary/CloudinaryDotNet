@@ -25,6 +25,7 @@ namespace CloudinaryDotNet
                 byte index = (byte)((crc & 0xff) ^ bytes[i]);
                 crc = (uint)((crc >> 8) ^ table[index]);
             }
+
             return ~crc;
         }
 
@@ -57,6 +58,7 @@ namespace CloudinaryDotNet
                         temp >>= 1;
                     }
                 }
+
                 table[i] = temp;
             }
         }

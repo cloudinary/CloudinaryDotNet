@@ -136,6 +136,7 @@ namespace CloudinaryDotNet
                     : $"{pair.Key}={pair.Value}").ToArray();
             }
         }
+
         /// <summary>
         /// Escape safe pair delimiter
         /// </summary>

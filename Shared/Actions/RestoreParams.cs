@@ -63,6 +63,7 @@ namespace CloudinaryDotNet.Actions
             {
                 dict.Add("public_ids", PublicIds);
             }
+
             return dict;
         }
     }

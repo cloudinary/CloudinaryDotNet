@@ -113,8 +113,10 @@ namespace CloudinaryDotNet
                 response = ex.Response as HttpWebResponse;
                 if (response == null) throw;
             }
+
             return response;
         }
+
         internal HttpWebRequest PrepareRequestBody(HttpWebRequest request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             SetHttpMethod(method, request);

@@ -40,6 +40,7 @@ namespace CloudinaryDotNet
             {
                 components.Add(string.Format("fetch:{0}", m_url));
             }
+
             return string.Join(":", components.ToArray());
         }
 
@@ -52,6 +53,7 @@ namespace CloudinaryDotNet
             {
                 throw new ArgumentException("Must supply url.");
             }
+
             return AdditionalParams();
         }
 

@@ -188,6 +188,7 @@ namespace CloudinaryDotNet
             {
                 toSign.Add(string.Format("url={0}", EscapeUrlToLower(url)));
             }
+
             string auth = Digest(string.Join("~", toSign));
             tokenParts.Add(string.Format("hmac={0}", auth));
 
@@ -283,6 +284,7 @@ namespace CloudinaryDotNet
             {
                 data[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);
             }
+
             return data;
         }
 

@@ -119,6 +119,7 @@ namespace CloudinaryDotNet
             {
                 sb.Append(Regex.Escape(op)).Append("|");
             }
+
             sb.Remove(sb.Length - 1, 1);
             sb.Append(")(?=[ _])|").Append(string.Join("|", parameters.Keys.ToArray())).Append(")");
             return sb.ToString();

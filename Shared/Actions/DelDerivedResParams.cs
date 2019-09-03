@@ -73,6 +73,7 @@ namespace CloudinaryDotNet.Actions
                 {
                     transformations.Add(t.Generate());
                 }
+
                 dict.Add("transformations", transformations);
             }
 

@@ -154,6 +154,7 @@ namespace CloudinaryDotNet
                 result.Append(m.Value);
                 start = m.Index + m.Length;
             }
+
             result.Append(Encode(text.Substring(start)));
 
             return result.ToString();
@@ -277,6 +278,7 @@ namespace CloudinaryDotNet
             {
                 components.Add(m_text);
             }
+
             return string.Join(":", components);
         }
 
@@ -289,6 +291,7 @@ namespace CloudinaryDotNet
             {
                 throw new ArgumentException("Must supply either text or publicId.");
             }
+
             return base.ToString();
         }
 

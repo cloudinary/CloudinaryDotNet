@@ -29,6 +29,7 @@ namespace CloudinaryDotNet
                     if (!dict.ContainsKey(codecParams[i]))
                         dict.Add(codecParams[i], codecParams[i + 1]);
                 }
+
                 return VideoCodec(dict);
             }
 
@@ -537,6 +538,7 @@ namespace CloudinaryDotNet
                     }
                 }
             }
+
             return sb.ToString();
         }
 
@@ -583,6 +585,7 @@ namespace CloudinaryDotNet
                 {
                     stringArr[i] = ToString(rangeArr.GetValue(i));
                 }
+
                 return stringArr;
             }
 

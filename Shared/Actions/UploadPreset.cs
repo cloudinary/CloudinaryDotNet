@@ -88,6 +88,7 @@ namespace CloudinaryDotNet.Actions
                             dict.Add(prop.Key, prop.Value.ToString());
                         }
                     }
+
                     Transformation = new Transformation(dict);
                 }
             }
@@ -111,6 +112,7 @@ namespace CloudinaryDotNet.Actions
                                 dict.Add(prop.Key, prop.Value.ToString());
                             }
                         }
+
                         EagerTransforms.Add(new Transformation(dict));
                     }
                 }

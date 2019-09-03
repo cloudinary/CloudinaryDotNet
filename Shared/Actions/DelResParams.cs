@@ -159,6 +159,7 @@ namespace CloudinaryDotNet.Actions
             {
                 return dict;
             }
+
             if (!string.IsNullOrEmpty(Prefix))
             {
                 dict.Add("prefix", Prefix);
@@ -167,6 +168,7 @@ namespace CloudinaryDotNet.Actions
             {
                 dict.Add("public_ids", PublicIds);
             }
+
             if (m_all)
             {
                 AddParam(dict, "all", true);

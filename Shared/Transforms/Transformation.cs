@@ -242,6 +242,7 @@ namespace CloudinaryDotNet
             {
                 Add("custom_pre_function", $"pre:{function}");
             }
+
             return this;
         }
 

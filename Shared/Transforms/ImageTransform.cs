@@ -355,6 +355,7 @@ namespace CloudinaryDotNet
                         m_nestedTransforms[i] = segment; // [..., {c: fill, w: 500}, ...]
                         m_nestedTransforms.Insert(i, new Transformation(string.Format("if={0}", value.ToString()))); // [..., "if_w_gt_1000", {c: fill, w: 500}, ...]
                     }
+
                     // otherwise keep looking for if_condition
                     if (!string.Equals("else", ifValue))
                     {
@@ -362,6 +363,7 @@ namespace CloudinaryDotNet
                     }
                 }
             }
+
             Add("if", "end");
             return Chain();
         }
