@@ -12,7 +12,7 @@ namespace CloudinaryDotNet
     /// </summary>
     internal static partial class Utils
     {
-        internal static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        internal static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary>
         /// Converts DateTime to Unix epoch time in seconds.
@@ -21,7 +21,7 @@ namespace CloudinaryDotNet
         /// <returns>Epoch time in seconds.</returns>
         internal static long ToUnixTimeSeconds(DateTime date)
         {
-            return Convert.ToInt64((date.ToUniversalTime() - epoch).TotalSeconds);
+            return Convert.ToInt64((date.ToUniversalTime() - Epoch).TotalSeconds);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace CloudinaryDotNet
         /// <returns>Datetime.</returns>
         public static DateTime FromUnixTimeSeconds(long unixTime)
         {
-            return epoch.AddSeconds(unixTime);
+            return Epoch.AddSeconds(unixTime);
         }
 
         /// <summary>
