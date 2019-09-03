@@ -223,7 +223,7 @@ namespace CloudinaryDotNet
                     {
                         // Unfortunately we don't have ByteRangeStreamContent here,
                         // let's create another stream from the original one
-                        stream =  GetRangeFromFile(file, stream);
+                        stream = GetRangeFromFile(file, stream);
                     }
 
                     var streamContent = new StreamContent(stream);
