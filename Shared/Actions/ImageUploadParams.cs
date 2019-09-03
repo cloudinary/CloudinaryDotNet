@@ -238,8 +238,9 @@ namespace CloudinaryDotNet.Actions
         /// <returns>The string representation of face coordinates.</returns>
         public override string ToString()
         {
-            return string.Join("|",
-                    this.Select(r => string.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
+            return string.Join(
+                "|",
+                this.Select(r => string.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
         }
     }
 }

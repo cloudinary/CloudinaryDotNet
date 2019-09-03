@@ -46,7 +46,8 @@ namespace CloudinaryDotNet.Actions
 
             if (Representations != null)
             {
-                dict.Add("representations",
+                dict.Add(
+                        "representations",
                         JsonConvert.SerializeObject(
                                 Representations,
                                 new JsonSerializerSettings

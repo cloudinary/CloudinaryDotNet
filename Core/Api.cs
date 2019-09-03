@@ -72,7 +72,8 @@ namespace CloudinaryDotNet
 
             var frameworkDescription = RuntimeInformation.FrameworkDescription;
 
-            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2} ({3})",
+            USER_AGENT = String.Format(
+                "CloudinaryDotNet/{0}.{1}.{2} ({3})",
                 version.Major, version.Minor, version.Build, frameworkDescription);
         }
 
@@ -176,7 +177,8 @@ namespace CloudinaryDotNet
             request.Content = content;
         }
 
-        private HttpContent PrepareMultipartFormDataContent(SortedDictionary<string, object> parameters,
+        private HttpContent PrepareMultipartFormDataContent(
+            SortedDictionary<string, object> parameters,
             FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             var content = new MultipartFormDataContent(HTTP_BOUNDARY);
@@ -414,7 +416,8 @@ namespace CloudinaryDotNet
         public override T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
-            using (var response = Call(method,
+            using (var response = Call(
+                method,
                 url,
                 parameters,
                 file,

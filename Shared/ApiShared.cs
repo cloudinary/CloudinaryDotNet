@@ -164,7 +164,8 @@ namespace CloudinaryDotNet
         {
             parameters?.Check();
 
-            return CallAndParse<T>(method,
+            return CallAndParse<T>(
+                                   method,
                                    url,
                                    (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
                                    file,

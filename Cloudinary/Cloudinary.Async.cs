@@ -17,7 +17,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of image uploading.</returns>
         public Task<RawUploadResult> UploadLargeRawAsync(BasicRawUploadParams parameters, int bufferSize = 20 * 1024 * 1024)
         {
-            return Task.Factory.StartNew((object o) =>
+            return Task.Factory.StartNew(
+            (object o) =>
             {
                 var t = (Tuple<BasicRawUploadParams, int>)o;
                 return UploadLargeRaw(t.Item1, t.Item2);
@@ -32,7 +33,8 @@ namespace CloudinaryDotNet
         /// <returns>Results of image uploading.</returns>
         public Task<RawUploadResult> UploadAsync(RawUploadParams parameters, string type = "auto")
         {
-            return Task.Factory.StartNew((object o) =>
+            return Task.Factory.StartNew(
+            (object o) =>
             {
                 var t = (Tuple<RawUploadParams, string>)o;
                 return Upload(t.Item1, t.Item2);
@@ -242,7 +244,8 @@ namespace CloudinaryDotNet
 
         private Task<TRes> CallAsync<TParams, TRes>(Func<TParams, TRes> f, TParams @params)
         {
-            return Task.Factory.StartNew((object o) =>
+            return Task.Factory.StartNew(
+            (object o) =>
             {
                 return f(@params);
             }, @params);
