@@ -16,7 +16,9 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public StringDictionary() { }
+        public StringDictionary()
+        {
+        }
 
         /// <summary>
         /// Constructs a new instance from an array of strings.

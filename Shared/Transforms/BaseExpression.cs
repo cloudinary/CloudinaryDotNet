@@ -9,7 +9,9 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Base abstract non-generic class for creating Expressions.
     /// </summary>
-    public abstract class BaseExpression { }
+    public abstract class BaseExpression
+    {
+    }
 
     /// <summary>
     /// Represents expression object that can be used in user defined variables and conditional transformations.

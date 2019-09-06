@@ -106,7 +106,9 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Creates empty transformation object.
         /// </summary>
-        public Transformation() { }
+        public Transformation()
+        {
+        }
 
         /// <summary>
         /// Creates transformation object chained with other transformations.
@@ -609,20 +611,26 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="transforms">A list of transformations to chain with.</param>
         public EagerTransformation(params Transformation[] transforms)
-            : base(transforms.ToList()) { }
+            : base(transforms.ToList())
+        {
+        }
 
         /// <summary>
         /// Creates eager transformation object chained with other transformations.
         /// </summary>
         /// <param name="transforms">A list of transformations to chain with.</param>
         public EagerTransformation(List<Transformation> transforms)
-            : base(transforms) { }
+            : base(transforms)
+        {
+        }
 
         /// <summary>
         /// Creates an empty eager transformation object.
         /// </summary>
         public EagerTransformation()
-            : base() { }
+            : base()
+        {
+        }
 
         /// <summary>
         /// Set file format for the transformation.

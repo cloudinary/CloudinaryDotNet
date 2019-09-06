@@ -112,7 +112,9 @@ namespace CloudinaryDotNet
         /// Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public ApiShared()
-            : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL")) { }
+            : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL"))
+        {
+        }
 
         /// <summary>
         /// Parameterized constructor.

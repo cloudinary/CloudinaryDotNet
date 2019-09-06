@@ -16,7 +16,9 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Instantiates the <see cref="UpdateResourceAccessModeParams"/> object.
         /// </summary>
-        public UpdateResourceAccessModeParams() { }
+        public UpdateResourceAccessModeParams()
+        {
+        }
 
         /// <summary>
         /// Update all resources with the given public IDs (array of up to 100 public_ids).

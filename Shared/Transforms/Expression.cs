@@ -17,7 +17,9 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Default parameterless constructor. Instantiates the <see cref="Expression"/> object.
         /// </summary>
-        public Expression() { }
+        public Expression()
+        {
+        }
 
         /// <summary>
         /// Instantiates the <see cref="Expression"/> object with name.

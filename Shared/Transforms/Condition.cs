@@ -12,7 +12,9 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Default parameterless constructor. Instantiates the <see cref="Condition"/> object.
         /// </summary>
-        public Condition() { }
+        public Condition()
+        {
+        }
 
         /// <summary>
         /// Create a <see cref="Condition"/> object. The condition string will be translated to a serialized condition.

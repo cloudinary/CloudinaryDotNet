@@ -17,7 +17,9 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Default parameterless constructor. Instantiates the <see cref="UploadPresetParams"/> object.
         /// </summary>
-        public UploadPresetParams() { }
+        public UploadPresetParams()
+        {
+        }
 
         /// <summary>
         /// Instantiates the <see cref="UploadPresetParams"/> object with result object.

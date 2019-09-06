@@ -14,7 +14,9 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Instantiates the <see cref="RestoreParams"/> object.
         /// </summary>
-        public RestoreParams() { }
+        public RestoreParams()
+        {
+        }
 
         /// <summary>
         /// The public IDs of (deleted or existing) backed up resources to restore. Reverts to the latest backed up

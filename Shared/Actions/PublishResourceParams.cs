@@ -15,7 +15,9 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Instantiates the <see cref="PublishResourceParams"/> object.
         /// </summary>
-        public PublishResourceParams() { }
+        public PublishResourceParams()
+        {
+        }
 
         /// <summary>
         /// Publish all resources with the given public IDs.
