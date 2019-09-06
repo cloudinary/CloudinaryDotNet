@@ -500,7 +500,8 @@ namespace CloudinaryDotNet
         /// <returns>Boolean result of the validation</returns>
         public bool VerifyApiResponseSignature(string publicId, string version, string signature)
         {
-            var parametersToSign = new SortedDictionary<string, object>() {
+            var parametersToSign = new SortedDictionary<string, object>()
+            {
                 { "public_id", publicId },
                 { "version", version },
             };

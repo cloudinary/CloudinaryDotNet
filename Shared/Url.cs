@@ -20,7 +20,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Recommended sources for video tag.
         /// </summary>
-        public static readonly VideoSource[] DefaultVideoSources = {
+        public static readonly VideoSource[] DefaultVideoSources =
+        {
             new VideoSource
             {
                 Type = "mp4", Codecs = new[] { "hev1" }, Transformation = new Transformation().VideoCodec(VideoCodec.H265),

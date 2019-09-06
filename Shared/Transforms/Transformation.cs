@@ -13,7 +13,8 @@ namespace CloudinaryDotNet
     {
         private const string VARIABLES_PARAM_KEY = "variables";
 
-        static readonly string[] SimpleParams = new string[] {
+        static readonly string[] SimpleParams = new string[]
+        {
             "ac", "audio_codec",
             "af", "audio_frequency",
             "bo", "border",
@@ -49,15 +50,18 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Common responsive width transformation.
         /// </summary>
-        public static Transformation ResponsiveWidthTransform {
-            get {
+        public static Transformation ResponsiveWidthTransform
+        {
+            get
+            {
                 if (m_responsiveWidthTransform == null)
                     return DEFAULT_RESPONSIVE_WIDTH_TRANSFORM;
                 else
                     return m_responsiveWidthTransform;
             }
 
-            set {
+            set
+            {
                 m_responsiveWidthTransform = value;
             }
         }
@@ -108,7 +112,8 @@ namespace CloudinaryDotNet
         /// Creates transformation object chained with other transformations.
         /// </summary>
         /// <param name="transforms">List of transformations to chain with.</param>
-        public Transformation(List<Transformation> transforms) {
+        public Transformation(List<Transformation> transforms)
+        {
             if (transforms != null)
                 m_nestedTransforms = transforms;
         }
@@ -117,8 +122,10 @@ namespace CloudinaryDotNet
         /// Creates transformation object initialized with array of transformation parameters.
         /// </summary>
         /// <param name="transformParams">List of transformation parameters represented as pairs 'name=value'.</param>
-        public Transformation(params string[] transformParams) {
-            foreach (var pair in transformParams) {
+        public Transformation(params string[] transformParams)
+        {
+            foreach (var pair in transformParams)
+            {
                 string[] splittedPair = pair.Split('=');
                 if (splittedPair.Length != 2)
                     throw new ArgumentException(string.Format("Couldn't parse '{0}'!", pair));
@@ -133,8 +140,10 @@ namespace CloudinaryDotNet
         /// <param name="transformParams">
         /// One can use an element of <seealso cref="Actions.GetTransformResult.Info"/> array.
         /// </param>
-        public Transformation(Dictionary<string, object> transformParams) {
-            foreach (var key in transformParams.Keys) {
+        public Transformation(Dictionary<string, object> transformParams)
+        {
+            foreach (var key in transformParams.Keys)
+            {
                 m_transformParams.Add(key, transformParams[key]);
             }
         }
@@ -143,12 +152,16 @@ namespace CloudinaryDotNet
         /// Creates transformation object from results of <seealso cref="Actions.GetTransformResult"/>.
         /// </summary>
         /// <param name="dictionary">One can use <seealso cref="Actions.GetTransformResult.Info"/> array.</param>
-        public Transformation(Dictionary<string, object>[] dictionary) {
-            for (int i = 0; i < dictionary.Length; i++) {
-                if (i == dictionary.Length - 1) {
+        public Transformation(Dictionary<string, object>[] dictionary)
+        {
+            for (int i = 0; i < dictionary.Length; i++)
+            {
+                if (i == dictionary.Length - 1)
+                {
                     m_transformParams = dictionary[i];
                 }
-                else {
+                else
+                {
                     m_nestedTransforms.Add(new Transformation(dictionary[i]));
                 }
             }
@@ -157,14 +170,16 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Get the transformation parameters dictionary.
         /// </summary>
-        public Dictionary<string, object> Params {
+        public Dictionary<string, object> Params
+        {
             get { return m_transformParams; }
         }
 
         /// <summary>
         /// Get list of nested transformations.
         /// </summary>
-        public List<Transformation> NestedTransforms {
+        public List<Transformation> NestedTransforms
+        {
             get { return m_nestedTransforms; }
         }
 
@@ -181,7 +196,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Chain transformation.
         /// </summary>
-        public Transformation Chain() {
+        public Transformation Chain()
+        {
             Transformation nested = this.Clone();
             nested.m_nestedTransforms = null;
             m_nestedTransforms.Add(nested);
@@ -281,9 +297,11 @@ namespace CloudinaryDotNet
         /// Generate transformation string.
         /// </summary>
         /// <returns>Generated transformation.</returns>
-        public string GenerateThis() {
+        public string GenerateThis()
+        {
             string size = GetString(m_transformParams, "size");
-            if (size != null) {
+            if (size != null)
+            {
                 string[] sizeComponents = size.Split("x".ToArray());
                 m_transformParams.Add("width", sizeComponents[0]);
                 m_transformParams.Add("height", sizeComponents[1]);
@@ -324,12 +342,14 @@ namespace CloudinaryDotNet
                 m_htmlHeight = null;
 
             string background = GetString(m_transformParams, "background");
-            if (background != null) {
+            if (background != null)
+            {
                 background = background.Replace("^#", "rgb:");
             }
 
             string color = GetString(m_transformParams, "color");
-            if (color != null) {
+            if (color != null)
+            {
                 color = color.Replace("^#", "rgb:");
             }
 
@@ -452,7 +472,8 @@ namespace CloudinaryDotNet
                 components.Add(rawTransformation);
             }
 
-            if (components.Count > 0) {
+            if (components.Count > 0)
+            {
                 transformations.Add(string.Join(",", components.ToArray()));
             }
 
@@ -484,26 +505,31 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Get the HTML height parameter.
         /// </summary>
-        public string HtmlHeight {
+        public string HtmlHeight
+        {
             get { return m_htmlHeight; }
         }
 
-        private string[] GetStringArray(Dictionary<string, object> options, string key) {
+        private string[] GetStringArray(Dictionary<string, object> options, string key)
+        {
             if (!options.ContainsKey(key)) return new string[0];
 
             object value = options[key];
 
-            if (value is string[]) {
+            if (value is string[])
+            {
                 return (string[])value;
             }
-            else {
+            else
+            {
                 List<string> list = new List<string>();
                 list.Add(ToString(value));
                 return list.ToArray();
             }
         }
 
-        private string GetString(Dictionary<string, object> options, string key) {
+        private string GetString(Dictionary<string, object> options, string key)
+        {
             if (options.ContainsKey(key))
                 return ToString(options[key]);
             else
@@ -514,7 +540,8 @@ namespace CloudinaryDotNet
         /// Get this transformation represented as string.
         /// </summary>
         /// <returns>The transformation represented as string.</returns>
-        public override string ToString() {
+        public override string ToString()
+        {
             return Generate();
         }
 
@@ -522,15 +549,18 @@ namespace CloudinaryDotNet
         /// Get a deep cloned copy of this transformation.
         /// </summary>
         /// <returns>A deep cloned copy of this transformation.</returns>
-        public Transformation Clone() {
+        public Transformation Clone()
+        {
             Transformation t = (Transformation)this.MemberwiseClone();
 
             t.m_transformParams = new Dictionary<string, object>();
 
-            foreach (var key in m_transformParams.Keys) {
+            foreach (var key in m_transformParams.Keys)
+            {
                 var value = m_transformParams[key];
 
-                if (value is Array) {
+                if (value is Array)
+                {
                     t.Add(key, ((Array)value).Clone());
                 }
                 else if (value is string || value is ValueType || value is BaseExpression)
@@ -541,17 +571,21 @@ namespace CloudinaryDotNet
                 {
                     t.Add(key, ((Core.ICloneable)value).Clone());
                 }
-                else if (value is Dictionary<string, string>) {
+                else if (value is Dictionary<string, string>)
+                {
                     t.Add(key, new Dictionary<string, string>((Dictionary<string, string>)value));
                 }
-                else {
+                else
+                {
                     throw new Exception(string.Format("Couldn't clone parameter '{0}'!", key));
                 }
             }
 
-            if (m_nestedTransforms != null) {
+            if (m_nestedTransforms != null)
+            {
                 t.m_nestedTransforms = new List<Transformation>();
-                foreach (var nestedTransform in m_nestedTransforms) {
+                foreach (var nestedTransform in m_nestedTransforms)
+                {
                     t.m_nestedTransforms.Add(nestedTransform.Clone());
                 }
             }
@@ -559,7 +593,8 @@ namespace CloudinaryDotNet
             return t;
         }
 
-        object Core.ICloneable.Clone() {
+        object Core.ICloneable.Clone()
+        {
             return Clone();
         }
     }
