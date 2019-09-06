@@ -797,14 +797,17 @@ namespace CloudinaryDotNet
         /// DELETE
         /// </summary>
         DELETE,
+
         /// <summary>
         /// GET
         /// </summary>
         GET,
+
         /// <summary>
         /// POST
         /// </summary>
         POST,
+
         /// <summary>
         /// PUT
         /// </summary>

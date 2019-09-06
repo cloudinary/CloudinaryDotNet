@@ -27,14 +27,17 @@ namespace CloudinaryDotNet.Core
         /// Gets or sets the height of this <see cref="Rectangle"/> structure.
         /// </summary>
         public int Height { get; set; }
+
         /// <summary>
         /// Gets or sets the width of this <see cref="Rectangle"/> structure.
         /// </summary>
         public int Width { get; set; }
+
         /// <summary>
         /// Gets or sets the x-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure.
         /// </summary>
         public int X { get; set; }
+
         /// <summary>
         /// Gets or sets the y-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure.
         /// </summary>

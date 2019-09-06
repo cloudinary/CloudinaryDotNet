@@ -17,16 +17,19 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [EnumMember(Value = "pending")]
         Pending,
+
         /// <summary>
         /// Asset was rejected by moderation service.
         /// </summary>
         [EnumMember(Value = "rejected")]
         Rejected,
+
         /// <summary>
         /// Asset approved.
         /// </summary>
         [EnumMember(Value = "approved")]
         Approved,
+
         /// <summary>
         /// Moderation result was manually overridden.
         /// </summary>
@@ -44,11 +47,13 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [EnumMember(Value = "image")]
         Image,
+
         /// <summary>
         /// Any files (text, binary)
         /// </summary>
         [EnumMember(Value = "raw")]
         Raw,
+
         /// <summary>
         /// Video files in various formats (mp4, etc.)
         /// </summary>
@@ -112,6 +117,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public HttpStatusCode StatusCode { get; internal set; }
         private JToken rawJson;
+
         /// <summary>
         /// Raw JSON as received from the server.
         /// </summary>

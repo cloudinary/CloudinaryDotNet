@@ -16,6 +16,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [EnumMember(Value = "download")]
         Download,
+
         /// <summary>
         /// Generates an archive file based on the given parameter values (default target_format = zip), uploads the
         /// file to your Cloudinary account, returns a JSON response with the URLs for accessing the archive file,

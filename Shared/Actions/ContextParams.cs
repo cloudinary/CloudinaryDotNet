@@ -96,6 +96,7 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [EnumMember(Value = "add")]
         Add,
+
         /// <summary>
         /// Remove all contexts from resources with the given Public IDs.
         /// </summary>
