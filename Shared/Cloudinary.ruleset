@@ -71,7 +71,7 @@
     <Rule Id="SA1515" Action="Info" />
     <Rule Id="SA1516" Action="Warning" />
     <Rule Id="SA1517" Action="Warning" />
-    <Rule Id="SA1518" Action="Info" />
+    <Rule Id="SA1518" Action="Warning" />
     <Rule Id="SA1519" Action="Info" />
     <Rule Id="SA1520" Action="Info" />
     <Rule Id="SA1600" Action="Info" />
