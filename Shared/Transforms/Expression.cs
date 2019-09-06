@@ -50,8 +50,10 @@ namespace CloudinaryDotNet
         public static void CheckVariableName(string name)
         {
             if (string.IsNullOrWhiteSpace(name) || !Regex.IsMatch(name, VARIABLE_NAME_REGEX))
+            {
                 throw new ArgumentException(
                    $"The name `{name}` can include only alphanumeric characters and must begin with a letter.");
+            }
         }
 
         /// <summary>

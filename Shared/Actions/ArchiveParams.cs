@@ -116,8 +116,10 @@ namespace CloudinaryDotNet.Actions
                 m_fullyQualifiedPublicIds?.Any() != true &&
                 m_prefixes?.Any() != true &&
                 m_tags?.Any() != true)
+            {
                 throw new ArgumentException("At least one of the following \"filtering\" parameters needs " +
                                             "to be specified: PublicIds, FullyQualifiedPublicIds, Tags or Prefixes.");
+            }
 
             if (m_resourceType == "auto" ^ (m_fullyQualifiedPublicIds?.Any() ?? false))
             {

@@ -317,6 +317,7 @@ namespace CloudinaryDotNet
             }
 
             if (message.Headers != null)
+            {
                 foreach (var header in message.Headers.AllKeys)
                 {
                     if (header.StartsWith("X-FeatureRateLimit"))
@@ -334,6 +335,7 @@ namespace CloudinaryDotNet
                             result.Reset = t;
                     }
                 }
+            }
 
             result.StatusCode = message.StatusCode;
 

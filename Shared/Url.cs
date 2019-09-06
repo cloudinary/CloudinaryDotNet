@@ -1068,9 +1068,11 @@ namespace CloudinaryDotNet
                 sharedDomain |= privateCdn == Constants.SHARED_CDN;
 
                 if (sharedDomain && m_useSubDomain)
+                {
                     privateCdn = privateCdn.Replace(
                         "res.cloudinary.com",
                         "res-" + Shard(source) + ".cloudinary.com");
+                }
 
                 prefix = string.Format("https://{0}", privateCdn);
             }
