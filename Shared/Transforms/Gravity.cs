@@ -1,5 +1,4 @@
-﻿
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
     /// <summary>
     /// The gravity values.
