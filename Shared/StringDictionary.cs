@@ -86,6 +86,7 @@ namespace CloudinaryDotNet
 
                 return null;
             }
+
             set
             {
                 KeyValuePair<string, string> newItem = new KeyValuePair<string, string>(key, value);

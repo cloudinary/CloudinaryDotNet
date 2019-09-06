@@ -55,6 +55,7 @@ namespace CloudinaryDotNet.Actions
         public List<string> PublicIds
         {
             get { return m_publicIds; }
+
             set
             {
                 m_publicIds = value;
@@ -71,6 +72,7 @@ namespace CloudinaryDotNet.Actions
         public string Prefix
         {
             get { return m_prefix; }
+
             set
             {
                 m_publicIds = null;
@@ -87,6 +89,7 @@ namespace CloudinaryDotNet.Actions
         public string Tag
         {
             get { return m_tag; }
+
             set
             {
                 m_publicIds = null;
@@ -103,6 +106,7 @@ namespace CloudinaryDotNet.Actions
         public bool All
         {
             get { return m_all; }
+
             set
             {
                 if (value)

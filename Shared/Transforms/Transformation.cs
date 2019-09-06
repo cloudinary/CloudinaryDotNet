@@ -56,6 +56,7 @@ namespace CloudinaryDotNet
                 else
                     return m_responsiveWidthTransform;
             }
+
             set {
                 m_responsiveWidthTransform = value;
             }

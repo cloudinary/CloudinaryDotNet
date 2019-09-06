@@ -1239,6 +1239,7 @@ namespace CloudinaryDotNet
                 string path = Path;
                 return path.Substring(path.LastIndexOf("/") + 1);
             }
+
             set
             {
                 string path = Path;

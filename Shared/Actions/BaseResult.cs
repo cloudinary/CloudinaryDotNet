@@ -116,6 +116,7 @@ namespace CloudinaryDotNet.Actions
         /// HTTP status code.
         /// </summary>
         public HttpStatusCode StatusCode { get; internal set; }
+
         private JToken rawJson;
 
         /// <summary>
@@ -124,6 +125,7 @@ namespace CloudinaryDotNet.Actions
         public JToken JsonObj
         {
             get { return rawJson; }
+
             internal set
             {
                 rawJson = value;
