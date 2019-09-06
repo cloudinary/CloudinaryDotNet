@@ -113,11 +113,21 @@ namespace CloudinaryDotNet
                 }
 
                 task2.Wait();
-                if (task2.IsFaulted) { throw task2.Exception; }
+                if (task2.IsFaulted)
+                {
+                    throw task2.Exception;
+                }
+
                 response = task2.Result;
 
-                if (task2.IsCanceled) { }
-                if (task2.IsFaulted) { throw task2.Exception; }
+                if (task2.IsCanceled)
+                {
+                }
+
+                if (task2.IsFaulted)
+                {
+                    throw task2.Exception;
+                }
 
                 return response;
             }
