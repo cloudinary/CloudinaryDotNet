@@ -117,7 +117,9 @@ namespace CloudinaryDotNet.Actions
                     m_all = value;
                 }
                 else
+                {
                     m_all = value;
+                }
             }
         }
 

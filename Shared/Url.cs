@@ -671,11 +671,17 @@ namespace CloudinaryDotNet
         public Url Poster(object poster)
         {
             if (poster is string)
+            {
                 return PosterSource((string)poster);
+            }
             else if (poster is Url)
+            {
                 return PosterUrl((Url)poster);
+            }
             else if (poster is Transformation)
+            {
                 return PosterTransform((Transformation)poster);
+            }
             else if (poster == null || (poster is bool && !(bool)poster))
             {
                 PosterSource(string.Empty);

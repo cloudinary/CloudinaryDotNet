@@ -630,7 +630,9 @@ namespace CloudinaryDotNet
         protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
         {
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+            {
                 FinalizeUploadParameters(parameters);
+            }
             else if (parameters.ContainsKey("removeUnsignedParam"))
             {
                 parameters.Remove("unsigned");

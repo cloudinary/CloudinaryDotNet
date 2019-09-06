@@ -295,7 +295,9 @@ namespace CloudinaryDotNet
         public override int GetHashCode()
         {
             if (isNullToken)
+            {
                 return 0;
+            }
             else
             {
                 List<string> hashComponents = new List<string>();
