@@ -578,7 +578,6 @@ namespace CloudinaryDotNet
 
         private static string NormAutoRangeValue(object objectValue)
         {
-
             return objectValue != null && string.Equals(objectValue.ToString(), "auto")
                               ? objectValue.ToString()
                               : NormRangeValue(objectValue);

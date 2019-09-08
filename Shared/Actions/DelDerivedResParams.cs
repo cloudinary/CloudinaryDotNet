@@ -8,7 +8,6 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class DelDerivedResParams : BaseParams
     {
-
         string m_publicId = string.Empty;
         List<Transformation> m_tranformations = new List<Transformation>();
 

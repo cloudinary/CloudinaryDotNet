@@ -350,7 +350,6 @@ namespace CloudinaryDotNet
 
         private bool ReadBytes(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
         {
-
             bytesSent = 0;
             int toSend = 0;
             byte[] buf = new byte[ChunkSize];
