@@ -72,7 +72,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults.ToString());
+            }
 
             AddParam(dict, "start_at", StartAt);
             AddParam(dict, "next_cursor", NextCursor);
@@ -118,7 +120,9 @@ namespace CloudinaryDotNet.Actions
                 AddParam(dict, "public_ids", PublicIds);
 
                 if (dict.ContainsKey("direction"))
+                {
                     dict.Remove("direction");
+                }
             }
 
             return dict;
@@ -168,7 +172,9 @@ namespace CloudinaryDotNet.Actions
             base.Check();
 
             if (string.IsNullOrEmpty(Tag))
+            {
                 throw new ArgumentException("Tag must be set to filter resources by tag!");
+            }
         }
 
         /// <summary>
@@ -180,7 +186,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (dict.ContainsKey("type"))
+            {
                 dict.Remove("type");
+            }
 
             return dict;
         }
@@ -209,7 +217,9 @@ namespace CloudinaryDotNet.Actions
             base.Check();
 
             if (string.IsNullOrEmpty(ModerationKind))
+            {
                 throw new ArgumentException("ModerationKind must be set to filter resources by moderation kind/status!");
+            }
         }
 
         /// <summary>
@@ -221,7 +231,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (dict.ContainsKey("type"))
+            {
                 dict.Remove("type");
+            }
 
             return dict;
         }

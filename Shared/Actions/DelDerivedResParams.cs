@@ -49,10 +49,14 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if ((DerivedResources == null || DerivedResources.Count == 0) && (m_tranformations == null || m_tranformations.Count == 0))
+            {
                 throw new ArgumentException("At least one derived resource or transformation must be specified!");
+            }
 
             if (m_tranformations != null && (m_tranformations.Count > 0 && string.IsNullOrWhiteSpace(m_publicId)))
+            {
                 throw new ArgumentException("PublicId must be specified!");
+            }
         }
 
         /// <summary>
@@ -64,7 +68,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (DerivedResources != null && DerivedResources.Count > 0)
+            {
                 dict.Add("derived_resource_ids", DerivedResources);
+            }
 
             if (m_tranformations != null && m_tranformations.Count > 0)
             {

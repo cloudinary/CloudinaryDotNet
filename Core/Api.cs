@@ -164,7 +164,9 @@ namespace CloudinaryDotNet
             if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
             {
                 if (UseChunkedEncoding)
+                {
                     request.Headers.Add("Transfer-Encoding", "chunked");
+                }
 
                 PrepareRequestContent(request, parameters, file, extraHeaders);
             }
@@ -374,7 +376,9 @@ namespace CloudinaryDotNet
             where T : BaseResult, new()
         {
             if (response == null)
+            {
                 throw new ArgumentNullException("response");
+            }
 
             HttpResponseMessage message = (HttpResponseMessage)response;
 
@@ -407,13 +411,19 @@ namespace CloudinaryDotNet
                         DateTime t;
 
                         if (header.Key.EndsWith("Limit") && long.TryParse(header.Value.First(), out l))
+                        {
                             result.Limit = l;
+                        }
 
                         if (header.Key.EndsWith("Remaining") && long.TryParse(header.Value.First(), out l))
+                        {
                             result.Remaining = l;
+                        }
 
                         if (header.Key.EndsWith("Reset") && DateTime.TryParse(header.Value.First(), out t))
+                        {
                             result.Reset = t;
+                        }
                     }
                 }
             }

@@ -111,7 +111,10 @@ namespace CloudinaryDotNet
             catch (WebException ex)
             {
                 response = ex.Response as HttpWebResponse;
-                if (response == null) throw;
+                if (response == null)
+                {
+                    throw;
+                }
             }
 
             return response;
@@ -150,7 +153,9 @@ namespace CloudinaryDotNet
                 request.AllowAutoRedirect = false;
 
                 if (UseChunkedEncoding)
+                {
                     request.SendChunked = true;
+                }
 
                 PrepareRequestContent(ref request, parameters, file);
             }
@@ -227,7 +232,9 @@ namespace CloudinaryDotNet
         public override string BuildCallbackUrl(string path = "")
         {
             if (string.IsNullOrEmpty(path))
+            {
                 path = "/Content/cloudinary_cors.html";
+            }
 
             if (Regex.IsMatch(path.ToLower(), "^https?:/.*"))
             {
@@ -236,9 +243,13 @@ namespace CloudinaryDotNet
             else
             {
                 if (HttpContext.Current != null)
+                {
                     return new Uri(HttpContext.Current.Request.Url, path).ToString();
+                }
                 else
+                {
                     throw new HttpException("Http context is not set. Either use this method in the right context or provide an absolute path to file!");
+                }
             }
         }
 
@@ -295,7 +306,9 @@ namespace CloudinaryDotNet
             where T : BaseResult, new()
         {
             if (response == null)
+            {
                 throw new ArgumentNullException("response");
+            }
 
             HttpWebResponse message = (HttpWebResponse)response;
 
@@ -326,13 +339,19 @@ namespace CloudinaryDotNet
                         DateTime t;
 
                         if (header.EndsWith("Limit") && long.TryParse(message.Headers[header], out l))
+                        {
                             result.Limit = l;
+                        }
 
                         if (header.EndsWith("Remaining") && long.TryParse(message.Headers[header], out l))
+                        {
                             result.Remaining = l;
+                        }
 
                         if (header.EndsWith("Reset") && DateTime.TryParse(message.Headers[header], out t))
+                        {
                             result.Reset = t;
+                        }
                     }
                 }
             }

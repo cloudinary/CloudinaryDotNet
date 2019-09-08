@@ -83,7 +83,9 @@ namespace CloudinaryDotNet
                 foreach (var item in m_list)
                 {
                     if (item.Key == key)
+                    {
                         return item.Value;
+                    }
                 }
 
                 return null;
@@ -103,7 +105,9 @@ namespace CloudinaryDotNet
                 }
 
                 if (!updated)
+                {
                     m_list.Add(newItem);
+                }
             }
         }
 
@@ -205,7 +209,9 @@ namespace CloudinaryDotNet
             foreach (var item in m_list)
             {
                 if (item.Key == key)
+                {
                     return true;
+                }
             }
 
             return false;

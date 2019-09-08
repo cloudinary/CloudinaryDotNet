@@ -32,7 +32,9 @@ namespace CloudinaryDotNet.Actions
         {
             base.SetValues(source);
             if (Mappings == null)
+            {
                 Mappings = new Dictionary<string, string>();
+            }
 
             if (source != null)
             {
@@ -55,7 +57,9 @@ namespace CloudinaryDotNet.Actions
                 var folder = source.Value<string>("folder") ?? string.Empty;
                 var template = source.Value<string>("template") ?? string.Empty;
                 if (!string.IsNullOrEmpty(folder))
+                {
                     Mappings.Add(folder, template);
+                }
 
                 // parsing NextCursor
                 NextCursor = source.Value<string>("next_cursor") ?? string.Empty;

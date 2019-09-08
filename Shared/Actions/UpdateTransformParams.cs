@@ -40,7 +40,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(Transformation))
+            {
                 throw new ArgumentException("Transformation must be set!");
+            }
         }
 
         /// <summary>
@@ -54,7 +56,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "allowed_for_strict", Strict ? "true" : "false");
 
             if (UnsafeTransform != null)
+            {
                 AddParam(dict, "unsafe_update", UnsafeTransform.Generate());
+            }
 
             return dict;
         }

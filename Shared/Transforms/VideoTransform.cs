@@ -27,7 +27,9 @@ namespace CloudinaryDotNet
                 for (int i = 0; i < codecParams.Length; i += 2)
                 {
                     if (!dict.ContainsKey(codecParams[i]))
+                    {
                         dict.Add(codecParams[i], codecParams[i + 1]);
+                    }
                 }
 
                 return VideoCodec(dict);
@@ -74,7 +76,9 @@ namespace CloudinaryDotNet
         public Transformation Fps(double? min, double? max)
         {
             if (!min.HasValue && !max.HasValue)
+            {
                 throw new ArgumentException("Both arguments 'min' and 'max' can not be null.");
+            }
 
             return Fps($"{min}-{max}");
         }
@@ -88,7 +92,9 @@ namespace CloudinaryDotNet
         public Transformation Fps(string min, string max)
         {
             if (string.IsNullOrEmpty(min) && string.IsNullOrEmpty(max))
+            {
                 throw new ArgumentException("Both arguments 'min' and 'max' can not be null.");
+            }
 
             return Fps($"{min}-{max}");
         }
@@ -364,7 +370,11 @@ namespace CloudinaryDotNet
         /// <param name="value">Range of strings representing an offset value.</param>
         public Transformation Offset(params string[] value)
         {
-            if (value.Length < 2) throw new ArgumentException("Offset range must include at least 2 items.");
+            if (value.Length < 2)
+            {
+                throw new ArgumentException("Offset range must include at least 2 items.");
+            }
+
             return Add("offset", value);
         }
 
@@ -376,7 +386,11 @@ namespace CloudinaryDotNet
         /// <param name="value">Range of floats representing an offset value.</param>
         public Transformation Offset(params float[] value)
         {
-            if (value.Length < 2) throw new ArgumentException("Offset range must include at least 2 items.");
+            if (value.Length < 2)
+            {
+                throw new ArgumentException("Offset range must include at least 2 items.");
+            }
+
             var arr = new object[] { (object)value[0], (object)value[1] };
             return Offset(arr);
         }
@@ -389,7 +403,11 @@ namespace CloudinaryDotNet
         /// <param name="value">Range of doubles representing an offset value.</param>
         public Transformation Offset(params double[] value)
         {
-            if (value.Length < 2) throw new ArgumentException("Offset range must include at least 2 items.");
+            if (value.Length < 2)
+            {
+                throw new ArgumentException("Offset range must include at least 2 items.");
+            }
+
             var arr = new object[] { (object)value[0], (object)value[1] };
             return Offset(arr);
         }
@@ -402,7 +420,11 @@ namespace CloudinaryDotNet
         /// <param name="value">Range of objects representing an offset value.</param>
         private Transformation Offset(params object[] value)
         {
-            if (value.Length < 2) throw new ArgumentException("Offset range must include at least 2 items.");
+            if (value.Length < 2)
+            {
+                throw new ArgumentException("Offset range must include at least 2 items.");
+            }
+
             return Add("offset", value);
         }
 
@@ -484,7 +506,11 @@ namespace CloudinaryDotNet
         /// <param name="value">Int representing the time between keyframes.</param>
         public Transformation KeyframeInterval(int value)
         {
-            if (value <= 0) throw new ArgumentException("The range for keyframe interval should be greater than 0.");
+            if (value <= 0)
+            {
+                throw new ArgumentException("The range for keyframe interval should be greater than 0.");
+            }
+
             return Add("keyframe_interval", string.Format("{0:0.0}", value));
         }
 
@@ -494,7 +520,11 @@ namespace CloudinaryDotNet
         /// <param name="value">Float representing the time between keyframes.</param>
         public Transformation KeyframeInterval(float value)
         {
-            if (value <= 0) throw new ArgumentException("The range for keyframe interval should be greater than 0.");
+            if (value <= 0)
+            {
+                throw new ArgumentException("The range for keyframe interval should be greater than 0.");
+            }
+
             return Add("keyframe_interval", value);
         }
 
@@ -527,7 +557,11 @@ namespace CloudinaryDotNet
             {
                 string s = null;
                 var @params = (Dictionary<string, string>)codecParam;
-                if (!@params.TryGetValue("codec", out s)) return null;
+                if (!@params.TryGetValue("codec", out s))
+                {
+                    return null;
+                }
+
                 sb.Append(s);
                 if (@params.TryGetValue("profile", out s))
                 {
@@ -552,13 +586,22 @@ namespace CloudinaryDotNet
 
         private static string NormRangeValue(object objectValue)
         {
-            if (objectValue == null) return null;
+            if (objectValue == null)
+            {
+                return null;
+            }
 
             var value = ToString(objectValue);
-            if (string.IsNullOrEmpty(value)) return null;
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
 
             var match = RANGE_VALUE_RE.Match(value);
-            if (!match.Success) return null;
+            if (!match.Success)
+            {
+                return null;
+            }
 
             string modifier = string.Empty;
             if (match.Groups.Count == 3 && !string.IsNullOrEmpty(match.Groups[2].Value))
@@ -575,7 +618,9 @@ namespace CloudinaryDotNet
             {
                 var rangeStr = (string)range;
                 if (RANGE_RE.IsMatch(rangeStr))
+                {
                     return rangeStr.Split(new string[] { ".." }, StringSplitOptions.RemoveEmptyEntries);
+                }
             }
             else if (range is Array)
             {

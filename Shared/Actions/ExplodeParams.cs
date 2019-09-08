@@ -50,10 +50,14 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(PublicId))
+            {
                 throw new ArgumentException("PublicId must be set!");
+            }
 
             if (Transformation == null)
+            {
                 throw new ArgumentException("Transformation must be set!");
+            }
         }
 
         /// <summary>
@@ -69,7 +73,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "format", Format);
 
             if (Transformation != null)
+            {
                 AddParam(dict, "transformation", Transformation.Generate());
+            }
 
             return dict;
         }

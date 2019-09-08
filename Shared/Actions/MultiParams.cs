@@ -50,7 +50,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(Tag))
+            {
                 throw new ArgumentException("Tag must be set!");
+            }
         }
 
         /// <summary>
@@ -67,7 +69,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "async", Async);
 
             if (Transformation != null)
+            {
                 AddParam(dict, "transformation", Transformation.Generate());
+            }
 
             return dict;
         }

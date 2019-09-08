@@ -123,12 +123,16 @@ namespace CloudinaryDotNet
         public ApiShared(string cloudinaryUrl)
         {
             if (string.IsNullOrEmpty(cloudinaryUrl))
+            {
                 throw new ArgumentException("Valid cloudinary init string must be provided!");
+            }
 
             Uri cloudinaryUri = new Uri(cloudinaryUrl);
 
             if (string.IsNullOrEmpty(cloudinaryUri.Host))
+            {
                 throw new ArgumentException("Cloud name must be specified as host name in URL!");
+            }
 
             string[] creds = cloudinaryUri.UserInfo.Split(':');
             Account = new Account(cloudinaryUri.Host, creds[0], creds[1]);
@@ -215,10 +219,14 @@ namespace CloudinaryDotNet
         public ApiShared(Account account)
         {
             if (account == null)
+            {
                 throw new ArgumentException("Account can't be null!");
+            }
 
             if (string.IsNullOrEmpty(account.Cloud))
+            {
                 throw new ArgumentException("Cloud name must be specified in Account!");
+            }
 
             UsePrivateCdn = false;
             Account = account;
@@ -382,7 +390,9 @@ namespace CloudinaryDotNet
                 typeof(EnumMemberAttribute), false);
 
             if (attrs.Length == 0)
+            {
                 throw new ArgumentException("Enum fields must be decorated with EnumMemberAttribute!");
+            }
 
             return attrs[0].Value;
         }
@@ -402,10 +412,14 @@ namespace CloudinaryDotNet
                     typeof(EnumMemberAttribute), false);
 
                 if (attrs.Length == 0)
+                {
                     continue;
+                }
 
                 if (s == attrs[0].Value)
+                {
                     return (T)fi.GetValue(null);
+                }
             }
 
             return default(T);
@@ -431,14 +445,20 @@ namespace CloudinaryDotNet
         public string PrepareUploadParams(IDictionary<string, object> parameters)
         {
             if (parameters == null)
+            {
                 parameters = new SortedDictionary<string, object>();
+            }
 
             if (!(parameters is SortedDictionary<string, object>))
+            {
                 parameters = new SortedDictionary<string, object>(parameters);
+            }
 
             string path = string.Empty;
             if (parameters.ContainsKey("callback") && parameters["callback"] != null)
+            {
                 path = parameters["callback"].ToString();
+            }
 
             try
             {
@@ -449,7 +469,9 @@ namespace CloudinaryDotNet
             }
 
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+            {
                 FinalizeUploadParameters(parameters);
+            }
 
             return JsonConvert.SerializeObject(parameters);
         }
@@ -477,7 +499,10 @@ namespace CloudinaryDotNet
 
             var hash = Utils.ComputeHash(signBase.ToString());
             StringBuilder sign = new StringBuilder();
-            foreach (byte b in hash) sign.Append(b.ToString("x2"));
+            foreach (byte b in hash)
+            {
+                sign.Append(b.ToString("x2"));
+            }
 
             return sign.ToString();
         }
@@ -525,7 +550,9 @@ namespace CloudinaryDotNet
             var currentTimestamp = Utils.UnixTimeNowSeconds();
             var isSignatureExpired = timestamp <= currentTimestamp - validFor;
             if (isSignatureExpired)
+            {
                 return false;
+            }
 
             var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}");
 
@@ -559,7 +586,9 @@ namespace CloudinaryDotNet
         protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
         {
             if (parameters == null)
+            {
                 parameters = new SortedDictionary<string, object>();
+            }
 
             parameters.Add("upload_preset", preset);
             parameters.Add("unsigned", true);
@@ -579,10 +608,14 @@ namespace CloudinaryDotNet
         public string BuildUploadFormShared(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
             if (htmlOptions == null)
+            {
                 htmlOptions = new Dictionary<string, string>();
+            }
 
             if (string.IsNullOrEmpty(resourceType))
+            {
                 resourceType = "auto";
+            }
 
             StringBuilder builder = new StringBuilder();
 
@@ -602,7 +635,10 @@ namespace CloudinaryDotNet
 
             foreach (var item in htmlOptions)
             {
-                if (item.Key == "class") continue;
+                if (item.Key == "class")
+                {
+                    continue;
+                }
 
                 builder.
                     Append("' ").

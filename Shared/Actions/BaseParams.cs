@@ -61,7 +61,9 @@ namespace CloudinaryDotNet.Actions
         protected void AddParam(SortedDictionary<string, object> dict, string key, string value)
         {
             if (!string.IsNullOrEmpty(value))
+            {
                 dict.Add(key, value);
+            }
         }
 
         /// <summary>
@@ -73,7 +75,9 @@ namespace CloudinaryDotNet.Actions
         protected void AddParam(SortedDictionary<string, object> dict, string key, DateTime value)
         {
             if (value != DateTime.MinValue)
+            {
                 dict.Add(key, value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            }
         }
 
         /// <summary>
@@ -96,7 +100,9 @@ namespace CloudinaryDotNet.Actions
         protected void AddParam(SortedDictionary<string, object> dict, string key, IEnumerable<string> value)
         {
             if (value != null)
+            {
                 dict.Add(key, value);
+            }
         }
 
         /// <summary>
@@ -118,7 +124,10 @@ namespace CloudinaryDotNet.Actions
         /// <param name="value">The value.</param>
         protected void AddParam(SortedDictionary<string, object> dict, string key, bool? value)
         {
-            if (!value.HasValue) return;
+            if (!value.HasValue)
+            {
+                return;
+            }
 
             AddParam(dict, key, value.Value);
         }
@@ -132,7 +141,10 @@ namespace CloudinaryDotNet.Actions
         /// <param name="coordObj">The value.</param>
         protected void AddCoordinates(SortedDictionary<string, object> dict, string key, object coordObj)
         {
-            if (coordObj == null) return;
+            if (coordObj == null)
+            {
+                return;
+            }
 
             if (coordObj is Rectangle)
             {

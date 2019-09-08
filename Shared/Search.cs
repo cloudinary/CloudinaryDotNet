@@ -117,13 +117,19 @@ namespace CloudinaryDotNet
             Dictionary<string, object> queryParams = new Dictionary<string, object>(searchParams);
 
             if (withFieldParam.Count > 0)
+            {
                 queryParams.Add("with_field", withFieldParam);
+            }
 
             if (sortByParam.Count > 0)
+            {
                 queryParams.Add("sort_by", sortByParam);
+            }
 
             if (aggregateParam.Count > 0)
+            {
                 queryParams.Add("aggregate", aggregateParam);
+            }
 
             return queryParams;
         }

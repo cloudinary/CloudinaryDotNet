@@ -434,58 +434,92 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "mode", Api.GetCloudinaryParam(Mode()));
 
             if (m_tags != null && m_tags.Count > 0)
+            {
                 AddParam(dict, "tags", m_tags);
+            }
 
             if (m_publicIds != null && m_publicIds.Count > 0)
+            {
                 AddParam(dict, "public_ids", m_publicIds);
+            }
 
             if (m_fullyQualifiedPublicIds != null && m_fullyQualifiedPublicIds.Count > 0)
+            {
                 AddParam(dict, "fully_qualified_public_ids", m_fullyQualifiedPublicIds);
+            }
 
             if (m_prefixes != null && m_prefixes.Count > 0)
+            {
                 AddParam(dict, "prefixes", m_prefixes);
+            }
 
             if (!string.IsNullOrEmpty(m_type))
+            {
                 AddParam(dict, "type", m_type);
+            }
 
             if (m_transformations != null && m_transformations.Count > 0)
+            {
                 AddParam(dict, "transformations", string.Join("/", m_transformations));
+            }
 
             if (m_targetFormat != ArchiveFormat.Zip)
+            {
                 AddParam(dict, "target_format", Api.GetCloudinaryParam(m_targetFormat));
+            }
 
             if (m_flattenFolders)
+            {
                 AddParam(dict, "flatten_folders", m_flattenFolders);
+            }
 
             if (m_flattenTransformations)
+            {
                 AddParam(dict, "flatten_transformations", m_flattenTransformations);
+            }
 
             if (m_useOriginalFilename)
+            {
                 AddParam(dict, "use_original_filename", m_useOriginalFilename);
+            }
 
             if (!string.IsNullOrEmpty(m_notificationUrl))
+            {
                 AddParam(dict, "notification_url", m_notificationUrl);
+            }
 
             if (m_keepDerived)
+            {
                 AddParam(dict, "keep_derived", m_keepDerived);
+            }
 
             if (m_skipTransformationName)
+            {
                 AddParam(dict, "skip_transformation_name", m_skipTransformationName);
+            }
 
             if (m_mode == ArchiveCallMode.Create)
             {
                 if (m_async)
+                {
                     AddParam(dict, "async", m_async);
+                }
 
                 if (!string.IsNullOrEmpty(m_targetPublicId))
+                {
                     AddParam(dict, "target_public_id", m_targetPublicId);
+                }
 
                 if (m_targetTags != null && m_targetTags.Count > 0)
+                {
                     AddParam(dict, "target_tags", m_targetTags);
+                }
             }
 
             if (m_expiresAt > 0 && m_mode == ArchiveCallMode.Download)
+            {
                 AddParam(dict, "expires_at", m_expiresAt);
+            }
 
             return dict;
         }

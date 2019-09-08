@@ -25,7 +25,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(Key))
+            {
                 throw new InvalidOperationException("Key must be set to list resources by context.");
+            }
         }
 
         /// <summary>

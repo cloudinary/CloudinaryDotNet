@@ -24,7 +24,9 @@ namespace CloudinaryDotNet
             : this()
         {
             if (!string.IsNullOrEmpty(condition))
+            {
                 m_expressions.Add(Normalize(condition));
+            }
         }
 
         /// <summary>

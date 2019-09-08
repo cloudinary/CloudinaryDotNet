@@ -202,13 +202,17 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "return_delete_token", ReturnDeleteToken);
 
             if (AutoTagging.HasValue)
+            {
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
+            }
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
 
             if (Transformation != null)
+            {
                 AddParam(dict, "transformation", Transformation.Generate());
+            }
 
             if (EagerTransforms != null && EagerTransforms.Count > 0)
             {

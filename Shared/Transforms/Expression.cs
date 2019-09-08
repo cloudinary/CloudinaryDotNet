@@ -28,7 +28,9 @@ namespace CloudinaryDotNet
             : this()
         {
             if (!string.IsNullOrEmpty(name))
+            {
                 m_expressions.Add(name);
+            }
         }
 
         /// <summary>

@@ -158,9 +158,20 @@ namespace CloudinaryDotNet
 
         private static bool IsSafe(char ch)
         {
-            if (ch >= 0x30 && ch <= 0x39) return true; // 0-9
-            if (ch >= 0x41 && ch <= 0x5a) return true; // A-Z
-            if (ch >= 0x61 && ch <= 0x7a) return true; // a-z
+            if (ch >= 0x30 && ch <= 0x39)
+            {
+                return true; // 0-9
+            }
+
+            if (ch >= 0x41 && ch <= 0x5a)
+            {
+                return true; // A-Z
+            }
+
+            if (ch >= 0x61 && ch <= 0x7a)
+            {
+                return true; // a-z
+            }
 
             return "/:-_.*".IndexOf(ch) >= 0;
         }
@@ -357,7 +368,11 @@ namespace CloudinaryDotNet
         {
             get
             {
-                if (m_transformation == null) m_transformation = new Transformation();
+                if (m_transformation == null)
+                {
+                    m_transformation = new Transformation();
+                }
+
                 return m_transformation;
             }
         }
@@ -399,7 +414,9 @@ namespace CloudinaryDotNet
         public Url Add(string part)
         {
             if (!string.IsNullOrEmpty(part))
+            {
                 m_customParts.Add(part);
+            }
 
             return this;
         }
@@ -411,7 +428,9 @@ namespace CloudinaryDotNet
         public Url VideoSources(params VideoSource[] videoSources)
         {
             if (videoSources != null && videoSources.Length > 0)
+            {
                 m_videoSources = videoSources;
+            }
 
             return this;
         }
@@ -625,7 +644,9 @@ namespace CloudinaryDotNet
         public Url SourceTransformationFor(string source, Transformation transform)
         {
             if (m_sourceTransforms == null)
+            {
                 m_sourceTransforms = new Dictionary<string, Transformation>();
+            }
 
             m_sourceTransforms.Add(source, transform);
 
@@ -700,7 +721,11 @@ namespace CloudinaryDotNet
         public string BuildSpriteCss(string source)
         {
             m_action = "sprite";
-            if (!source.EndsWith(".css")) FormatValue = "css";
+            if (!source.EndsWith(".css"))
+            {
+                FormatValue = "css";
+            }
+
             return BuildUrl(source);
         }
 
@@ -722,15 +747,21 @@ namespace CloudinaryDotNet
         public string BuildImageTag(string source, StringDictionary dict = null)
         {
             if (dict == null)
+            {
                 dict = new StringDictionary();
+            }
 
             string url = BuildUrl(source);
 
             if (!string.IsNullOrEmpty(Transformation.HtmlWidth))
+            {
                 dict.Add("width", Transformation.HtmlWidth);
+            }
 
             if (!string.IsNullOrEmpty(Transformation.HtmlHeight))
+            {
                 dict.Add("height", Transformation.HtmlHeight);
+            }
 
             if (Transformation.HiDpi || Transformation.IsResponsive)
             {
@@ -740,14 +771,19 @@ namespace CloudinaryDotNet
                 dict.Add("data-src", url);
                 var responsivePlaceholder = dict.Remove("responsive_placeholder");
                 if (responsivePlaceholder == "blank")
+                {
                     responsivePlaceholder = CL_BLANK;
+                }
+
                 url = responsivePlaceholder;
             }
 
             var sb = new StringBuilder();
             sb.Append("<img");
             if (!string.IsNullOrEmpty(url))
+            {
                 sb.Append(" src=\"").Append(url).Append("\"");
+            }
 
             foreach (var item in dict)
             {
@@ -781,17 +817,23 @@ namespace CloudinaryDotNet
         public string BuildVideoTag(string source, StringDictionary dict = null)
         {
             if (dict == null)
+            {
                 dict = new StringDictionary();
+            }
 
             source = VIDEO_EXTENSION_RE.Replace(source, string.Empty, 1);
 
             if (string.IsNullOrEmpty(m_resourceType))
+            {
                 m_resourceType = "video";
+            }
 
             string posterUrl = FinalizePosterUrl(source);
 
             if (!string.IsNullOrEmpty(posterUrl))
+            {
                 dict.Add("poster", posterUrl);
+            }
 
             List<string> tags = GetVideoSourceTags(source);
 
@@ -810,14 +852,22 @@ namespace CloudinaryDotNet
             }
 
             if (dict.ContainsKey("html_height"))
+            {
                 dict["height"] = dict.Remove("html_height");
+            }
             else if (Transformation.HtmlHeight != null)
+            {
                 dict["height"] = Transformation.HtmlHeight;
+            }
 
             if (dict.ContainsKey("html_width"))
+            {
                 dict["width"] = dict.Remove("html_width");
+            }
             else if (Transformation.HtmlWidth != null)
+            {
                 dict["width"] = Transformation.HtmlWidth;
+            }
 
             bool wasSorted = dict.Sort;
             dict.Sort = true;
@@ -825,7 +875,9 @@ namespace CloudinaryDotNet
             {
                 sb.Append(" ").Append(item.Key);
                 if (item.Value != null)
+                {
                     sb.Append("='").Append(item.Value).Append("'");
+                }
             }
 
             dict.Sort = wasSorted;
@@ -914,7 +966,9 @@ namespace CloudinaryDotNet
             else if (m_posterSource != null)
             {
                 if (!string.IsNullOrEmpty(m_posterSource))
+                {
                     posterUrl = Clone().Format("jpg").BuildUrl(m_posterSource);
+                }
             }
             else
             {
@@ -941,13 +995,19 @@ namespace CloudinaryDotNet
         public string BuildUrl(string source)
         {
             if (string.IsNullOrEmpty(m_cloudName))
+            {
                 throw new ArgumentException("cloudName must be specified!");
+            }
 
             if (source == null)
+            {
                 source = m_source;
+            }
 
             if (source == null)
+            {
                 source = string.Empty;
+            }
 
             if (Regex.IsMatch(source.ToLower(), "^https?:/.*") &&
                 (m_action == "upload" || m_action == "asset"))
@@ -997,7 +1057,9 @@ namespace CloudinaryDotNet
             if (m_signed && (m_AuthToken == null && CloudinaryConfiguration.AuthToken == null))
             {
                 if (m_signProvider == null)
+                {
                     throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
+                }
 
                 var signedPart = string.Join("/", new string[] { transformationStr, src.SourceToSign });
                 signedPart = Regex.Replace(signedPart, "^/+", string.Empty);
@@ -1046,7 +1108,9 @@ namespace CloudinaryDotNet
                 if (!string.IsNullOrEmpty(m_suffix))
                 {
                     if (Regex.IsMatch(m_suffix, "[\\./]"))
+                    {
                         throw new ArgumentException("Suffix should not include . or /!");
+                    }
 
                     src.Source += "/" + m_suffix;
                 }
@@ -1174,13 +1238,19 @@ namespace CloudinaryDotNet
             Url newUrl = (Url)this.MemberwiseClone();
 
             if (m_transformation != null)
+            {
                 newUrl.m_transformation = this.m_transformation.Clone();
+            }
 
             if (m_posterTransformation != null)
+            {
                 newUrl.m_posterTransformation = m_posterTransformation.Clone();
+            }
 
             if (m_posterUrl != null)
+            {
                 newUrl.m_posterUrl = m_posterUrl.Clone();
+            }
 
             if (m_sourceTypes != null)
             {
@@ -1406,7 +1476,10 @@ namespace CloudinaryDotNet
 
         private void BuildQueryString()
         {
-            if (queryString == null) return;
+            if (queryString == null)
+            {
+                return;
+            }
 
             int count = queryString.Count;
 

@@ -144,7 +144,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(PublicId))
+            {
                 throw new ArgumentException("PublicId must be set!");
+            }
         }
 
         /// <summary>
@@ -165,13 +167,19 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "background_removal", BackgroundRemoval);
 
             if (!string.IsNullOrWhiteSpace(NotificationUrl))
+            {
                 AddParam(dict, "notification_url", NotificationUrl);
+            }
 
             if (ModerationStatus != Actions.ModerationStatus.Pending)
+            {
                 AddParam(dict, "moderation_status", ApiShared.GetCloudinaryParam(ModerationStatus));
+            }
 
             if (AutoTagging.HasValue)
+            {
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
+            }
 
             AddParam(dict, "raw_convert", RawConvert);
 
@@ -184,7 +192,9 @@ namespace CloudinaryDotNet.Actions
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
 
             if (!string.IsNullOrWhiteSpace(QualityOverride))
+            {
                 AddParam(dict, "quality_override", QualityOverride);
+            }
 
             if (Headers != null && Headers.Count > 0)
             {

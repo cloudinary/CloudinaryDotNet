@@ -55,9 +55,13 @@ namespace CloudinaryDotNet
             get
             {
                 if (m_responsiveWidthTransform == null)
+                {
                     return DEFAULT_RESPONSIVE_WIDTH_TRANSFORM;
+                }
                 else
+                {
                     return m_responsiveWidthTransform;
+                }
             }
 
             set
@@ -73,12 +77,20 @@ namespace CloudinaryDotNet
 
         private static string ToString(object obj)
         {
-            if (obj == null) return null;
+            if (obj == null)
+            {
+                return null;
+            }
 
-            if (obj is string) return obj.ToString();
+            if (obj is string)
+            {
+                return obj.ToString();
+            }
 
             if (obj is float || obj is double)
+            {
                 return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
+            }
 
             return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
         }
@@ -117,7 +129,9 @@ namespace CloudinaryDotNet
         public Transformation(List<Transformation> transforms)
         {
             if (transforms != null)
+            {
                 m_nestedTransforms = transforms;
+            }
         }
 
         /// <summary>
@@ -130,7 +144,9 @@ namespace CloudinaryDotNet
             {
                 string[] splittedPair = pair.Split('=');
                 if (splittedPair.Length != 2)
+                {
                     throw new ArgumentException(string.Format("Couldn't parse '{0}'!", pair));
+                }
 
                 Add(splittedPair[0], splittedPair[1]);
             }
@@ -273,9 +289,13 @@ namespace CloudinaryDotNet
         public Transformation Add(string key, object value)
         {
             if (m_transformParams.ContainsKey(key))
+            {
                 m_transformParams[key] = value;
+            }
             else
+            {
                 m_transformParams.Add(key, value);
+            }
 
             return this;
         }
@@ -290,7 +310,9 @@ namespace CloudinaryDotNet
 
             var thisTransform = GenerateThis();
             if (!string.IsNullOrEmpty(thisTransform))
+            {
                 parts.Add(thisTransform);
+            }
 
             return string.Join("/", parts.ToArray());
         }
@@ -313,10 +335,14 @@ namespace CloudinaryDotNet
             string height = GetString(m_transformParams, "height");
 
             if (m_htmlWidth == null)
+            {
                 m_htmlWidth = width;
+            }
 
             if (m_htmlHeight == null)
+            {
                 m_htmlHeight = height;
+            }
 
             bool hasLayer = !string.IsNullOrEmpty(GetString(m_transformParams, "overlay")) ||
                 !string.IsNullOrEmpty(GetString(m_transformParams, "underlay"));
@@ -326,7 +352,9 @@ namespace CloudinaryDotNet
 
             bool isResponsive;
             if (!bool.TryParse(GetString(m_transformParams, "responsive_width"), out isResponsive))
+            {
                 isResponsive = DefaultIsResponsive;
+            }
 
             bool noHtmlSizes = hasLayer || !string.IsNullOrEmpty(angle) || crop == "fit" || crop == "limit";
 
@@ -335,13 +363,17 @@ namespace CloudinaryDotNet
                                                  float.TryParse(width, out var wResult) && wResult < 1 ||
                                                  noHtmlSizes ||
                                                  isResponsive))
+            {
                 m_htmlWidth = null;
+            }
 
             if (!string.IsNullOrEmpty(height) && (Expression.ValueContainsVariable(height) ||
                                                   float.TryParse(height, out var hResult) && hResult < 1 ||
                                                   noHtmlSizes ||
                                                   isResponsive))
+            {
                 m_htmlHeight = null;
+            }
 
             string background = GetString(m_transformParams, "background");
             if (background != null)
@@ -367,11 +399,15 @@ namespace CloudinaryDotNet
 
             string startOffset = null;
             if (m_transformParams.TryGetValue("start_offset", out obj))
+            {
                 startOffset = NormAutoRangeValue(obj);
+            }
 
             string endOffset = null;
             if (m_transformParams.TryGetValue("end_offset", out obj))
+            {
                 endOffset = NormRangeValue(obj);
+            }
 
             if (m_transformParams.TryGetValue("offset", out obj))
             {
@@ -385,17 +421,24 @@ namespace CloudinaryDotNet
 
             string duration = null;
             if (m_transformParams.TryGetValue("duration", out obj))
+            {
                 duration = NormRangeValue(obj);
+            }
 
             string videoCodec = m_transformParams.TryGetValue("video_codec", out obj) ? ProcessVideoCodec(obj) : null;
 
             if (!m_transformParams.TryGetValue("dpr", out object dpr))
+            {
                 dpr = DefaultDpr;
+            }
+
             var dprStr = ToString(dpr);
             if (!string.IsNullOrEmpty(dprStr))
             {
                 if (dprStr.ToLower() == "auto")
+                {
                     HiDpi = true;
+                }
             }
 
             var parameters = new SortedList<string, string>();
@@ -428,7 +471,9 @@ namespace CloudinaryDotNet
             for (int i = 0; i < SimpleParams.Length; i += 2)
             {
                 if (m_transformParams.TryGetValue(SimpleParams[i + 1], out obj))
+                {
                     parameters.Add(SimpleParams[i], ToString(obj));
+                }
             }
 
             List<string> components = new List<string>();
@@ -465,7 +510,9 @@ namespace CloudinaryDotNet
             foreach (var param in parameters)
             {
                 if (!string.IsNullOrEmpty(param.Value))
+                {
                     components.Add(string.Format("{0}_{1}", param.Key, param.Value));
+                }
             }
 
             string rawTransformation = GetString(m_transformParams, "raw_transformation");
@@ -480,10 +527,14 @@ namespace CloudinaryDotNet
             }
 
             if (isResponsive)
+            {
                 transformations.Add(ResponsiveWidthTransform.Generate());
+            }
 
             if (width == "auto" || isResponsive)
+            {
                 IsResponsive = true;
+            }
 
             return string.Join("/", transformations.ToArray());
         }
@@ -491,7 +542,9 @@ namespace CloudinaryDotNet
         private string ProcessVariables(Expression[] variables)
         {
             if (variables == null || variables.Length == 0)
+            {
                 return null;
+            }
 
             return string.Join(",", variables.Select(v => v.ToString()).ToArray());
         }
@@ -514,7 +567,10 @@ namespace CloudinaryDotNet
 
         private string[] GetStringArray(Dictionary<string, object> options, string key)
         {
-            if (!options.ContainsKey(key)) return new string[0];
+            if (!options.ContainsKey(key))
+            {
+                return new string[0];
+            }
 
             object value = options[key];
 
@@ -533,9 +589,13 @@ namespace CloudinaryDotNet
         private string GetString(Dictionary<string, object> options, string key)
         {
             if (options.ContainsKey(key))
+            {
                 return ToString(options[key]);
+            }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>
@@ -656,7 +716,9 @@ namespace CloudinaryDotNet
             string s = base.Generate();
 
             if (!string.IsNullOrEmpty(Format))
+            {
                 s += "/" + Format;
+            }
 
             return s;
         }

@@ -24,10 +24,14 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(Name))
+            {
                 throw new ArgumentException("Name must be set!");
+            }
 
             if (Transform == null)
+            {
                 throw new ArgumentException("Transform must be defined!");
+            }
         }
 
         /// <summary>

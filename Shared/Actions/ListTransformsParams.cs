@@ -50,11 +50,19 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults.ToString());
+            }
+
             if (Named.HasValue)
+            {
                 AddParam(dict, "named", Named.Value.ToString());
+            }
+
             if (!string.IsNullOrWhiteSpace(NextCursor))
+            {
                 AddParam(dict, "next_cursor", NextCursor);
+            }
 
             return dict;
         }

@@ -468,7 +468,11 @@ namespace CloudinaryDotNet
                 { // if: "w_gt_1000"
                     var value = segment.Params["if"];
                     string ifValue = value.ToString();
-                    if (ifValue.Equals("end")) break;
+                    if (ifValue.Equals("end"))
+                    {
+                        break;
+                    }
+
                     if (segment.Params.Count > 1)
                     {
                         segment.Params.Remove("if"); // {c: fill, w: 500}

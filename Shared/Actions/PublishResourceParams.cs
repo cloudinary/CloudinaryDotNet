@@ -68,10 +68,14 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (PublicIdsExist)
+            {
                 dict.Add("public_ids", PublicIds);
+            }
 
             if (!string.IsNullOrWhiteSpace(m_type))
+            {
                 dict.Add("type", m_type);
+            }
 
             return dict;
         }

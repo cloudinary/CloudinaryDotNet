@@ -45,13 +45,19 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (File == null)
+            {
                 throw new ArgumentException("File must be specified in UploadParams!");
+            }
 
             if (!File.IsRemote && File.Stream == null && string.IsNullOrEmpty(File.FilePath))
+            {
                 throw new ArgumentException("File is not ready!");
+            }
 
             if (string.IsNullOrEmpty(File.FileName))
+            {
                 throw new ArgumentException("File name must be specified in UploadParams!");
+            }
         }
 
         /// <summary>
@@ -66,7 +72,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "type", Type);
 
             if (Backup.HasValue)
+            {
                 AddParam(dict, "backup", Backup.Value);
+            }
 
             return dict;
         }
@@ -198,10 +206,14 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "moderation", Moderation);
 
             if (UseFilename.HasValue && UseFilename.Value)
+            {
                 AddParam(dict, "unique_filename", UniqueFilename);
+            }
 
             if (AllowedFormats != null)
+            {
                 AddParam(dict, "allowed_formats", string.Join(",", AllowedFormats));
+            }
 
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "discard_original_filename", DiscardOriginalFilename);

@@ -93,7 +93,9 @@ namespace CloudinaryDotNet
         public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "")
         {
             if (string.IsNullOrEmpty(publicId))
+            {
                 throw new ArgumentException("publicId");
+            }
 
             UrlBuilder urlBuilder = new UrlBuilder(
                m_api.ApiUrlV
@@ -107,13 +109,19 @@ namespace CloudinaryDotNet
             };
 
             if (!string.IsNullOrEmpty(format))
+            {
                 parameters.Add("format", format);
+            }
 
             if (attachment != null)
+            {
                 parameters.Add("attachment", (bool)attachment ? "true" : "false");
+            }
 
             if (!string.IsNullOrEmpty(type))
+            {
                 parameters.Add("type", type);
+            }
 
             return GetDownloadUrl(urlBuilder, parameters);
         }
@@ -128,7 +136,9 @@ namespace CloudinaryDotNet
         public string DownloadZip(string tag, Transformation transform)
         {
             if (string.IsNullOrEmpty(tag))
+            {
                 throw new ArgumentException("Tag should be specified!");
+            }
 
             UrlBuilder urlBuilder = new UrlBuilder(
                m_api.ApiUrlV
@@ -142,7 +152,9 @@ namespace CloudinaryDotNet
             };
 
             if (transform != null)
+            {
                 parameters.Add("transformation", transform.Generate());
+            }
 
             return GetDownloadUrl(urlBuilder, parameters);
         }
@@ -214,7 +226,9 @@ namespace CloudinaryDotNet
         private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams parameters)
         {
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
                 parameters.AddCustomParam(byKey, value);
+            }
 
             Url url = m_api.ApiUrlV
                 .Add("resources")
@@ -227,7 +241,9 @@ namespace CloudinaryDotNet
         private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
         {
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
                 parameters.AddCustomParam(byKey, value);
+            }
 
             Url url = m_api.ApiUrlV
                  .Add(Constants.RESOURCES_API_URL)
@@ -326,7 +342,9 @@ namespace CloudinaryDotNet
             Url url = m_api.ApiUrlV.ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
 
             if (!string.IsNullOrEmpty(parameters.ResourceType()))
+            {
                 url.ResourceType(parameters.ResourceType());
+            }
 
             parameters.Mode(ArchiveCallMode.Create);
             return m_api.CallApi<ArchiveResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
@@ -460,7 +478,9 @@ namespace CloudinaryDotNet
             where P : BasicRawUploadParams, new()
         {
             if (parameters == null)
+            {
                 throw new ArgumentNullException("parameters", "Upload parameters should be defined");
+            }
 
             string uri = m_api.ApiUrlV
                 .Action(Constants.ACTION_NAME_UPLOAD)
@@ -506,10 +526,14 @@ namespace CloudinaryDotNet
             fileDescription.Reset();
 
             if (parameters == null)
+            {
                 parameters = new SortedDictionary<string, object>();
+            }
 
             if (!(parameters is SortedDictionary<string, object>))
+            {
                 parameters = new SortedDictionary<string, object>(parameters);
+            }
 
             return m_api.CallAndParse<RawUploadResult>(HttpMethod.POST, uri, (SortedDictionary<string, object>)parameters, fileDescription);
         }
@@ -531,7 +555,9 @@ namespace CloudinaryDotNet
         public GetFoldersResult SubFolders(string folder)
         {
             if (string.IsNullOrEmpty(folder))
+            {
                 throw new ArgumentException("folder must be set! Please use RootFolders() to get list of folders in root!");
+            }
 
             return m_api.CallApi<GetFoldersResult>(HttpMethod.GET, m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl(), null, null);
         }
@@ -658,18 +684,26 @@ namespace CloudinaryDotNet
             where T : UploadResult, new()
         {
             if (parameters == null)
+            {
                 throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
+            }
 
             if (parameters.File == null)
+            {
                 throw new ArgumentNullException(nameof(parameters.File), "File parameter should be defined");
+            }
 
             if (parameters.File.IsRemote)
+            {
                 return Upload<T, BasicRawUploadParams>(parameters);
+            }
 
             Url url = m_api.ApiUrlImgUpV;
             var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
             if (name != null)
+            {
                 url.ResourceType(name.ToLower());
+            }
 
             string uri = url.BuildUrl();
 
@@ -1332,7 +1366,9 @@ namespace CloudinaryDotNet
         public UploadMappingResults UploadMappings(UploadMappingParams parameters)
         {
             if (parameters == null)
+            {
                 parameters = new UploadMappingParams();
+            }
 
             return CallUploadMappingsAPI(HttpMethod.GET, parameters);
         }
@@ -1345,7 +1381,9 @@ namespace CloudinaryDotNet
         public UploadMappingResults UploadMapping(string folder)
         {
             if (string.IsNullOrEmpty(folder))
+            {
                 throw new ArgumentException("Folder must be specified.");
+            }
 
             var parameters = new UploadMappingParams() { Folder = folder };
 
@@ -1361,10 +1399,14 @@ namespace CloudinaryDotNet
         public UploadMappingResults CreateUploadMapping(string folder, string template)
         {
             if (string.IsNullOrEmpty(folder))
+            {
                 throw new ArgumentException("Folder property must be specified.");
+            }
 
             if (string.IsNullOrEmpty(template))
+            {
                 throw new ArgumentException("Template must be specified.");
+            }
 
             var parameters = new UploadMappingParams()
             {
@@ -1383,10 +1425,14 @@ namespace CloudinaryDotNet
         public UploadMappingResults UpdateUploadMapping(string folder, string newTemplate)
         {
             if (string.IsNullOrEmpty(folder))
+            {
                 throw new ArgumentException("Folder must be specified.");
+            }
 
             if (string.IsNullOrEmpty(newTemplate))
+            {
                 throw new ArgumentException("New Template name must be specified.");
+            }
 
             var parameters = new UploadMappingParams() { Folder = folder, Template = newTemplate };
 
@@ -1519,7 +1565,9 @@ namespace CloudinaryDotNet
 #endif
         {
             if (string.IsNullOrEmpty(dir))
+            {
                 dir = "/Scripts";
+            }
 
             StringBuilder sb = new StringBuilder(1000);
 
@@ -1547,7 +1595,9 @@ namespace CloudinaryDotNet
                 });
 
             if (!string.IsNullOrEmpty(m_api.PrivateCdn))
+            {
                 cloudinaryParams.Add("secure_distribution", m_api.PrivateCdn);
+            }
 
             sb.AppendLine("<script type='text/javascript'>");
             sb.Append("$.cloudinary.config(");
@@ -1568,7 +1618,9 @@ namespace CloudinaryDotNet
             sb.Append(dir);
 
             if (!dir.EndsWith("/") && !dir.EndsWith("\\"))
+            {
                 sb.Append("/");
+            }
 
             sb.Append(script);
 

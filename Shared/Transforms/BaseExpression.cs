@@ -88,7 +88,9 @@ namespace CloudinaryDotNet
         public static string Normalize(string expression)
         {
             if (string.IsNullOrEmpty(expression))
+            {
                 return null;
+            }
 
             expression = Regex.Replace(expression, "[ _]+", "_");
             string pattern = GetPattern();
@@ -103,7 +105,9 @@ namespace CloudinaryDotNet
         protected static string GetOperatorReplacement(string value)
         {
             if (operators.ContainsKey(value))
+            {
                 return operators[value];
+            }
 
             return parameters.ContainsKey(value) ? parameters[value] : value;
         }

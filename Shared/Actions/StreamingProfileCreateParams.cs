@@ -20,7 +20,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(Name))
+            {
                 throw new ArgumentException("Must be specified", nameof(Name));
+            }
 
             base.Check();
         }

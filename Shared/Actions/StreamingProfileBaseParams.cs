@@ -28,7 +28,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (Representations == null || !Representations.Any())
+            {
                 throw new ArgumentException("Must be specified and not empty", nameof(Representations));
+            }
         }
 
         /// <summary>

@@ -43,7 +43,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (MaxResults > 500)
+            {
                 throw new ArgumentException(string.Format("The maximal count of folders to return is 500, but {0} given!", MaxResults));
+            }
         }
 
         /// <summary>
@@ -56,9 +58,15 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "folder", Folder);
             AddParam(dict, "template", Template);
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults);
+            }
+
             if (!string.IsNullOrEmpty(NextCursor))
+            {
                 AddParam(dict, "next_cursor", NextCursor);
+            }
+
             return dict;
         }
     }

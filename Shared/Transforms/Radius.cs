@@ -63,10 +63,14 @@ namespace CloudinaryDotNet
         public Radius(object topLeftAndBottomRight, object topRightAndBottomLeft)
         {
             if (topLeftAndBottomRight == null)
+            {
                 throw new ArgumentNullException(nameof(topLeftAndBottomRight));
+            }
 
             if (topRightAndBottomLeft == null)
+            {
                 throw new ArgumentNullException(nameof(topRightAndBottomLeft));
+            }
 
             m_radius = $"{topLeftAndBottomRight}:{topRightAndBottomLeft}";
         }
@@ -81,13 +85,19 @@ namespace CloudinaryDotNet
         public Radius(object topLeft, object topRightAndBottomLeft, object bottomRight)
         {
             if (topLeft == null)
+            {
                 throw new ArgumentNullException(nameof(topLeft));
+            }
 
             if (topRightAndBottomLeft == null)
+            {
                 throw new ArgumentNullException(nameof(topRightAndBottomLeft));
+            }
 
             if (bottomRight == null)
+            {
                 throw new ArgumentNullException(nameof(bottomRight));
+            }
 
             m_radius = $"{topLeft}:{topRightAndBottomLeft}:{bottomRight}";
         }
@@ -104,16 +114,24 @@ namespace CloudinaryDotNet
         public Radius(object topLeft, object topRight, object bottomRight, object bottomLeft)
         {
             if (topLeft == null)
+            {
                 throw new ArgumentNullException(nameof(topLeft));
+            }
 
             if (topRight == null)
+            {
                 throw new ArgumentNullException(nameof(topRight));
+            }
 
             if (bottomRight == null)
+            {
                 throw new ArgumentNullException(nameof(bottomRight));
+            }
 
             if (bottomLeft == null)
+            {
                 throw new ArgumentNullException(nameof(bottomLeft));
+            }
 
             m_radius = $"{topLeft}:{topRight}:{bottomRight}:{bottomLeft}";
         }
@@ -128,7 +146,10 @@ namespace CloudinaryDotNet
             if (value is ICollection radiusCollection)
             {
                 if (radiusCollection.Count == 0 || radiusCollection.Count > 4)
+                {
                     throw new ArgumentException("Radius array should contain between 1 and 4 values");
+                }
+
                 var strings = from object item in radiusCollection select item.ToString();
                 return string.Join(":", strings);
             }

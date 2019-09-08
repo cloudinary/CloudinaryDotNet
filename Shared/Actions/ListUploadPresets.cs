@@ -37,7 +37,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults.ToString());
+            }
 
             AddParam(dict, "next_cursor", NextCursor);
 

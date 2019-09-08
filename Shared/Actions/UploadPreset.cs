@@ -30,7 +30,10 @@ namespace CloudinaryDotNet.Actions
             Name = preset.Name;
             Unsigned = preset.Unsigned;
 
-            if (preset.Settings == null) return;
+            if (preset.Settings == null)
+            {
+                return;
+            }
 
             DisallowPublicId = preset.Settings.DisallowPublicId;
             Backup = preset.Settings.Backup;
@@ -39,9 +42,13 @@ namespace CloudinaryDotNet.Actions
             if (preset.Settings.Tags != null)
             {
                 if (preset.Settings.Tags.Type == JTokenType.String)
+                {
                     Tags = preset.Settings.Tags.ToString();
+                }
                 else if (preset.Settings.Tags.Type == JTokenType.Array)
+                {
                     Tags = string.Join(",", preset.Settings.Tags.Values<string>().ToArray());
+                }
             }
 
             Invalidate = preset.Settings.Invalidate;
@@ -66,9 +73,13 @@ namespace CloudinaryDotNet.Actions
             if (preset.Settings.AllowedFormats != null)
             {
                 if (preset.Settings.AllowedFormats.Type == JTokenType.String)
+                {
                     AllowedFormats = preset.Settings.AllowedFormats.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                }
                 else if (preset.Settings.AllowedFormats.Type == JTokenType.Array)
+                {
                     AllowedFormats = preset.Settings.AllowedFormats.Select(t => t.ToString()).ToArray();
+                }
             }
 
             Moderation = preset.Settings.Moderation;
@@ -359,7 +370,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (Overwrite.HasValue && Overwrite.Value && Unsigned)
+            {
                 throw new ArgumentException("Don't set both Overwrite and Unsigned to true!");
+            }
         }
 
         /// <summary>
@@ -405,10 +418,14 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "transformation", GetTransformation(Transformation));
 
             if (AutoTagging.HasValue)
+            {
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
+            }
 
             if (FaceCoordinates != null)
+            {
                 AddParam(dict, "face_coordinates", FaceCoordinates.ToString());
+            }
 
             if (EagerTransforms != null && EagerTransforms.Count > 0)
             {
@@ -419,7 +436,9 @@ namespace CloudinaryDotNet.Actions
             }
 
             if (AllowedFormats != null)
+            {
                 AddParam(dict, "allowed_formats", string.Join(",", AllowedFormats));
+            }
 
             if (Context != null && Context.Count > 0)
             {
@@ -431,14 +450,23 @@ namespace CloudinaryDotNet.Actions
 
         private string GetTransformation(object o)
         {
-            if (o == null) return null;
+            if (o == null)
+            {
+                return null;
+            }
 
             if (o is string)
+            {
                 return (string)o;
+            }
             else if (o is Transformation)
+            {
                 return ((Transformation)o).Generate();
+            }
             else
+            {
                 throw new NotSupportedException(string.Format("Instance of type {0} is not supported as Transformation!", o.GetType()));
+            }
         }
     }
 

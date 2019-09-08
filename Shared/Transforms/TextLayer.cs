@@ -300,23 +300,49 @@ namespace CloudinaryDotNet
             List<string> components = new List<string>();
 
             if (!string.IsNullOrEmpty(m_fontWeight) && !m_fontWeight.Equals("normal"))
+            {
                 components.Add(m_fontWeight);
+            }
+
             if (!string.IsNullOrEmpty(m_fontStyle) && !m_fontStyle.Equals("normal"))
+            {
                 components.Add(m_fontStyle);
+            }
+
             if (!string.IsNullOrEmpty(m_fontAntialiasing))
+            {
                 components.Add($"antialias_{m_fontAntialiasing}");
+            }
+
             if (!string.IsNullOrEmpty(m_fontHinting))
+            {
                 components.Add($"hinting_{m_fontHinting}");
+            }
+
             if (!string.IsNullOrEmpty(m_textDecoration) && !m_textDecoration.Equals("none"))
+            {
                 components.Add(m_textDecoration);
+            }
+
             if (!string.IsNullOrEmpty(m_textAlign))
+            {
                 components.Add(m_textAlign);
+            }
+
             if (!string.IsNullOrEmpty(m_stroke) && !m_stroke.Equals("none"))
+            {
                 components.Add(m_stroke);
+            }
+
             if (!string.IsNullOrEmpty(m_letterSpacing))
+            {
                 components.Add($"letter_spacing_{m_letterSpacing}");
+            }
+
             if (!string.IsNullOrEmpty(m_lineSpacing))
+            {
                 components.Add($"line_spacing_{m_lineSpacing}");
+            }
 
             if (string.IsNullOrEmpty(m_fontFamily) && components.Count == 0)
             {
