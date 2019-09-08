@@ -124,7 +124,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public JToken JsonObj
         {
-            get { return rawJson; }
+            get
+            {
+                return rawJson;
+            }
 
             internal set
             {

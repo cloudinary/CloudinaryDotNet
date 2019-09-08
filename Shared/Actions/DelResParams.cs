@@ -54,7 +54,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public List<string> PublicIds
         {
-            get { return m_publicIds; }
+            get
+            {
+                return m_publicIds;
+            }
 
             set
             {
@@ -71,7 +74,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Prefix
         {
-            get { return m_prefix; }
+            get
+            {
+                return m_prefix;
+            }
 
             set
             {
@@ -88,7 +94,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Tag
         {
-            get { return m_tag; }
+            get
+            {
+                return m_tag;
+            }
 
             set
             {
@@ -105,7 +114,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public bool All
         {
-            get { return m_all; }
+            get
+            {
+                return m_all;
+            }
 
             set
             {
