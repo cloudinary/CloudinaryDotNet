@@ -18,7 +18,7 @@ namespace CloudinaryDotNet.Actions
             ResourceType = ResourceType.Image;
         }
 
-        List<string> m_publicIds = new List<string>();
+        private List<string> m_publicIds = new List<string>();
 
         /// <summary>
         /// A list of public IDs (up to 1000) of assets uploaded to Cloudinary.

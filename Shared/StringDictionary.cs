@@ -11,7 +11,7 @@ namespace CloudinaryDotNet
     /// </summary>
     public class StringDictionary : IDictionary<string, string>
     {
-        List<KeyValuePair<string, string>> m_list = new List<KeyValuePair<string, string>>();
+        private List<KeyValuePair<string, string>> m_list = new List<KeyValuePair<string, string>>();
 
         /// <summary>
         /// Default constructor.

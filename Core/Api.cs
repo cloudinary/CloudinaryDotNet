@@ -22,7 +22,7 @@ namespace CloudinaryDotNet
     /// </summary>
     public class Api : ApiShared
     {
-        static HttpClient client = new HttpClient();
+        private static HttpClient client = new HttpClient();
 
         /// <summary>
         /// Default static parameterless constructor.

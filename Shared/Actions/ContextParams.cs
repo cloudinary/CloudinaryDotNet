@@ -12,7 +12,7 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class ContextParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
+        private List<string> m_publicIds = new List<string>();
 
         /// <summary>
         /// A list of Public IDs of assets uploaded to Cloudinary.

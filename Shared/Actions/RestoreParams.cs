@@ -8,8 +8,8 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class RestoreParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
-        ResourceType m_resourceType = ResourceType.Image;
+        private List<string> m_publicIds = new List<string>();
+        private ResourceType m_resourceType = ResourceType.Image;
 
         /// <summary>
         /// Instantiates the <see cref="RestoreParams"/> object.

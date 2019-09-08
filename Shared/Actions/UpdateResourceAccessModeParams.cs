@@ -8,10 +8,10 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class UpdateResourceAccessModeParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
-        ResourceType m_resourceType = ResourceType.Image;
-        string m_accessMode = "public";
-        string m_type = "upload";
+        private List<string> m_publicIds = new List<string>();
+        private ResourceType m_resourceType = ResourceType.Image;
+        private string m_accessMode = "public";
+        private string m_type = "upload";
 
         /// <summary>
         /// Instantiates the <see cref="UpdateResourceAccessModeParams"/> object.

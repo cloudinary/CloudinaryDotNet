@@ -8,9 +8,9 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class PublishResourceParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
-        ResourceType m_resourceType = ResourceType.Image;
-        string m_type = string.Empty;
+        private List<string> m_publicIds = new List<string>();
+        private ResourceType m_resourceType = ResourceType.Image;
+        private string m_type = string.Empty;
 
         /// <summary>
         /// Instantiates the <see cref="PublishResourceParams"/> object.

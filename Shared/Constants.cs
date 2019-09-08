@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CloudinaryDotNet
 {
-    static class Constants
+    internal static class Constants
     {
         // API URL patterns
         public const string RESOURCES_API_URL = "resources";

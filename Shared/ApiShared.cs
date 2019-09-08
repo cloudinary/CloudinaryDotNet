@@ -41,7 +41,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public static string USER_AGENT;
 
-        string m_apiAddr = "https://" + ADDR_API;
+        private string m_apiAddr = "https://" + ADDR_API;
 
         /// <summary>
         /// Whether to use a sub domain.

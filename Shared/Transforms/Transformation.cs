@@ -13,7 +13,7 @@ namespace CloudinaryDotNet
     {
         private const string VARIABLES_PARAM_KEY = "variables";
 
-        static readonly string[] SimpleParams = new string[]
+        private static readonly string[] SimpleParams = new string[]
         {
             "ac", "audio_codec",
             "af", "audio_frequency",

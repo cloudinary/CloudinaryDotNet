@@ -8,10 +8,10 @@ namespace CloudinaryDotNet.Actions
     /// </summary>
     public class DelResParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
-        string m_prefix;
-        string m_tag;
-        bool m_all;
+        private List<string> m_publicIds = new List<string>();
+        private string m_prefix;
+        private string m_tag;
+        private bool m_all;
 
         /// <summary>
         /// Instantiates the <see cref="DelResParams"/> object.

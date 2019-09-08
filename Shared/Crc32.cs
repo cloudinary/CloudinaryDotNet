@@ -10,7 +10,7 @@ namespace CloudinaryDotNet
     /// </summary>
     public static class Crc32
     {
-        static uint[] table;
+        private static uint[] table;
 
         /// <summary>
         /// Compute checksum for a byte array.
