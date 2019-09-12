@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
     /// <summary>
     /// Cloudinary account

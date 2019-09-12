@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.IO;
+
     /// <summary>
     /// Represents a file for uploading to cloudinary.
     /// </summary>

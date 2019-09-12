@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+
     /// <summary>
     /// Represents the video parameter (l_video: in URLs) to specify the name of another
     /// uploaded video to be added as an overlay.

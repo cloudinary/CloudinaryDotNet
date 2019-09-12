@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using CloudinaryDotNet.Actions;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Threading.Tasks;
+    using CloudinaryDotNet.Actions;
+
     /// <summary>
     /// Provides asynchronous methods for interaction with Cloudinary.
     /// </summary>

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Net;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed response after upload of the video resource.
     /// </summary>

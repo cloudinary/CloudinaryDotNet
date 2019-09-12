@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using CloudinaryDotNet.Core;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Text.RegularExpressions;
+
     public partial class Transformation : Core.ICloneable
     {
         private static readonly Regex RANGE_VALUE_RE = new Regex("^((?:\\d+\\.)?\\d+)([%pP])?$", RegexOptions.Compiled);

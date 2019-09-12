@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Runtime.Serialization;
-using System.Text;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parsed response after a call of Explicit method.
     /// </summary>

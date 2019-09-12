@@ -1,9 +1,8 @@
-﻿using System;
-using System.Net;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// The report on the status of your Cloudinary account usage details. Note that numbers are updated periodically.
     /// </summary>

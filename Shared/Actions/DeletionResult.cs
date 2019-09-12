@@ -1,7 +1,7 @@
-﻿using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed result of asset deletion.
     /// </summary>

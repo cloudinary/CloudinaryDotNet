@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
-
 namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of the request of resource as well as its derived resources.
     /// </summary>

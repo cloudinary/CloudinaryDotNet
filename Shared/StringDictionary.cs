@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// This class is based on list so is very slow but allows not unique keys.
     /// This behavior is required for DeleteResources and ListResources commands.

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
     /// <summary>
     /// Represents Condition object that can be used in user defined variables and conditional transformations.

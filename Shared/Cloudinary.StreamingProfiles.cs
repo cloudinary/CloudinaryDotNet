@@ -1,8 +1,8 @@
-﻿using System;
-using CloudinaryDotNet.Actions;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using CloudinaryDotNet.Actions;
+
     public partial class Cloudinary
     {
         /// <summary>

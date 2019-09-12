@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents property of the overlay parameter to specify the Url on another image to be added as an overlay.
     /// </summary>

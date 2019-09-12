@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-using CloudinaryDotNet.Core;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.Globalization;
+    using System.Text.RegularExpressions;
+
     public partial class Transformation : Core.ICloneable
     {
         /// <summary>

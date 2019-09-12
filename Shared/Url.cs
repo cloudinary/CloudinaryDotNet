@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-#if NET40
-using System.Web;
-#endif
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+
+    #if NET40
+    using System.Web;
+    #endif
+
     /// <summary>
     /// The building blocks for generating an https delivery URL for assets.
     /// </summary>

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using System.Text;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Represents property of the overlay parameter (l_text: in URLs) for placing text as an overlay.
     /// </summary>

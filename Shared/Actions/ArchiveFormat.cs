@@ -1,8 +1,7 @@
-﻿using System.ComponentModel;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// The format for the generated archive
     /// </summary>

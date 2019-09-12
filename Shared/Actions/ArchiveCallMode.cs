@@ -1,8 +1,7 @@
-﻿using System.ComponentModel;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Either return a URL to the generated archive file ('download') or store it as a raw asset
     /// in your Cloudinary account('create').

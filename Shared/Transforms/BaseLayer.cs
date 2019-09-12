@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Base abstract non-generic class for creating Layers.
     /// </summary>

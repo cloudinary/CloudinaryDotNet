@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net;
-using System.Runtime.Serialization;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parsed result of the resources listing request.
     /// </summary>

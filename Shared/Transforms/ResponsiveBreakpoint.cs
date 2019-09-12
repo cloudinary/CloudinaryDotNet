@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Allows to generate images for your responsive website in various width dimensions,
     /// and to define the minimum file size step (performance budget).

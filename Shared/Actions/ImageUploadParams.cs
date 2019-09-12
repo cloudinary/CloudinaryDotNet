@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CloudinaryDotNet.Core;
-using Newtonsoft.Json;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CloudinaryDotNet.Core;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Parameters of image file uploading.
     /// </summary>

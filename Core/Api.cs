@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.RegularExpressions;
-using System.Threading;
-using CloudinaryDotNet.Actions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Reflection;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using System.Text.Encodings.Web;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+    using CloudinaryDotNet.Actions;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Technological layer to work with cloudinary API.
     /// </summary>

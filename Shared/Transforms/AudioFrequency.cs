@@ -1,7 +1,7 @@
-﻿using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Audio sample frequency values, in Hz
     /// </summary>

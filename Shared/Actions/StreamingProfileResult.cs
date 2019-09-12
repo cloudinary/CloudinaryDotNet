@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Detailed information about streaming profile.
     /// </summary>

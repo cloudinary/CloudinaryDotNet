@@ -1,8 +1,7 @@
-﻿using System.Text;
-using System.Web;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.Web;
+
     /// <summary>
     /// Implement platform specific functions
     /// </summary>

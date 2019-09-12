@@ -1,8 +1,8 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed response with detailed information about the created animated GIF.
     /// </summary>

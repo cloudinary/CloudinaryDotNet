@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters to publish resource request.
     /// </summary>

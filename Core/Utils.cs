@@ -1,7 +1,7 @@
-﻿using System.Text.Encodings.Web;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.Text.Encodings.Web;
+
     /// <summary>
     /// Implement platform specific functions
     /// </summary>

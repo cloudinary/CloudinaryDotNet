@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-
 namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Parameters for the explicit method to apply actions to already uploaded assets.
     /// </summary>

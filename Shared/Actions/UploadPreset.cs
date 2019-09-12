@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Runtime.Serialization;
-using CloudinaryDotNet.Core;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using CloudinaryDotNet.Core;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parameters of upload preset, which enable you to centrally define a set of image upload options instead of
     /// specifying them in each upload call.

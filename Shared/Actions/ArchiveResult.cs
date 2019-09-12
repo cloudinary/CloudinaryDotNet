@@ -1,9 +1,7 @@
-﻿using System;
-using System.Net;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parsed result of creating the archive.
     /// </summary>

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Parsed results of uploading image with Responsive breakpoints.
     /// </summary>

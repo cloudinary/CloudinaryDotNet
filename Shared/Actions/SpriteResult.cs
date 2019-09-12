@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed response with detailed information about the created sprite.
     /// </summary>

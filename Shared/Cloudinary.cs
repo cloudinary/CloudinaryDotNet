@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using CloudinaryDotNet.Actions;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Text;
+    using CloudinaryDotNet.Actions;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Main class of Cloudinary .NET API.
     /// </summary>

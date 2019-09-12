@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CloudinaryDotNet.Core;
-using Newtonsoft.Json;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using CloudinaryDotNet.Core;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Parameters to update details of an existing resource.
     /// </summary>

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections;
+    using System.Linq;
+
     /// <summary>
     /// Round the specified corners of an image by specifying 1-4 pixel values.
     /// </summary>

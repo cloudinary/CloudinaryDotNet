@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Stores a set of parameters for updating the access_mode of resources.
     /// </summary>
