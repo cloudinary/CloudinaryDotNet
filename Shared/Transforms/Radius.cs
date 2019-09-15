@@ -129,6 +129,20 @@
             m_radius = $"{topLeft}:{topRight}:{bottomRight}:{bottomLeft}";
         }
 
+        /// <summary>
+        /// Creates a new Radius object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>A new Radius object that is a copy of this instance.</returns>
+        public Radius Clone() => (Radius)MemberwiseClone();
+
+        object Core.ICloneable.Clone() => Clone();
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return m_radius;
+        }
+
         private void SetRadius(object value)
         {
             m_radius = value != null
@@ -155,20 +169,6 @@
             }
 
             return value.ToString();
-        }
-
-        /// <summary>
-        /// Creates a new Radius object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>A new Radius object that is a copy of this instance.</returns>
-        public Radius Clone() => (Radius)MemberwiseClone();
-
-        object Core.ICloneable.Clone() => Clone();
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return m_radius;
         }
     }
 }

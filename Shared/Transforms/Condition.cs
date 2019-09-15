@@ -26,23 +26,6 @@
         }
 
         /// <summary>
-        /// Creates a predicate for binary operators.
-        /// </summary>
-        /// <param name="name">A name of parameter.</param>
-        /// <param name="operator">An operator.</param>
-        /// <param name="value">A value.</param>
-        protected Condition Predicate(string name, string @operator, object value)
-        {
-            if (operators.ContainsKey(@operator))
-            {
-                @operator = operators[@operator];
-            }
-
-            m_expressions.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
-            return this;
-        }
-
-        /// <summary>
         /// Terminates the definition of the condition and continue with Transformation definition.
         /// </summary>
         /// <returns>The Transformation object this Condition is attached to.</returns>
@@ -120,6 +103,23 @@
         public Condition PageCount(string @operator, object value)
         {
             return Predicate("pc", @operator, value);
+        }
+
+        /// <summary>
+        /// Creates a predicate for binary operators.
+        /// </summary>
+        /// <param name="name">A name of parameter.</param>
+        /// <param name="operator">An operator.</param>
+        /// <param name="value">A value.</param>
+        protected Condition Predicate(string name, string @operator, object value)
+        {
+            if (operators.ContainsKey(@operator))
+            {
+                @operator = operators[@operator];
+            }
+
+            m_expressions.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
+            return this;
         }
     }
 }

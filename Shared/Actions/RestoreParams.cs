@@ -28,11 +28,6 @@
             set { m_publicIds = value; }
         }
 
-        private bool PublicIdsExist
-        {
-            get { return PublicIds != null && PublicIds.Count > 0; }
-        }
-
         /// <summary>
         /// Restore resources with the given resource type. Default: image.
         /// </summary>
@@ -40,6 +35,11 @@
         {
             get { return m_resourceType; }
             set { m_resourceType = value; }
+        }
+
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
         }
 
         /// <summary>

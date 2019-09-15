@@ -122,6 +122,12 @@
             return string.Join(":", components.ToArray());
         }
 
+        /// <summary>
+        /// Creates a shallow copy of the current object.
+        /// </summary>
+        /// <returns>A new instance of the current object.</returns>
+        public override object Clone() => MemberwiseClone();
+
         private string FormattedPublicId()
         {
             var transientPublicId = m_publicId;
@@ -133,11 +139,5 @@
 
             return transientPublicId;
         }
-
-        /// <summary>
-        /// Creates a shallow copy of the current object.
-        /// </summary>
-        /// <returns>A new instance of the current object.</returns>
-        public override object Clone() => MemberwiseClone();
     }
 }

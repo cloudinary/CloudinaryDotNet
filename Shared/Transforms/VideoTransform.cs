@@ -206,16 +206,6 @@
         }
 
         /// <summary>
-        /// Relevant when converting videos to animated GIF or WebP format. If not specified, the resulting GIF or WebP
-        /// samples the whole video (up to 400 frames, at up to 10 frames per second).
-        /// </summary>
-        /// <param name="value">The number of seconds between each frame to sample from the original video.</param>
-        private Transformation VideoSamplingSeconds(object value)
-        {
-            return Add("video_sampling", ToString(value) + "s");
-        }
-
-        /// <summary>
         /// Offset in seconds of a video. The start of the video to be kept after trimming.
         /// </summary>
         /// <param name="value">String representing value of  </param>
@@ -258,15 +248,6 @@
         public Transformation StartOffsetPercent(double value)
         {
             return StartOffsetPercent((object)value);
-        }
-
-        /// <summary>
-        /// Offset in percent of a video. The start of the video to be kept after trimming.
-        /// </summary>
-        /// <param name="value">Object representing a percent value.</param>
-        private Transformation StartOffsetPercent(object value)
-        {
-            return Add("start_offset", ToString(value) + "p");
         }
 
         /// <summary>
@@ -339,18 +320,6 @@
         }
 
         /// <summary>
-        /// Offset in percent of a video, used to specify the end of the video to be kept after trimming or
-        /// when an overlay ends displaying.
-        ///
-        /// Normally used together with the start_offset and duration parameters.
-        /// </summary>
-        /// <param name="value">Object representing an end_offset value.</param>
-        private Transformation EndOffsetPercent(object value)
-        {
-            return Add("end_offset", ToString(value) + "p");
-        }
-
-        /// <summary>
         /// Set a shortcut to set video cutting using a combination of start_offset and end_offset values.
         ///
         /// Offset in seconds or percent of a video.
@@ -412,22 +381,6 @@
         }
 
         /// <summary>
-        /// Set a shortcut to set video cutting using a combination of start_offset and end_offset values.
-        ///
-        /// Offset in seconds or percent of a video.
-        /// </summary>
-        /// <param name="value">Range of objects representing an offset value.</param>
-        private Transformation Offset(params object[] value)
-        {
-            if (value.Length < 2)
-            {
-                throw new ArgumentException("Offset range must include at least 2 items.");
-            }
-
-            return Add("offset", value);
-        }
-
-        /// <summary>
         /// Set the duration the video/overlay displays.
         ///
         /// Offset in seconds or percent of a video, normally used together with the start_offset and end_offset
@@ -485,18 +438,6 @@
         public Transformation DurationPercent(double value)
         {
             return DurationPercent((object)value);
-        }
-
-        /// <summary>
-        /// Set the duration the video/overlay displays.
-        ///
-        /// Offset in percent of a video, normally used together with the start_offset and end_offset
-        /// parameters.
-        /// </summary>
-        /// <param name="value">Object representing a duration value.</param>
-        private Transformation DurationPercent(object value)
-        {
-            return Add("duration", ToString(value) + "p");
         }
 
         /// <summary>
@@ -633,6 +574,65 @@
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Relevant when converting videos to animated GIF or WebP format. If not specified, the resulting GIF or WebP
+        /// samples the whole video (up to 400 frames, at up to 10 frames per second).
+        /// </summary>
+        /// <param name="value">The number of seconds between each frame to sample from the original video.</param>
+        private Transformation VideoSamplingSeconds(object value)
+        {
+            return Add("video_sampling", ToString(value) + "s");
+        }
+
+        /// <summary>
+        /// Offset in percent of a video. The start of the video to be kept after trimming.
+        /// </summary>
+        /// <param name="value">Object representing a percent value.</param>
+        private Transformation StartOffsetPercent(object value)
+        {
+            return Add("start_offset", ToString(value) + "p");
+        }
+
+        /// <summary>
+        /// Offset in percent of a video, used to specify the end of the video to be kept after trimming or
+        /// when an overlay ends displaying.
+        ///
+        /// Normally used together with the start_offset and duration parameters.
+        /// </summary>
+        /// <param name="value">Object representing an end_offset value.</param>
+        private Transformation EndOffsetPercent(object value)
+        {
+            return Add("end_offset", ToString(value) + "p");
+        }
+
+        /// <summary>
+        /// Set a shortcut to set video cutting using a combination of start_offset and end_offset values.
+        ///
+        /// Offset in seconds or percent of a video.
+        /// </summary>
+        /// <param name="value">Range of objects representing an offset value.</param>
+        private Transformation Offset(params object[] value)
+        {
+            if (value.Length < 2)
+            {
+                throw new ArgumentException("Offset range must include at least 2 items.");
+            }
+
+            return Add("offset", value);
+        }
+
+        /// <summary>
+        /// Set the duration the video/overlay displays.
+        ///
+        /// Offset in percent of a video, normally used together with the start_offset and end_offset
+        /// parameters.
+        /// </summary>
+        /// <param name="value">Object representing a duration value.</param>
+        private Transformation DurationPercent(object value)
+        {
+            return Add("duration", ToString(value) + "p");
         }
     }
 }

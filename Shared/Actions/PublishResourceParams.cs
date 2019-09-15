@@ -27,11 +27,6 @@
             set { m_publicIds = value; }
         }
 
-        private bool PublicIdsExist
-        {
-            get { return PublicIds != null && PublicIds.Count > 0; }
-        }
-
         /// <summary>
         /// Publish resources with the given resource type. Default: "image".
         /// </summary>
@@ -49,6 +44,11 @@
         {
             get { return m_type; }
             set { m_type = value; }
+        }
+
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
         }
 
         /// <summary>

@@ -118,110 +118,6 @@
             return response;
         }
 
-        internal HttpWebRequest PrepareRequestBody(HttpWebRequest request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-        {
-            SetHttpMethod(method, request);
-
-            // Add platform information to the USER_AGENT header
-            // This is intended for platform information and not individual applications!
-            request.UserAgent = string.IsNullOrEmpty(UserPlatform)
-                ? USER_AGENT
-                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
-
-            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
-
-            if (extraHeaders != null)
-            {
-                if (extraHeaders.ContainsKey("Content-Type"))
-                {
-                    request.ContentType = extraHeaders["Content-Type"];
-                    extraHeaders.Remove("Content-Type");
-                }
-
-                foreach (var header in extraHeaders)
-                {
-                    request.Headers[header.Key] = header.Value;
-                }
-            }
-
-            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
-            {
-                request.AllowWriteStreamBuffering = false;
-                request.AllowAutoRedirect = false;
-
-                if (UseChunkedEncoding)
-                {
-                    request.SendChunked = true;
-                }
-
-                PrepareRequestContent(ref request, parameters, file);
-            }
-
-            return request;
-        }
-
-        private void PrepareRequestContent(
-            ref HttpWebRequest request,
-            SortedDictionary<string, object> parameters,
-            FileDescription file)
-        {
-            if (request == null)
-            {
-                return;
-            }
-
-            HandleUnsignedParameters(parameters);
-
-            if (request.ContentType == Constants.CONTENT_TYPE_APPLICATION_JSON)
-            {
-                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                {
-                    streamWriter.Write(ParamsToJson(parameters));
-                }
-            }
-            else
-            {
-                PrepareMultipartFormDataContent(request, parameters, file);
-            }
-        }
-
-        private void PrepareMultipartFormDataContent(HttpWebRequest request, SortedDictionary<string, object> parameters, FileDescription file)
-        {
-            request.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
-
-            using (Stream requestStream = request.GetRequestStream())
-            {
-                using (StreamWriter writer = new StreamWriter(requestStream))
-                {
-                    foreach (var param in parameters)
-                    {
-                        if (param.Value != null)
-                        {
-                            if (param.Value is IEnumerable<string>)
-                            {
-                                foreach (var item in (IEnumerable<string>)param.Value)
-                                {
-                                    WriteParam(writer, param.Key + "[]", item);
-                                }
-                            }
-                            else
-                            {
-                                WriteParam(writer, param.Key, param.Value.ToString());
-                            }
-                        }
-                    }
-
-                    if (file != null)
-                    {
-                        WriteFile(writer, file);
-                    }
-
-                    writer.Write("--{0}--", HTTP_BOUNDARY);
-                }
-            }
-        }
-
         /// <summary>
         /// Check file path for callback url.
         /// </summary>
@@ -278,21 +174,6 @@
         public IHtmlString BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
             return new HtmlString(BuildUploadFormShared(field, resourceType, parameters, htmlOptions));
-        }
-
-        /// <summary>
-        /// Encode url to a representation that is unambiguous and universally accepted by web browsers and servers.
-        /// </summary>
-        /// <param name="value">The url to encode.</param>
-        /// <returns>Encoded url.</returns>
-        protected override string EncodeApiUrl(string value)
-        {
-            return HttpUtility.HtmlEncode(value);
-        }
-
-        private static void SetHttpMethod(HttpMethod method, HttpWebRequest req)
-        {
-            req.Method = Enum.GetName(typeof(HttpMethod), method);
         }
 
         /// <summary>
@@ -357,6 +238,125 @@
             result.StatusCode = message.StatusCode;
 
             return result;
+        }
+
+        internal HttpWebRequest PrepareRequestBody(HttpWebRequest request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            SetHttpMethod(method, request);
+
+            // Add platform information to the USER_AGENT header
+            // This is intended for platform information and not individual applications!
+            request.UserAgent = string.IsNullOrEmpty(UserPlatform)
+                ? USER_AGENT
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
+
+            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+
+            if (extraHeaders != null)
+            {
+                if (extraHeaders.ContainsKey("Content-Type"))
+                {
+                    request.ContentType = extraHeaders["Content-Type"];
+                    extraHeaders.Remove("Content-Type");
+                }
+
+                foreach (var header in extraHeaders)
+                {
+                    request.Headers[header.Key] = header.Value;
+                }
+            }
+
+            if ((method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null)
+            {
+                request.AllowWriteStreamBuffering = false;
+                request.AllowAutoRedirect = false;
+
+                if (UseChunkedEncoding)
+                {
+                    request.SendChunked = true;
+                }
+
+                PrepareRequestContent(ref request, parameters, file);
+            }
+
+            return request;
+        }
+
+        /// <summary>
+        /// Encode url to a representation that is unambiguous and universally accepted by web browsers and servers.
+        /// </summary>
+        /// <param name="value">The url to encode.</param>
+        /// <returns>Encoded url.</returns>
+        protected override string EncodeApiUrl(string value)
+        {
+            return HttpUtility.HtmlEncode(value);
+        }
+
+        private static void SetHttpMethod(HttpMethod method, HttpWebRequest req)
+        {
+            req.Method = Enum.GetName(typeof(HttpMethod), method);
+        }
+
+        private void PrepareRequestContent(
+            ref HttpWebRequest request,
+            SortedDictionary<string, object> parameters,
+            FileDescription file)
+        {
+            if (request == null)
+            {
+                return;
+            }
+
+            HandleUnsignedParameters(parameters);
+
+            if (request.ContentType == Constants.CONTENT_TYPE_APPLICATION_JSON)
+            {
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(ParamsToJson(parameters));
+                }
+            }
+            else
+            {
+                PrepareMultipartFormDataContent(request, parameters, file);
+            }
+        }
+
+        private void PrepareMultipartFormDataContent(HttpWebRequest request, SortedDictionary<string, object> parameters, FileDescription file)
+        {
+            request.ContentType = "multipart/form-data; boundary=" + HTTP_BOUNDARY;
+
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                using (StreamWriter writer = new StreamWriter(requestStream))
+                {
+                    foreach (var param in parameters)
+                    {
+                        if (param.Value != null)
+                        {
+                            if (param.Value is IEnumerable<string>)
+                            {
+                                foreach (var item in (IEnumerable<string>)param.Value)
+                                {
+                                    WriteParam(writer, param.Key + "[]", item);
+                                }
+                            }
+                            else
+                            {
+                                WriteParam(writer, param.Key, param.Value.ToString());
+                            }
+                        }
+                    }
+
+                    if (file != null)
+                    {
+                        WriteFile(writer, file);
+                    }
+
+                    writer.Write("--{0}--", HTTP_BOUNDARY);
+                }
+            }
         }
     }
 }

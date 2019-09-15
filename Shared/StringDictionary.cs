@@ -184,16 +184,6 @@
         }
 
         /// <summary>
-        /// Escape safe pair delimiter
-        /// </summary>
-        /// <param name="value">Value to escape</param>
-        /// <returns>Escaped value</returns>
-        private string EscapeSafePairString(string value)
-        {
-            return value.Replace(@"=", @"\=");
-        }
-
-        /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
         /// <returns>
@@ -327,6 +317,16 @@
         public bool Remove(KeyValuePair<string, string> item)
         {
             return m_list.Remove(item);
+        }
+
+        /// <summary>
+        /// Escape safe pair delimiter
+        /// </summary>
+        /// <param name="value">Value to escape</param>
+        /// <returns>Escaped value</returns>
+        private string EscapeSafePairString(string value)
+        {
+            return value.Replace(@"=", @"\=");
         }
     }
 }

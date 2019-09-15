@@ -87,8 +87,6 @@
         /// </summary>
         public static string USER_AGENT;
 
-        private string m_apiAddr = "https://" + ADDR_API;
-
         /// <summary>
         /// Whether to use a sub domain.
         /// </summary>
@@ -152,6 +150,8 @@
         /// Maximum size of chunk when uploading a file.
         /// </summary>
         public int ChunkSize = 65000;
+
+        private string m_apiAddr = "https://" + ADDR_API;
 
         /// <summary>
         /// Default parameterless constructor.
@@ -441,19 +441,6 @@
             throw new Exception("Please call overriden method");
         }
 
-        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-            where T : BaseResult, new()
-        {
-            parameters?.Check();
-
-            return CallAndParse<T>(
-                                   method,
-                                   url,
-                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
-                                   file,
-                                   extraHeaders);
-        }
-
         /// <summary>
         /// Virtual method to call the cloudinary API and return the parsed response. This method should be overridden
         /// in child classes.
@@ -606,40 +593,12 @@
         }
 
         /// <summary>
-        /// Calculates current UNIX time.
-        /// </summary>
-        /// <returns>Amount of seconds from 1 january 1970.</returns>
-        private string GetTime()
-        {
-            return Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
-        }
-
-        /// <summary>
         /// Virtual build callback URL method. This method should be overridden in child classes.
         /// </summary>
         /// <returns>Callback URL.</returns>
         public virtual string BuildCallbackUrl(string path = "")
         {
             return string.Empty;
-        }
-
-        /// <summary>
-        /// Build unsigned upload params with defined preset.
-        /// </summary>
-        /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
-        /// <param name="parameters">Cloudinary upload parameters.</param>
-        /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
-        protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
-        {
-            if (parameters == null)
-            {
-                parameters = new SortedDictionary<string, object>();
-            }
-
-            parameters.Add("upload_preset", preset);
-            parameters.Add("unsigned", true);
-
-            return parameters;
         }
 
         /// <summary>
@@ -698,6 +657,45 @@
             return builder.ToString();
         }
 
+        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
+        {
+            parameters?.Check();
+
+            return CallAndParse<T>(
+                method,
+                url,
+                (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                file,
+                extraHeaders);
+        }
+
+        internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
+        {
+            parameters.Add("timestamp", GetTime());
+            parameters.Add("signature", SignParameters(parameters));
+            parameters.Add("api_key", Account.ApiKey);
+        }
+
+        /// <summary>
+        /// Build unsigned upload params with defined preset.
+        /// </summary>
+        /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
+        /// <param name="parameters">Cloudinary upload parameters.</param>
+        /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
+        protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
+        {
+            if (parameters == null)
+            {
+                parameters = new SortedDictionary<string, object>();
+            }
+
+            parameters.Add("upload_preset", preset);
+            parameters.Add("unsigned", true);
+
+            return parameters;
+        }
+
         /// <summary>
         /// Virtual encode API URL method. This method should be overridden in child classes.
         /// </summary>
@@ -747,13 +745,6 @@
             return sb.ToString();
         }
 
-        internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
-        {
-            parameters.Add("timestamp", GetTime());
-            parameters.Add("signature", SignParameters(parameters));
-            parameters.Add("api_key", Account.ApiKey);
-        }
-
         /// <summary>
         /// Write cloudinary parameter to the request stream.
         /// </summary>
@@ -800,6 +791,15 @@
                     file.BytesSent += bytesSent;
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculates current UNIX time.
+        /// </summary>
+        /// <returns>Amount of seconds from 1 january 1970.</returns>
+        private string GetTime()
+        {
+            return Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
         }
 
         /// <summary>

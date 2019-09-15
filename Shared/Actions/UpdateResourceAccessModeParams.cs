@@ -37,11 +37,6 @@
             set { m_accessMode = value; }
         }
 
-        private bool PublicIdsExist
-        {
-            get { return PublicIds != null && PublicIds.Count > 0; }
-        }
-
         /// <summary>
         /// Update resources with the given resource type. Default resource type: "image".
         /// </summary>
@@ -58,6 +53,11 @@
         {
             get { return m_type; }
             set { m_type = value; }
+        }
+
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
         }
 
         /// <summary>

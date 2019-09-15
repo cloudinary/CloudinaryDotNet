@@ -11,6 +11,26 @@
     /// </summary>
     public partial class Transformation : Core.ICloneable
     {
+        /// <summary>
+        /// A dictionary of transformation parameters.
+        /// </summary>
+        protected Dictionary<string, object> m_transformParams = new Dictionary<string, object>();
+
+        /// <summary>
+        /// A list of nested transformations.
+        /// </summary>
+        protected List<Transformation> m_nestedTransforms = new List<Transformation>();
+
+        /// <summary>
+        /// HTML width attribute.
+        /// </summary>
+        protected string m_htmlWidth = null;
+
+        /// <summary>
+        /// HTML height attribute.
+        /// </summary>
+        protected string m_htmlHeight = null;
+
         private const string VARIABLES_PARAM_KEY = "variables";
 
         private static readonly string[] SimpleParams = new string[]
@@ -39,26 +59,6 @@
             = new Transformation().Width("auto").Crop("limit");
 
         private static Transformation m_responsiveWidthTransform = null;
-
-        /// <summary>
-        /// A dictionary of transformation parameters.
-        /// </summary>
-        protected Dictionary<string, object> m_transformParams = new Dictionary<string, object>();
-
-        /// <summary>
-        /// A list of nested transformations.
-        /// </summary>
-        protected List<Transformation> m_nestedTransforms = new List<Transformation>();
-
-        /// <summary>
-        /// HTML width attribute.
-        /// </summary>
-        protected string m_htmlWidth = null;
-
-        /// <summary>
-        /// HTML height attribute.
-        /// </summary>
-        protected string m_htmlHeight = null;
 
         /// <summary>
         /// Creates empty transformation object.
@@ -205,26 +205,6 @@
         public string HtmlHeight
         {
             get { return m_htmlHeight; }
-        }
-
-        private static string ToString(object obj)
-        {
-            if (obj == null)
-            {
-                return null;
-            }
-
-            if (obj is string)
-            {
-                return obj.ToString();
-            }
-
-            if (obj is float || obj is double)
-            {
-                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
-            }
-
-            return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
         }
 
         /// <summary>
@@ -555,49 +535,6 @@
             return string.Join("/", transformations.ToArray());
         }
 
-        private string ProcessVariables(Expression[] variables)
-        {
-            if (variables == null || variables.Length == 0)
-            {
-                return null;
-            }
-
-            return string.Join(",", variables.Select(v => v.ToString()).ToArray());
-        }
-
-        private string[] GetStringArray(Dictionary<string, object> options, string key)
-        {
-            if (!options.ContainsKey(key))
-            {
-                return new string[0];
-            }
-
-            object value = options[key];
-
-            if (value is string[])
-            {
-                return (string[])value;
-            }
-            else
-            {
-                List<string> list = new List<string>();
-                list.Add(ToString(value));
-                return list.ToArray();
-            }
-        }
-
-        private string GetString(Dictionary<string, object> options, string key)
-        {
-            if (options.ContainsKey(key))
-            {
-                return ToString(options[key]);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         /// <summary>
         /// Get this transformation represented as string.
         /// </summary>
@@ -658,6 +595,69 @@
         object Core.ICloneable.Clone()
         {
             return Clone();
+        }
+
+        private static string ToString(object obj)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+
+            if (obj is string)
+            {
+                return obj.ToString();
+            }
+
+            if (obj is float || obj is double)
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
+            }
+
+            return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
+        }
+
+        private string ProcessVariables(Expression[] variables)
+        {
+            if (variables == null || variables.Length == 0)
+            {
+                return null;
+            }
+
+            return string.Join(",", variables.Select(v => v.ToString()).ToArray());
+        }
+
+        private string[] GetStringArray(Dictionary<string, object> options, string key)
+        {
+            if (!options.ContainsKey(key))
+            {
+                return new string[0];
+            }
+
+            object value = options[key];
+
+            if (value is string[])
+            {
+                return (string[])value;
+            }
+            else
+            {
+                List<string> list = new List<string>();
+                list.Add(ToString(value));
+                return list.ToArray();
+            }
+        }
+
+        private string GetString(Dictionary<string, object> options, string key)
+        {
+            if (options.ContainsKey(key))
+            {
+                return ToString(options[key]);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 

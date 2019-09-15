@@ -159,19 +159,6 @@
             return GetDownloadUrl(urlBuilder, parameters);
         }
 
-        private string GetUploadMappingUrl()
-        {
-            return m_api.ApiUrlV.
-                ResourceType("upload_mappings").
-                BuildUrl();
-        }
-
-        private string GetUploadMappingUrl(UploadMappingParams parameters)
-        {
-            var uri = GetUploadMappingUrl();
-            return new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
-        }
-
         /// <summary>
         ///  Returns URL on archive file.
         /// </summary>
@@ -221,37 +208,6 @@
         public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams parameters)
         {
             return PublishResource(string.Empty, string.Empty, parameters);
-        }
-
-        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams parameters)
-        {
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                parameters.AddCustomParam(byKey, value);
-            }
-
-            Url url = m_api.ApiUrlV
-                .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLower())
-                .Add("publish_resources");
-
-            return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
-        }
-
-        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
-        {
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                parameters.AddCustomParam(byKey, value);
-            }
-
-            Url url = m_api.ApiUrlV
-                 .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLower())
-                 .Add(parameters.Type)
-                 .Add(Constants.UPDATE_ACESS_MODE);
-
-            return m_api.CallApi<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
 
         /// <summary>
@@ -469,30 +425,6 @@
         }
 
         /// <summary>
-        /// Uploads a resource to Cloudinary.
-        /// </summary>
-        /// <param name="parameters">Parameters of uploading .</param>
-        /// <returns>Results of uploading.</returns>
-        private T Upload<T, P>(P parameters)
-            where T : UploadResult, new()
-            where P : BasicRawUploadParams, new()
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentNullException("parameters", "Upload parameters should be defined");
-            }
-
-            string uri = m_api.ApiUrlV
-                .Action(Constants.ACTION_NAME_UPLOAD)
-                .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
-                .BuildUrl();
-
-            parameters.File.Reset();
-
-            return m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File);
-        }
-
-        /// <summary>
         /// Uploads an image file to Cloudinary.
         /// </summary>
         /// <param name="parameters">Parameters of image uploading .</param>
@@ -595,13 +527,6 @@
             parameters.File.Reset();
 
             return m_api.CallApi<RawUploadResult>(HttpMethod.POST, uri, parameters, parameters.File);
-        }
-
-        private string RandomPublicId()
-        {
-            byte[] buffer = new byte[8];
-            m_random.NextBytes(buffer);
-            return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
         }
 
         /// <summary>
@@ -1340,22 +1265,6 @@
         }
 
         /// <summary>
-        /// Calls an upload mappings API.
-        /// </summary>
-        /// <param name="httpMethod">HTTP method.</param>
-        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
-        /// existing online locations.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
-        private UploadMappingResults CallUploadMappingsAPI(HttpMethod httpMethod, UploadMappingParams parameters)
-        {
-            string url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-                ? GetUploadMappingUrl()
-                : GetUploadMappingUrl(parameters);
-
-            return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
-        }
-
-        /// <summary>
         /// Returns list of all upload mappings.
         /// </summary>
         /// <param name="parameters">
@@ -1632,6 +1541,97 @@
             m_api.FinalizeUploadParameters(parameters);
             builder.SetParameters(parameters);
             return builder.ToString();
+        }
+
+        private string GetUploadMappingUrl()
+        {
+            return m_api.ApiUrlV.
+                ResourceType("upload_mappings").
+                BuildUrl();
+        }
+
+        private string GetUploadMappingUrl(UploadMappingParams parameters)
+        {
+            var uri = GetUploadMappingUrl();
+            return new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
+        }
+
+        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams parameters)
+        {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
+                parameters.AddCustomParam(byKey, value);
+            }
+
+            Url url = m_api.ApiUrlV
+                .Add("resources")
+                .Add(parameters.ResourceType.ToString().ToLower())
+                .Add("publish_resources");
+
+            return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
+        }
+
+        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
+        {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
+                parameters.AddCustomParam(byKey, value);
+            }
+
+            Url url = m_api.ApiUrlV
+                .Add(Constants.RESOURCES_API_URL)
+                .Add(parameters.ResourceType.ToString().ToLower())
+                .Add(parameters.Type)
+                .Add(Constants.UPDATE_ACESS_MODE);
+
+            return m_api.CallApi<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
+        }
+
+        /// <summary>
+        /// Uploads a resource to Cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of uploading .</param>
+        /// <returns>Results of uploading.</returns>
+        private T Upload<T, P>(P parameters)
+            where T : UploadResult, new()
+            where P : BasicRawUploadParams, new()
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException("parameters", "Upload parameters should be defined");
+            }
+
+            string uri = m_api.ApiUrlV
+                .Action(Constants.ACTION_NAME_UPLOAD)
+                .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
+                .BuildUrl();
+
+            parameters.File.Reset();
+
+            return m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File);
+        }
+
+        private string RandomPublicId()
+        {
+            byte[] buffer = new byte[8];
+            m_random.NextBytes(buffer);
+            return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+        }
+
+        /// <summary>
+        /// Calls an upload mappings API.
+        /// </summary>
+        /// <param name="httpMethod">HTTP method.</param>
+        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
+        /// existing online locations.</param>
+        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        private UploadMappingResults CallUploadMappingsAPI(HttpMethod httpMethod, UploadMappingParams parameters)
+        {
+            string url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
+                ? GetUploadMappingUrl()
+                : GetUploadMappingUrl(parameters);
+
+            return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
         }
     }
 }

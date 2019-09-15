@@ -15,16 +15,6 @@
         internal static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary>
-        /// Converts DateTime to Unix epoch time in seconds.
-        /// </summary>
-        /// <param name="date">The date to be converted.</param>
-        /// <returns>Epoch time in seconds.</returns>
-        internal static long ToUnixTimeSeconds(DateTime date)
-        {
-            return Convert.ToInt64((date.ToUniversalTime() - Epoch).TotalSeconds);
-        }
-
-        /// <summary>
         /// Converts Unix epoch time in seconds to DateTime.
         /// </summary>
         /// <param name="unixTime">The epoch time to be converted.</param>
@@ -32,6 +22,16 @@
         public static DateTime FromUnixTimeSeconds(long unixTime)
         {
             return Epoch.AddSeconds(unixTime);
+        }
+
+        /// <summary>
+        /// Converts DateTime to Unix epoch time in seconds.
+        /// </summary>
+        /// <param name="date">The date to be converted.</param>
+        /// <returns>Epoch time in seconds.</returns>
+        internal static long ToUnixTimeSeconds(DateTime date)
+        {
+            return Convert.ToInt64((date.ToUniversalTime() - Epoch).TotalSeconds);
         }
 
         /// <summary>

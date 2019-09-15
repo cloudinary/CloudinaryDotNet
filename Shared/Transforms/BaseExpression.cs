@@ -103,40 +103,6 @@
         }
 
         /// <summary>
-        /// Helper method to replace the operator to the Cloudinary URL syntax.
-        /// </summary>
-        /// <param name="value">An operator to replace.</param>
-        /// <returns>An operator replaced to the Cloudinary URL syntax.</returns>
-        protected static string GetOperatorReplacement(string value)
-        {
-            if (operators.ContainsKey(value))
-            {
-                return operators[value];
-            }
-
-            return parameters.ContainsKey(value) ? parameters[value] : value;
-        }
-
-        /// <summary>
-        /// Get regex pattern for operators and predefined vars as /((operators)(?=[ _])|variables)/.
-        /// </summary>
-        /// <returns>A regex pattern.</returns>
-        private static string GetPattern()
-        {
-            var operators = new List<string>(BaseExpression<T>.operators.Keys);
-            operators.Reverse();
-            var sb = new StringBuilder("((");
-            foreach (string op in operators)
-            {
-                sb.Append(Regex.Escape(op)).Append("|");
-            }
-
-            sb.Remove(sb.Length - 1, 1);
-            sb.Append(")(?=[ _])|").Append(string.Join("|", parameters.Keys.ToArray())).Append(")");
-            return sb.ToString();
-        }
-
-        /// <summary>
         /// Set parent transformation.
         /// </summary>
         /// <param name="parent">A parent transformation.</param>
@@ -144,14 +110,6 @@
         {
             Parent = parent;
             return (T)this;
-        }
-
-        /// <summary>
-        /// Serialize a list of predicates.
-        /// </summary>
-        protected string Serialize()
-        {
-            return Normalize(string.Join("_", m_expressions));
         }
 
         /// <summary>
@@ -423,6 +381,48 @@
         public T Nin(object value)
         {
             return Nin().Value(value);
+        }
+
+        /// <summary>
+        /// Helper method to replace the operator to the Cloudinary URL syntax.
+        /// </summary>
+        /// <param name="value">An operator to replace.</param>
+        /// <returns>An operator replaced to the Cloudinary URL syntax.</returns>
+        protected static string GetOperatorReplacement(string value)
+        {
+            if (operators.ContainsKey(value))
+            {
+                return operators[value];
+            }
+
+            return parameters.ContainsKey(value) ? parameters[value] : value;
+        }
+
+        /// <summary>
+        /// Serialize a list of predicates.
+        /// </summary>
+        protected string Serialize()
+        {
+            return Normalize(string.Join("_", m_expressions));
+        }
+
+        /// <summary>
+        /// Get regex pattern for operators and predefined vars as /((operators)(?=[ _])|variables)/.
+        /// </summary>
+        /// <returns>A regex pattern.</returns>
+        private static string GetPattern()
+        {
+            var operators = new List<string>(BaseExpression<T>.operators.Keys);
+            operators.Reverse();
+            var sb = new StringBuilder("((");
+            foreach (string op in operators)
+            {
+                sb.Append(Regex.Escape(op)).Append("|");
+            }
+
+            sb.Remove(sb.Length - 1, 1);
+            sb.Append(")(?=[ _])|").Append(string.Join("|", parameters.Keys.ToArray())).Append(")");
+            return sb.ToString();
         }
     }
 }

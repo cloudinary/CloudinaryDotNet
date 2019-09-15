@@ -132,6 +132,144 @@
             }
         }
 
+        /// <summary>
+        /// Check file path for callback url.
+        /// </summary>
+        /// <param name="path">File path to check.</param>
+        /// <returns>Provided path if it matches the callback url format.</returns>
+        public override string BuildCallbackUrl(string path = "")
+        {
+            if (!Regex.IsMatch(path.ToLower(), "^https?:/.*"))
+            {
+                throw new Exception("Provide an absolute path to file!");
+            }
+
+            return path;
+        }
+
+        /// <summary>
+        /// Builds HTML file input tag for unsigned upload of an asset.
+        /// </summary>
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="preset">The name of upload preset.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
+        public string BuildUnsignedUploadForm(string field, string preset, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        {
+            return BuildUploadForm(field, resourceType, BuildUnsignedUploadParams(preset, parameters), htmlOptions);
+        }
+
+        /// <summary>
+        /// Builds HTML file input tag for upload an asset.
+        /// </summary>
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
+        public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        {
+            return BuildUploadFormShared(field, resourceType, parameters, htmlOptions);
+        }
+
+        /// <summary>
+        /// Call the Cloudinary API and parse HTTP response.
+        /// </summary>
+        /// <typeparam name="T">The type of the parsed response.</typeparam>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">A generated URL.</param>
+        /// <param name="parameters">A dictionary of parameters in cloudinary notation.</param>
+        /// <param name="file">The file to upload.</param>
+        /// <param name="extraHeaders">The extra headers to pass into the request.</param>
+        /// <returns>Instance of the parsed response from the cloudinary API.</returns>
+        public override T CallAndParse<T>(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null)
+        {
+            using (var response = Call(
+                method,
+                url,
+                parameters,
+                file,
+                extraHeaders))
+            {
+                return Parse<T>(response);
+            }
+        }
+
+        /// <summary>
+        /// Parses HTTP response and creates new instance of this class.
+        /// </summary>
+        /// <param name="response">HTTP response.</param>
+        /// <returns>New instance of this class.</returns>
+        internal static T Parse<T>(object response)
+            where T : BaseResult, new()
+        {
+            if (response == null)
+            {
+                throw new ArgumentNullException("response");
+            }
+
+            HttpResponseMessage message = (HttpResponseMessage)response;
+
+            T result;
+
+            var task = message.Content.ReadAsStreamAsync();
+            task.Wait();
+            using (Stream stream = task.Result)
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string s = reader.ReadToEnd();
+                try
+                {
+                    result = JsonConvert.DeserializeObject<T>(s);
+                    result.JsonObj = JToken.Parse(s);
+                }
+                catch (JsonException jex)
+                {
+                    throw new Exception($"Failed to deserialize response with status code: {message.StatusCode}", jex);
+                }
+            }
+
+            if (message.Headers != null)
+            {
+                foreach (var header in message.Headers)
+                {
+                    if (header.Key.StartsWith("X-FeatureRateLimit"))
+                    {
+                        long l;
+                        DateTime t;
+
+                        if (header.Key.EndsWith("Limit") && long.TryParse(header.Value.First(), out l))
+                        {
+                            result.Limit = l;
+                        }
+
+                        if (header.Key.EndsWith("Remaining") && long.TryParse(header.Value.First(), out l))
+                        {
+                            result.Remaining = l;
+                        }
+
+                        if (header.Key.EndsWith("Reset") && DateTime.TryParse(header.Value.First(), out t))
+                        {
+                            result.Reset = t;
+                        }
+                    }
+                }
+            }
+
+            result.StatusCode = message.StatusCode;
+
+            return result;
+        }
+
         internal HttpRequestMessage PrepareRequestBody(HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             SetHttpMethod(method, request);
@@ -171,6 +309,38 @@
             }
 
             return request;
+        }
+
+        /// <summary>
+        /// Encode url to a representation that is unambiguous and universally accepted by web browsers and servers.
+        /// </summary>
+        /// <param name="value">The url to encode.</param>
+        /// <returns>Encoded url.</returns>
+        protected override string EncodeApiUrl(string value)
+        {
+            return HtmlEncoder.Default.Encode(value);
+        }
+
+        private static void SetHttpMethod(HttpMethod method, HttpRequestMessage req)
+        {
+            switch (method)
+            {
+                case HttpMethod.DELETE:
+                    req.Method = System.Net.Http.HttpMethod.Delete;
+                    break;
+                case HttpMethod.GET:
+                    req.Method = System.Net.Http.HttpMethod.Get;
+                    break;
+                case HttpMethod.POST:
+                    req.Method = System.Net.Http.HttpMethod.Post;
+                    break;
+                case HttpMethod.PUT:
+                    req.Method = System.Net.Http.HttpMethod.Put;
+                    break;
+                default:
+                    req.Method = System.Net.Http.HttpMethod.Get;
+                    break;
+            }
         }
 
         private void PrepareRequestContent(HttpRequestMessage request, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
@@ -257,82 +427,6 @@
             return content;
         }
 
-        /// <summary>
-        /// Check file path for callback url.
-        /// </summary>
-        /// <param name="path">File path to check.</param>
-        /// <returns>Provided path if it matches the callback url format.</returns>
-        public override string BuildCallbackUrl(string path = "")
-        {
-            if (!Regex.IsMatch(path.ToLower(), "^https?:/.*"))
-            {
-                throw new Exception("Provide an absolute path to file!");
-            }
-
-            return path;
-        }
-
-        /// <summary>
-        /// Builds HTML file input tag for unsigned upload of an asset.
-        /// </summary>
-        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
-        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
-        /// <param name="preset">The name of upload preset.</param>
-        /// <param name="resourceType">Type of the uploaded resource.</param>
-        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
-        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
-        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
-        public string BuildUnsignedUploadForm(string field, string preset, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
-        {
-            return BuildUploadForm(field, resourceType, BuildUnsignedUploadParams(preset, parameters), htmlOptions);
-        }
-
-        /// <summary>
-        /// Builds HTML file input tag for upload an asset.
-        /// </summary>
-        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
-        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
-        /// <param name="resourceType">Type of the uploaded resource.</param>
-        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
-        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
-        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
-        public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
-        {
-            return BuildUploadFormShared(field, resourceType, parameters, htmlOptions);
-        }
-
-        /// <summary>
-        /// Encode url to a representation that is unambiguous and universally accepted by web browsers and servers.
-        /// </summary>
-        /// <param name="value">The url to encode.</param>
-        /// <returns>Encoded url.</returns>
-        protected override string EncodeApiUrl(string value)
-        {
-            return HtmlEncoder.Default.Encode(value);
-        }
-
-        private static void SetHttpMethod(HttpMethod method, HttpRequestMessage req)
-        {
-            switch (method)
-            {
-                case HttpMethod.DELETE:
-                    req.Method = System.Net.Http.HttpMethod.Delete;
-                    break;
-                case HttpMethod.GET:
-                    req.Method = System.Net.Http.HttpMethod.Get;
-                    break;
-                case HttpMethod.POST:
-                    req.Method = System.Net.Http.HttpMethod.Post;
-                    break;
-                case HttpMethod.PUT:
-                    req.Method = System.Net.Http.HttpMethod.Put;
-                    break;
-                default:
-                    req.Method = System.Net.Http.HttpMethod.Get;
-                    break;
-            }
-        }
-
         private Stream GetRangeFromFile(FileDescription file, Stream stream)
         {
             MemoryStream memStream = new MemoryStream();
@@ -363,100 +457,6 @@
             }
 
             return cnt == 0;
-        }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class.
-        /// </summary>
-        /// <param name="response">HTTP response.</param>
-        /// <returns>New instance of this class.</returns>
-        internal static T Parse<T>(object response)
-            where T : BaseResult, new()
-        {
-            if (response == null)
-            {
-                throw new ArgumentNullException("response");
-            }
-
-            HttpResponseMessage message = (HttpResponseMessage)response;
-
-            T result;
-
-            var task = message.Content.ReadAsStreamAsync();
-            task.Wait();
-            using (Stream stream = task.Result)
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                string s = reader.ReadToEnd();
-                try
-                {
-                    result = JsonConvert.DeserializeObject<T>(s);
-                    result.JsonObj = JToken.Parse(s);
-                }
-                catch (JsonException jex)
-                {
-                    throw new Exception($"Failed to deserialize response with status code: {message.StatusCode}", jex);
-                }
-            }
-
-            if (message.Headers != null)
-            {
-                foreach (var header in message.Headers)
-                {
-                    if (header.Key.StartsWith("X-FeatureRateLimit"))
-                    {
-                        long l;
-                        DateTime t;
-
-                        if (header.Key.EndsWith("Limit") && long.TryParse(header.Value.First(), out l))
-                        {
-                            result.Limit = l;
-                        }
-
-                        if (header.Key.EndsWith("Remaining") && long.TryParse(header.Value.First(), out l))
-                        {
-                            result.Remaining = l;
-                        }
-
-                        if (header.Key.EndsWith("Reset") && DateTime.TryParse(header.Value.First(), out t))
-                        {
-                            result.Reset = t;
-                        }
-                    }
-                }
-            }
-
-            result.StatusCode = message.StatusCode;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Call the Cloudinary API and parse HTTP response.
-        /// </summary>
-        /// <typeparam name="T">The type of the parsed response.</typeparam>
-        /// <param name="method">HTTP method.</param>
-        /// <param name="url">A generated URL.</param>
-        /// <param name="parameters">A dictionary of parameters in cloudinary notation.</param>
-        /// <param name="file">The file to upload.</param>
-        /// <param name="extraHeaders">The extra headers to pass into the request.</param>
-        /// <returns>Instance of the parsed response from the cloudinary API.</returns>
-        public override T CallAndParse<T>(
-            HttpMethod method,
-            string url,
-            SortedDictionary<string, object> parameters,
-            FileDescription file,
-            Dictionary<string, string> extraHeaders = null)
-        {
-            using (var response = Call(
-                method,
-                url,
-                parameters,
-                file,
-                extraHeaders))
-            {
-                return Parse<T>(response);
-            }
         }
     }
 }

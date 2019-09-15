@@ -81,6 +81,23 @@
         }
 
         /// <summary>
+        /// Convert hex string to the array of bytes.
+        /// </summary>
+        /// <param name="s">Hex string to convert.</param>
+        /// <returns>An array of bytes.</returns>
+        public static byte[] HexStringToByteArray(string s)
+        {
+            int len = s.Length;
+            byte[] data = new byte[len / 2];
+            for (int i = 0; i < len; i += 2)
+            {
+                data[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);
+            }
+
+            return data;
+        }
+
+        /// <summary>
         /// Set the Start time when the cookie becomes valid.
         /// </summary>
         /// <param name="startTime">Timestamp in UNIX time when the cookie becomes valid.</param>
@@ -211,12 +228,6 @@
             return authToken;
         }
 
-        private AuthToken SetNull()
-        {
-            isNullToken = true;
-            return this;
-        }
-
         /// <summary>
         /// Check the equality of two tokens.
         /// </summary>
@@ -239,6 +250,30 @@
             else
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Compute a hashcode for the token.
+        /// </summary>
+        /// <returns>The hashcode for the token.</returns>
+        public override int GetHashCode()
+        {
+            if (isNullToken)
+            {
+                return 0;
+            }
+            else
+            {
+                List<string> hashComponents = new List<string>();
+                hashComponents.Add(tokenName);
+                hashComponents.Add(startTime.ToString());
+                hashComponents.Add(expiration.ToString());
+                hashComponents.Add(duration.ToString());
+                hashComponents.Add(ip);
+                hashComponents.Add(acl);
+
+                return hashComponents.GetHashCode();
             }
         }
 
@@ -269,45 +304,10 @@
             return hex;
         }
 
-        /// <summary>
-        /// Convert hex string to the array of bytes.
-        /// </summary>
-        /// <param name="s">Hex string to convert.</param>
-        /// <returns>An array of bytes.</returns>
-        public static byte[] HexStringToByteArray(string s)
+        private AuthToken SetNull()
         {
-            int len = s.Length;
-            byte[] data = new byte[len / 2];
-            for (int i = 0; i < len; i += 2)
-            {
-                data[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);
-            }
-
-            return data;
-        }
-
-        /// <summary>
-        /// Compute a hashcode for the token.
-        /// </summary>
-        /// <returns>The hashcode for the token.</returns>
-        public override int GetHashCode()
-        {
-            if (isNullToken)
-            {
-                return 0;
-            }
-            else
-            {
-                List<string> hashComponents = new List<string>();
-                hashComponents.Add(tokenName);
-                hashComponents.Add(startTime.ToString());
-                hashComponents.Add(expiration.ToString());
-                hashComponents.Add(duration.ToString());
-                hashComponents.Add(ip);
-                hashComponents.Add(acl);
-
-                return hashComponents.GetHashCode();
-            }
+            isNullToken = true;
+            return this;
         }
     }
 }

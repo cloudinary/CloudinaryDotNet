@@ -198,41 +198,6 @@
             return this;
         }
 
-        private string Encode(string text)
-        {
-            return Utils.Encode(text)
-                .Replace("%2f", "%252f").Replace("/", "%252f")
-                .Replace("%3a", ":").Replace("+", "%20")
-                .Replace("%2c", "%252c").Replace(",", "%252c")
-                .Replace("(", "%28").Replace(")", "%29")
-                .Replace("$", "%24");
-        }
-
-        /// <summary>
-        /// Prepare text for Overlay.
-        /// </summary>
-        private string OverlayTextEncode(string text)
-        {
-            string part;
-            StringBuilder result = new StringBuilder();
-
-            // Don't encode interpolation expressions e.g. $(variable)
-            var match = Regex.Matches(text, "\\$\\([a-zA-Z]\\w+\\)");
-            int start = 0;
-            foreach (Match m in match)
-            {
-                part = text.Substring(start, m.Index - start);
-                part = Encode(part);
-                result.Append(part);
-                result.Append(m.Value);
-                start = m.Index + m.Length;
-            }
-
-            result.Append(Encode(text.Substring(start)));
-
-            return result.ToString();
-        }
-
         /// <summary>
         /// Type of font antialiasing to use.
         /// </summary>
@@ -366,6 +331,41 @@
             }
 
             return base.ToString();
+        }
+
+        private string Encode(string text)
+        {
+            return Utils.Encode(text)
+                .Replace("%2f", "%252f").Replace("/", "%252f")
+                .Replace("%3a", ":").Replace("+", "%20")
+                .Replace("%2c", "%252c").Replace(",", "%252c")
+                .Replace("(", "%28").Replace(")", "%29")
+                .Replace("$", "%24");
+        }
+
+        /// <summary>
+        /// Prepare text for Overlay.
+        /// </summary>
+        private string OverlayTextEncode(string text)
+        {
+            string part;
+            StringBuilder result = new StringBuilder();
+
+            // Don't encode interpolation expressions e.g. $(variable)
+            var match = Regex.Matches(text, "\\$\\([a-zA-Z]\\w+\\)");
+            int start = 0;
+            foreach (Match m in match)
+            {
+                part = text.Substring(start, m.Index - start);
+                part = Encode(part);
+                result.Append(part);
+                result.Append(m.Value);
+                start = m.Index + m.Length;
+            }
+
+            result.Append(Encode(text.Substring(start)));
+
+            return result.ToString();
         }
 
         private string TextStyleIdentifier()
