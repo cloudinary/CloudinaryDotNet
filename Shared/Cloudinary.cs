@@ -39,23 +39,6 @@
         protected Api m_api;
 
         /// <summary>
-        /// API object that used by this instance.
-        /// </summary>
-        public Api Api
-        {
-            get { return m_api; }
-        }
-
-        /// <summary>
-        /// Gets the advanced search provider used by the Cloudinary instance.
-        /// </summary>
-        /// <returns></returns>
-        public Search Search()
-        {
-            return new Search(m_api);
-        }
-
-        /// <summary>
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public Cloudinary()
@@ -79,6 +62,23 @@
         public Cloudinary(Account account)
         {
             m_api = new Api(account);
+        }
+
+        /// <summary>
+        /// API object that used by this instance.
+        /// </summary>
+        public Api Api
+        {
+            get { return m_api; }
+        }
+
+        /// <summary>
+        /// Gets the advanced search provider used by the Cloudinary instance.
+        /// </summary>
+        /// <returns></returns>
+        public Search Search()
+        {
+            return new Search(m_api);
         }
 
         /// <summary>

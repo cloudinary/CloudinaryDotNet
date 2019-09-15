@@ -4,10 +4,50 @@
     using System.Runtime.Serialization;
 
     /// <summary>
+    /// The action to perform on image resources using the given tag.
+    /// </summary>
+    public enum TagCommand
+    {
+        /// <summary>
+        /// Assign the given tag to the resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "add")]
+        Add,
+
+        /// <summary>
+        /// Remove the given tag from the resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "remove")]
+        Remove,
+
+        /// <summary>
+        /// Assign the given tag to the resources with the given Public IDs while clearing all other tags assigned
+        /// to these resources.
+        /// </summary>
+        [EnumMember(Value = "replace")]
+        Replace,
+
+        /// <summary>
+        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other
+        /// resources. This means that only the resources with the given Public IDs will have the given tag.
+        /// </summary>
+        [EnumMember(Value = "set_exclusive")]
+        SetExclusive,
+
+        /// <summary>
+        /// Remove all the tags assigned to the resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "remove_all")]
+        RemoveAll,
+    }
+
+    /// <summary>
     /// Parameters of tag management request.
     /// </summary>
     public class TagParams : BaseParams
     {
+        private List<string> m_publicIds = new List<string>();
+
         /// <summary>
         /// Instantiates the <see cref="TagParams"/> object.
         /// </summary>
@@ -15,8 +55,6 @@
         {
             ResourceType = ResourceType.Image;
         }
-
-        private List<string> m_publicIds = new List<string>();
 
         /// <summary>
         /// A list of public IDs (up to 1000) of assets uploaded to Cloudinary.
@@ -69,43 +107,5 @@
 
             return dict;
         }
-    }
-
-    /// <summary>
-    /// The action to perform on image resources using the given tag.
-    /// </summary>
-    public enum TagCommand
-    {
-        /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "add")]
-        Add,
-
-        /// <summary>
-        /// Remove the given tag from the resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "remove")]
-        Remove,
-
-        /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs while clearing all other tags assigned
-        /// to these resources.
-        /// </summary>
-        [EnumMember(Value = "replace")]
-        Replace,
-
-        /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other
-        /// resources. This means that only the resources with the given Public IDs will have the given tag.
-        /// </summary>
-        [EnumMember(Value = "set_exclusive")]
-        SetExclusive,
-
-        /// <summary>
-        /// Remove all the tags assigned to the resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "remove_all")]
-        RemoveAll,
     }
 }

@@ -54,16 +54,16 @@
     public class TransformDerived
     {
         /// <summary>
-        /// The public identifier that is used for accessing the media asset.
-        /// </summary>
-        [DataMember(Name = "public_id")]
-        public string PublicId { get; protected set; }
-
-        /// <summary>
         /// The type of media asset: image, raw, or video.
         /// </summary>
         [DataMember(Name = "resource_type")]
         public string m_resourceType;
+
+        /// <summary>
+        /// The public identifier that is used for accessing the media asset.
+        /// </summary>
+        [DataMember(Name = "public_id")]
+        public string PublicId { get; protected set; }
 
         /// <summary>
         /// The type of media asset: image, raw, or video.

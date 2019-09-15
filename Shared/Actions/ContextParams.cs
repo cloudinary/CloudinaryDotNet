@@ -4,6 +4,24 @@
     using System.Runtime.Serialization;
 
     /// <summary>
+    /// The action to perform on image resources using the given context.
+    /// </summary>
+    public enum ContextCommand
+    {
+        /// <summary>
+        /// Assign the given context to the resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "add")]
+        Add,
+
+        /// <summary>
+        /// Remove all contexts from resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "remove_all")]
+        RemoveAll,
+    }
+
+    /// <summary>
     /// Parameters for context management.
     /// </summary>
     public class ContextParams : BaseParams
@@ -80,23 +98,5 @@
 
             return dict;
         }
-    }
-
-    /// <summary>
-    /// The action to perform on image resources using the given context.
-    /// </summary>
-    public enum ContextCommand
-    {
-        /// <summary>
-        /// Assign the given context to the resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "add")]
-        Add,
-
-        /// <summary>
-        /// Remove all contexts from resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "remove_all")]
-        RemoveAll,
     }
 }

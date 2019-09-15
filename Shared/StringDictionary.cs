@@ -45,31 +45,68 @@
         public bool Sort { get; set; }
 
         /// <summary>
-        /// Add a new pair of key and value.
+        /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1" />.
         /// </summary>
-        public void Add(string key, string value)
+        /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1" />.</returns>
+        public int Count
         {
-            var newItem = new KeyValuePair<string, string>(key, value);
-            m_list.Add(newItem);
+            get
+            {
+                return m_list.Count;
+            }
         }
 
         /// <summary>
-        /// Removes the specified key.
+        /// Returns all keys and values.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns></returns>
-        public string Remove(string key)
+        public string[] Pairs
         {
-            foreach (var item in m_list)
+            get
             {
-                if (item.Key == key)
-                {
-                    m_list.Remove(item);
-                    return item.Value;
-                }
+                return m_list.Select(pair => pair.Value == null
+                    ? pair.Key
+                    : $"{pair.Key}={pair.Value}").ToArray();
             }
+        }
 
-            return null;
+        /// <summary>
+        /// Returns all keys and values with escaped "=" symbol
+        /// </summary>
+        public string[] SafePairs
+        {
+            get
+            {
+                return m_list.Select(pair => string.IsNullOrEmpty(pair.Value)
+                    ? EscapeSafePairString(pair.Key)
+                    : $"{EscapeSafePairString(pair.Key)}={EscapeSafePairString(pair.Value)}").ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the <see cref="T:System.Collections.Generic.IDictionary`2" />.
+        /// </summary>
+        /// <returns>An <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the object that implements <see cref="T:System.Collections.Generic.IDictionary`2" />.</returns>
+        public ICollection<string> Keys
+        {
+            get { return m_list.Select(pair => pair.Key).ToArray(); }
+        }
+
+        /// <summary>
+        /// Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the values in the <see cref="T:System.Collections.Generic.IDictionary`2" />.
+        /// </summary>
+        /// <returns>An <see cref="T:System.Collections.Generic.ICollection`1" /> containing the values in the object that implements <see cref="T:System.Collections.Generic.IDictionary`2" />.</returns>
+        public ICollection<string> Values
+        {
+            get { return m_list.Select(pair => pair.Value).ToArray(); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.
+        /// </summary>
+        /// <returns>true if the <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only; otherwise, false.</returns>
+        public bool IsReadOnly
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -111,36 +148,39 @@
         }
 
         /// <summary>
+        /// Add a new pair of key and value.
+        /// </summary>
+        public void Add(string key, string value)
+        {
+            var newItem = new KeyValuePair<string, string>(key, value);
+            m_list.Add(newItem);
+        }
+
+        /// <summary>
+        /// Removes the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
+        public string Remove(string key)
+        {
+            foreach (var item in m_list)
+            {
+                if (item.Key == key)
+                {
+                    m_list.Remove(item);
+                    return item.Value;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1" />.
         /// </summary>
         public void Clear()
         {
             m_list.Clear();
-        }
-
-        /// <summary>
-        /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1" />.
-        /// </summary>
-        /// <returns>The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1" />.</returns>
-        public int Count
-        {
-            get
-            {
-                return m_list.Count;
-            }
-        }
-
-        /// <summary>
-        /// Returns all keys and values.
-        /// </summary>
-        public string[] Pairs
-        {
-            get
-            {
-                return m_list.Select(pair => pair.Value == null
-                    ? pair.Key
-                    : $"{pair.Key}={pair.Value}").ToArray();
-            }
         }
 
         /// <summary>
@@ -151,19 +191,6 @@
         private string EscapeSafePairString(string value)
         {
             return value.Replace(@"=", @"\=");
-        }
-
-        /// <summary>
-        /// Returns all keys and values with escaped "=" symbol
-        /// </summary>
-        public string[] SafePairs
-        {
-            get
-            {
-                return m_list.Select(pair => string.IsNullOrEmpty(pair.Value)
-                    ? EscapeSafePairString(pair.Key)
-                    : $"{EscapeSafePairString(pair.Key)}={EscapeSafePairString(pair.Value)}").ToArray();
-            }
         }
 
         /// <summary>
@@ -217,15 +244,6 @@
         }
 
         /// <summary>
-        /// Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the <see cref="T:System.Collections.Generic.IDictionary`2" />.
-        /// </summary>
-        /// <returns>An <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the object that implements <see cref="T:System.Collections.Generic.IDictionary`2" />.</returns>
-        public ICollection<string> Keys
-        {
-            get { return m_list.Select(pair => pair.Key).ToArray(); }
-        }
-
-        /// <summary>
         /// Removes the element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2" />.
         /// </summary>
         /// <param name="key">The key of the element to remove.</param>
@@ -269,15 +287,6 @@
         }
 
         /// <summary>
-        /// Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the values in the <see cref="T:System.Collections.Generic.IDictionary`2" />.
-        /// </summary>
-        /// <returns>An <see cref="T:System.Collections.Generic.ICollection`1" /> containing the values in the object that implements <see cref="T:System.Collections.Generic.IDictionary`2" />.</returns>
-        public ICollection<string> Values
-        {
-            get { return m_list.Select(pair => pair.Value).ToArray(); }
-        }
-
-        /// <summary>
         /// Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1" />.
         /// </summary>
         /// <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1" />.</param>
@@ -306,15 +315,6 @@
         public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
         {
             m_list.CopyTo(array, arrayIndex);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.
-        /// </summary>
-        /// <returns>true if the <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only; otherwise, false.</returns>
-        public bool IsReadOnly
-        {
-            get { return false; }
         }
 
         /// <summary>

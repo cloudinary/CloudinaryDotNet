@@ -80,6 +80,11 @@
         }
 
         /// <summary>
+        /// Parent transformation this expression belongs to.
+        /// </summary>
+        protected Transformation Parent { get; private set; }
+
+        /// <summary>
         /// Normalize an expression string, replace "nice names" with their coded values and spaces with "_"
         /// e.g. "width > 0" => "w_lt_0".
         /// </summary>
@@ -130,11 +135,6 @@
             sb.Append(")(?=[ _])|").Append(string.Join("|", parameters.Keys.ToArray())).Append(")");
             return sb.ToString();
         }
-
-        /// <summary>
-        /// Parent transformation this expression belongs to.
-        /// </summary>
-        protected Transformation Parent { get; private set; }
 
         /// <summary>
         /// Set parent transformation.

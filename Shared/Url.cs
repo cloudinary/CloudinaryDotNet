@@ -40,142 +40,6 @@
         };
 
         /// <summary>
-        /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs.
-        /// </summary>
-        /// <param name="sourceType">The type of the source.</param>
-        /// <param name="codecs">Codecs.</param>
-        /// <returns>Resulting mime type.</returns>
-        private static string VideoMimeType(string sourceType, params string[] codecs)
-        {
-            sourceType = sourceType == "ogv" ? "ogg" : sourceType;
-
-            if (string.IsNullOrEmpty(sourceType))
-            {
-                return string.Empty;
-            }
-
-            if (codecs == null || codecs.Length == 0)
-            {
-                return $"video/{sourceType}";
-            }
-
-            var codecsJoined = string.Join(", ", codecs.Where(c => !string.IsNullOrEmpty(c)));
-            var codecsStr = !string.IsNullOrEmpty(codecsJoined) ? $"; codecs={codecsJoined}" : string.Empty;
-
-            return $"video/{sourceType}{codecsStr}";
-        }
-
-        private static void AppendTransformation(Url url, Transformation transform)
-        {
-            if (url.m_transformation == null)
-            {
-                url.Transform(transform);
-            }
-            else
-            {
-                url.m_transformation.Chain();
-                transform.NestedTransforms.AddRange(url.m_transformation.NestedTransforms);
-                url.Transform(transform);
-            }
-        }
-
-        /// <summary>
-        /// Helper method to merge transformation for the URL.
-        /// </summary>
-        /// <param name="url">The URL with transformation to be merged.</param>
-        /// <param name="transformationSrc">Transformation to merge.</param>
-        private static void MergeUrlTransformation(Url url, Transformation transformationSrc)
-        {
-            if (transformationSrc == null)
-            {
-                return;
-            }
-
-            if (url.m_transformation == null)
-            {
-                url.Transform(transformationSrc);
-            }
-            else
-            {
-                foreach (var param in transformationSrc.Params)
-                {
-                    url.m_transformation.Add(param.Key, param.Value);
-                }
-            }
-        }
-
-        private static string Shard(string input)
-        {
-            uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
-            return ((hash % 5 + 5) % 5 + 1).ToString();
-        }
-
-        private static string Decode(string input)
-        {
-            StringBuilder resultStr = new StringBuilder(input.Length);
-
-            int pos = 0;
-
-            while (pos < input.Length)
-            {
-                int ppos = input.IndexOf('%', pos);
-                if (ppos == -1)
-                {
-                    resultStr.Append(input.Substring(pos));
-                    pos = input.Length;
-                }
-                else
-                {
-                    resultStr.Append(input.Substring(pos, ppos - pos));
-                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
-                    resultStr.Append(ch);
-                    pos = ppos + 3;
-                }
-            }
-
-            return resultStr.ToString();
-        }
-
-        private static string Encode(string input)
-        {
-            StringBuilder resultStr = new StringBuilder(input.Length);
-            foreach (char ch in input)
-            {
-                if (!IsSafe(ch))
-                {
-                    resultStr.Append('%');
-                    resultStr.Append(string.Format("{0:X2}", (short)ch));
-                }
-                else
-                {
-                    resultStr.Append(ch);
-                }
-            }
-
-            return resultStr.ToString();
-        }
-
-        private static bool IsSafe(char ch)
-        {
-            if (ch >= 0x30 && ch <= 0x39)
-            {
-                return true; // 0-9
-            }
-
-            if (ch >= 0x41 && ch <= 0x5a)
-            {
-                return true; // A-Z
-            }
-
-            if (ch >= 0x61 && ch <= 0x7a)
-            {
-                return true; // a-z
-            }
-
-            return "/:-_.*".IndexOf(ch) >= 0;
-        }
-
-        /// <summary>
         /// Blank placeholder image that is displayed until the image is loaded.
         /// </summary>
         protected const string CL_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -374,6 +238,142 @@
 
                 return m_transformation;
             }
+        }
+
+        /// <summary>
+        /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs.
+        /// </summary>
+        /// <param name="sourceType">The type of the source.</param>
+        /// <param name="codecs">Codecs.</param>
+        /// <returns>Resulting mime type.</returns>
+        private static string VideoMimeType(string sourceType, params string[] codecs)
+        {
+            sourceType = sourceType == "ogv" ? "ogg" : sourceType;
+
+            if (string.IsNullOrEmpty(sourceType))
+            {
+                return string.Empty;
+            }
+
+            if (codecs == null || codecs.Length == 0)
+            {
+                return $"video/{sourceType}";
+            }
+
+            var codecsJoined = string.Join(", ", codecs.Where(c => !string.IsNullOrEmpty(c)));
+            var codecsStr = !string.IsNullOrEmpty(codecsJoined) ? $"; codecs={codecsJoined}" : string.Empty;
+
+            return $"video/{sourceType}{codecsStr}";
+        }
+
+        private static void AppendTransformation(Url url, Transformation transform)
+        {
+            if (url.m_transformation == null)
+            {
+                url.Transform(transform);
+            }
+            else
+            {
+                url.m_transformation.Chain();
+                transform.NestedTransforms.AddRange(url.m_transformation.NestedTransforms);
+                url.Transform(transform);
+            }
+        }
+
+        /// <summary>
+        /// Helper method to merge transformation for the URL.
+        /// </summary>
+        /// <param name="url">The URL with transformation to be merged.</param>
+        /// <param name="transformationSrc">Transformation to merge.</param>
+        private static void MergeUrlTransformation(Url url, Transformation transformationSrc)
+        {
+            if (transformationSrc == null)
+            {
+                return;
+            }
+
+            if (url.m_transformation == null)
+            {
+                url.Transform(transformationSrc);
+            }
+            else
+            {
+                foreach (var param in transformationSrc.Params)
+                {
+                    url.m_transformation.Add(param.Key, param.Value);
+                }
+            }
+        }
+
+        private static string Shard(string input)
+        {
+            uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
+            return ((hash % 5 + 5) % 5 + 1).ToString();
+        }
+
+        private static string Decode(string input)
+        {
+            StringBuilder resultStr = new StringBuilder(input.Length);
+
+            int pos = 0;
+
+            while (pos < input.Length)
+            {
+                int ppos = input.IndexOf('%', pos);
+                if (ppos == -1)
+                {
+                    resultStr.Append(input.Substring(pos));
+                    pos = input.Length;
+                }
+                else
+                {
+                    resultStr.Append(input.Substring(pos, ppos - pos));
+                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
+                    resultStr.Append(ch);
+                    pos = ppos + 3;
+                }
+            }
+
+            return resultStr.ToString();
+        }
+
+        private static string Encode(string input)
+        {
+            StringBuilder resultStr = new StringBuilder(input.Length);
+            foreach (char ch in input)
+            {
+                if (!IsSafe(ch))
+                {
+                    resultStr.Append('%');
+                    resultStr.Append(string.Format("{0:X2}", (short)ch));
+                }
+                else
+                {
+                    resultStr.Append(ch);
+                }
+            }
+
+            return resultStr.ToString();
+        }
+
+        private static bool IsSafe(char ch)
+        {
+            if (ch >= 0x30 && ch <= 0x39)
+            {
+                return true; // 0-9
+            }
+
+            if (ch >= 0x41 && ch <= 0x5a)
+            {
+                return true; // A-Z
+            }
+
+            if (ch >= 0x61 && ch <= 0x7a)
+            {
+                return true; // a-z
+            }
+
+            return "/:-_.*".IndexOf(ch) >= 0;
         }
 
         /// <summary>
@@ -1292,41 +1292,6 @@
         private StringDictionary queryString = null;
 
         /// <summary>
-        /// Gets the query information included in the Url.
-        /// </summary>
-        public StringDictionary QueryString
-        {
-            get
-            {
-                if (queryString == null)
-                {
-                    queryString = new StringDictionary();
-                }
-
-                return queryString;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a path to the resource referenced by the Url.
-        /// </summary>
-        public string PageName
-        {
-            get
-            {
-                string path = Path;
-                return path.Substring(path.LastIndexOf("/") + 1);
-            }
-
-            set
-            {
-                string path = Path;
-                path = path.Substring(0, path.LastIndexOf("/"));
-                Path = string.Concat(path, "/", value);
-            }
-        }
-
-        /// <summary>
         /// Default parameterless constructor. Instantiates the <see cref="UrlBuilder"/> object.
         /// </summary>
         public UrlBuilder()
@@ -1412,6 +1377,41 @@
         public UrlBuilder(string scheme, string host, int port, string path, string extraValue)
             : base(scheme, host, port, path, extraValue)
         {
+        }
+
+        /// <summary>
+        /// Gets the query information included in the Url.
+        /// </summary>
+        public StringDictionary QueryString
+        {
+            get
+            {
+                if (queryString == null)
+                {
+                    queryString = new StringDictionary();
+                }
+
+                return queryString;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a path to the resource referenced by the Url.
+        /// </summary>
+        public string PageName
+        {
+            get
+            {
+                string path = Path;
+                return path.Substring(path.LastIndexOf("/") + 1);
+            }
+
+            set
+            {
+                string path = Path;
+                path = path.Substring(0, path.LastIndexOf("/"));
+                Path = string.Concat(path, "/", value);
+            }
         }
 
         /// <summary>

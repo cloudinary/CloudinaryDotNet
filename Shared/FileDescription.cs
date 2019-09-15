@@ -11,18 +11,6 @@
         internal bool Eof;
         internal int BytesSent;
 
-        internal long GetFileLength()
-        {
-            return Stream?.Length ?? new FileInfo(FilePath).Length;
-        }
-
-        internal void Reset(int bufferSize = int.MaxValue)
-        {
-            BufferLength = bufferSize;
-            Eof = false;
-            BytesSent = 0;
-        }
-
         /// <summary>
         /// Constructor to upload file from stream.
         /// </summary>
@@ -77,5 +65,17 @@
         /// Whether it is remote (by URL) or local file
         /// </summary>
         public bool IsRemote { get; }
+
+        internal long GetFileLength()
+        {
+            return Stream?.Length ?? new FileInfo(FilePath).Length;
+        }
+
+        internal void Reset(int bufferSize = int.MaxValue)
+        {
+            BufferLength = bufferSize;
+            Eof = false;
+            BytesSent = 0;
+        }
     }
 }

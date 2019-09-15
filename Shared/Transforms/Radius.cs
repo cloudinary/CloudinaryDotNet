@@ -47,13 +47,6 @@
         /// <exception cref="ArgumentNullException"/>
         public Radius(float value) => SetRadius(value);
 
-        private void SetRadius(object value)
-        {
-            m_radius = value != null
-                ? value.ToString()
-                : throw new ArgumentNullException(nameof(value));
-        }
-
         /// <summary>
         /// Defines radius value for corners rounding (in pixels).
         /// </summary>
@@ -134,6 +127,13 @@
             }
 
             m_radius = $"{topLeft}:{topRight}:{bottomRight}:{bottomLeft}";
+        }
+
+        private void SetRadius(object value)
+        {
+            m_radius = value != null
+                ? value.ToString()
+                : throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>

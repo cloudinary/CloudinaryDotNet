@@ -6,6 +6,16 @@
     public class CSource
     {
         /// <summary>
+        /// Source part of the URL.
+        /// </summary>
+        public string Source;
+
+        /// <summary>
+        /// Source part of the URL to be signed.
+        /// </summary>
+        public string SourceToSign;
+
+        /// <summary>
         /// Instantiates the <see cref="CSource"/> object with a source.
         /// </summary>
         /// <param name="source">Source part of the URL.</param>
@@ -27,15 +37,5 @@
 
             return src;
         }
-
-        /// <summary>
-        /// Source part of the URL.
-        /// </summary>
-        public string Source;
-
-        /// <summary>
-        /// Source part of the URL to be signed.
-        /// </summary>
-        public string SourceToSign;
     }
 }

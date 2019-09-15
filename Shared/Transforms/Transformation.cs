@@ -35,65 +35,10 @@
             "sp", "streaming_profile",
         };
 
-        /// <summary>
-        /// Default Device Pixel Ratio (float, integer and "auto" values are allowed").
-        /// </summary>
-        public static object DefaultDpr { get; set; }
-
-        /// <summary>
-        /// Whether to enable automatic adaptation of website images by default.
-        /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for
-        /// further info.
-        /// </summary>
-        public static bool DefaultIsResponsive { get; set; }
-
-        /// <summary>
-        /// Common responsive width transformation.
-        /// </summary>
-        public static Transformation ResponsiveWidthTransform
-        {
-            get
-            {
-                if (m_responsiveWidthTransform == null)
-                {
-                    return DEFAULT_RESPONSIVE_WIDTH_TRANSFORM;
-                }
-                else
-                {
-                    return m_responsiveWidthTransform;
-                }
-            }
-
-            set
-            {
-                m_responsiveWidthTransform = value;
-            }
-        }
-
         private static readonly Transformation DEFAULT_RESPONSIVE_WIDTH_TRANSFORM
             = new Transformation().Width("auto").Crop("limit");
 
         private static Transformation m_responsiveWidthTransform = null;
-
-        private static string ToString(object obj)
-        {
-            if (obj == null)
-            {
-                return null;
-            }
-
-            if (obj is string)
-            {
-                return obj.ToString();
-            }
-
-            if (obj is float || obj is double)
-            {
-                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
-            }
-
-            return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
-        }
 
         /// <summary>
         /// A dictionary of transformation parameters.
@@ -186,6 +131,41 @@
         }
 
         /// <summary>
+        /// Default Device Pixel Ratio (float, integer and "auto" values are allowed").
+        /// </summary>
+        public static object DefaultDpr { get; set; }
+
+        /// <summary>
+        /// Whether to enable automatic adaptation of website images by default.
+        /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for
+        /// further info.
+        /// </summary>
+        public static bool DefaultIsResponsive { get; set; }
+
+        /// <summary>
+        /// Common responsive width transformation.
+        /// </summary>
+        public static Transformation ResponsiveWidthTransform
+        {
+            get
+            {
+                if (m_responsiveWidthTransform == null)
+                {
+                    return DEFAULT_RESPONSIVE_WIDTH_TRANSFORM;
+                }
+                else
+                {
+                    return m_responsiveWidthTransform;
+                }
+            }
+
+            set
+            {
+                m_responsiveWidthTransform = value;
+            }
+        }
+
+        /// <summary>
         /// Get the transformation parameters dictionary.
         /// </summary>
         public Dictionary<string, object> Params
@@ -210,6 +190,42 @@
         /// Whether to support a responsive layout.
         /// </summary>
         public bool IsResponsive { get; private set; }
+
+        /// <summary>
+        /// Get the HTML width parameter.
+        /// </summary>
+        public string HtmlWidth
+        {
+            get { return m_htmlWidth; }
+        }
+
+        /// <summary>
+        /// Get the HTML height parameter.
+        /// </summary>
+        public string HtmlHeight
+        {
+            get { return m_htmlHeight; }
+        }
+
+        private static string ToString(object obj)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+
+            if (obj is string)
+            {
+                return obj.ToString();
+            }
+
+            if (obj is float || obj is double)
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", obj);
+            }
+
+            return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
+        }
 
         /// <summary>
         /// Chain transformation.
@@ -549,22 +565,6 @@
             return string.Join(",", variables.Select(v => v.ToString()).ToArray());
         }
 
-        /// <summary>
-        /// Get the HTML width parameter.
-        /// </summary>
-        public string HtmlWidth
-        {
-            get { return m_htmlWidth; }
-        }
-
-        /// <summary>
-        /// Get the HTML height parameter.
-        /// </summary>
-        public string HtmlHeight
-        {
-            get { return m_htmlHeight; }
-        }
-
         private string[] GetStringArray(Dictionary<string, object> options, string key)
         {
             if (!options.ContainsKey(key))
@@ -693,6 +693,11 @@
         }
 
         /// <summary>
+        /// Gets or sets a file format for the transformation.
+        /// </summary>
+        public string Format { get; set; }
+
+        /// <summary>
         /// Set file format for the transformation.
         /// </summary>
         /// <param name="format">The file format to set.</param>
@@ -701,11 +706,6 @@
             Format = format;
             return this;
         }
-
-        /// <summary>
-        /// Gets or sets a file format for the transformation.
-        /// </summary>
-        public string Format { get; set; }
 
         /// <summary>
         /// Get this transformation represented as string.

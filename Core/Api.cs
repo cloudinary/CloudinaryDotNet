@@ -23,6 +23,9 @@
     {
         private static HttpClient client = new HttpClient();
 
+        private Func<string, HttpRequestMessage> requestBuilder =
+            (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
+
         /// <summary>
         /// Default static parameterless constructor.
         /// </summary>
@@ -39,9 +42,6 @@
                 version.Build,
                 frameworkDescription);
         }
-
-        private Func<string, HttpRequestMessage> requestBuilder =
-            (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
 
         /// <summary>
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.

@@ -25,15 +25,6 @@
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
-        internal override void SetValues(JToken source)
-        {
-            var responsiveBreakpoints = source["responsive_breakpoints"];
-            if (responsiveBreakpoints != null)
-            {
-                ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
-            }
-        }
-
         /// <summary>
         /// Status is returned when passing 'Async' argument set to 'true' to the server.
         /// </summary>
@@ -51,6 +42,15 @@
         /// </summary>
         [DataMember(Name = "quality_analysis")]
         public QualityAnalysis QualityAnalysis { get; protected set; }
+
+        internal override void SetValues(JToken source)
+        {
+            var responsiveBreakpoints = source["responsive_breakpoints"];
+            if (responsiveBreakpoints != null)
+            {
+                ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
+            }
+        }
     }
 
     /// <summary>

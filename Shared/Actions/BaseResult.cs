@@ -110,13 +110,12 @@
     public abstract class BaseResult
     {
         // protected static Dictionary<Type, DataContractJsonSerializer> m_serializers = new Dictionary<Type, DataContractJsonSerializer>();
+        private JToken rawJson;
 
         /// <summary>
         /// HTTP status code.
         /// </summary>
         public HttpStatusCode StatusCode { get; internal set; }
-
-        private JToken rawJson;
 
         /// <summary>
         /// Raw JSON as received from the server.
@@ -251,6 +250,11 @@
     public class ModerationResponseConverter : JsonConverter
     {
         /// <summary>
+        /// Gets a value indicating whether this <see cref="ModerationResponseConverter"/> can write JSON.
+        /// </summary>
+        public override bool CanWrite => false;
+
+        /// <summary>
         /// Reads the JSON representation of the object.
         /// </summary>
         /// <param name="reader">The <see cref="JsonReader"/> to read from.</param>
@@ -275,11 +279,6 @@
         /// <param name="objectType">Type of the object.</param>
         /// <returns>True if this instance can convert the specified object type; otherwise, false.</returns>
         public override bool CanConvert(Type objectType) => true;
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="ModerationResponseConverter"/> can write JSON.
-        /// </summary>
-        public override bool CanWrite => false;
 
         /// <summary>
         /// Writes the JSON representation of the object.

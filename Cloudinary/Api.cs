@@ -17,6 +17,8 @@
     /// </summary>
     public class Api : ApiShared
     {
+        private Func<string, HttpWebRequest> requestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
+
         /// <summary>
         /// Default static parameterless constructor.
         /// </summary>
@@ -26,8 +28,6 @@
 
             USER_AGENT = $"CloudinaryDotNet/{version.Major}.{version.Minor}.{version.Build} (.NET Framework 4)";
         }
-
-        private Func<string, HttpWebRequest> requestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
 
         /// <summary>
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.

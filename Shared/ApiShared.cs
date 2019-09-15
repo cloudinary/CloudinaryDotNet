@@ -12,6 +12,52 @@
     using Newtonsoft.Json.Converters;
 
     /// <summary>
+    /// HTTP method.
+    /// </summary>
+    public enum HttpMethod
+    {
+        /// <summary>
+        /// DELETE
+        /// </summary>
+        DELETE,
+
+        /// <summary>
+        /// GET
+        /// </summary>
+        GET,
+
+        /// <summary>
+        /// POST
+        /// </summary>
+        POST,
+
+        /// <summary>
+        /// PUT
+        /// </summary>
+        PUT,
+    }
+
+    /// <summary>
+    /// Digital signature provider.
+    /// </summary>
+    public interface ISignProvider
+    {
+        /// <summary>
+        /// Generate digital signature for parameters.
+        /// </summary>
+        /// <param name="parameters">The parameters to sign.</param>
+        /// <returns>Generated signature.</returns>
+        string SignParameters(IDictionary<string, object> parameters);
+
+        /// <summary>
+        /// Generate digital signature for part of an URI.
+        /// </summary>
+        /// <param name="uriPart">The part of an URI to sign.</param>
+        /// <returns>Generated signature.</returns>
+        string SignUriPart(string uriPart);
+    }
+
+    /// <summary>
     /// Provider for the API calls.
     /// </summary>
     public class ApiShared : ISignProvider
@@ -147,50 +193,6 @@
                 PrivateCdn = cloudinaryUri.AbsolutePath;
                 Secure = true;
             }
-        }
-
-        /// <summary>
-        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
-        /// </summary>
-        /// <param name="method">Http request method.</param>
-        /// <param name="url">API URL.</param>
-        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
-        /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
-        /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-        {
-            throw new Exception("Please call overriden method");
-        }
-
-        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-            where T : BaseResult, new()
-        {
-            parameters?.Check();
-
-            return CallAndParse<T>(
-                                   method,
-                                   url,
-                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
-                                   file,
-                                   extraHeaders);
-        }
-
-        /// <summary>
-        /// Virtual method to call the cloudinary API and return the parsed response. This method should be overridden
-        /// in child classes.
-        /// </summary>
-        /// <typeparam name="T">Type of the response.</typeparam>
-        /// <param name="method">Http request method.</param>
-        /// <param name="url">API URL.</param>
-        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
-        /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
-        /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-            where T : BaseResult, new()
-        {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -423,6 +425,50 @@
             }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
+        /// </summary>
+        /// <param name="method">Http request method.</param>
+        /// <param name="url">API URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Parsed response from the cloudinary API.</returns>
+        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            throw new Exception("Please call overriden method");
+        }
+
+        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
+        {
+            parameters?.Check();
+
+            return CallAndParse<T>(
+                                   method,
+                                   url,
+                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                                   file,
+                                   extraHeaders);
+        }
+
+        /// <summary>
+        /// Virtual method to call the cloudinary API and return the parsed response. This method should be overridden
+        /// in child classes.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">Http request method.</param>
+        /// <param name="url">API URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Parsed response from the cloudinary API.</returns>
+        public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -807,51 +853,5 @@
             writer.Write(format, val);
             writer.Write("\r\n");
         }
-    }
-
-    /// <summary>
-    /// Digital signature provider.
-    /// </summary>
-    public interface ISignProvider
-    {
-        /// <summary>
-        /// Generate digital signature for parameters.
-        /// </summary>
-        /// <param name="parameters">The parameters to sign.</param>
-        /// <returns>Generated signature.</returns>
-        string SignParameters(IDictionary<string, object> parameters);
-
-        /// <summary>
-        /// Generate digital signature for part of an URI.
-        /// </summary>
-        /// <param name="uriPart">The part of an URI to sign.</param>
-        /// <returns>Generated signature.</returns>
-        string SignUriPart(string uriPart);
-    }
-
-    /// <summary>
-    /// HTTP method.
-    /// </summary>
-    public enum HttpMethod
-    {
-        /// <summary>
-        /// DELETE
-        /// </summary>
-        DELETE,
-
-        /// <summary>
-        /// GET
-        /// </summary>
-        GET,
-
-        /// <summary>
-        /// POST
-        /// </summary>
-        POST,
-
-        /// <summary>
-        /// PUT
-        /// </summary>
-        PUT,
     }
 }

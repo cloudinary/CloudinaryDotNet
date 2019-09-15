@@ -9,6 +9,30 @@
     {
         private static uint[] table;
 
+        static Crc32()
+        {
+            uint poly = 0xedb88320;
+            table = new uint[256];
+            uint temp = 0;
+            for (uint i = 0; i < table.Length; ++i)
+            {
+                temp = i;
+                for (int j = 8; j > 0; --j)
+                {
+                    if ((temp & 1) == 1)
+                    {
+                        temp = (uint)((temp >> 1) ^ poly);
+                    }
+                    else
+                    {
+                        temp >>= 1;
+                    }
+                }
+
+                table[i] = temp;
+            }
+        }
+
         /// <summary>
         /// Compute checksum for a byte array.
         /// </summary>
@@ -34,30 +58,6 @@
         public static byte[] ComputeChecksumBytes(byte[] bytes)
         {
             return BitConverter.GetBytes(ComputeChecksum(bytes));
-        }
-
-        static Crc32()
-        {
-            uint poly = 0xedb88320;
-            table = new uint[256];
-            uint temp = 0;
-            for (uint i = 0; i < table.Length; ++i)
-            {
-                temp = i;
-                for (int j = 8; j > 0; --j)
-                {
-                    if ((temp & 1) == 1)
-                    {
-                        temp = (uint)((temp >> 1) ^ poly);
-                    }
-                    else
-                    {
-                        temp >>= 1;
-                    }
-                }
-
-                table[i] = temp;
-            }
         }
     }
 }
