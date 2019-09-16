@@ -3,6 +3,9 @@
     using System;
     using CloudinaryDotNet.Actions;
 
+    /// <summary>
+    /// Provides methods for adaptive streaming profiles management.
+    /// </summary>
     public partial class Cloudinary
     {
         /// <summary>

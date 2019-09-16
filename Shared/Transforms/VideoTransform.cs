@@ -5,6 +5,9 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
+    /// <summary>
+    /// The building blocks for video assets transformation.
+    /// </summary>
     public partial class Transformation : Core.ICloneable
     {
         private static readonly Regex RANGE_VALUE_RE = new Regex("^((?:\\d+\\.)?\\d+)([%pP])?$", RegexOptions.Compiled);

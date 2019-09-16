@@ -3,6 +3,9 @@
     using System.Globalization;
     using System.Text.RegularExpressions;
 
+    /// <summary>
+    /// The building blocks for image assets transformation.
+    /// </summary>
     public partial class Transformation : Core.ICloneable
     {
         /// <summary>
