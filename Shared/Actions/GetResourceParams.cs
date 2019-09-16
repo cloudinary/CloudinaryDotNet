@@ -11,7 +11,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Instantiates the <see cref="GetResourceParams"/> object.
         /// </summary>
-        /// <param name="publicId"></param>
+        /// <param name="publicId">The public ID of the resource.</param>
         public GetResourceParams(string publicId)
         {
             PublicId = publicId;

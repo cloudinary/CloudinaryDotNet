@@ -116,7 +116,7 @@
         /// <summary>
         /// Gets a list of tags asynchronously.
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">Parameters of asynchronous list tags request.</param>
         /// <returns></returns>
         public Task<ListTagsResult> ListTagsAsync(ListTagsParams parameters)
         {

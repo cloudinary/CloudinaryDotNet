@@ -961,7 +961,7 @@
         /// <summary>
         /// Gets a list of tags.
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">Parameters of list tags request.</param>
         /// <returns>Parsed list of tags.</returns>
         public ListTagsResult ListTags(ListTagsParams parameters)
         {

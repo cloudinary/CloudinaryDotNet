@@ -390,7 +390,7 @@
         /// <summary>
         /// Type of the resource.
         /// </summary>
-        /// <param name="resourceType"></param>
+        /// <param name="resourceType">Type of the resource</param>
         /// <returns></returns>
         public Url ResourceType(string resourceType)
         {
