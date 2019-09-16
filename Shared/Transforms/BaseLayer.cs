@@ -17,6 +17,7 @@
     /// <summary>
     /// Base abstract generic class for creating Layers.
     /// </summary>
+    /// <typeparam name="T">Type of the layer.</typeparam>
     public abstract class BaseLayer<T> : BaseLayer
         where T : BaseLayer<T>
     {

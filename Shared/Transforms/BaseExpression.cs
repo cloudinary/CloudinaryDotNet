@@ -16,6 +16,7 @@
     /// <summary>
     /// Represents expression object that can be used in user defined variables and conditional transformations.
     /// </summary>
+    /// <typeparam name="T">Type of the expression.</typeparam>
     public abstract class BaseExpression<T> : BaseExpression
         where T : BaseExpression<T>
     {

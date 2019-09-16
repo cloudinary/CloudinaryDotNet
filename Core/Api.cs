@@ -209,6 +209,7 @@
         /// </summary>
         /// <param name="response">HTTP response.</param>
         /// <returns>New instance of this class.</returns>
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
         internal static T Parse<T>(object response)
             where T : BaseResult, new()
         {
