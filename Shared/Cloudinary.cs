@@ -1592,9 +1592,9 @@
         /// </summary>
         /// <param name="parameters">Parameters of uploading .</param>
         /// <returns>Results of uploading.</returns>
-        private T Upload<T, P>(P parameters)
+        private T Upload<T, TP>(TP parameters)
             where T : UploadResult, new()
-            where P : BasicRawUploadParams, new()
+            where TP : BasicRawUploadParams, new()
         {
             if (parameters == null)
             {
