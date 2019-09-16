@@ -16,7 +16,7 @@
         public string Message { get; protected set; }
 
         /// <summary>
-        ///
+        /// Details of the streaming profile.
         /// </summary>
         [DataMember(Name = "data")]
         public StreamingProfileData Data { get; protected set; }
