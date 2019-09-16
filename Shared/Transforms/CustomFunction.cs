@@ -5,11 +5,11 @@
     /// </summary>
     public class CustomFunction
     {
-        private readonly string _params;
+        private readonly string parameters;
 
         private CustomFunction(params string[] components)
         {
-            _params = string.Join(":", components);
+            parameters = string.Join(":", components);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@
         /// <returns>String with parameters joined with ':'.</returns>
         public override string ToString()
         {
-            return _params;
+            return parameters;
         }
     }
 }
