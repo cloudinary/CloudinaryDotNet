@@ -806,9 +806,9 @@
         /// Writes one chunk of file to stream.
         /// </summary>
         /// <param name="writer">Output writer.</param>
-        /// <param name="fileName">Name of file.</param>
         /// <param name="stream">Input stream.</param>
         /// <param name="length">Maximum amount of bytes to send.</param>
+        /// <param name="fileName">Name of file.</param>
         /// <param name="bytesSent">Amount of sent bytes.</param>
         /// <returns>
         /// true for EOF.
