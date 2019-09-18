@@ -172,45 +172,87 @@ namespace CloudinaryDotNet.IntegrationTest
         }
 
         /// <summary>
-        /// A convenience method for uploading an image before testing
+        /// A convenient method for uploading an image before testing.
         /// </summary>
-        /// <param name="id">The ID of the resource</param>
-        /// <returns>The upload results</returns>
-        protected ImageUploadResult UploadTestResource(String id = null)
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <returns>The upload result.</returns>
+        protected ImageUploadResult UploadTestImageResource(
+            Action<ImageUploadParams> setParamsAction = null,
+            StorageType storageType = StorageType.upload)
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                id = GetUniquePublicId();
-            }
+            var uploadParams = new ImageUploadParams();
 
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                PublicId = id,
-                Tags = m_apiTag
-            };
+            setParamsAction?.Invoke(uploadParams);
+
+            FillParams(uploadParams, false, storageType);
+
             return m_cloudinary.Upload(uploadParams);
         }
 
         /// <summary>
-        /// A convenient method for uploading an image before testing
+        /// A convenient method for uploading an image before testing.
         /// </summary>
-        /// <param name="id">The ID of the resource</param>
-        /// <returns>The upload results</returns>
-        protected ImageUploadResult UploadAsyncTestResource(string id = null)
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <returns>The upload result.</returns>
+        protected Task<ImageUploadResult> UploadTestImageResourceAsync(
+            Action<ImageUploadParams> setParamsAction = null,
+            StorageType storageType = StorageType.upload)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                id = GetUniqueAsyncPublicId();
-            }
+            var uploadParams = new ImageUploadParams();
 
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                PublicId = id,
-                Tags = m_apiTag
-            };
-            return m_cloudinary.Upload(uploadParams);
+            setParamsAction?.Invoke(uploadParams);
+
+            FillParams(uploadParams, true, storageType);
+
+            return m_cloudinary.UploadAsync(uploadParams);
+        }
+
+        /// <summary>
+        /// A convenient method for uploading a raw resource before testing.
+        /// </summary>
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <param name="type">The type ("raw" or "auto", last by default).</param>
+        /// <returns>The upload result.</returns>
+        protected RawUploadResult UploadTestRawResource(
+            Action<RawUploadParams> setParamsAction = null,
+            string type = "auto",
+            StorageType storageType = StorageType.upload)
+        {
+            var uploadParams = new RawUploadParams();
+
+            setParamsAction?.Invoke(uploadParams);
+
+            FillParams(uploadParams, false, storageType);
+
+            return m_cloudinary.Upload(uploadParams, type);
+        }
+
+        /// <summary>
+        /// A convenient method for uploading a raw resource before testing.
+        /// </summary>
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <param name="type">The type ("raw" or "auto", last by default).</param>
+        /// <returns>The upload result.</returns>
+        protected Task<RawUploadResult> UploadTestRawResourceAsync(
+            Action<RawUploadParams> setParamsAction = null,
+            string type = "auto",
+            StorageType storageType = StorageType.upload)
+        {
+            var uploadParams = new RawUploadParams();
+
+            setParamsAction?.Invoke(uploadParams);
+
+            FillParams(uploadParams, true, storageType);
+
+            return m_cloudinary.UploadAsync(uploadParams, type);
+        }
+
+        private void FillParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
+        {
+            uploadParams.File = uploadParams.File ?? new FileDescription(m_testImagePath);
+            uploadParams.PublicId = uploadParams.PublicId ??
+                (isAsync ? GetUniqueAsyncPublicId(storageType) : GetUniquePublicId(storageType));
+            uploadParams.Tags = uploadParams.Tags ?? m_apiTag;
         }
 
         /// <summary>
@@ -334,11 +376,6 @@ namespace CloudinaryDotNet.IntegrationTest
         }
 
         #endregion
-
-        private int GetUniqueNumber()
-        {
-            return Guid.NewGuid().GetHashCode();
-        }
 
         [OneTimeTearDown]
         public virtual void Cleanup()

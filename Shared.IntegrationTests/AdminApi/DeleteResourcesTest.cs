@@ -12,62 +12,63 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         public void TestDelete()
         {
             // should allow deleting resources
-            var publicId = GetUniquePublicId();
+            var uploadResult = UploadTestImageResource();
+
+            var uploadedPublicId = uploadResult.PublicId;
             var nonExistingPublicId = GetUniquePublicId();
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                PublicId = publicId,
-                Tags = m_apiTag
-            };
+            var resource = m_cloudinary.GetResource(uploadedPublicId);
 
-            m_cloudinary.Upload(uploadParams);
+            CheckResourceExists(resource, uploadedPublicId);
 
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            var delResult = m_cloudinary.DeleteResources(nonExistingPublicId, uploadedPublicId);
 
-            Assert.IsNotNull(resource);
-            Assert.AreEqual(publicId, resource.PublicId);
+            CheckResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResources(
-                nonExistingPublicId, publicId);
+            resource = m_cloudinary.GetResource(uploadedPublicId);
 
-            Assert.AreEqual("not_found", delResult.Deleted[nonExistingPublicId]);
-            Assert.AreEqual("deleted", delResult.Deleted[publicId]);
-
-            resource = m_cloudinary.GetResource(publicId);
-
-            Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
+            CheckResourceDoesNotExist(resource);
         }
 
         [Test]
         public async Task TestDeleteAsync()
         {
             // should allow deleting resources
-            var publicId = GetUniqueAsyncPublicId();
-            var nonExistingPublicId = GetUniqueAsyncPublicId();
+            var uploadResult = await UploadTestImageResourceAsync();
 
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                PublicId = publicId,
-                Tags = m_apiTag
-            };
+            var uploadedPublicId = uploadResult.PublicId;
+            var nonExistingPublicId = GetUniquePublicId();
 
-            await m_cloudinary.UploadAsync(uploadParams);
+            var resource = await m_cloudinary.GetResourceAsync(uploadedPublicId);
 
-            var resource = await m_cloudinary.GetResourceAsync(publicId);
+            CheckResourceExists(resource, uploadedPublicId);
 
+            var delResult = await m_cloudinary.DeleteResourcesAsync(nonExistingPublicId, uploadedPublicId);
+
+            CheckResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
+
+            resource = await m_cloudinary.GetResourceAsync(uploadedPublicId);
+
+            CheckResourceDoesNotExist(resource);
+        }
+
+        private void CheckResourceExists(GetResourceResult resource, string publicId)
+        {
+            Assert.IsNotNull(resource);
             Assert.AreEqual(publicId, resource.PublicId);
+        }
 
-            var delResult = await m_cloudinary.DeleteResourcesAsync(nonExistingPublicId, publicId);
+        private void CheckResourceDoesNotExist(GetResourceResult resource)
+        {
+            Assert.IsNotNull(resource);
+            Assert.IsNull(resource.PublicId);
+        }
 
-            Assert.AreEqual("not_found", delResult.Deleted[nonExistingPublicId]);
-            Assert.AreEqual("deleted", delResult.Deleted[publicId]);
-
-            resource = await m_cloudinary.GetResourceAsync(publicId);
-
-            Assert.IsTrue(string.IsNullOrEmpty(resource.PublicId));
+        private void CheckResourceDeleted(DelResResult result, string deletedPublicId, string nonExistingPublicId)
+        {
+            Assert.IsNotNull(result);
+            Assert.AreEqual("not_found", result.Deleted[nonExistingPublicId]);
+            Assert.AreEqual("deleted", result.Deleted[deletedPublicId]);
         }
 
         [Test]

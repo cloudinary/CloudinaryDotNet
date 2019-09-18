@@ -192,37 +192,32 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             //should update custom coordinates
 
-            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
 
-            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), Tags = m_apiTag });
+            var upResult = UploadTestImageResource();
 
-            m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { CustomCoordinates = coordinates });
+            m_cloudinary.UpdateResource(
+                new UpdateParams(upResult.PublicId)
+                {
+                    CustomCoordinates = coordinates
+                });
 
-            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
+            var result = m_cloudinary.GetResource(
+                new GetResourceParams(upResult.PublicId)
+                {
+                    Coordinates = true
+                });
 
-            Assert.NotNull(result.Coordinates);
-            Assert.NotNull(result.Coordinates.Custom);
-            Assert.AreEqual(1, result.Coordinates.Custom.Length);
-            Assert.AreEqual(4, result.Coordinates.Custom[0].Length);
-            Assert.AreEqual(coordinates.X, result.Coordinates.Custom[0][0]);
-            Assert.AreEqual(coordinates.Y, result.Coordinates.Custom[0][1]);
-            Assert.AreEqual(coordinates.Width, result.Coordinates.Custom[0][2]);
-            Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
+            CheckUpdatedCustomCoordinates(result, coordinates);
         }
 
         [Test]
         public async Task TestUpdateCustomCoordinatesAsync()
         {
             //should update custom coordinates
+            var upResult = await UploadTestImageResourceAsync();
 
             var coordinates = new Core.Rectangle(121, 31, 110, 151);
-
-            var upResult = await m_cloudinary.UploadAsync(
-                new ImageUploadParams()
-                {
-                    File = new FileDescription(m_testImagePath),
-                    Tags = m_apiTag
-                });
 
             await m_cloudinary.UpdateResourceAsync(
                 new UpdateParams(upResult.PublicId)
@@ -236,6 +231,11 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                     Coordinates = true
                 });
 
+            CheckUpdatedCustomCoordinates(result, coordinates);
+        }
+
+        private void CheckUpdatedCustomCoordinates(GetResourceResult result, Core.Rectangle coordinates)
+        {
             Assert.NotNull(result.Coordinates);
             Assert.NotNull(result.Coordinates.Custom);
             Assert.AreEqual(1, result.Coordinates.Custom.Length);

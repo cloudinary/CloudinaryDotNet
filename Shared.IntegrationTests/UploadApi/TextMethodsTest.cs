@@ -9,33 +9,37 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestEnglishText()
         {
-            TextParams tParams = new TextParams("Sample text.")
-            {
-                Background = "red",
-                FontStyle = "italic",
-                PublicId = GetUniquePublicId(StorageType.text)
-            };
+            var textParams = GetEnglishTextParams();
 
-            TextResult textResult = m_cloudinary.Text(tParams);
+            var textResult = m_cloudinary.Text(textParams);
 
-            Assert.IsTrue(textResult.Width > 0);
-            Assert.IsTrue(textResult.Height > 0);
+            CheckEnglishText(textResult);
         }
 
         [Test]
         public async Task TestEnglishTextAsync()
         {
-            var tParams = new TextParams("Sample text.")
+            var textParams = GetEnglishTextParams();
+
+            var textResult = await m_cloudinary.TextAsync(textParams);
+
+            CheckEnglishText(textResult);
+        }
+
+        private TextParams GetEnglishTextParams()
+        {
+            return new TextParams("Sample text.")
             {
                 Background = "red",
                 FontStyle = "italic",
                 PublicId = GetUniqueAsyncPublicId(StorageType.text)
             };
+        }
 
-            var textResult = await m_cloudinary.TextAsync(tParams);
-
-            Assert.IsTrue(textResult.Width > 0);
-            Assert.IsTrue(textResult.Height > 0);
+        private void CheckEnglishText(TextResult result)
+        {
+            Assert.Greater(result.Width, 0);
+            Assert.Greater(result.Height, 0);
         }
 
         [Test]

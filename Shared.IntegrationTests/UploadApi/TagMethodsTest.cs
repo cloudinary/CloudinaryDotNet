@@ -11,55 +11,44 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestTagAdd()
         {
-            var tag = GetMethodTag();
+            var uploadResult = UploadTestImageResource();
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag
-            };
+            var tagParams = GetAddTagParams(uploadResult.PublicId, GetMethodTag());
 
-            ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
+            var tagResult = m_cloudinary.Tag(tagParams);
 
-            TagParams tagParams = new TagParams()
-            {
-                Command = TagCommand.Add,
-                Tag = tag
-            };
-
-            tagParams.PublicIds.Add(uploadResult.PublicId);
-
-            TagResult tagResult = m_cloudinary.Tag(tagParams);
-
-            Assert.AreEqual(1, tagResult.PublicIds.Length);
-            Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
+            CheckTagParamsAdd(tagResult, uploadResult.PublicId);
         }
 
         [Test]
         public async Task TestTagAddAsync()
         {
-            var tag = GetMethodTag();
+            var uploadResult = await UploadTestImageResourceAsync();
 
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag
-            };
+            var tagParams = GetAddTagParams(uploadResult.PublicId, GetMethodTag());
 
-            var uploadResult = await m_cloudinary.UploadAsync(uploadParams);
+            var tagResult = await m_cloudinary.TagAsync(tagParams);
 
+            CheckTagParamsAdd(tagResult, uploadResult.PublicId);
+        }
+
+        private void CheckTagParamsAdd(TagResult result, string publicId)
+        {
+            Assert.AreEqual(1, result.PublicIds.Length);
+            Assert.AreEqual(publicId, result.PublicIds[0]);
+        }
+
+        private TagParams GetAddTagParams(string publicId, string tag)
+        {
             var tagParams = new TagParams()
             {
                 Command = TagCommand.Add,
                 Tag = tag
             };
 
-            tagParams.PublicIds.Add(uploadResult.PublicId);
+            tagParams.PublicIds.Add(publicId);
 
-            var tagResult = await m_cloudinary.TagAsync(tagParams);
-
-            Assert.AreEqual(1, tagResult.PublicIds.Length);
-            Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
+            return tagParams;
         }
 
         /// <summary>

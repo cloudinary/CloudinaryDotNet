@@ -9,81 +9,98 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestMultiTransformation()
         {
-            var publicId1 = GetUniquePublicId(StorageType.multi);
-            var publicId2 = GetUniquePublicId(StorageType.multi);
             var tag = GetMethodTag();
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            UploadTestImageResource((uploadParams) =>
             {
-                File = new FileDescription(m_testImagePath),
-                Tags = $"{tag},{m_apiTag}",
-                PublicId = publicId1
-            };
+                uploadParams.Tags = $"{tag},{m_apiTag}";
+            },
+            StorageType.multi);
 
-            m_cloudinary.Upload(uploadParams);
+            UploadTestImageResource((uploadParams) =>
+            {
+                uploadParams.Tags = $"{tag},{m_apiTag}";
+                uploadParams.Transformation = m_simpleTransformation;
+            },
+            StorageType.multi);
 
-            uploadParams.PublicId = publicId2;
-            uploadParams.Transformation = m_simpleTransformation;
-            m_cloudinary.Upload(uploadParams);
+            var multiParams = new MultiParams(tag);
 
-            MultiParams multi = new MultiParams(tag);
-            MultiResult result = m_cloudinary.Multi(multi);
-            AddCreatedPublicId(StorageType.multi, result.PublicId);
-            Assert.True(result.Uri.AbsoluteUri.EndsWith($".{FILE_FORMAT_GIF}"));
+            var result = m_cloudinary.Multi(multiParams);
 
-            multi.Transformation = m_resizeTransformation;
-            result = m_cloudinary.Multi(multi);
-            AddCreatedPublicId(StorageType.multi, result.PublicId);
-            Assert.IsTrue(result.Uri.AbsoluteUri.Contains(TRANSFORM_W_512));
-
-            multi.Transformation = m_simpleTransformationAngle;
-            multi.Format = FILE_FORMAT_PDF;
-            result = m_cloudinary.Multi(multi);
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            Assert.True(result.Uri.AbsoluteUri.Contains(TRANSFORM_A_45));
-            Assert.True(result.Uri.AbsoluteUri.EndsWith($".{FILE_FORMAT_PDF}"));
+            CheckMultiResult(result, null, FILE_FORMAT_GIF);
+
+            multiParams.Transformation = m_resizeTransformation;
+
+            result = m_cloudinary.Multi(multiParams);
+
+            AddCreatedPublicId(StorageType.multi, result.PublicId);
+
+            CheckMultiResult(result, TRANSFORM_W_512, null);
+
+            multiParams.Transformation = m_simpleTransformationAngle;
+            multiParams.Format = FILE_FORMAT_PDF;
+
+            result = m_cloudinary.Multi(multiParams);
+
+            AddCreatedPublicId(StorageType.multi, result.PublicId);
+
+            CheckMultiResult(result, TRANSFORM_A_45, FILE_FORMAT_PDF);
         }
 
         [Test]
         public async Task TestMultiTransformationAsync()
         {
-            var publicId1 = GetUniqueAsyncPublicId(StorageType.multi);
-            var publicId2 = GetUniqueAsyncPublicId(StorageType.multi);
             var tag = GetMethodTag();
 
-            var uploadParams = new ImageUploadParams()
+            await UploadTestImageResourceAsync((uploadParams) =>
             {
-                File = new FileDescription(m_testImagePath),
-                Tags = $"{tag},{m_apiTag}",
-                PublicId = publicId1
-            };
+                uploadParams.Tags = $"{tag},{m_apiTag}";
+            },
+            StorageType.multi);
 
-            await m_cloudinary.UploadAsync(uploadParams);
+            await UploadTestImageResourceAsync((uploadParams) =>
+            {
+                uploadParams.Tags = $"{tag},{m_apiTag}";
+                uploadParams.Transformation = m_simpleTransformation;
+            },
+            StorageType.multi);
 
-            uploadParams.PublicId = publicId2;
-            uploadParams.Transformation = m_simpleTransformation;
-            await m_cloudinary.UploadAsync(uploadParams);
+            var multiParams = new MultiParams(tag);
 
-            var multi = new MultiParams(tag);
-            var result = await m_cloudinary.MultiAsync(multi);
+            var result = await m_cloudinary.MultiAsync(multiParams);
+
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            Assert.True(result.Uri.AbsoluteUri.EndsWith($".{FILE_FORMAT_GIF}"));
+            CheckMultiResult(result, null, FILE_FORMAT_GIF);
 
-            multi.Transformation = m_resizeTransformation;
-            result = await m_cloudinary.MultiAsync(multi);
+            multiParams.Transformation = m_resizeTransformation;
+
+            result = await m_cloudinary.MultiAsync(multiParams);
+
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            Assert.IsTrue(result.Uri.AbsoluteUri.Contains(TRANSFORM_W_512));
+            CheckMultiResult(result, TRANSFORM_W_512, null);
 
-            multi.Transformation = m_simpleTransformationAngle;
-            multi.Format = FILE_FORMAT_PDF;
-            result = await m_cloudinary.MultiAsync(multi);
+            multiParams.Transformation = m_simpleTransformationAngle;
+            multiParams.Format = FILE_FORMAT_PDF;
+
+            result = await m_cloudinary.MultiAsync(multiParams);
+
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            Assert.True(result.Uri.AbsoluteUri.Contains(TRANSFORM_A_45));
-            Assert.True(result.Uri.AbsoluteUri.EndsWith($".{FILE_FORMAT_PDF}"));
+            CheckMultiResult(result, TRANSFORM_A_45, FILE_FORMAT_PDF);
+        }
+
+        private void CheckMultiResult(MultiResult result, string transformation, string fileFormat)
+        {
+            if (!string.IsNullOrEmpty(transformation))
+                Assert.True(result.Uri.AbsoluteUri.Contains(transformation));
+
+            if (!string.IsNullOrEmpty(fileFormat))
+                Assert.True(result.Uri.AbsoluteUri.EndsWith($".{fileFormat}"));
         }
     }
 }

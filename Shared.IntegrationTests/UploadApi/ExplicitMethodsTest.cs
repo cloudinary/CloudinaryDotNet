@@ -7,50 +7,50 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class ExplicitMethodsTest : IntegrationTestBase
     {
+        private readonly string CLOUDINARY_PUBLIC_ID = "cloudinary";
+        private readonly string STORAGE_TYPE_FACEBOOK = StorageType.facebook.ToString();
+
         [Test]
         public void TestExplicit()
         {
-            var facebook = StorageType.facebook.ToString();
-            var cloudinary = "cloudinary";
-            var exp = new ExplicitParams(cloudinary)
-            {
-                EagerTransforms = new List<Transformation>() { m_explicitTransformation },
-                Type = facebook,
-                Tags = m_apiTag
-            };
+            var explicitParams = CreateExplicitParams();
 
-            var expResult = m_cloudinary.Explicit(exp);
+            var expResult = m_cloudinary.Explicit(explicitParams);
 
-            var url = new Url(m_account.Cloud).ResourceType(Api.GetCloudinaryParam(ResourceType.Image)).Add(facebook).
-                Transform(m_explicitTransformation).
-                Format(FILE_FORMAT_PNG).Version(expResult.Version).BuildUrl(cloudinary);
-
-            Assert.AreEqual(url, expResult.Eager[0].Uri.AbsoluteUri);
+            CheckExplicitAbsoluteUri(expResult);
         }
 
         [Test]
         public async Task TestExplicitAsync()
         {
-            var facebook = StorageType.facebook.ToString();
-            var cloudinary = "cloudinary";
-            var exp = new ExplicitParams(cloudinary)
+            var explicitParams = CreateExplicitParams();
+
+            var expResult = await m_cloudinary.ExplicitAsync(explicitParams);
+
+            CheckExplicitAbsoluteUri(expResult);
+        }
+
+        private ExplicitParams CreateExplicitParams()
+        {
+            return new ExplicitParams(CLOUDINARY_PUBLIC_ID)
             {
                 EagerTransforms = new List<Transformation>() { m_explicitTransformation },
-                Type = facebook,
+                Type = STORAGE_TYPE_FACEBOOK,
                 Tags = m_apiTag
             };
+        }
 
-            var expResult = await m_cloudinary.ExplicitAsync(exp);
-
+        private void CheckExplicitAbsoluteUri(ExplicitResult result)
+        {
             var url = new Url(m_account.Cloud)
                 .ResourceType(ApiShared.GetCloudinaryParam(ResourceType.Image))
-                .Add(facebook)
+                .Add(STORAGE_TYPE_FACEBOOK)
                 .Transform(m_explicitTransformation)
                 .Format(FILE_FORMAT_PNG)
-                .Version(expResult.Version)
-                .BuildUrl(cloudinary);
+                .Version(result.Version)
+                .BuildUrl(CLOUDINARY_PUBLIC_ID);
 
-            Assert.AreEqual(url, expResult.Eager[0].Uri.AbsoluteUri);
+            Assert.AreEqual(url, result.Eager[0].Uri.AbsoluteUri);
         }
 
         [Test]

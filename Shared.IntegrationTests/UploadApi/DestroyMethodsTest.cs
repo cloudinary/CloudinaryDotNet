@@ -9,49 +9,36 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestDestroyRaw()
         {
-            RawUploadParams uploadParams = new RawUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag
-            };
+            var uploadResult = UploadTestRawResource(type: ApiShared.GetCloudinaryParam(ResourceType.Raw));
 
-            RawUploadResult uploadResult = m_cloudinary.Upload(uploadParams, Api.GetCloudinaryParam(ResourceType.Raw));
+            var deletionParams = GetDeletionParams(uploadResult.PublicId);
+            var destroyResult = m_cloudinary.Destroy(deletionParams);
 
-            Assert.NotNull(uploadResult);
-
-            DeletionParams destroyParams = new DeletionParams(uploadResult.PublicId)
-            {
-                ResourceType = ResourceType.Raw
-            };
-
-            DeletionResult destroyResult = m_cloudinary.Destroy(destroyParams);
-
-            Assert.AreEqual("ok", destroyResult.Result);
+            CheckDestroyed(destroyResult);
         }
 
         [Test]
         public async Task TestDestroyRawAsync()
         {
-            var uploadParams = new RawUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag
-            };
+            var uploadResult = await UploadTestRawResourceAsync(type: ApiShared.GetCloudinaryParam(ResourceType.Raw));
 
-            var uploadResult = await m_cloudinary.UploadAsync(
-                uploadParams,
-                ApiShared.GetCloudinaryParam(ResourceType.Raw));
+            var deletionParams = GetDeletionParams(uploadResult.PublicId);
+            var destroyResult = await m_cloudinary.DestroyAsync(deletionParams);
 
-            Assert.NotNull(uploadResult);
+            CheckDestroyed(destroyResult);
+        }
 
-            var destroyParams = new DeletionParams(uploadResult.PublicId)
+        private DeletionParams GetDeletionParams(string publicId)
+        {
+            return new DeletionParams(publicId)
             {
                 ResourceType = ResourceType.Raw
             };
+        }
 
-            var destroyResult = await m_cloudinary.DestroyAsync(destroyParams);
-
-            Assert.AreEqual("ok", destroyResult.Result);
+        private void CheckDestroyed(DeletionResult result)
+        {
+            Assert.AreEqual("ok", result.Result);
         }
     }
 }

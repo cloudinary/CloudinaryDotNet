@@ -54,55 +54,34 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestUploadLocalImage()
         {
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag
-            };
+            var uploadResult = UploadTestImageResource();
 
-            var uploadResult = m_cloudinary.Upload(uploadParams);
-
-            Assert.AreEqual(1920, uploadResult.Width);
-            Assert.AreEqual(1200, uploadResult.Height);
-            Assert.AreEqual(FILE_FORMAT_JPG, uploadResult.Format);
-
-            var checkParams = new SortedDictionary<string, object>
-            {
-                { "public_id", uploadResult.PublicId },
-                { "version", uploadResult.Version }
-            };
-
-            var api = new Api(m_account);
-            string expectedSign = api.SignParameters(checkParams);
-
-            Assert.AreEqual(expectedSign, uploadResult.Signature);
+            CheckDefaultTestImageUploadAndSignature(uploadResult);
         }
 
         [Test]
         public async Task TestUploadLocalImageAsync()
         {
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag
-            };
+            var uploadResult = await UploadTestImageResourceAsync();
 
-            var uploadResult = await m_cloudinary.UploadAsync(uploadParams);
+            CheckDefaultTestImageUploadAndSignature(uploadResult);
+        }
 
-            Assert.AreEqual(1920, uploadResult.Width);
-            Assert.AreEqual(1200, uploadResult.Height);
-            Assert.AreEqual(FILE_FORMAT_JPG, uploadResult.Format);
-
-            var checkParams = new SortedDictionary<string, object>
-            {
-                { "public_id", uploadResult.PublicId },
-                { "version", uploadResult.Version }
-            };
+        private void CheckDefaultTestImageUploadAndSignature(ImageUploadResult result)
+        {
+            Assert.AreEqual(1920, result.Width);
+            Assert.AreEqual(1200, result.Height);
+            Assert.AreEqual(FILE_FORMAT_JPG, result.Format);
 
             var api = new Api(m_account);
-            var expectedSign = api.SignParameters(checkParams);
 
-            Assert.AreEqual(expectedSign, uploadResult.Signature);
+            var expectedSign = api.SignParameters(new SortedDictionary<string, object>
+            {
+                { "public_id", result.PublicId },
+                { "version", result.Version }
+            });
+
+            Assert.AreEqual(expectedSign, result.Signature);
         }
 
         [Test]
@@ -495,30 +474,41 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         public void TestUploadLargeRawFiles()
         {
             // support uploading large raw files
-
             var largeFilePath = m_testLargeImagePath;
-            int fileLength = (int)new FileInfo(largeFilePath).Length;
-            var result = m_cloudinary.UploadLarge(new RawUploadParams()
-            {
-                File = new FileDescription(largeFilePath),
-                Tags = m_apiTag
-            }, 5 * 1024 * 1024);
+            int largeFileLength = (int)new FileInfo(largeFilePath).Length;
 
-            Assert.AreEqual(fileLength, result.Length);
+            var uploadParams = GetUploadLargeRawParams(largeFilePath);
+
+            var result = m_cloudinary.UploadLarge(uploadParams, 5 * 1024 * 1024);
+
+            CheckUploadLarge(result, largeFileLength);
         }
 
         [Test]
         public async Task TestUploadLargeRawFilesAsync()
         {
-            // support uploading large raw files
+            // support asynchronous uploading large raw files
             var largeFilePath = m_testLargeImagePath;
-            int fileLength = (int)new FileInfo(largeFilePath).Length;
-            var result = await m_cloudinary.UploadLargeAsync(new RawUploadParams()
-            {
-                File = new FileDescription(largeFilePath),
-                Tags = m_apiTag
-            }, 5 * 1024 * 1024);
+            int largeFileLength = (int)new FileInfo(largeFilePath).Length;
 
+            var uploadParams = GetUploadLargeRawParams(largeFilePath);
+
+            var result = await m_cloudinary.UploadLargeAsync(uploadParams, 5 * 1024 * 1024);
+
+            CheckUploadLarge(result, largeFileLength);
+        }
+
+        private RawUploadParams GetUploadLargeRawParams(string path)
+        {
+            return new RawUploadParams()
+            {
+                File = new FileDescription(path),
+                Tags = m_apiTag
+            };
+        }
+
+        private void CheckUploadLarge(RawUploadResult result, int fileLength)
+        {
             Assert.AreEqual(fileLength, result.Length);
         }
 

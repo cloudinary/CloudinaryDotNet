@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CloudinaryDotNet
@@ -167,8 +168,9 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Execute search request asynchronously.
         /// </summary>
+        /// <param name="cancellationToken">(Optional) Cancellation token</param>
         /// <returns>Search response with information about the assets matching the search criteria.</returns>
-        public Task<SearchResult> ExecuteAsync()
+        public Task<SearchResult> ExecuteAsync(CancellationToken? cancellationToken = null)
         {
             var url = m_api.ApiUrlV
                 .Add("resources")
@@ -179,7 +181,7 @@ namespace CloudinaryDotNet
                 url.BuildUrl(),
                 PrepareSearchParams(),
                 null,
-                PrepareHeaders());
+                PrepareHeaders(), cancellationToken);
         }
     }
 }

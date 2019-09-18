@@ -296,19 +296,26 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         public void TestListTags()
         {
             // should allow listing tags
-            UploadTestResource();
+            UploadTestImageResource();
 
-            ListTagsResult result = m_cloudinary.ListTags(new ListTagsParams());
-            Assert.Greater(result.Tags.Length, 0);
+            var result = m_cloudinary.ListTags(new ListTagsParams());
+
+            CheckListTagNotEmpty(result);
         }
 
         [Test]
         public async Task TestListTagsAsync()
         {
             // should allow listing tags
-            UploadAsyncTestResource();
+            await UploadTestImageResourceAsync();
 
             var result = await m_cloudinary.ListTagsAsync(new ListTagsParams());
+
+            CheckListTagNotEmpty(result);
+        }
+
+        private void CheckListTagNotEmpty(ListTagsResult result)
+        {
             Assert.Greater(result.Tags.Length, 0);
         }
 
