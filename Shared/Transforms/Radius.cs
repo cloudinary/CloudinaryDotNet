@@ -16,7 +16,7 @@
         /// Or specify 'max' to make the image a perfect circle or oval (ellipse).
         /// </summary>
         /// <param name="value">Can be string, number, float or collection with 1..4 values.</param>
-        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="ArgumentNullException">The value cannot be null.</exception>/>
         public Radius(object value) => SetRadius(Normalize(value));
 
         /// <summary>
@@ -26,7 +26,7 @@
         /// <param name="value">
         /// Symmetrical. All four corners are rounded equally according to the specified value.
         /// </param>
-        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="ArgumentNullException">The value cannot be null.</exception>/>
         public Radius(string value) => SetRadius(value);
 
         /// <summary>
@@ -35,7 +35,7 @@
         /// <param name="value">
         /// Symmetrical. All four corners are rounded equally according to the specified value.
         /// </param>
-        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="ArgumentNullException">The value cannot be null.</exception>/>
         public Radius(int value) => SetRadius(value);
 
         /// <summary>
@@ -44,7 +44,7 @@
         /// <param name="value">
         /// Symmetrical. All four corners are rounded equally according to the specified value.
         /// </param>
-        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="ArgumentNullException">The value cannot be null.</exception>/>
         public Radius(float value) => SetRadius(value);
 
         /// <summary>
@@ -52,7 +52,7 @@
         /// </summary>
         /// <param name="topLeftAndBottomRight">Top-left and bottom-right corners.</param>
         /// <param name="topRightAndBottomLeft">Top-right and bottom-left corners.</param>
-        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="ArgumentNullException">Both arguments cannot be null.</exception>/>
         public Radius(object topLeftAndBottomRight, object topRightAndBottomLeft)
         {
             if (topLeftAndBottomRight == null)
@@ -74,7 +74,7 @@
         /// <param name="topLeft">Top-left corner.</param>
         /// <param name="topRightAndBottomLeft">Top-right and bottom-left corners.</param>
         /// <param name="bottomRight">Bottom-right corner.</param>
-        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="ArgumentNullException">None of the arguments can be null.</exception>/>
         public Radius(object topLeft, object topRightAndBottomLeft, object bottomRight)
         {
             if (topLeft == null)
@@ -103,7 +103,7 @@
         /// <param name="topRight">Top-right corner.</param>
         /// <param name="bottomRight">Bottom-right corner.</param>
         /// <param name="bottomLeft">Bottom-left corner.</param>
-        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="ArgumentNullException">None of the arguments can be null.</exception>/>
         public Radius(object topLeft, object topRight, object bottomRight, object bottomLeft)
         {
             if (topLeft == null)
@@ -154,7 +154,7 @@
         /// Parse provided radius value and make it normalized.
         /// </summary>
         /// <param name="value">Can be string, number, float or collection with 1..4 values.</param>
-        /// <exception cref="ArgumentException" />
+        /// <exception cref="ArgumentException">The value cannot be null</exception>/>
         private string Normalize(object value)
         {
             if (value is ICollection radiusCollection)
