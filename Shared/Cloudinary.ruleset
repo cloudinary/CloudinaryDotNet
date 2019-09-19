@@ -89,7 +89,7 @@
     <Rule Id="SA1629" Action="Warning" />
     <Rule Id="SA1633" Action="Info" />
     <Rule Id="SA1642" Action="Info" />
-    <Rule Id="SA1648" Action="Info" />
+    <Rule Id="SA1648" Action="Warning" />
     <Rule Id="SA1649" Action="Info" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">

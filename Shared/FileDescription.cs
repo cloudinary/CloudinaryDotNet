@@ -34,7 +34,6 @@
             FileName = IsRemote ? filePath : name;
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// Constructor to upload file by path.
         /// </summary>

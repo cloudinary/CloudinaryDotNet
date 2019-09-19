@@ -195,7 +195,6 @@
             }
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// Parameterized constructor.
         /// </summary>
