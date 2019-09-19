@@ -87,8 +87,8 @@
         /// <summary>
         /// Generate an image of a given textual string asynchronously.
         /// </summary>
-        /// <param name="parameters">Parameters of generating an image of a given textual string</param>
-        /// <returns>Results of generating an image of a given textual string</returns>
+        /// <param name="parameters">Parameters of generating an image of a given textual string.</param>
+        /// <returns>Results of generating an image of a given textual string.</returns>
         public Task<TextResult> TextAsync(TextParams parameters)
         {
             return CallAsync(Text, parameters);
@@ -97,8 +97,8 @@
         /// <summary>
         /// Manage tag assignments asynchronously.
         /// </summary>
-        /// <param name="parameters">Parameters of tag management</param>
-        /// <returns>Results of tags management</returns>
+        /// <param name="parameters">Parameters of tag management.</param>
+        /// <returns>Results of tags management.</returns>
         public Task<TagResult> TagAsync(TagParams parameters)
         {
             return CallAsync(Tag, parameters);
@@ -214,20 +214,20 @@
         }
 
         /// <summary>
-        /// Allows multi transformation
+        /// Allows multi transformation.
         /// </summary>
-        /// <param name="parameters">Parameters of operation</param>
-        /// <returns>Result of operation</returns>
+        /// <param name="parameters">Parameters of operation.</param>
+        /// <returns>Result of operation.</returns>
         public Task<MultiResult> MultiAsync(MultiParams parameters)
         {
             return CallAsync(Multi, parameters);
         }
 
         /// <summary>
-        /// Explode multipage document to single pages
+        /// Explode multipage document to single pages.
         /// </summary>
-        /// <param name="parameters">Parameters of explosion</param>
-        /// <returns>Result of operation</returns>
+        /// <param name="parameters">Parameters of explosion.</param>
+        /// <returns>Result of operation.</returns>
         public Task<ExplodeResult> ExplodeAsync(ExplodeParams parameters)
         {
             return CallAsync(Explode, parameters);
@@ -236,7 +236,7 @@
         /// <summary>
         /// Gets the Cloudinary account usage details asynchronously.
         /// </summary>
-        /// <returns>Result of operation</returns>
+        /// <returns>Result of operation.</returns>
         public Task<UsageResult> GetUsageAsync()
         {
             return Task.Factory.StartNew<UsageResult>(GetUsage);

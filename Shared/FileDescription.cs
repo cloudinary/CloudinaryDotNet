@@ -23,10 +23,10 @@
         }
 
         /// <summary>
-        /// Constructor to upload file by path specifying explicit filename
+        /// Constructor to upload file by path specifying explicit filename.
         /// </summary>
-        /// <param name="name">Resource name</param>
-        /// <param name="filePath">Either URL (http/https/s3/data) or local path to file</param>
+        /// <param name="name">Resource name.</param>
+        /// <param name="filePath">Either URL (http/https/s3/data) or local path to file.</param>
         public FileDescription(string name, string filePath)
         {
             IsRemote = Utils.IsRemoteFile(filePath);
@@ -47,22 +47,22 @@
         }
 
         /// <summary>
-        /// Stream to upload
+        /// Stream to upload.
         /// </summary>
         public Stream Stream { get; }
 
         /// <summary>
-        /// Name of the file to upload
+        /// Name of the file to upload.
         /// </summary>
         public string FileName { get; set; }
 
         /// <summary>
-        /// Filesystem path to the file to upload
+        /// Filesystem path to the file to upload.
         /// </summary>
         public string FilePath { get; }
 
         /// <summary>
-        /// Whether it is remote (by URL) or local file
+        /// Whether it is remote (by URL) or local file.
         /// </summary>
         public bool IsRemote { get; }
 

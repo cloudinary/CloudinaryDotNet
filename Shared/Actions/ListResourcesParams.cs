@@ -56,7 +56,7 @@
         public DateTime StartAt { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -64,9 +64,9 @@
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
@@ -166,7 +166,7 @@
         /// <summary>
         /// Validate object model.
         /// </summary>
-        /// <exception cref="System.ArgumentException">Tag must be set to list resource by tag!</exception>
+        /// <exception cref="System.ArgumentException">Tag must be set to list resource by tag.</exception>
         public override void Check()
         {
             base.Check();

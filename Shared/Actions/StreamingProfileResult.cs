@@ -29,7 +29,7 @@
     public class StreamingProfileData : StreamingProfileBaseData
     {
         /// <summary>
-        /// A collection of Representations that defines a custom streaming profile
+        /// A collection of Representations that defines a custom streaming profile.
         /// </summary>
         [DataMember(Name = "representations")]
         public List<Representation> Representations { get; set; }

@@ -102,7 +102,7 @@
         }
 
         /// <summary>
-        /// Control the audio codec or remove the audio channel
+        /// Control the audio codec or remove the audio channel.
         /// </summary>
         /// <param name="codec">Audio codec to set. Use 'none' to remove the audio channel.</param>
         public Transformation AudioCodec(string codec)
@@ -113,7 +113,7 @@
         /// <summary>
         /// Advanced control of video bitrate in bits per second.
         /// </summary>
-        /// <param name="bitRate">Number of bits per second as an integer. (max: 500000)</param>
+        /// <param name="bitRate">Number of bits per second as an integer (max: 500000).</param>
         public Transformation BitRate(int bitRate)
         {
             return Add("bit_rate", bitRate);
@@ -211,7 +211,7 @@
         /// <summary>
         /// Offset in seconds of a video. The start of the video to be kept after trimming.
         /// </summary>
-        /// <param name="value">String representing value of  </param>
+        /// <param name="value">String representing value of.</param>
         public Transformation StartOffset(string value)
         {
             return Add("start_offset", value);

@@ -13,7 +13,7 @@
     using Newtonsoft.Json.Linq;
 
     /// <summary>
-    /// Technological layer to work with cloudinary API
+    /// Technological layer to work with cloudinary API.
     /// </summary>
     public class Api : ApiShared
     {
@@ -85,12 +85,12 @@
         /// <summary>
         /// Makes custom call to Cloudinary API.
         /// </summary>
-        /// <param name="method">HTTP method of call</param>
-        /// <param name="url">URL to call</param>
-        /// <param name="parameters">Dictionary of call parameters (can be null)</param>
-        /// <param name="file">File to upload (must be null for non-uploading actions)</param>
-        /// <param name="extraHeaders">Headers to add to the request</param>
-        /// <returns>HTTP response on call</returns>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="url">URL to call.</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null).</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <returns>HTTP response on call.</returns>
         public HttpWebResponse Call(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             HttpWebRequest request = requestBuilder(url);
@@ -177,10 +177,10 @@
         }
 
         /// <summary>
-        /// Parses HTTP response and creates new instance of this class
+        /// Parses HTTP response and creates new instance of this class.
         /// </summary>
-        /// <param name="response">HTTP response</param>
-        /// <returns>New instance of this class</returns>
+        /// <param name="response">HTTP response.</param>
+        /// <returns>New instance of this class.</returns>
         /// <typeparam name="T">Type of the parsed response.</typeparam>
         internal static T Parse<T>(object response)
             where T : BaseResult, new()

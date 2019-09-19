@@ -180,7 +180,7 @@
 
         /// <summary>
         /// An ordered array of the video source types to include in the HTML5 tag, where the type is mapped to the
-        /// mime type. Default: ['webm', 'mp4', 'ogv']
+        /// mime type. Default: ['webm', 'mp4', 'ogv'].
         /// </summary>
         protected string[] m_sourceTypes;
 
@@ -336,7 +336,7 @@
         /// is added to the url. Set this boolean as false to prevent that behaviour.
         /// </summary>
         /// <param name="forceVersion">A boolean parameter indicating whether or not to add the version.</param>
-        /// <returns>Url</returns>
+        /// <returns>Url.</returns>
         public Url ForceVersion(bool forceVersion = true)
         {
             m_forceVersion = forceVersion;
@@ -368,7 +368,7 @@
 
         /// <summary>
         /// An ordered array of the video source types to include in the HTML5 tag, where the type is mapped to the
-        /// mime type. Default: ['webm', 'mp4', 'ogv']
+        /// mime type. Default: ['webm', 'mp4', 'ogv'].
         /// </summary>
         /// <param name="sourceTypes">An ordered array of the video source types.</param>
         public Url SourceTypes(params string[] sourceTypes)
@@ -388,9 +388,9 @@
         }
 
         /// <summary>
-        /// Type of the resource.
+        /// Set resource type.
         /// </summary>
-        /// <param name="resourceType">Type of the resource</param>
+        /// <param name="resourceType">Type of the resource.</param>
         /// <returns></returns>
         public Url ResourceType(string resourceType)
         {
@@ -1517,7 +1517,7 @@
         /// <summary>
         /// A single value, or a comma-separated list of values identifying the codec(s) that should be used to
         /// generate the video. The codec definition can include additional properties,separated with a dot.
-        /// For example, codecs="avc1.42E01E,mp4a.40.2"
+        /// For example, codecs="avc1.42E01E,mp4a.40.2".
         /// </summary>
         public string[] Codecs { get; set; }
 

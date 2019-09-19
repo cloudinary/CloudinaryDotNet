@@ -130,7 +130,7 @@
         /// <summary>
         /// Set the Access Control List for limiting the allowed URL path to a specified pattern.
         /// </summary>
-        /// <param name="acl">The pattern (e.g., /image/authenticated/*)</param>
+        /// <param name="acl">The pattern (e.g., /image/authenticated/*).</param>
         public AuthToken Acl(string acl)
         {
             this.acl = acl;

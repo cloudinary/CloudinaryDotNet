@@ -132,7 +132,7 @@
         /// <param name="tag">The tag.</param>
         /// <param name="transform">The transformation.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentException">Tag should be specified!</exception>
+        /// <exception cref="System.ArgumentException">Tag should be specified.</exception>
         public string DownloadZip(string tag, Transformation transform)
         {
             if (string.IsNullOrEmpty(tag))
@@ -495,7 +495,7 @@
         }
 
         /// <summary>
-        /// Deletes folder
+        /// Deletes folder.
         /// </summary>
         public DeleteFolderResult DeleteFolder(string folder)
         {
@@ -538,7 +538,7 @@
         /// <exception cref="System.ArgumentException">
         /// Please use BasicRawUploadParams class for large raw file uploading!
         /// or
-        /// The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!
+        /// The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading.
         /// </exception>
         public RawUploadResult UploadLargeRaw(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
         {
@@ -1127,7 +1127,7 @@
         /// <summary>
         /// Deletes all resources with the given public IDs.
         /// </summary>
-        /// <param name="publicIds">Array of up to 100 public_ids</param>
+        /// <param name="publicIds">Array of up to 100 public_ids.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public DelResResult DeleteResources(params string[] publicIds)
         {

@@ -3,7 +3,7 @@
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// The format for the generated archive
+    /// The format for the generated archive.
     /// </summary>
     public enum ArchiveFormat
     {

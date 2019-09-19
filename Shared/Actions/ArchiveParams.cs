@@ -51,7 +51,7 @@
         }
 
         /// <summary>
-        /// Get a list of Fully Qualified Public IDs for the specific assets to be included in the archive
+        /// Get a list of Fully Qualified Public IDs for the specific assets to be included in the archive.
         /// </summary>
         public List<string> FullyQualifiedPublicIds()
         {
@@ -59,7 +59,7 @@
         }
 
         /// <summary>
-        /// Set a list of Fully Qualified Public IDs for the specific assets to be included in the archive
+        /// Set a list of Fully Qualified Public IDs for the specific assets to be included in the archive.
         /// </summary>
         public ArchiveParams FullyQualifiedPublicIds(List<string> fullyQualifiedPublicIds)
         {

@@ -98,7 +98,7 @@ namespace CloudinaryDotNet.Actions
         public string DerivedNextCursor { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {

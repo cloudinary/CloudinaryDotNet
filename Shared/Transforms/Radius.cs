@@ -154,7 +154,7 @@
         /// Parse provided radius value and make it normalized.
         /// </summary>
         /// <param name="value">Can be string, number, float or collection with 1..4 values.</param>
-        /// <exception cref="ArgumentException">The value cannot be null</exception>/>
+        /// <exception cref="ArgumentException">The value cannot be null.</exception>/>
         private string Normalize(object value)
         {
             if (value is ICollection radiusCollection)

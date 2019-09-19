@@ -3,7 +3,7 @@
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Audio sample frequency values, in Hz
+    /// Audio sample frequency values, in Hz.
     /// </summary>
     public enum AudioFrequency
     {

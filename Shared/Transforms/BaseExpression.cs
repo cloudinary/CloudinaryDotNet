@@ -153,7 +153,7 @@
         /// <summary>
         /// Add 'greater than' operation with value.
         /// </summary>
-        /// <param name="value">The value</param>
+        /// <param name="value">The value.</param>
         public T Gt(object value)
         {
             return Gt().Value(value);

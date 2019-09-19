@@ -91,9 +91,9 @@
         /// Validate object model.
         /// </summary>
         /// <exception cref="System.ArgumentException">
-        /// FromPublicId can't be null!
+        /// FromPublicId can't be null.
         /// or
-        /// ToPublicId can't be null!
+        /// ToPublicId can't be null.
         /// </exception>
         public override void Check()
         {

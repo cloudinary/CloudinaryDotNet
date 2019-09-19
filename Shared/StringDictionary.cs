@@ -70,7 +70,7 @@
         }
 
         /// <summary>
-        /// Returns all keys and values with escaped "=" symbol
+        /// Returns all keys and values with escaped "=" symbol.
         /// </summary>
         public string[] SafePairs
         {
@@ -320,10 +320,10 @@
         }
 
         /// <summary>
-        /// Escape safe pair delimiter
+        /// Escape safe pair delimiter.
         /// </summary>
-        /// <param name="value">Value to escape</param>
-        /// <returns>Escaped value</returns>
+        /// <param name="value">Value to escape.</param>
+        /// <returns>Escaped value.</returns>
         private string EscapeSafePairString(string value)
         {
             return value.Replace(@"=", @"\=");

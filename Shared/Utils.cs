@@ -87,7 +87,7 @@
         }
 
         /// <summary>
-        /// Compute hash and convert the result to HEX string
+        /// Compute hash and convert the result to HEX string.
         /// </summary>
         internal static string ComputeHexHash(string s)
         {

@@ -9,7 +9,7 @@
     public partial class Cloudinary
     {
         /// <summary>
-        /// Create a new streaming profile
+        /// Create a new streaming profile.
         /// </summary>
         public StreamingProfileResult CreateStreamingProfile(StreamingProfileCreateParams parameters)
         {
@@ -17,9 +17,9 @@
         }
 
         /// <summary>
-        /// Update streaming profile
+        /// Update streaming profile.
         /// </summary>
-        /// <exception cref="ArgumentNullException">both arguments can't be null</exception>
+        /// <exception cref="ArgumentNullException">both arguments can't be null.</exception>
         public StreamingProfileResult UpdateStreamingProfile(string name, StreamingProfileUpdateParams parameters)
         {
             if (string.IsNullOrEmpty(name))
@@ -40,9 +40,9 @@
         }
 
         /// <summary>
-        /// Delete streaming profile
+        /// Delete streaming profile.
         /// </summary>
-        /// <exception cref="ArgumentNullException">name can't be null</exception>
+        /// <exception cref="ArgumentNullException">name can't be null.</exception>
         public StreamingProfileResult DeleteStreamingProfile(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -55,9 +55,9 @@
         }
 
         /// <summary>
-        /// Retrieve the details of a single streaming profile by name
+        /// Retrieve the details of a single streaming profile by name.
         /// </summary>
-        /// <exception cref="ArgumentNullException">name can't be null</exception>
+        /// <exception cref="ArgumentNullException">name can't be null.</exception>
         public StreamingProfileResult GetStreamingProfile(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -70,7 +70,7 @@
         }
 
         /// <summary>
-        /// Retrieve the list of streaming profiles, including built-in and custom profiles
+        /// Retrieve the list of streaming profiles, including built-in and custom profiles.
         /// </summary>
         public StreamingProfileListResult ListStreamingProfiles()
         {

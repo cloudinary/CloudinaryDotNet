@@ -3,7 +3,7 @@
     using System.Text.Encodings.Web;
 
     /// <summary>
-    /// Implement platform specific functions
+    /// Implement platform specific functions.
     /// </summary>
     internal static partial class Utils
     {

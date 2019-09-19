@@ -65,7 +65,7 @@
 
         /// <summary>
         /// Add the aspect_ratio parameter to resize or crop the image to a new aspect ratio.
-        /// Decimal format (e.g., 1.33 or 2.5)
+        /// Decimal format (e.g., 1.33 or 2.5).
         /// </summary>
         /// <param name="value">A decimal value representing the ratio of the width divided by the height.</param>
         public Transformation AspectRatio(double value)
@@ -414,9 +414,9 @@
         }
 
         /// <summary>
-        /// Start defining a condition, which will be completed with a call <seealso cref="Condition.Then()"/>
+        /// Start defining a condition, which will be completed with a call. <seealso cref="Condition.Then()"/>
         /// </summary>
-        /// <returns>Condition</returns>
+        /// <returns>Condition.</returns>
         public Condition IfCondition()
         {
             return new Condition().SetParent(this);
@@ -433,10 +433,10 @@
         }
 
         /// <summary>
-        /// Define a conditional transformation
+        /// Define a conditional transformation.
         /// </summary>
-        /// <param name="expression">An expression</param>
-        /// <returns>The transformation for chaining</returns>
+        /// <param name="expression">An expression.</param>
+        /// <returns>The transformation for chaining.</returns>
         public Transformation IfCondition(BaseExpression expression)
         {
             return IfCondition(expression.ToString());

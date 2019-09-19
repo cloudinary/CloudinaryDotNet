@@ -128,7 +128,7 @@
         public string UserPlatform;
 
         /// <summary>
-        /// Timeout for the API requests,
+        /// Timeout for the API requests.
         /// </summary>
         public int Timeout = 0;
 
@@ -240,7 +240,7 @@
         public Account Account { get; private set; }
 
         /// <summary>
-        /// Gets or sets API base address (https://api.cloudinary.com by default) which is used to build ApiUrl*
+        /// Gets or sets API base address (https://api.cloudinary.com by default) which is used to build ApiUrl.
         /// </summary>
         public string ApiBaseAddress
         {
@@ -552,12 +552,12 @@
         }
 
         /// <summary>
-        /// Validates API response signature against Cloudinary configuration
+        /// Validates API response signature against Cloudinary configuration.
         /// </summary>
-        /// <param name="publicId">Public ID of resource</param>
-        /// <param name="version">Version of resource</param>
-        /// <param name="signature">Response signature</param>
-        /// <returns>Boolean result of the validation</returns>
+        /// <param name="publicId">Public ID of resource.</param>
+        /// <param name="version">Version of resource.</param>
+        /// <param name="signature">Response signature.</param>
+        /// <returns>Boolean result of the validation.</returns>
         public bool VerifyApiResponseSignature(string publicId, string version, string signature)
         {
             var parametersToSign = new SortedDictionary<string, object>()
@@ -571,13 +571,13 @@
         }
 
         /// <summary>
-        /// Validates notification signature against Cloudinary configuration
+        /// Validates notification signature against Cloudinary configuration.
         /// </summary>
-        /// <param name="body">Request body</param>
-        /// <param name="timestamp">Request timestamp</param>
-        /// <param name="signature">Notification signature</param>
-        /// <param name="validFor">For how long the signature is valid, in seconds</param>
-        /// <returns>Boolean result of the validation</returns>
+        /// <param name="body">Request body.</param>
+        /// <param name="timestamp">Request timestamp.</param>
+        /// <param name="signature">Notification signature.</param>
+        /// <param name="validFor">For how long the signature is valid, in seconds.</param>
+        /// <returns>Boolean result of the validation.</returns>
         public bool VerifyNotificationSignature(string body, long timestamp, string signature, int validFor = 7200)
         {
             var currentTimestamp = Utils.UnixTimeNowSeconds();

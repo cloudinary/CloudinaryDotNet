@@ -228,12 +228,12 @@
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// Proxy to use when Cloudinary accesses remote folders
+        /// Proxy to use when Cloudinary accesses remote folders.
         /// </summary>
         public string Proxy { get; set; }
 
         /// <summary>
-        /// Base Folder to use when building the Cloudinary public_id
+        /// Base Folder to use when building the Cloudinary public_id.
         /// </summary>
         public string Folder { get; set; }
 
@@ -364,7 +364,7 @@
         public bool Live { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {

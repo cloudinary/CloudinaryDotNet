@@ -142,7 +142,7 @@
 
         /// <summary>
         /// Allows the resource to behave as if it's of the authenticated 'type' while still using the default 'upload'
-        /// type in delivery URLs
+        /// type in delivery URLs.
         /// </summary>
         public string AccessMode { get; set; }
 

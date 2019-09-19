@@ -53,7 +53,7 @@
         }
 
         /// <summary>
-        /// Get maximal width in pixels
+        /// Get maximal width in pixels.
         /// </summary>
         public int MaxWidth()
         {
@@ -100,7 +100,7 @@
         /// <summary>
         /// Set the minimum number of bytes between two consecutive breakpoints (images). Default: 20000.
         /// </summary>
-        /// <param name="bytesStep">File size step in bytes</param>
+        /// <param name="bytesStep">File size step in bytes.</param>
         /// <returns></returns>
         public ResponsiveBreakpoint BytesStep(int bytesStep)
         {

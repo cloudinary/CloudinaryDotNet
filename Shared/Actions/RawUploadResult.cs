@@ -17,7 +17,7 @@
         public string Signature { get; protected set; }
 
         /// <summary>
-        /// Storage type
+        /// Storage type.
         /// </summary>
         [DataMember(Name = "type")]
         public string Type { get; protected set; }
