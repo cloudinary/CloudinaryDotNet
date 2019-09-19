@@ -434,7 +434,7 @@
         /// <param name="url">API URL.</param>
         /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) The extra headers to pass into the request.</param>
         /// <returns>Parsed response from the cloudinary API.</returns>
         public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
@@ -450,7 +450,7 @@
         /// <param name="url">API URL.</param>
         /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) The extra headers to pass into the request.</param>
         /// <returns>Parsed response from the cloudinary API.</returns>
         public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
