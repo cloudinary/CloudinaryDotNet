@@ -86,7 +86,7 @@
     public class RawUploadParams : BasicRawUploadParams
     {
         /// <summary>
-        /// Instantiates the <see cref="RawUploadParams"/> object.
+        /// Initializes a new instance of the <see cref="RawUploadParams"/> class.
         /// </summary>
         public RawUploadParams()
         {

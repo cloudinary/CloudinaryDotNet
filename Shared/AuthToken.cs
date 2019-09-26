@@ -65,14 +65,14 @@
         private bool isNullToken = false;
 
         /// <summary>
-        /// Instantiates the <see cref="AuthToken"/> object.
+        /// Initializes a new instance of the <see cref="AuthToken"/> class.
         /// </summary>
         public AuthToken()
         {
         }
 
         /// <summary>
-        /// Instantiates the <see cref="AuthToken"/> object.
+        /// Initializes a new instance of the <see cref="AuthToken"/> class.
         /// </summary>
         /// <param name="key">The encryption key received from Cloudinary to sign token with.</param>
         public AuthToken(string key)

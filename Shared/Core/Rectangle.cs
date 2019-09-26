@@ -6,7 +6,7 @@
     public struct Rectangle
     {
         /// <summary>
-        /// Instantiates the <see cref="Rectangle"/> object with the specified location and size.
+        /// Initializes a new instance of the <see cref="Rectangle"/> struct with the specified location and size.
         /// </summary>
         /// <param name="x">the x-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure.</param>
         /// <param name="y">the y-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure.</param>

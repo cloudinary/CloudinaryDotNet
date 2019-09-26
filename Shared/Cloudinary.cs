@@ -39,7 +39,8 @@
         protected Api m_api;
 
         /// <summary>
-        /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
+        /// Initializes a new instance of the <see cref="Cloudinary"/> class.
+        /// Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public Cloudinary()
         {
@@ -47,7 +48,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Cloudinary"/> object with Cloudinary URL.
+        /// Initializes a new instance of the <see cref="Cloudinary"/> class with Cloudinary URL.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public Cloudinary(string cloudinaryUrl)
@@ -56,7 +57,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Cloudinary"/> object with Cloudinary account.
+        /// Initializes a new instance of the <see cref="Cloudinary"/> class with Cloudinary account.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         public Cloudinary(Account account)

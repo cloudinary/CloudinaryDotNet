@@ -15,14 +15,15 @@
         public const string VARIABLE_NAME_REGEX = "^\\$[a-zA-Z][a-zA-Z0-9]*$";
 
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="Expression"/> object.
+        /// Initializes a new instance of the <see cref="Expression"/> class.
+        /// Default parameterless constructor.
         /// </summary>
         public Expression()
         {
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Expression"/> object with name.
+        /// Initializes a new instance of the <see cref="Expression"/> class with name.
         /// </summary>
         public Expression(string name)
             : this()

@@ -9,7 +9,7 @@
     public class UpdateTransformParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="UpdateTransformParams"/> object.
+        /// Initializes a new instance of the <see cref="UpdateTransformParams"/> class.
         /// </summary>
         public UpdateTransformParams()
         {

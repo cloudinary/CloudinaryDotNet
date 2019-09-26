@@ -9,7 +9,7 @@
     public class VideoLayer : BaseLayer<VideoLayer>
     {
         /// <summary>
-        /// Instantiates the <see cref="VideoLayer"/> object.
+        /// Initializes a new instance of the <see cref="VideoLayer"/> class.
         /// </summary>
         public VideoLayer()
         {
@@ -17,7 +17,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="VideoLayer"/> object with public ID.
+        /// Initializes a new instance of the <see cref="VideoLayer"/> class with public ID.
         /// </summary>
         /// <param name="publicId">Public ID of a previously uploaded PNG image.</param>
         public VideoLayer(string publicId)

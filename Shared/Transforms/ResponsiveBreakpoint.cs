@@ -17,7 +17,7 @@
         private const string FORMAT = "format";
 
         /// <summary>
-        /// Instantiates the <see cref="ResponsiveBreakpoint"/> object.
+        /// Initializes a new instance of the <see cref="ResponsiveBreakpoint"/> class.
         /// </summary>
         public ResponsiveBreakpoint()
         {

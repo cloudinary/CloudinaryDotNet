@@ -13,7 +13,7 @@
         private string m_type = "upload";
 
         /// <summary>
-        /// Instantiates the <see cref="UpdateResourceAccessModeParams"/> object.
+        /// Initializes a new instance of the <see cref="UpdateResourceAccessModeParams"/> class.
         /// </summary>
         public UpdateResourceAccessModeParams()
         {

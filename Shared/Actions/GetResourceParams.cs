@@ -9,7 +9,7 @@ namespace CloudinaryDotNet.Actions
     public class GetResourceParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="GetResourceParams"/> object.
+        /// Initializes a new instance of the <see cref="GetResourceParams"/> class.
         /// </summary>
         /// <param name="publicId">The public ID of the resource.</param>
         public GetResourceParams(string publicId)

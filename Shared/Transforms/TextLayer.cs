@@ -147,7 +147,7 @@
         protected string m_lineSpacing;
 
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="TextLayer"/> object.
+        /// Initializes a new instance of the <see cref="TextLayer"/> class.
         /// </summary>
         public TextLayer()
         {
@@ -156,7 +156,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="TextLayer"/> object with text.
+        /// Initializes a new instance of the <see cref="TextLayer"/> class with text.
         /// </summary>
         /// <param name="text">The text to generate an image for.</param>
         public TextLayer(string text)

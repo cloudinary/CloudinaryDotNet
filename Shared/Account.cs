@@ -6,6 +6,7 @@
     public class Account
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Account"/> class.
         /// Default constructor.
         /// </summary>
         public Account()
@@ -16,6 +17,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Account"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="cloud">Cloud name.</param>
@@ -29,6 +31,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Account"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="cloud">Cloud name.</param>

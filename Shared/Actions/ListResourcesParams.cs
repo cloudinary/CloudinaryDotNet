@@ -94,7 +94,7 @@
     public class ListSpecificResourcesParams : ListResourcesParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ListSpecificResourcesParams"/> object.
+        /// Initializes a new instance of the <see cref="ListSpecificResourcesParams"/> class.
         /// </summary>
         public ListSpecificResourcesParams()
         {

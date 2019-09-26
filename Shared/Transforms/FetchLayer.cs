@@ -14,7 +14,8 @@
         protected string m_url;
 
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="FetchLayer"/> object.
+        /// Initializes a new instance of the <see cref="FetchLayer"/> class.
+        /// Default parameterless constructor.
         /// </summary>
         public FetchLayer()
         {

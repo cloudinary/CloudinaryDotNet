@@ -9,7 +9,7 @@
     public class DeletionParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="DeletionParams"/> object.
+        /// Initializes a new instance of the <see cref="DeletionParams"/> class.
         /// </summary>
         /// <param name="publicId">The identifier of the uploaded asset. </param>
         public DeletionParams(string publicId)

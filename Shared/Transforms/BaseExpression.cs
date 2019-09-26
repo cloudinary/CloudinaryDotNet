@@ -73,7 +73,8 @@
         protected List<string> m_expressions;
 
         /// <summary>
-        /// Default paramaterless constructor. Instantiates the <see cref="BaseExpression"/> object.
+        /// Initializes a new instance of the <see cref="BaseExpression{T}"/> class.
+        /// Default paramaterless constructor.
         /// </summary>
         protected BaseExpression()
         {

@@ -12,7 +12,7 @@ namespace CloudinaryDotNet.Actions
     public class ExplicitParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ExplicitParams"/> object with public id.
+        /// Initializes a new instance of the <see cref="ExplicitParams"/> class with public id.
         /// </summary>
         /// <param name="publicId">The identifier that is used for accessing the uploaded resource.</param>
         public ExplicitParams(string publicId)

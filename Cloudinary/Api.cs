@@ -20,7 +20,7 @@
         private Func<string, HttpWebRequest> requestBuilder = (x) => HttpWebRequest.Create(x) as HttpWebRequest;
 
         /// <summary>
-        /// Default static parameterless constructor.
+        /// Initializes static members of the <see cref="Api"/> class.
         /// </summary>
         static Api()
         {
@@ -30,7 +30,8 @@
         }
 
         /// <summary>
-        /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
+        /// Initializes a new instance of the <see cref="Api"/> class.
+        /// Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public Api()
             : base()
@@ -38,7 +39,7 @@
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary URL.
+        /// Initializes a new instance of the <see cref="Api"/> class with cloudinary URL.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public Api(string cloudinaryUrl)
@@ -47,7 +48,7 @@
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with initial parameters.
+        /// Initializes a new instance of the <see cref="Api"/> class with initial parameters.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network.</param>
@@ -60,7 +61,7 @@
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with account.
+        /// Initializes a new instance of the <see cref="Api"/> class with account.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         public Api(Account account)

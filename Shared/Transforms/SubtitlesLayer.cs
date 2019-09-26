@@ -7,7 +7,7 @@
     public class SubtitlesLayer : TextLayer
     {
         /// <summary>
-        /// Instantiates the <see cref="SubtitlesLayer"/> object.
+        /// Initializes a new instance of the <see cref="SubtitlesLayer"/> class.
         /// </summary>
         public SubtitlesLayer()
         {

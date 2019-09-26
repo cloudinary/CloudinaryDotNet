@@ -200,7 +200,7 @@
         protected Transformation m_transformation;
 
         /// <summary>
-        /// Instantiates the <see cref="Url"/> object with cloud name.
+        /// Initializes a new instance of the <see cref="Url"/> class with cloud name.
         /// </summary>
         /// <param name="cloudName">The name of your cloud.</param>
         public Url(string cloudName)
@@ -209,7 +209,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Url"/> object with cloud name and sign provider.
+        /// Initializes a new instance of the <see cref="Url"/> class with cloud name and sign provider.
         /// </summary>
         /// <param name="cloudName">The name of your cloud.</param>
         /// <param name="signProvider">Provider for signing parameters.</param>
@@ -1292,7 +1292,8 @@
         private StringDictionary queryString = null;
 
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="UrlBuilder"/> object.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class.
+        /// Default parameterless constructor.
         /// </summary>
         public UrlBuilder()
             : base()
@@ -1300,7 +1301,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified URI.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified URI.
         /// </summary>
         /// <param name="uri">A URI string.</param>
         public UrlBuilder(string uri)
@@ -1310,7 +1311,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified URI and dictionary with cloudinary
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified URI and dictionary with cloudinary
         /// parameters.
         /// </summary>
         /// <param name="uri">A URI string.</param>
@@ -1323,7 +1324,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified <see cref="Uri"/> instance.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified <see cref="Uri"/> instance.
         /// </summary>
         /// <param name="uri">An instance of the <see cref="Uri"/> class.</param>
         public UrlBuilder(Uri uri)
@@ -1333,7 +1334,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified scheme and host.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified scheme and host.
         /// </summary>
         /// <param name="schemeName">An Internet access protocol.</param>
         /// <param name="hostName">A DNS-style domain name or IP address.</param>
@@ -1343,7 +1344,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified scheme, host, and port.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified scheme, host, and port.
         /// </summary>
         /// <param name="scheme">An Internet access protocol.</param>
         /// <param name="host">A DNS-style domain name or IP address.</param>
@@ -1354,7 +1355,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified scheme, host, port number, and path.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified scheme, host, port number, and path.
         /// </summary>
         /// <param name="scheme">An Internet access protocol.</param>
         /// <param name="host">A DNS-style domain name or IP address.</param>
@@ -1366,7 +1367,7 @@
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified scheme, host, port number, path and
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified scheme, host, port number, path and
         /// query string or fragment identifier.
         /// </summary>
         /// <param name="scheme">An Internet access protocol.</param>

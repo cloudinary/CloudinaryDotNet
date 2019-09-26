@@ -9,7 +9,7 @@
     public class GetTransformParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="GetTransformParams"/> object.
+        /// Initializes a new instance of the <see cref="GetTransformParams"/> class.
         /// </summary>
         public GetTransformParams()
         {

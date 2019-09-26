@@ -14,7 +14,7 @@
         private bool m_all;
 
         /// <summary>
-        /// Instantiates the <see cref="DelResParams"/> object.
+        /// Initializes a new instance of the <see cref="DelResParams"/> class.
         /// </summary>
         public DelResParams()
         {

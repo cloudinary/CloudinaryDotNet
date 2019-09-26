@@ -9,6 +9,7 @@
     public class UploadMappingParams : BaseParams
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="UploadMappingParams"/> class.
         /// Default constructor.
         /// </summary>
         public UploadMappingParams()

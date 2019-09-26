@@ -8,7 +8,7 @@
     public class ListTagsParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ListTagsParams"/> object.
+        /// Initializes a new instance of the <see cref="ListTagsParams"/> class.
         /// </summary>
         public ListTagsParams()
         {

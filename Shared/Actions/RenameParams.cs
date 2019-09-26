@@ -9,7 +9,7 @@
     public class RenameParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="RenameParams"/> object.
+        /// Initializes a new instance of the <see cref="RenameParams"/> class.
         /// </summary>
         /// <param name="fromPublicId">The current identifier of the uploaded asset.</param>
         /// <param name="toPublicId">The new identifier to assign to the uploaded asset.</param>

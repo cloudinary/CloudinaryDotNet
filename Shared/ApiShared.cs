@@ -154,6 +154,7 @@
         private string m_apiAddr = "https://" + ADDR_API;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Default parameterless constructor.
         /// Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
@@ -163,6 +164,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
@@ -196,6 +198,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
@@ -214,6 +217,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>

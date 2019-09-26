@@ -12,7 +12,7 @@
         private string m_type = string.Empty;
 
         /// <summary>
-        /// Instantiates the <see cref="PublishResourceParams"/> object.
+        /// Initializes a new instance of the <see cref="PublishResourceParams"/> class.
         /// </summary>
         public PublishResourceParams()
         {

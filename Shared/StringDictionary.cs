@@ -13,6 +13,7 @@
         private List<KeyValuePair<string, string>> m_list = new List<KeyValuePair<string, string>>();
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="StringDictionary"/> class.
         /// Default constructor.
         /// </summary>
         public StringDictionary()
@@ -20,7 +21,7 @@
         }
 
         /// <summary>
-        /// Constructs a new instance from an array of strings.
+        /// Initializes a new instance of the <see cref="StringDictionary"/> class from an array of strings.
         /// </summary>
         /// <param name="keyValuePairs">Array of strings in form of "key=value". A string could also contain only a key ("key"). Only the first '=' character is used to split string.</param>
         public StringDictionary(params string[] keyValuePairs)

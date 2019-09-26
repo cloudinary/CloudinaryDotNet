@@ -8,7 +8,7 @@
     public class ListTransformsParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ListTransformsParams"/> object.
+        /// Initializes a new instance of the <see cref="ListTransformsParams"/> class.
         /// </summary>
         public ListTransformsParams()
         {

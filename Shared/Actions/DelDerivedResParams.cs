@@ -12,7 +12,7 @@
         private List<Transformation> m_tranformations = new List<Transformation>();
 
         /// <summary>
-        /// Instantiates the <see cref="DelDerivedResParams"/> object.
+        /// Initializes a new instance of the <see cref="DelDerivedResParams"/> class.
         /// </summary>
         public DelDerivedResParams()
         {

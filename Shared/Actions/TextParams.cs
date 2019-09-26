@@ -9,7 +9,7 @@
     public class TextParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="TextParams"/> object.
+        /// Initializes a new instance of the <see cref="TextParams"/> class.
         /// </summary>
         public TextParams()
         {
@@ -17,6 +17,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TextParams"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="text">The text string to generate an image for.</param>

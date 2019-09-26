@@ -12,7 +12,7 @@
         private ResourceType m_resourceType = ResourceType.Image;
 
         /// <summary>
-        /// Instantiates the <see cref="RestoreParams"/> object.
+        /// Initializes a new instance of the <see cref="RestoreParams"/> class.
         /// </summary>
         public RestoreParams()
         {

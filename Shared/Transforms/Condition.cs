@@ -6,14 +6,16 @@
     public class Condition : BaseExpression<Condition>
     {
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="Condition"/> object.
+        /// Initializes a new instance of the <see cref="Condition"/> class.
+        /// Default parameterless constructor.
         /// </summary>
         public Condition()
         {
         }
 
         /// <summary>
-        /// Create a <see cref="Condition"/> object. The condition string will be translated to a serialized condition.
+        /// Initializes a new instance of the <see cref="Condition"/> class.
+        /// The condition string will be translated to a serialized condition.
         /// </summary>
         /// <param name="condition">Condition in string format.</param>
         public Condition(string condition)

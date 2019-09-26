@@ -49,7 +49,7 @@
         private List<string> m_publicIds = new List<string>();
 
         /// <summary>
-        /// Instantiates the <see cref="TagParams"/> object.
+        /// Initializes a new instance of the <see cref="TagParams"/> class.
         /// </summary>
         public TagParams()
         {

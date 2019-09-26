@@ -61,6 +61,7 @@
         private static Transformation m_responsiveWidthTransform = null;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Transformation"/> class.
         /// Creates empty transformation object.
         /// </summary>
         public Transformation()
@@ -68,6 +69,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Transformation"/> class.
         /// Creates transformation object chained with other transformations.
         /// </summary>
         /// <param name="transforms">List of transformations to chain with.</param>
@@ -80,6 +82,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Transformation"/> class.
         /// Creates transformation object initialized with array of transformation parameters.
         /// </summary>
         /// <param name="transformParams">List of transformation parameters represented as pairs 'name=value'.</param>
@@ -98,6 +101,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Transformation"/> class.
         /// Creates transformation object from single result of  <seealso cref="Actions.GetTransformResult"/>.
         /// </summary>
         /// <param name="transformParams">
@@ -112,6 +116,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Transformation"/> class.
         /// Creates transformation object from results of <seealso cref="Actions.GetTransformResult"/>.
         /// </summary>
         /// <param name="dictionary">One can use <seealso cref="Actions.GetTransformResult.Info"/> array.</param>
@@ -667,6 +672,7 @@
     public class EagerTransformation : Transformation
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="EagerTransformation"/> class.
         /// Creates eager transformation object chained with other transformations.
         /// </summary>
         /// <param name="transforms">A list of transformations to chain with.</param>
@@ -676,6 +682,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EagerTransformation"/> class.
         /// Creates eager transformation object chained with other transformations.
         /// </summary>
         /// <param name="transforms">A list of transformations to chain with.</param>
@@ -685,6 +692,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EagerTransformation"/> class.
         /// Creates an empty eager transformation object.
         /// </summary>
         public EagerTransformation()

@@ -27,6 +27,7 @@
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
 
         /// <summary>
+        /// Initializes static members of the <see cref="Api"/> class.
         /// Default static parameterless constructor.
         /// </summary>
         static Api()
@@ -44,6 +45,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Api"/> class.
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public Api()
@@ -52,7 +54,7 @@
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary URL.
+        /// Initializes a new instance of the <see cref="Api"/> class with cloudinary URL.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public Api(string cloudinaryUrl)
@@ -61,7 +63,7 @@
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with initial parameters.
+        /// Initializes a new instance of the <see cref="Api"/> class with initial parameters.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network.</param>
@@ -74,7 +76,7 @@
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with account.
+        /// Initializes a new instance of the <see cref="Api"/> class with account.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         public Api(Account account)

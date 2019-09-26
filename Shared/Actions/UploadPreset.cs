@@ -14,14 +14,15 @@
     public class UploadPresetParams : BaseParams
     {
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="UploadPresetParams"/> object.
+        /// Initializes a new instance of the <see cref="UploadPresetParams"/> class.
+        /// Default parameterless constructor.
         /// </summary>
         public UploadPresetParams()
         {
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UploadPresetParams"/> object with result object.
+        /// Initializes a new instance of the <see cref="UploadPresetParams"/> class with result object.
         /// </summary>
         /// <param name="preset">The preset returned from API.</param>
         public UploadPresetParams(GetUploadPresetResult preset)

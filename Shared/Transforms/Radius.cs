@@ -12,6 +12,7 @@
         private string m_radius;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Radius"/> class.
         /// Defines radius value for corners rounding (in pixels).
         /// Or specify 'max' to make the image a perfect circle or oval (ellipse).
         /// </summary>
@@ -20,6 +21,7 @@
         public Radius(object value) => SetRadius(Normalize(value));
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Radius"/> class.
         /// Defines radius value for corners rounding (in pixels).
         /// Or specify 'max' to make the image a perfect circle or oval (ellipse).
         /// </summary>
@@ -30,6 +32,7 @@
         public Radius(string value) => SetRadius(value);
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Radius"/> class.
         /// Defines radius value for corners rounding (in pixels).
         /// </summary>
         /// <param name="value">
@@ -39,6 +42,7 @@
         public Radius(int value) => SetRadius(value);
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Radius"/> class.
         /// Defines radius value for corners rounding (in pixels).
         /// </summary>
         /// <param name="value">
@@ -48,6 +52,7 @@
         public Radius(float value) => SetRadius(value);
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Radius"/> class.
         /// Defines radius value for corners rounding (in pixels).
         /// </summary>
         /// <param name="topLeftAndBottomRight">Top-left and bottom-right corners.</param>
@@ -69,6 +74,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Radius"/> class.
         /// Defines radius value for corners rounding (in pixels).
         /// </summary>
         /// <param name="topLeft">Top-left corner.</param>
@@ -96,6 +102,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Radius"/> class.
         /// Defines radius value for corners rounding (in pixels).
         /// The rounding for each corner is specified separately, in clockwise order, starting with the top-left.
         /// </summary>

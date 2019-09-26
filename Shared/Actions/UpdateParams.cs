@@ -12,7 +12,7 @@
     public class UpdateParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="UpdateParams"/> object with public ID.
+        /// Initializes a new instance of the <see cref="UpdateParams"/> class with public ID.
         /// </summary>
         /// <param name="publicId">The public ID of the resource to update.</param>
         public UpdateParams(string publicId)

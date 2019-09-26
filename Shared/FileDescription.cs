@@ -12,6 +12,7 @@
         internal int BytesSent;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileDescription"/> class.
         /// Constructor to upload file from stream.
         /// </summary>
         /// <param name="name">Resource name.</param>
@@ -23,6 +24,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileDescription"/> class.
         /// Constructor to upload file by path specifying explicit filename.
         /// </summary>
         /// <param name="name">Resource name.</param>
@@ -35,6 +37,7 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileDescription"/> class.
         /// Constructor to upload file by path.
         /// </summary>
         /// <param name="filePath">Either URL (http/https/s3/data) or local path to file.</param>

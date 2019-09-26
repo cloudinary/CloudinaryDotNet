@@ -12,7 +12,7 @@
     public class ImageUploadParams : RawUploadParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ImageUploadParams"/> object.
+        /// Initializes a new instance of the <see cref="ImageUploadParams"/> class.
         /// </summary>
         public ImageUploadParams()
         {

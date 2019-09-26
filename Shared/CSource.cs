@@ -16,7 +16,7 @@
         public string SourceToSign;
 
         /// <summary>
-        /// Instantiates the <see cref="CSource"/> object with a source.
+        /// Initializes a new instance of the <see cref="CSource"/> class with a source.
         /// </summary>
         /// <param name="source">Source part of the URL.</param>
         public CSource(string source)

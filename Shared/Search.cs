@@ -16,7 +16,7 @@
         private ApiShared m_api;
 
         /// <summary>
-        /// Instantiates the <see cref="Search"/> object with an API object.
+        /// Initializes a new instance of the <see cref="Search"/> class with an API object.
         /// </summary>
         /// <param name="api">Provider of the API calls.</param>
         public Search(ApiShared api)

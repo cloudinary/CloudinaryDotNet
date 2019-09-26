@@ -9,7 +9,7 @@
     public class MultiParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="MultiParams"/> object.
+        /// Initializes a new instance of the <see cref="MultiParams"/> class.
         /// </summary>
         /// <param name="tag">The animated GIF is created from all images with this tag.</param>
         public MultiParams(string tag)

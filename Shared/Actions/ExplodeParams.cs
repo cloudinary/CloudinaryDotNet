@@ -9,7 +9,7 @@
     public class ExplodeParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ExplodeParams"/> object.
+        /// Initializes a new instance of the <see cref="ExplodeParams"/> class.
         /// </summary>
         /// <param name="publicId">The identifier of the uploaded multi-page file (PDF or animated GIF).
         /// Note: The public ID for images does not include a file extension.</param>
