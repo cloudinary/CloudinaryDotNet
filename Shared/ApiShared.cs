@@ -660,6 +660,16 @@
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Virtual method to call the cloudinary API and return the parsed response.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">Http request method.</param>
+        /// <param name="url">API URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">The extra headers to pass into the request.</param>
+        /// <returns>Parsed response from the cloudinary API.</returns>
         internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
         {
@@ -673,6 +683,10 @@
                 extraHeaders);
         }
 
+        /// <summary>
+        /// Extends Cloudinary upload parameters with additional attributes.
+        /// </summary>
+        /// <param name="parameters">Cloudinary upload parameters.</param>
         internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
         {
             parameters.Add("timestamp", GetTime());

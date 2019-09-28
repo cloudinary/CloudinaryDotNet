@@ -85,6 +85,11 @@
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
+        /// <summary>
+        /// Overrides corresponding method of <see cref="BaseResult"/> class.
+        /// Populates additional token fields.
+        /// </summary>
+        /// <param name="source">JSON token received from the server.</param>
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);

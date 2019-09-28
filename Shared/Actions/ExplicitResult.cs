@@ -43,6 +43,11 @@
         [DataMember(Name = "quality_analysis")]
         public QualityAnalysis QualityAnalysis { get; protected set; }
 
+        /// <summary>
+        /// Overrides corresponding method of <see cref="BaseResult"/> class.
+        /// Populates additional token fields.
+        /// </summary>
+        /// <param name="source">JSON token received from the server.</param>
         internal override void SetValues(JToken source)
         {
             var responsiveBreakpoints = source["responsive_breakpoints"];

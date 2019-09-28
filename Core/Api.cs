@@ -273,6 +273,15 @@
             return result;
         }
 
+        /// <summary>
+        /// Prepares request body to be sent on custom call to Cloudinary API.
+        /// </summary>
+        /// <param name="request">HTTP request to alter.</param>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="parameters">Dictionary of call parameters.</param>
+        /// <param name="file">File to upload.</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <returns>Prepared HTTP request.</returns>
         internal HttpRequestMessage PrepareRequestBody(HttpRequestMessage request, HttpMethod method, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
             SetHttpMethod(method, request);

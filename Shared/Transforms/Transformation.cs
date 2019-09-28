@@ -597,6 +597,10 @@
             return t;
         }
 
+        /// <summary>
+        /// Creates a new object that is a deep copy of the current instance.
+        /// </summary>
+        /// <returns> A new object that is a deep copy of this instance. </returns>
         object Core.ICloneable.Clone()
         {
             return Clone();

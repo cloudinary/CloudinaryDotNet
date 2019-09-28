@@ -142,6 +142,10 @@
         /// <returns>A new Radius object that is a copy of this instance.</returns>
         public Radius Clone() => (Radius)MemberwiseClone();
 
+        /// <summary>
+        /// Creates a new object that is a deep copy of the current instance.
+        /// </summary>
+        /// <returns> A new object that is a deep copy of this instance.</returns>
         object Core.ICloneable.Clone() => Clone();
 
         /// <inheritdoc />

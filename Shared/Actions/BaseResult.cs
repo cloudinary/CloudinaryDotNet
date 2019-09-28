@@ -155,6 +155,10 @@
         /// </summary>
         public DateTime Reset { get; internal set; }
 
+        /// <summary>
+        /// Populates additional token fields.
+        /// </summary>
+        /// <param name="source">JSON token received from the server.</param>
         internal virtual void SetValues(JToken source)
         {
         }

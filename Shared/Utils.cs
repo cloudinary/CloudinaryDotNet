@@ -12,6 +12,7 @@
     /// </summary>
     internal static partial class Utils
     {
+        /// <summary>Represents the Unix time starting point.</summary>
         internal static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary>
@@ -54,6 +55,11 @@
             return string.Join(separator, items.Select(item => Regex.Replace(item, $"([{separator}])", "\\$1")));
         }
 
+        /// <summary>
+        /// Based on file path, determines if the file is hosted remotely.
+        /// </summary>
+        /// <param name="filePath"> Path to the file.</param>
+        /// <returns>True if the file is remote; otherwise, false.</returns>
         internal static bool IsRemoteFile(string filePath)
         {
             return Regex.IsMatch(
@@ -78,6 +84,11 @@
             return Convert.ToBase64String(bytes).Replace('+', '-').Replace('/', '_');
         }
 
+        /// <summary>
+        /// Computes the hash value for the specified string.
+        /// </summary>
+        /// <param name="s"> The input to compute the hash code for.</param>
+        /// <returns>The computed hash code.</returns>
         internal static byte[] ComputeHash(string s)
         {
             using (var sha1 = SHA1.Create())
