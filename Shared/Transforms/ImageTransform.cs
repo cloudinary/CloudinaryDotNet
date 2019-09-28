@@ -134,7 +134,7 @@
         /// </summary>
         /// <param name="effect">The name of the effect.</param>
         /// <param name="param">An additional parameter that controls the behavior of the specific effect.</param>
-        /// <returns></returns>
+        /// <returns>The transformation with effect applied.</returns>
         public Transformation Effect(string effect, object param)
         {
             return Add("effect", effect + ":" + param);

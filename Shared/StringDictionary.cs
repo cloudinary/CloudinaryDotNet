@@ -161,7 +161,7 @@
         /// Removes the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        /// <returns></returns>
+        /// <returns>The value of removed item.</returns>
         public string Remove(string key)
         {
             foreach (var item in m_list)
@@ -260,7 +260,7 @@
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns>True if the element is found; otherwise, false.</returns>
         public bool TryGetValue(string key, out string value)
         {
             value = null;

@@ -68,7 +68,7 @@
         /// Changes public identifier of a file asynchronously.
         /// </summary>
         /// <param name="parameters">Operation parameters.</param>
-        /// <returns></returns>
+        /// <returns>Result of resource renaming.</returns>
         public Task<RenameResult> RenameAsync(RenameParams parameters)
         {
             return CallAsync(Rename, parameters);
@@ -117,7 +117,7 @@
         /// Gets a list of tags asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of asynchronous list tags request.</param>
-        /// <returns></returns>
+        /// <returns>Parsed list of tags.</returns>
         public Task<ListTagsResult> ListTagsAsync(ListTagsParams parameters)
         {
             return CallAsync(ListTags, parameters);

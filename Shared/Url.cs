@@ -391,7 +391,7 @@
         /// Set resource type.
         /// </summary>
         /// <param name="resourceType">Type of the resource.</param>
-        /// <returns></returns>
+        /// <returns>The url with resource type defined.</returns>
         public Url ResourceType(string resourceType)
         {
             m_resourceType = resourceType;

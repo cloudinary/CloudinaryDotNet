@@ -270,7 +270,7 @@
         /// Get whether to flatten the folder structure of the derived assets and store the transformation details on
         /// the file name instead.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the folder structure should be flattened; otherwise, false.</returns>
         public bool IsFlattenTransformations()
         {
             return m_flattenTransformations;

@@ -101,7 +101,7 @@
         /// Set the minimum number of bytes between two consecutive breakpoints (images). Default: 20000.
         /// </summary>
         /// <param name="bytesStep">File size step in bytes.</param>
-        /// <returns></returns>
+        /// <returns>Breakpoint with bytes step defined.</returns>
         public ResponsiveBreakpoint BytesStep(int bytesStep)
         {
             this[BYTES_STEP] = bytesStep;

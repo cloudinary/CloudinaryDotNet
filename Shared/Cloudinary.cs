@@ -76,7 +76,7 @@
         /// <summary>
         /// Gets the advanced search provider used by the Cloudinary instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Instance of the <see cref="Search"/> class.</returns>
         public Search Search()
         {
             return new Search(m_api);
@@ -89,7 +89,7 @@
         /// <param name="attachment">Whether to download image as attachment (optional).</param>
         /// <param name="format">Format to download (optional).</param>
         /// <param name="type">The type (optional).</param>
-        /// <returns></returns>
+        /// <returns>URL at the image.</returns>
         /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
         public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "")
         {
@@ -132,7 +132,7 @@
         /// </summary>
         /// <param name="tag">The tag.</param>
         /// <param name="transform">The transformation.</param>
-        /// <returns></returns>
+        /// <returns>URL at the tag cloud.</returns>
         /// <exception cref="System.ArgumentException">Tag should be specified.</exception>
         public string DownloadZip(string tag, Transformation transform)
         {
@@ -183,7 +183,7 @@
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <returns></returns>
+        /// <returns>Structure with the results of publishing.</returns>
         public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams parameters)
         {
             return PublishResource("prefix", prefix, parameters);
@@ -194,7 +194,7 @@
         /// </summary>
         /// <param name="tag">All resources with the given tag will be published.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <returns></returns>
+        /// <returns>Structure with the results of publishing.</returns>
         public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams parameters)
         {
             return PublishResource("tag", tag, parameters);
@@ -535,7 +535,7 @@
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
-        /// <returns></returns>
+        /// <returns>Parsed result of the large file uploading.</returns>
         /// <exception cref="System.ArgumentException">
         /// Please use BasicRawUploadParams class for large raw file uploading!
         /// or
