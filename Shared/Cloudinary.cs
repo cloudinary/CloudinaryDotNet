@@ -388,6 +388,7 @@
         /// <summary>
         /// Lists upload presets.
         /// </summary>
+        /// <param name="nextCursor">(Optional) Starting position.</param>
         /// <returns>Parsed result of upload presets listing.</returns>
         public ListUploadPresetsResult ListUploadPresets(string nextCursor = null)
         {
@@ -498,6 +499,7 @@
         /// <summary>
         /// Deletes folder.
         /// </summary>
+        /// <param name="folder">Folder name to delete.</param>
         public DeleteFolderResult DeleteFolder(string folder)
         {
             var uri = m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl();

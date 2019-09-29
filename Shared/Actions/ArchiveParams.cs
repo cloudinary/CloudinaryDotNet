@@ -43,6 +43,7 @@
         /// Set a list of Public IDs for the specific assets to be included in the archive.
         /// Up to 1000 public IDs are supported.
         /// </summary>
+        /// <param name="publicIds">List of Public IDs of the assets.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams PublicIds(List<string> publicIds)
         {
@@ -61,6 +62,7 @@
         /// <summary>
         /// Set a list of Fully Qualified Public IDs for the specific assets to be included in the archive.
         /// </summary>
+        /// <param name="fullyQualifiedPublicIds">List of fully qualified Public IDs.</param>
         public ArchiveParams FullyQualifiedPublicIds(List<string> fullyQualifiedPublicIds)
         {
             m_fullyQualifiedPublicIds = fullyQualifiedPublicIds;
@@ -79,6 +81,7 @@
         /// Set a list of tag names. All assets with the specified tags are included in the archive.
         /// Up to 20 tags are supported.
         /// </summary>
+        /// <param name="tags">List of tags to be included.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Tags(List<string> tags)
         {
@@ -99,6 +102,7 @@
         /// for including all assets in the account for the given ResourceType and Type (up to the max files limit).
         /// Up to 20 prefixes are supported.
         /// </summary>
+        /// <param name="prefixes">List of prefixes to be included.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Prefixes(List<string> prefixes)
         {
@@ -143,6 +147,7 @@
         /// create and store it as a raw asset in your Cloudinary account and return JSON with the URLs to access
         /// the archive file ('create').
         /// </summary>
+        /// <param name="mode">One of the values of <see cref="ArchiveCallMode"/> enum.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Mode(ArchiveCallMode mode)
         {
@@ -161,6 +166,7 @@
         /// <summary>
         /// Set the resource type (image, video or raw) of files to include in the archive: Default: image.
         /// </summary>
+        /// <param name="resourceType">Resource type to be included.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams ResourceType(string resourceType)
         {
@@ -180,6 +186,7 @@
         /// Set the specific file type of assets to include in the archive (upload/private/authenticated). If tags are
         /// specified as a filter then all types are included. Default: upload.
         /// </summary>
+        /// <param name="type">File type of assets to be included.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Type(string type)
         {
@@ -200,6 +207,7 @@
         /// Set a list of transformations to run on all the derived assets before storing them in your Cloudinary
         /// account.
         /// </summary>
+        /// <param name="transformations">List of transformations to run on.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Transformations(List<Transformation> transformations)
         {
@@ -220,6 +228,7 @@
         /// Currently only 'zip' is supported.
         /// Default: zip.
         /// </summary>
+        /// <param name="targetFormat">Generated archive format.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams TargetFormat(ArchiveFormat targetFormat)
         {
@@ -239,6 +248,7 @@
         /// Set the Public ID to assign to the generated archive. If not specified, a random Public ID is generated.
         /// Only relevant when using the 'create' method.
         /// </summary>
+        /// <param name="targetPublicId">Public ID of the generated archive.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams TargetPublicId(string targetPublicId)
         {
@@ -259,6 +269,7 @@
         /// information included in the Public ID is stripped and a numeric counter is added to the file name in the
         /// case of a name conflict. Default: false.
         /// </summary>
+        /// <param name="flattenFolders">Flag that determines files flattening.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams FlattenFolders(bool flattenFolders)
         {
@@ -280,6 +291,7 @@
         /// If multiple transformations are also applied, determines whether to flatten the folder structure of the
         /// derived assets and store the transformation details on the file name instead. Default: false.
         /// </summary>
+        /// <param name="flattenTransformations">Flag that determines folder structure flattening.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams FlattenTransformations(bool flattenTransformations)
         {
@@ -299,6 +311,7 @@
         /// Set the date (UNIX time in seconds) of the URL expiration (e.g., 1415060076). Only relevant when using the
         /// 'download' SDK methods. Default: 1 hour from the time that the URL is generated.
         /// </summary>
+        /// <param name="expiresAt">UNIX time in seconds of the URL expiration.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams ExpiresAt(int expiresAt)
         {
@@ -318,6 +331,7 @@
         /// Whether to use the original file name of the included assets (if available) instead of the public ID.
         /// Default: false.
         /// </summary>
+        /// <param name="useOriginalFilename">Flag that determines original file usage.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams UseOriginalFilename(bool useOriginalFilename)
         {
@@ -337,6 +351,7 @@
         /// Set whether to perform the archive generation in the background (asynchronously).
         /// Only relevant when using the 'create' SDK methods. Default: false.
         /// </summary>
+        /// <param name="async">Flag that determines background archive generation.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams Async(bool async)
         {
@@ -357,6 +372,7 @@
         /// Set an HTTP or HTTPS URL to notify your application (a webhook) when the archive creation process has
         /// completed. Only relevant when using the 'create' methods.
         /// </summary>
+        /// <param name="notificationUrl">Notification URL.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams NotificationUrl(string notificationUrl)
         {
@@ -376,6 +392,7 @@
         /// Set a list of tag names to assign to the generated archive.
         /// Only relevant when using the 'create' SDK methods.
         /// </summary>
+        /// <param name="targetTags">List of tag names to assign.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams TargetTags(List<string> targetTags)
         {
@@ -394,6 +411,7 @@
         /// <summary>
         /// Set whether to keep the derived assets used for generating the archive.
         /// </summary>
+        /// <param name="keepDerived">Flag that determines derived assets usage.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams KeepDerived(bool keepDerived)
         {
@@ -414,6 +432,7 @@
         /// Determine whether to strip all transformation details from file names and add a numeric counter to a file
         /// name in the case of a name conflict. Default: false.
         /// </summary>
+        /// <param name="skipTransformationName">Flag that determines whether to strip all transformation details.</param>
         /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams SkipTransformationName(bool skipTransformationName)
         {

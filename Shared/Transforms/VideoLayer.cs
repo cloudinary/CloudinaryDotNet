@@ -29,6 +29,7 @@
         /// <summary>
         /// ResourceType for video layers. Not allowed to modify.
         /// </summary>
+        /// <param name="resourceType">Type of the resource.</param>
         public new VideoLayer ResourceType(string resourceType)
         {
             throw new InvalidOperationException("Cannot modify resourceType for video layers");
@@ -37,6 +38,7 @@
         /// <summary>
         /// Type for video layer. Not allowed to modify.
         /// </summary>
+        /// <param name="type">Type of the asset.</param>
         public new VideoLayer Type(string type)
         {
             throw new InvalidOperationException("Cannot modify type for video layers");
@@ -45,6 +47,7 @@
         /// <summary>
         /// Format for video layer. Not allowed to modify.
         /// </summary>
+        /// <param name="format">Format of the asset.</param>
         public new VideoLayer Format(string format)
         {
             throw new InvalidOperationException("Cannot modify format for video layers");

@@ -113,6 +113,7 @@
         /// <summary>
         /// Gets a value of a first found key or adds a new pair of key and value or updates a value of first found key.
         /// </summary>
+        /// <param name="key">The key.</param>
         public string this[string key]
         {
             get
@@ -151,6 +152,8 @@
         /// <summary>
         /// Add a new pair of key and value.
         /// </summary>
+        /// <param name="key">The key to add.</param>
+        /// <param name="value">The value to add.</param>
         public void Add(string key, string value)
         {
             var newItem = new KeyValuePair<string, string>(key, value);

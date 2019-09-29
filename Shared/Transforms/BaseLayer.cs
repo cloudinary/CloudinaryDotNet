@@ -44,6 +44,7 @@
         /// <summary>
         /// Sets the type of resource. Valid values: image, raw, and video.
         /// </summary>
+        /// <param name="resourceType">Type of the resource.</param>
         /// <returns>The instance of Layer object with set parameter.</returns>
         public T ResourceType(string resourceType)
         {
@@ -54,6 +55,7 @@
         /// <summary>
         /// Sets the specific type of asset. Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
+        /// <param name="type">Type of the asset.</param>
         /// <returns>The instance of Layer object with set parameter.</returns>
         public T Type(string type)
         {

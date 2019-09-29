@@ -598,6 +598,7 @@
         /// <summary>
         /// Virtual build callback URL method. This method should be overridden in child classes.
         /// </summary>
+        /// <param name="path">File path to check.</param>
         /// <returns>Callback URL.</returns>
         public virtual string BuildCallbackUrl(string path = "")
         {

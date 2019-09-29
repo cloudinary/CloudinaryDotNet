@@ -168,6 +168,7 @@
         /// <summary>
         /// Overridden method. Restricted to use for text layers.
         /// </summary>
+        /// <param name="resourceType">Type of the resource.</param>
         public new TextLayer ResourceType(string resourceType)
         {
             throw new InvalidOperationException("Cannot modify resourceType for text layers");
@@ -176,6 +177,7 @@
         /// <summary>
         /// Overridden method. Restricted to use for text layers.
         /// </summary>
+        /// <param name="type">Type of the asset.</param>
         public new TextLayer Type(string type)
         {
             throw new InvalidOperationException("Cannot modify type for text layers");
@@ -184,6 +186,7 @@
         /// <summary>
         /// Overridden method. Restricted to use for text layers.
         /// </summary>
+        /// <param name="format">Asset format.</param>
         public new TextLayer Format(string format)
         {
             throw new InvalidOperationException("Cannot modify format for text layers");
@@ -192,6 +195,7 @@
         /// <summary>
         /// Set the text to generate an image for.
         /// </summary>
+        /// <param name="text">Text to generate an image for.</param>
         public TextLayer Text(string text)
         {
             this.m_text = OverlayTextEncode(text);
@@ -201,6 +205,7 @@
         /// <summary>
         /// Type of font antialiasing to use.
         /// </summary>
+        /// <param name="value">One of the values of <see cref="FontAntialiasing"/> enum.</param>
         public TextLayer FontAntialiasing(FontAntialiasing value)
         {
             m_fontAntialiasing = ApiShared.GetCloudinaryParam(value);
@@ -210,6 +215,7 @@
         /// <summary>
         /// Type of font hinting to use.
         /// </summary>
+        /// <param name="value">One of the values of <see cref="FontHinting"/> enum.</param>
         public TextLayer FontHinting(FontHinting value)
         {
             m_fontHinting = ApiShared.GetCloudinaryParam(value);
@@ -219,6 +225,7 @@
         /// <summary>
         /// Required name of the font family. e.g. "arial".
         /// </summary>
+        /// <param name="fontFamily">A string representing the font family.</param>
         public TextLayer FontFamily(string fontFamily)
         {
             this.m_fontFamily = fontFamily;
@@ -228,6 +235,7 @@
         /// <summary>
         /// Font size in pixels. Default: 12.
         /// </summary>
+        /// <param name="fontSize">Font size in pixels.</param>
         public TextLayer FontSize(int fontSize)
         {
             this.m_fontSize = fontSize;
@@ -237,6 +245,7 @@
         /// <summary>
         /// Whether to use a "normal" or a "bold" font. Default: "normal".
         /// </summary>
+        /// <param name="fontWeight">A string representing the font weight.</param>
         public TextLayer FontWeight(string fontWeight)
         {
             this.m_fontWeight = fontWeight;
@@ -246,6 +255,7 @@
         /// <summary>
         /// Whether to use a "normal" or an "italic" font style. Default: "normal".
         /// </summary>
+        /// <param name="fontStyle">A string representing the font style.</param>
         public TextLayer FontStyle(string fontStyle)
         {
             this.m_fontStyle = fontStyle;
@@ -255,6 +265,7 @@
         /// <summary>
         /// Text decoration: underline or strikethrough. Default: "none".
         /// </summary>
+        /// <param name="textDecoration">A string representing the text decoration.</param>
         public TextLayer TextDecoration(string textDecoration)
         {
             this.m_textDecoration = textDecoration;
@@ -264,6 +275,7 @@
         /// <summary>
         /// Text alignment: left, center, right, end, start or justify. Default: "left".
         /// </summary>
+        /// <param name="textAlign">A string representing the text alignment.</param>
         public TextLayer TextAlign(string textAlign)
         {
             this.m_textAlign = textAlign;
@@ -274,6 +286,7 @@
         /// Font Stroke(border) for the text. Possible values: "none" or "stroke". Default: "none".
         /// Set the color and weight of the stroke with the border parameter.
         /// </summary>
+        /// <param name="stroke">A string representing the font stroke.</param>
         public TextLayer Stroke(string stroke)
         {
             this.m_stroke = stroke;
@@ -283,6 +296,7 @@
         /// <summary>
         /// Spacing between the letters in pixels. Can be a positive or negative, integer or decimal value.
         /// </summary>
+        /// <param name="letterSpacing">A string representing spacing between letters.</param>
         public TextLayer LetterSpacing(string letterSpacing)
         {
             this.m_letterSpacing = letterSpacing;
@@ -293,6 +307,7 @@
         /// Spacing between the lines in pixels (only relevant for multi-line text).
         /// Can be a positive or negative, integer or decimal value.
         /// </summary>
+        /// <param name="lineSpacing">A string representing spacing between lines.</param>
         public TextLayer LineSpacing(string lineSpacing)
         {
             this.m_lineSpacing = lineSpacing;

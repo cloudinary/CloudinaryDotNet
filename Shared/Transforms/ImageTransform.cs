@@ -116,6 +116,7 @@
         /// <summary>
         /// Defines the color to use for various effects.
         /// </summary>
+        /// <param name="value">A string representing the color value.</param>
         public Transformation Color(string value)
         {
             return Add("color", Regex.Replace(value, "^#", "rgb:"));
@@ -124,6 +125,7 @@
         /// <summary>
         /// Apply a filter or an effect on an image. The value includes the name of the effect and an additional parameter that controls the behavior of the specific effect.
         /// </summary>
+        /// <param name="value">A string representing name of the effect and its additional parameter.</param>
         public Transformation Effect(string value)
         {
             return Add("effect", value);
@@ -161,6 +163,7 @@
         /// <summary>
         /// Add a solid border around the image. The value has a CSS-like format: width_style_color.
         /// </summary>
+        /// <param name="value">A string representing border in CSS-like format.</param>
         public Transformation Border(string value)
         {
             return Add("border", value);
@@ -169,6 +172,8 @@
         /// <summary>
         /// Add a solid border around the image.
         /// </summary>
+        /// <param name="width">Border width.</param>
+        /// <param name="color">Border color.</param>
         public Transformation Border(int width, string color)
         {
             return Add("border", string.Empty + width + "px_solid_" + Regex.Replace(color, "^#", "rgb:"));
@@ -177,6 +182,7 @@
         /// <summary>
         /// Horizontal position for custom-coordinates based cropping and overlay placement.
         /// </summary>
+        /// <param name="value">Value of horizontal position.</param>
         public Transformation X(object value)
         {
             return Add("x", value);
@@ -185,6 +191,7 @@
         /// <summary>
         /// Vertical position for custom-coordinates based cropping and overlay placement.
         /// </summary>
+        /// <param name="value">Value of vertical position.</param>
         public Transformation Y(object value)
         {
             return Add("y", value);
@@ -209,6 +216,7 @@
         /// original image's quality or 90% if not available. Reducing quality generates JPG images much smaller in
         /// file size.
         /// </summary>
+        /// <param name="value">Quality level.</param>
         public Transformation Quality(object value)
         {
             return Add("quality", value);
@@ -267,6 +275,7 @@
         /// <summary>
         /// Manipulate image opacity in order to make the image semi-transparent.
         /// </summary>
+        /// <param name="value">Opacity level: 100 means opaque, while 0 is completely transparent.</param>
         public Transformation Opacity(int value)
         {
             return Add("opacity", value);
@@ -321,6 +330,7 @@
         /// <summary>
         /// Control the density to use while converting a PDF document to images. (range: 50-300, default: 150).
         /// </summary>
+        /// <param name="value">Dpi value.</param>
         public Transformation Density(object value)
         {
             return Add("density", value);
@@ -329,6 +339,7 @@
         /// <summary>
         /// Given a multi-page PDF document, generate an image of a single page using the given index.
         /// </summary>
+        /// <param name="value">Page number or layer name.</param>
         public Transformation Page(object value)
         {
             return Add("page", value);
@@ -366,6 +377,7 @@
         /// <summary>
         /// How much zoom should be applying when detecting faces for crop, thumb or for overlays. (e.g. 0.5 will cause zoom out of x2 on both axes).
         /// </summary>
+        /// <param name="value">Zoom percent value represented by integer number.</param>
         public Transformation Zoom(int value)
         {
             return Add("zoom", value);
@@ -374,6 +386,7 @@
         /// <summary>
         /// How much zoom should be applying when detecting faces for crop, thumb or for overlays. (e.g. 0.5 will cause zoom out of x2 on both axes).
         /// </summary>
+        /// <param name="value">Zoom percent value represented by string.</param>
         public Transformation Zoom(string value)
         {
             return Add("zoom", value);
@@ -382,6 +395,7 @@
         /// <summary>
         /// How much zoom should be applying when detecting faces for crop, thumb or for overlays. (e.g. 0.5 will cause zoom out of x2 on both axes).
         /// </summary>
+        /// <param name="value">Zoom percent value represented by single-precision number.</param>
         public Transformation Zoom(float value)
         {
             return Add("zoom", value);
@@ -390,6 +404,7 @@
         /// <summary>
         /// How much zoom should be applying when detecting faces for crop, thumb or for overlays. (e.g. 0.5 will cause zoom out of x2 on both axes).
         /// </summary>
+        /// <param name="value">Zoom percent value represented by double-precision number.</param>
         public Transformation Zoom(double value)
         {
             return Add("zoom", value);
@@ -399,6 +414,7 @@
         /// Sets Device Pixel Ratio  (float, integer and "auto" values are allowed").
         /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for further info.
         /// </summary>
+        /// <param name="value">Device pixel ratio.</param>
         public Transformation Dpr(object value)
         {
             return Add("dpr", value);
@@ -408,6 +424,7 @@
         /// Whether to enable automatic adaptation of website images.
         /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for further info.
         /// </summary>
+        /// <param name="value">Flag that determines automatic adaptation usage.</param>
         public Transformation ResponsiveWidth(bool value)
         {
             return Add("responsive_width", value);

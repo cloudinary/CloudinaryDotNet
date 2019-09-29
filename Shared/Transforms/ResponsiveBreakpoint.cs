@@ -37,6 +37,7 @@
         /// If true, create and keep the derived images of the selected breakpoints during the API call.
         /// If false, images generated during the analysis process are thrown away.
         /// </summary>
+        /// <param name="createDerived">Flag that determines whether derived images are created.</param>
         public ResponsiveBreakpoint CreateDerived(bool createDerived)
         {
             this[CREATE_DERIVED] = createDerived;
@@ -46,6 +47,7 @@
         /// <summary>
         /// The base transformation to first apply to the image before finding the best breakpoints.
         /// </summary>
+        /// <param name="transformation">Transformation to base on.</param>
         public ResponsiveBreakpoint Transformation(Transformation transformation)
         {
             this[TRANSFORMATION] = transformation.ToString();
@@ -120,6 +122,7 @@
         /// Set the maximum number of breakpoints to find, between 3 and 200. This means that there might be size
         /// differences bigger than the given bytes_step value between consecutive images. Default: 20.
         /// </summary>
+        /// <param name="maxImages">Maximum number of breakpoints to find.</param>
         public ResponsiveBreakpoint MaxImages(int maxImages)
         {
             this[MAX_IMAGES] = maxImages;
@@ -137,6 +140,7 @@
         /// <summary>
         /// Sets the file extension of the derived resources to the format indicated.
         /// </summary>
+        /// <param name="format">File extension of the derived resources.</param>
         public ResponsiveBreakpoint Format(string format)
         {
             this[FORMAT] = format;

@@ -25,6 +25,7 @@
         /// <summary>
         /// The URL to fetch an image for.
         /// </summary>
+        /// <param name="url">The image URL.</param>
         public FetchLayer Url(string url)
         {
             this.m_url = UrlEncode(url);

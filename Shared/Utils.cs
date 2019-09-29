@@ -70,6 +70,7 @@
         /// <summary>
         /// Encode string to URL-safe Base64 string.
         /// </summary>
+        /// <param name="s"> String to encode.</param>
         internal static string EncodeUrlSafe(string s)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(s);
@@ -79,6 +80,7 @@
         /// <summary>
         /// Encode bytes to URL-safe Base64 string.
         /// </summary>
+        /// <param name="bytes"> Byte array to encode.</param>
         internal static string EncodeUrlSafe(byte[] bytes)
         {
             return Convert.ToBase64String(bytes).Replace('+', '-').Replace('/', '_');
@@ -100,6 +102,7 @@
         /// <summary>
         /// Compute hash and convert the result to HEX string.
         /// </summary>
+        /// <param name="s"> String to calculate a hash for.</param>
         internal static string ComputeHexHash(string s)
         {
             var bytesHash = ComputeHash(s);

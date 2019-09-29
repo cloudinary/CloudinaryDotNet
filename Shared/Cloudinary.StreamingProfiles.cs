@@ -11,6 +11,7 @@
         /// <summary>
         /// Create a new streaming profile.
         /// </summary>
+        /// <param name="parameters">Parameters that define streaming profile.</param>
         public StreamingProfileResult CreateStreamingProfile(StreamingProfileCreateParams parameters)
         {
             return m_api.CallApi<StreamingProfileResult>(HttpMethod.POST, m_api.ApiUrlStreamingProfileV.BuildUrl(), parameters, null);
@@ -19,6 +20,8 @@
         /// <summary>
         /// Update streaming profile.
         /// </summary>
+        /// <param name="name">Name of the streaming profile.</param>
+        /// <param name="parameters">Parameters that define streaming profile update request.</param>
         /// <exception cref="ArgumentNullException">both arguments can't be null.</exception>
         public StreamingProfileResult UpdateStreamingProfile(string name, StreamingProfileUpdateParams parameters)
         {
@@ -42,6 +45,7 @@
         /// <summary>
         /// Delete streaming profile.
         /// </summary>
+        /// <param name="name">Streaming profile name to delete.</param>
         /// <exception cref="ArgumentNullException">name can't be null.</exception>
         public StreamingProfileResult DeleteStreamingProfile(string name)
         {
@@ -57,6 +61,7 @@
         /// <summary>
         /// Retrieve the details of a single streaming profile by name.
         /// </summary>
+        /// <param name="name">Streaming profile name.</param>
         /// <exception cref="ArgumentNullException">name can't be null.</exception>
         public StreamingProfileResult GetStreamingProfile(string name)
         {

@@ -25,6 +25,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="Expression"/> class with name.
         /// </summary>
+        /// <param name="name">Name of the new expression.</param>
         public Expression(string name)
             : this()
         {

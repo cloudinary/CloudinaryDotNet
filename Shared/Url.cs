@@ -360,6 +360,7 @@
         /// <summary>
         /// A Cloudinary public ID or file name or a reference to a resource.
         /// </summary>
+        /// <param name="source">Public ID, file name or resource reference.</param>
         public Url Source(string source)
         {
             m_source = source;
