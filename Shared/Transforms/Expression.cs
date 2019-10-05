@@ -40,6 +40,7 @@
         /// </summary>
         /// <param name="name">The name of variable.</param>
         /// <param name="value">The value.</param>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression Variable(string name, object value)
         {
             CheckVariableName(name);
@@ -66,6 +67,7 @@
         /// Check if the value contains user defined variable or predefined variable.
         /// </summary>
         /// <param name="value">The value to check.</param>
+        /// <returns>True if the value contains the variable; otherwise, false.</returns>
         public static bool ValueContainsVariable(string value)
         {
             return !string.IsNullOrEmpty(value) &&
@@ -76,6 +78,7 @@
         /// <summary>
         /// Predefined variable 'width'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression Width()
         {
             return new Expression("w");
@@ -84,6 +87,7 @@
         /// <summary>
         /// Predefined variable 'height'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression Height()
         {
             return new Expression("h");
@@ -92,6 +96,7 @@
         /// <summary>
         /// Predefined variable 'initial width'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression InitialWidth()
         {
             return new Expression("iw");
@@ -100,6 +105,7 @@
         /// <summary>
         /// Predefined variable 'initial height'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression InitialHeight()
         {
             return new Expression("ih");
@@ -108,6 +114,7 @@
         /// <summary>
         /// Predefined variable 'page count'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression PageCount()
         {
             return new Expression("pc");
@@ -116,6 +123,7 @@
         /// <summary>
         /// Predefined variable 'face count'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression FaceCount()
         {
             return new Expression("fc");
@@ -124,6 +132,7 @@
         /// <summary>
         /// Predefined variable 'illustration score'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression IllustrationScore()
         {
             return new Expression("ils");
@@ -132,6 +141,7 @@
         /// <summary>
         /// Predefined variable 'current page index'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression CurrentPageIndex()
         {
             return new Expression("cp");
@@ -140,6 +150,7 @@
         /// <summary>
         /// Predefined variable 'tags'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression Tags()
         {
             return new Expression("tags");
@@ -148,6 +159,7 @@
         /// <summary>
         /// Predefined variable 'x-offset'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression XOffset()
         {
             return new Expression("px");
@@ -156,6 +168,7 @@
         /// <summary>
         /// Predefined variable 'y-offset'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression YOffset()
         {
             return new Expression("py");
@@ -164,6 +177,7 @@
         /// <summary>
         /// Predefined variable 'aspect ratio'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression AspectRatio()
         {
             return new Expression("ar");
@@ -172,6 +186,7 @@
         /// <summary>
         /// Predefined variable 'aspect ratio of initial image'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression AspectRatioOfInitialImage()
         {
             return new Expression("iar");

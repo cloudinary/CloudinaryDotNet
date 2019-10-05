@@ -26,6 +26,7 @@
         /// The URL to fetch an image for.
         /// </summary>
         /// <param name="url">The image URL.</param>
+        /// <returns>The layer with set parameter.</returns>
         public FetchLayer Url(string url)
         {
             this.m_url = UrlEncode(url);
@@ -35,6 +36,7 @@
         /// <summary>
         /// Get an additional parameters for the fetch layer.
         /// </summary>
+        /// <returns>A string that represents additional parameters.</returns>
         public override string AdditionalParams()
         {
             List<string> components = new List<string>();
@@ -49,6 +51,7 @@
         /// <summary>
         /// Get this layer represented as string.
         /// </summary>
+        /// <returns>A string that represents the layer.</returns>
         public override string ToString()
         {
             if (string.IsNullOrEmpty(m_url))

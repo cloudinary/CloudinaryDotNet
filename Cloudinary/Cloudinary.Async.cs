@@ -59,6 +59,7 @@
         /// custom derived images for already uploaded images.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        /// <returns>Parsed response after a call of Explicit method.</returns>
         public Task<ExplicitResult> ExplicitAsync(ExplicitParams parameters)
         {
             return CallAsync(Explicit, parameters);
@@ -108,6 +109,7 @@
         /// Lists resources asynchronously.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        /// <returns>Parsed result of the resources listing request.</returns>
         public Task<ListResourcesResult> ListResourcesAsync(ListResourcesParams parameters)
         {
             return CallAsync(ListResources, parameters);

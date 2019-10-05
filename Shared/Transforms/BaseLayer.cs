@@ -88,6 +88,7 @@
         /// <summary>
         /// Gets an additional parameters for the layer.
         /// </summary>
+        /// <returns>A string that represents additional parameters.</returns>
         public virtual string AdditionalParams()
         {
             return string.Empty;

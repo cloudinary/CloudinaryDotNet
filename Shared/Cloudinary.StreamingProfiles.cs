@@ -12,6 +12,7 @@
         /// Create a new streaming profile.
         /// </summary>
         /// <param name="parameters">Parameters that define streaming profile.</param>
+        /// <returns>Detailed information about created streaming profile.</returns>
         public StreamingProfileResult CreateStreamingProfile(StreamingProfileCreateParams parameters)
         {
             return m_api.CallApi<StreamingProfileResult>(HttpMethod.POST, m_api.ApiUrlStreamingProfileV.BuildUrl(), parameters, null);
@@ -23,6 +24,7 @@
         /// <param name="name">Name of the streaming profile.</param>
         /// <param name="parameters">Parameters that define streaming profile update request.</param>
         /// <exception cref="ArgumentNullException">both arguments can't be null.</exception>
+        /// <returns>Result of updating the streaming profile.</returns>
         public StreamingProfileResult UpdateStreamingProfile(string name, StreamingProfileUpdateParams parameters)
         {
             if (string.IsNullOrEmpty(name))
@@ -47,6 +49,7 @@
         /// </summary>
         /// <param name="name">Streaming profile name to delete.</param>
         /// <exception cref="ArgumentNullException">name can't be null.</exception>
+        /// <returns>Result of removing the streaming profile.</returns>
         public StreamingProfileResult DeleteStreamingProfile(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -63,6 +66,7 @@
         /// </summary>
         /// <param name="name">Streaming profile name.</param>
         /// <exception cref="ArgumentNullException">name can't be null.</exception>
+        /// <returns>Detailed information about the streaming profile.</returns>
         public StreamingProfileResult GetStreamingProfile(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -77,6 +81,7 @@
         /// <summary>
         /// Retrieve the list of streaming profiles, including built-in and custom profiles.
         /// </summary>
+        /// <returns>Detailed information about streaming profiles.</returns>
         public StreamingProfileListResult ListStreamingProfiles()
         {
             return m_api.CallApi<StreamingProfileListResult>(

@@ -17,6 +17,7 @@
         /// The video codec (with video profile and level if relevant).
         /// </summary>
         /// <param name="codecParams">Parameters of the video codec. Use the syntax: {codec}[:{profile}:[{level}]].</param>
+        /// <returns>The transformation with video codec applied.</returns>
         public Transformation VideoCodec(params string[] codecParams)
         {
             if (codecParams.Length == 1)
@@ -44,6 +45,7 @@
         /// The video codec (with video profile and level if relevant).
         /// </summary>
         /// <param name="codecParams">Dictionary with parameters of the video codec. E.g. codec: h264.</param>
+        /// <returns>The transformation with video codec applied.</returns>
         public Transformation VideoCodec(Dictionary<string, string> codecParams)
         {
             return Add("video_codec", codecParams);
@@ -54,6 +56,7 @@
         /// delivered with an expected fps level (helps with sync to audio).
         /// </summary>
         /// <param name="value">Value of the frame rate.</param>
+        /// <returns>The transformation with FPS value applied.</returns>
         public Transformation Fps(string value)
         {
             return Add("fps", Expression.Normalize(value));
@@ -64,6 +67,7 @@
         /// delivered with an expected fps level (helps with sync to audio).
         /// </summary>
         /// <param name="value">Value of the frame rate.</param>
+        /// <returns>The transformation with FPS value applied.</returns>
         public Transformation Fps(double value)
         {
             return Fps($"{value}");
@@ -75,6 +79,7 @@
         /// </summary>
         /// <param name="min">Minimum value of the range.</param>
         /// <param name="max">Maximum value of the range.</param>
+        /// <returns>The transformation with FPS value applied.</returns>
         public Transformation Fps(double? min, double? max)
         {
             if (!min.HasValue && !max.HasValue)
@@ -91,6 +96,7 @@
         /// </summary>
         /// <param name="min">Minimum value of the range.</param>
         /// <param name="max">Maximum value of the range.</param>
+        /// <returns>The transformation with FPS value applied.</returns>
         public Transformation Fps(string min, string max)
         {
             if (string.IsNullOrEmpty(min) && string.IsNullOrEmpty(max))
@@ -105,6 +111,7 @@
         /// Control the audio codec or remove the audio channel.
         /// </summary>
         /// <param name="codec">Audio codec to set. Use 'none' to remove the audio channel.</param>
+        /// <returns>The transformation with audio codec applied.</returns>
         public Transformation AudioCodec(string codec)
         {
             return Add("audio_codec", codec);
@@ -114,6 +121,7 @@
         /// Advanced control of video bitrate in bits per second.
         /// </summary>
         /// <param name="bitRate">Number of bits per second as an integer (max: 500000).</param>
+        /// <returns>The transformation with bit rate applied.</returns>
         public Transformation BitRate(int bitRate)
         {
             return Add("bit_rate", bitRate);
@@ -124,6 +132,7 @@
         /// </summary>
         /// <param name="bitRate">Number of bits per second as a string, supporting k and m for kilobits and megabits
         /// respectively e.g., 500k or 1m. </param>
+        /// <returns>The transformation with bit rate applied.</returns>
         public Transformation BitRate(string bitRate)
         {
             return Add("bit_rate", bitRate);
@@ -134,6 +143,7 @@
         /// </summary>
         /// <param name="frequency">An integer value in Hz and can only take one of the following values: 8000, 11025,
         /// 16000, 22050, 32000, 37800, 44056, 44100, 47250, 48000, 88200, 96000, 176400 or 192000.</param>
+        /// <returns>The transformation with audio frequency defined.</returns>
         public Transformation AudioFrequency(int frequency)
         {
             return Add("audio_frequency", frequency);
@@ -144,6 +154,7 @@
         /// </summary>
         /// <param name="frequency">A string value in Hz and can only take one of the following values: 8000, 11025,
         /// 16000, 22050, 32000, 37800, 44056, 44100, 47250, 48000, 88200, 96000, 176400 or 192000.</param>
+        /// <returns>The transformation with audio frequency defined.</returns>
         public Transformation AudioFrequency(string frequency)
         {
             return Add("audio_frequency", frequency);
@@ -153,6 +164,7 @@
         /// Control audio sample frequency.
         /// </summary>
         /// <param name="frequency">An enum value, that represents frequency value in Hz.</param>
+        /// <returns>The transformation with audio frequency defined.</returns>
         public Transformation AudioFrequency(AudioFrequency frequency)
         {
             return Add("audio_frequency", ApiShared.GetCloudinaryParam(frequency));
@@ -163,6 +175,7 @@
         /// samples the whole video (up to 400 frames, at up to 10 frames per second).
         /// </summary>
         /// <param name="value">Value of the video sampling setting.</param>
+        /// <returns>The transformation with video sampling defined.</returns>
         public Transformation VideoSampling(string value)
         {
             return Add("video_sampling", value);
@@ -173,6 +186,7 @@
         /// samples the whole video (up to 400 frames, at up to 10 frames per second).
         /// </summary>
         /// <param name="value">The total number of frames to sample from the original video.</param>
+        /// <returns>The transformation with video sampling defined.</returns>
         public Transformation VideoSamplingFrames(int value)
         {
             return Add("video_sampling", value);
@@ -183,6 +197,7 @@
         /// samples the whole video (up to 400 frames, at up to 10 frames per second).
         /// </summary>
         /// <param name="value">The number of seconds between each frame to sample from the original video.</param>
+        /// <returns>The transformation with video sampling defined.</returns>
         public Transformation VideoSamplingSeconds(int value)
         {
             return VideoSamplingSeconds((object)value);
@@ -193,6 +208,7 @@
         /// samples the whole video (up to 400 frames, at up to 10 frames per second).
         /// </summary>
         /// <param name="value">The number of seconds between each frame to sample from the original video.</param>
+        /// <returns>The transformation with video sampling defined.</returns>
         public Transformation VideoSamplingSeconds(float value)
         {
             return VideoSamplingSeconds((object)value);
@@ -203,6 +219,7 @@
         /// samples the whole video (up to 400 frames, at up to 10 frames per second).
         /// </summary>
         /// <param name="value">The number of seconds between each frame to sample from the original video.</param>
+        /// <returns>The transformation with video sampling defined.</returns>
         public Transformation VideoSamplingSeconds(double value)
         {
             return VideoSamplingSeconds((object)value);
@@ -212,6 +229,7 @@
         /// Offset in seconds of a video. The start of the video to be kept after trimming.
         /// </summary>
         /// <param name="value">String representing value of.</param>
+        /// <returns>The transformation with start offset defined.</returns>
         public Transformation StartOffset(string value)
         {
             return Add("start_offset", value);
@@ -221,6 +239,7 @@
         /// Offset in seconds of a video. The start of the video to be kept after trimming.
         /// </summary>
         /// <param name="value">Float representing seconds.</param>
+        /// <returns>The transformation with start offset defined.</returns>
         public Transformation StartOffset(float value)
         {
             return Add("start_offset", value);
@@ -230,6 +249,7 @@
         /// Offset in seconds of a video. The start of the video to be kept after trimming.
         /// </summary>
         /// <param name="value">Double representing seconds.</param>
+        /// <returns>The transformation with start offset defined.</returns>
         public Transformation StartOffset(double value)
         {
             return Add("start_offset", value);
@@ -239,6 +259,7 @@
         /// Offset in percent of a video. The start of the video to be kept after trimming.
         /// </summary>
         /// <param name="value">Float representing a percent value.</param>
+        /// <returns>The transformation with start offset percent defined.</returns>
         public Transformation StartOffsetPercent(float value)
         {
             return StartOffsetPercent((object)value);
@@ -248,6 +269,7 @@
         /// Offset in percent of a video. The start of the video to be kept after trimming.
         /// </summary>
         /// <param name="value">Double representing a percent value.</param>
+        /// <returns>The transformation with start offset percent defined.</returns>
         public Transformation StartOffsetPercent(double value)
         {
             return StartOffsetPercent((object)value);
@@ -257,6 +279,7 @@
         /// Automatically selects a suitable frame from the first few seconds of the video (only relevant for
         /// generating image thumbnails).
         /// </summary>
+        /// <returns>The transformation with auto start offset defined.</returns>
         public Transformation StartOffsetAuto()
         {
             return StartOffset("auto");
@@ -269,6 +292,7 @@
         /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">String representing an end_offset value.</param>
+        /// <returns>The transformation with end offset defined.</returns>
         public Transformation EndOffset(string value)
         {
             return Add("end_offset", value);
@@ -281,6 +305,7 @@
         /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Float representing an end_offset value.</param>
+        /// <returns>The transformation with end offset defined.</returns>
         public Transformation EndOffset(float value)
         {
             return Add("end_offset", value);
@@ -293,6 +318,7 @@
         /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Double representing an end_offset value.</param>
+        /// <returns>The transformation with end offset defined.</returns>
         public Transformation EndOffset(double value)
         {
             return Add("end_offset", value);
@@ -305,6 +331,7 @@
         /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Float representing an end_offset value.</param>
+        /// <returns>The transformation with end offset percent defined.</returns>
         public Transformation EndOffsetPercent(float value)
         {
             return EndOffsetPercent((object)value);
@@ -317,6 +344,7 @@
         /// Normally used together with the start_offset and duration parameters.
         /// </summary>
         /// <param name="value">Double representing an end_offset value.</param>
+        /// <returns>The transformation with end offset percent defined.</returns>
         public Transformation EndOffsetPercent(double value)
         {
             return EndOffsetPercent((object)value);
@@ -328,6 +356,7 @@
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">String representing an offset value.</param>
+        /// <returns>The transformation with offset defined.</returns>
         public Transformation Offset(string value)
         {
             return Add("offset", value);
@@ -339,6 +368,7 @@
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">Range of strings representing an offset value.</param>
+        /// <returns>The transformation with offset defined.</returns>
         public Transformation Offset(params string[] value)
         {
             if (value.Length < 2)
@@ -355,6 +385,7 @@
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">Range of floats representing an offset value.</param>
+        /// <returns>The transformation with offset defined.</returns>
         public Transformation Offset(params float[] value)
         {
             if (value.Length < 2)
@@ -372,6 +403,7 @@
         /// Offset in seconds or percent of a video.
         /// </summary>
         /// <param name="value">Range of doubles representing an offset value.</param>
+        /// <returns>The transformation with offset defined.</returns>
         public Transformation Offset(params double[] value)
         {
             if (value.Length < 2)
@@ -390,6 +422,7 @@
         /// parameters.
         /// </summary>
         /// <param name="value">String representing a duration value.</param>
+        /// <returns>The transformation with duration defined.</returns>
         public Transformation Duration(string value)
         {
             return Add("duration", value);
@@ -402,6 +435,7 @@
         /// parameters.
         /// </summary>
         /// <param name="value">Float representing a duration value.</param>
+        /// <returns>The transformation with duration defined.</returns>
         public Transformation Duration(float value)
         {
             return Add("duration", value);
@@ -414,6 +448,7 @@
         /// parameters.
         /// </summary>
         /// <param name="value">Double representing a duration value.</param>
+        /// <returns>The transformation with duration defined.</returns>
         public Transformation Duration(double value)
         {
             return Add("duration", value);
@@ -426,6 +461,7 @@
         /// parameters.
         /// </summary>
         /// <param name="value">Float representing a duration value.</param>
+        /// <returns>The transformation with duration percent defined.</returns>
         public Transformation DurationPercent(float value)
         {
             return DurationPercent((object)value);
@@ -438,6 +474,7 @@
         /// parameters.
         /// </summary>
         /// <param name="value">Double representing a duration value.</param>
+        /// <returns>The transformation with duration percent defined.</returns>
         public Transformation DurationPercent(double value)
         {
             return DurationPercent((object)value);
@@ -447,6 +484,7 @@
         /// Explicitly sets the keyframe interval (in seconds) of the delivered video.
         /// </summary>
         /// <param name="value">Int representing the time between keyframes.</param>
+        /// <returns>The transformation with keyframe interval defined.</returns>
         public Transformation KeyframeInterval(int value)
         {
             if (value <= 0)
@@ -461,6 +499,7 @@
         /// Explicitly sets the keyframe interval (in seconds) of the delivered video.
         /// </summary>
         /// <param name="value">Float representing the time between keyframes.</param>
+        /// <returns>The transformation with keyframe interval defined.</returns>
         public Transformation KeyframeInterval(float value)
         {
             if (value <= 0)
@@ -475,6 +514,7 @@
         /// Explicitly sets the keyframe interval (in seconds) of the delivered video.
         /// </summary>
         /// <param name="value">String representing the time between keyframes.</param>
+        /// <returns>The transformation with keyframe interval defined.</returns>
         public Transformation KeyframeInterval(string value)
         {
             return Add("keyframe_interval", value);
@@ -484,6 +524,7 @@
         /// Set the name of the streaming profile to apply to an HLS or MPEG-DASH adaptive bitrate streaming video.
         /// </summary>
         /// <param name="value">The name of streaming profile.</param>
+        /// <returns>The transformation with streaming profile applied.</returns>
         public Transformation StreamingProfile(string value)
         {
             return Add("streaming_profile", value);

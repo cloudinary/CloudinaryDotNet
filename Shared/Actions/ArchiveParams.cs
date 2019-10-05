@@ -34,6 +34,7 @@
         /// <summary>
         /// Get a list of Public IDs for the specific assets to be included in the archive.
         /// </summary>
+        /// <returns>A list of strings where each element represents Public ID.</returns>
         public List<string> PublicIds()
         {
             return m_publicIds;
@@ -54,6 +55,7 @@
         /// <summary>
         /// Get a list of Fully Qualified Public IDs for the specific assets to be included in the archive.
         /// </summary>
+        /// <returns>A list of strings where each element represents Fully Qualified Public ID.</returns>
         public List<string> FullyQualifiedPublicIds()
         {
             return m_fullyQualifiedPublicIds;
@@ -63,6 +65,7 @@
         /// Set a list of Fully Qualified Public IDs for the specific assets to be included in the archive.
         /// </summary>
         /// <param name="fullyQualifiedPublicIds">List of fully qualified Public IDs.</param>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
         public ArchiveParams FullyQualifiedPublicIds(List<string> fullyQualifiedPublicIds)
         {
             m_fullyQualifiedPublicIds = fullyQualifiedPublicIds;
@@ -72,6 +75,7 @@
         /// <summary>
         /// Get a list of tag names. All assets with the specified tags are included in the archive.
         /// </summary>
+        /// <returns>A list of strings where each element represents a tag name.</returns>
         public List<string> Tags()
         {
             return m_tags;
@@ -92,6 +96,7 @@
         /// <summary>
         /// Get a list of prefixes of Public IDs (e.g., folders).
         /// </summary>
+        /// <returns>A list of strings where each element represents a Public ID prefix.</returns>
         public List<string> Prefixes()
         {
             return m_prefixes;
@@ -137,6 +142,7 @@
         /// Get Mode whether to return the generated archive file ('download') or to store it as a raw resource
         /// ('create').
         /// </summary>
+        /// <returns>A member of <see cref="ArchiveCallMode"/> enum.</returns>
         public virtual ArchiveCallMode Mode()
         {
             return m_mode;
@@ -158,6 +164,7 @@
         /// <summary>
         /// Get the resource type (image, video or raw) of files to include in the archive.
         /// </summary>
+        /// <returns>A string that represents type of the resource.</returns>
         public string ResourceType()
         {
             return m_resourceType;
@@ -177,6 +184,7 @@
         /// <summary>
         /// Get the specific file type of assets to include in the archive (upload/private/authenticated).
         /// </summary>
+        /// <returns>A string that represents file type of the asset.</returns>
         public string Type()
         {
             return m_type;
@@ -198,6 +206,7 @@
         /// Get a list of transformations to run on all the derived assets before storing them in your Cloudinary
         /// account.
         /// </summary>
+        /// <returns>A list of transformations.</returns>
         public List<Transformation> Transformations()
         {
             return m_transformations;
@@ -218,6 +227,7 @@
         /// <summary>
         /// Get the format for the generated archive.
         /// </summary>
+        /// <returns>A member of <see cref="ArchiveFormat"/> enum.</returns>
         public ArchiveFormat TargetFormat()
         {
             return m_targetFormat;
@@ -239,6 +249,7 @@
         /// <summary>
         /// Get the Public ID to assign to the generated archive.
         /// </summary>
+        /// <returns>A string that represents archive Public ID.</returns>
         public string TargetPublicId()
         {
             return m_targetPublicId;
@@ -259,6 +270,7 @@
         /// <summary>
         /// Get whether to flatten all files to be in the root of the archive file (no sub-folders).
         /// </summary>
+        /// <returns>True if files are to be flattened; otherwise, false.</returns>
         public bool IsFlattenFolders()
         {
             return m_flattenFolders;
@@ -302,6 +314,7 @@
         /// <summary>
         /// Get the date (UNIX time in seconds) of the URL expiration.
         /// </summary>
+        /// <returns>UNIX time in seconds represented by an integer value.</returns>
         public int ExpiresAt()
         {
             return m_expiresAt;
@@ -322,6 +335,7 @@
         /// <summary>
         /// Get whether to use the original file name of the included assets (if available) instead of the public ID.
         /// </summary>
+        /// <returns>True if original file name is to be used; otherwise, false.</returns>
         public bool IsUseOriginalFilename()
         {
             return m_useOriginalFilename;
@@ -342,6 +356,7 @@
         /// <summary>
         /// Get whether to perform the archive generation in the background (asynchronously).
         /// </summary>
+        /// <returns>True for background archive generation; otherwise, false.</returns>
         public bool IsAsync()
         {
             return m_async;
@@ -363,6 +378,7 @@
         /// Get an HTTP or HTTPS URL to notify your application (a webhook) when the archive creation process has
         /// completed.
         /// </summary>
+        /// <returns>A string that represents URL.</returns>
         public string NotificationUrl()
         {
             return m_notificationUrl;
@@ -383,6 +399,7 @@
         /// <summary>
         /// Get a list of tag names to assign to the generated archive.
         /// </summary>
+        /// <returns>A list of strings where each element represents a tag name.</returns>
         public List<string> TargetTags()
         {
             return m_targetTags;
@@ -403,6 +420,7 @@
         /// <summary>
         /// Get whether to keep the derived assets used for generating the archive.
         /// </summary>
+        /// <returns>True if derived assets are to be used; otherwise, false.</returns>
         public bool IsKeepDerived()
         {
             return m_keepDerived;
@@ -423,6 +441,7 @@
         /// Get whether to strip all transformation details from file names and add a numeric counter to a file name
         /// in the case of a name conflict.
         /// </summary>
+        /// <returns>True if all transformation details are to be skipped; otherwise, false.</returns>
         public bool IsSkipTransformationName()
         {
             return m_skipTransformationName;

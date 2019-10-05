@@ -500,6 +500,7 @@
         /// Deletes folder.
         /// </summary>
         /// <param name="folder">Folder name to delete.</param>
+        /// <returns>Parsed result of folder deletion.</returns>
         public DeleteFolderResult DeleteFolder(string folder)
         {
             var uri = m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl();

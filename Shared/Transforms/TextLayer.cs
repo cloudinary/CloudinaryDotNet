@@ -169,6 +169,7 @@
         /// Overridden method. Restricted to use for text layers.
         /// </summary>
         /// <param name="resourceType">Type of the resource.</param>
+        /// <returns>The layer with parameter applied.</returns>
         public new TextLayer ResourceType(string resourceType)
         {
             throw new InvalidOperationException("Cannot modify resourceType for text layers");
@@ -178,6 +179,7 @@
         /// Overridden method. Restricted to use for text layers.
         /// </summary>
         /// <param name="type">Type of the asset.</param>
+        /// <returns>The layer with parameter applied.</returns>
         public new TextLayer Type(string type)
         {
             throw new InvalidOperationException("Cannot modify type for text layers");
@@ -187,6 +189,7 @@
         /// Overridden method. Restricted to use for text layers.
         /// </summary>
         /// <param name="format">Asset format.</param>
+        /// <returns>The layer with parameter applied.</returns>
         public new TextLayer Format(string format)
         {
             throw new InvalidOperationException("Cannot modify format for text layers");
@@ -196,6 +199,7 @@
         /// Set the text to generate an image for.
         /// </summary>
         /// <param name="text">Text to generate an image for.</param>
+        /// <returns>The layer with text applied.</returns>
         public TextLayer Text(string text)
         {
             this.m_text = OverlayTextEncode(text);
@@ -206,6 +210,7 @@
         /// Type of font antialiasing to use.
         /// </summary>
         /// <param name="value">One of the values of <see cref="FontAntialiasing"/> enum.</param>
+        /// <returns>The layer with font antialiasing applied.</returns>
         public TextLayer FontAntialiasing(FontAntialiasing value)
         {
             m_fontAntialiasing = ApiShared.GetCloudinaryParam(value);
@@ -216,6 +221,7 @@
         /// Type of font hinting to use.
         /// </summary>
         /// <param name="value">One of the values of <see cref="FontHinting"/> enum.</param>
+        /// <returns>The layer with font hinting applied.</returns>
         public TextLayer FontHinting(FontHinting value)
         {
             m_fontHinting = ApiShared.GetCloudinaryParam(value);
@@ -226,6 +232,7 @@
         /// Required name of the font family. e.g. "arial".
         /// </summary>
         /// <param name="fontFamily">A string representing the font family.</param>
+        /// <returns>The layer with font family defined.</returns>
         public TextLayer FontFamily(string fontFamily)
         {
             this.m_fontFamily = fontFamily;
@@ -236,6 +243,7 @@
         /// Font size in pixels. Default: 12.
         /// </summary>
         /// <param name="fontSize">Font size in pixels.</param>
+        /// <returns>The layer with font size defined.</returns>
         public TextLayer FontSize(int fontSize)
         {
             this.m_fontSize = fontSize;
@@ -246,6 +254,7 @@
         /// Whether to use a "normal" or a "bold" font. Default: "normal".
         /// </summary>
         /// <param name="fontWeight">A string representing the font weight.</param>
+        /// <returns>The layer with font weight defined.</returns>
         public TextLayer FontWeight(string fontWeight)
         {
             this.m_fontWeight = fontWeight;
@@ -256,6 +265,7 @@
         /// Whether to use a "normal" or an "italic" font style. Default: "normal".
         /// </summary>
         /// <param name="fontStyle">A string representing the font style.</param>
+        /// <returns>The layer with font style defined.</returns>
         public TextLayer FontStyle(string fontStyle)
         {
             this.m_fontStyle = fontStyle;
@@ -266,6 +276,7 @@
         /// Text decoration: underline or strikethrough. Default: "none".
         /// </summary>
         /// <param name="textDecoration">A string representing the text decoration.</param>
+        /// <returns>The layer with text decoration applied.</returns>
         public TextLayer TextDecoration(string textDecoration)
         {
             this.m_textDecoration = textDecoration;
@@ -276,6 +287,7 @@
         /// Text alignment: left, center, right, end, start or justify. Default: "left".
         /// </summary>
         /// <param name="textAlign">A string representing the text alignment.</param>
+        /// <returns>The layer with text align applied.</returns>
         public TextLayer TextAlign(string textAlign)
         {
             this.m_textAlign = textAlign;
@@ -287,6 +299,7 @@
         /// Set the color and weight of the stroke with the border parameter.
         /// </summary>
         /// <param name="stroke">A string representing the font stroke.</param>
+        /// <returns>The layer with font stroke defined.</returns>
         public TextLayer Stroke(string stroke)
         {
             this.m_stroke = stroke;
@@ -297,6 +310,7 @@
         /// Spacing between the letters in pixels. Can be a positive or negative, integer or decimal value.
         /// </summary>
         /// <param name="letterSpacing">A string representing spacing between letters.</param>
+        /// <returns>The layer with letter spacing defined.</returns>
         public TextLayer LetterSpacing(string letterSpacing)
         {
             this.m_letterSpacing = letterSpacing;
@@ -308,6 +322,7 @@
         /// Can be a positive or negative, integer or decimal value.
         /// </summary>
         /// <param name="lineSpacing">A string representing spacing between lines.</param>
+        /// <returns>The layer with line spacing defined.</returns>
         public TextLayer LineSpacing(string lineSpacing)
         {
             this.m_lineSpacing = lineSpacing;
@@ -317,6 +332,7 @@
         /// <summary>
         /// Get an additional parameters for the text layer.
         /// </summary>
+        /// <returns>A string that represents additional parameters.</returns>
         public override string AdditionalParams()
         {
             List<string> components = new List<string>();
@@ -338,6 +354,7 @@
         /// <summary>
         /// Get this text layer represented as string.
         /// </summary>
+        /// <returns>A string that represents the layer.</returns>
         public override string ToString()
         {
             if (string.IsNullOrEmpty(m_publicId) && string.IsNullOrEmpty(m_text))

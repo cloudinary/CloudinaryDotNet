@@ -27,6 +27,7 @@
         /// <summary>
         /// Get value of the create_derived flag.
         /// </summary>
+        /// <returns>True if derived images are to be created; otherwise, false.</returns>
         public bool IsCreateDerived()
         {
             return GetValue(CREATE_DERIVED).Value<bool>();
@@ -38,6 +39,7 @@
         /// If false, images generated during the analysis process are thrown away.
         /// </summary>
         /// <param name="createDerived">Flag that determines whether derived images are created.</param>
+        /// <returns>The responsive breakpoint with flag set.</returns>
         public ResponsiveBreakpoint CreateDerived(bool createDerived)
         {
             this[CREATE_DERIVED] = createDerived;
@@ -48,6 +50,7 @@
         /// The base transformation to first apply to the image before finding the best breakpoints.
         /// </summary>
         /// <param name="transformation">Transformation to base on.</param>
+        /// <returns>The responsive breakpoint with the transformation applied.</returns>
         public ResponsiveBreakpoint Transformation(Transformation transformation)
         {
             this[TRANSFORMATION] = transformation.ToString();
@@ -57,6 +60,7 @@
         /// <summary>
         /// Get maximal width in pixels.
         /// </summary>
+        /// <returns>Integer value that represents maximum width.</returns>
         public int MaxWidth()
         {
             return Value<int>(MAX_WIDTH);
@@ -67,6 +71,7 @@
         /// of the original image is used instead. Default: 1000.
         /// </summary>
         /// <param name="maxWidth">Maximum width in pixels.</param>
+        /// <returns>The responsive breakpoint with maximum width defined.</returns>
         public ResponsiveBreakpoint MaxWidth(int maxWidth)
         {
             this[MAX_WIDTH] = maxWidth;
@@ -76,6 +81,7 @@
         /// <summary>
         /// Get minimum width in pixels.
         /// </summary>
+        /// <returns>Integer value that represents minimum width.</returns>
         public int MinWidth()
         {
             return Value<int>(MIN_WIDTH);
@@ -85,6 +91,7 @@
         /// Set the minimum width needed for this image. Default: 50.
         /// </summary>
         /// <param name="minWidth">Minimum width in pixels.</param>
+        /// <returns>The responsive breakpoint with minimum width defined.</returns>
         public ResponsiveBreakpoint MinWidth(int minWidth)
         {
             this[MIN_WIDTH] = minWidth;
@@ -94,6 +101,7 @@
         /// <summary>
         /// Get minimum number of bytes between two consecutive breakpoints (images).
         /// </summary>
+        /// <returns>Integer value that represents bytes step.</returns>
         public int BytesStep()
         {
             return Value<int>(BYTES_STEP);
@@ -113,6 +121,7 @@
         /// <summary>
         /// Get maximum number of breakpoints(images) to find.
         /// </summary>
+        /// <returns>Integer value that represents maximum number of images.</returns>
         public int MaxImages()
         {
             return Value<int>(MAX_IMAGES);
@@ -123,6 +132,7 @@
         /// differences bigger than the given bytes_step value between consecutive images. Default: 20.
         /// </summary>
         /// <param name="maxImages">Maximum number of breakpoints to find.</param>
+        /// <returns>Breakpoint with maximum number of images defined.</returns>
         public ResponsiveBreakpoint MaxImages(int maxImages)
         {
             this[MAX_IMAGES] = maxImages;
@@ -132,6 +142,7 @@
         /// <summary>
         /// Get the file extension of the derived resources to the format indicated.
         /// </summary>
+        /// <returns>A string that represents file extension.</returns>
         public string Format()
         {
             return Value<string>(FORMAT);
@@ -141,6 +152,7 @@
         /// Sets the file extension of the derived resources to the format indicated.
         /// </summary>
         /// <param name="format">File extension of the derived resources.</param>
+        /// <returns>Breakpoint with file extension defined.</returns>
         public ResponsiveBreakpoint Format(string format)
         {
             this[FORMAT] = format;

@@ -108,6 +108,7 @@
         /// Set parent transformation.
         /// </summary>
         /// <param name="parent">A parent transformation.</param>
+        /// <returns>The expression with set parameter.</returns>
         public T SetParent(Transformation parent)
         {
             Parent = parent;
@@ -127,6 +128,7 @@
         /// Set expression value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with set parameter.</returns>
         public virtual T Value(object value)
         {
             m_expressions.Add(Convert.ToString(value));
@@ -137,6 +139,7 @@
         /// Add 'multiply' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Mul(object value)
         {
             return Mul().Value(value);
@@ -145,6 +148,7 @@
         /// <summary>
         /// Add 'multiply' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Mul()
         {
             m_expressions.Add("mul");
@@ -155,6 +159,7 @@
         /// Add 'greater than' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Gt(object value)
         {
             return Gt().Value(value);
@@ -163,6 +168,7 @@
         /// <summary>
         /// Add 'greater than' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Gt()
         {
             m_expressions.Add("gt");
@@ -173,6 +179,7 @@
         /// Add 'and' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T And(object value)
         {
             return And().Value(value);
@@ -181,6 +188,7 @@
         /// <summary>
         /// Add 'and' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T And()
         {
             m_expressions.Add("and");
@@ -191,6 +199,7 @@
         /// Add 'or' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Or(object value)
         {
             return Or().Value(value);
@@ -199,6 +208,7 @@
         /// <summary>
         /// Add 'or' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Or()
         {
             m_expressions.Add("or");
@@ -209,6 +219,7 @@
         /// Add 'equal to' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Eq(object value)
         {
             return Eq().Value(value);
@@ -217,6 +228,7 @@
         /// <summary>
         /// Add 'equal to' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Eq()
         {
             m_expressions.Add("eq");
@@ -227,6 +239,7 @@
         /// Add 'not equal to' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Ne(object value)
         {
             return Ne().Value(value);
@@ -235,6 +248,7 @@
         /// <summary>
         /// Add 'not equal to' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Ne()
         {
             m_expressions.Add("ne");
@@ -245,6 +259,7 @@
         /// Add 'less than' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Lt(object value)
         {
             return Lt().Value(value);
@@ -253,6 +268,7 @@
         /// <summary>
         /// Add 'less than' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Lt()
         {
             m_expressions.Add("lt");
@@ -263,6 +279,7 @@
         /// Add 'less than or equal to' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Lte(object value)
         {
             return Lte().Value(value);
@@ -271,6 +288,7 @@
         /// <summary>
         /// Add 'less than or equal to' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Lte()
         {
             m_expressions.Add("lte");
@@ -281,6 +299,7 @@
         /// Add 'greater than or equal to' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Gte(object value)
         {
             return Gte().Value(value);
@@ -289,6 +308,7 @@
         /// <summary>
         /// Add 'greater than or equal to' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Gte()
         {
             m_expressions.Add("gte");
@@ -299,6 +319,7 @@
         /// Add 'divide' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Div(object value)
         {
             return Div().Value(value);
@@ -307,6 +328,7 @@
         /// <summary>
         /// Add 'divide' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Div()
         {
             m_expressions.Add("div");
@@ -317,6 +339,7 @@
         /// Add 'add' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Add(object value)
         {
             return Add().Value(value);
@@ -325,6 +348,7 @@
         /// <summary>
         /// Add 'add' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Add()
         {
             m_expressions.Add("add");
@@ -335,6 +359,7 @@
         /// Add 'subtract' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Sub(object value)
         {
             return Sub().Value(value);
@@ -343,6 +368,7 @@
         /// <summary>
         /// Add 'subtract' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Sub()
         {
             m_expressions.Add("sub");
@@ -352,6 +378,7 @@
         /// <summary>
         /// Add 'included in' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T In()
         {
             m_expressions.Add("in");
@@ -362,6 +389,7 @@
         /// Add 'included in' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T In(object value)
         {
             return In().Value(value);
@@ -370,6 +398,7 @@
         /// <summary>
         /// Add 'not included in' operation.
         /// </summary>
+        /// <returns>The expression with operation added.</returns>
         public T Nin()
         {
             m_expressions.Add("nin");
@@ -380,6 +409,7 @@
         /// Add 'not included in' operation with value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <returns>The expression with operation added.</returns>
         public T Nin(object value)
         {
             return Nin().Value(value);
@@ -403,6 +433,7 @@
         /// <summary>
         /// Serialize a list of predicates.
         /// </summary>
+        /// <returns>A string that represents serialized predicates list.</returns>
         protected string Serialize()
         {
             return Normalize(string.Join("_", m_expressions));

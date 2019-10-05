@@ -215,6 +215,7 @@
         /// <summary>
         /// Chain transformation.
         /// </summary>
+        /// <returns>A transformation for chaining.</returns>
         public Transformation Chain()
         {
             Transformation nested = this.Clone();
@@ -230,6 +231,7 @@
         /// </summary>
         /// <param name="name">The name of variable.</param>
         /// <param name="value">The value.</param>
+        /// <returns>The transformation with variable added.</returns>
         public Transformation Variable(string name, object value)
         {
             Expression.CheckVariableName(name);
@@ -242,6 +244,7 @@
         /// </summary>
         /// <param name="name">The name of variable.</param>
         /// <param name="values">A list of values.</param>
+        /// <returns>The transformation with variable added.</returns>
         public Transformation Variable(string name, string[] values)
         {
             return Variable(name, $"!{(values != null ? string.Join(":", values) : string.Empty)}!");
@@ -251,6 +254,7 @@
         /// Add user defined variables to the transformation.
         /// </summary>
         /// <param name="variables">A list of variables.</param>
+        /// <returns>The transformation with variables added.</returns>
         public Transformation Variables(params Expression[] variables)
         {
             Add(VARIABLES_PARAM_KEY, variables);
@@ -261,6 +265,7 @@
         /// Add custom function to the transformation.
         /// </summary>
         /// <param name="function">The custom function.</param>
+        /// <returns>The transformation with custom function added.</returns>
         public Transformation CustomFunction(CustomFunction function)
         {
             Add("custom_function", function);
@@ -271,6 +276,7 @@
         /// Add custom pre-function to the transformation.
         /// </summary>
         /// <param name="function">The custom pre-function.</param>
+        /// <returns>The transformation with custom pre-function added.</returns>
         public Transformation CustomPreFunction(CustomFunction function)
         {
             string serialized = ToString(function);
@@ -287,6 +293,7 @@
         /// </summary>
         /// <param name="key">The name.</param>
         /// <param name="value">The value.</param>
+        /// <returns>The transformation with parameter added.</returns>
         public Transformation Add(string key, object value)
         {
             if (m_transformParams.ContainsKey(key))
@@ -713,6 +720,7 @@
         /// Set file format for the transformation.
         /// </summary>
         /// <param name="format">The file format to set.</param>
+        /// <returns>The transformation with file format defined.</returns>
         public EagerTransformation SetFormat(string format)
         {
             Format = format;

@@ -244,6 +244,7 @@
         /// Set whether to use shortened URL when possible.
         /// </summary>
         /// <param name="shorten">True - to use shorten URL.</param>
+        /// <returns>The delivery URL with flag to shorten URL applied.</returns>
         public Url Shorten(bool shorten)
         {
             m_shorten = shorten;
@@ -254,6 +255,7 @@
         /// Set the cloudinary URL to access the resources.
         /// </summary>
         /// <param name="cloudinaryAddr">Cloud URL.</param>
+        /// <returns>The delivery URL with Cloudinary address defined.</returns>
         public Url CloudinaryAddr(string cloudinaryAddr)
         {
             m_cloudinaryAddr = cloudinaryAddr;
@@ -264,6 +266,7 @@
         /// Set cloud name from your account details.
         /// </summary>
         /// <param name="cloudName">Cloud name.</param>
+        /// <returns>The delivery URL with cloud name defined.</returns>
         public Url CloudName(string cloudName)
         {
             m_cloudName = cloudName;
@@ -274,6 +277,7 @@
         /// Add custom part to the URL.
         /// </summary>
         /// <param name="part">Custom URL part.</param>
+        /// <returns>The delivery URL with custom URL part added.</returns>
         public Url Add(string part)
         {
             if (!string.IsNullOrEmpty(part))
@@ -288,6 +292,7 @@
         /// Add sources for video tag.
         /// </summary>
         /// <param name="videoSources">Array of video sources.</param>
+        /// <returns>The delivery URL with video sources defined.</returns>
         public Url VideoSources(params VideoSource[] videoSources)
         {
             if (videoSources != null && videoSources.Length > 0)
@@ -302,6 +307,7 @@
         /// Add action to the URL.
         /// </summary>
         /// <param name="action">The action.</param>
+        /// <returns>The delivery URL with action applied.</returns>
         public Url Action(string action)
         {
             m_action = action;
@@ -312,6 +318,7 @@
         /// Set the version of the cloudinary API.
         /// </summary>
         /// <param name="apiVersion">API version.</param>
+        /// <returns>The delivery URL with API version defined.</returns>
         public Url ApiVersion(string apiVersion)
         {
             m_apiVersion = apiVersion;
@@ -323,6 +330,7 @@
         /// resource.
         /// </summary>
         /// <param name="version">The version for your delivery URL.</param>
+        /// <returns>The delivery URL with its version defined.</returns>
         public Url Version(string version)
         {
             m_version = version;
@@ -347,6 +355,7 @@
         /// Set authentication token for the token-based authentication.
         /// </summary>
         /// <param name="authToken">The authentication token.</param>
+        /// <returns>The delivery URL with authentication token applied.</returns>
         public Url AuthToken(AuthToken authToken)
         {
             if (m_AuthToken == null)
@@ -361,6 +370,7 @@
         /// A Cloudinary public ID or file name or a reference to a resource.
         /// </summary>
         /// <param name="source">Public ID, file name or resource reference.</param>
+        /// <returns>The delivery URL with resource reference defined.</returns>
         public Url Source(string source)
         {
             m_source = source;
@@ -372,6 +382,7 @@
         /// mime type. Default: ['webm', 'mp4', 'ogv'].
         /// </summary>
         /// <param name="sourceTypes">An ordered array of the video source types.</param>
+        /// <returns>The delivery URL with video source types defined.</returns>
         public Url SourceTypes(params string[] sourceTypes)
         {
             m_sourceTypes = sourceTypes;
@@ -382,6 +393,7 @@
         /// When true - add signature part to the Url.
         /// </summary>
         /// <param name="signed">Whether to add signature to the Url.</param>
+        /// <returns>The delivery URL with signature flag applied.</returns>
         public Url Signed(bool signed)
         {
             m_signed = signed;
@@ -403,6 +415,7 @@
         /// Format of the resource file.
         /// </summary>
         /// <param name="format">File format.</param>
+        /// <returns>The delivery URL with file format defined.</returns>
         public Url Format(string format)
         {
             FormatValue = format;
@@ -413,6 +426,7 @@
         /// Set private CDN prefix for the Url.
         /// </summary>
         /// <param name="privateCdn">The prefix of private CDN.</param>
+        /// <returns>The delivery URL with private CDN prefix applied.</returns>
         public Url SecureDistribution(string privateCdn)
         {
             m_privateCdn = privateCdn;
@@ -423,6 +437,7 @@
         /// Set custom domain for the Url.
         /// </summary>
         /// <param name="cName">Custom domain name.</param>
+        /// <returns>The delivery URL with CName applied.</returns>
         public Url CName(string cName)
         {
             m_cName = cName;
@@ -433,6 +448,7 @@
         /// Set transformation for the Url.
         /// </summary>
         /// <param name="transformation">The transformation to be addded to the Url.</param>
+        /// <returns>The delivery URL with transformation applied.</returns>
         public Url Transform(Transformation transformation)
         {
             m_transformation = transformation;
@@ -443,6 +459,7 @@
         /// Force Url builder to use HTTPS URLs. Default: true.
         /// </summary>
         /// <param name="secure">Whether to use HTTPS Url.</param>
+        /// <returns>The delivery URL with secure flag applied.</returns>
         public Url Secure(bool secure = true)
         {
             m_secure = secure;
@@ -453,6 +470,7 @@
         /// Set wether to use a private CDN distribution.
         /// </summary>
         /// <param name="usePrivateCdn">Wether to use a private CDN distribution.</param>
+        /// <returns>The delivery URL with private CDN flag applied.</returns>
         public Url PrivateCdn(bool usePrivateCdn)
         {
             m_usePrivateCdn = usePrivateCdn;
@@ -463,6 +481,7 @@
         /// Set whether to use sub domain.
         /// </summary>
         /// <param name="useSubDomain">Use sub domain.</param>
+        /// <returns>The delivery URL with sub domain usage flag applied.</returns>
         public Url CSubDomain(bool useSubDomain)
         {
             m_useSubDomain = useSubDomain;
@@ -474,6 +493,7 @@
         /// which means that any URL without the resource type and type parameters.
         /// </summary>
         /// <param name="useRootPath">Whether to use root path.</param>
+        /// <returns>The delivery URL with root path usage flag applied.</returns>
         public Url UseRootPath(bool useRootPath)
         {
             m_useRootPath = useRootPath;
@@ -484,6 +504,7 @@
         /// Set HTML string to display in the case that the browser does not support any of the video formats included.
         /// </summary>
         /// <param name="fallbackContent">Fallback content string.</param>
+        /// <returns>The delivery URL with fallback content defined.</returns>
         public Url FallbackContent(string fallbackContent)
         {
             m_fallbackContent = fallbackContent;
@@ -494,6 +515,7 @@
         /// Set descriptive suffix to add to the Public ID in the delivery Url.
         /// </summary>
         /// <param name="suffix">The suffix.</param>
+        /// <returns>The delivery URL with suffix defined.</returns>
         public Url Suffix(string suffix)
         {
             m_suffix = suffix;
@@ -505,6 +527,7 @@
         /// </summary>
         /// <param name="source">Video source format.</param>
         /// <param name="transform">Transformation to override the default transformation instructions.</param>
+        /// <returns>The delivery URL with transformation applied.</returns>
         public Url SourceTransformationFor(string source, Transformation transform)
         {
             if (m_sourceTransforms == null)
@@ -522,6 +545,7 @@
         /// use instead of the default image).
         /// </summary>
         /// <param name="transformation">Transformation for the poster.</param>
+        /// <returns>The delivery URL with poster transformation applied.</returns>
         public Url PosterTransform(Transformation transformation)
         {
             m_posterTransformation = transformation;
@@ -532,6 +556,7 @@
         /// Set the source of the image to be shown while the video is downloading or until the user hits the play button.
         /// </summary>
         /// <param name="source">The source of the poster image.</param>
+        /// <returns>The delivery URL with poster image source defined.</returns>
         public Url PosterSource(string source)
         {
             m_posterSource = source;
@@ -542,6 +567,7 @@
         /// Set an Url to an image to be shown while the video is downloading or until the user hits the play button.
         /// </summary>
         /// <param name="url">Url to an image.</param>
+        /// <returns>The delivery URL with poster image URL defined.</returns>
         public Url PosterUrl(Url url)
         {
             m_posterUrl = url;
@@ -554,6 +580,7 @@
         /// <param name="poster">
         /// Poster object. E.g. source string, transformation, Url or null to delete poster options.
         /// </param>
+        /// <returns>The delivery URL with poster defined.</returns>
         public Url Poster(object poster)
         {
             if (poster is string)
@@ -582,6 +609,7 @@
         /// Build an Url to sprite css file.
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
+        /// <returns>A string that represents sprite css file URL.</returns>
         public string BuildSpriteCss(string source)
         {
             m_action = "sprite";
@@ -598,6 +626,7 @@
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="keyValuePairs">Array of strings in form of "key=value".</param>
+        /// <returns>A string that represents HTML image tag.</returns>
         public string BuildImageTag(string source, params string[] keyValuePairs)
         {
             return BuildImageTag(source, new StringDictionary(keyValuePairs));
@@ -608,6 +637,7 @@
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="dict">Additional parameters.</param>
+        /// <returns>A string that represents HTML image tag.</returns>
         public string BuildImageTag(string source, StringDictionary dict = null)
         {
             if (dict == null)
@@ -668,6 +698,7 @@
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="keyValuePairs">Array of strings in form of "key=value".</param>
+        /// <returns>A string that represents video tag.</returns>
         public string BuildVideoTag(string source, params string[] keyValuePairs)
         {
             return BuildVideoTag(source, new StringDictionary(keyValuePairs));
@@ -678,6 +709,7 @@
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="dict">Additional parameters.</param>
+        /// <returns>A string that represents video tag.</returns>
         public string BuildVideoTag(string source, StringDictionary dict = null)
         {
             if (dict == null)
@@ -1441,6 +1473,7 @@
         /// <summary>
         /// Returns a string that represents the current Url.
         /// </summary>
+        /// <returns>A string that represents the URL.</returns>
         public new string ToString()
         {
             BuildQueryString();

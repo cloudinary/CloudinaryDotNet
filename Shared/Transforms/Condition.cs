@@ -42,6 +42,7 @@
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition Width(string @operator, object value)
         {
             return Predicate("w", @operator, value);
@@ -52,6 +53,7 @@
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition InitialWidth(string @operator, object value)
         {
             return Predicate("iw", @operator, value);
@@ -62,6 +64,7 @@
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition Height(string @operator, object value)
         {
             return Predicate("h", @operator, value);
@@ -72,6 +75,7 @@
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition InitialHeight(string @operator, object value)
         {
             return Predicate("ih", @operator, value);
@@ -82,6 +86,7 @@
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition AspectRatio(string @operator, string value)
         {
             return Predicate("ar", @operator, value);
@@ -92,6 +97,7 @@
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition FaceCount(string @operator, object value)
         {
             return Predicate("fc", @operator, value);
@@ -102,6 +108,7 @@
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition PageCount(string @operator, object value)
         {
             return Predicate("pc", @operator, value);
@@ -113,6 +120,7 @@
         /// <param name="name">A name of parameter.</param>
         /// <param name="operator">An operator.</param>
         /// <param name="value">A value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         protected Condition Predicate(string name, string @operator, object value)
         {
             if (operators.ContainsKey(@operator))

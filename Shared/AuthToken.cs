@@ -101,6 +101,7 @@
         /// Set the Start time when the cookie becomes valid.
         /// </summary>
         /// <param name="startTime">Timestamp in UNIX time when the cookie becomes valid.</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken StartTime(long startTime)
         {
             this.startTime = startTime;
@@ -111,6 +112,7 @@
         /// Set the cookie expiration time.
         /// </summary>
         /// <param name="expiration">Timestamp in UNIX time when the cookie will expire.</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken Expiration(long expiration)
         {
             this.expiration = expiration;
@@ -121,6 +123,7 @@
         /// Set the IP for access the asset.
         /// </summary>
         /// <param name="ip">Only this IP address can access the resource.</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken Ip(string ip)
         {
             this.ip = ip;
@@ -131,6 +134,7 @@
         /// Set the Access Control List for limiting the allowed URL path to a specified pattern.
         /// </summary>
         /// <param name="acl">The pattern (e.g., /image/authenticated/*).</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken Acl(string acl)
         {
             this.acl = acl;
@@ -141,6 +145,7 @@
         /// Set the duration that the cookie is valid.
         /// </summary>
         /// <param name="duration">The duration that the cookie is valid in seconds.</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken Duration(long duration)
         {
             this.duration = duration;

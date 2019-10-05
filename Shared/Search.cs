@@ -33,6 +33,7 @@
         /// resources are listed (up to max_results).
         /// </summary>
         /// <param name="value">Search query expression.</param>
+        /// <returns>The search provider with search query defined.</returns>
         public Search Expression(string value)
         {
             searchParams.Add("expression", value);
@@ -43,6 +44,7 @@
         /// The maximum number of results to return. Default 50. Maximum 500.
         /// </summary>
         /// <param name="value">Number of results to return.</param>
+        /// <returns>The search provider with maximum number of results defined.</returns>
         public Search MaxResults(int value)
         {
             searchParams.Add("max_results", value);
@@ -53,6 +55,7 @@
         /// Set value of NextCursor.
         /// </summary>
         /// <param name="value">The value of NextCursor.</param>
+        /// <returns>The search provider with next cursor defined.</returns>
         public Search NextCursor(string value)
         {
             searchParams.Add("next_cursor", value);
@@ -63,6 +66,7 @@
         /// Set value of Direction.
         /// </summary>
         /// <param name="value">The value of Direction.</param>
+        /// <returns>The search provider with direction defined.</returns>
         public Search Direction(string value)
         {
             searchParams.Add("direction", value);
@@ -74,6 +78,7 @@
         /// response. Supported parameters: resource_type, type, pixels, duration, format, and bytes.
         /// </summary>
         /// <param name="field">The name of field.</param>
+        /// <returns>The search provider with aggregation field defined.</returns>
         public Search Aggregate(string field)
         {
             aggregateParam.Add(field);
@@ -85,6 +90,7 @@
         /// Possible value: context, tags, image_metadata and image_analysis.
         /// </summary>
         /// <param name="field">The name of field.</param>
+        /// <returns>The search provider with additional asset attribute defined.</returns>
         public Search WithField(string field)
         {
             withFieldParam.Add(field);
@@ -97,6 +103,7 @@
         /// </summary>
         /// <param name="field">The field to sort by.</param>
         /// <param name="dir">The direction.</param>
+        /// <returns>The search provider with sort parameter defined.</returns>
         public Search SortBy(string field, string dir)
         {
             Dictionary<string, object> sortBucket = new Dictionary<string, object>();
