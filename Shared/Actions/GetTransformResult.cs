@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -51,6 +52,7 @@
     /// Settings of derived assets generated (and cached) from the original media asset.
     /// </summary>
     [DataContract]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:AccessibleFieldsMustBeginWithUpperCaseLetter", Justification = "Reviewed.")]
     public class TransformDerived
     {
         /// <summary>
