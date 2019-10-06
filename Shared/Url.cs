@@ -1033,7 +1033,7 @@
         private static string Shard(string input)
         {
             uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
-            return ((hash % 5 + 5) % 5 + 1).ToString();
+            return ((((hash % 5) + 5) % 5) + 1).ToString();
         }
 
         private static string Decode(string input)
