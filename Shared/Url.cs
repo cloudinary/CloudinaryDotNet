@@ -1243,8 +1243,8 @@
 
             if (m_useRootPath)
             {
-                if (m_resourceType == "image" && m_action == "upload"
-                    || m_resourceType == "images" && string.IsNullOrEmpty(m_action))
+                if ((m_resourceType == "image" && m_action == "upload")
+                    || (m_resourceType == "images" && string.IsNullOrEmpty(m_action)))
                 {
                     m_resourceType = string.Empty;
                     m_action = string.Empty;

@@ -368,7 +368,7 @@
 
             if (!string.IsNullOrEmpty(width) && (Expression.ValueContainsVariable(width) ||
                                                  width.IndexOf("auto", StringComparison.OrdinalIgnoreCase) != -1 ||
-                                                 float.TryParse(width, out var wResult) && wResult < 1 ||
+                                                 (float.TryParse(width, out var wResult) && wResult < 1) ||
                                                  noHtmlSizes ||
                                                  isResponsive))
             {
@@ -376,7 +376,7 @@
             }
 
             if (!string.IsNullOrEmpty(height) && (Expression.ValueContainsVariable(height) ||
-                                                  float.TryParse(height, out var hResult) && hResult < 1 ||
+                                                  (float.TryParse(height, out var hResult) && hResult < 1) ||
                                                   noHtmlSizes ||
                                                   isResponsive))
             {
