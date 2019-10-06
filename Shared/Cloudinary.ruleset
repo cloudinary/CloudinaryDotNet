@@ -25,7 +25,7 @@
     <Rule Id="SA1100" Action="Warning" />
     <Rule Id="SA1101" Action="Info" />
     <Rule Id="SA1107" Action="Warning" />
-    <Rule Id="SA1111" Action="Info" />
+    <Rule Id="SA1111" Action="Warning" />
     <Rule Id="SA1116" Action="Warning" />
     <Rule Id="SA1117" Action="Warning" />
     <Rule Id="SA1118" Action="Warning" />
