@@ -29,7 +29,7 @@
         {
             if (Representations == null || !Representations.Any())
             {
-                throw new ArgumentException("Must be specified and not empty", nameof(Representations));
+                throw new ArgumentException($"{nameof(Representations)} field must be specified and not empty");
             }
         }
 

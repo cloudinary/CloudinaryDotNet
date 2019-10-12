@@ -120,7 +120,7 @@
     <Rule Id="CA1825" Action="Info" />
     <Rule Id="CA2000" Action="Info" />
     <Rule Id="CA2008" Action="Info" />
-    <Rule Id="CA2208" Action="Info" />
+    <Rule Id="CA2208" Action="Warning" />
     <Rule Id="CA2211" Action="Info" />
     <Rule Id="CA2225" Action="Info" />
     <Rule Id="CA2227" Action="Info" />

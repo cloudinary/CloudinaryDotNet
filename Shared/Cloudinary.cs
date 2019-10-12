@@ -97,7 +97,7 @@
         {
             if (string.IsNullOrEmpty(publicId))
             {
-                throw new ArgumentException("publicId");
+                throw new ArgumentException("Parameter representing the Public ID should be defined", nameof(publicId));
             }
 
             UrlBuilder urlBuilder = new UrlBuilder(
@@ -621,7 +621,7 @@
 
             if (parameters.File == null)
             {
-                throw new ArgumentNullException(nameof(parameters.File), "File parameter should be defined");
+                throw new ArgumentNullException(nameof(parameters), $"{nameof(parameters.File)} parameter should be defined");
             }
 
             if (parameters.File.IsRemote)

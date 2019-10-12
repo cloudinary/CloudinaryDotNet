@@ -21,7 +21,7 @@
         {
             if (string.IsNullOrEmpty(Name))
             {
-                throw new ArgumentException("Must be specified", nameof(Name));
+                throw new ArgumentException($"{nameof(Name)} field must be specified");
             }
 
             base.Check();
