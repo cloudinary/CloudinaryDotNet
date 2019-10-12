@@ -143,7 +143,7 @@
                 }
                 else
                 {
-                    throw new HttpException("Http context is not set. Either use this method in the right context or provide an absolute path to file!");
+                    throw new ArgumentException("Http context is not set. Either use this method in the right context or provide an absolute path to file!");
                 }
             }
         }

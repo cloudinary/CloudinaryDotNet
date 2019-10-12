@@ -502,7 +502,7 @@
             {
                 parameters["callback"] = BuildCallbackUrl(path);
             }
-            catch (Exception)
+            catch (ArgumentException)
             {
             }
 

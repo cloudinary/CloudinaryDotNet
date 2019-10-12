@@ -58,5 +58,10 @@ namespace CloudinaryDotNet.Test.Asset
             StringAssert.IsMatch(@"Test\/1\.0 CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\)", request.UserAgent);
         }
 
+        [Test]
+        public void TestUploadParamsWithoutCallback()
+        {
+            Assert.DoesNotThrow(() => m_api.PrepareUploadParams(new SortedDictionary<string, object>()));
+        }
     }
 }

@@ -143,7 +143,7 @@
         {
             if (!Regex.IsMatch(path.ToLower(), "^https?:/.*"))
             {
-                throw new Exception("Provide an absolute path to file!");
+                throw new ArgumentException("Provide an absolute path to file!");
             }
 
             return path;
