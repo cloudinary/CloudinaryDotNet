@@ -1487,7 +1487,7 @@
         {
             string query = Query;
 
-            if (query == string.Empty || query == null)
+            if (string.IsNullOrEmpty(query))
             {
                 return;
             }
