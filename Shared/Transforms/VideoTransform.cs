@@ -10,8 +10,8 @@
     /// </summary>
     public partial class Transformation : Core.ICloneable
     {
-        private static readonly Regex RANGE_VALUE_RE = new Regex("^((?:\\d+\\.)?\\d+)([%pP])?$", RegexOptions.Compiled);
-        private static readonly Regex RANGE_RE = new Regex("^(\\d+\\.)?\\d+[%pP]?\\.\\.(\\d+\\.)?\\d+[%pP]?$", RegexOptions.Compiled);
+        private static readonly Regex RangeValueRe = new Regex("^((?:\\d+\\.)?\\d+)([%pP])?$", RegexOptions.Compiled);
+        private static readonly Regex RangeRe = new Regex("^(\\d+\\.)?\\d+[%pP]?\\.\\.(\\d+\\.)?\\d+[%pP]?$", RegexOptions.Compiled);
 
         /// <summary>
         /// The video codec (with video profile and level if relevant).
@@ -580,7 +580,7 @@
                 return null;
             }
 
-            var match = RANGE_VALUE_RE.Match(value);
+            var match = RangeValueRe.Match(value);
             if (!match.Success)
             {
                 return null;
@@ -600,7 +600,7 @@
             if (range is string)
             {
                 var rangeStr = (string)range;
-                if (RANGE_RE.IsMatch(rangeStr))
+                if (RangeRe.IsMatch(rangeStr))
                 {
                     return rangeStr.Split(new string[] { ".." }, StringSplitOptions.RemoveEmptyEntries);
                 }

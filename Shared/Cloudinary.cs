@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Net;
     using System.Text;
@@ -11,6 +12,7 @@
     /// <summary>
     /// Main class of Cloudinary .NET API.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     public partial class Cloudinary
     {
         /// <summary>

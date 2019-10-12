@@ -1,12 +1,14 @@
 ﻿namespace CloudinaryDotNet
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text.RegularExpressions;
 
     /// <summary>
     /// Represents expression object that can be used in user defined variables and conditional transformations.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     public class Expression : BaseExpression<Expression>
     {
         /// <summary>

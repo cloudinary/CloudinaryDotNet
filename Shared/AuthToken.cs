@@ -11,6 +11,7 @@
     /// Authentication token for the token-based authentication feature.
     /// Allows you to limit the validity of the image delivery URL.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:AccessibleFieldsMustBeginWithUpperCaseLetter", Justification = "Reviewed.")]
     public class AuthToken
     {

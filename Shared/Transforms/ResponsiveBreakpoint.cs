@@ -8,12 +8,12 @@
     /// </summary>
     public class ResponsiveBreakpoint : JObject
     {
-        private const string CREATE_DERIVED = "create_derived";
+        private const string CREATEDERIVED = "create_derived";
         private const string TRANSFORMATION = "transformation";
-        private const string MAX_WIDTH = "max_width";
-        private const string MIN_WIDTH = "min_width";
-        private const string BYTES_STEP = "bytes_step";
-        private const string MAX_IMAGES = "max_images";
+        private const string MAXWIDTH = "max_width";
+        private const string MINWIDTH = "min_width";
+        private const string BYTESSTEP = "bytes_step";
+        private const string MAXIMAGES = "max_images";
         private const string FORMAT = "format";
 
         /// <summary>
@@ -21,7 +21,7 @@
         /// </summary>
         public ResponsiveBreakpoint()
         {
-            Add(CREATE_DERIVED, true);
+            Add(CREATEDERIVED, true);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@
         /// <returns>True if derived images are to be created; otherwise, false.</returns>
         public bool IsCreateDerived()
         {
-            return GetValue(CREATE_DERIVED).Value<bool>();
+            return GetValue(CREATEDERIVED).Value<bool>();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@
         /// <returns>The responsive breakpoint with flag set.</returns>
         public ResponsiveBreakpoint CreateDerived(bool createDerived)
         {
-            this[CREATE_DERIVED] = createDerived;
+            this[CREATEDERIVED] = createDerived;
             return this;
         }
 
@@ -63,7 +63,7 @@
         /// <returns>Integer value that represents maximum width.</returns>
         public int MaxWidth()
         {
-            return Value<int>(MAX_WIDTH);
+            return Value<int>(MAXWIDTH);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@
         /// <returns>The responsive breakpoint with maximum width defined.</returns>
         public ResponsiveBreakpoint MaxWidth(int maxWidth)
         {
-            this[MAX_WIDTH] = maxWidth;
+            this[MAXWIDTH] = maxWidth;
             return this;
         }
 
@@ -84,7 +84,7 @@
         /// <returns>Integer value that represents minimum width.</returns>
         public int MinWidth()
         {
-            return Value<int>(MIN_WIDTH);
+            return Value<int>(MINWIDTH);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@
         /// <returns>The responsive breakpoint with minimum width defined.</returns>
         public ResponsiveBreakpoint MinWidth(int minWidth)
         {
-            this[MIN_WIDTH] = minWidth;
+            this[MINWIDTH] = minWidth;
             return this;
         }
 
@@ -104,7 +104,7 @@
         /// <returns>Integer value that represents bytes step.</returns>
         public int BytesStep()
         {
-            return Value<int>(BYTES_STEP);
+            return Value<int>(BYTESSTEP);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@
         /// <returns>Breakpoint with bytes step defined.</returns>
         public ResponsiveBreakpoint BytesStep(int bytesStep)
         {
-            this[BYTES_STEP] = bytesStep;
+            this[BYTESSTEP] = bytesStep;
             return this;
         }
 
@@ -124,7 +124,7 @@
         /// <returns>Integer value that represents maximum number of images.</returns>
         public int MaxImages()
         {
-            return Value<int>(MAX_IMAGES);
+            return Value<int>(MAXIMAGES);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@
         /// <returns>Breakpoint with maximum number of images defined.</returns>
         public ResponsiveBreakpoint MaxImages(int maxImages)
         {
-            this[MAX_IMAGES] = maxImages;
+            this[MAXIMAGES] = maxImages;
             return this;
         }
 

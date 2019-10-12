@@ -2,18 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
 
-    #if NET40
+#if NET40
     using System.Web;
-    #endif
+#endif
 
     /// <summary>
     /// The building blocks for generating an https delivery URL for assets.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     public class Url : Core.ICloneable
     {
         /// <summary>

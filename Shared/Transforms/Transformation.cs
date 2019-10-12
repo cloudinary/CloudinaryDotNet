@@ -31,7 +31,7 @@
         /// </summary>
         protected string m_htmlHeight = null;
 
-        private const string VARIABLES_PARAM_KEY = "variables";
+        private const string VARIABLESPARAMKEY = "variables";
 
         private static readonly string[] SimpleParams = new string[]
         {
@@ -55,7 +55,7 @@
             "sp", "streaming_profile",
         };
 
-        private static readonly Transformation DEFAULT_RESPONSIVE_WIDTH_TRANSFORM
+        private static readonly Transformation DefaultResponsiveWidthTransform
             = new Transformation().Width("auto").Crop("limit");
 
         private static Transformation m_responsiveWidthTransform = null;
@@ -156,7 +156,7 @@
             {
                 if (m_responsiveWidthTransform == null)
                 {
-                    return DEFAULT_RESPONSIVE_WIDTH_TRANSFORM;
+                    return DefaultResponsiveWidthTransform;
                 }
                 else
                 {
@@ -257,7 +257,7 @@
         /// <returns>The transformation with variables added.</returns>
         public Transformation Variables(params Expression[] variables)
         {
-            Add(VARIABLES_PARAM_KEY, variables);
+            Add(VARIABLESPARAMKEY, variables);
             return this;
         }
 
@@ -506,7 +506,7 @@
                 components.Add(string.Join(",", varParams));
             }
 
-            string vars = m_transformParams.TryGetValue(VARIABLES_PARAM_KEY, out obj) && obj is Expression[] expressions
+            string vars = m_transformParams.TryGetValue(VARIABLESPARAMKEY, out obj) && obj is Expression[] expressions
                 ? ProcessVariables(expressions)
                 : null;
 

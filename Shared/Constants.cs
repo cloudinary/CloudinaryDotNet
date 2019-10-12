@@ -1,8 +1,11 @@
 ﻿namespace CloudinaryDotNet
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Group of the most widely used API constants.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     internal static class Constants
     {
         /// <summary> API URL pattern for resources.</summary>
