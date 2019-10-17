@@ -91,7 +91,7 @@ namespace CloudinaryDotNet
         /// <param name="expiresAt">The date (UNIX time in seconds) for the URL expiration. (optional).</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
-        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "", int? expiresAt = null)
+        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "", long? expiresAt = null)
         {
             if (String.IsNullOrEmpty(publicId))
                 throw new ArgumentException("publicId");
