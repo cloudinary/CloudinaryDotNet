@@ -831,18 +831,25 @@ namespace CloudinaryDotNet
         /// <param name="type">Resource type.</param>
         /// <param name="moderations">If true, include moderation status for each resource.</param>
         /// <param name="nextCursor">Starting position.</param>
+        /// <param name="maxResults">Max Results.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByPrefix(string prefix, bool tags, bool context, bool moderations, string type = "upload", string nextCursor = null)
+        public ListResourcesResult ListResourcesByPrefix(string prefix, bool tags, bool context, bool moderations, string type = "upload", string nextCursor = null, int? maxResults = null)
         {
-            return ListResources(new ListResourcesByPrefixParams()
+            ListResourcesByPrefixParams listResourcesByPrefixParams = new ListResourcesByPrefixParams();
+
+            if (maxResults != null)
             {
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-                Type = type,
-                Prefix = prefix,
-                NextCursor = nextCursor
-            });
+                listResourcesByPrefixParams.MaxResults = (int)maxResults;
+            }
+
+            listResourcesByPrefixParams.Tags = tags;
+            listResourcesByPrefixParams.Context = context;
+            listResourcesByPrefixParams.Moderations = moderations;
+            listResourcesByPrefixParams.Type = type;
+            listResourcesByPrefixParams.Prefix = prefix;
+            listResourcesByPrefixParams.NextCursor = nextCursor;
+
+            return ListResources(listResourcesByPrefixParams);            
         }
 
         /// <summary>

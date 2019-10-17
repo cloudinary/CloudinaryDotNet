@@ -205,25 +205,36 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow listing resources by prefix
             var publicId = GetUniquePublicId();
+            var publicId2 = GetUniquePublicId();
+            var folder = m_folderPrefix;
 
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = publicId,
                 Context = new StringDictionary("context=abc"),
-                Tags = m_apiTag
+                Tags = m_apiTag,
+                Folder = folder
             };
 
             m_cloudinary.Upload(uploadParams);
 
-            var result = m_cloudinary.ListResourcesByPrefix(publicId, true, true, true);
+            uploadParams.PublicId = publicId2;
+
+            m_cloudinary.Upload(uploadParams);
+
+            var result = m_cloudinary.ListResourcesByPrefix($"{folder}/", true, true, true);
 
             //Assert.IsTrue(result.Resources.Where(res => res.PublicId.StartsWith("testlist")).Count() == result.Resources.Count());
             Assert.IsTrue(
                 result
                     .Resources
                     .Where(res => (res.Context == null ? false : res.Context["custom"]["context"].ToString() == "abc"))
-                    .Count() > 0);
+                    .Count() > 1);            
+
+            var resultWitMaxResults = m_cloudinary.ListResourcesByPrefix($"{folder}/", true, true, true, maxResults: 1);
+
+            Assert.IsTrue(resultWitMaxResults.Resources.Count() == 1);
         }
 
         [Test]
