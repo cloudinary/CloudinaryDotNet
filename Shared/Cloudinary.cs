@@ -88,9 +88,10 @@ namespace CloudinaryDotNet
         /// <param name="attachment">Whether to download image as attachment (optional).</param>
         /// <param name="format">Format to download (optional).</param>
         /// <param name="type">The type (optional).</param>
+        /// <param name="expiresAt">The date (UNIX time in seconds) for the URL expiration. (optional).</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
-        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "")
+        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "", int? expiresAt = null)
         {
             if (String.IsNullOrEmpty(publicId))
                 throw new ArgumentException("publicId");
@@ -114,6 +115,9 @@ namespace CloudinaryDotNet
 
             if (!String.IsNullOrEmpty(type))
                 parameters.Add("type", type);
+
+            if (expiresAt != null)
+                parameters.Add("expires_at", expiresAt);
 
             return GetDownloadUrl(urlBuilder, parameters);
         }
