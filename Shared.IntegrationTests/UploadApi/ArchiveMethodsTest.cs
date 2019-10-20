@@ -174,8 +174,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestDownloadPrivate()
         {
-            var result = m_cloudinary.DownloadPrivate("zihltjwsyczm700kqj1z");
-            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=\d*&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}"));
+            long expiresAt = Utils.UnixTimeNowSeconds() + 7200;
+
+            string result = m_cloudinary.DownloadPrivate("zihltjwsyczm700kqj1z", expiresAt: expiresAt);
+            Assert.True(Regex.IsMatch(result, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=\d*&expires_at=" + expiresAt + @"&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}"));
         }
 
         [Test]
