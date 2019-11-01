@@ -3,6 +3,7 @@
     <TargetFramework>netcoreapp1.0</TargetFramework>
     <AssemblyName>Cloudinary.NetCoreIntegrationTest</AssemblyName>
     <PackageId>Cloudinary.NetCoreTest</PackageId>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;dnx451</PackageTargetFallback>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

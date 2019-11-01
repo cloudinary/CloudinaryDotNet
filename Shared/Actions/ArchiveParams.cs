@@ -31,6 +31,13 @@ namespace CloudinaryDotNet.Actions
         private bool m_async;
         private List<string> m_targetTags;
 
+        /// <summary>
+        /// Instantiates the <see cref="ArchiveParams"/> object.
+        /// </summary>
+        public ArchiveParams()
+        {
+            m_resourceType = Constants.RESOURCE_TYPE_IMAGE;
+        }
 
         /// <summary>
         /// Get a list of Public IDs for the specific assets to be included in the archive.

@@ -3,6 +3,7 @@
     <TargetFramework>netstandard1.3</TargetFramework>
     <AssemblyName>CloudinaryDotNet</AssemblyName>
     <PackageId>CloudinaryDotNet</PackageId>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

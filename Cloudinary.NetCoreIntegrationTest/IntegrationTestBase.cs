@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Net;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace CloudinaryDotNet.IntegrationTest
@@ -18,5 +20,14 @@ namespace CloudinaryDotNet.IntegrationTest
             return $"{m_apiTag}_{memberName}";
         }
 
+        protected bool CanArchiveFileBeDownloaded(string url)
+        {
+            var request = WebRequest.Create(new Uri(url));
+            request.Method = "GET";
+            using (var response = (HttpWebResponse)request.GetResponseAsync().Result)
+            {
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+        }
     }
 }
