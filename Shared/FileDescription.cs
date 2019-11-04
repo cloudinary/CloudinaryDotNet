@@ -8,17 +8,34 @@ namespace CloudinaryDotNet
     /// </summary>
     public class FileDescription
     {
+        /// <summary>
+        /// Buffer length
+        /// </summary>
         internal int BufferLength = Int32.MaxValue;
 
+        /// <summary>
+        /// End of file flag
+        /// </summary>
         internal bool Eof => BytesSent == GetFileLength();
 
+        /// <summary>
+        /// Byte sent
+        /// </summary>
         internal int BytesSent;
 
+        /// <summary>
+        /// Get file length
+        /// </summary>
+        /// <returns></returns>
         internal long GetFileLength()
         {
             return Stream?.Length ?? new FileInfo(FilePath).Length;
         }
 
+        /// <summary>
+        /// Reset stream buffer length and bytes sent values.
+        /// </summary>
+        /// <param name="bufferSize"></param>
         internal void Reset(int bufferSize = int.MaxValue)
         {
             BufferLength = bufferSize;

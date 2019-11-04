@@ -32,7 +32,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = m_cloudinary.ListTransformations();
 
-            CheckNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
+            AssertNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
         }
 
         [Test]
@@ -47,10 +47,10 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = await m_cloudinary.ListTransformationsAsync();
 
-            CheckNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
+            AssertNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
         }
 
-        private void CheckNotEmptyListAndContainsTransformation(ListTransformsResult result, string transformation)
+        private void AssertNotEmptyListAndContainsTransformation(ListTransformsResult result, string transformation)
         {
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Transformations);
@@ -74,7 +74,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = m_cloudinary.GetTransform(m_updateTransformationAsString);
 
-            CheckGetTransform(result, m_updateTransformation);
+            AssertGetTransform(result, m_updateTransformation);
         }
 
         [Test]
@@ -88,10 +88,10 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = await m_cloudinary.GetTransformAsync(m_updateTransformationAsString);
 
-            CheckGetTransform(result, m_updateTransformation);
+            AssertGetTransform(result, m_updateTransformation);
         }
 
-        private void CheckGetTransform(GetTransformResult result, Transformation transformation)
+        private void AssertGetTransform(GetTransformResult result, Transformation transformation)
         {
             Assert.IsNotNull(result);
             Assert.AreEqual(transformation.ToString(), new Transformation(result.Info[0]).ToString());
@@ -174,14 +174,14 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
 
-            CheckGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
+            AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
 
             updateParams.Strict = false;
             m_cloudinary.UpdateTransform(updateParams);
 
             getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
 
-            CheckGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
+            AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
         }
 
         [Test]
@@ -200,14 +200,14 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var getResult = await m_cloudinary.GetTransformAsync(m_simpleTransformationAsString);
 
-            CheckGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
+            AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
 
             updateParams.Strict = false;
             await m_cloudinary.UpdateTransformAsync(updateParams);
 
             getResult = await m_cloudinary.GetTransformAsync(m_simpleTransformationAsString);
 
-            CheckGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
+            AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
         }
 
         private UpdateTransformParams GetUpdateTransformParamsStrict(string transformation)
@@ -219,7 +219,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             };
         }
 
-        private void CheckGetTransformResultIsStrict(GetTransformResult result, string transformName, bool isStrict)
+        private void AssertGetTransformResultIsStrict(GetTransformResult result, string transformName, bool isStrict)
         {
             StringAssert.AreEqualIgnoringCase(transformName, result?.Name);
             Assert.AreEqual(isStrict, result.Strict);
@@ -264,7 +264,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             var getResult = m_cloudinary.GetTransform(
                 new GetTransformParams { Transformation = createParams.Name });
 
-            CheckCreateTransform(getResult, m_simpleTransformation);
+            AssertCreateTransform(getResult, m_simpleTransformation);
         }
 
         [Test]
@@ -279,7 +279,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             var getResult = await m_cloudinary.GetTransformAsync(
                 new GetTransformParams { Transformation = createParams.Name });
 
-            CheckCreateTransform(getResult, m_simpleTransformation);
+            AssertCreateTransform(getResult, m_simpleTransformation);
         }
 
         private CreateTransformParams GetCreateTransformParams(Transformation transformation)
@@ -291,7 +291,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             };
         }
 
-        private void CheckCreateTransform(GetTransformResult result, Transformation testTransformation)
+        private void AssertCreateTransform(GetTransformResult result, Transformation testTransformation)
         {
             Assert.IsNotNull(result);
             Assert.AreEqual(true, result.Strict);

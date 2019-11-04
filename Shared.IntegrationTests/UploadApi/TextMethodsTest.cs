@@ -13,7 +13,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var textResult = m_cloudinary.Text(textParams);
 
-            CheckEnglishText(textResult);
+            AssertEnglishText(textResult);
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var textResult = await m_cloudinary.TextAsync(textParams);
 
-            CheckEnglishText(textResult);
+            AssertEnglishText(textResult);
         }
 
         private TextParams GetEnglishTextParams()
@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             };
         }
 
-        private void CheckEnglishText(TextResult result)
+        private void AssertEnglishText(TextResult result)
         {
             Assert.Greater(result.Width, 0);
             Assert.Greater(result.Height, 0);

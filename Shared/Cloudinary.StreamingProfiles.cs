@@ -8,7 +8,7 @@ namespace CloudinaryDotNet
     public partial class Cloudinary
     {
         /// <summary>
-        /// Create a new streaming profile.
+        /// Create a new streaming profile asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of streaming profile creating.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -23,7 +23,7 @@ namespace CloudinaryDotNet
             CallProfileApi(HttpMethod.POST, parameters);
 
         /// <summary>
-        /// Update streaming profile.
+        /// Update streaming profile asynchronously.
         /// </summary>
         /// <param name="name">Name to be assigned to a streaming profile.</param>
         /// <param name="parameters">Parameters of streaming profile updating.</param>
@@ -35,7 +35,7 @@ namespace CloudinaryDotNet
             StreamingProfileUpdateParams parameters, 
             CancellationToken? cancellationToken = null)
         {
-            CheckNameAndParameters(name, parameters);
+            ValidateCallProfileApiParameters(name, parameters);
             return CallProfileApiAsync(HttpMethod.PUT, parameters, cancellationToken);
         }
 
@@ -47,19 +47,19 @@ namespace CloudinaryDotNet
         /// <exception cref="ArgumentNullException">both arguments can't be null</exception>
         public StreamingProfileResult UpdateStreamingProfile(string name, StreamingProfileUpdateParams parameters)
         {
-            CheckNameAndParameters(name, parameters);
+            ValidateCallProfileApiParameters(name, parameters);
             return CallProfileApi(HttpMethod.PUT, parameters, name);
         }
 
         /// <summary>
-        /// Delete streaming profile.
+        /// Delete streaming profile asynchronously.
         /// </summary>
         /// <param name="name">The Name of streaming profile.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         /// <exception cref="ArgumentException">name can't be null</exception>
         public Task<StreamingProfileResult> DeleteStreamingProfileAsync(string name, CancellationToken? cancellationToken = null)
         {
-            CheckNameParameter(name);
+            ValidateNameForCallProfileApiParameters(name);
             return CallProfileApiAsync(HttpMethod.DELETE, null, cancellationToken, name);
         }
 
@@ -69,19 +69,19 @@ namespace CloudinaryDotNet
         /// <exception cref="ArgumentNullException">name can't be null</exception>
         public StreamingProfileResult DeleteStreamingProfile(string name)
         {
-            CheckNameParameter(name);
+            ValidateNameForCallProfileApiParameters(name);
             return CallProfileApi(HttpMethod.DELETE, null, name);
         }
 
         /// <summary>
-        /// Retrieve the details of a single streaming profile by name.
+        /// Retrieve the details of a single streaming profile by name asynchronously.
         /// </summary>
         /// <param name="name">The Name of streaming profile.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         /// <exception cref="ArgumentException">name can't be null</exception>
         public Task<StreamingProfileResult> GetStreamingProfileAsync(string name, CancellationToken? cancellationToken = null)
         {
-            CheckNameParameter(name);
+            ValidateNameForCallProfileApiParameters(name);
             return CallProfileApiAsync(HttpMethod.GET, null, cancellationToken, name);
         }
 
@@ -91,12 +91,12 @@ namespace CloudinaryDotNet
         /// <exception cref="ArgumentNullException">name can't be null</exception>
         public StreamingProfileResult GetStreamingProfile(string name)
         {
-            CheckNameParameter(name);
+            ValidateNameForCallProfileApiParameters(name);
             return CallProfileApi(HttpMethod.GET, null, name);
         }
 
         /// <summary>
-        /// Retrieve the list of streaming profiles, including built-in and custom profiles.
+        /// Retrieve the list of streaming profiles, including built-in and custom profiles asynchronously.
         /// </summary>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         public Task<StreamingProfileListResult> ListStreamingProfilesAsync(CancellationToken? cancellationToken = null)
@@ -143,19 +143,19 @@ namespace CloudinaryDotNet
                 null);
         }
 
-        private static void CheckNameAndParameters(string name, StreamingProfileUpdateParams parameters)
+        private static void ValidateCallProfileApiParameters(string name, StreamingProfileUpdateParams parameters)
         {
-            CheckNameParameter(name);
-            CheckParameters(parameters);
+            ValidateNameForCallProfileApiParameters(name);
+            ValidateStreamingProfileUpdateParams(parameters);
         }
 
-        private static void CheckParameters(StreamingProfileUpdateParams parameters)
+        private static void ValidateStreamingProfileUpdateParams(StreamingProfileUpdateParams parameters)
         {
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
         }
 
-        private static void CheckNameParameter(string name)
+        private static void ValidateNameForCallProfileApiParameters(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Name parameter should be defined", nameof(name));

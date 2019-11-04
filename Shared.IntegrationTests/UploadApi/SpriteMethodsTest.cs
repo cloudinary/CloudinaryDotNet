@@ -33,7 +33,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
 
-            CheckSprite(result, addedPublicIds, FILE_FORMAT_JPG);
+            AssertSprite(result, addedPublicIds, FILE_FORMAT_JPG);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
 
-            CheckSprite(result, addedPublicIds, FILE_FORMAT_JPG);
+            AssertSprite(result, addedPublicIds, FILE_FORMAT_JPG);
         }
 
         private SpriteParams CreateSpriteParams(string tag, string fileFormat)
@@ -74,7 +74,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             };
         }
 
-        private void CheckSprite(SpriteResult result, IEnumerable<string> publicIds, string fileFormat)
+        private void AssertSprite(SpriteResult result, IEnumerable<string> publicIds, string fileFormat)
         {
             Assert.NotNull(result?.ImageInfos);
             StringAssert.EndsWith(fileFormat, result.ImageUri.ToString());

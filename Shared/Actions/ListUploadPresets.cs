@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
 using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions

@@ -300,7 +300,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = m_cloudinary.ListTags(new ListTagsParams());
 
-            CheckListTagNotEmpty(result);
+            AssertListTagNotEmpty(result);
         }
 
         [Test]
@@ -311,10 +311,10 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = await m_cloudinary.ListTagsAsync(new ListTagsParams());
 
-            CheckListTagNotEmpty(result);
+            AssertListTagNotEmpty(result);
         }
 
-        private void CheckListTagNotEmpty(ListTagsResult result)
+        private void AssertListTagNotEmpty(ListTagsResult result)
         {
             Assert.Greater(result.Tags.Length, 0);
         }

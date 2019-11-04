@@ -14,7 +14,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = m_cloudinary.GetUsage();
 
-            CheckUsageResult(result);
+            AssertUsageResult(result);
         }
 
         [Test]
@@ -24,10 +24,10 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = await m_cloudinary.GetUsageAsync();
 
-            CheckUsageResult(result);
+            AssertUsageResult(result);
         }
 
-        private void CheckUsageResult(UsageResult result)
+        private void AssertUsageResult(UsageResult result)
         {
             var plans = new List<string>() { "Free", "Advanced" };
 

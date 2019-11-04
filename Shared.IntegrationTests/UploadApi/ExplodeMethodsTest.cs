@@ -26,7 +26,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var result = m_cloudinary.Explode(explodeParams);
 
-            CheckExplodeStatus(result);
+            AssertExplodeStatus(result);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var result = await m_cloudinary.ExplodeAsync(explodeParams);
 
-            CheckExplodeStatus(result);
+            AssertExplodeStatus(result);
         }
 
         private ExplodeParams CreateExplodeParams(string publicId, Transformation transformation)
@@ -49,7 +49,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             return new ExplodeParams(publicId, transformation);
         }
 
-        private void CheckExplodeStatus(ExplodeResult result)
+        private void AssertExplodeStatus(ExplodeResult result)
         {
             Assert.AreEqual("processing", result.Status);
         }

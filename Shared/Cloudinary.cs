@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,9 +16,21 @@ namespace CloudinaryDotNet
     /// </summary>
     public partial class Cloudinary
     {
-        private class ApiParams
+        /// <summary>
+        /// Private helper class for specifing parameters for upload preset api call.
+        /// </summary>
+        private class UploadPresetApiParams
         {
-            public ApiParams(HttpMethod httpMethod, string url, UploadPresetParams paramsCopy,
+            /// <summary>
+            /// Instantiates the <see cref="UploadPresetApiParams"/> object.
+            /// </summary>
+            /// <param name="httpMethod">Http request method.</param>
+            /// <param name="url">Url for api call.</param>
+            /// <param name="paramsCopy">Parameters of the upload preset.</param>
+            /// <param name="fileDescription">File description.</param>
+            public UploadPresetApiParams(HttpMethod httpMethod, 
+                string url, 
+                UploadPresetParams paramsCopy,
                 FileDescription fileDescription)
             {
                 Url = url;
@@ -28,9 +39,24 @@ namespace CloudinaryDotNet
                 FileDescription = fileDescription;
             }
 
+            /// <summary>
+            /// Url for api call.
+            /// </summary>
             public string Url { get; private set; }
+
+            /// <summary>
+            /// Parameters of the upload preset.
+            /// </summary>
             public UploadPresetParams ParamsCopy { get; private set; }
+
+            /// <summary>
+            /// Http request method.
+            /// </summary>
             public HttpMethod HttpMethod { get; private set; }
+
+            /// <summary>
+            /// File description.
+            /// </summary>
             public FileDescription FileDescription { get; private set; }
         }
 
@@ -109,9 +135,10 @@ namespace CloudinaryDotNet
         /// <param name="attachment">Whether to download image as attachment (optional).</param>
         /// <param name="format">Format to download (optional).</param>
         /// <param name="type">The type (optional).</param>
+        /// <param name="expiresAt">The date (UNIX time in seconds) for the URL expiration. (optional).</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
-        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "")
+        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "", long? expiresAt = null)
         {
             if (String.IsNullOrEmpty(publicId))
                 throw new ArgumentException("publicId");
@@ -135,6 +162,9 @@ namespace CloudinaryDotNet
 
             if (!String.IsNullOrEmpty(type))
                 parameters.Add("type", type);
+
+            if (expiresAt != null)
+                parameters.Add("expires_at", expiresAt);
 
             return GetDownloadUrl(urlBuilder, parameters);
         }
@@ -200,7 +230,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Publishes resources by prefix.
+        /// Publishes resources by prefix asynchronously.
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
@@ -224,7 +254,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Publishes resources by tag.
+        /// Publishes resources by tag asynchronously.
         /// </summary>
         /// <param name="tag">All resources with the given tag will be published.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
@@ -250,7 +280,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Publishes resource by Id.
+        /// Publishes resource by Id asynchronously.
         /// </summary>
         /// <param name="tag">Not used.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
@@ -345,7 +375,7 @@ namespace CloudinaryDotNet
 
 
         /// <summary>
-        /// Updates access mode for the resources selected by tag.
+        /// Updates access mode for the resources selected by tag asynchronously.
         /// </summary>
         /// <param name="tag">Update all resources with the given tag (up to a maximum
         /// of 100 matching original resources).</param>
@@ -373,7 +403,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Updates access mode for the resources selected by prefix.
+        /// Updates access mode for the resources selected by prefix asynchronously.
         /// </summary>
         /// <param name="prefix">Update all resources where the public ID starts with the given prefix (up to a maximum
         /// of 100 matching original resources).</param>
@@ -403,7 +433,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Updates access mode for the resources selected by public ids.
+        /// Updates access mode for the resources selected by public ids asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters for updating of resources. Update all resources with the given
         /// public IDs (array of up to 100 public_ids).</param>
@@ -458,7 +488,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Manages context assignments.
+        /// Manages context assignments asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of context management.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -489,7 +519,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes derived resources by the given transformation (should be specified in parameters).
+        /// Deletes derived resources by the given transformation (should be specified in parameters) asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to delete derived resources.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -528,7 +558,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Creates archive and stores it as a raw resource in your Cloudinary account.
+        /// Creates archive and stores it as a raw resource in your Cloudinary account asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of new generated archive.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -567,7 +597,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Creates a zip archive and stores it as a raw resource in your Cloudinary account.
+        /// Creates a zip archive and stores it as a raw resource in your Cloudinary account asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the new generated zip archive.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -593,7 +623,7 @@ namespace CloudinaryDotNet
         /// This method can be used to force refresh facebook and twitter profile pictures. The response of this method
         /// includes the image's version. Use this version to bypass previously cached CDN copies. Also it can be used
         /// to generate transformed versions of an uploaded image. This is useful when Strict Transformations are
-        /// allowed for your account and you wish to create custom derived images for already uploaded images.
+        /// allowed for your account and you wish to create custom derived images for already uploaded images asynchronously.
         /// </summary>
         /// <param name="parameters">The parameters for explicit method.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -636,7 +666,7 @@ namespace CloudinaryDotNet
         /// Creates the upload preset.
         /// Upload presets allow you to define the default behavior for your uploads, instead of
         /// receiving these as parameters during the upload request itself. Upload presets have
-        /// precedence over client-side upload parameters.
+        /// precedence over client-side upload parameters asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the upload preset.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -673,7 +703,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Updates the upload preset.
-        /// Every update overwrites all the preset settings.
+        /// Every update overwrites all the preset settings asynchronously.
         /// </summary>
         /// <param name="parameters">New parameters for upload preset.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -690,7 +720,7 @@ namespace CloudinaryDotNet
         public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters) => 
             CallApi<UploadPresetResult>(PrepareUploadPresetApiParams(parameters));
 
-        private ApiParams PrepareUploadPresetApiParams(UploadPresetParams parameters)
+        private UploadPresetApiParams PrepareUploadPresetApiParams(UploadPresetParams parameters)
         {
             var paramsCopy = (UploadPresetParams) parameters.Copy();
             paramsCopy.Name = null;
@@ -700,17 +730,26 @@ namespace CloudinaryDotNet
                 .Add(parameters.Name)
                 .BuildUrl();
 
-            return new ApiParams(HttpMethod.PUT, url, paramsCopy, null);
+            return new UploadPresetApiParams(HttpMethod.PUT, url, paramsCopy, null);
         }
 
-        private T CallApi<T>(ApiParams apiParams) where T : BaseResult, new() => 
+        /// <summary>
+        /// Call api with specified parameters.
+        /// </summary>
+        /// <param name="apiParams">New parameters for upload preset.</param>
+        private T CallApi<T>(UploadPresetApiParams apiParams) where T : BaseResult, new() => 
             m_api.CallApi<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, apiParams.FileDescription);
 
-        private Task<T> CallApiAsync<T>(ApiParams apiParams, CancellationToken? cancellationToken = null) where T : BaseResult, new() => 
+        /// <summary>
+        /// Call api with specified parameters asynchronously.
+        /// </summary>
+        /// <param name="apiParams">New parameters for upload preset.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null) where T : BaseResult, new() => 
             m_api.CallApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, apiParams.FileDescription, null, cancellationToken);
 
         /// <summary>
-        /// Gets the upload preset.
+        /// Gets the upload preset asynchronously.
         /// </summary>
         /// <param name="name">Name of the upload preset.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -747,7 +786,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists upload presets.
+        /// Lists upload presets asynchronously.
         /// </summary>
         /// <param name="nextCursor">Next cursor</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -767,7 +806,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists upload presets.
+        /// Lists upload presets asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to list upload presets.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -806,7 +845,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes the upload preset.
+        /// Deletes the upload preset asynchronously.
         /// </summary>
         /// <param name="name">Name of the upload preset.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -843,14 +882,14 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads a resource to Cloudinary.
+        /// Uploads a resource to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of uploading .</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         /// <returns>Results of uploading.</returns>
         private Task<T> UploadAsync<T>(BasicRawUploadParams parameters, CancellationToken? cancellationToken = null) where T : UploadResult, new()
         {
-            var uri = CheckParametersAndGetUploadUrl(parameters);
+            var uri = CheckUploadParametersAndGetUploadUrl(parameters);
 
             return m_api.CallApiAsync<T>(
                 HttpMethod.POST, 
@@ -869,12 +908,12 @@ namespace CloudinaryDotNet
         private T Upload<T, P>(P parameters) where T : UploadResult, new()
                                              where P : BasicRawUploadParams, new()
         {
-            var uri = CheckParametersAndGetUploadUrl(parameters);
+            var uri = CheckUploadParametersAndGetUploadUrl(parameters);
 
             return m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File);
         }
 
-        private string CheckParametersAndGetUploadUrl(BasicRawUploadParams parameters)
+        private string CheckUploadParametersAndGetUploadUrl(BasicRawUploadParams parameters)
         {
             if (parameters == null)
                 throw new ArgumentNullException("parameters", "Upload parameters should be defined");
@@ -910,7 +949,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads a video file to Cloudinary.
+        /// Uploads a video file to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of video uploading.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -993,7 +1032,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Async call to get a list of folders in the root.
+        /// Async call to get a list of folders in the root asynchronously.
         /// </summary>
         /// <returns>Parsed result of folders listing.</returns>
         public Task<GetFoldersResult> RootFoldersAsync()
@@ -1015,7 +1054,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Gets a list of subfolders in a specified folder.
+        /// Gets a list of subfolders in a specified folder asynchronously.
         /// </summary>
         /// <param name="folder">The folder name.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -1062,7 +1101,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes folder.
+        /// Deletes folder asynchronously.
         /// </summary>
         /// <param name="folder">Folder name</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -1118,7 +1157,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads a file to Cloudinary.
+        /// Uploads a file to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="type">The type ("raw" or "auto", last by default).</param>
@@ -1155,7 +1194,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads large file asynchronously by dividing it to chunks.
+        /// Uploads large file by dividing it to chunks asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
@@ -1192,7 +1231,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads large raw file to Cloudinary by dividing it to chunks.
+        /// Uploads large raw file to Cloudinary by dividing it to chunks asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
@@ -1218,7 +1257,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads large image file to Cloudinary by dividing it to chunks.
+        /// Uploads large image file to Cloudinary by dividing it to chunks asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
@@ -1244,7 +1283,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads large video file to Cloudinary by dividing it to chunks.
+        /// Uploads large video file to Cloudinary by dividing it to chunks asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
@@ -1290,7 +1329,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Uploads large resources to Cloudinary by dividing it to chunks.
+        /// Uploads large resources to Cloudinary by dividing it to chunks asynchronously.
         /// </summary>
         /// <typeparam name="T">The type of result of upload.</typeparam>
         /// <param name="parameters">Parameters of file uploading.</param>
@@ -1308,7 +1347,7 @@ namespace CloudinaryDotNet
             if (parameters.File.IsRemote)
                 return await UploadAsync<T>(parameters);
 
-            var internalParams = new InternalUploadParams(parameters, bufferSize, m_api);
+            var internalParams = new UploadLargeParams(parameters, bufferSize, m_api);
             T result = null;
 
             while (!parameters.File.Eof)
@@ -1340,7 +1379,7 @@ namespace CloudinaryDotNet
             if (parameters.File.IsRemote)
                 return Upload<T, BasicRawUploadParams>(parameters);
 
-            var internalParams = new InternalUploadParams(parameters, bufferSize, m_api);
+            var internalParams = new UploadLargeParams(parameters, bufferSize, m_api);
             T result = null;
 
             while (!parameters.File.Eof)
@@ -1352,9 +1391,18 @@ namespace CloudinaryDotNet
             return result;
         }
 
-        class InternalUploadParams
+        /// <summary>
+        /// Upload large file parameters.
+        /// </summary>
+        internal class UploadLargeParams
         {
-            public InternalUploadParams(BasicRawUploadParams parameters, int bufferSize, Api api)
+            /// <summary>
+            /// Parameterized constructor
+            /// </summary>
+            /// <param name="parameters">Basic raw upload parameters.</param>
+            /// <param name="bufferSize">Buffer size.</param>
+            /// <param name="api">Technological layer to work with cloudinary API.</param>
+            public UploadLargeParams(BasicRawUploadParams parameters, int bufferSize, Api api)
             {
                 parameters.File.Reset(bufferSize);
                 this.Parameters = parameters;
@@ -1362,17 +1410,33 @@ namespace CloudinaryDotNet
                 this.BufferSize = bufferSize;
             }
 
+            /// <summary>
+            /// Buffer size
+            /// </summary>
             public int BufferSize { get; }
 
+            /// <summary>
+            /// Url
+            /// </summary>
             public string Url { get; }
 
+            /// <summary>
+            /// Basic raw upload parameters
+            /// </summary>
             public BasicRawUploadParams Parameters { get; }
 
+            /// <summary>
+            /// Request headers
+            /// </summary>
             public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>
             {
                 ["X-Unique-Upload-Id"] = RandomPublicId()
             };
 
+            /// <summary>
+            /// Generate random PublicId.
+            /// </summary>
+            /// <returns>Randomly generated PublicId.</returns>
             private static string RandomPublicId()
             {
                 var buffer = new byte[8];
@@ -1380,6 +1444,12 @@ namespace CloudinaryDotNet
                 return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
             }
 
+            /// <summary>
+            /// A convenient method for uploading an image before testing.
+            /// </summary>
+            /// <param name="parameters">Parameters of type BasicRawUploadParams.</param>
+            /// <param name="mApi">Action to set custom upload parameters.</param>
+            /// <returns>The upload url.</returns>
             private string GetUploadUrl(BasicRawUploadParams parameters, Api mApi)
             {
                 var url = mApi.ApiUrlImgUpV;
@@ -1391,7 +1461,7 @@ namespace CloudinaryDotNet
             }
         }
 
-        private static void UpdateContentRange(InternalUploadParams internalParams)
+        private static void UpdateContentRange(UploadLargeParams internalParams)
         {
             var fileDescription = internalParams.Parameters.File;
             var fileLength = fileDescription.GetFileLength();
@@ -1455,7 +1525,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Changes public identifier of a file.
+        /// Changes public identifier of a file asynchronously.
         /// </summary>
         /// <param name="parameters">Operation parameters.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -1540,7 +1610,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Generates an image of a given textual string.
+        /// Generates an image of a given textual string asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of generating an image of a given textual string.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -1571,7 +1641,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists resource types.
+        /// Lists resource types asynchronously.
         /// </summary>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         /// <returns>Parsed list of resource types.</returns>
@@ -1596,7 +1666,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists resources asynchronously.
+        /// Lists resources asynchronously asynchronously.
         /// </summary>
         /// <param name="nextCursor">Starting position.</param>
         /// <param name="tags">Whether to include tags in result.</param>
@@ -1645,7 +1715,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists resources of specified type.
+        /// Lists resources of specified type asynchronously.
         /// </summary>
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
@@ -1668,7 +1738,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists resources by prefix.
+        /// Lists resources by prefix asynchronously.
         /// </summary>
         /// <param name="prefix">Public identifier prefix.</param>
         /// <param name="type">Resource type.</param>
@@ -1708,7 +1778,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists resources by prefix.
+        /// Lists resources by prefix asynchronously.
         /// </summary>
         /// <param name="prefix">Public identifier prefix.</param>
         /// <param name="tags">Whether to include tags in result.</param>
@@ -1763,7 +1833,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists resources by tag.
+        /// Lists resources by tag asynchronously.
         /// </summary>
         /// <param name="tag">The tag.</param>
         /// <param name="nextCursor">Starting position.</param>
@@ -1796,7 +1866,7 @@ namespace CloudinaryDotNet
 
 
         /// <summary>
-        /// Returns resources with specified public identifiers.
+        /// Returns resources with specified public identifiers asynchronously.
         /// </summary>
         /// <param name="publicIds">Public identifiers.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -1824,7 +1894,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Returns resources with specified public identifiers.
+        /// Returns resources with specified public identifiers asynchronously.
         /// </summary>
         /// <param name="publicIds">Public identifiers.</param>
         /// <param name="tags">Whether to include tags in result.</param>
@@ -1869,7 +1939,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Lists resources by moderation status.
+        /// Lists resources by moderation status asynchronously.
         /// </summary>
         /// <param name="kind">The moderation kind.</param>
         /// <param name="status">The moderation status.</param>
@@ -1930,7 +2000,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// List resources by context metadata keys and values.
+        /// List resources by context metadata keys and values asynchronously.
         /// </summary>
         /// <param name="key">Only resources with the given key should be returned.</param>
         /// <param name="value">When provided should only return resources with this given value for the context key.
@@ -1982,7 +2052,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Gets a list of resources.
+        /// Gets a list of resources asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to list resources.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2062,7 +2132,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Finds all tags that start with the given prefix.
+        /// Finds all tags that start with the given prefix asynchronously.
         /// </summary>
         /// <param name="prefix">The tag prefix.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2083,7 +2153,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Gets a list of tags.
+        /// Gets a list of tags asynchronously.
         /// </summary>
         /// <param name="parameters"></param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2138,7 +2208,7 @@ namespace CloudinaryDotNet
 
 
         /// <summary>
-        /// Gets a list of transformations.
+        /// Gets a list of transformations asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the request for a list of transformation.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2199,7 +2269,7 @@ namespace CloudinaryDotNet
 
 
         /// <summary>
-        /// Gets details of a single transformation.
+        /// Gets details of a single transformation asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the request of transformation details.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2263,7 +2333,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Updates details of an existing resource.
+        /// Updates details of an existing resource asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to update details of an existing resource.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2317,7 +2387,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Gets details of the requested resource as well as all its derived resources.
+        /// Gets details of the requested resource as well as all its derived resources asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the request of resource.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2386,7 +2456,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes all derived resources with the given parameters.
+        /// Deletes all derived resources with the given parameters asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to delete derived resources.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2451,7 +2521,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes all resources with the given public IDs.
+        /// Deletes all resources with the given public IDs asynchronously.
         /// </summary>
         /// <param name="publicIds">Array of up to 100 public_ids</param>
         /// <returns>Parsed result of deletion resources.</returns>
@@ -2476,7 +2546,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Deletes all resources, including derived resources, where the public ID starts with the given prefix (up to
-        /// a maximum of 1000 original resources).
+        /// a maximum of 1000 original resources) asynchronously.
         /// </summary>
         /// <param name="prefix">Delete all resources where the public ID starts with the given prefix. </param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2501,7 +2571,7 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// Deletes all resources, including derived resources, where the public ID starts with the given prefix (up to
-        /// a maximum of 1000 original resources).
+        /// a maximum of 1000 original resources) asynchronously.
         /// </summary>
         /// <param name="prefix">Delete all resources where the public ID starts with the given prefix. </param>
         /// <param name="keepOriginal">If true, delete only the derived images of the matching resources.</param>
@@ -2534,7 +2604,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes resources by the given tag name.
+        /// Deletes resources by the given tag name asynchronously.
         /// </summary>
         /// <param name="tag">
         /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
@@ -2563,7 +2633,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes resources by the given tag name.
+        /// Deletes resources by the given tag name asynchronously.
         /// </summary>
         /// <param name="tag">
         /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
@@ -2601,7 +2671,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes all resources.
+        /// Deletes all resources asynchronously.
         /// </summary>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         /// <returns>Parsed result of deletion resources.</returns>
@@ -2622,7 +2692,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes all resources with conditions.
+        /// Deletes all resources with conditions asynchronously.
         /// </summary>
         /// <param name="keepOriginal">If true, delete only the derived resources.</param>
         /// <param name="nextCursor">
@@ -2656,7 +2726,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes all resources with parameters.
+        /// Deletes all resources with parameters asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters for deletion resources.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2703,7 +2773,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Restores a deleted resources by array of public ids.
+        /// Restores a deleted resources by array of public ids asynchronously.
         /// </summary>
         /// <param name="publicIds">The public IDs of (deleted or existing) backed up resources to restore.</param>
         /// <returns>Parsed result of restoring resources.</returns>
@@ -2727,7 +2797,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Restores a deleted resources.
+        /// Restores a deleted resources asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to restore a deleted resources.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2760,14 +2830,14 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Calls an upload mappings API.
+        /// Calls an upload mappings API asynchronously.
         /// </summary>
         /// <param name="httpMethod">HTTP method.</param>
         /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
         /// existing online locations.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
-        private Task<UploadMappingResults> CallUploadMappingsAPIAsync(HttpMethod httpMethod, UploadMappingParams parameters, CancellationToken? cancellationToken = null)
+        private Task<UploadMappingResults> CallUploadMappingsApiAsync(HttpMethod httpMethod, UploadMappingParams parameters, CancellationToken? cancellationToken = null)
         {
             var url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
                 ? GetUploadMappingUrl()
@@ -2799,7 +2869,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Returns list of all upload mappings.
+        /// Returns list of all upload mappings asynchronously.
         /// </summary>
         /// <param name="parameters">
         /// Uses only <see cref="UploadMappingParams.MaxResults"/> and <see cref="UploadMappingParams.NextCursor"/>
@@ -2812,7 +2882,7 @@ namespace CloudinaryDotNet
             if (parameters == null)
                 parameters = new UploadMappingParams();
 
-            return CallUploadMappingsAPIAsync(HttpMethod.GET, parameters, cancellationToken);
+            return CallUploadMappingsApiAsync(HttpMethod.GET, parameters, cancellationToken);
         }
 
         /// <summary>
@@ -2832,7 +2902,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Returns single upload mapping by <see cref="Folder"/> name.
+        /// Returns single upload mapping by <see cref="Folder"/> name asynchronously.
         /// </summary>
         /// <param name="folder">Folder name.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2844,7 +2914,7 @@ namespace CloudinaryDotNet
 
             var parameters = new UploadMappingParams() { Folder = folder };
 
-            return CallUploadMappingsAPIAsync(HttpMethod.GET, parameters, cancellationToken);
+            return CallUploadMappingsApiAsync(HttpMethod.GET, parameters, cancellationToken);
         }
 
         /// <summary>
@@ -2863,7 +2933,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Creates a new upload mapping folder and its template (URL).
+        /// Creates a new upload mapping folder and its template (URL) asynchronously.
         /// </summary>
         /// <param name="folder">Folder name to create.</param>
         /// <param name="template">URL template for mapping to the <paramref name="folder"/>.</param>
@@ -2871,8 +2941,8 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public Task<UploadMappingResults> CreateUploadMappingAsync(string folder, string template, CancellationToken? cancellationToken = null)
         {
-            var parameters = CreateUploadParams(folder, template);
-            return CallUploadMappingsAPIAsync(HttpMethod.POST, parameters, cancellationToken);
+            var parameters = CreateUploadMappingParams(folder, template);
+            return CallUploadMappingsApiAsync(HttpMethod.POST, parameters, cancellationToken);
         }
 
         /// <summary>
@@ -2883,12 +2953,12 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public UploadMappingResults CreateUploadMapping(string folder, string template)
         {
-            var parameters = CreateUploadParams(folder, template);
+            var parameters = CreateUploadMappingParams(folder, template);
             return CallUploadMappingsAPI(HttpMethod.POST, parameters);
         }
 
         /// <summary>
-        /// Updates existing upload mapping.
+        /// Updates existing upload mapping asynchronously.
         /// </summary>
         /// <param name="folder">Existing Folder to be updated.</param>
         /// <param name="newTemplate">New value of Template URL.</param>
@@ -2896,8 +2966,8 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after Upload mappings update.</returns>
         public Task<UploadMappingResults> UpdateUploadMappingAsync(string folder, string newTemplate, CancellationToken? cancellationToken = null)
         {
-            var parameters = CreateUploadParams(folder, newTemplate);
-            return CallUploadMappingsAPIAsync(HttpMethod.PUT, parameters, cancellationToken);
+            var parameters = CreateUploadMappingParams(folder, newTemplate);
+            return CallUploadMappingsApiAsync(HttpMethod.PUT, parameters, cancellationToken);
         }
 
         /// <summary>
@@ -2908,11 +2978,11 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after Upload mappings update.</returns>
         public UploadMappingResults UpdateUploadMapping(string folder, string newTemplate)
         {
-            var parameters = CreateUploadParams(folder, newTemplate);
+            var parameters = CreateUploadMappingParams(folder, newTemplate);
             return CallUploadMappingsAPI(HttpMethod.PUT, parameters);
         }
 
-        private static UploadMappingParams CreateUploadParams(string folder, string template)
+        private static UploadMappingParams CreateUploadMappingParams(string folder, string template)
         {
             if (string.IsNullOrEmpty(folder))
                 throw new ArgumentException("Folder property must be specified.");
@@ -2929,7 +2999,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes all upload mappings.
+        /// Deletes all upload mappings asynchronously.
         /// </summary>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         /// <returns>Parsed response after Upload mappings delete.</returns>
@@ -2948,7 +3018,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes upload mapping by <paramref name="folder"/> name.
+        /// Deletes upload mapping by <paramref name="folder"/> name asynchronously.
         /// </summary>
         /// <param name="folder">Folder name.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -2956,7 +3026,7 @@ namespace CloudinaryDotNet
         public Task<UploadMappingResults> DeleteUploadMappingAsync(string folder, CancellationToken? cancellationToken = null)
         {
             var parameters = new UploadMappingParams { Folder = folder };
-            return CallUploadMappingsAPIAsync(HttpMethod.DELETE, parameters, cancellationToken);
+            return CallUploadMappingsApiAsync(HttpMethod.DELETE, parameters, cancellationToken);
         }
 
         /// <summary>
@@ -3023,7 +3093,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Deletes transformation by name.
+        /// Deletes transformation by name asynchronously.
         /// </summary>
         /// <param name="transformName">The name of transformation to delete.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>

@@ -14,7 +14,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var deletionParams = GetDeletionParams(uploadResult.PublicId);
             var destroyResult = m_cloudinary.Destroy(deletionParams);
 
-            CheckDestroyed(destroyResult);
+            AssertDestroyed(destroyResult);
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var deletionParams = GetDeletionParams(uploadResult.PublicId);
             var destroyResult = await m_cloudinary.DestroyAsync(deletionParams);
 
-            CheckDestroyed(destroyResult);
+            AssertDestroyed(destroyResult);
         }
 
         private DeletionParams GetDeletionParams(string publicId)
@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             };
         }
 
-        private void CheckDestroyed(DeletionResult result)
+        private void AssertDestroyed(DeletionResult result)
         {
             Assert.AreEqual("ok", result.Result);
         }

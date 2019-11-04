@@ -79,7 +79,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = await CreateStreamingProfileWith2TransformsAsync(name);
 
-            CheckStreamingProfileWith2Transforms(result, name);
+            AssertStreamingProfileWith2Transforms(result, name);
         }
 
         [Test]
@@ -89,10 +89,10 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = CreateStreamingProfileWith2Transforms(name);
 
-            CheckStreamingProfileWith2Transforms(result, name);
+            AssertStreamingProfileWith2Transforms(result, name);
         }
 
-        private void CheckStreamingProfileWith2Transforms(StreamingProfileResult result, string name)
+        private void AssertStreamingProfileWith2Transforms(StreamingProfileResult result, string name)
         {
             Assert.NotNull(result?.Data);
             Assert.AreEqual(name, result.Data.Name);

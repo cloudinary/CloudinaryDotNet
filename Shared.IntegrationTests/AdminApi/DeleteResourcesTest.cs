@@ -19,15 +19,15 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var resource = m_cloudinary.GetResource(uploadedPublicId);
 
-            CheckResourceExists(resource, uploadedPublicId);
+            AssertResourceExists(resource, uploadedPublicId);
 
             var delResult = m_cloudinary.DeleteResources(nonExistingPublicId, uploadedPublicId);
 
-            CheckResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
+            AssertResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
 
             resource = m_cloudinary.GetResource(uploadedPublicId);
 
-            CheckResourceDoesNotExist(resource);
+            AssertResourceDoesNotExist(resource);
         }
 
         [Test]
@@ -41,30 +41,30 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var resource = await m_cloudinary.GetResourceAsync(uploadedPublicId);
 
-            CheckResourceExists(resource, uploadedPublicId);
+            AssertResourceExists(resource, uploadedPublicId);
 
             var delResult = await m_cloudinary.DeleteResourcesAsync(nonExistingPublicId, uploadedPublicId);
 
-            CheckResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
+            AssertResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
 
             resource = await m_cloudinary.GetResourceAsync(uploadedPublicId);
 
-            CheckResourceDoesNotExist(resource);
+            AssertResourceDoesNotExist(resource);
         }
 
-        private void CheckResourceExists(GetResourceResult resource, string publicId)
+        private void AssertResourceExists(GetResourceResult resource, string publicId)
         {
             Assert.IsNotNull(resource);
             Assert.AreEqual(publicId, resource.PublicId);
         }
 
-        private void CheckResourceDoesNotExist(GetResourceResult resource)
+        private void AssertResourceDoesNotExist(GetResourceResult resource)
         {
             Assert.IsNotNull(resource);
             Assert.IsNull(resource.PublicId);
         }
 
-        private void CheckResourceDeleted(DelResResult result, string deletedPublicId, string nonExistingPublicId)
+        private void AssertResourceDeleted(DelResResult result, string deletedPublicId, string nonExistingPublicId)
         {
             Assert.IsNotNull(result);
             Assert.AreEqual("not_found", result.Deleted[nonExistingPublicId]);

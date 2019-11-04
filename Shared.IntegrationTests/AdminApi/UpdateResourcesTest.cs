@@ -208,7 +208,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                     Coordinates = true
                 });
 
-            CheckUpdatedCustomCoordinates(result, coordinates);
+            AssertUpdatedCustomCoordinates(result, coordinates);
         }
 
         [Test]
@@ -231,10 +231,10 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                     Coordinates = true
                 });
 
-            CheckUpdatedCustomCoordinates(result, coordinates);
+            AssertUpdatedCustomCoordinates(result, coordinates);
         }
 
-        private void CheckUpdatedCustomCoordinates(GetResourceResult result, Core.Rectangle coordinates)
+        private void AssertUpdatedCustomCoordinates(GetResourceResult result, Core.Rectangle coordinates)
         {
             Assert.NotNull(result.Coordinates);
             Assert.NotNull(result.Coordinates.Custom);

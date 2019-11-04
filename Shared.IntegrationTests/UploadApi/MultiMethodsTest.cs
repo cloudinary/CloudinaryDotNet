@@ -30,7 +30,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            CheckMultiResult(result, null, FILE_FORMAT_GIF);
+            AssertMultiResult(result, null, FILE_FORMAT_GIF);
 
             multiParams.Transformation = m_resizeTransformation;
 
@@ -38,7 +38,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            CheckMultiResult(result, TRANSFORM_W_512, null);
+            AssertMultiResult(result, TRANSFORM_W_512, null);
 
             multiParams.Transformation = m_simpleTransformationAngle;
             multiParams.Format = FILE_FORMAT_PDF;
@@ -47,7 +47,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            CheckMultiResult(result, TRANSFORM_A_45, FILE_FORMAT_PDF);
+            AssertMultiResult(result, TRANSFORM_A_45, FILE_FORMAT_PDF);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            CheckMultiResult(result, null, FILE_FORMAT_GIF);
+            AssertMultiResult(result, null, FILE_FORMAT_GIF);
 
             multiParams.Transformation = m_resizeTransformation;
 
@@ -82,7 +82,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            CheckMultiResult(result, TRANSFORM_W_512, null);
+            AssertMultiResult(result, TRANSFORM_W_512, null);
 
             multiParams.Transformation = m_simpleTransformationAngle;
             multiParams.Format = FILE_FORMAT_PDF;
@@ -91,10 +91,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.multi, result.PublicId);
 
-            CheckMultiResult(result, TRANSFORM_A_45, FILE_FORMAT_PDF);
+            AssertMultiResult(result, TRANSFORM_A_45, FILE_FORMAT_PDF);
         }
 
-        private void CheckMultiResult(MultiResult result, string transformation, string fileFormat)
+        private void AssertMultiResult(MultiResult result, string transformation, string fileFormat)
         {
             if (!string.IsNullOrEmpty(transformation))
                 Assert.True(result.Uri.AbsoluteUri.Contains(transformation));

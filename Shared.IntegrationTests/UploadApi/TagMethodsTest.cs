@@ -17,7 +17,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var tagResult = m_cloudinary.Tag(tagParams);
 
-            CheckTagParamsAdd(tagResult, uploadResult.PublicId);
+            AssertTagParamsAdd(tagResult, uploadResult.PublicId);
         }
 
         [Test]
@@ -29,10 +29,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var tagResult = await m_cloudinary.TagAsync(tagParams);
 
-            CheckTagParamsAdd(tagResult, uploadResult.PublicId);
+            AssertTagParamsAdd(tagResult, uploadResult.PublicId);
         }
 
-        private void CheckTagParamsAdd(TagResult result, string publicId)
+        private void AssertTagParamsAdd(TagResult result, string publicId)
         {
             Assert.AreEqual(1, result.PublicIds.Length);
             Assert.AreEqual(publicId, result.PublicIds[0]);

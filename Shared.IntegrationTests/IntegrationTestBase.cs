@@ -184,13 +184,13 @@ namespace CloudinaryDotNet.IntegrationTest
 
             setParamsAction?.Invoke(uploadParams);
 
-            FillParams(uploadParams, false, storageType);
+            FixMissingParams(uploadParams, false, storageType);
 
             return m_cloudinary.Upload(uploadParams);
         }
 
         /// <summary>
-        /// A convenient method for uploading an image before testing.
+        /// A convenient method for uploading an image before testing asynchronously.
         /// </summary>
         /// <param name="setParamsAction">Action to set custom upload parameters.</param>
         /// <returns>The upload result.</returns>
@@ -202,7 +202,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
             setParamsAction?.Invoke(uploadParams);
 
-            FillParams(uploadParams, true, storageType);
+            FixMissingParams(uploadParams, true, storageType);
 
             return m_cloudinary.UploadAsync(uploadParams);
         }
@@ -222,13 +222,13 @@ namespace CloudinaryDotNet.IntegrationTest
 
             setParamsAction?.Invoke(uploadParams);
 
-            FillParams(uploadParams, false, storageType);
+            FixMissingParams(uploadParams, false, storageType);
 
             return m_cloudinary.Upload(uploadParams, type);
         }
 
         /// <summary>
-        /// A convenient method for uploading a raw resource before testing.
+        /// A convenient method for uploading a raw resource before testing asynchronously.
         /// </summary>
         /// <param name="setParamsAction">Action to set custom upload parameters.</param>
         /// <param name="type">The type ("raw" or "auto", last by default).</param>
@@ -242,12 +242,12 @@ namespace CloudinaryDotNet.IntegrationTest
 
             setParamsAction?.Invoke(uploadParams);
 
-            FillParams(uploadParams, true, storageType);
+            FixMissingParams(uploadParams, true, storageType);
 
             return m_cloudinary.UploadAsync(uploadParams, type);
         }
 
-        private void FillParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
+        private void FixMissingParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
         {
             uploadParams.File = uploadParams.File ?? new FileDescription(m_testImagePath);
             uploadParams.PublicId = uploadParams.PublicId ??

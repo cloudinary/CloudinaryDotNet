@@ -56,7 +56,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         {
             var uploadResult = UploadTestImageResource();
 
-            CheckDefaultTestImageUploadAndSignature(uploadResult);
+            AssertDefaultTestImageUploadAndSignature(uploadResult);
         }
 
         [Test]
@@ -64,10 +64,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         {
             var uploadResult = await UploadTestImageResourceAsync();
 
-            CheckDefaultTestImageUploadAndSignature(uploadResult);
+            AssertDefaultTestImageUploadAndSignature(uploadResult);
         }
 
-        private void CheckDefaultTestImageUploadAndSignature(ImageUploadResult result)
+        private void AssertDefaultTestImageUploadAndSignature(ImageUploadResult result)
         {
             Assert.AreEqual(1920, result.Width);
             Assert.AreEqual(1200, result.Height);
@@ -481,7 +481,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var result = m_cloudinary.UploadLarge(uploadParams, 5 * 1024 * 1024);
 
-            CheckUploadLarge(result, largeFileLength);
+            AssertUploadLarge(result, largeFileLength);
         }
 
         [Test]
@@ -495,7 +495,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var result = await m_cloudinary.UploadLargeAsync(uploadParams, 5 * 1024 * 1024);
 
-            CheckUploadLarge(result, largeFileLength);
+            AssertUploadLarge(result, largeFileLength);
         }
 
         private RawUploadParams GetUploadLargeRawParams(string path)
@@ -507,7 +507,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             };
         }
 
-        private void CheckUploadLarge(RawUploadResult result, int fileLength)
+        private void AssertUploadLarge(RawUploadResult result, int fileLength)
         {
             Assert.AreEqual(fileLength, result.Length);
         }
