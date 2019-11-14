@@ -26,7 +26,7 @@ namespace CloudinaryDotNet
         /// <param name="method">HTTP method.</param>
         /// <param name="url">Url for api call.</param>
         /// <param name="parameters">Parameters for api call.</param>
-        /// <param name="file">File description.</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Extra headers.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Return response of specified type.</returns>
@@ -50,7 +50,7 @@ namespace CloudinaryDotNet
         /// <param name="method">HTTP method.</param>
         /// <param name="url">Url for api call.</param>
         /// <param name="parameters">Parameters for api call.</param>
-        /// <param name="file">File description.</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Extra headers.</param>
         /// <returns>Return response of specified type.</returns>
         internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
@@ -135,7 +135,7 @@ namespace CloudinaryDotNet
 
         internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
         {
-            parameters.Add("timestamp", GetTime());
+            parameters.Add("timestamp", Utils.UnixTimeNowSeconds());
             parameters.Add("signature", SignParameters(parameters));
             parameters.Add("api_key", Account.ApiKey);
         }
@@ -240,7 +240,7 @@ namespace CloudinaryDotNet
                 ? CreateStringContent(parameters)
                 : await PrepareMultipartFormDataContentAsync(parameters, file, extraHeaders, cancellationToken);
 
-            EnrichAndSetContent(request, extraHeaders, content);
+            SetHeadersAndContent(request, extraHeaders, content);
         }
 
         private void PrepareRequestContent(
@@ -255,7 +255,7 @@ namespace CloudinaryDotNet
                 ? CreateStringContent(parameters)
                 : PrepareMultipartFormDataContent(parameters, file, extraHeaders);
 
-            EnrichAndSetContent(request, extraHeaders, content);
+            SetHeadersAndContent(request, extraHeaders, content);
         }
 
         private StringContent CreateStringContent(SortedDictionary<string, object> parameters) =>
@@ -266,7 +266,7 @@ namespace CloudinaryDotNet
             extraHeaders.TryGetValue(Constants.HEADER_CONTENT_TYPE, out var value) &&
             value == Constants.CONTENT_TYPE_APPLICATION_JSON;
 
-        private static void EnrichAndSetContent(HttpRequestMessage request, Dictionary<string, string> extraHeaders, HttpContent content)
+        private static void SetHeadersAndContent(HttpRequestMessage request, Dictionary<string, string> extraHeaders, HttpContent content)
         {
             if (extraHeaders != null)
             {
@@ -474,63 +474,6 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Calculates current UNIX time.
-        /// </summary>
-        /// <returns>Amount of seconds from 1 january 1970.</returns>
-        private string GetTime()
-        {
-            return Convert.ToInt64(((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
-        }
-
-        /// <summary>
-        /// Writes one chunk of file to stream.
-        /// </summary>
-        /// <param name="writer">Output writer.</param>
-        /// <param name="fileName">Name of file.</param>
-        /// <param name="stream">Input stream.</param>
-        /// <param name="length">Maximum amount of bytes to send.</param>
-        /// <returns>Amount of sent bytes.</returns>
-        private int WriteFile(StreamWriter writer, Stream stream, int length, string fileName)
-        {
-            WriteLine(writer, "--{0}", HTTP_BOUNDARY);
-            WriteLine(writer, "Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
-            WriteLine(writer, "Content-Type: application/octet-stream");
-            WriteLine(writer);
-
-            writer.Flush();
-
-            int bytesSent = 0;
-            byte[] buf = new byte[ChunkSize];
-            int toSend;
-            int cnt;
-            while ((toSend = length - bytesSent) > 0
-                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
-            {
-                writer.BaseStream.Write(buf, 0, cnt);
-                bytesSent += cnt;
-            }
-
-            return bytesSent;
-        }
-
-        private void WriteLine(StreamWriter writer)
-        {
-            writer.Write("\r\n");
-        }
-
-        private void WriteLine(StreamWriter writer, string format)
-        {
-            writer.Write(format);
-            writer.Write("\r\n");
-        }
-
-        private void WriteLine(StreamWriter writer, string format, Object val)
-        {
-            writer.Write(format, val);
-            writer.Write("\r\n");
-        }
-
-        /// <summary>
         /// Virtual encode API URL method. This method should be overridden in child classes.
         /// </summary>
         /// <param name="value">URL to be encoded.</param>
@@ -575,51 +518,6 @@ namespace CloudinaryDotNet
             }
 
             return sb.ToString();
-        }
-
-        /// <summary>
-        /// Write cloudinary parameter to the request stream.
-        /// </summary>
-        /// <param name="writer">Stream writer.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The parameter value.</param>
-        protected void WriteParam(StreamWriter writer, string key, string value)
-        {
-#if DEBUG
-            Console.WriteLine(String.Format("{0}: {1}", key, value));
-#endif
-            WriteLine(writer, "--{0}", HTTP_BOUNDARY);
-            WriteLine(writer, "Content-Disposition: form-data; name=\"{0}\"", key);
-            WriteLine(writer);
-            WriteLine(writer, value);
-        }
-
-        /// <summary>
-        /// Write cloudinary parameter to the request stream.
-        /// </summary>
-        /// <param name="writer">Stream writer.</param>
-        /// <param name="file">File to be written to the stream.</param>
-        protected void WriteFile(StreamWriter writer, FileDescription file)
-        {
-            if (file.IsRemote)
-            {
-                WriteParam(writer, "file", file.FilePath);
-            }
-            else
-            {
-                if (file.Stream == null)
-                {
-                    using (FileStream stream = new FileStream(file.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        stream.Seek(file.BytesSent, SeekOrigin.Begin);
-                        file.BytesSent += WriteFile(writer, stream, file.BufferLength, file.FileName);
-                    }
-                }
-                else
-                {
-                    file.BytesSent += WriteFile(writer, file.Stream, file.BufferLength, file.FileName);
-                }
-            }
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace CloudinaryDotNet
     public class FileDescription
     {
         /// <summary>
-        /// Buffer length
+        /// Maximum size of a single chunk of data to be uploaded
         /// </summary>
         internal int BufferLength = Int32.MaxValue;
 

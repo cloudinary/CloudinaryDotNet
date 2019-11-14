@@ -55,7 +55,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 return uploadResult.PublicId;
             });
 
-            var addedPublicIds = await Task.WhenAll(addedPublicIdsTasks);
+            var addedPublicIdsTask = await Task.WhenAll(addedPublicIdsTasks);
 
             var spriteParams = CreateSpriteParams(spriteTag, FILE_FORMAT_JPG);
 
@@ -63,7 +63,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
 
-            AssertSprite(result, addedPublicIds, FILE_FORMAT_JPG);
+            AssertSprite(result, addedPublicIdsTask, FILE_FORMAT_JPG);
         }
 
         private SpriteParams CreateSpriteParams(string tag, string fileFormat)

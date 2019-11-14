@@ -11,7 +11,7 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Implement generic utility functions.
     /// </summary>
-    internal static partial class Utils
+    internal static class Utils
     {
         internal static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 

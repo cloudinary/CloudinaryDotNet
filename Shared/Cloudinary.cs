@@ -17,7 +17,7 @@ namespace CloudinaryDotNet
     public partial class Cloudinary
     {
         /// <summary>
-        /// Private helper class for specifing parameters for upload preset api call.
+        /// Private helper class for specifying parameters for upload preset api call.
         /// </summary>
         private class UploadPresetApiParams
         {
@@ -27,16 +27,13 @@ namespace CloudinaryDotNet
             /// <param name="httpMethod">Http request method.</param>
             /// <param name="url">Url for api call.</param>
             /// <param name="paramsCopy">Parameters of the upload preset.</param>
-            /// <param name="fileDescription">File description.</param>
             public UploadPresetApiParams(HttpMethod httpMethod, 
                 string url, 
-                UploadPresetParams paramsCopy,
-                FileDescription fileDescription)
+                UploadPresetParams paramsCopy)
             {
                 Url = url;
                 ParamsCopy = paramsCopy;
                 HttpMethod = httpMethod;
-                FileDescription = fileDescription;
             }
 
             /// <summary>
@@ -53,11 +50,6 @@ namespace CloudinaryDotNet
             /// Http request method.
             /// </summary>
             public HttpMethod HttpMethod { get; private set; }
-
-            /// <summary>
-            /// File description.
-            /// </summary>
-            public FileDescription FileDescription { get; private set; }
         }
 
         /// <summary>
@@ -129,6 +121,15 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Get default API URL with version
+        /// </summary>
+        /// <returns></returns>
+        private Url GetApiUrlV()
+        {
+            return m_api.ApiUrlV;
+        }
+
+        /// <summary>
         /// Gets URL to download private image.
         /// </summary>
         /// <param name="publicId">The image public ID.</param>
@@ -144,7 +145,7 @@ namespace CloudinaryDotNet
                 throw new ArgumentException("publicId");
 
             var urlBuilder = new UrlBuilder(
-               m_api.ApiUrlV
+               GetApiUrlV()
                .ResourceType(RESOURCE_TYPE_IMAGE)
                .Action("download")
                .BuildUrl());
@@ -182,7 +183,7 @@ namespace CloudinaryDotNet
                 throw new ArgumentException("Tag should be specified!");
 
             UrlBuilder urlBuilder = new UrlBuilder(
-               m_api.ApiUrlV
+               GetApiUrlV()
                .ResourceType(RESOURCE_TYPE_IMAGE)
                .Action("download_tag.zip")
                .BuildUrl());
@@ -199,7 +200,7 @@ namespace CloudinaryDotNet
         }
         private string GetUploadMappingUrl()
         {
-            return m_api.ApiUrlV.
+            return GetApiUrlV().
                 ResourceType("upload_mappings").
                 BuildUrl();
         }
@@ -207,7 +208,7 @@ namespace CloudinaryDotNet
         private string GetUploadMappingUrl(UploadMappingParams parameters)
         {
             var uri = GetUploadMappingUrl();
-            return new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
+            return (parameters == null) ? uri :  new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
         }
 
 
@@ -221,7 +222,7 @@ namespace CloudinaryDotNet
             parameters.Mode(ArchiveCallMode.Download);
 
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType(RESOURCE_TYPE_IMAGE).
                 Action(ACTION_GENERATE_ARCHIVE).
                 BuildUrl());
@@ -312,7 +313,7 @@ namespace CloudinaryDotNet
                 parameters.AddCustomParam(byKey, value);
             }
 
-            Url url = m_api.ApiUrlV
+            Url url = GetApiUrlV()
                 .Add("resources")
                 .Add(parameters.ResourceType.ToString().ToLower())
                 .Add("publish_resources");
@@ -326,7 +327,7 @@ namespace CloudinaryDotNet
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
                 parameters.AddCustomParam(byKey, value);
 
-            Url url = m_api.ApiUrlV
+            Url url = GetApiUrlV()
                 .Add("resources")
                 .Add(parameters.ResourceType.ToString().ToLower())
                 .Add("publish_resources");
@@ -343,7 +344,7 @@ namespace CloudinaryDotNet
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
                 parameters.AddCustomParam(byKey, value);
 
-            var url = m_api.ApiUrlV
+            var url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
                  .Add(parameters.ResourceType.ToString().ToLower())
                  .Add(parameters.Type)
@@ -363,7 +364,7 @@ namespace CloudinaryDotNet
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
                 parameters.AddCustomParam(byKey, value);
 
-            Url url = m_api.ApiUrlV
+            Url url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
                  .Add(parameters.ResourceType.ToString().ToLower())
                  .Add(parameters.Type)
@@ -464,7 +465,7 @@ namespace CloudinaryDotNet
         /// <returns>Results of tags management.</returns>
         public Task<TagResult> TagAsync(TagParams parameters, CancellationToken? cancellationToken = null)
         {
-            string uri = m_api.ApiUrlV
+            string uri = GetApiUrlV()
                 .ResourceType(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType))
                 .Action(Constants.TAGS_MANGMENT)
                 .BuildUrl();
@@ -479,7 +480,7 @@ namespace CloudinaryDotNet
         /// <returns>Results of tags management.</returns>
         public TagResult Tag(TagParams parameters)
         {
-            string uri = m_api.ApiUrlV
+            string uri = GetApiUrlV()
                 .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
                 .Action(Constants.TAGS_MANGMENT)
                 .BuildUrl();
@@ -527,7 +528,7 @@ namespace CloudinaryDotNet
         public Task<DelDerivedResResult> DeleteDerivedResourcesByTransformAsync(DelDerivedResParams parameters, CancellationToken? cancellationToken = null)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 Add("derived_resources").
                 BuildUrl(),
                 parameters.ToParamsDictionary());
@@ -549,7 +550,7 @@ namespace CloudinaryDotNet
         public DelDerivedResResult DeleteDerivedResourcesByTransform(DelDerivedResParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 Add("derived_resources").
                 BuildUrl(),
                 parameters.ToParamsDictionary());
@@ -565,7 +566,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of creating the archive.</returns>
         public Task<ArchiveResult> CreateArchiveAsync(ArchiveParams parameters, CancellationToken? cancellationToken = null)
         {
-            Url url = m_api.ApiUrlV.ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
+            Url url = GetApiUrlV().ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
 
             if (!string.IsNullOrEmpty(parameters.ResourceType()))
                 url.ResourceType(parameters.ResourceType());
@@ -587,7 +588,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of creating the archive.</returns>
         public ArchiveResult CreateArchive(ArchiveParams parameters)
         {
-            Url url = m_api.ApiUrlV.ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
+            Url url = GetApiUrlV().ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
 
             if (!String.IsNullOrEmpty(parameters.ResourceType()))
                 url.ResourceType(parameters.ResourceType());
@@ -630,7 +631,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after a call of Explicit method.</returns>
         public Task<ExplicitResult> ExplicitAsync(ExplicitParams parameters, CancellationToken? cancellationToken = null)
         {
-            string uri = m_api.ApiUrlV
+            string uri = GetApiUrlV()
                 .ResourceType(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType))
                 .Action("explicit")
                 .BuildUrl();
@@ -654,7 +655,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after a call of Explicit method.</returns>
         public ExplicitResult Explicit(ExplicitParams parameters)
         {
-            string uri = m_api.ApiUrlV
+            string uri = GetApiUrlV()
                 .ResourceType(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType))
                 .Action("explicit")
                 .BuildUrl();
@@ -673,7 +674,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after manipulation of upload presets.</returns>
         public Task<UploadPresetResult> CreateUploadPresetAsync(UploadPresetParams parameters, CancellationToken? cancellationToken = null)
         {
-            string url = m_api.ApiUrlV.
+            string url = GetApiUrlV().
                 Add("upload_presets").
                 BuildUrl();
 
@@ -694,7 +695,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after manipulation of upload presets.</returns>
         public UploadPresetResult CreateUploadPreset(UploadPresetParams parameters)
         {
-            var url = m_api.ApiUrlV.
+            var url = GetApiUrlV().
                 Add("upload_presets").
                 BuildUrl();
 
@@ -704,6 +705,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Updates the upload preset.
         /// Every update overwrites all the preset settings asynchronously.
+        /// File specified as null because it's non-uploading action.
         /// </summary>
         /// <param name="parameters">New parameters for upload preset.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
@@ -714,6 +716,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Updates the upload preset.
         /// Every update overwrites all the preset settings.
+        /// File specified as null because it's non-uploading action.
         /// </summary>
         /// <param name="parameters">New parameters for upload preset.</param>
         /// <returns>Parsed response after manipulation of upload presets.</returns>
@@ -725,12 +728,12 @@ namespace CloudinaryDotNet
             var paramsCopy = (UploadPresetParams) parameters.Copy();
             paramsCopy.Name = null;
 
-            var url = m_api.ApiUrlV
+            var url = GetApiUrlV()
                 .Add("upload_presets")
                 .Add(parameters.Name)
                 .BuildUrl();
 
-            return new UploadPresetApiParams(HttpMethod.PUT, url, paramsCopy, null);
+            return new UploadPresetApiParams(HttpMethod.PUT, url, paramsCopy);
         }
 
         /// <summary>
@@ -738,7 +741,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="apiParams">New parameters for upload preset.</param>
         private T CallApi<T>(UploadPresetApiParams apiParams) where T : BaseResult, new() => 
-            m_api.CallApi<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, apiParams.FileDescription);
+            m_api.CallApi<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null);
 
         /// <summary>
         /// Call api with specified parameters asynchronously.
@@ -746,7 +749,7 @@ namespace CloudinaryDotNet
         /// <param name="apiParams">New parameters for upload preset.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token</param>
         private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null) where T : BaseResult, new() => 
-            m_api.CallApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, apiParams.FileDescription, null, cancellationToken);
+            m_api.CallApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null, null, cancellationToken);
 
         /// <summary>
         /// Gets the upload preset asynchronously.
@@ -756,7 +759,7 @@ namespace CloudinaryDotNet
         /// <returns>Upload preset details.</returns>
         public Task<GetUploadPresetResult> GetUploadPresetAsync(string name, CancellationToken? cancellationToken = null)
         {
-            var url = m_api.ApiUrlV
+            var url = GetApiUrlV()
                 .Add("upload_presets")
                 .Add(name)
                 .BuildUrl();
@@ -777,7 +780,7 @@ namespace CloudinaryDotNet
         /// <returns>Upload preset details.</returns>
         public GetUploadPresetResult GetUploadPreset(string name)
         {
-            var url = m_api.ApiUrlV
+            var url = GetApiUrlV()
                 .Add("upload_presets")
                 .Add(name)
                 .BuildUrl();
@@ -814,7 +817,7 @@ namespace CloudinaryDotNet
         public Task<ListUploadPresetsResult> ListUploadPresetsAsync(ListUploadPresetsParams parameters, CancellationToken? cancellationToken = null)
         {
             var urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV
+                GetApiUrlV()
                 .Add("upload_presets")
                 .BuildUrl(),
                 parameters.ToParamsDictionary());
@@ -836,7 +839,7 @@ namespace CloudinaryDotNet
         public ListUploadPresetsResult ListUploadPresets(ListUploadPresetsParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV
+                GetApiUrlV()
                 .Add("upload_presets")
                 .BuildUrl(),
                 parameters.ToParamsDictionary());
@@ -852,7 +855,7 @@ namespace CloudinaryDotNet
         /// <returns>Result of upload preset deletion.</returns>
         public Task<DeleteUploadPresetResult> DeleteUploadPresetAsync(string name, CancellationToken? cancellationToken = null)
         {
-            var url = m_api.ApiUrlV
+            var url = GetApiUrlV()
                 .Add("upload_presets")
                 .Add(name)
                 .BuildUrl();
@@ -873,7 +876,7 @@ namespace CloudinaryDotNet
         /// <returns>Result of upload preset deletion.</returns>
         public DeleteUploadPresetResult DeleteUploadPreset(string name)
         {
-            var url = m_api.ApiUrlV
+            var url = GetApiUrlV()
                 .Add("upload_presets")
                 .Add(name)
                 .BuildUrl();
@@ -918,7 +921,7 @@ namespace CloudinaryDotNet
             if (parameters == null)
                 throw new ArgumentNullException("parameters", "Upload parameters should be defined");
 
-            string uri = m_api.ApiUrlV
+            string uri = GetApiUrlV()
                 .Action(Constants.ACTION_NAME_UPLOAD)
                 .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
                 .BuildUrl();
@@ -1028,7 +1031,7 @@ namespace CloudinaryDotNet
 
         private string GetUploadUrl(string resourceType)
         {
-            return m_api.ApiUrlV.Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
+            return GetApiUrlV().Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
         }
 
         /// <summary>
@@ -1065,7 +1068,7 @@ namespace CloudinaryDotNet
 
             return m_api.CallApiAsync<GetFoldersResult>(
                 HttpMethod.GET,
-                m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl(),
+                GetApiUrlV().Add("folders").Add(folder).BuildUrl(),
                 null,
                 null, 
                 null, 
@@ -1090,7 +1093,7 @@ namespace CloudinaryDotNet
 
         private string GetFolderUrl(string folder = null)
         {
-            return m_api.ApiUrlV.Add("folders").Add(folder).BuildUrl();
+            return GetApiUrlV().Add("folders").Add(folder).BuildUrl();
         }
 
         private static void CheckFolderParameter(string folder)
@@ -1134,7 +1137,7 @@ namespace CloudinaryDotNet
         /// <returns>The report on the status of your Cloudinary account usage details.</returns>
         public Task<UsageResult> GetUsageAsync(CancellationToken? cancellationToken = null)
         {
-            string uri = m_api.ApiUrlV.Action("usage").BuildUrl();
+            string uri = GetApiUrlV().Action("usage").BuildUrl();
 
             return m_api.CallApiAsync<UsageResult>(
                 HttpMethod.GET, 
@@ -1151,7 +1154,7 @@ namespace CloudinaryDotNet
         /// <returns>The report on the status of your Cloudinary account usage details.</returns>
         public UsageResult GetUsage()
         {
-            string uri = m_api.ApiUrlV.Action("usage").BuildUrl();
+            string uri = GetApiUrlV().Action("usage").BuildUrl();
 
             return m_api.CallApi<UsageResult>(HttpMethod.GET, uri, null, null);
         }
@@ -1649,7 +1652,7 @@ namespace CloudinaryDotNet
         {
             return m_api.CallApiAsync<ListResourceTypesResult>(
                 HttpMethod.GET,
-                m_api.ApiUrlV.Add("resources").BuildUrl(),
+                GetApiUrlV().Add("resources").BuildUrl(),
                 null,
                 null, 
                 null, 
@@ -1662,7 +1665,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed list of resource types.</returns>
         public ListResourceTypesResult ListResourceTypes()
         {
-            return m_api.CallApi<ListResourceTypesResult>(HttpMethod.GET, m_api.ApiUrlV.Add("resources").BuildUrl(), null, null);
+            return m_api.CallApi<ListResourceTypesResult>(HttpMethod.GET, GetApiUrlV().Add("resources").BuildUrl(), null, null);
         }
 
         /// <summary>
@@ -2076,7 +2079,7 @@ namespace CloudinaryDotNet
 
         private string GetListResourcesUrl(ListResourcesParams parameters)
         {
-            var url = m_api.ApiUrlV.ResourceType("resources").Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
+            var url = GetApiUrlV().ResourceType("resources").Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
 
 
             switch (parameters)
@@ -2161,7 +2164,7 @@ namespace CloudinaryDotNet
         public Task<ListTagsResult> ListTagsAsync(ListTagsParams parameters, CancellationToken? cancellationToken = null)
         {
             var urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType("tags").
                 Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
                 BuildUrl(),
@@ -2178,7 +2181,7 @@ namespace CloudinaryDotNet
         public ListTagsResult ListTags(ListTagsParams parameters)
         {
             var urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType("tags").
                 Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
                 BuildUrl(),
@@ -2216,7 +2219,7 @@ namespace CloudinaryDotNet
         public Task<ListTransformsResult> ListTransformationsAsync(ListTransformsParams parameters, CancellationToken? cancellationToken = null)
         {
             var urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType("transformations").
                 BuildUrl(),
                 parameters.ToParamsDictionary());
@@ -2238,7 +2241,7 @@ namespace CloudinaryDotNet
         public ListTransformsResult ListTransformations(ListTransformsParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType("transformations").
                 BuildUrl(),
                 parameters.ToParamsDictionary());
@@ -2277,7 +2280,7 @@ namespace CloudinaryDotNet
         public Task<GetTransformResult> GetTransformAsync(GetTransformParams parameters, CancellationToken? cancellationToken = null)
         {
             var urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType("transformations").
                 Add(parameters.Transformation).
                 BuildUrl(),
@@ -2300,7 +2303,7 @@ namespace CloudinaryDotNet
         public GetTransformResult GetTransform(GetTransformParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType("transformations").
                 Add(parameters.Transformation).
                 BuildUrl(),
@@ -2340,7 +2343,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response of the detailed resource information.</returns>
         public Task<GetResourceResult> UpdateResourceAsync(UpdateParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = m_api.ApiUrlV.
+            var url = GetApiUrlV().
                 ResourceType("resources").
                 Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
                 Add(parameters.Type).Add(parameters.PublicId).
@@ -2356,7 +2359,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response of the detailed resource information.</returns>
         public GetResourceResult UpdateResource(UpdateParams parameters)
         {
-            var url = m_api.ApiUrlV.
+            var url = GetApiUrlV().
                 ResourceType("resources").
                 Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
                 Add(parameters.Type).Add(parameters.PublicId).
@@ -2395,7 +2398,7 @@ namespace CloudinaryDotNet
         public Task<GetResourceResult> GetResourceAsync(GetResourceParams parameters, CancellationToken? cancellationToken = null)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType("resources").
                 Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
                 Add(parameters.Type).
@@ -2420,7 +2423,7 @@ namespace CloudinaryDotNet
         public GetResourceResult GetResource(GetResourceParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 ResourceType("resources").
                 Add(Api.GetCloudinaryParam(parameters.ResourceType)).
                 Add(parameters.Type).
@@ -2464,7 +2467,7 @@ namespace CloudinaryDotNet
         public Task<DelDerivedResResult> DeleteDerivedResourcesAsync(DelDerivedResParams parameters, CancellationToken? cancellationToken = null)
         {
             var urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 Add("derived_resources").
                 BuildUrl(),
                 parameters.ToParamsDictionary());
@@ -2486,7 +2489,7 @@ namespace CloudinaryDotNet
         public DelDerivedResResult DeleteDerivedResources(DelDerivedResParams parameters)
         {
             UrlBuilder urlBuilder = new UrlBuilder(
-                m_api.ApiUrlV.
+                GetApiUrlV().
                 Add("derived_resources").
                 BuildUrl(),
                 parameters.ToParamsDictionary());
@@ -2733,7 +2736,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesAsync(DelResParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = m_api.ApiUrlV.
+            var url = GetApiUrlV().
                 Add("resources").
                 Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
 
@@ -2759,7 +2762,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of deletion resources.</returns>
         public DelResResult DeleteResources(DelResParams parameters)
         {
-            Url url = m_api.ApiUrlV.
+            Url url = GetApiUrlV().
                 Add("resources").
                 Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType));
 
@@ -2781,6 +2784,7 @@ namespace CloudinaryDotNet
         {
             var restoreParams = new RestoreParams();
             restoreParams.PublicIds.AddRange(publicIds);
+
             return RestoreAsync(restoreParams);
         }
 
@@ -2793,6 +2797,7 @@ namespace CloudinaryDotNet
         {
             RestoreParams restoreParams = new RestoreParams();
             restoreParams.PublicIds.AddRange(publicIds);
+
             return Restore(restoreParams);
         }
 
@@ -2804,7 +2809,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of restoring resources.</returns>
         public Task<RestoreResult> RestoreAsync(RestoreParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = m_api.ApiUrlV.
+            var url = GetApiUrlV().
                 ResourceType("resources").
                 Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
                 Add("upload").
@@ -2820,7 +2825,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of restoring resources.</returns>
         public RestoreResult Restore(RestoreParams parameters)
         {
-            var url = m_api.ApiUrlV.
+            var url = GetApiUrlV().
                 ResourceType("resources").
                 Add(Api.GetCloudinaryParam(parameters.ResourceType)).
                 Add("upload").
@@ -2879,9 +2884,6 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public Task<UploadMappingResults> UploadMappingsAsync(UploadMappingParams parameters, CancellationToken? cancellationToken = null)
         {
-            if (parameters == null)
-                parameters = new UploadMappingParams();
-
             return CallUploadMappingsApiAsync(HttpMethod.GET, parameters, cancellationToken);
         }
 
@@ -2895,9 +2897,6 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public UploadMappingResults UploadMappings(UploadMappingParams parameters)
         {
-            if (parameters == null)
-                parameters = new UploadMappingParams();
-
             return CallUploadMappingsAPI(HttpMethod.GET, parameters);
         }
 
@@ -3076,7 +3075,7 @@ namespace CloudinaryDotNet
         }
 
         private string GetTransformationUrl(string transformationName) =>
-            m_api.ApiUrlV.
+            GetApiUrlV().
                 ResourceType("transformations").
                 Add(transformationName).
                 BuildUrl();

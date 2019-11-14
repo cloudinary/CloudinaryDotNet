@@ -184,7 +184,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
             setParamsAction?.Invoke(uploadParams);
 
-            FixMissingParams(uploadParams, false, storageType);
+            PopulateMissingRawUploadParams(uploadParams, false, storageType);
 
             return m_cloudinary.Upload(uploadParams);
         }
@@ -202,7 +202,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
             setParamsAction?.Invoke(uploadParams);
 
-            FixMissingParams(uploadParams, true, storageType);
+            PopulateMissingRawUploadParams(uploadParams, true, storageType);
 
             return m_cloudinary.UploadAsync(uploadParams);
         }
@@ -222,7 +222,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
             setParamsAction?.Invoke(uploadParams);
 
-            FixMissingParams(uploadParams, false, storageType);
+            PopulateMissingRawUploadParams(uploadParams, false, storageType);
 
             return m_cloudinary.Upload(uploadParams, type);
         }
@@ -242,27 +242,17 @@ namespace CloudinaryDotNet.IntegrationTest
 
             setParamsAction?.Invoke(uploadParams);
 
-            FixMissingParams(uploadParams, true, storageType);
+            PopulateMissingRawUploadParams(uploadParams, true, storageType);
 
             return m_cloudinary.UploadAsync(uploadParams, type);
         }
 
-        private void FixMissingParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
+        private void PopulateMissingRawUploadParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
         {
             uploadParams.File = uploadParams.File ?? new FileDescription(m_testImagePath);
             uploadParams.PublicId = uploadParams.PublicId ??
                 (isAsync ? GetUniqueAsyncPublicId(storageType) : GetUniquePublicId(storageType));
             uploadParams.Tags = uploadParams.Tags ?? m_apiTag;
-        }
-
-        /// <summary>
-        /// A convenience method for deleting an image in the test
-        /// </summary>
-        /// <param name="id">The ID of the image to delete</param>
-        /// <returns>The results of the deletion</returns>
-        protected DelResResult DeleteTestResource(String id)
-        {
-            return m_cloudinary.DeleteResources(id);
         }
 
         /// <summary>
@@ -285,6 +275,7 @@ namespace CloudinaryDotNet.IntegrationTest
             Assert.IsFalse(String.IsNullOrEmpty(account.Cloud));
             Assert.IsFalse(String.IsNullOrEmpty(account.ApiKey));
             Assert.IsFalse(String.IsNullOrEmpty(account.ApiSecret));
+
             return account;
         }
 
@@ -298,13 +289,8 @@ namespace CloudinaryDotNet.IntegrationTest
             Cloudinary cloudinary = new Cloudinary(account);
             if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
                 cloudinary.Api.ApiBaseAddress = m_apiBaseAddress;
-            return cloudinary;
-        }
 
-        protected long UnixTimeNow()
-        {
-            var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-            return (long)timeSpan.TotalMilliseconds;
+            return cloudinary;
         }
 
         protected IEnumerable<Resource> GetAllResults(Func<String, ListResourcesResult> list)
@@ -315,6 +301,7 @@ namespace CloudinaryDotNet.IntegrationTest
             {
                 resources = resources.Concat(current.Resources);
             }
+
             return resources;
         }
 
@@ -346,11 +333,6 @@ namespace CloudinaryDotNet.IntegrationTest
             var transformationName = $"{m_apiTest}_transformation_{m_transformationsToClear.Count + 1}_{suffix}";
             AddCreatedTransformation(transformationName);
             return transformationName;
-        }
-
-        protected virtual string GetUniqueAsyncTransformationName()
-        {
-            return GetUniqueTransformationName("ASYNC");
         }
 
         protected void AddCreatedTransformation(object transformation)
