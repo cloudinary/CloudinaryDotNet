@@ -271,24 +271,41 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             // should allow listing resources by tag
             var localTag = GetMethodTag();
 
-            var file = new FileDescription(m_testImagePath);
             m_cloudinary.DeleteResourcesByTag(localTag);
-            var uploadParams = new ImageUploadParams()
-            {
-                File = file,
-                Tags = $"{m_apiTag},{localTag}"
-            };
 
-            m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(PrepareImageUploadParamsWithTag(localTag));
+            m_cloudinary.Upload(PrepareImageUploadParamsWithTag(localTag));
 
-            uploadParams = new ImageUploadParams()
-            {
-                File = file,
-                Tags = $"{m_apiTag},{localTag}"
-            };
-
-            m_cloudinary.Upload(uploadParams);
             var result = m_cloudinary.ListResourcesByTag(localTag);
+            AssertListResourcesByTagResult(result);
+        }
+
+        [Test]
+        public async Task TestListResourcesByTagAsync()
+        {
+            // should allow listing resources by tag
+            var localTag = GetMethodTag();
+
+            await m_cloudinary.DeleteResourcesByTagAsync(localTag);
+
+            await m_cloudinary.UploadAsync(PrepareImageUploadParamsWithTag(localTag));
+            await m_cloudinary.UploadAsync(PrepareImageUploadParamsWithTag(localTag));
+
+            var result = await m_cloudinary.ListResourcesByTagAsync(localTag);
+            AssertListResourcesByTagResult(result);
+        }
+
+        private ImageUploadParams PrepareImageUploadParamsWithTag(string localTag)
+        {
+            return new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = $"{m_apiTag},{localTag}"
+            };
+        }
+
+        private void AssertListResourcesByTagResult(ListResourcesResult result)
+        {
             Assert.AreEqual(2, result.Resources.Count());
         }
 

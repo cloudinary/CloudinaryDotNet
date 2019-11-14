@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
@@ -19,16 +20,51 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             m_cloudinary.Upload(uploadParams_nobackup);
             GetResourceResult resource = m_cloudinary.GetResource(publicId);
-            Assert.IsNotNull(resource);
-            Assert.AreEqual(publicId, resource.PublicId);
+            AssertGetResourceResultBeforeDeletion(resource, publicId);
 
             DelResResult delResult = m_cloudinary.DeleteResources(publicId);
-            Assert.AreEqual("deleted", delResult.Deleted[publicId]);
+            AssertResourceDeletionResult(delResult, publicId);
 
             resource = m_cloudinary.GetResource(publicId);
-            Assert.IsTrue(string.IsNullOrEmpty(resource.PublicId));
+            AssertGetResourceResultAfterDeletionNoBackup(resource);
 
             RestoreResult rResult = m_cloudinary.Restore(publicId);
+            AssertRestoreResultNoBackup(rResult, publicId);
+        }
+
+        [Test]
+        public async Task TestRestoreNoBackupAsync()
+        {
+            string publicId = GetUniquePublicId();
+
+            ImageUploadParams uploadParams_nobackup = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Tags = m_apiTag
+            };
+
+            m_cloudinary.Upload(uploadParams_nobackup);
+            GetResourceResult resource = await m_cloudinary.GetResourceAsync(publicId);
+            AssertGetResourceResultBeforeDeletion(resource, publicId);
+
+            DelResResult delResult = await m_cloudinary.DeleteResourcesAsync(publicId);
+            AssertResourceDeletionResult(delResult, publicId);
+
+            resource = await m_cloudinary.GetResourceAsync(publicId);
+            AssertGetResourceResultAfterDeletionNoBackup(resource);
+
+            RestoreResult rResult = await m_cloudinary.RestoreAsync(publicId);
+            AssertRestoreResultNoBackup(rResult, publicId);
+        }
+
+        private void AssertGetResourceResultAfterDeletionNoBackup(GetResourceResult resource)
+        {
+            Assert.IsTrue(string.IsNullOrEmpty(resource.PublicId));
+        }
+
+        private void AssertRestoreResultNoBackup(RestoreResult rResult, string publicId)
+        {
             Assert.IsNotNull(rResult.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId));
             Assert.AreEqual("no_backup", rResult.JsonObj[publicId]["error"].ToString());
         }
@@ -48,20 +84,75 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             m_cloudinary.Upload(uploadParams_backup);
             GetResourceResult resource_backup = m_cloudinary.GetResource(publicId);
-            Assert.IsNotNull(resource_backup);
-            Assert.AreEqual(publicId, resource_backup.PublicId);
+            AssertGetResourceResultBeforeDeletion(resource_backup, publicId);
 
             DelResResult delResult_backup = m_cloudinary.DeleteResources(publicId);
-            Assert.AreEqual("deleted", delResult_backup.Deleted[publicId]);
+            AssertResourceDeletionResult(delResult_backup, publicId);
 
             resource_backup = m_cloudinary.GetResource(publicId);
-            Assert.AreEqual(0, resource_backup.Length);
+            AssertGetResourceResultAfterDeletion(resource_backup);
 
             RestoreResult rResult_backup = m_cloudinary.Restore(publicId);
-            Assert.IsNotNull(rResult_backup.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId));
-            Assert.AreEqual(publicId, rResult_backup.JsonObj[publicId]["public_id"].ToString());
+            AssertRestoreResult(rResult_backup, publicId);
 
             resource_backup = m_cloudinary.GetResource(publicId);
+            AssertGetResourceResultAfterRestore(resource_backup);
+        }
+
+        [Test]
+        public async Task TestRestoreAsync()
+        {
+            string publicId = GetUniquePublicId();
+
+            ImageUploadParams uploadParams_backup = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Backup = true,
+                Tags = m_apiTag
+            };
+
+            await m_cloudinary.UploadAsync(uploadParams_backup);
+            GetResourceResult resource_backup = await m_cloudinary.GetResourceAsync(publicId);
+            AssertGetResourceResultBeforeDeletion(resource_backup, publicId);
+
+            DelResResult delResult_backup = await m_cloudinary.DeleteResourcesAsync(publicId);
+            AssertResourceDeletionResult(delResult_backup, publicId);
+
+            resource_backup = await m_cloudinary.GetResourceAsync(publicId);
+            AssertGetResourceResultAfterDeletion(resource_backup);
+
+            RestoreResult rResult_backup = await m_cloudinary.RestoreAsync(publicId);
+            AssertRestoreResult(rResult_backup, publicId);
+
+            resource_backup = await m_cloudinary.GetResourceAsync(publicId);
+            AssertGetResourceResultAfterRestore(resource_backup);
+        }
+
+        private void AssertGetResourceResultBeforeDeletion(GetResourceResult resource_backup, string publicId)
+        {
+            Assert.IsNotNull(resource_backup);
+            Assert.AreEqual(publicId, resource_backup.PublicId);
+        }
+
+        private void AssertResourceDeletionResult(DelResResult delResult_backup, string publicId)
+        {
+            Assert.AreEqual("deleted", delResult_backup.Deleted[publicId]);
+        }
+
+        private void AssertGetResourceResultAfterDeletion(GetResourceResult resource_backup)
+        {
+            Assert.AreEqual(0, resource_backup.Length);
+        }
+
+        private void AssertRestoreResult(RestoreResult rResult_backup, string publicId)
+        {
+            Assert.IsNotNull(rResult_backup.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId));
+            Assert.AreEqual(publicId, rResult_backup.JsonObj[publicId]["public_id"].ToString());
+        }
+
+        private void AssertGetResourceResultAfterRestore(GetResourceResult resource_backup)
+        {
             Assert.IsFalse(string.IsNullOrEmpty(resource_backup.PublicId));
         }
     }
