@@ -9,9 +9,9 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public void TestRestoreNoBackup()
         {
-            string publicId = GetUniquePublicId();
+            var publicId = GetUniquePublicId();
 
-            ImageUploadParams uploadParams_nobackup = new ImageUploadParams()
+            var uploadParams_nobackup = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = publicId,
@@ -19,25 +19,25 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             };
 
             m_cloudinary.Upload(uploadParams_nobackup);
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            var resource = m_cloudinary.GetResource(publicId);
             AssertGetResourceResultBeforeDeletion(resource, publicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResources(publicId);
+            var delResult = m_cloudinary.DeleteResources(publicId);
             AssertResourceDeletionResult(delResult, publicId);
 
             resource = m_cloudinary.GetResource(publicId);
             AssertGetResourceResultAfterDeletionNoBackup(resource);
 
-            RestoreResult rResult = m_cloudinary.Restore(publicId);
+            var rResult = m_cloudinary.Restore(publicId);
             AssertRestoreResultNoBackup(rResult, publicId);
         }
 
         [Test]
         public async Task TestRestoreNoBackupAsync()
         {
-            string publicId = GetUniquePublicId();
+            var publicId = GetUniqueAsyncPublicId();
 
-            ImageUploadParams uploadParams_nobackup = new ImageUploadParams()
+            var uploadParams_nobackup = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = publicId,
@@ -45,16 +45,16 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             };
 
             m_cloudinary.Upload(uploadParams_nobackup);
-            GetResourceResult resource = await m_cloudinary.GetResourceAsync(publicId);
+            var resource = await m_cloudinary.GetResourceAsync(publicId);
             AssertGetResourceResultBeforeDeletion(resource, publicId);
 
-            DelResResult delResult = await m_cloudinary.DeleteResourcesAsync(publicId);
+            var delResult = await m_cloudinary.DeleteResourcesAsync(publicId);
             AssertResourceDeletionResult(delResult, publicId);
 
             resource = await m_cloudinary.GetResourceAsync(publicId);
             AssertGetResourceResultAfterDeletionNoBackup(resource);
 
-            RestoreResult rResult = await m_cloudinary.RestoreAsync(publicId);
+            var rResult = await m_cloudinary.RestoreAsync(publicId);
             AssertRestoreResultNoBackup(rResult, publicId);
         }
 
@@ -72,9 +72,9 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public void TestRestore()
         {
-            string publicId = GetUniquePublicId();
+            var publicId = GetUniquePublicId();
 
-            ImageUploadParams uploadParams_backup = new ImageUploadParams()
+            var uploadParams_backup = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = publicId,
@@ -83,16 +83,16 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             };
 
             m_cloudinary.Upload(uploadParams_backup);
-            GetResourceResult resource_backup = m_cloudinary.GetResource(publicId);
+            var resource_backup = m_cloudinary.GetResource(publicId);
             AssertGetResourceResultBeforeDeletion(resource_backup, publicId);
 
-            DelResResult delResult_backup = m_cloudinary.DeleteResources(publicId);
+            var delResult_backup = m_cloudinary.DeleteResources(publicId);
             AssertResourceDeletionResult(delResult_backup, publicId);
 
             resource_backup = m_cloudinary.GetResource(publicId);
             AssertGetResourceResultAfterDeletion(resource_backup);
 
-            RestoreResult rResult_backup = m_cloudinary.Restore(publicId);
+            var rResult_backup = m_cloudinary.Restore(publicId);
             AssertRestoreResult(rResult_backup, publicId);
 
             resource_backup = m_cloudinary.GetResource(publicId);
@@ -102,9 +102,9 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public async Task TestRestoreAsync()
         {
-            string publicId = GetUniquePublicId();
+            var publicId = GetUniqueAsyncPublicId();
 
-            ImageUploadParams uploadParams_backup = new ImageUploadParams()
+            var uploadParams_backup = new ImageUploadParams()
             {
                 File = new FileDescription(m_testImagePath),
                 PublicId = publicId,
@@ -113,16 +113,16 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             };
 
             await m_cloudinary.UploadAsync(uploadParams_backup);
-            GetResourceResult resource_backup = await m_cloudinary.GetResourceAsync(publicId);
+            var resource_backup = await m_cloudinary.GetResourceAsync(publicId);
             AssertGetResourceResultBeforeDeletion(resource_backup, publicId);
 
-            DelResResult delResult_backup = await m_cloudinary.DeleteResourcesAsync(publicId);
+            var delResult_backup = await m_cloudinary.DeleteResourcesAsync(publicId);
             AssertResourceDeletionResult(delResult_backup, publicId);
 
             resource_backup = await m_cloudinary.GetResourceAsync(publicId);
             AssertGetResourceResultAfterDeletion(resource_backup);
 
-            RestoreResult rResult_backup = await m_cloudinary.RestoreAsync(publicId);
+            var rResult_backup = await m_cloudinary.RestoreAsync(publicId);
             AssertRestoreResult(rResult_backup, publicId);
 
             resource_backup = await m_cloudinary.GetResourceAsync(publicId);
