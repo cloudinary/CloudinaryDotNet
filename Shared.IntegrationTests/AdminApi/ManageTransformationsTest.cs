@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -24,20 +25,40 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow listing transformations
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            UploadTestImageResource((uploadParams) =>
             {
-                File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
-                Tags = m_apiTag
-            };
+                uploadParams.EagerTransforms = new List<Transformation>() { m_simpleTransformation };
+            });
 
-            m_cloudinary.Upload(uploadParams);
+            var result = m_cloudinary.ListTransformations();
 
-            ListTransformsResult result = m_cloudinary.ListTransformations();
+            AssertNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
+        }
 
+        [Test]
+        public async Task TestListTransformationsAsync()
+        {
+            // should allow listing transformations
+
+            await UploadTestImageResourceAsync((uploadParams) =>
+            {
+                uploadParams.EagerTransforms = new List<Transformation>() { m_simpleTransformation };
+            });
+
+            var result = await m_cloudinary.ListTransformationsAsync();
+
+            AssertNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
+        }
+
+        private void AssertNotEmptyListAndContainsTransformation(ListTransformsResult result, string transformation)
+        {
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Transformations);
-            TransformDesc td = result.Transformations.Where(t => t.Name == m_simpleTransformationAsString).First();
+
+            var td = result.Transformations
+                .Where(t => t.Name == transformation)
+                .First();
+
             Assert.IsFalse(td.Named);
             Assert.IsTrue(td.Used);
         }
@@ -47,19 +68,33 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow getting transformation metadata
 
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { m_updateTransformation },
-                Tags = m_apiTag
-            };
-
-            m_cloudinary.Upload(uploadParams);
+            UploadTestImageResource((uploadParams) => {
+                uploadParams.EagerTransforms = new List<Transformation>() { m_updateTransformation };
+            });
 
             var result = m_cloudinary.GetTransform(m_updateTransformationAsString);
 
+            AssertGetTransform(result, m_updateTransformation);
+        }
+
+        [Test]
+        public async Task TestGetTransformAsync()
+        {
+            // should allow getting transformation metadata
+
+            await UploadTestImageResourceAsync((uploadParams) => {
+                uploadParams.EagerTransforms = new List<Transformation>() { m_updateTransformation };
+            });
+
+            var result = await m_cloudinary.GetTransformAsync(m_updateTransformationAsString);
+
+            AssertGetTransform(result, m_updateTransformation);
+        }
+
+        private void AssertGetTransform(GetTransformResult result, Transformation transformation)
+        {
             Assert.IsNotNull(result);
-            Assert.AreEqual(m_updateTransformation.ToString(), new Transformation(result.Info[0]).ToString());
+            Assert.AreEqual(transformation.ToString(), new Transformation(result.Info[0]).ToString());
         }
 
         [Test]
@@ -128,35 +163,66 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow updating transformation allowed_for_strict
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            UploadTestImageResource((uploadParams) =>
             {
-                File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
-                Tags = m_apiTag
-            };
+                uploadParams.EagerTransforms = new List<Transformation>() { m_simpleTransformation };
+            });
 
-            m_cloudinary.Upload(uploadParams);
-
-            UpdateTransformParams updateParams = new UpdateTransformParams()
-            {
-                Transformation = m_simpleTransformationAsString,
-                Strict = true
-            };
+            var updateParams = GetUpdateTransformParamsStrict(m_simpleTransformationAsString);
 
             m_cloudinary.UpdateTransform(updateParams);
 
-            GetTransformResult getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
+            var getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
 
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(true, getResult.Strict);
+            AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
 
             updateParams.Strict = false;
             m_cloudinary.UpdateTransform(updateParams);
 
             getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
 
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(false, getResult.Strict);
+            AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
+        }
+
+        [Test]
+        public async Task TestUpdateTransformStrictAsync()
+        {
+            // should allow updating transformation allowed_for_strict
+
+            await UploadTestImageResourceAsync((uploadParams) =>
+            {
+                uploadParams.EagerTransforms = new List<Transformation>() { m_simpleTransformation };
+            });
+
+            var updateParams = GetUpdateTransformParamsStrict(m_simpleTransformationAsString);
+
+            await m_cloudinary.UpdateTransformAsync(updateParams);
+
+            var getResult = await m_cloudinary.GetTransformAsync(m_simpleTransformationAsString);
+
+            AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
+
+            updateParams.Strict = false;
+            await m_cloudinary.UpdateTransformAsync(updateParams);
+
+            getResult = await m_cloudinary.GetTransformAsync(m_simpleTransformationAsString);
+
+            AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
+        }
+
+        private UpdateTransformParams GetUpdateTransformParamsStrict(string transformation)
+        {
+            return new UpdateTransformParams()
+            {
+                Transformation = transformation,
+                Strict = true
+            };
+        }
+
+        private void AssertGetTransformResultIsStrict(GetTransformResult result, string transformName, bool isStrict)
+        {
+            StringAssert.AreEqualIgnoringCase(transformName, result?.Name);
+            Assert.AreEqual(isStrict, result.Strict);
         }
 
         [Test]
@@ -191,26 +257,47 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow creating named transformation
 
-            CreateTransformParams create = new CreateTransformParams()
+            var createParams = GetCreateTransformParams(m_simpleTransformation);
+
+            m_cloudinary.CreateTransform(createParams);
+
+            var getResult = m_cloudinary.GetTransform(
+                new GetTransformParams { Transformation = createParams.Name });
+
+            AssertCreateTransform(getResult, m_simpleTransformation);
+        }
+
+        [Test]
+        public async Task TestCreateTransformAsync()
+        {
+            // should allow creating named transformation
+
+            var createParams = GetCreateTransformParams(m_simpleTransformation);
+
+            await m_cloudinary.CreateTransformAsync(createParams);
+
+            var getResult = await m_cloudinary.GetTransformAsync(
+                new GetTransformParams { Transformation = createParams.Name });
+
+            AssertCreateTransform(getResult, m_simpleTransformation);
+        }
+
+        private CreateTransformParams GetCreateTransformParams(Transformation transformation)
+        {
+            return new CreateTransformParams()
             {
                 Name = GetUniqueTransformationName(),
-                Transform = m_simpleTransformation
+                Transform = transformation
             };
+        }
 
-            m_cloudinary.CreateTransform(create);
-
-            GetTransformParams get = new GetTransformParams()
-            {
-                Transformation = create.Name
-            };
-
-            GetTransformResult getResult = m_cloudinary.GetTransform(get);
-
-            Assert.IsNotNull(getResult);
-            Assert.AreEqual(true, getResult.Strict);
-            Assert.AreEqual(false, getResult.Used);
-            Assert.AreEqual(1, getResult.Info.Length);
-            Assert.AreEqual(m_simpleTransformation.Generate(), new Transformation(getResult.Info[0]).Generate());
+        private void AssertCreateTransform(GetTransformResult result, Transformation testTransformation)
+        {
+            Assert.IsNotNull(result);
+            Assert.AreEqual(true, result.Strict);
+            Assert.AreEqual(false, result.Used);
+            Assert.AreEqual(1, result.Info.Length);
+            Assert.AreEqual(testTransformation.Generate(), new Transformation(result.Info[0]).Generate());
         }
     }
 }

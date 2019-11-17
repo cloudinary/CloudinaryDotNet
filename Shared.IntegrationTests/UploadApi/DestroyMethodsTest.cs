@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
@@ -8,24 +9,36 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestDestroyRaw()
         {
-            RawUploadParams uploadParams = new RawUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag
-            };
+            var uploadResult = UploadTestRawResource(type: ApiShared.GetCloudinaryParam(ResourceType.Raw));
 
-            RawUploadResult uploadResult = m_cloudinary.Upload(uploadParams, Api.GetCloudinaryParam(ResourceType.Raw));
+            var deletionParams = GetDeletionParams(uploadResult.PublicId);
+            var destroyResult = m_cloudinary.Destroy(deletionParams);
 
-            Assert.NotNull(uploadResult);
+            AssertDestroyed(destroyResult);
+        }
 
-            DeletionParams destroyParams = new DeletionParams(uploadResult.PublicId)
+        [Test]
+        public async Task TestDestroyRawAsync()
+        {
+            var uploadResult = await UploadTestRawResourceAsync(type: ApiShared.GetCloudinaryParam(ResourceType.Raw));
+
+            var deletionParams = GetDeletionParams(uploadResult.PublicId);
+            var destroyResult = await m_cloudinary.DestroyAsync(deletionParams);
+
+            AssertDestroyed(destroyResult);
+        }
+
+        private DeletionParams GetDeletionParams(string publicId)
+        {
+            return new DeletionParams(publicId)
             {
                 ResourceType = ResourceType.Raw
             };
+        }
 
-            DeletionResult destroyResult = m_cloudinary.Destroy(destroyParams);
-
-            Assert.AreEqual("ok", destroyResult.Result);
+        private void AssertDestroyed(DeletionResult result)
+        {
+            Assert.AreEqual("ok", result.Result);
         }
     }
 }

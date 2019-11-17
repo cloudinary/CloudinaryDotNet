@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
@@ -16,20 +17,40 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestExplode()
         {
-            var publicId = GetUniquePublicId();
-
-            var uploadParams = new ImageUploadParams()
+            var uploadResult = UploadTestImageResource((uploadParams) =>
             {
-                File = new FileDescription(m_testPdfPath),
-                PublicId = publicId,
-                Tags = m_apiTag
-            };
+                uploadParams.File = new FileDescription(m_testPdfPath);
+            });
 
-            m_cloudinary.Upload(uploadParams);
+            var explodeParams = CreateExplodeParams(uploadResult.PublicId, m_transformationExplode);
 
-            var explodeParams = new ExplodeParams(publicId, m_transformationExplode);
             var result = m_cloudinary.Explode(explodeParams);
 
+            AssertExplodeStatus(result);
+        }
+
+        [Test]
+        public async Task TestExplodeAsync()
+        {
+            var uploadResult = await UploadTestImageResourceAsync((uploadParams) =>
+            {
+                uploadParams.File = new FileDescription(m_testPdfPath);
+            });
+
+            var explodeParams = CreateExplodeParams(uploadResult.PublicId, m_transformationExplode);
+
+            var result = await m_cloudinary.ExplodeAsync(explodeParams);
+
+            AssertExplodeStatus(result);
+        }
+
+        private ExplodeParams CreateExplodeParams(string publicId, Transformation transformation)
+        {
+            return new ExplodeParams(publicId, transformation);
+        }
+
+        private void AssertExplodeStatus(ExplodeResult result)
+        {
             Assert.AreEqual("processing", result.Status);
         }
     }

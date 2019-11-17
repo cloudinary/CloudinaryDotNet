@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
@@ -8,17 +9,37 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestEnglishText()
         {
-            TextParams tParams = new TextParams("Sample text.")
+            var textParams = GetEnglishTextParams();
+
+            var textResult = m_cloudinary.Text(textParams);
+
+            AssertEnglishText(textResult);
+        }
+
+        [Test]
+        public async Task TestEnglishTextAsync()
+        {
+            var textParams = GetEnglishTextParams();
+
+            var textResult = await m_cloudinary.TextAsync(textParams);
+
+            AssertEnglishText(textResult);
+        }
+
+        private TextParams GetEnglishTextParams()
+        {
+            return new TextParams("Sample text.")
             {
                 Background = "red",
                 FontStyle = "italic",
-                PublicId = GetUniquePublicId(StorageType.text)
+                PublicId = GetUniqueAsyncPublicId(StorageType.text)
             };
+        }
 
-            TextResult textResult = m_cloudinary.Text(tParams);
-
-            Assert.IsTrue(textResult.Width > 0);
-            Assert.IsTrue(textResult.Height > 0);
+        private void AssertEnglishText(TextResult result)
+        {
+            Assert.Greater(result.Width, 0);
+            Assert.Greater(result.Height, 0);
         }
 
         [Test]

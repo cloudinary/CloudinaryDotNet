@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 
 namespace CloudinaryDotNet
@@ -10,7 +11,7 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Implement generic utility functions.
     /// </summary>
-    internal static partial class Utils
+    internal static class Utils
     {
         internal static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -58,6 +59,14 @@ namespace CloudinaryDotNet
             return Regex.IsMatch(
                 filePath, 
                 @"^((ftp|https?|s3|gs):.*)|data:([\w-]+/[\w-]+)?(;[\w-]+=[\w-]+)*;base64,([a-zA-Z0-9/+\n=]+)");
+        }
+
+        /// <summary>
+        /// Encodes the supplied URL string as a new string.
+        /// </summary>
+        internal static string Encode(string value)
+        {
+            return UrlEncoder.Default.Encode(value);
         }
 
         /// <summary>

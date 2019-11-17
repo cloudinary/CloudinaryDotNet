@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -15,11 +16,11 @@ namespace CloudinaryDotNet.Test.Asset
         private const string DefaultVersionStr = "v1";
         private const string TestFolder = "folder/test";
         private const string TestImageId = "image.jpg";
-        
+
         [OneTimeSetUp]
         public void Init()
         {
-            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey, 
+            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey,
                 TestConstants.DefaultApiSecret);
             m_api = new Api(account);
         }
@@ -209,7 +210,7 @@ namespace CloudinaryDotNet.Test.Asset
             Assert.AreEqual(TestConstants.DefaultRootPath + "image/youtube/http://www.youtube.com/watch%3Fv%3Dd9NF2edxy-M", uri);
         }
 
-        
+
         [Test]
         public void TestFetchFormat()
         {
@@ -401,6 +402,25 @@ namespace CloudinaryDotNet.Test.Asset
             var transformation = new Transformation().Chain().X(100).Y(100).Crop("fill").Chain();
             var uri = m_api.UrlImgUp.Transform(transformation).BuildUrl("test");
             Assert.AreEqual(TestConstants.DefaultImageUpPath + "c_fill,x_100,y_100/test", uri);
+        }
+
+        [Test]
+        public void TestAgentPlatformHeaders()
+        {
+            var request = new HttpRequestMessage { RequestUri = new Uri("http://dummy.com") };
+            m_api.UserPlatform = "Test/1.0";
+
+            m_api.PrepareRequestBody(
+                request,
+                HttpMethod.GET,
+                new SortedDictionary<string, object>(),
+                new FileDescription(""));
+
+            //Can't test the result, so we just verify the UserAgent parameter is sent to the server
+            StringAssert.AreEqualIgnoringCase($"{m_api.UserPlatform} {ApiShared.USER_AGENT}",
+                request.Headers.UserAgent.ToString());
+            StringAssert.IsMatch(@"Test\/1\.0 CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\)",
+                request.Headers.UserAgent.ToString());
         }
     }
 }

@@ -4,11 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-#if NET40
-using System.Web;
-#endif
 
 namespace CloudinaryDotNet
 {
@@ -621,11 +616,7 @@ namespace CloudinaryDotNet
 
             foreach (var item in dict)
             {
-#if NET40
-                sb.Append(" ").Append(item.Key).Append("=\"").Append(HttpUtility.HtmlAttributeEncode(item.Value)).Append("\"");
-#else
                 sb.Append(" ").Append(item.Key).Append("=\"").Append(System.Net.WebUtility.HtmlEncode(item.Value)).Append("\"");
-#endif
             }
 
             sb.Append("/>");
