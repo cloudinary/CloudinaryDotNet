@@ -8,7 +8,7 @@ $netClassicPath = "$baseOutputPath\NetClassic"
 $libPath = "lib"
 
 $targetFrameworks = @{
- "\net40" = $netClassicPath;
+ "\net45" = $netClassicPath;
  "\netstandard1.3" = $netCorePath;
  "\netcore" = $netCorePath;
 }
@@ -44,7 +44,7 @@ function Get-MSBuild-Path {
 function Build-Net-Classic($outPath) {
     
   $msbuildExe = Get-MSBuild-Path
-  &$msbuildExe Cloudinary\Cloudinary.csproj /t:"Clean,Build" /p:"Configuration="Release";OutDir=$outPath;TargetFrameworkVersion="v4.0";Sign="$sign""
+  &$msbuildExe Cloudinary\Cloudinary.csproj /t:"Clean,Build" /p:"Configuration="Release";OutDir=$outPath;TargetFrameworkVersion="v4.5";Sign="$sign""
   if (-not $?) { exit 1 }
 }
 
