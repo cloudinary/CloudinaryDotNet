@@ -1,3 +1,31 @@
+
+1.9.0 / 2019-11-17
+==================
+
+New functionality
+-----------------
+  * Add support of `Async` API calls in .NET Core
+  * Add `expiresAt` to `DownloadPrivate`
+  * Add `DerivedNextCursor ` to `GetResourceParams` Admin API
+  * Add `ListResourcesByContext` to Admin API
+  * Add `Live` parameter to `UploadPreset`
+  * Add `AudioFrequency` enumeration
+  * Add `Format` parameter to `SpriteParams`
+  * Add supported video codecs
+  * Add supported `Gravity` values
+  * Add `Named` parameter to `GetTransformResult`
+  * Add `VerifyApiResponseSignature` and `VerifyNotificationSignature` functions
+  * Add XML documentation
+  
+ Other Changes
+ -------------
+ 
+  * Fix typo in `QualityOverride` parameter name
+  * Fix `acl` and `url` escaping in `AuthToken` generation
+  * Fix project types for VS for Mac
+  * Extract integration tests into separate assembly
+  * Fix `build.ps1` script
+ 
 1.8.0 / 2019-04-23
 ==================
 
