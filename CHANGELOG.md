@@ -1,9 +1,16 @@
 
+1.9.1 / 2019-11-18
+==================
+
+  * Fix nuget package
+  * Fix build script output paths resolution
+
 1.9.0 / 2019-11-17
 ==================
 
 New functionality
 -----------------
+
   * Add support of `Async` API calls in .NET Core
   * Add `expiresAt` to `DownloadPrivate`
   * Add `DerivedNextCursor ` to `GetResourceParams` Admin API
