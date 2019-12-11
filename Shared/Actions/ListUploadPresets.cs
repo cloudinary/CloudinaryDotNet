@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace CloudinaryDotNet.Actions
@@ -62,15 +60,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class.
-        /// </summary>
-        /// <param name="response">HTTP response.</param>
-        /// <returns>New instance of this class.</returns>
-        internal static ListUploadPresetsResult Parse(Object response)
-        {
-            return Api.Parse<ListUploadPresetsResult>(response);
-        }
     }
 }

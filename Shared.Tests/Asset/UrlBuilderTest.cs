@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
@@ -17,11 +18,11 @@ namespace CloudinaryDotNet.Test.Asset
         private const string DefaultVersionStr = "v1";
         private const string TestFolder = "folder/test";
         private const string TestImageId = "image.jpg";
-        
+
         [OneTimeSetUp]
         public void Init()
         {
-            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey, 
+            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey,
                 TestConstants.DefaultApiSecret);
             m_api = new Api(account);
         }
@@ -211,7 +212,7 @@ namespace CloudinaryDotNet.Test.Asset
             Assert.AreEqual(TestConstants.DefaultRootPath + "image/youtube/http://www.youtube.com/watch%3Fv%3Dd9NF2edxy-M", uri);
         }
 
-        
+
         [Test]
         public void TestFetchFormat()
         {
@@ -406,6 +407,25 @@ namespace CloudinaryDotNet.Test.Asset
         }
 
         [Test]
+        public void TestAgentPlatformHeaders()
+        {
+            var request = new HttpRequestMessage { RequestUri = new Uri("http://dummy.com") };
+            m_api.UserPlatform = "Test/1.0";
+
+            m_api.PrepareRequestBody(
+                request,
+                HttpMethod.GET,
+                new SortedDictionary<string, object>(),
+                new FileDescription(""));
+
+            //Can't test the result, so we just verify the UserAgent parameter is sent to the server
+            StringAssert.AreEqualIgnoringCase($"{m_api.UserPlatform} {ApiShared.USER_AGENT}",
+                request.Headers.UserAgent.ToString());
+            StringAssert.IsMatch(@"Test\/1\.0 CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\)",
+                request.Headers.UserAgent.ToString());
+        }
+        
+        [Test]
         public void TestDownloadArchiveUrl()
         {
             var cloudinary = new Cloudinary("cloudinary://a:b@test123");
@@ -423,7 +443,7 @@ namespace CloudinaryDotNet.Test.Asset
             var regVideo = Regex.IsMatch(decodedVideoUrl, @"https://api\.cloudinary\.com/v1_1/[^/]*/video/generate_archive\?api_key=a&mode=download&signature=\w{40}&tags\[]=some_tag&timestamp=\d{10}");
             Assert.True(regVideo);
         }
-
+        
         [Test]
         public void TestDownloadPrivate()
         {

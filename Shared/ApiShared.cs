@@ -1,21 +1,22 @@
-﻿
-using CloudinaryDotNet.Actions;
+﻿using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
-using Newtonsoft.Json.Converters;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet
 {
     /// <summary>
     /// Provider for the API calls.
     /// </summary>
-    public class ApiShared : ISignProvider
+    public partial class ApiShared : ISignProvider
     {
         /// <summary>
         /// URL of the cloudinary API.
@@ -85,7 +86,7 @@ namespace CloudinaryDotNet
         public string UserPlatform;
 
         /// <summary>
-        /// Timeout for the API requests,
+        /// Timeout for the API requests, milliseconds.
         /// </summary>
         public int Timeout = 0;
 
@@ -108,6 +109,23 @@ namespace CloudinaryDotNet
         /// </summary>
         public int ChunkSize = 65000;
 
+        private static readonly HttpClient client = new HttpClient();
+
+        private readonly Func<string, HttpRequestMessage> RequestBuilder =
+            (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
+
+        /// <summary>
+        /// Default static parameterless constructor.
+        /// </summary>
+        static ApiShared()
+        {
+            var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
+
+            var frameworkDescription = RuntimeInformation.FrameworkDescription;
+
+            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2} ({3})",
+                version.Major, version.Minor, version.Build, frameworkDescription);
+        }
 
         /// <summary>
         /// Default parameterless constructor.
@@ -144,47 +162,6 @@ namespace CloudinaryDotNet
                 Secure = true;
             }
 
-        }
-
-        /// <summary>
-        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
-        /// </summary>
-        /// <param name="method">Http request method.</param>
-        /// <param name="url">API URL.</param>
-        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
-        /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
-        /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-        {
-            throw new Exception("Please call overriden method");
-        }
-
-        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
-        {
-            parameters?.Check();
-
-            return CallAndParse<T>(method,
-                                   url,
-                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
-                                   file,
-                                   extraHeaders);
-        }
-
-        /// <summary>
-        /// Virtual method to call the cloudinary API and return the parsed response. This method should be overridden
-        /// in child classes.
-        /// </summary>
-        /// <typeparam name="T">Type of the response.</typeparam>
-        /// <param name="method">Http request method.</param>
-        /// <param name="url">API URL.</param>
-        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
-        /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
-        /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual T CallAndParse<T>(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
-        {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -367,6 +344,131 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
+        /// </summary>
+        /// <param name="method">Http request method.</param>
+        /// <param name="url">API URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Parsed response from the cloudinary API.</returns>
+        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        {
+            throw new Exception("Please call overriden method");
+        }
+
+        /// <summary>
+        /// Call the Cloudinary API and parse HTTP response asynchronously.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">A generated URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <returns>Instance of the parsed response from the cloudinary API.</returns>
+        public async Task<T> CallAndParseAsync<T>(HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null,
+            CancellationToken? cancellationToken = null) where T : BaseResult, new()
+        {
+            using (var response = await CallAsync(method,
+                url,
+                parameters,
+                file,
+                extraHeaders,
+                cancellationToken))
+            {
+                return await ParseAsync<T>(response);
+            }
+        }
+
+        /// <summary>
+        /// Call the Cloudinary API and parse HTTP response.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">A generated URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="file">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <returns>Instance of the parsed response from the cloudinary API.</returns>
+        public T CallAndParse<T>(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        {
+            using (var response = Call(method,
+                url,
+                parameters,
+                file,
+                extraHeaders))
+            {
+                return Parse<T>(response);
+            }
+        }
+
+        /// <summary>
+        /// Makes custom call to Cloudinary API asynchronously.
+        /// </summary>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="url">URL to call.</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null).</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <returns>HTTP response on call.</returns>
+        public async Task<HttpResponseMessage> CallAsync(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null,
+            CancellationToken? cancellationToken = null)
+        {
+            using (var request =
+                await PrepareRequestBodyAsync(RequestBuilder(url), method, parameters, file, extraHeaders, cancellationToken))
+            {
+                var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
+                return await client.SendAsync(request, httpCancellationToken);
+            }
+        }
+
+        /// <summary>
+        /// Makes custom call to Cloudinary API.
+        /// </summary>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="url">URL to call.</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null).</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <returns>HTTP response on call.</returns>
+        public HttpResponseMessage Call(
+            HttpMethod method, 
+            string url, 
+            SortedDictionary<string, object> parameters, 
+            FileDescription file, 
+            Dictionary<string, string> extraHeaders = null)
+        {
+            using (var request = RequestBuilder(url))
+            {
+                PrepareRequestBody(request, method, parameters, file, extraHeaders);
+
+                var cancellationToken = GetDefaultCancellationToken();
+
+                return client
+                    .SendAsync(request, cancellationToken)
+                    .GetAwaiter()
+                    .GetResult();
+            }
+        }
+
+        /// <summary>
         /// Gets cloudinary parameter from enumeration.
         /// </summary>
         /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
@@ -528,15 +630,6 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Calculates current UNIX time.
-        /// </summary>
-        /// <returns>Amount of seconds from 1 january 1970.</returns>
-        private string GetTime()
-        {
-            return Convert.ToInt64(((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
-        }
-
-        /// <summary>
         /// Virtual build callback URL method. This method should be overridden in child classes.
         /// </summary>
         /// <returns>Callback URL.</returns>
@@ -546,20 +639,32 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Build unsigned upload params with defined preset.
+        /// Builds HTML file input tag for unsigned upload of an asset.
         /// </summary>
-        /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
-        /// <param name="parameters">Cloudinary upload parameters.</param>
-        /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
-        protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="preset">The name of upload preset.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
+        public string BuildUnsignedUploadForm(string field, string preset, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
-            if (parameters == null)
-                parameters = new SortedDictionary<string, object>();
+            return BuildUploadForm(field, resourceType, BuildUnsignedUploadParams(preset, parameters), htmlOptions);
+        }
 
-            parameters.Add("upload_preset", preset);
-            parameters.Add("unsigned", true);
-
-            return parameters;
+        /// <summary>
+        /// Builds HTML file input tag for upload an asset.
+        /// </summary>
+        /// <param name="field">The name of an input field in the same form that will be updated post-upload with the asset's metadata.
+        /// If no such field exists in your form, a new hidden field with the specified name will be created.</param>
+        /// <param name="resourceType">Type of the uploaded resource.</param>
+        /// <param name="parameters">Cloudinary upload parameters to add to the file input tag.</param>
+        /// <param name="htmlOptions">Html options to be applied to the file input tag.</param>
+        /// <returns>A file input tag, that needs to be added to the form on your HTML page.</returns>
+        public string BuildUploadForm(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
+        {
+            return BuildUploadFormShared(field, resourceType, parameters, htmlOptions);
         }
 
         /// <summary>
@@ -609,161 +714,6 @@ namespace CloudinaryDotNet
             builder.Append("'/>");
 
             return builder.ToString();
-        }
-
-        /// <summary>
-        /// Virtual encode API URL method. This method should be overridden in child classes.
-        /// </summary>
-        /// <param name="value">URL to be encoded.</param>
-        /// <returns>Encoded URL.</returns>
-        protected virtual string EncodeApiUrl(string value)
-        {
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Check 'unsigned' parameter value and add signature into parameters if unsigned=false or not specified.
-        /// </summary>
-        /// <param name="parameters">Parameters to check signature.</param>
-        protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
-        {
-            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
-                FinalizeUploadParameters(parameters);
-            else if (parameters.ContainsKey("removeUnsignedParam"))
-            {
-                parameters.Remove("unsigned");
-                parameters.Remove("removeUnsignedParam");
-            }
-        }
-
-        /// <summary>
-        /// Serialize the cloudinary parameters to JSON.
-        /// </summary>
-        /// <param name="parameters">Parameters to serialize.</param>
-        /// <returns>Serialized parameters as JSON string.</returns>
-        protected string ParamsToJson(SortedDictionary<string, object> parameters)
-        {
-            var serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            var sb = new StringBuilder();
-            var sw = new StringWriter(sb);
-
-            using (var writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, parameters);
-            }
-
-            return sb.ToString();
-        }
-
-        internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
-        {
-            parameters.Add("timestamp", GetTime());
-            parameters.Add("signature", SignParameters(parameters));
-            parameters.Add("api_key", Account.ApiKey);
-        }
-
-        /// <summary>
-        /// Write cloudinary parameter to the request stream.
-        /// </summary>
-        /// <param name="writer">Stream writer.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The parameter value.</param>
-        protected void WriteParam(StreamWriter writer, string key, string value)
-        {
-#if DEBUG
-            Console.WriteLine(String.Format("{0}: {1}", key, value));
-#endif
-            WriteLine(writer, "--{0}", HTTP_BOUNDARY);
-            WriteLine(writer, "Content-Disposition: form-data; name=\"{0}\"", key);
-            WriteLine(writer);
-            WriteLine(writer, value);
-        }
-
-        /// <summary>
-        /// Write cloudinary parameter to the request stream.
-        /// </summary>
-        /// <param name="writer">Stream writer.</param>
-        /// <param name="file">File to be written to the stream.</param>
-        protected void WriteFile(StreamWriter writer, FileDescription file)
-        {
-            if (file.IsRemote)
-            {
-                WriteParam(writer, "file", file.FilePath);
-            }
-            else
-            {
-                int bytesSent = 0;
-                if (file.Stream == null)
-                {
-                    using (FileStream stream = new FileStream(file.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        stream.Seek(file.BytesSent, SeekOrigin.Begin);
-                        file.Eof = WriteFile(writer, stream, file.BufferLength, file.FileName, out bytesSent);
-                        file.BytesSent += bytesSent;
-                    }
-                }
-                else
-                {
-                    file.Eof = WriteFile(writer, file.Stream, file.BufferLength, file.FileName, out bytesSent);
-                    file.BytesSent += bytesSent;
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Writes one chunk of file to stream.
-        /// </summary>
-        /// <param name="writer">Output writer.</param>
-        /// <param name="fileName">Name of file.</param>
-        /// <param name="stream">Input stream.</param>
-        /// <param name="length">Maximum amount of bytes to send.</param>
-        /// <param name="bytesSent">Amount of sent bytes.</param>
-        /// <returns>
-        /// true for EOF.
-        /// </returns>
-        private bool WriteFile(StreamWriter writer, Stream stream, int length, string fileName, out int bytesSent)
-        {
-            WriteLine(writer, "--{0}", HTTP_BOUNDARY);
-            WriteLine(writer, "Content-Disposition: form-data;  name=\"file\"; filename=\"{0}\"", fileName);
-            WriteLine(writer, "Content-Type: application/octet-stream");
-            WriteLine(writer);
-
-            writer.Flush();
-
-            bytesSent = 0;
-            int toSend = 0;
-            byte[] buf = new byte[ChunkSize];
-            int cnt = 0;
-
-            while ((toSend = length - bytesSent) > 0
-                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
-            {
-                writer.BaseStream.Write(buf, 0, cnt);
-                bytesSent += cnt;
-            }
-
-            return cnt == 0;
-        }
-
-        private void WriteLine(StreamWriter writer)
-        {
-            writer.Write("\r\n");
-        }
-
-        private void WriteLine(StreamWriter writer, string format)
-        {
-            writer.Write(format);
-            writer.Write("\r\n");
-        }
-
-        private void WriteLine(StreamWriter writer, string format, Object val)
-        {
-            writer.Write(format, val);
-            writer.Write("\r\n");
         }
     }
 
