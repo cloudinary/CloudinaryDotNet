@@ -8,10 +8,6 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-#if NET40
-    using System.Web;
-#endif
-
     /// <summary>
     /// The building blocks for generating an https delivery URL for assets.
     /// </summary>
@@ -403,10 +399,10 @@
         }
 
         /// <summary>
-        /// Set resource type.
+        /// Type of the resource.
         /// </summary>
-        /// <param name="resourceType">Type of the resource.</param>
-        /// <returns>The url with resource type defined.</returns>
+        /// <param name="resourceType">The resource type.</param>
+        /// <returns>The delivery URL with resource type defined.</returns>
         public Url ResourceType(string resourceType)
         {
             m_resourceType = resourceType;
@@ -683,11 +679,7 @@
 
             foreach (var item in dict)
             {
-#if NET40
-                sb.Append(" ").Append(item.Key).Append("=\"").Append(HttpUtility.HtmlAttributeEncode(item.Value)).Append("\"");
-#else
                 sb.Append(" ").Append(item.Key).Append("=\"").Append(System.Net.WebUtility.HtmlEncode(item.Value)).Append("\"");
-#endif
             }
 
             sb.Append("/>");
@@ -794,6 +786,151 @@
 
             sb.Append("</video>");
             return sb.ToString();
+        }
+
+        private string[] GetSourceTypes()
+        {
+            if (m_sourceTypes != null && m_sourceTypes.Length > 0)
+            {
+                return m_sourceTypes;
+            }
+
+            return DEFAULT_VIDEO_SOURCE_TYPES;
+        }
+
+        /// <summary>
+        /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs.
+        /// </summary>
+        /// <param name="sourceType">The type of the source.</param>
+        /// <param name="codecs">Codecs.</param>
+        /// <returns>Resulting mime type.</returns>
+        private static string VideoMimeType(string sourceType, params string[] codecs)
+        {
+            sourceType = sourceType == "ogv" ? "ogg" : sourceType;
+
+            if (string.IsNullOrEmpty(sourceType))
+            {
+                return string.Empty;
+            }
+
+            if (codecs == null || codecs.Length == 0)
+            {
+                return $"video/{sourceType}";
+            }
+
+            var codecsJoined = string.Join(", ", codecs.Where(c => !string.IsNullOrEmpty(c)));
+            var codecsStr = !string.IsNullOrEmpty(codecsJoined) ? $"; codecs={codecsJoined}" : string.Empty;
+
+            return $"video/{sourceType}{codecsStr}";
+        }
+
+        private static void AppendTransformation(Url url, Transformation transform)
+        {
+            if (url.m_transformation == null)
+            {
+                url.Transform(transform);
+            }
+            else
+            {
+                url.m_transformation.Chain();
+                transform.NestedTransforms.AddRange(url.m_transformation.NestedTransforms);
+                url.Transform(transform);
+            }
+        }
+
+        /// <summary>
+        /// Helper method to merge transformation for the URL.
+        /// </summary>
+        /// <param name="url">The URL with transformation to be merged.</param>
+        /// <param name="transformationSrc">Transformation to merge.</param>
+        private static void MergeUrlTransformation(Url url, Transformation transformationSrc)
+        {
+            if (transformationSrc == null)
+            {
+                return;
+            }
+
+            if (url.m_transformation == null)
+            {
+                url.Transform(transformationSrc);
+            }
+            else
+            {
+                foreach (var param in transformationSrc.Params)
+                {
+                    url.m_transformation.Add(param.Key, param.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Helper method for BuildVideoTag, returns source tags from provided options.
+        ///
+        /// Source types and video sources are mutually exclusive, only one of them can be used.
+        /// If both are not provided, default source types are used.
+        /// </summary>
+        ///
+        /// <param name="source">The public ID of the video.</param>
+        ///
+        /// <returns>Resulting source tags (may be empty).</returns>
+        private List<string> GetVideoSourceTags(string source)
+        {
+            if (m_videoSources != null && m_videoSources.Length > 0)
+            {
+                return m_videoSources.Select(x => GetSourceTag(source, x.Type, x.Codecs, x.Transformation)).ToList();
+            }
+
+            return GetSourceTypes().Select(x => GetSourceTag(source, x)).ToList();
+        }
+
+        private string GetSourceTag(
+            string source,
+            string sourceType,
+            string[] codecs = null,
+            Transformation transformation = null)
+        {
+            var sourceUrl = Clone();
+            MergeUrlTransformation(sourceUrl, transformation);
+
+            if (m_sourceTransforms != null)
+            {
+                if (m_sourceTransforms.TryGetValue(sourceType, out var sourceTransformation) &&
+                    sourceTransformation != null)
+                {
+                    AppendTransformation(sourceUrl, sourceTransformation.Clone());
+                }
+            }
+
+            var src = sourceUrl.Format(sourceType).BuildUrl(source);
+
+            return $"<source src='{src}' type='{VideoMimeType(sourceType, codecs)}'>";
+        }
+
+        private string FinalizePosterUrl(string source)
+        {
+            string posterUrl = null;
+
+            if (m_posterUrl != null)
+            {
+                posterUrl = m_posterUrl.BuildUrl();
+            }
+            else if (m_posterTransformation != null)
+            {
+                posterUrl = Clone().Format("jpg").Transform(m_posterTransformation.Clone()).BuildUrl(source);
+            }
+            else if (m_posterSource != null)
+            {
+                if (!string.IsNullOrEmpty(m_posterSource))
+                {
+                    posterUrl = Clone().Format("jpg").BuildUrl(m_posterSource);
+                }
+            }
+            else
+            {
+                posterUrl = Clone().Format("jpg").BuildUrl(source);
+            }
+
+            return posterUrl;
         }
 
         /// <summary>
@@ -909,225 +1046,6 @@
             }
 
             return uriStr;
-        }
-
-        /// <summary>
-        /// Creates a new object that is a deep copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a deep copy of this instance.
-        /// </returns>
-        public Url Clone()
-        {
-            Url newUrl = (Url)this.MemberwiseClone();
-
-            if (m_transformation != null)
-            {
-                newUrl.m_transformation = this.m_transformation.Clone();
-            }
-
-            if (m_posterTransformation != null)
-            {
-                newUrl.m_posterTransformation = m_posterTransformation.Clone();
-            }
-
-            if (m_posterUrl != null)
-            {
-                newUrl.m_posterUrl = m_posterUrl.Clone();
-            }
-
-            if (m_sourceTypes != null)
-            {
-                newUrl.m_sourceTypes = new string[m_sourceTypes.Length];
-                Array.Copy(m_sourceTypes, newUrl.m_sourceTypes, m_sourceTypes.Length);
-            }
-
-            if (m_sourceTransforms != null)
-            {
-                newUrl.m_sourceTransforms = new Dictionary<string, Transformation>();
-                foreach (var item in m_sourceTransforms)
-                {
-                    newUrl.m_sourceTransforms.Add(item.Key, item.Value.Clone());
-                }
-            }
-
-            newUrl.m_customParts = new List<string>(m_customParts);
-
-            return newUrl;
-        }
-
-        /// <summary>
-        /// Creates a new object that is a deep copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a deep copy of this instance.
-        /// </returns>
-        object CloudinaryDotNet.Core.ICloneable.Clone()
-        {
-            return Clone();
-        }
-
-        /// <summary>
-        /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs.
-        /// </summary>
-        /// <param name="sourceType">The type of the source.</param>
-        /// <param name="codecs">Codecs.</param>
-        /// <returns>Resulting mime type.</returns>
-        private static string VideoMimeType(string sourceType, params string[] codecs)
-        {
-            sourceType = sourceType == "ogv" ? "ogg" : sourceType;
-
-            if (string.IsNullOrEmpty(sourceType))
-            {
-                return string.Empty;
-            }
-
-            if (codecs == null || codecs.Length == 0)
-            {
-                return $"video/{sourceType}";
-            }
-
-            var codecsJoined = string.Join(", ", codecs.Where(c => !string.IsNullOrEmpty(c)));
-            var codecsStr = !string.IsNullOrEmpty(codecsJoined) ? $"; codecs={codecsJoined}" : string.Empty;
-
-            return $"video/{sourceType}{codecsStr}";
-        }
-
-        private static void AppendTransformation(Url url, Transformation transform)
-        {
-            if (url.m_transformation == null)
-            {
-                url.Transform(transform);
-            }
-            else
-            {
-                url.m_transformation.Chain();
-                transform.NestedTransforms.AddRange(url.m_transformation.NestedTransforms);
-                url.Transform(transform);
-            }
-        }
-
-        /// <summary>
-        /// Helper method to merge transformation for the URL.
-        /// </summary>
-        /// <param name="url">The URL with transformation to be merged.</param>
-        /// <param name="transformationSrc">Transformation to merge.</param>
-        private static void MergeUrlTransformation(Url url, Transformation transformationSrc)
-        {
-            if (transformationSrc == null)
-            {
-                return;
-            }
-
-            if (url.m_transformation == null)
-            {
-                url.Transform(transformationSrc);
-            }
-            else
-            {
-                foreach (var param in transformationSrc.Params)
-                {
-                    url.m_transformation.Add(param.Key, param.Value);
-                }
-            }
-        }
-
-        private static string Shard(string input)
-        {
-            uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
-            return ((((hash % 5) + 5) % 5) + 1).ToString();
-        }
-
-        private static string Decode(string input)
-        {
-            StringBuilder resultStr = new StringBuilder(input.Length);
-
-            int pos = 0;
-
-            while (pos < input.Length)
-            {
-                int ppos = input.IndexOf('%', pos);
-                if (ppos == -1)
-                {
-                    resultStr.Append(input.Substring(pos));
-                    pos = input.Length;
-                }
-                else
-                {
-                    resultStr.Append(input.Substring(pos, ppos - pos));
-                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
-                    resultStr.Append(ch);
-                    pos = ppos + 3;
-                }
-            }
-
-            return resultStr.ToString();
-        }
-
-        private static string Encode(string input)
-        {
-            StringBuilder resultStr = new StringBuilder(input.Length);
-            foreach (char ch in input)
-            {
-                if (!IsSafe(ch))
-                {
-                    resultStr.Append('%');
-                    resultStr.Append(string.Format("{0:X2}", (short)ch));
-                }
-                else
-                {
-                    resultStr.Append(ch);
-                }
-            }
-
-            return resultStr.ToString();
-        }
-
-        private static bool IsSafe(char ch)
-        {
-            if (ch >= 0x30 && ch <= 0x39)
-            {
-                return true; // 0-9
-            }
-
-            if (ch >= 0x41 && ch <= 0x5a)
-            {
-                return true; // A-Z
-            }
-
-            if (ch >= 0x61 && ch <= 0x7a)
-            {
-                return true; // a-z
-            }
-
-            return "/:-_.*".IndexOf(ch) >= 0;
-        }
-
-        private string FinalizePosterUrl(string source)
-        {
-            string posterUrl = null;
-
-            if (m_posterUrl != null)
-            {
-                posterUrl = m_posterUrl.BuildUrl();
-            }
-            else if (m_posterTransformation != null)
-            {
-                posterUrl = Clone().Format("jpg").Transform(m_posterTransformation.Clone()).BuildUrl(source);
-            }
-            else if (m_posterSource != null)
-            {
-                if (!string.IsNullOrEmpty(m_posterSource))
-                {
-                    posterUrl = Clone().Format("jpg").BuildUrl(m_posterSource);
-                }
-            }
-            else
-            {
-                posterUrl = Clone().Format("jpg").BuildUrl(source);
-            }
-
-            return posterUrl;
         }
 
         private CSource UpdateSource(string source)
@@ -1264,57 +1182,131 @@
             }
         }
 
-        private string[] GetSourceTypes()
+        private static string Shard(string input)
         {
-            if (m_sourceTypes != null && m_sourceTypes.Length > 0)
-            {
-                return m_sourceTypes;
-            }
-
-            return DEFAULT_VIDEO_SOURCE_TYPES;
+            uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
+            return ((((hash % 5) + 5) % 5) + 1).ToString();
         }
 
-        /// <summary>
-        /// Helper method for BuildVideoTag, returns source tags from provided options.
-        ///
-        /// Source types and video sources are mutually exclusive, only one of them can be used.
-        /// If both are not provided, default source types are used.
-        /// </summary>
-        ///
-        /// <param name="source">The public ID of the video.</param>
-        ///
-        /// <returns>Resulting source tags (may be empty).</returns>
-        private List<string> GetVideoSourceTags(string source)
+        private static string Decode(string input)
         {
-            if (m_videoSources != null && m_videoSources.Length > 0)
+            StringBuilder resultStr = new StringBuilder(input.Length);
+
+            int pos = 0;
+
+            while (pos < input.Length)
             {
-                return m_videoSources.Select(x => GetSourceTag(source, x.Type, x.Codecs, x.Transformation)).ToList();
-            }
-
-            return GetSourceTypes().Select(x => GetSourceTag(source, x)).ToList();
-        }
-
-        private string GetSourceTag(
-            string source,
-            string sourceType,
-            string[] codecs = null,
-            Transformation transformation = null)
-        {
-            var sourceUrl = Clone();
-            MergeUrlTransformation(sourceUrl, transformation);
-
-            if (m_sourceTransforms != null)
-            {
-                if (m_sourceTransforms.TryGetValue(sourceType, out var sourceTransformation) &&
-                    sourceTransformation != null)
+                int ppos = input.IndexOf('%', pos);
+                if (ppos == -1)
                 {
-                    AppendTransformation(sourceUrl, sourceTransformation.Clone());
+                    resultStr.Append(input.Substring(pos));
+                    pos = input.Length;
+                }
+                else
+                {
+                    resultStr.Append(input.Substring(pos, ppos - pos));
+                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
+                    resultStr.Append(ch);
+                    pos = ppos + 3;
                 }
             }
 
-            var src = sourceUrl.Format(sourceType).BuildUrl(source);
+            return resultStr.ToString();
+        }
 
-            return $"<source src='{src}' type='{VideoMimeType(sourceType, codecs)}'>";
+        private static string Encode(string input)
+        {
+            StringBuilder resultStr = new StringBuilder(input.Length);
+            foreach (char ch in input)
+            {
+                if (!IsSafe(ch))
+                {
+                    resultStr.Append('%');
+                    resultStr.Append(string.Format("{0:X2}", (short)ch));
+                }
+                else
+                {
+                    resultStr.Append(ch);
+                }
+            }
+
+            return resultStr.ToString();
+        }
+
+        private static bool IsSafe(char ch)
+        {
+            if (ch >= 0x30 && ch <= 0x39)
+            {
+                return true; // 0-9
+            }
+
+            if (ch >= 0x41 && ch <= 0x5a)
+            {
+                return true; // A-Z
+            }
+
+            if (ch >= 0x61 && ch <= 0x7a)
+            {
+                return true; // a-z
+            }
+
+            return "/:-_.*".IndexOf(ch) >= 0;
+        }
+
+        /// <summary>
+        /// Creates a new object that is a deep copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a deep copy of this instance.
+        /// </returns>
+        public Url Clone()
+        {
+            Url newUrl = (Url)this.MemberwiseClone();
+
+            if (m_transformation != null)
+            {
+                newUrl.m_transformation = this.m_transformation.Clone();
+            }
+
+            if (m_posterTransformation != null)
+            {
+                newUrl.m_posterTransformation = m_posterTransformation.Clone();
+            }
+
+            if (m_posterUrl != null)
+            {
+                newUrl.m_posterUrl = m_posterUrl.Clone();
+            }
+
+            if (m_sourceTypes != null)
+            {
+                newUrl.m_sourceTypes = new string[m_sourceTypes.Length];
+                Array.Copy(m_sourceTypes, newUrl.m_sourceTypes, m_sourceTypes.Length);
+            }
+
+            if (m_sourceTransforms != null)
+            {
+                newUrl.m_sourceTransforms = new Dictionary<string, Transformation>();
+                foreach (var item in m_sourceTransforms)
+                {
+                    newUrl.m_sourceTransforms.Add(item.Key, item.Value.Clone());
+                }
+            }
+
+            newUrl.m_customParts = new List<string>(m_customParts);
+
+            return newUrl;
+        }
+
+        /// <summary>
+        /// Creates a new object that is a deep copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a deep copy of this instance.
+        /// </returns>
+        object CloudinaryDotNet.Core.ICloneable.Clone()
+        {
+            return Clone();
         }
     }
 
@@ -1325,6 +1317,41 @@
     public class UrlBuilder : UriBuilder
     {
         private StringDictionary queryString = null;
+
+        /// <summary>
+        /// Gets the query information included in the Url.
+        /// </summary>
+        public StringDictionary QueryString
+        {
+            get
+            {
+                if (queryString == null)
+                {
+                    queryString = new StringDictionary();
+                }
+
+                return queryString;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a path to the resource referenced by the Url.
+        /// </summary>
+        public string PageName
+        {
+            get
+            {
+                string path = Path;
+                return path.Substring(path.LastIndexOf("/") + 1);
+            }
+
+            set
+            {
+                string path = Path;
+                path = path.Substring(0, path.LastIndexOf("/"));
+                Path = string.Concat(path, "/", value);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlBuilder"/> class.
@@ -1346,8 +1373,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified URI and dictionary with cloudinary
-        /// parameters.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class
+        /// with the specified URI and dictionary with cloudinary parameters.
         /// </summary>
         /// <param name="uri">A URI string.</param>
         /// <param name="params">Cloudinary parameters.</param>
@@ -1390,7 +1417,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified scheme, host, port number, and path.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class  with the specified scheme, host, port number, and path.
         /// </summary>
         /// <param name="scheme">An Internet access protocol.</param>
         /// <param name="host">A DNS-style domain name or IP address.</param>
@@ -1402,8 +1429,8 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified scheme, host, port number, path and
-        /// query string or fragment identifier.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class
+        /// with the specified scheme, host, port number, path and query string or fragment identifier.
         /// </summary>
         /// <param name="scheme">An Internet access protocol.</param>
         /// <param name="host">A DNS-style domain name or IP address.</param>
@@ -1413,41 +1440,6 @@
         public UrlBuilder(string scheme, string host, int port, string path, string extraValue)
             : base(scheme, host, port, path, extraValue)
         {
-        }
-
-        /// <summary>
-        /// Gets the query information included in the Url.
-        /// </summary>
-        public StringDictionary QueryString
-        {
-            get
-            {
-                if (queryString == null)
-                {
-                    queryString = new StringDictionary();
-                }
-
-                return queryString;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a path to the resource referenced by the Url.
-        /// </summary>
-        public string PageName
-        {
-            get
-            {
-                string path = Path;
-                return path.Substring(path.LastIndexOf("/") + 1);
-            }
-
-            set
-            {
-                string path = Path;
-                path = path.Substring(0, path.LastIndexOf("/"));
-                Path = string.Concat(path, "/", value);
-            }
         }
 
         /// <summary>

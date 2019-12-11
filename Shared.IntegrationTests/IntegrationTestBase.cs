@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -35,7 +36,7 @@ namespace CloudinaryDotNet.IntegrationTest
         protected const string TEST_LARGEIMAGE = "TestLargeImage.jpg";
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
-        
+
         protected const string FILE_FORMAT_PDF = "pdf";
         protected const string FILE_FORMAT_PNG = "png";
         protected const string FILE_FORMAT_JPG = "jpg";
@@ -47,7 +48,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
         protected const string STORAGE_TYPE_UPLOAD = "upload";
         protected const string STORAGE_TYPE_PRIVATE = "private";
-        
+
         protected const int TEST_PDF_PAGES_COUNT = 3;
         protected const int MAX_RESULTS = 500;
 
@@ -87,8 +88,10 @@ namespace CloudinaryDotNet.IntegrationTest
 
         protected enum StorageType { text, sprite, multi, facebook, upload }
 
-        private void Initialize(Assembly assembly)
+        [OneTimeSetUp]
+        public virtual void Initialize()
         {
+            var assembly = typeof(IntegrationTestBase).GetTypeInfo().Assembly;
             Settings settings = new Settings(Path.GetDirectoryName(assembly.Location));
             m_cloudName = settings.CloudName;
             m_apiKey = settings.ApiKey;
@@ -113,6 +116,11 @@ namespace CloudinaryDotNet.IntegrationTest
             m_presetsToClear = new List<string>();
 
             InitializeUniqueNames(assembly.GetName().Name);
+        }
+
+        protected virtual string GetMethodTag([System.Runtime.CompilerServices.CallerMemberName]string memberName = "")
+        {
+            return $"{m_apiTag}_{memberName}";
         }
 
         protected void InitializeUniqueNames(string assemblyName)
@@ -164,34 +172,87 @@ namespace CloudinaryDotNet.IntegrationTest
         }
 
         /// <summary>
-        /// A convenience method for uploading an image before testing
+        /// A convenient method for uploading an image before testing.
         /// </summary>
-        /// <param name="id">The ID of the resource</param>
-        /// <returns>The upload results</returns>
-        protected ImageUploadResult UploadTestResource(String id = null)
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <returns>The upload result.</returns>
+        protected ImageUploadResult UploadTestImageResource(
+            Action<ImageUploadParams> setParamsAction = null,
+            StorageType storageType = StorageType.upload)
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                id = GetUniquePublicId();
-            }
+            var uploadParams = new ImageUploadParams();
 
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                PublicId = id,
-                Tags = m_apiTag
-            };
+            setParamsAction?.Invoke(uploadParams);
+
+            PopulateMissingRawUploadParams(uploadParams, false, storageType);
+
             return m_cloudinary.Upload(uploadParams);
         }
 
         /// <summary>
-        /// A convenience method for deleting an image in the test
+        /// A convenient method for uploading an image before testing asynchronously.
         /// </summary>
-        /// <param name="id">The ID of the image to delete</param>
-        /// <returns>The results of the deletion</returns>
-        protected DelResResult DeleteTestResource(String id)
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <returns>The upload result.</returns>
+        protected Task<ImageUploadResult> UploadTestImageResourceAsync(
+            Action<ImageUploadParams> setParamsAction = null,
+            StorageType storageType = StorageType.upload)
         {
-            return m_cloudinary.DeleteResources(id);
+            var uploadParams = new ImageUploadParams();
+
+            setParamsAction?.Invoke(uploadParams);
+
+            PopulateMissingRawUploadParams(uploadParams, true, storageType);
+
+            return m_cloudinary.UploadAsync(uploadParams);
+        }
+
+        /// <summary>
+        /// A convenient method for uploading a raw resource before testing.
+        /// </summary>
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <param name="type">The type ("raw" or "auto", last by default).</param>
+        /// <returns>The upload result.</returns>
+        protected RawUploadResult UploadTestRawResource(
+            Action<RawUploadParams> setParamsAction = null,
+            string type = "auto",
+            StorageType storageType = StorageType.upload)
+        {
+            var uploadParams = new RawUploadParams();
+
+            setParamsAction?.Invoke(uploadParams);
+
+            PopulateMissingRawUploadParams(uploadParams, false, storageType);
+
+            return m_cloudinary.Upload(uploadParams, type);
+        }
+
+        /// <summary>
+        /// A convenient method for uploading a raw resource before testing asynchronously.
+        /// </summary>
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <param name="type">The type ("raw" or "auto", last by default).</param>
+        /// <returns>The upload result.</returns>
+        protected Task<RawUploadResult> UploadTestRawResourceAsync(
+            Action<RawUploadParams> setParamsAction = null,
+            string type = "auto",
+            StorageType storageType = StorageType.upload)
+        {
+            var uploadParams = new RawUploadParams();
+
+            setParamsAction?.Invoke(uploadParams);
+
+            PopulateMissingRawUploadParams(uploadParams, true, storageType);
+
+            return m_cloudinary.UploadAsync(uploadParams, type);
+        }
+
+        private void PopulateMissingRawUploadParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
+        {
+            uploadParams.File = uploadParams.File ?? new FileDescription(m_testImagePath);
+            uploadParams.PublicId = uploadParams.PublicId ??
+                (isAsync ? GetUniqueAsyncPublicId(storageType) : GetUniquePublicId(storageType));
+            uploadParams.Tags = uploadParams.Tags ?? m_apiTag;
         }
 
         /// <summary>
@@ -214,6 +275,7 @@ namespace CloudinaryDotNet.IntegrationTest
             Assert.IsFalse(String.IsNullOrEmpty(account.Cloud));
             Assert.IsFalse(String.IsNullOrEmpty(account.ApiKey));
             Assert.IsFalse(String.IsNullOrEmpty(account.ApiSecret));
+
             return account;
         }
 
@@ -227,13 +289,8 @@ namespace CloudinaryDotNet.IntegrationTest
             Cloudinary cloudinary = new Cloudinary(account);
             if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
                 cloudinary.Api.ApiBaseAddress = m_apiBaseAddress;
-            return cloudinary;
-        }
 
-        protected long UnixTimeNow()
-        {
-            var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-            return (long)timeSpan.TotalMilliseconds;
+            return cloudinary;
         }
 
         protected IEnumerable<Resource> GetAllResults(Func<String, ListResourcesResult> list)
@@ -244,6 +301,7 @@ namespace CloudinaryDotNet.IntegrationTest
             {
                 resources = resources.Concat(current.Resources);
             }
+
             return resources;
         }
 
@@ -254,6 +312,11 @@ namespace CloudinaryDotNet.IntegrationTest
             var publicId = $"{m_apiTest}_{m_publicIdsToClear[storageType].Count + 1}_{suffix}";
             AddCreatedPublicId(storageType, publicId);
             return publicId;
+        }
+
+        protected virtual string GetUniqueAsyncPublicId(StorageType storageType = StorageType.upload)
+        {
+            return GetUniquePublicId(storageType, "ASYNC");
         }
 
         protected void AddCreatedPublicId(StorageType storageType, string publicId)
@@ -295,11 +358,6 @@ namespace CloudinaryDotNet.IntegrationTest
         }
 
         #endregion
-
-        private int GetUniqueNumber()
-        {
-            return Guid.NewGuid().GetHashCode();
-        }
 
         [OneTimeTearDown]
         public virtual void Cleanup()

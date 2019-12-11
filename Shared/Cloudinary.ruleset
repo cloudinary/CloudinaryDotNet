@@ -38,10 +38,10 @@
     <Rule Id="SA1131" Action="Warning" />
     <Rule Id="SA1137" Action="Warning" />
     <Rule Id="SA1200" Action="Warning" />
-    <Rule Id="SA1201" Action="Warning" />
-    <Rule Id="SA1202" Action="Warning" />
-    <Rule Id="SA1203" Action="Warning" />
-    <Rule Id="SA1204" Action="Warning" />
+    <Rule Id="SA1201" Action="Info" />
+    <Rule Id="SA1202" Action="Info" />
+    <Rule Id="SA1203" Action="Info" />
+    <Rule Id="SA1204" Action="Info" />
     <Rule Id="SA1208" Action="Warning" />
     <Rule Id="SA1210" Action="Warning" />
     <Rule Id="SA1304" Action="Warning" />
@@ -120,6 +120,7 @@
     <Rule Id="CA1825" Action="Info" />
     <Rule Id="CA2000" Action="Info" />
     <Rule Id="CA2008" Action="Info" />
+    <Rule Id="CA2007" Action="None" />
     <Rule Id="CA2208" Action="Warning" />
     <Rule Id="CA2211" Action="Info" />
     <Rule Id="CA2225" Action="Info" />

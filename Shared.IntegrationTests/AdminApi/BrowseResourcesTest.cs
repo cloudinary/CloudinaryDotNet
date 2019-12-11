@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -269,25 +270,42 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow listing resources by tag
             var localTag = GetMethodTag();
-
             var file = new FileDescription(m_testImagePath);
             m_cloudinary.DeleteResourcesByTag(localTag);
-            var uploadParams = new ImageUploadParams()
-            {
-                File = file,
-                Tags = $"{m_apiTag},{localTag}"
-            };
 
-            m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(PrepareImageUploadParamsWithTag(localTag, file));
+            m_cloudinary.Upload(PrepareImageUploadParamsWithTag(localTag, file));
 
-            uploadParams = new ImageUploadParams()
-            {
-                File = file,
-                Tags = $"{m_apiTag},{localTag}"
-            };
-
-            m_cloudinary.Upload(uploadParams);
             var result = m_cloudinary.ListResourcesByTag(localTag);
+            AssertListResourcesByTagResult(result);
+        }
+
+        [Test]
+        public async Task TestListResourcesByTagAsync()
+        {
+            // should allow listing resources by tag
+            var localTag = GetMethodTag();
+            var file = new FileDescription(m_testImagePath);
+            await m_cloudinary.DeleteResourcesByTagAsync(localTag);
+
+            await m_cloudinary.UploadAsync(PrepareImageUploadParamsWithTag(localTag, file));
+            await m_cloudinary.UploadAsync(PrepareImageUploadParamsWithTag(localTag, file));
+
+            var result = await m_cloudinary.ListResourcesByTagAsync(localTag);
+            AssertListResourcesByTagResult(result);
+        }
+
+        private ImageUploadParams PrepareImageUploadParamsWithTag(string localTag, FileDescription file)
+        {
+            return new ImageUploadParams()
+            {
+                File = file,
+                Tags = $"{m_apiTag},{localTag}"
+            };
+        }
+
+        private void AssertListResourcesByTagResult(ListResourcesResult result)
+        {
             Assert.AreEqual(2, result.Resources.Count());
         }
 
@@ -295,9 +313,26 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         public void TestListTags()
         {
             // should allow listing tags
-            UploadTestResource();
+            UploadTestImageResource();
 
-            ListTagsResult result = m_cloudinary.ListTags(new ListTagsParams());
+            var result = m_cloudinary.ListTags(new ListTagsParams());
+
+            AssertListTagNotEmpty(result);
+        }
+
+        [Test]
+        public async Task TestListTagsAsync()
+        {
+            // should allow listing tags
+            await UploadTestImageResourceAsync();
+
+            var result = await m_cloudinary.ListTagsAsync(new ListTagsParams());
+
+            AssertListTagNotEmpty(result);
+        }
+
+        private void AssertListTagNotEmpty(ListTagsResult result)
+        {
             Assert.Greater(result.Tags.Length, 0);
         }
 

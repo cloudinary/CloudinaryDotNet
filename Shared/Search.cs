@@ -1,6 +1,8 @@
 ﻿namespace CloudinaryDotNet
 {
     using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
 
     /// <summary>
@@ -15,8 +17,12 @@
         private Dictionary<string, object> searchParams;
         private ApiShared m_api;
 
+        private Url SearchResourcesUrl => m_api?.ApiUrlV?
+                .Add("resources")
+                .Add("search");
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Search"/> class with an API object.
+        /// Initializes a new instance of the <see cref="Search"/> class.
         /// </summary>
         /// <param name="api">Provider of the API calls.</param>
         public Search(ApiShared api)
@@ -139,17 +145,6 @@
             return queryParams;
         }
 
-        /// <summary>
-        /// Execute search request.
-        /// </summary>
-        /// <returns>Search response with information about the assets matching the search criteria.</returns>
-        public SearchResult Execute()
-        {
-            Url url = m_api.ApiUrlV.Add("resources").Add("search");
-
-            return m_api.CallAndParse<SearchResult>(HttpMethod.POST, url.BuildUrl(), PrepareSearchParams(), null, PrepareHeaders());
-        }
-
         private SortedDictionary<string, object> PrepareSearchParams()
         {
             SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
@@ -165,6 +160,36 @@
             extraHeaders.Add(Constants.HEADER_CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON);
 
             return extraHeaders;
+        }
+
+        /// <summary>
+        /// Execute search request.
+        /// </summary>
+        /// <returns>Search response with information about the assets matching the search criteria.</returns>
+        public SearchResult Execute()
+        {
+            return m_api.CallAndParse<SearchResult>(
+                HttpMethod.POST,
+                SearchResourcesUrl.BuildUrl(),
+                PrepareSearchParams(),
+                null,
+                PrepareHeaders());
+        }
+
+        /// <summary>
+        /// Execute search request asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Search response with information about the assets matching the search criteria.</returns>
+        public Task<SearchResult> ExecuteAsync(CancellationToken? cancellationToken = null)
+        {
+            return m_api.CallAndParseAsync<SearchResult>(
+                HttpMethod.POST,
+                SearchResourcesUrl.BuildUrl(),
+                PrepareSearchParams(),
+                null,
+                PrepareHeaders(),
+                cancellationToken);
         }
     }
 }

@@ -7,14 +7,39 @@
     /// </summary>
     public class FileDescription
     {
-        /// <summary>Represents size of the streaming buffer.</summary>
+        /// <summary>
+        /// Maximum size of a single chunk of data to be uploaded.
+        /// </summary>
         internal int BufferLength = int.MaxValue;
 
-        /// <summary>Represents end of file flag.</summary>
-        internal bool Eof;
+        /// <summary>
+        /// End of file flag.
+        /// </summary>
+        internal bool Eof => BytesSent == GetFileLength();
 
-        /// <summary>Represents amount of bytes sent.</summary>
+        /// <summary>
+        /// Byte sent.
+        /// </summary>
         internal int BytesSent;
+
+        /// <summary>
+        /// Get file length.
+        /// </summary>
+        /// <returns>The length of file.</returns>
+        internal long GetFileLength()
+        {
+            return Stream?.Length ?? new FileInfo(FilePath).Length;
+        }
+
+        /// <summary>
+        /// Reset stream buffer length and bytes sent values.
+        /// </summary>
+        /// <param name="bufferSize">(Optional) Size of the buffer.</param>
+        internal void Reset(int bufferSize = int.MaxValue)
+        {
+            BufferLength = bufferSize;
+            BytesSent = 0;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileDescription"/> class.
@@ -72,25 +97,5 @@
         /// Whether it is remote (by URL) or local file.
         /// </summary>
         public bool IsRemote { get; }
-
-        /// <summary>
-        /// Calculates the length of stream or file to upload.
-        /// </summary>
-        /// <returns>Unicode string.</returns>
-        internal long GetFileLength()
-        {
-            return Stream?.Length ?? new FileInfo(FilePath).Length;
-        }
-
-        /// <summary>
-        /// Resets the upload process.
-        /// </summary>
-        /// <param name="bufferSize">Size of the streaming buffer.</param>
-        internal void Reset(int bufferSize = int.MaxValue)
-        {
-            BufferLength = bufferSize;
-            Eof = false;
-            BytesSent = 0;
-        }
     }
 }

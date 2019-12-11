@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -191,14 +192,50 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             //should update custom coordinates
 
-            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
 
-            var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), Tags = m_apiTag });
+            var upResult = UploadTestImageResource();
 
-            m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { CustomCoordinates = coordinates });
+            m_cloudinary.UpdateResource(
+                new UpdateParams(upResult.PublicId)
+                {
+                    CustomCoordinates = coordinates
+                });
 
-            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
+            var result = m_cloudinary.GetResource(
+                new GetResourceParams(upResult.PublicId)
+                {
+                    Coordinates = true
+                });
 
+            AssertUpdatedCustomCoordinates(result, coordinates);
+        }
+
+        [Test]
+        public async Task TestUpdateCustomCoordinatesAsync()
+        {
+            //should update custom coordinates
+            var upResult = await UploadTestImageResourceAsync();
+
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
+
+            await m_cloudinary.UpdateResourceAsync(
+                new UpdateParams(upResult.PublicId)
+                {
+                    CustomCoordinates = coordinates
+                });
+
+            var result = await m_cloudinary.GetResourceAsync(
+                new GetResourceParams(upResult.PublicId)
+                {
+                    Coordinates = true
+                });
+
+            AssertUpdatedCustomCoordinates(result, coordinates);
+        }
+
+        private void AssertUpdatedCustomCoordinates(GetResourceResult result, Core.Rectangle coordinates)
+        {
             Assert.NotNull(result.Coordinates);
             Assert.NotNull(result.Coordinates.Custom);
             Assert.AreEqual(1, result.Coordinates.Custom.Length);

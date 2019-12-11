@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -53,28 +54,34 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestUploadLocalImage()
         {
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag
-            };
+            var uploadResult = UploadTestImageResource();
 
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+            AssertDefaultTestImageUploadAndSignature(uploadResult);
+        }
 
-            Assert.AreEqual(1920, uploadResult.Width);
-            Assert.AreEqual(1200, uploadResult.Height);
-            Assert.AreEqual(FILE_FORMAT_JPG, uploadResult.Format);
+        [Test]
+        public async Task TestUploadLocalImageAsync()
+        {
+            var uploadResult = await UploadTestImageResourceAsync();
 
-            var checkParams = new SortedDictionary<string, object>
-            {
-                { "public_id", uploadResult.PublicId },
-                { "version", uploadResult.Version }
-            };
+            AssertDefaultTestImageUploadAndSignature(uploadResult);
+        }
+
+        private void AssertDefaultTestImageUploadAndSignature(ImageUploadResult result)
+        {
+            Assert.AreEqual(1920, result.Width);
+            Assert.AreEqual(1200, result.Height);
+            Assert.AreEqual(FILE_FORMAT_JPG, result.Format);
 
             var api = new Api(m_account);
-            string expectedSign = api.SignParameters(checkParams);
 
-            Assert.AreEqual(expectedSign, uploadResult.Signature);
+            var expectedSign = api.SignParameters(new SortedDictionary<string, object>
+            {
+                { "public_id", result.PublicId },
+                { "version", result.Version }
+            });
+
+            Assert.AreEqual(expectedSign, result.Signature);
         }
 
         [Test]
@@ -467,15 +474,41 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         public void TestUploadLargeRawFiles()
         {
             // support uploading large raw files
-
             var largeFilePath = m_testLargeImagePath;
-            int fileLength = (int)new FileInfo(largeFilePath).Length;
-            var result = m_cloudinary.UploadLarge(new RawUploadParams()
-            {
-                File = new FileDescription(largeFilePath),
-                Tags = m_apiTag
-            }, 5 * 1024 * 1024);
+            int largeFileLength = (int)new FileInfo(largeFilePath).Length;
 
+            var uploadParams = GetUploadLargeRawParams(largeFilePath);
+
+            var result = m_cloudinary.UploadLarge(uploadParams, 5 * 1024 * 1024);
+
+            AssertUploadLarge(result, largeFileLength);
+        }
+
+        [Test]
+        public async Task TestUploadLargeRawFilesAsync()
+        {
+            // support asynchronous uploading large raw files
+            var largeFilePath = m_testLargeImagePath;
+            int largeFileLength = (int)new FileInfo(largeFilePath).Length;
+
+            var uploadParams = GetUploadLargeRawParams(largeFilePath);
+
+            var result = await m_cloudinary.UploadLargeAsync(uploadParams, 5 * 1024 * 1024);
+
+            AssertUploadLarge(result, largeFileLength);
+        }
+
+        private RawUploadParams GetUploadLargeRawParams(string path)
+        {
+            return new RawUploadParams()
+            {
+                File = new FileDescription(path),
+                Tags = m_apiTag
+            };
+        }
+
+        private void AssertUploadLarge(RawUploadResult result, int fileLength)
+        {
             Assert.AreEqual(fileLength, result.Length);
         }
 

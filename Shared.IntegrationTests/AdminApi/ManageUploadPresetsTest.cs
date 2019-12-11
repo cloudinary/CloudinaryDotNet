@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -107,25 +108,67 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow updating upload presets
 
-            var presetToCreate = new UploadPresetParams()
-            {
-                Folder = "folder",
-                Name = GetUniquePresetName(),
-                Context = new StringDictionary("a=b", "b=c"),
-                Transformation = m_simpleTransformation,
-                EagerTransforms = new List<object>() { m_resizeTransformation, m_updateTransformation },
-                AllowedFormats = new string[] { FILE_FORMAT_JPG, FILE_FORMAT_PNG },
-                Tags = $"a,b,c,{m_apiTag}",
-                FaceCoordinates = "1,2,3,4",
-                Live = false
-            };
+            var presetToCreate = CreateUploadPresetParams();
 
             var presetName = m_cloudinary.CreateUploadPreset(presetToCreate).Name;
 
             var preset = m_cloudinary.GetUploadPreset(presetName);
             Assert.IsFalse(preset.Settings.Live);
 
-            var presetToUpdate = new UploadPresetParams(preset)
+            var presetToUpdate = CreatePresetToUpdate(preset);
+
+            var result = m_cloudinary.UpdateUploadPreset(presetToUpdate);
+
+            AssertUpdateUploadPresetResult(result);
+
+            preset = m_cloudinary.GetUploadPreset(presetName);
+
+            AssertUpdateUploadPreset(presetName, preset); 
+
+            // TODO: compare settings of preset and presetToUpdate
+        }
+
+        [Test]
+        public async Task TestUpdateUploadPresetAsync()
+        {
+            // should allow updating upload presets
+
+            var presetToCreate = CreateUploadPresetParams();
+
+            var presetName = (await m_cloudinary.CreateUploadPresetAsync(presetToCreate)).Name;
+
+            var preset = await m_cloudinary.GetUploadPresetAsync(presetName);
+            Assert.IsFalse(preset.Settings.Live);
+
+            var presetToUpdate = CreatePresetToUpdate(preset);
+
+            var result = await m_cloudinary.UpdateUploadPresetAsync(presetToUpdate);
+
+            AssertUpdateUploadPresetResult(result);
+
+            preset = await m_cloudinary.GetUploadPresetAsync(presetName);
+
+            AssertUpdateUploadPreset(presetName, preset);
+
+            // TODO: compare settings of preset and presetToUpdate
+        }
+
+        private static void AssertUpdateUploadPreset(string presetName, GetUploadPresetResult preset)
+        {
+            Assert.AreEqual(presetName, preset.Name);
+            Assert.IsTrue(preset.Unsigned);
+            Assert.IsTrue(preset.Settings.QualityAnalysis);
+            Assert.IsTrue(preset.Settings.Live);
+        }
+
+        private static void AssertUpdateUploadPresetResult(UploadPresetResult result)
+        {
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            Assert.AreEqual("updated", result.Message);
+        }
+
+        private static UploadPresetParams CreatePresetToUpdate(GetUploadPresetResult preset) =>
+            new UploadPresetParams(preset)
             {
                 Colors = true,
                 Unsigned = true,
@@ -134,20 +177,19 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                 Live = true
             };
 
-            var result = m_cloudinary.UpdateUploadPreset(presetToUpdate);
-
-            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
-            Assert.AreEqual("updated", result.Message);
-
-            preset = m_cloudinary.GetUploadPreset(presetName);
-
-            Assert.AreEqual(presetName, preset.Name);
-            Assert.IsTrue(preset.Unsigned);
-            Assert.IsTrue(preset.Settings.QualityAnalysis);
-            Assert.IsTrue(preset.Settings.Live);
-
-            // TODO: compare settings of preset and presetToUpdate
-        }
+        private UploadPresetParams CreateUploadPresetParams() =>
+            new UploadPresetParams()
+            {
+                Folder = "folder",
+                Name = GetUniquePresetName(),
+                Context = new StringDictionary("a=b", "b=c"),
+                Transformation = m_simpleTransformation,
+                EagerTransforms = new List<object>() {m_resizeTransformation, m_updateTransformation},
+                AllowedFormats = new string[] {FILE_FORMAT_JPG, FILE_FORMAT_PNG},
+                Tags = $"a,b,c,{m_apiTag}",
+                FaceCoordinates = "1,2,3,4",
+                Live = false
+            };
 
         [Test]
         public void TestUnsignedUpload()

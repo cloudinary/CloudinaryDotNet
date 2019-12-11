@@ -1,15 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <AssemblyName>CloudinaryDotNet</AssemblyName>
     <PackageId>CloudinaryDotNet</PackageId>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>CloudinaryDotNet</RootNamespace>
     <Authors>Cloudinary</Authors>
-    <Version>1.8.0</Version>
+    <Version>1.9.1</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Official client library for easily integrating with the Cloudinary service</Description>
     <PackageTags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</PackageTags>
@@ -26,7 +25,7 @@
     <DebugType>none</DebugType>
     <DebugSymbols>False</DebugSymbols>
     <DefineConstants>TRACE</DefineConstants>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>..\Shared\Cloudinary.ruleset</CodeAnalysisRuleSet>
     <WarningsAsErrors />
   </PropertyGroup>
@@ -50,12 +49,15 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="1.1.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.WebEncoders" Version="1.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.*" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />

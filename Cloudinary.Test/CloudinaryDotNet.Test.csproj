@@ -11,9 +11,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CloudinaryDotNet.Test</RootNamespace>
     <AssemblyName>Cloudinary.Test</AssemblyName>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFramework>net45</TargetFramework>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
@@ -63,8 +62,8 @@
     <DefineConstants>SIGN_ASSEMBLY</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.2.1510.2205" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.*" />
+    <PackageReference Include="Moq" Version="4.12.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.*" />
     <PackageReference Include="NUnit" Version="3.10.*" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.*" />
     <Reference Include="System" />

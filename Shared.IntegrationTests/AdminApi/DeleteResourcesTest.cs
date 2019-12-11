@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using CloudinaryDotNet.Actions;
+﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
@@ -11,32 +12,63 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         public void TestDelete()
         {
             // should allow deleting resources
-            var publicId = GetUniquePublicId();
+            var uploadResult = UploadTestImageResource();
+
+            var uploadedPublicId = uploadResult.PublicId;
             var nonExistingPublicId = GetUniquePublicId();
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                PublicId = publicId,
-                Tags = m_apiTag
-            };
+            var resource = m_cloudinary.GetResource(uploadedPublicId);
 
-            m_cloudinary.Upload(uploadParams);
+            AssertResourceExists(resource, uploadedPublicId);
 
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            var delResult = m_cloudinary.DeleteResources(nonExistingPublicId, uploadedPublicId);
 
+            AssertResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
+
+            resource = m_cloudinary.GetResource(uploadedPublicId);
+
+            AssertResourceDoesNotExist(resource);
+        }
+
+        [Test]
+        public async Task TestDeleteAsync()
+        {
+            // should allow deleting resources
+            var uploadResult = await UploadTestImageResourceAsync();
+
+            var uploadedPublicId = uploadResult.PublicId;
+            var nonExistingPublicId = GetUniquePublicId();
+
+            var resource = await m_cloudinary.GetResourceAsync(uploadedPublicId);
+
+            AssertResourceExists(resource, uploadedPublicId);
+
+            var delResult = await m_cloudinary.DeleteResourcesAsync(nonExistingPublicId, uploadedPublicId);
+
+            AssertResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
+
+            resource = await m_cloudinary.GetResourceAsync(uploadedPublicId);
+
+            AssertResourceDoesNotExist(resource);
+        }
+
+        private void AssertResourceExists(GetResourceResult resource, string publicId)
+        {
             Assert.IsNotNull(resource);
             Assert.AreEqual(publicId, resource.PublicId);
+        }
 
-            DelResResult delResult = m_cloudinary.DeleteResources(
-                nonExistingPublicId, publicId);
+        private void AssertResourceDoesNotExist(GetResourceResult resource)
+        {
+            Assert.IsNotNull(resource);
+            Assert.IsNull(resource.PublicId);
+        }
 
-            Assert.AreEqual("not_found", delResult.Deleted[nonExistingPublicId]);
-            Assert.AreEqual("deleted", delResult.Deleted[publicId]);
-
-            resource = m_cloudinary.GetResource(publicId);
-
-            Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
+        private void AssertResourceDeleted(DelResResult result, string deletedPublicId, string nonExistingPublicId)
+        {
+            Assert.IsNotNull(result);
+            Assert.AreEqual("not_found", result.Deleted[nonExistingPublicId]);
+            Assert.AreEqual("deleted", result.Deleted[deletedPublicId]);
         }
 
         [Test]

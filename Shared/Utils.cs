@@ -5,25 +5,16 @@
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using System.Text.Encodings.Web;
     using System.Text.RegularExpressions;
 
     /// <summary>
     /// Implement generic utility functions.
     /// </summary>
-    internal static partial class Utils
+    internal static class Utils
     {
         /// <summary>Represents the Unix time starting point.</summary>
         internal static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-        /// <summary>
-        /// Converts Unix epoch time in seconds to DateTime.
-        /// </summary>
-        /// <param name="unixTime">The epoch time to be converted.</param>
-        /// <returns>Datetime.</returns>
-        public static DateTime FromUnixTimeSeconds(long unixTime)
-        {
-            return Epoch.AddSeconds(unixTime);
-        }
 
         /// <summary>
         /// Converts DateTime to Unix epoch time in seconds.
@@ -33,6 +24,16 @@
         internal static long ToUnixTimeSeconds(DateTime date)
         {
             return Convert.ToInt64((date.ToUniversalTime() - Epoch).TotalSeconds);
+        }
+
+        /// <summary>
+        /// Converts Unix epoch time in seconds to DateTime.
+        /// </summary>
+        /// <param name="unixTime">The epoch time to be converted.</param>
+        /// <returns>Datetime.</returns>
+        public static DateTime FromUnixTimeSeconds(long unixTime)
+        {
+            return Epoch.AddSeconds(unixTime);
         }
 
         /// <summary>
@@ -65,6 +66,16 @@
             return Regex.IsMatch(
                 filePath,
                 @"^((ftp|https?|s3|gs):.*)|data:([\w-]+/[\w-]+)?(;[\w-]+=[\w-]+)*;base64,([a-zA-Z0-9/+\n=]+)");
+        }
+
+        /// <summary>
+        /// Encodes the supplied URL string as a new string.
+        /// </summary>
+        /// <param name="value">String to encode.</param>
+        /// <returns>Encoded string.</returns>
+        internal static string Encode(string value)
+        {
+            return UrlEncoder.Default.Encode(value);
         }
 
         /// <summary>
