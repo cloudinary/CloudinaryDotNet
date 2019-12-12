@@ -141,5 +141,22 @@ namespace CloudinaryDotNet.Test.Parameters
             var p = new UploadPresetParams { Overwrite = true, Unsigned = true };
             Assert.Throws<ArgumentException>(p.Check, "Should require only one property set to true: Overwrite or Unsigned");
         }
+
+        [Test]
+        public void StreamingProfileCreateParamsCheckTest()
+        {
+            var p = new StreamingProfileCreateParams{Name = null};
+            Assert.Throws<ArgumentException>(p.Check, "Should require Name");
+        }
+
+        [Test]
+        public void StreamingProfileBaseParamsCheckTest()
+        {
+            var p = new StreamingProfileBaseParams { Representations = null };
+            Assert.Throws<ArgumentException>(p.Check, "Should require Representations to not be null");
+
+            p.Representations = new List<Representation>();
+            Assert.Throws<ArgumentException>(p.Check, "Should require Representations to not be empty");
+        }
     }
 }

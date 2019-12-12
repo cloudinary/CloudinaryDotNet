@@ -42,5 +42,11 @@ namespace CloudinaryDotNet.Test.Asset
             s = m_api.PrepareUploadParams(parameters);
             Assert.True(s.Contains("https://cloudinary.com/test/cloudinary_cors.html"));
         }
+
+        [Test]
+        public void TestUploadParamsWithoutCallback()
+        {
+            Assert.DoesNotThrow(() => m_api.PrepareUploadParams(new SortedDictionary<string, object>()));
+        }
     }
 }

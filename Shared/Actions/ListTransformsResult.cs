@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed list of transformations details.
     /// </summary>
@@ -16,13 +15,12 @@ namespace CloudinaryDotNet.Actions
         public TransformDesc[] Transformations { get; protected set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="ListTransformsParams.MaxResults"/>, 
+        /// When a listing request has more results to return than <see cref="ListTransformsParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
-        /// the <see cref="ListTransformsParams.NextCursor"/> parameter of the following listing request. 
+        /// the <see cref="ListTransformsParams.NextCursor"/> parameter of the following listing request.
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
-        
     }
 
     /// <summary>

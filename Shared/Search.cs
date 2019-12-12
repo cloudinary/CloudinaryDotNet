@@ -1,10 +1,10 @@
-﻿using CloudinaryDotNet.Actions;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using CloudinaryDotNet.Actions;
+
     /// <summary>
     /// Advanced search provider. Allows you to retrieve information on all the assets in your account with the help of
     /// query expressions in a Lucene-like query language.
@@ -16,13 +16,13 @@ namespace CloudinaryDotNet
         private List<string> withFieldParam;
         private Dictionary<string, object> searchParams;
         private ApiShared m_api;
-        
+
         private Url SearchResourcesUrl => m_api?.ApiUrlV?
                 .Add("resources")
                 .Add("search");
 
         /// <summary>
-        /// Instantiates the <see cref="Search"/> object with an API object.
+        /// Initializes a new instance of the <see cref="Search"/> class.
         /// </summary>
         /// <param name="api">Provider of the API calls.</param>
         public Search(ApiShared api)
@@ -39,6 +39,7 @@ namespace CloudinaryDotNet
         /// resources are listed (up to max_results).
         /// </summary>
         /// <param name="value">Search query expression.</param>
+        /// <returns>The search provider with search query defined.</returns>
         public Search Expression(string value)
         {
             searchParams.Add("expression", value);
@@ -49,6 +50,7 @@ namespace CloudinaryDotNet
         /// The maximum number of results to return. Default 50. Maximum 500.
         /// </summary>
         /// <param name="value">Number of results to return.</param>
+        /// <returns>The search provider with maximum number of results defined.</returns>
         public Search MaxResults(int value)
         {
             searchParams.Add("max_results", value);
@@ -59,6 +61,7 @@ namespace CloudinaryDotNet
         /// Set value of NextCursor.
         /// </summary>
         /// <param name="value">The value of NextCursor.</param>
+        /// <returns>The search provider with next cursor defined.</returns>
         public Search NextCursor(string value)
         {
             searchParams.Add("next_cursor", value);
@@ -69,6 +72,7 @@ namespace CloudinaryDotNet
         /// Set value of Direction.
         /// </summary>
         /// <param name="value">The value of Direction.</param>
+        /// <returns>The search provider with direction defined.</returns>
         public Search Direction(string value)
         {
             searchParams.Add("direction", value);
@@ -80,6 +84,7 @@ namespace CloudinaryDotNet
         /// response. Supported parameters: resource_type, type, pixels, duration, format, and bytes.
         /// </summary>
         /// <param name="field">The name of field.</param>
+        /// <returns>The search provider with aggregation field defined.</returns>
         public Search Aggregate(string field)
         {
             aggregateParam.Add(field);
@@ -91,6 +96,7 @@ namespace CloudinaryDotNet
         /// Possible value: context, tags, image_metadata and image_analysis.
         /// </summary>
         /// <param name="field">The name of field.</param>
+        /// <returns>The search provider with additional asset attribute defined.</returns>
         public Search WithField(string field)
         {
             withFieldParam.Add(field);
@@ -103,6 +109,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="field">The field to sort by.</param>
         /// <param name="dir">The direction.</param>
+        /// <returns>The search provider with sort parameter defined.</returns>
         public Search SortBy(string field, string dir)
         {
             Dictionary<string, object> sortBucket = new Dictionary<string, object>();
@@ -121,13 +128,19 @@ namespace CloudinaryDotNet
             Dictionary<string, object> queryParams = new Dictionary<string, object>(searchParams);
 
             if (withFieldParam.Count > 0)
+            {
                 queryParams.Add("with_field", withFieldParam);
+            }
 
-            if(sortByParam.Count > 0)
+            if (sortByParam.Count > 0)
+            {
                 queryParams.Add("sort_by", sortByParam);
+            }
 
-            if(aggregateParam.Count > 0)
+            if (aggregateParam.Count > 0)
+            {
                 queryParams.Add("aggregate", aggregateParam);
+            }
 
             return queryParams;
         }
@@ -166,7 +179,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Execute search request asynchronously.
         /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Search response with information about the assets matching the search criteria.</returns>
         public Task<SearchResult> ExecuteAsync(CancellationToken? cancellationToken = null)
         {
@@ -175,7 +188,8 @@ namespace CloudinaryDotNet
                 SearchResourcesUrl.BuildUrl(),
                 PrepareSearchParams(),
                 null,
-                PrepareHeaders(), cancellationToken);
+                PrepareHeaders(),
+                cancellationToken);
         }
     }
 }

@@ -1,37 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// The building blocks for generating an https delivery URL for assets.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     public class Url : Core.ICloneable
     {
         /// <summary>
         /// Recommended sources for video tag.
         /// </summary>
-        public static readonly VideoSource[] DefaultVideoSources = {
+        public static readonly VideoSource[] DefaultVideoSources =
+        {
             new VideoSource
             {
-                Type = "mp4", Codecs = new[]{"hev1"}, Transformation = new Transformation().VideoCodec(VideoCodec.H265)
+                Type = "mp4", Codecs = new[] { "hev1" }, Transformation = new Transformation().VideoCodec(VideoCodec.H265),
             },
             new VideoSource
             {
-                Type = "webm", Codecs = new[]{"vp9"}, Transformation = new Transformation().VideoCodec(VideoCodec.Vp9)
+                Type = "webm", Codecs = new[] { "vp9" }, Transformation = new Transformation().VideoCodec(VideoCodec.Vp9),
             },
             new VideoSource
             {
-                Type = "mp4", Transformation = new Transformation().VideoCodec(VideoCodec.Auto)
+                Type = "mp4", Transformation = new Transformation().VideoCodec(VideoCodec.Auto),
             },
             new VideoSource
             {
-                Type = "webm", Transformation = new Transformation().VideoCodec(VideoCodec.Auto)
-            }
+                Type = "webm", Transformation = new Transformation().VideoCodec(VideoCodec.Auto),
+            },
         };
 
         /// <summary>
@@ -47,7 +50,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Regular expression to match video source types extensions.
         /// </summary>
-        protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + String.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
+        protected static readonly Regex VIDEO_EXTENSION_RE = new Regex("\\.(" + string.Join("|", DEFAULT_VIDEO_SOURCE_TYPES) + ")$", RegexOptions.Compiled);
 
         /// <summary>
         /// Digital signature provider.
@@ -175,19 +178,19 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// An ordered array of the video source types to include in the HTML5 tag, where the type is mapped to the
-        /// mime type. Default: ['webm', 'mp4', 'ogv']
+        /// mime type. Default: ['webm', 'mp4', 'ogv'].
         /// </summary>
         protected string[] m_sourceTypes;
 
         /// <summary>
         /// The action to be added to the URL.
         /// </summary>
-        protected string m_action = String.Empty;
+        protected string m_action = string.Empty;
 
         /// <summary>
         /// Type of the resource.
         /// </summary>
-        protected string m_resourceType = String.Empty;
+        protected string m_resourceType = string.Empty;
 
         /// <summary>
         /// The transformation to be added to the URL.
@@ -195,7 +198,7 @@ namespace CloudinaryDotNet
         protected Transformation m_transformation;
 
         /// <summary>
-        /// Instantiates the <see cref="Url"/> object with cloud name.
+        /// Initializes a new instance of the <see cref="Url"/> class with cloud name.
         /// </summary>
         /// <param name="cloudName">The name of your cloud.</param>
         public Url(string cloudName)
@@ -204,7 +207,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Url"/> object with cloud name and sign provider.
+        /// Initializes a new instance of the <see cref="Url"/> class with cloud name and sign provider.
         /// </summary>
         /// <param name="cloudName">The name of your cloud.</param>
         /// <param name="signProvider">Provider for signing parameters.</param>
@@ -226,7 +229,11 @@ namespace CloudinaryDotNet
         {
             get
             {
-                if (m_transformation == null) m_transformation = new Transformation();
+                if (m_transformation == null)
+                {
+                    m_transformation = new Transformation();
+                }
+
                 return m_transformation;
             }
         }
@@ -235,6 +242,7 @@ namespace CloudinaryDotNet
         /// Set whether to use shortened URL when possible.
         /// </summary>
         /// <param name="shorten">True - to use shorten URL.</param>
+        /// <returns>The delivery URL with flag to shorten URL applied.</returns>
         public Url Shorten(bool shorten)
         {
             m_shorten = shorten;
@@ -245,6 +253,7 @@ namespace CloudinaryDotNet
         /// Set the cloudinary URL to access the resources.
         /// </summary>
         /// <param name="cloudinaryAddr">Cloud URL.</param>
+        /// <returns>The delivery URL with Cloudinary address defined.</returns>
         public Url CloudinaryAddr(string cloudinaryAddr)
         {
             m_cloudinaryAddr = cloudinaryAddr;
@@ -255,6 +264,7 @@ namespace CloudinaryDotNet
         /// Set cloud name from your account details.
         /// </summary>
         /// <param name="cloudName">Cloud name.</param>
+        /// <returns>The delivery URL with cloud name defined.</returns>
         public Url CloudName(string cloudName)
         {
             m_cloudName = cloudName;
@@ -265,10 +275,13 @@ namespace CloudinaryDotNet
         /// Add custom part to the URL.
         /// </summary>
         /// <param name="part">Custom URL part.</param>
+        /// <returns>The delivery URL with custom URL part added.</returns>
         public Url Add(string part)
         {
-            if (!String.IsNullOrEmpty(part))
+            if (!string.IsNullOrEmpty(part))
+            {
                 m_customParts.Add(part);
+            }
 
             return this;
         }
@@ -277,10 +290,13 @@ namespace CloudinaryDotNet
         /// Add sources for video tag.
         /// </summary>
         /// <param name="videoSources">Array of video sources.</param>
+        /// <returns>The delivery URL with video sources defined.</returns>
         public Url VideoSources(params VideoSource[] videoSources)
         {
             if (videoSources != null && videoSources.Length > 0)
+            {
                 m_videoSources = videoSources;
+            }
 
             return this;
         }
@@ -289,6 +305,7 @@ namespace CloudinaryDotNet
         /// Add action to the URL.
         /// </summary>
         /// <param name="action">The action.</param>
+        /// <returns>The delivery URL with action applied.</returns>
         public Url Action(string action)
         {
             m_action = action;
@@ -299,6 +316,7 @@ namespace CloudinaryDotNet
         /// Set the version of the cloudinary API.
         /// </summary>
         /// <param name="apiVersion">API version.</param>
+        /// <returns>The delivery URL with API version defined.</returns>
         public Url ApiVersion(string apiVersion)
         {
             m_apiVersion = apiVersion;
@@ -310,6 +328,7 @@ namespace CloudinaryDotNet
         /// resource.
         /// </summary>
         /// <param name="version">The version for your delivery URL.</param>
+        /// <returns>The delivery URL with its version defined.</returns>
         public Url Version(string version)
         {
             m_version = version;
@@ -323,7 +342,7 @@ namespace CloudinaryDotNet
         /// is added to the url. Set this boolean as false to prevent that behaviour.
         /// </summary>
         /// <param name="forceVersion">A boolean parameter indicating whether or not to add the version.</param>
-        /// <returns>Url</returns>
+        /// <returns>Url.</returns>
         public Url ForceVersion(bool forceVersion = true)
         {
             m_forceVersion = forceVersion;
@@ -334,6 +353,7 @@ namespace CloudinaryDotNet
         /// Set authentication token for the token-based authentication.
         /// </summary>
         /// <param name="authToken">The authentication token.</param>
+        /// <returns>The delivery URL with authentication token applied.</returns>
         public Url AuthToken(AuthToken authToken)
         {
             if (m_AuthToken == null)
@@ -347,6 +367,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// A Cloudinary public ID or file name or a reference to a resource.
         /// </summary>
+        /// <param name="source">Public ID, file name or resource reference.</param>
+        /// <returns>The delivery URL with resource reference defined.</returns>
         public Url Source(string source)
         {
             m_source = source;
@@ -355,9 +377,10 @@ namespace CloudinaryDotNet
 
         /// <summary>
         /// An ordered array of the video source types to include in the HTML5 tag, where the type is mapped to the
-        /// mime type. Default: ['webm', 'mp4', 'ogv']
+        /// mime type. Default: ['webm', 'mp4', 'ogv'].
         /// </summary>
         /// <param name="sourceTypes">An ordered array of the video source types.</param>
+        /// <returns>The delivery URL with video source types defined.</returns>
         public Url SourceTypes(params string[] sourceTypes)
         {
             m_sourceTypes = sourceTypes;
@@ -368,6 +391,7 @@ namespace CloudinaryDotNet
         /// When true - add signature part to the Url.
         /// </summary>
         /// <param name="signed">Whether to add signature to the Url.</param>
+        /// <returns>The delivery URL with signature flag applied.</returns>
         public Url Signed(bool signed)
         {
             m_signed = signed;
@@ -377,8 +401,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Type of the resource.
         /// </summary>
-        /// <param name="resourceType"></param>
-        /// <returns></returns>
+        /// <param name="resourceType">The resource type.</param>
+        /// <returns>The delivery URL with resource type defined.</returns>
         public Url ResourceType(string resourceType)
         {
             m_resourceType = resourceType;
@@ -389,6 +413,7 @@ namespace CloudinaryDotNet
         /// Format of the resource file.
         /// </summary>
         /// <param name="format">File format.</param>
+        /// <returns>The delivery URL with file format defined.</returns>
         public Url Format(string format)
         {
             FormatValue = format;
@@ -399,6 +424,7 @@ namespace CloudinaryDotNet
         /// Set private CDN prefix for the Url.
         /// </summary>
         /// <param name="privateCdn">The prefix of private CDN.</param>
+        /// <returns>The delivery URL with private CDN prefix applied.</returns>
         public Url SecureDistribution(string privateCdn)
         {
             m_privateCdn = privateCdn;
@@ -409,6 +435,7 @@ namespace CloudinaryDotNet
         /// Set custom domain for the Url.
         /// </summary>
         /// <param name="cName">Custom domain name.</param>
+        /// <returns>The delivery URL with CName applied.</returns>
         public Url CName(string cName)
         {
             m_cName = cName;
@@ -419,6 +446,7 @@ namespace CloudinaryDotNet
         /// Set transformation for the Url.
         /// </summary>
         /// <param name="transformation">The transformation to be addded to the Url.</param>
+        /// <returns>The delivery URL with transformation applied.</returns>
         public Url Transform(Transformation transformation)
         {
             m_transformation = transformation;
@@ -429,6 +457,7 @@ namespace CloudinaryDotNet
         /// Force Url builder to use HTTPS URLs. Default: true.
         /// </summary>
         /// <param name="secure">Whether to use HTTPS Url.</param>
+        /// <returns>The delivery URL with secure flag applied.</returns>
         public Url Secure(bool secure = true)
         {
             m_secure = secure;
@@ -439,6 +468,7 @@ namespace CloudinaryDotNet
         /// Set wether to use a private CDN distribution.
         /// </summary>
         /// <param name="usePrivateCdn">Wether to use a private CDN distribution.</param>
+        /// <returns>The delivery URL with private CDN flag applied.</returns>
         public Url PrivateCdn(bool usePrivateCdn)
         {
             m_usePrivateCdn = usePrivateCdn;
@@ -449,6 +479,7 @@ namespace CloudinaryDotNet
         /// Set whether to use sub domain.
         /// </summary>
         /// <param name="useSubDomain">Use sub domain.</param>
+        /// <returns>The delivery URL with sub domain usage flag applied.</returns>
         public Url CSubDomain(bool useSubDomain)
         {
             m_useSubDomain = useSubDomain;
@@ -460,6 +491,7 @@ namespace CloudinaryDotNet
         /// which means that any URL without the resource type and type parameters.
         /// </summary>
         /// <param name="useRootPath">Whether to use root path.</param>
+        /// <returns>The delivery URL with root path usage flag applied.</returns>
         public Url UseRootPath(bool useRootPath)
         {
             m_useRootPath = useRootPath;
@@ -470,6 +502,7 @@ namespace CloudinaryDotNet
         /// Set HTML string to display in the case that the browser does not support any of the video formats included.
         /// </summary>
         /// <param name="fallbackContent">Fallback content string.</param>
+        /// <returns>The delivery URL with fallback content defined.</returns>
         public Url FallbackContent(string fallbackContent)
         {
             m_fallbackContent = fallbackContent;
@@ -480,6 +513,7 @@ namespace CloudinaryDotNet
         /// Set descriptive suffix to add to the Public ID in the delivery Url.
         /// </summary>
         /// <param name="suffix">The suffix.</param>
+        /// <returns>The delivery URL with suffix defined.</returns>
         public Url Suffix(string suffix)
         {
             m_suffix = suffix;
@@ -491,10 +525,13 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="source">Video source format.</param>
         /// <param name="transform">Transformation to override the default transformation instructions.</param>
+        /// <returns>The delivery URL with transformation applied.</returns>
         public Url SourceTransformationFor(string source, Transformation transform)
         {
             if (m_sourceTransforms == null)
+            {
                 m_sourceTransforms = new Dictionary<string, Transformation>();
+            }
 
             m_sourceTransforms.Add(source, transform);
 
@@ -506,6 +543,7 @@ namespace CloudinaryDotNet
         /// use instead of the default image).
         /// </summary>
         /// <param name="transformation">Transformation for the poster.</param>
+        /// <returns>The delivery URL with poster transformation applied.</returns>
         public Url PosterTransform(Transformation transformation)
         {
             m_posterTransformation = transformation;
@@ -516,6 +554,7 @@ namespace CloudinaryDotNet
         /// Set the source of the image to be shown while the video is downloading or until the user hits the play button.
         /// </summary>
         /// <param name="source">The source of the poster image.</param>
+        /// <returns>The delivery URL with poster image source defined.</returns>
         public Url PosterSource(string source)
         {
             m_posterSource = source;
@@ -526,6 +565,7 @@ namespace CloudinaryDotNet
         /// Set an Url to an image to be shown while the video is downloading or until the user hits the play button.
         /// </summary>
         /// <param name="url">Url to an image.</param>
+        /// <returns>The delivery URL with poster image URL defined.</returns>
         public Url PosterUrl(Url url)
         {
             m_posterUrl = url;
@@ -538,17 +578,24 @@ namespace CloudinaryDotNet
         /// <param name="poster">
         /// Poster object. E.g. source string, transformation, Url or null to delete poster options.
         /// </param>
+        /// <returns>The delivery URL with poster defined.</returns>
         public Url Poster(object poster)
         {
             if (poster is string)
+            {
                 return PosterSource((string)poster);
+            }
             else if (poster is Url)
+            {
                 return PosterUrl((Url)poster);
+            }
             else if (poster is Transformation)
+            {
                 return PosterTransform((Transformation)poster);
+            }
             else if (poster == null || (poster is bool && !(bool)poster))
             {
-                PosterSource(String.Empty);
+                PosterSource(string.Empty);
                 PosterUrl(null);
                 PosterTransform(null);
             }
@@ -560,20 +607,24 @@ namespace CloudinaryDotNet
         /// Build an Url to sprite css file.
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
+        /// <returns>A string that represents sprite css file URL.</returns>
         public string BuildSpriteCss(string source)
         {
             m_action = "sprite";
-            if (!source.EndsWith(".css")) FormatValue = "css";
+            if (!source.EndsWith(".css"))
+            {
+                FormatValue = "css";
+            }
+
             return BuildUrl(source);
         }
-
-        #region BuildImageTag
 
         /// <summary>
         /// Build an HTML image tag for embedding in a web view.
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="keyValuePairs">Array of strings in form of "key=value".</param>
+        /// <returns>A string that represents HTML image tag.</returns>
         public string BuildImageTag(string source, params string[] keyValuePairs)
         {
             return BuildImageTag(source, new StringDictionary(keyValuePairs));
@@ -584,18 +635,25 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="dict">Additional parameters.</param>
+        /// <returns>A string that represents HTML image tag.</returns>
         public string BuildImageTag(string source, StringDictionary dict = null)
         {
             if (dict == null)
+            {
                 dict = new StringDictionary();
+            }
 
             string url = BuildUrl(source);
 
             if (!string.IsNullOrEmpty(Transformation.HtmlWidth))
+            {
                 dict.Add("width", Transformation.HtmlWidth);
+            }
 
             if (!string.IsNullOrEmpty(Transformation.HtmlHeight))
+            {
                 dict.Add("height", Transformation.HtmlHeight);
+            }
 
             if (Transformation.HiDpi || Transformation.IsResponsive)
             {
@@ -605,14 +663,19 @@ namespace CloudinaryDotNet
                 dict.Add("data-src", url);
                 var responsivePlaceholder = dict.Remove("responsive_placeholder");
                 if (responsivePlaceholder == "blank")
+                {
                     responsivePlaceholder = CL_BLANK;
+                }
+
                 url = responsivePlaceholder;
             }
 
             var sb = new StringBuilder();
             sb.Append("<img");
             if (!string.IsNullOrEmpty(url))
+            {
                 sb.Append(" src=\"").Append(url).Append("\"");
+            }
 
             foreach (var item in dict)
             {
@@ -624,15 +687,12 @@ namespace CloudinaryDotNet
             return sb.ToString();
         }
 
-        #endregion
-
-        #region BuildVideoTag
-
         /// <summary>
         /// Builds a video tag for embedding in a web view.
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="keyValuePairs">Array of strings in form of "key=value".</param>
+        /// <returns>A string that represents video tag.</returns>
         public string BuildVideoTag(string source, params string[] keyValuePairs)
         {
             return BuildVideoTag(source, new StringDictionary(keyValuePairs));
@@ -643,20 +703,27 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="source">A Cloudinary public ID or file name or a reference to a resource.</param>
         /// <param name="dict">Additional parameters.</param>
+        /// <returns>A string that represents video tag.</returns>
         public string BuildVideoTag(string source, StringDictionary dict = null)
         {
             if (dict == null)
+            {
                 dict = new StringDictionary();
+            }
 
-            source = VIDEO_EXTENSION_RE.Replace(source, "", 1);
+            source = VIDEO_EXTENSION_RE.Replace(source, string.Empty, 1);
 
             if (string.IsNullOrEmpty(m_resourceType))
+            {
                 m_resourceType = "video";
+            }
 
             string posterUrl = FinalizePosterUrl(source);
 
             if (!string.IsNullOrEmpty(posterUrl))
+            {
                 dict.Add("poster", posterUrl);
+            }
 
             List<string> tags = GetVideoSourceTags(source);
 
@@ -675,14 +742,22 @@ namespace CloudinaryDotNet
             }
 
             if (dict.ContainsKey("html_height"))
+            {
                 dict["height"] = dict.Remove("html_height");
+            }
             else if (Transformation.HtmlHeight != null)
+            {
                 dict["height"] = Transformation.HtmlHeight;
+            }
 
             if (dict.ContainsKey("html_width"))
+            {
                 dict["width"] = dict.Remove("html_width");
+            }
             else if (Transformation.HtmlWidth != null)
+            {
                 dict["width"] = Transformation.HtmlWidth;
+            }
 
             bool wasSorted = dict.Sort;
             dict.Sort = true;
@@ -690,8 +765,11 @@ namespace CloudinaryDotNet
             {
                 sb.Append(" ").Append(item.Key);
                 if (item.Value != null)
+                {
                     sb.Append("='").Append(item.Value).Append("'");
+                }
             }
+
             dict.Sort = wasSorted;
 
             sb.Append(">");
@@ -716,6 +794,7 @@ namespace CloudinaryDotNet
             {
                 return m_sourceTypes;
             }
+
             return DEFAULT_VIDEO_SOURCE_TYPES;
         }
 
@@ -804,8 +883,11 @@ namespace CloudinaryDotNet
             return GetSourceTypes().Select(x => GetSourceTag(source, x)).ToList();
         }
 
-        private string GetSourceTag(string source, string sourceType,
-            string[] codecs = null, Transformation transformation = null)
+        private string GetSourceTag(
+            string source,
+            string sourceType,
+            string[] codecs = null,
+            Transformation transformation = null)
         {
             var sourceUrl = Clone();
             MergeUrlTransformation(sourceUrl, transformation);
@@ -838,8 +920,10 @@ namespace CloudinaryDotNet
             }
             else if (m_posterSource != null)
             {
-                if (!String.IsNullOrEmpty(m_posterSource))
+                if (!string.IsNullOrEmpty(m_posterSource))
+                {
                     posterUrl = Clone().Format("jpg").BuildUrl(m_posterSource);
+                }
             }
             else
             {
@@ -848,10 +932,6 @@ namespace CloudinaryDotNet
 
             return posterUrl;
         }
-
-        #endregion
-
-        #region BuildUrl
 
         /// <summary>
         /// Generate a transformation URL directly, without the containing image tag.
@@ -869,14 +949,20 @@ namespace CloudinaryDotNet
         /// <returns>The Url without image tag.</returns>
         public string BuildUrl(string source)
         {
-            if (String.IsNullOrEmpty(m_cloudName))
+            if (string.IsNullOrEmpty(m_cloudName))
+            {
                 throw new ArgumentException("cloudName must be specified!");
+            }
 
             if (source == null)
+            {
                 source = m_source;
+            }
 
             if (source == null)
-                source = String.Empty;
+            {
+                source = string.Empty;
+            }
 
             if (Regex.IsMatch(source.ToLower(), "^https?:/.*") &&
                 (m_action == "upload" || m_action == "asset"))
@@ -884,7 +970,7 @@ namespace CloudinaryDotNet
                 return source;
             }
 
-            if (m_action == "fetch" && !String.IsNullOrEmpty(FormatValue))
+            if (m_action == "fetch" && !string.IsNullOrEmpty(FormatValue))
             {
                 Transformation.FetchFormat(FormatValue);
                 FormatValue = null;
@@ -898,7 +984,7 @@ namespace CloudinaryDotNet
             var prefix = GetPrefix(src.Source, out sharedDomain);
 
             List<string> urlParts = new List<string>(new string[] { prefix });
-            if (!String.IsNullOrEmpty(m_apiVersion))
+            if (!string.IsNullOrEmpty(m_apiVersion))
             {
                 urlParts.Add(m_apiVersion);
                 urlParts.Add(m_cloudName);
@@ -926,12 +1012,14 @@ namespace CloudinaryDotNet
             if (m_signed && (m_AuthToken == null && CloudinaryConfiguration.AuthToken == null))
             {
                 if (m_signProvider == null)
+                {
                     throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
+                }
 
-                var signedPart = String.Join("/", new string[] { transformationStr, src.SourceToSign });
-                signedPart = Regex.Replace(signedPart, "^/+", String.Empty);
+                var signedPart = string.Join("/", new string[] { transformationStr, src.SourceToSign });
+                signedPart = Regex.Replace(signedPart, "^/+", string.Empty);
                 signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
-                signedPart = Regex.Replace(signedPart, "/$", String.Empty);
+                signedPart = Regex.Replace(signedPart, "/$", string.Empty);
 
                 signedPart = m_signProvider.SignUriPart(signedPart);
                 urlParts.Add(signedPart);
@@ -941,9 +1029,9 @@ namespace CloudinaryDotNet
             urlParts.Add(version);
             urlParts.Add(src.Source);
 
-            string uriStr = String.Join("/", urlParts.ToArray());
+            string uriStr = string.Join("/", urlParts.ToArray());
             uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
-            uriStr = Regex.Replace(uriStr, "/$", String.Empty);
+            uriStr = Regex.Replace(uriStr, "/$", string.Empty);
 
             if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
             {
@@ -972,15 +1060,17 @@ namespace CloudinaryDotNet
             {
                 src = new CSource(Encode(Decode(source)));
 
-                if (!String.IsNullOrEmpty(m_suffix))
+                if (!string.IsNullOrEmpty(m_suffix))
                 {
                     if (Regex.IsMatch(m_suffix, "[\\./]"))
+                    {
                         throw new ArgumentException("Suffix should not include . or /!");
+                    }
 
                     src.Source += "/" + m_suffix;
                 }
 
-                if (!String.IsNullOrEmpty(FormatValue))
+                if (!string.IsNullOrEmpty(FormatValue))
                 {
                     src += "." + FormatValue;
                 }
@@ -996,18 +1086,21 @@ namespace CloudinaryDotNet
             string privateCdn = m_privateCdn;
             if (m_secure)
             {
-                if (String.IsNullOrEmpty(privateCdn) || Constants.OLD_AKAMAI_SHARED_CDN == privateCdn)
+                if (string.IsNullOrEmpty(privateCdn) || privateCdn == Constants.OLD_AKAMAI_SHARED_CDN)
                 {
                     privateCdn = m_usePrivateCdn ? m_cloudName + "-res.cloudinary.com" : Constants.SHARED_CDN;
                 }
+
                 sharedDomain |= privateCdn == Constants.SHARED_CDN;
 
                 if (sharedDomain && m_useSubDomain)
+                {
                     privateCdn = privateCdn.Replace(
                         "res.cloudinary.com",
                         "res-" + Shard(source) + ".cloudinary.com");
+                }
 
-                prefix = String.Format("https://{0}", privateCdn);
+                prefix = string.Format("https://{0}", privateCdn);
             }
             else
             {
@@ -1017,13 +1110,13 @@ namespace CloudinaryDotNet
                 }
                 else if (m_cName != null)
                 {
-                    string subDomain = m_useSubDomain ? "a" + Shard(source) + "." : String.Empty;
+                    string subDomain = m_useSubDomain ? "a" + Shard(source) + "." : string.Empty;
                     prefix = "http://" + subDomain + m_cName;
                 }
                 else
                 {
-                    string subDomain = m_useSubDomain ? "-" + Shard(source) : String.Empty;
-                    string host = (m_usePrivateCdn ? m_cloudName + "-" : String.Empty) + "res" + subDomain + ".cloudinary.com";
+                    string subDomain = m_useSubDomain ? "-" + Shard(source) : string.Empty;
+                    string host = (m_usePrivateCdn ? m_cloudName + "-" : string.Empty) + "res" + subDomain + ".cloudinary.com";
 
                     prefix = "http://" + host;
                 }
@@ -1034,7 +1127,7 @@ namespace CloudinaryDotNet
 
         private void UpdateAction()
         {
-            if (!String.IsNullOrEmpty(m_suffix))
+            if (!string.IsNullOrEmpty(m_suffix))
             {
                 if (m_resourceType == "image" && m_action == "upload")
                 {
@@ -1070,11 +1163,11 @@ namespace CloudinaryDotNet
 
             if (m_useRootPath)
             {
-                if (m_resourceType == "image" && m_action == "upload"
-                    || m_resourceType == "images" && String.IsNullOrEmpty(m_action))
+                if ((m_resourceType == "image" && m_action == "upload")
+                    || (m_resourceType == "images" && string.IsNullOrEmpty(m_action)))
                 {
-                    m_resourceType = String.Empty;
-                    m_action = String.Empty;
+                    m_resourceType = string.Empty;
+                    m_action = string.Empty;
                 }
                 else
                 {
@@ -1084,7 +1177,7 @@ namespace CloudinaryDotNet
 
             if (m_shorten && m_resourceType == "image" && m_action == "upload")
             {
-                m_resourceType = String.Empty;
+                m_resourceType = string.Empty;
                 m_action = "iu";
             }
         }
@@ -1092,7 +1185,7 @@ namespace CloudinaryDotNet
         private static string Shard(string input)
         {
             uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
-            return ((hash % 5 + 5) % 5 + 1).ToString();
+            return ((((hash % 5) + 5) % 5) + 1).ToString();
         }
 
         private static string Decode(string input)
@@ -1112,7 +1205,7 @@ namespace CloudinaryDotNet
                 else
                 {
                     resultStr.Append(input.Substring(pos, ppos - pos));
-                    char ch = (char)Int16.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
+                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
                     resultStr.Append(ch);
                     pos = ppos + 3;
                 }
@@ -1129,28 +1222,36 @@ namespace CloudinaryDotNet
                 if (!IsSafe(ch))
                 {
                     resultStr.Append('%');
-                    resultStr.Append(String.Format("{0:X2}", (short)ch));
+                    resultStr.Append(string.Format("{0:X2}", (short)ch));
                 }
                 else
                 {
                     resultStr.Append(ch);
                 }
             }
+
             return resultStr.ToString();
         }
 
         private static bool IsSafe(char ch)
         {
-            if (ch >= 0x30 && ch <= 0x39) return true; // 0-9
-            if (ch >= 0x41 && ch <= 0x5a) return true; // A-Z
-            if (ch >= 0x61 && ch <= 0x7a) return true; // a-z
+            if (ch >= 0x30 && ch <= 0x39)
+            {
+                return true; // 0-9
+            }
+
+            if (ch >= 0x41 && ch <= 0x5a)
+            {
+                return true; // A-Z
+            }
+
+            if (ch >= 0x61 && ch <= 0x7a)
+            {
+                return true; // a-z
+            }
 
             return "/:-_.*".IndexOf(ch) >= 0;
         }
-
-        #endregion
-
-        #region ICloneable
 
         /// <summary>
         /// Creates a new object that is a deep copy of the current instance.
@@ -1163,13 +1264,19 @@ namespace CloudinaryDotNet
             Url newUrl = (Url)this.MemberwiseClone();
 
             if (m_transformation != null)
+            {
                 newUrl.m_transformation = this.m_transformation.Clone();
+            }
 
             if (m_posterTransformation != null)
+            {
                 newUrl.m_posterTransformation = m_posterTransformation.Clone();
+            }
 
             if (m_posterUrl != null)
+            {
                 newUrl.m_posterUrl = m_posterUrl.Clone();
+            }
 
             if (m_sourceTypes != null)
             {
@@ -1201,8 +1308,6 @@ namespace CloudinaryDotNet
         {
             return Clone();
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -1236,19 +1341,21 @@ namespace CloudinaryDotNet
         {
             get
             {
-                string path = base.Path;
+                string path = Path;
                 return path.Substring(path.LastIndexOf("/") + 1);
             }
+
             set
             {
-                string path = base.Path;
+                string path = Path;
                 path = path.Substring(0, path.LastIndexOf("/"));
-                base.Path = string.Concat(path, "/", value);
+                Path = string.Concat(path, "/", value);
             }
         }
 
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="UrlBuilder"/> object.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class.
+        /// Default parameterless constructor.
         /// </summary>
         public UrlBuilder()
             : base()
@@ -1256,7 +1363,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified URI.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified URI.
         /// </summary>
         /// <param name="uri">A URI string.</param>
         public UrlBuilder(string uri)
@@ -1266,8 +1373,8 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified URI and dictionary with cloudinary
-        /// parameters.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class
+        /// with the specified URI and dictionary with cloudinary parameters.
         /// </summary>
         /// <param name="uri">A URI string.</param>
         /// <param name="params">Cloudinary parameters.</param>
@@ -1279,7 +1386,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified <see cref="Uri"/> instance.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified <see cref="Uri"/> instance.
         /// </summary>
         /// <param name="uri">An instance of the <see cref="Uri"/> class.</param>
         public UrlBuilder(Uri uri)
@@ -1289,7 +1396,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified scheme and host.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified scheme and host.
         /// </summary>
         /// <param name="schemeName">An Internet access protocol.</param>
         /// <param name="hostName">A DNS-style domain name or IP address.</param>
@@ -1299,7 +1406,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified scheme, host, and port.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class with the specified scheme, host, and port.
         /// </summary>
         /// <param name="scheme">An Internet access protocol.</param>
         /// <param name="host">A DNS-style domain name or IP address.</param>
@@ -1310,7 +1417,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified scheme, host, port number, and path.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class  with the specified scheme, host, port number, and path.
         /// </summary>
         /// <param name="scheme">An Internet access protocol.</param>
         /// <param name="host">A DNS-style domain name or IP address.</param>
@@ -1322,8 +1429,8 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="UrlBuilder"/> object with the specified scheme, host, port number, path and
-        /// query string or fragment identifier.
+        /// Initializes a new instance of the <see cref="UrlBuilder"/> class
+        /// with the specified scheme, host, port number, path and query string or fragment identifier.
         /// </summary>
         /// <param name="scheme">An Internet access protocol.</param>
         /// <param name="host">A DNS-style domain name or IP address.</param>
@@ -1360,18 +1467,19 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Returns a string that represents the current Url.
         /// </summary>
+        /// <returns>A string that represents the URL.</returns>
         public new string ToString()
         {
             BuildQueryString();
 
-            return base.Uri.AbsoluteUri;
+            return Uri.AbsoluteUri;
         }
 
         private void PopulateQueryString()
         {
-            string query = base.Query;
+            string query = Query;
 
-            if (query == string.Empty || query == null)
+            if (string.IsNullOrEmpty(query))
             {
                 return;
             }
@@ -1383,7 +1491,7 @@ namespace CloudinaryDotNet
 
             queryString.Clear();
 
-            query = query.Substring(1); //remove the ?
+            query = query.Substring(1); // remove the ?
 
             string[] pairs = query.Split(new char[] { '&' });
             foreach (string s in pairs)
@@ -1396,13 +1504,16 @@ namespace CloudinaryDotNet
 
         private void BuildQueryString()
         {
-            if (queryString == null) return;
+            if (queryString == null)
+            {
+                return;
+            }
 
             int count = queryString.Count;
 
             if (count == 0)
             {
-                base.Query = string.Empty;
+                Query = string.Empty;
                 return;
             }
 
@@ -1418,7 +1529,7 @@ namespace CloudinaryDotNet
                 pairs[i] = string.Concat(keys[i], "=", values[i]);
             }
 
-            base.Query = string.Join("&", pairs);
+            Query = string.Join("&", pairs);
         }
     }
 
@@ -1435,7 +1546,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// A single value, or a comma-separated list of values identifying the codec(s) that should be used to
         /// generate the video. The codec definition can include additional properties,separated with a dot.
-        /// For example, codecs="avc1.42E01E,mp4a.40.2"
+        /// For example, codecs="avc1.42E01E,mp4a.40.2".
         /// </summary>
         public string[] Codecs { get; set; }
 

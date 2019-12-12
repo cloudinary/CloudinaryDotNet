@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Results of raw file upload.
     /// </summary>
@@ -17,7 +17,7 @@ namespace CloudinaryDotNet.Actions
         public string Signature { get; protected set; }
 
         /// <summary>
-        /// Storage type
+        /// Storage type.
         /// </summary>
         [DataMember(Name = "type")]
         public string Type { get; protected set; }

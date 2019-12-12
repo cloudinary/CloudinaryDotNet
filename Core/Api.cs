@@ -1,28 +1,33 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Technological layer to work with cloudinary API.
     /// </summary>
     public class Api : ApiShared
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Api"/> class.
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
-        public Api() : base() { }
-
-        /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with cloudinary URL.
-        /// </summary>
-        /// <param name="cloudinaryUrl">Cloudinary URL.</param>
-        public Api(string cloudinaryUrl) : base(cloudinaryUrl)
+        public Api()
+            : base()
         {
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with initial parameters.
+        /// Initializes a new instance of the <see cref="Api"/> class with cloudinary URL.
+        /// </summary>
+        /// <param name="cloudinaryUrl">Cloudinary URL.</param>
+        public Api(string cloudinaryUrl)
+            : base(cloudinaryUrl)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Api"/> class with initial parameters.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         /// <param name="usePrivateCdn">Whether to use private Content Delivery Network.</param>
@@ -35,10 +40,13 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the cloudinary <see cref="Api"/> object with account.
+        /// Initializes a new instance of the <see cref="Api"/> class with account.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
-        public Api(Account account) : base(account) { }
+        public Api(Account account)
+            : base(account)
+        {
+        }
 
         /// <summary>
         /// Check file path for callback url.
@@ -49,8 +57,9 @@ namespace CloudinaryDotNet
         {
             if (!Regex.IsMatch(path.ToLower(), "^https?:/.*"))
             {
-                throw new Exception("Provide an absolute path to file!");
+                throw new ArgumentException("Provide an absolute path to file!");
             }
+
             return path;
         }
     }

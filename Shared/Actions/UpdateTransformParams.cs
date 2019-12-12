@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters for transformation update.
     /// </summary>
     public class UpdateTransformParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="UpdateTransformParams"/> object.
+        /// Initializes a new instance of the <see cref="UpdateTransformParams"/> class.
         /// </summary>
         public UpdateTransformParams()
         {
-            Transformation = String.Empty;
+            Transformation = string.Empty;
         }
 
         /// <summary>
@@ -39,8 +39,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(Transformation))
+            if (string.IsNullOrEmpty(Transformation))
+            {
                 throw new ArgumentException("Transformation must be set!");
+            }
         }
 
         /// <summary>
@@ -54,7 +56,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "allowed_for_strict", Strict ? "true" : "false");
 
             if (UnsafeTransform != null)
+            {
                 AddParam(dict, "unsafe_update", UnsafeTransform.Generate());
+            }
 
             return dict;
         }

@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CloudinaryDotNet.Core;
-using Newtonsoft.Json;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using CloudinaryDotNet.Core;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Parameters to update details of an existing resource.
     /// </summary>
     public class UpdateParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="UpdateParams"/> object with public ID.
+        /// Initializes a new instance of the <see cref="UpdateParams"/> class with public ID.
         /// </summary>
         /// <param name="publicId">The public ID of the resource to update.</param>
         public UpdateParams(string publicId)
@@ -143,8 +143,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(PublicId))
+            if (string.IsNullOrEmpty(PublicId))
+            {
                 throw new ArgumentException("PublicId must be set!");
+            }
         }
 
         /// <summary>
@@ -164,14 +166,20 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "similarity_search", SimilaritySearch);
             AddParam(dict, "background_removal", BackgroundRemoval);
 
-            if(!string.IsNullOrWhiteSpace(NotificationUrl))
+            if (!string.IsNullOrWhiteSpace(NotificationUrl))
+            {
                 AddParam(dict, "notification_url", NotificationUrl);
+            }
 
             if (ModerationStatus != Actions.ModerationStatus.Pending)
+            {
                 AddParam(dict, "moderation_status", ApiShared.GetCloudinaryParam(ModerationStatus));
+            }
 
             if (AutoTagging.HasValue)
+            {
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
+            }
 
             AddParam(dict, "raw_convert", RawConvert);
 
@@ -184,7 +192,9 @@ namespace CloudinaryDotNet.Actions
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
 
             if (!string.IsNullOrWhiteSpace(QualityOverride))
+            {
                 AddParam(dict, "quality_override", QualityOverride);
+            }
 
             if (Headers != null && Headers.Count > 0)
             {

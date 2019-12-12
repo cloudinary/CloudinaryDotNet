@@ -1,24 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
+    /// <summary>
+    /// The action to perform on image resources using the given tag.
+    /// </summary>
+    public enum TagCommand
+    {
+        /// <summary>
+        /// Assign the given tag to the resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "add")]
+        Add,
+
+        /// <summary>
+        /// Remove the given tag from the resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "remove")]
+        Remove,
+
+        /// <summary>
+        /// Assign the given tag to the resources with the given Public IDs while clearing all other tags assigned
+        /// to these resources.
+        /// </summary>
+        [EnumMember(Value = "replace")]
+        Replace,
+
+        /// <summary>
+        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other
+        /// resources. This means that only the resources with the given Public IDs will have the given tag.
+        /// </summary>
+        [EnumMember(Value = "set_exclusive")]
+        SetExclusive,
+
+        /// <summary>
+        /// Remove all the tags assigned to the resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "remove_all")]
+        RemoveAll,
+    }
+
     /// <summary>
     /// Parameters of tag management request.
     /// </summary>
     public class TagParams : BaseParams
     {
-        /// <summary>
-        /// Instantiates the <see cref="TagParams"/> object.
-        /// </summary>
-		public TagParams()
-		{
-			ResourceType = ResourceType.Image;
-		}
+        private List<string> m_publicIds = new List<string>();
 
-        List<string> m_publicIds = new List<string>();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TagParams"/> class.
+        /// </summary>
+        public TagParams()
+        {
+            ResourceType = ResourceType.Image;
+        }
 
         /// <summary>
         /// A list of public IDs (up to 1000) of assets uploaded to Cloudinary.
@@ -35,12 +71,12 @@ namespace CloudinaryDotNet.Actions
         public string Tag { get; set; }
 
         /// <summary>
-        /// The type of asset. Valid values: image, raw, and video. Default: image. 
+        /// The type of asset. Valid values: image, raw, and video. Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        ///The specific type of the asset. Valid values: upload, private and authenticated.Default: upload.
+        /// The specific type of the asset. Valid values: upload, private and authenticated.Default: upload.
         /// </summary>
         public string Type { get; set; }
 
@@ -71,39 +107,5 @@ namespace CloudinaryDotNet.Actions
 
             return dict;
         }
-    }
-
-    /// <summary>
-    /// The action to perform on image resources using the given tag.
-    /// </summary>
-    public enum TagCommand
-    {
-        /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "add")]
-        Add,
-        /// <summary>
-        /// Remove the given tag from the resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "remove")]
-        Remove,
-        /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs while clearing all other tags assigned
-        /// to these resources.
-        /// </summary>
-        [EnumMember(Value = "replace")]
-        Replace,
-        /// <summary>
-        /// Assign the given tag to the resources with the given Public IDs while clearing the given tag from all other 
-        /// resources. This means that only the resources with the given Public IDs will have the given tag.
-        /// </summary>
-        [EnumMember(Value = "set_exclusive")]
-        SetExclusive,
-        /// <summary>
-        /// Remove all the tags assigned to the resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "remove_all")]
-        RemoveAll
     }
 }

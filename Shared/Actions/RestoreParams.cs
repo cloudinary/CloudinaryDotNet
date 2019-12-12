@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of restore a deleted resources request.
     /// </summary>
     public class RestoreParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
-        ResourceType m_resourceType = ResourceType.Image;
+        private List<string> m_publicIds = new List<string>();
+        private ResourceType m_resourceType = ResourceType.Image;
 
         /// <summary>
-        /// Instantiates the <see cref="RestoreParams"/> object.
+        /// Initializes a new instance of the <see cref="RestoreParams"/> class.
         /// </summary>
-        public RestoreParams() { }
+        public RestoreParams()
+        {
+        }
 
         /// <summary>
         /// The public IDs of (deleted or existing) backed up resources to restore. Reverts to the latest backed up
@@ -26,11 +28,6 @@ namespace CloudinaryDotNet.Actions
             set { m_publicIds = value; }
         }
 
-        private bool PublicIdsExist
-        {
-            get { return PublicIds != null && PublicIds.Count > 0; }
-        }
-
         /// <summary>
         /// Restore resources with the given resource type. Default: image.
         /// </summary>
@@ -38,6 +35,11 @@ namespace CloudinaryDotNet.Actions
         {
             get { return m_resourceType; }
             set { m_resourceType = value; }
+        }
+
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
         }
 
         /// <summary>
@@ -63,6 +65,7 @@ namespace CloudinaryDotNet.Actions
             {
                 dict.Add("public_ids", PublicIds);
             }
+
             return dict;
         }
     }

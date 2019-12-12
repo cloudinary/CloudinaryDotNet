@@ -1,18 +1,18 @@
-﻿using CloudinaryDotNet.Core;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using CloudinaryDotNet.Core;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Parameters of image file uploading.
     /// </summary>
     public class ImageUploadParams : RawUploadParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ImageUploadParams"/> object.
+        /// Initializes a new instance of the <see cref="ImageUploadParams"/> class.
         /// </summary>
         public ImageUploadParams()
         {
@@ -202,17 +202,23 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "return_delete_token", ReturnDeleteToken);
 
             if (AutoTagging.HasValue)
+            {
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
+            }
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);
 
             if (Transformation != null)
+            {
                 AddParam(dict, "transformation", Transformation.Generate());
+            }
 
             if (EagerTransforms != null && EagerTransforms.Count > 0)
             {
-                AddParam(dict, "eager",
+                AddParam(
+                    dict,
+                    "eager",
                     string.Join("|", EagerTransforms.Select(t => t.Generate()).ToArray()));
             }
 
@@ -238,8 +244,9 @@ namespace CloudinaryDotNet.Actions
         /// <returns>The string representation of face coordinates.</returns>
         public override string ToString()
         {
-            return string.Join("|",
-                    this.Select(r => string.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
+            return string.Join(
+                "|",
+                this.Select(r => string.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
         }
     }
 }

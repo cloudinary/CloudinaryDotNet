@@ -1,19 +1,20 @@
-﻿using CloudinaryDotNet.Actions;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Net;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using CloudinaryDotNet.Actions;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Main class of Cloudinary .NET API.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     public partial class Cloudinary
     {
         /// <summary>
@@ -22,13 +23,14 @@ namespace CloudinaryDotNet
         private class UploadPresetApiParams
         {
             /// <summary>
-            /// Instantiates the <see cref="UploadPresetApiParams"/> object.
+            /// Initializes a new instance of the <see cref="UploadPresetApiParams"/> class.
             /// </summary>
             /// <param name="httpMethod">Http request method.</param>
             /// <param name="url">Url for api call.</param>
             /// <param name="paramsCopy">Parameters of the upload preset.</param>
-            public UploadPresetApiParams(HttpMethod httpMethod, 
-                string url, 
+            public UploadPresetApiParams(
+                HttpMethod httpMethod,
+                string url,
                 UploadPresetParams paramsCopy)
             {
                 Url = url;
@@ -88,13 +90,14 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets the advanced search provider used by the Cloudinary instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Instance of the <see cref="Search"/> class.</returns>
         public Search Search()
         {
             return new Search(m_api);
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Cloudinary"/> class.
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public Cloudinary()
@@ -103,7 +106,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Cloudinary"/> object with Cloudinary URL.
+        /// Initializes a new instance of the <see cref="Cloudinary"/> class with Cloudinary URL.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public Cloudinary(string cloudinaryUrl)
@@ -112,7 +115,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Instantiates the <see cref="Cloudinary"/> object with Cloudinary account.
+        /// Initializes a new instance of the <see cref="Cloudinary"/> class with Cloudinary account.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         public Cloudinary(Account account)
@@ -121,9 +124,9 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Get default API URL with version
+        /// Get default API URL with version.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>URL of the API.</returns>
         private Url GetApiUrlV()
         {
             return m_api.ApiUrlV;
@@ -137,12 +140,14 @@ namespace CloudinaryDotNet
         /// <param name="format">Format to download (optional).</param>
         /// <param name="type">The type (optional).</param>
         /// <param name="expiresAt">The date (UNIX time in seconds) for the URL expiration. (optional).</param>
-        /// <returns></returns>
+        /// <returns>Download URL.</returns>
         /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
         public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "", long? expiresAt = null)
         {
-            if (String.IsNullOrEmpty(publicId))
-                throw new ArgumentException("publicId");
+            if (string.IsNullOrEmpty(publicId))
+            {
+                throw new ArgumentException("The image public ID is missing.");
+            }
 
             var urlBuilder = new UrlBuilder(
                GetApiUrlV()
@@ -152,20 +157,28 @@ namespace CloudinaryDotNet
 
             var parameters = new SortedDictionary<string, object>
             {
-                { "public_id", publicId }
+                { "public_id", publicId },
             };
 
-            if (!String.IsNullOrEmpty(format))
+            if (!string.IsNullOrEmpty(format))
+            {
                 parameters.Add("format", format);
+            }
 
             if (attachment != null)
+            {
                 parameters.Add("attachment", (bool)attachment ? "true" : "false");
+            }
 
-            if (!String.IsNullOrEmpty(type))
+            if (!string.IsNullOrEmpty(type))
+            {
                 parameters.Add("type", type);
+            }
 
             if (expiresAt != null)
+            {
                 parameters.Add("expires_at", expiresAt);
+            }
 
             return GetDownloadUrl(urlBuilder, parameters);
         }
@@ -175,12 +188,14 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="tag">The tag.</param>
         /// <param name="transform">The transformation.</param>
-        /// <returns></returns>
-        /// <exception cref="System.ArgumentException">Tag should be specified!</exception>
+        /// <returns>Download URL.</returns>
+        /// <exception cref="System.ArgumentException">Tag should be specified.</exception>
         public string DownloadZip(string tag, Transformation transform)
         {
-            if (String.IsNullOrEmpty(tag))
+            if (string.IsNullOrEmpty(tag))
+            {
                 throw new ArgumentException("Tag should be specified!");
+            }
 
             UrlBuilder urlBuilder = new UrlBuilder(
                GetApiUrlV()
@@ -190,14 +205,17 @@ namespace CloudinaryDotNet
 
             var parameters = new SortedDictionary<string, object>
             {
-                { "tag", tag }
+                { "tag", tag },
             };
 
             if (transform != null)
+            {
                 parameters.Add("transformation", transform.Generate());
+            }
 
             return GetDownloadUrl(urlBuilder, parameters);
         }
+
         private string GetUploadMappingUrl()
         {
             return GetApiUrlV().
@@ -208,9 +226,8 @@ namespace CloudinaryDotNet
         private string GetUploadMappingUrl(UploadMappingParams parameters)
         {
             var uri = GetUploadMappingUrl();
-            return (parameters == null) ? uri :  new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
+            return (parameters == null) ? uri : new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
         }
-
 
         /// <summary>
         ///  Returns URL on archive file.
@@ -235,10 +252,12 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task<PublishResourceResult> PublishResourceByPrefixAsync(string prefix,
-            PublishResourceParams parameters, CancellationToken? cancellationToken)
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public Task<PublishResourceResult> PublishResourceByPrefixAsync(
+            string prefix,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken)
         {
             return PublishResourceAsync("prefix", prefix, parameters, cancellationToken);
         }
@@ -248,7 +267,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <returns></returns>
+        /// <returns>Parsed result of publishing.</returns>
         public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams parameters)
         {
             return PublishResource("prefix", prefix, parameters);
@@ -259,8 +278,8 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="tag">All resources with the given tag will be published.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
-        /// <returns></returns>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of publishing.</returns>
         public Task<PublishResourceResult> PublishResourceByTagAsync(
             string tag,
             PublishResourceParams parameters,
@@ -274,7 +293,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="tag">All resources with the given tag will be published.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <returns></returns>
+        /// <returns>Parsed result of publishing.</returns>
         public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams parameters)
         {
             return PublishResource("tag", tag, parameters);
@@ -285,9 +304,11 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="tag">Not used.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Structure with the results of publishing.</returns>
-        public Task<PublishResourceResult> PublishResourceByIdsAsync(string tag, PublishResourceParams parameters,
+        public Task<PublishResourceResult> PublishResourceByIdsAsync(
+            string tag,
+            PublishResourceParams parameters,
             CancellationToken? cancellationToken)
         {
             return PublishResourceAsync(string.Empty, string.Empty, parameters, cancellationToken);
@@ -304,9 +325,11 @@ namespace CloudinaryDotNet
             return PublishResource(string.Empty, string.Empty, parameters);
         }
 
-        private Task<PublishResourceResult> PublishResourceAsync(string byKey,
+        private Task<PublishResourceResult> PublishResourceAsync(
+            string byKey,
             string value,
-            PublishResourceParams parameters, CancellationToken? cancellationToken)
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken)
         {
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
             {
@@ -319,13 +342,14 @@ namespace CloudinaryDotNet
                 .Add("publish_resources");
 
             return m_api.CallApiAsync<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null, null, cancellationToken);
-
         }
 
         private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams parameters)
         {
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
                 parameters.AddCustomParam(byKey, value);
+            }
 
             Url url = GetApiUrlV()
                 .Add("resources")
@@ -333,16 +357,18 @@ namespace CloudinaryDotNet
                 .Add("publish_resources");
 
             return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
-
         }
 
         private Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeAsync(
             string byKey,
             string value,
-            UpdateResourceAccessModeParams parameters, CancellationToken? cancellationToken = null)
+            UpdateResourceAccessModeParams parameters,
+            CancellationToken? cancellationToken = null)
         {
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
                 parameters.AddCustomParam(byKey, value);
+            }
 
             var url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
@@ -354,15 +380,17 @@ namespace CloudinaryDotNet
                 HttpMethod.POST,
                 url.BuildUrl(),
                 parameters,
-                null, 
-                null, 
+                null,
+                null,
                 cancellationToken);
         }
 
         private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
         {
             if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
                 parameters.AddCustomParam(byKey, value);
+            }
 
             Url url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
@@ -370,10 +398,8 @@ namespace CloudinaryDotNet
                  .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
-
             return m_api.CallApi<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
-
 
         /// <summary>
         /// Updates access mode for the resources selected by tag asynchronously.
@@ -381,11 +407,11 @@ namespace CloudinaryDotNet
         /// <param name="tag">Update all resources with the given tag (up to a maximum
         /// of 100 matching original resources).</param>
         /// <param name="parameters">Parameters for updating of resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Structure with the results of update.</returns>
         public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByTagAsync(
             string tag,
-            UpdateResourceAccessModeParams parameters, 
+            UpdateResourceAccessModeParams parameters,
             CancellationToken? cancellationToken = null)
         {
             return UpdateResourceAccessModeAsync(Constants.TAG_PARAM_NAME, tag, parameters, cancellationToken);
@@ -409,11 +435,11 @@ namespace CloudinaryDotNet
         /// <param name="prefix">Update all resources where the public ID starts with the given prefix (up to a maximum
         /// of 100 matching original resources).</param>
         /// <param name="parameters">Parameters for updating of resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Structure with the results of update.</returns>
         public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByPrefixAsync(
             string prefix,
-            UpdateResourceAccessModeParams parameters, 
+            UpdateResourceAccessModeParams parameters,
             CancellationToken? cancellationToken = null)
         {
             return UpdateResourceAccessModeAsync(Constants.PREFIX_PARAM_NAME, prefix, parameters, cancellationToken);
@@ -438,7 +464,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters for updating of resources. Update all resources with the given
         /// public IDs (array of up to 100 public_ids).</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Structure with the results of update.</returns>
         public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByIdsAsync(
             UpdateResourceAccessModeParams parameters, CancellationToken? cancellationToken = null)
@@ -461,7 +487,7 @@ namespace CloudinaryDotNet
         /// Manage tag assignments asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of tag management.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Results of tags management.</returns>
         public Task<TagResult> TagAsync(TagParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -492,18 +518,18 @@ namespace CloudinaryDotNet
         /// Manages context assignments asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of context management.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Results of contexts management.</returns>
         public Task<ContextResult> ContextAsync(ContextParams parameters, CancellationToken? cancellationToken = null)
         {
             string uri = m_api.ApiUrlImgUpV.Action(Constants.CONTEXT_MANAGMENT).BuildUrl();
 
             return m_api.CallApiAsync<ContextResult>(
-                HttpMethod.POST, 
-                uri, 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                uri,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -523,7 +549,7 @@ namespace CloudinaryDotNet
         /// Deletes derived resources by the given transformation (should be specified in parameters) asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to delete derived resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion derived resources.</returns>
         public Task<DelDerivedResResult> DeleteDerivedResourcesByTransformAsync(DelDerivedResParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -537,8 +563,8 @@ namespace CloudinaryDotNet
                 HttpMethod.DELETE,
                 urlBuilder.ToString(),
                 parameters,
-                null, 
-                null, 
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -562,22 +588,24 @@ namespace CloudinaryDotNet
         /// Creates archive and stores it as a raw resource in your Cloudinary account asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of new generated archive.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of creating the archive.</returns>
         public Task<ArchiveResult> CreateArchiveAsync(ArchiveParams parameters, CancellationToken? cancellationToken = null)
         {
             Url url = GetApiUrlV().ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
 
             if (!string.IsNullOrEmpty(parameters.ResourceType()))
+            {
                 url.ResourceType(parameters.ResourceType());
+            }
 
             parameters.Mode(ArchiveCallMode.Create);
             return m_api.CallApiAsync<ArchiveResult>(
-                HttpMethod.POST, 
-                url.BuildUrl(), 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                url.BuildUrl(),
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -590,8 +618,10 @@ namespace CloudinaryDotNet
         {
             Url url = GetApiUrlV().ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
 
-            if (!String.IsNullOrEmpty(parameters.ResourceType()))
+            if (!string.IsNullOrEmpty(parameters.ResourceType()))
+            {
                 url.ResourceType(parameters.ResourceType());
+            }
 
             parameters.Mode(ArchiveCallMode.Create);
             return m_api.CallApi<ArchiveResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
@@ -601,7 +631,7 @@ namespace CloudinaryDotNet
         /// Creates a zip archive and stores it as a raw resource in your Cloudinary account asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the new generated zip archive.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of creating the archive.</returns>
         public Task<ArchiveResult> CreateZipAsync(ArchiveParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -627,7 +657,7 @@ namespace CloudinaryDotNet
         /// allowed for your account and you wish to create custom derived images for already uploaded images asynchronously.
         /// </summary>
         /// <param name="parameters">The parameters for explicit method.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after a call of Explicit method.</returns>
         public Task<ExplicitResult> ExplicitAsync(ExplicitParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -637,11 +667,11 @@ namespace CloudinaryDotNet
                 .BuildUrl();
 
             return m_api.CallApiAsync<ExplicitResult>(
-                HttpMethod.POST, 
-                uri, 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                uri,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -670,7 +700,7 @@ namespace CloudinaryDotNet
         /// precedence over client-side upload parameters asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after manipulation of upload presets.</returns>
         public Task<UploadPresetResult> CreateUploadPresetAsync(UploadPresetParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -679,11 +709,11 @@ namespace CloudinaryDotNet
                 BuildUrl();
 
             return m_api.CallApiAsync<UploadPresetResult>(
-                HttpMethod.POST, 
-                url, 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                url,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -708,7 +738,7 @@ namespace CloudinaryDotNet
         /// File specified as null because it's non-uploading action.
         /// </summary>
         /// <param name="parameters">New parameters for upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after manipulation of upload presets.</returns>
         public Task<UploadPresetResult> UpdateUploadPresetAsync(UploadPresetParams parameters, CancellationToken? cancellationToken = null) =>
             CallApiAsync<UploadPresetResult>(PrepareUploadPresetApiParams(parameters), cancellationToken);
@@ -720,12 +750,12 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">New parameters for upload preset.</param>
         /// <returns>Parsed response after manipulation of upload presets.</returns>
-        public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters) => 
+        public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters) =>
             CallApi<UploadPresetResult>(PrepareUploadPresetApiParams(parameters));
 
         private UploadPresetApiParams PrepareUploadPresetApiParams(UploadPresetParams parameters)
         {
-            var paramsCopy = (UploadPresetParams) parameters.Copy();
+            var paramsCopy = (UploadPresetParams)parameters.Copy();
             paramsCopy.Name = null;
 
             var url = GetApiUrlV()
@@ -740,22 +770,24 @@ namespace CloudinaryDotNet
         /// Call api with specified parameters.
         /// </summary>
         /// <param name="apiParams">New parameters for upload preset.</param>
-        private T CallApi<T>(UploadPresetApiParams apiParams) where T : BaseResult, new() => 
+        private T CallApi<T>(UploadPresetApiParams apiParams)
+            where T : BaseResult, new() =>
             m_api.CallApi<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null);
 
         /// <summary>
         /// Call api with specified parameters asynchronously.
         /// </summary>
         /// <param name="apiParams">New parameters for upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
-        private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null) where T : BaseResult, new() => 
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null)
+            where T : BaseResult, new() =>
             m_api.CallApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null, null, cancellationToken);
 
         /// <summary>
         /// Gets the upload preset asynchronously.
         /// </summary>
         /// <param name="name">Name of the upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Upload preset details.</returns>
         public Task<GetUploadPresetResult> GetUploadPresetAsync(string name, CancellationToken? cancellationToken = null)
         {
@@ -765,11 +797,11 @@ namespace CloudinaryDotNet
                 .BuildUrl();
 
             return m_api.CallApiAsync<GetUploadPresetResult>(
-                HttpMethod.GET, 
-                url, 
-                null, 
-                null, 
-                null, 
+                HttpMethod.GET,
+                url,
+                null,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -791,8 +823,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Lists upload presets asynchronously.
         /// </summary>
-        /// <param name="nextCursor">Next cursor</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="nextCursor">Next cursor.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of upload presets listing.</returns>
         public Task<ListUploadPresetsResult> ListUploadPresetsAsync(string nextCursor = null, CancellationToken? cancellationToken = null)
         {
@@ -802,6 +834,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Lists upload presets.
         /// </summary>
+        /// <param name="nextCursor">(Optional) Starting position.</param>
         /// <returns>Parsed result of upload presets listing.</returns>
         public ListUploadPresetsResult ListUploadPresets(string nextCursor = null)
         {
@@ -812,7 +845,7 @@ namespace CloudinaryDotNet
         /// Lists upload presets asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to list upload presets.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of upload presets listing.</returns>
         public Task<ListUploadPresetsResult> ListUploadPresetsAsync(ListUploadPresetsParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -826,8 +859,8 @@ namespace CloudinaryDotNet
                 HttpMethod.GET,
                 urlBuilder.ToString(),
                 parameters,
-                null, 
-                null, 
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -851,7 +884,7 @@ namespace CloudinaryDotNet
         /// Deletes the upload preset asynchronously.
         /// </summary>
         /// <param name="name">Name of the upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Result of upload preset deletion.</returns>
         public Task<DeleteUploadPresetResult> DeleteUploadPresetAsync(string name, CancellationToken? cancellationToken = null)
         {
@@ -861,11 +894,11 @@ namespace CloudinaryDotNet
                 .BuildUrl();
 
             return m_api.CallApiAsync<DeleteUploadPresetResult>(
-                HttpMethod.DELETE, 
-                url, 
-                null, 
-                null, 
-                null, 
+                HttpMethod.DELETE,
+                url,
+                null,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -888,18 +921,19 @@ namespace CloudinaryDotNet
         /// Uploads a resource to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of uploading .</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Results of uploading.</returns>
-        private Task<T> UploadAsync<T>(BasicRawUploadParams parameters, CancellationToken? cancellationToken = null) where T : UploadResult, new()
+        private Task<T> UploadAsync<T>(BasicRawUploadParams parameters, CancellationToken? cancellationToken = null)
+            where T : UploadResult, new()
         {
             var uri = CheckUploadParametersAndGetUploadUrl(parameters);
 
             return m_api.CallApiAsync<T>(
-                HttpMethod.POST, 
-                uri, 
-                parameters, 
-                parameters.File, 
-                null, 
+                HttpMethod.POST,
+                uri,
+                parameters,
+                parameters.File,
+                null,
                 cancellationToken);
         }
 
@@ -908,8 +942,9 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters of uploading .</param>
         /// <returns>Results of uploading.</returns>
-        private T Upload<T, P>(P parameters) where T : UploadResult, new()
-                                             where P : BasicRawUploadParams, new()
+        private T Upload<T, TP>(TP parameters)
+            where T : UploadResult, new()
+            where TP : BasicRawUploadParams, new()
         {
             var uri = CheckUploadParametersAndGetUploadUrl(parameters);
 
@@ -919,7 +954,9 @@ namespace CloudinaryDotNet
         private string CheckUploadParametersAndGetUploadUrl(BasicRawUploadParams parameters)
         {
             if (parameters == null)
+            {
                 throw new ArgumentNullException("parameters", "Upload parameters should be defined");
+            }
 
             string uri = GetApiUrlV()
                 .Action(Constants.ACTION_NAME_UPLOAD)
@@ -934,7 +971,7 @@ namespace CloudinaryDotNet
         /// Uploads an image file to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of image uploading .</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Results of image uploading.</returns>
         public Task<ImageUploadResult> UploadAsync(ImageUploadParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -955,7 +992,7 @@ namespace CloudinaryDotNet
         /// Uploads a video file to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of video uploading.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Results of video uploading.</returns>
         public Task<VideoUploadResult> UploadAsync(VideoUploadParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -978,7 +1015,7 @@ namespace CloudinaryDotNet
         /// <param name="resourceType">Resource type ("image", "raw", "video", "auto").</param>
         /// <param name="parameters">Upload parameters.</param>
         /// <param name="fileDescription">File description.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Results of the raw file uploading.</returns>
         public Task<RawUploadResult> UploadAsync(
             string resourceType,
@@ -996,7 +1033,9 @@ namespace CloudinaryDotNet
                 HttpMethod.POST,
                 uri,
                 dict,
-                fileDescription, null, cancellationToken);
+                fileDescription,
+                null,
+                cancellationToken);
         }
 
         /// <summary>
@@ -1024,7 +1063,9 @@ namespace CloudinaryDotNet
         private static SortedDictionary<string, object> NormalizeParameters(IDictionary<string, object> parameters)
         {
             if (parameters == null)
+            {
                 return new SortedDictionary<string, object>();
+            }
 
             return parameters as SortedDictionary<string, object> ?? new SortedDictionary<string, object>(parameters);
         }
@@ -1060,7 +1101,7 @@ namespace CloudinaryDotNet
         /// Gets a list of subfolders in a specified folder asynchronously.
         /// </summary>
         /// <param name="folder">The folder name.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of folders listing.</returns>
         public Task<GetFoldersResult> SubFoldersAsync(string folder, CancellationToken? cancellationToken = null)
         {
@@ -1070,8 +1111,8 @@ namespace CloudinaryDotNet
                 HttpMethod.GET,
                 GetApiUrlV().Add("folders").Add(folder).BuildUrl(),
                 null,
-                null, 
-                null, 
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -1099,31 +1140,35 @@ namespace CloudinaryDotNet
         private static void CheckFolderParameter(string folder)
         {
             if (string.IsNullOrEmpty(folder))
+            {
                 throw new ArgumentException(
                     "folder must be set. Please use RootFolders() to get list of folders in root.");
+            }
         }
 
         /// <summary>
         /// Deletes folder asynchronously.
         /// </summary>
-        /// <param name="folder">Folder name</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="folder">Folder name.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of folder deletion.</returns>
         public Task<DeleteFolderResult> DeleteFolderAsync(string folder, CancellationToken? cancellationToken = null)
         {
             var uri = GetFolderUrl(folder);
             return m_api.CallApiAsync<DeleteFolderResult>(
-                HttpMethod.DELETE, 
-                uri, 
-                null, 
-                null, 
-                null, 
+                HttpMethod.DELETE,
+                uri,
+                null,
+                null,
+                null,
                 cancellationToken);
         }
 
         /// <summary>
         /// Deletes folder.
         /// </summary>
-        /// <param name="folder">Folder name</param>
+        /// <param name="folder">Folder name.</param>
+        /// <returns>Parsed result of folder deletion.</returns>
         public DeleteFolderResult DeleteFolder(string folder)
         {
             var uri = GetFolderUrl(folder);
@@ -1133,18 +1178,18 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets the Cloudinary account usage details asynchronously.
         /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>The report on the status of your Cloudinary account usage details.</returns>
         public Task<UsageResult> GetUsageAsync(CancellationToken? cancellationToken = null)
         {
             string uri = GetApiUrlV().Action("usage").BuildUrl();
 
             return m_api.CallApiAsync<UsageResult>(
-                HttpMethod.GET, 
-                uri, 
-                null, 
-                null, 
-                null, 
+                HttpMethod.GET,
+                uri,
+                null,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -1164,7 +1209,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="type">The type ("raw" or "auto", last by default).</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the raw file uploading.</returns>
         public Task<RawUploadResult> UploadAsync(RawUploadParams parameters, string type = "auto", CancellationToken? cancellationToken = null)
         {
@@ -1173,11 +1218,11 @@ namespace CloudinaryDotNet
             parameters.File.Reset();
 
             return m_api.CallApiAsync<RawUploadResult>(
-                HttpMethod.POST, 
-                uri, 
-                parameters, 
-                parameters.File, 
-                null, 
+                HttpMethod.POST,
+                uri,
+                parameters,
+                parameters.File,
+                null,
                 cancellationToken);
         }
 
@@ -1201,17 +1246,17 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
-        /// <returns></returns>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of the large file uploading.</returns>
         /// <exception cref="System.ArgumentException">
         /// Please use BasicRawUploadParams class for large raw file uploading!
         /// or
         /// The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for
-        /// remote file uploading!
+        /// remote file uploading.
         /// </exception>
         public Task<RawUploadResult> UploadLargeRawAsync(
             BasicRawUploadParams parameters,
-            int bufferSize = DEFAULT_CHUNK_SIZE, 
+            int bufferSize = DEFAULT_CHUNK_SIZE,
             CancellationToken? cancellationToken = null)
         {
             return UploadLargeAsync<RawUploadResult>(parameters, bufferSize, cancellationToken);
@@ -1222,11 +1267,11 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
-        /// <returns></returns>
+        /// <returns>Parsed result of the large file uploading.</returns>
         /// <exception cref="System.ArgumentException">
         /// Please use BasicRawUploadParams class for large raw file uploading!
         /// or
-        /// The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading!
+        /// The UploadLargeRaw method is intended to be used for large local file uploading and can't be used for remote file uploading.
         /// </exception>
         public RawUploadResult UploadLargeRaw(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
         {
@@ -1238,11 +1283,11 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of uploading.</returns>
         public Task<RawUploadResult> UploadLargeAsync(
             RawUploadParams parameters,
-            int bufferSize = DEFAULT_CHUNK_SIZE, 
+            int bufferSize = DEFAULT_CHUNK_SIZE,
             CancellationToken? cancellationToken = null)
         {
             return UploadLargeAsync<RawUploadResult>(parameters, bufferSize, cancellationToken);
@@ -1264,11 +1309,11 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of uploading.</returns>
         public Task<ImageUploadResult> UploadLargeAsync(
             ImageUploadParams parameters,
-            int bufferSize = DEFAULT_CHUNK_SIZE, 
+            int bufferSize = DEFAULT_CHUNK_SIZE,
             CancellationToken? cancellationToken = null)
         {
             return UploadLargeAsync<ImageUploadResult>(parameters, bufferSize, cancellationToken);
@@ -1290,11 +1335,11 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of uploading.</returns>
         public Task<VideoUploadResult> UploadLargeAsync(
             VideoUploadParams parameters,
-            int bufferSize = DEFAULT_CHUNK_SIZE, 
+            int bufferSize = DEFAULT_CHUNK_SIZE,
             CancellationToken? cancellationToken = null)
         {
             return UploadLargeAsync<VideoUploadResult>(parameters, bufferSize, cancellationToken);
@@ -1337,18 +1382,20 @@ namespace CloudinaryDotNet
         /// <typeparam name="T">The type of result of upload.</typeparam>
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of uploading.</returns>
         public async Task<T> UploadLargeAsync<T>(
-            BasicRawUploadParams parameters, 
-            int bufferSize = DEFAULT_CHUNK_SIZE, 
+            BasicRawUploadParams parameters,
+            int bufferSize = DEFAULT_CHUNK_SIZE,
             CancellationToken? cancellationToken = null)
             where T : UploadResult, new()
         {
             CheckUploadParameters(parameters);
 
             if (parameters.File.IsRemote)
+            {
                 return await UploadAsync<T>(parameters);
+            }
 
             var internalParams = new UploadLargeParams(parameters, bufferSize, m_api);
             T result = null;
@@ -1357,14 +1404,15 @@ namespace CloudinaryDotNet
             {
                 UpdateContentRange(internalParams);
                 result = await m_api.CallApiAsync<T>(
-                    HttpMethod.POST, 
-                    internalParams.Url, 
-                    parameters, 
-                    parameters.File, 
-                    internalParams.Headers, 
+                    HttpMethod.POST,
+                    internalParams.Url,
+                    parameters,
+                    parameters.File,
+                    internalParams.Headers,
                     cancellationToken);
                 CheckUploadResult(result);
             }
+
             return result;
         }
 
@@ -1375,12 +1423,15 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Parameters of file uploading.</param>
         /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
         /// <returns>Parsed result of uploading.</returns>
-        public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE) where T : UploadResult, new()
+        public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
+            where T : UploadResult, new()
         {
             CheckUploadParameters(parameters);
 
             if (parameters.File.IsRemote)
+            {
                 return Upload<T, BasicRawUploadParams>(parameters);
+            }
 
             var internalParams = new UploadLargeParams(parameters, bufferSize, m_api);
             T result = null;
@@ -1391,6 +1442,7 @@ namespace CloudinaryDotNet
                 result = m_api.CallApi<T>(HttpMethod.POST, internalParams.Url, parameters, parameters.File, internalParams.Headers);
                 CheckUploadResult(result);
             }
+
             return result;
         }
 
@@ -1400,7 +1452,7 @@ namespace CloudinaryDotNet
         internal class UploadLargeParams
         {
             /// <summary>
-            /// Parameterized constructor
+            /// Initializes a new instance of the <see cref="UploadLargeParams"/> class.
             /// </summary>
             /// <param name="parameters">Basic raw upload parameters.</param>
             /// <param name="bufferSize">Buffer size.</param>
@@ -1414,26 +1466,26 @@ namespace CloudinaryDotNet
             }
 
             /// <summary>
-            /// Buffer size
+            /// Buffer size.
             /// </summary>
             public int BufferSize { get; }
 
             /// <summary>
-            /// Url
+            /// Url.
             /// </summary>
             public string Url { get; }
 
             /// <summary>
-            /// Basic raw upload parameters
+            /// Basic raw upload parameters.
             /// </summary>
             public BasicRawUploadParams Parameters { get; }
 
             /// <summary>
-            /// Request headers
+            /// Request headers.
             /// </summary>
             public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>
             {
-                ["X-Unique-Upload-Id"] = RandomPublicId()
+                ["X-Unique-Upload-Id"] = RandomPublicId(),
             };
 
             /// <summary>
@@ -1458,7 +1510,9 @@ namespace CloudinaryDotNet
                 var url = mApi.ApiUrlImgUpV;
                 var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
                 if (name != null)
+                {
                     url.ResourceType(name.ToLower());
+                }
 
                 return url.BuildUrl();
             }
@@ -1474,7 +1528,8 @@ namespace CloudinaryDotNet
             internalParams.Headers["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
         }
 
-        private static void CheckUploadResult<T>(T result) where T : UploadResult, new()
+        private static void CheckUploadResult<T>(T result)
+            where T : UploadResult, new()
         {
             if (result.StatusCode != HttpStatusCode.OK)
             {
@@ -1487,10 +1542,14 @@ namespace CloudinaryDotNet
         private static void CheckUploadParameters(BasicRawUploadParams parameters)
         {
             if (parameters == null)
+            {
                 throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
+            }
 
             if (parameters.File == null)
+            {
                 throw new ArgumentException("Parameters.File parameter should be defined");
+            }
         }
 
         /// <summary>
@@ -1499,15 +1558,15 @@ namespace CloudinaryDotNet
         /// <param name="fromPublicId">Old identifier.</param>
         /// <param name="toPublicId">New identifier.</param>
         /// <param name="overwrite">Overwrite a file with the same identifier as new if such file exists.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Result of resource renaming.</returns>
         public Task<RenameResult> RenameAsync(string fromPublicId, string toPublicId, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
-            return RenameAsync( 
+            return RenameAsync(
                 new RenameParams(fromPublicId, toPublicId)
                 {
-                    Overwrite = overwrite
-                }, 
+                    Overwrite = overwrite,
+                },
                 cancellationToken);
         }
 
@@ -1523,7 +1582,7 @@ namespace CloudinaryDotNet
             return Rename(
                 new RenameParams(fromPublicId, toPublicId)
                 {
-                    Overwrite = overwrite
+                    Overwrite = overwrite,
                 });
         }
 
@@ -1531,17 +1590,17 @@ namespace CloudinaryDotNet
         /// Changes public identifier of a file asynchronously.
         /// </summary>
         /// <param name="parameters">Operation parameters.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Result of resource renaming.</returns>
         public Task<RenameResult> RenameAsync(RenameParams parameters, CancellationToken? cancellationToken = null)
         {
             var uri = GetRenameUrl(parameters);
             return m_api.CallApiAsync<RenameResult>(
-                HttpMethod.POST, 
-                uri, 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                uri,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -1595,7 +1654,7 @@ namespace CloudinaryDotNet
         /// Generate an image of a given textual string asynchronously.
         /// </summary>
         /// <param name="text">Text to draw.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Results of generating an image of a given textual string.</returns>
         public Task<TextResult> TextAsync(string text, CancellationToken? cancellationToken = null)
         {
@@ -1616,18 +1675,18 @@ namespace CloudinaryDotNet
         /// Generates an image of a given textual string asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of generating an image of a given textual string.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Results of generating an image of a given textual string.</returns>
         public Task<TextResult> TextAsync(TextParams parameters, CancellationToken? cancellationToken = null)
         {
             string uri = m_api.ApiUrlImgUpV.Action("text").BuildUrl();
 
             return m_api.CallApiAsync<TextResult>(
-                HttpMethod.POST, 
-                uri, 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                uri,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -1646,7 +1705,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Lists resource types asynchronously.
         /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed list of resource types.</returns>
         public Task<ListResourceTypesResult> ListResourceTypesAsync(CancellationToken? cancellationToken = null)
         {
@@ -1654,8 +1713,8 @@ namespace CloudinaryDotNet
                 HttpMethod.GET,
                 GetApiUrlV().Add("resources").BuildUrl(),
                 null,
-                null, 
-                null, 
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -1675,23 +1734,23 @@ namespace CloudinaryDotNet
         /// <param name="tags">Whether to include tags in result.</param>
         /// <param name="context">Whether to include context in result.</param>
         /// <param name="moderations">Whether to include moderation status in result.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesAsync(
             string nextCursor = null,
             bool tags = true,
             bool context = true,
-            bool moderations = true, 
+            bool moderations = true,
             CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesParams()
-                {
-                    NextCursor = nextCursor,
-                    Tags = tags,
-                    Context = context,
-                    Moderations = moderations
-                }, 
-                cancellationToken);
+            var listResourcesParams = new ListResourcesParams()
+            {
+                NextCursor = nextCursor,
+                Tags = tags,
+                Context = context,
+                Moderations = moderations,
+            };
+            return ListResourcesAsync(listResourcesParams, cancellationToken);
         }
 
         /// <summary>
@@ -1713,7 +1772,7 @@ namespace CloudinaryDotNet
                 NextCursor = nextCursor,
                 Tags = tags,
                 Context = context,
-                Moderations = moderations
+                Moderations = moderations,
             });
         }
 
@@ -1722,7 +1781,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByTypeAsync(string type, string nextCursor = null, CancellationToken? cancellationToken = null)
         {
@@ -1746,21 +1805,21 @@ namespace CloudinaryDotNet
         /// <param name="prefix">Public identifier prefix.</param>
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByPrefixAsync(
             string prefix,
             string type = "upload",
-            string nextCursor = null, 
+            string nextCursor = null,
             CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesByPrefixParams()
-                {
-                    Type = type,
-                    Prefix = prefix,
-                    NextCursor = nextCursor
-                }, 
-                cancellationToken);
+            var listResourcesByPrefixParams = new ListResourcesByPrefixParams()
+            {
+                Type = type,
+                Prefix = prefix,
+                NextCursor = nextCursor,
+            };
+            return ListResourcesAsync(listResourcesByPrefixParams, cancellationToken);
         }
 
         /// <summary>
@@ -1776,7 +1835,7 @@ namespace CloudinaryDotNet
             {
                 Type = type,
                 Prefix = prefix,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -1786,10 +1845,10 @@ namespace CloudinaryDotNet
         /// <param name="prefix">Public identifier prefix.</param>
         /// <param name="tags">Whether to include tags in result.</param>
         /// <param name="context">Whether to include context in result.</param>
-        /// <param name="type">Resource type.</param>
         /// <param name="moderations">If true, include moderation status for each resource.</param>
+        /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByPrefixAsync(
             string prefix,
@@ -1797,19 +1856,19 @@ namespace CloudinaryDotNet
             bool context,
             bool moderations,
             string type = "upload",
-            string nextCursor = null, 
+            string nextCursor = null,
             CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesByPrefixParams()
-                {
-                    Tags = tags,
-                    Context = context,
-                    Moderations = moderations,
-                    Type = type,
-                    Prefix = prefix,
-                    NextCursor = nextCursor
-                }, 
-                cancellationToken);
+            var listResourcesByPrefixParams = new ListResourcesByPrefixParams()
+            {
+                Tags = tags,
+                Context = context,
+                Moderations = moderations,
+                Type = type,
+                Prefix = prefix,
+                NextCursor = nextCursor,
+            };
+            return ListResourcesAsync(listResourcesByPrefixParams, cancellationToken);
         }
 
         /// <summary>
@@ -1818,8 +1877,8 @@ namespace CloudinaryDotNet
         /// <param name="prefix">Public identifier prefix.</param>
         /// <param name="tags">Whether to include tags in result.</param>
         /// <param name="context">Whether to include context in result.</param>
-        /// <param name="type">Resource type.</param>
         /// <param name="moderations">If true, include moderation status for each resource.</param>
+        /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public ListResourcesResult ListResourcesByPrefix(string prefix, bool tags, bool context, bool moderations, string type = "upload", string nextCursor = null)
@@ -1831,7 +1890,7 @@ namespace CloudinaryDotNet
                 Moderations = moderations,
                 Type = type,
                 Prefix = prefix,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -1840,16 +1899,16 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="tag">The tag.</param>
         /// <param name="nextCursor">Starting position.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByTagAsync(string tag, string nextCursor = null, CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesByTagParams()
-                {
-                    Tag = tag,
-                    NextCursor = nextCursor
-                }, 
-                cancellationToken);
+            var listResourcesByTagParams = new ListResourcesByTagParams()
+            {
+                Tag = tag,
+                NextCursor = nextCursor,
+            };
+            return ListResourcesAsync(listResourcesByTagParams, cancellationToken);
         }
 
         /// <summary>
@@ -1863,24 +1922,23 @@ namespace CloudinaryDotNet
             return ListResources(new ListResourcesByTagParams()
             {
                 Tag = tag,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
-
 
         /// <summary>
         /// Returns resources with specified public identifiers asynchronously.
         /// </summary>
         /// <param name="publicIds">Public identifiers.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByPublicIdsAsync(IEnumerable<string> publicIds, CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListSpecificResourcesParams()
-                {
-                    PublicIds = new List<string>(publicIds)
-                }, 
-                cancellationToken);
+            var listSpecificResourcesParams = new ListSpecificResourcesParams()
+            {
+                PublicIds = new List<string>(publicIds),
+            };
+            return ListResourcesAsync(listSpecificResourcesParams, cancellationToken);
         }
 
         /// <summary>
@@ -1892,7 +1950,7 @@ namespace CloudinaryDotNet
         {
             return ListResources(new ListSpecificResourcesParams()
             {
-                PublicIds = new List<string>(publicIds)
+                PublicIds = new List<string>(publicIds),
             });
         }
 
@@ -1903,23 +1961,23 @@ namespace CloudinaryDotNet
         /// <param name="tags">Whether to include tags in result.</param>
         /// <param name="context">Whether to include context in result.</param>
         /// <param name="moderations">Whether to include moderation status in result.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourceByPublicIdsAsync(
             IEnumerable<string> publicIds,
             bool tags,
             bool context,
-            bool moderations, 
+            bool moderations,
             CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListSpecificResourcesParams()
-                {
-                    PublicIds = new List<string>(publicIds),
-                    Tags = tags,
-                    Context = context,
-                    Moderations = moderations
-                }, 
-                cancellationToken);
+            var listSpecificResourcesParams = new ListSpecificResourcesParams()
+            {
+                PublicIds = new List<string>(publicIds),
+                Tags = tags,
+                Context = context,
+                Moderations = moderations,
+            };
+            return ListResourcesAsync(listSpecificResourcesParams, cancellationToken);
         }
 
         /// <summary>
@@ -1937,7 +1995,7 @@ namespace CloudinaryDotNet
                 PublicIds = new List<string>(publicIds),
                 Tags = tags,
                 Context = context,
-                Moderations = moderations
+                Moderations = moderations,
             });
         }
 
@@ -1950,7 +2008,7 @@ namespace CloudinaryDotNet
         /// <param name="context">Whether to include context in result.</param>
         /// <param name="moderations">Whether to include moderation status in result.</param>
         /// <param name="nextCursor">The next cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByModerationStatusAsync(
             string kind,
@@ -1958,19 +2016,19 @@ namespace CloudinaryDotNet
             bool tags = true,
             bool context = true,
             bool moderations = true,
-            string nextCursor = null, 
+            string nextCursor = null,
             CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesByModerationParams()
-                {
-                    ModerationKind = kind,
-                    ModerationStatus = status,
-                    Tags = tags,
-                    Context = context,
-                    Moderations = moderations,
-                    NextCursor = nextCursor
-                }, 
-                cancellationToken);
+            var listResourcesByModerationParams = new ListResourcesByModerationParams()
+            {
+                ModerationKind = kind,
+                ModerationStatus = status,
+                Tags = tags,
+                Context = context,
+                Moderations = moderations,
+                NextCursor = nextCursor,
+            };
+            return ListResourcesAsync(listResourcesByModerationParams, cancellationToken);
         }
 
         /// <summary>
@@ -1998,7 +2056,7 @@ namespace CloudinaryDotNet
                 Tags = tags,
                 Context = context,
                 Moderations = moderations,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -2011,25 +2069,25 @@ namespace CloudinaryDotNet
         /// <param name="tags">If true, include list of tag names assigned for each resource.</param>
         /// <param name="context">If true, include context assigned to each resource.</param>
         /// <param name="nextCursor">The next cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByContextAsync(
             string key,
             string value = "",
             bool tags = false,
             bool context = false,
-            string nextCursor = null, 
+            string nextCursor = null,
             CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesByContextParams()
-                {
-                    Key = key,
-                    Value = value,
-                    Tags = tags,
-                    Context = context,
-                    NextCursor = nextCursor
-                }, 
-                cancellationToken);
+            var listResourcesByContextParams = new ListResourcesByContextParams()
+            {
+                Key = key,
+                Value = value,
+                Tags = tags,
+                Context = context,
+                NextCursor = nextCursor,
+            };
+            return ListResourcesAsync(listResourcesByContextParams, cancellationToken);
         }
 
         /// <summary>
@@ -2050,7 +2108,7 @@ namespace CloudinaryDotNet
                 Value = value,
                 Tags = tags,
                 Context = context,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             });
         }
 
@@ -2058,7 +2116,7 @@ namespace CloudinaryDotNet
         /// Gets a list of resources asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to list resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesAsync(ListResourcesParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2081,7 +2139,6 @@ namespace CloudinaryDotNet
         {
             var url = GetApiUrlV().ResourceType("resources").Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
 
-
             switch (parameters)
             {
                 case ListResourcesByTagParams tagParams:
@@ -2101,9 +2158,10 @@ namespace CloudinaryDotNet
 
                     break;
                 case ListResourcesByContextParams _:
-                {
-                    url.Add("context");
-                }
+                    {
+                        url.Add("context");
+                    }
+
                     break;
             }
 
@@ -2118,7 +2176,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets a list of tags asynchronously.
         /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed list of tags.</returns>
         public Task<ListTagsResult> ListTagsAsync(CancellationToken? cancellationToken = null)
         {
@@ -2138,7 +2196,7 @@ namespace CloudinaryDotNet
         /// Finds all tags that start with the given prefix asynchronously.
         /// </summary>
         /// <param name="prefix">The tag prefix.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed list of tags.</returns>
         public Task<ListTagsResult> ListTagsByPrefixAsync(string prefix, CancellationToken? cancellationToken = null)
         {
@@ -2158,8 +2216,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets a list of tags asynchronously.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="parameters">Parameters of the request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed list of tags.</returns>
         public Task<ListTagsResult> ListTagsAsync(ListTagsParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2176,7 +2234,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets a list of tags.
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">Parameters of the request.</param>
         /// <returns>Parsed list of tags.</returns>
         public ListTagsResult ListTags(ListTagsParams parameters)
         {
@@ -2193,7 +2251,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets a list of transformations asynchronously.
         /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed list of transformations details.</returns>
         public Task<ListTransformsResult> ListTransformationsAsync(CancellationToken? cancellationToken = null)
         {
@@ -2209,12 +2267,11 @@ namespace CloudinaryDotNet
             return ListTransformations(new ListTransformsParams());
         }
 
-
         /// <summary>
         /// Gets a list of transformations asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the request for a list of transformation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed list of transformations details.</returns>
         public Task<ListTransformsResult> ListTransformationsAsync(ListTransformsParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2228,8 +2285,8 @@ namespace CloudinaryDotNet
                 HttpMethod.GET,
                 urlBuilder.ToString(),
                 parameters,
-                null, 
-                null, 
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -2253,7 +2310,7 @@ namespace CloudinaryDotNet
         /// Gets details of a single transformation asynchronously.
         /// </summary>
         /// <param name="transform">Name of the transformation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed details of a single transformation.</returns>
         public Task<GetTransformResult> GetTransformAsync(string transform, CancellationToken? cancellationToken = null)
         {
@@ -2270,12 +2327,11 @@ namespace CloudinaryDotNet
             return GetTransform(new GetTransformParams() { Transformation = transform });
         }
 
-
         /// <summary>
         /// Gets details of a single transformation asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the request of transformation details.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed details of a single transformation.</returns>
         public Task<GetTransformResult> GetTransformAsync(GetTransformParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2290,8 +2346,8 @@ namespace CloudinaryDotNet
                 HttpMethod.GET,
                 urlBuilder.ToString(),
                 parameters,
-                null, 
-                null, 
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -2317,7 +2373,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="publicId">The public ID of the resource to update.</param>
         /// <param name="moderationStatus">The image moderation status.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response of the detailed resource information.</returns>
         public Task<GetResourceResult> UpdateResourceAsync(string publicId, ModerationStatus moderationStatus, CancellationToken? cancellationToken = null)
         {
@@ -2339,7 +2395,7 @@ namespace CloudinaryDotNet
         /// Updates details of an existing resource asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to update details of an existing resource.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response of the detailed resource information.</returns>
         public Task<GetResourceResult> UpdateResourceAsync(UpdateParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2372,7 +2428,7 @@ namespace CloudinaryDotNet
         /// Gets details of a single resource as well as all its derived resources by its public ID asynchronously.
         /// </summary>
         /// <param name="publicId">The public ID of the resource.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response with the detailed resource information.</returns>
         public Task<GetResourceResult> GetResourceAsync(string publicId, CancellationToken? cancellationToken = null)
         {
@@ -2393,7 +2449,7 @@ namespace CloudinaryDotNet
         /// Gets details of the requested resource as well as all its derived resources asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the request of resource.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response with the detailed resource information.</returns>
         public Task<GetResourceResult> GetResourceAsync(GetResourceParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2462,7 +2518,7 @@ namespace CloudinaryDotNet
         /// Deletes all derived resources with the given parameters asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to delete derived resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion derived resources.</returns>
         public Task<DelDerivedResResult> DeleteDerivedResourcesAsync(DelDerivedResParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2500,7 +2556,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Deletes all resources of the given resource type and with the given public IDs asynchronously.
         /// </summary>
-        ///<param name="type">The type of file to delete. Default: image.</param>
+        /// <param name="type">The type of file to delete. Default: image.</param>
         /// <param name="publicIds">Array of up to 100 public_ids.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesAsync(ResourceType type, params string[] publicIds)
@@ -2513,7 +2569,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Deletes all resources of the given resource type and with the given public IDs.
         /// </summary>
-        ///<param name="type">The type of file to delete. Default: image.</param>
+        /// <param name="type">The type of file to delete. Default: image.</param>
         /// <param name="publicIds">Array of up to 100 public_ids.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public DelResResult DeleteResources(ResourceType type, params string[] publicIds)
@@ -2526,7 +2582,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Deletes all resources with the given public IDs asynchronously.
         /// </summary>
-        /// <param name="publicIds">Array of up to 100 public_ids</param>
+        /// <param name="publicIds">Array of up to 100 public_ids.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesAsync(params string[] publicIds)
         {
@@ -2538,7 +2594,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Deletes all resources with the given public IDs.
         /// </summary>
-        /// <param name="publicIds">Array of up to 100 public_ids</param>
+        /// <param name="publicIds">Array of up to 100 public_ids.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public DelResResult DeleteResources(params string[] publicIds)
         {
@@ -2552,7 +2608,7 @@ namespace CloudinaryDotNet
         /// a maximum of 1000 original resources) asynchronously.
         /// </summary>
         /// <param name="prefix">Delete all resources where the public ID starts with the given prefix. </param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesByPrefixAsync(string prefix, CancellationToken? cancellationToken = null)
         {
@@ -2579,7 +2635,7 @@ namespace CloudinaryDotNet
         /// <param name="prefix">Delete all resources where the public ID starts with the given prefix. </param>
         /// <param name="keepOriginal">If true, delete only the derived images of the matching resources.</param>
         /// <param name="nextCursor">Continue deletion from the given cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesByPrefixAsync(string prefix, bool keepOriginal, string nextCursor, CancellationToken? cancellationToken = null)
         {
@@ -2587,7 +2643,7 @@ namespace CloudinaryDotNet
             {
                 Prefix = prefix,
                 KeepOriginal = keepOriginal,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             };
             return DeleteResourcesAsync(p, cancellationToken);
         }
@@ -2613,7 +2669,7 @@ namespace CloudinaryDotNet
         /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
         /// 1000 original resources).
         /// </param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesByTagAsync(string tag, CancellationToken? cancellationToken = null)
         {
@@ -2644,7 +2700,7 @@ namespace CloudinaryDotNet
         /// </param>
         /// <param name="keepOriginal">If true, delete only the derived images of the matching resources.</param>
         /// <param name="nextCursor">Continue deletion from the given cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesByTagAsync(string tag, bool keepOriginal, string nextCursor, CancellationToken? cancellationToken = null)
         {
@@ -2652,7 +2708,7 @@ namespace CloudinaryDotNet
             {
                 Tag = tag,
                 KeepOriginal = keepOriginal,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             };
             return DeleteResourcesAsync(p, cancellationToken);
         }
@@ -2676,7 +2732,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Deletes all resources asynchronously.
         /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteAllResourcesAsync(CancellationToken? cancellationToken = null)
         {
@@ -2701,7 +2757,7 @@ namespace CloudinaryDotNet
         /// <param name="nextCursor">
         /// Value of the <see cref="DelResResult.NextCursor"/> to continue delete from.
         /// </param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteAllResourcesAsync(bool keepOriginal, string nextCursor, CancellationToken? cancellationToken = null)
         {
@@ -2709,7 +2765,7 @@ namespace CloudinaryDotNet
             {
                 All = true,
                 KeepOriginal = keepOriginal,
-                NextCursor = nextCursor
+                NextCursor = nextCursor,
             };
             return DeleteResourcesAsync(p, cancellationToken);
         }
@@ -2732,7 +2788,7 @@ namespace CloudinaryDotNet
         /// Deletes all resources with parameters asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters for deletion resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of deletion resources.</returns>
         public Task<DelResResult> DeleteResourcesAsync(DelResParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2747,11 +2803,11 @@ namespace CloudinaryDotNet
             var urlBuilder = new UrlBuilder(url.BuildUrl(), parameters.ToParamsDictionary());
 
             return m_api.CallApiAsync<DelResResult>(
-                HttpMethod.DELETE, 
-                urlBuilder.ToString(), 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.DELETE,
+                urlBuilder.ToString(),
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -2805,7 +2861,7 @@ namespace CloudinaryDotNet
         /// Restores a deleted resources asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters to restore a deleted resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of restoring resources.</returns>
         public Task<RestoreResult> RestoreAsync(RestoreParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2840,7 +2896,7 @@ namespace CloudinaryDotNet
         /// <param name="httpMethod">HTTP method.</param>
         /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
         /// existing online locations.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         private Task<UploadMappingResults> CallUploadMappingsApiAsync(HttpMethod httpMethod, UploadMappingParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2849,11 +2905,11 @@ namespace CloudinaryDotNet
                 : GetUploadMappingUrl(parameters);
 
             return m_api.CallApiAsync<UploadMappingResults>(
-                httpMethod, 
-                url, 
-                parameters, 
-                null, 
-                null, 
+                httpMethod,
+                url,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -2880,7 +2936,7 @@ namespace CloudinaryDotNet
         /// Uses only <see cref="UploadMappingParams.MaxResults"/> and <see cref="UploadMappingParams.NextCursor"/>
         /// properties. Can be null.
         /// </param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public Task<UploadMappingResults> UploadMappingsAsync(UploadMappingParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -2904,12 +2960,14 @@ namespace CloudinaryDotNet
         /// Returns single upload mapping by <see cref="Folder"/> name asynchronously.
         /// </summary>
         /// <param name="folder">Folder name.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public Task<UploadMappingResults> UploadMappingAsync(string folder, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrEmpty(folder))
-                throw new ArgumentException(nameof(folder));
+            {
+                throw new ArgumentException("Folder name is required.", nameof(folder));
+            }
 
             var parameters = new UploadMappingParams() { Folder = folder };
 
@@ -2924,7 +2982,9 @@ namespace CloudinaryDotNet
         public UploadMappingResults UploadMapping(string folder)
         {
             if (string.IsNullOrEmpty(folder))
+            {
                 throw new ArgumentException("Folder must be specified.");
+            }
 
             var parameters = new UploadMappingParams() { Folder = folder };
 
@@ -2936,7 +2996,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="folder">Folder name to create.</param>
         /// <param name="template">URL template for mapping to the <paramref name="folder"/>.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public Task<UploadMappingResults> CreateUploadMappingAsync(string folder, string template, CancellationToken? cancellationToken = null)
         {
@@ -2961,7 +3021,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="folder">Existing Folder to be updated.</param>
         /// <param name="newTemplate">New value of Template URL.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after Upload mappings update.</returns>
         public Task<UploadMappingResults> UpdateUploadMappingAsync(string folder, string newTemplate, CancellationToken? cancellationToken = null)
         {
@@ -2984,10 +3044,14 @@ namespace CloudinaryDotNet
         private static UploadMappingParams CreateUploadMappingParams(string folder, string template)
         {
             if (string.IsNullOrEmpty(folder))
+            {
                 throw new ArgumentException("Folder property must be specified.");
+            }
 
             if (string.IsNullOrEmpty(template))
+            {
                 throw new ArgumentException("Template must be specified.");
+            }
 
             var parameters = new UploadMappingParams()
             {
@@ -3000,7 +3064,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Deletes all upload mappings asynchronously.
         /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after Upload mappings delete.</returns>
         public Task<UploadMappingResults> DeleteUploadMappingAsync(CancellationToken? cancellationToken = null)
         {
@@ -3020,7 +3084,7 @@ namespace CloudinaryDotNet
         /// Deletes upload mapping by <paramref name="folder"/> name asynchronously.
         /// </summary>
         /// <param name="folder">Folder name.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public Task<UploadMappingResults> DeleteUploadMappingAsync(string folder, CancellationToken? cancellationToken = null)
         {
@@ -3035,7 +3099,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public UploadMappingResults DeleteUploadMapping(string folder)
         {
-            var parameters = new UploadMappingParams {Folder = folder};
+            var parameters = new UploadMappingParams { Folder = folder };
             return CallUploadMappingsAPI(HttpMethod.DELETE, parameters);
         }
 
@@ -3043,7 +3107,7 @@ namespace CloudinaryDotNet
         /// Updates Cloudinary transformation resource asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters for transformation update.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after transformation manipulation.</returns>
         public Task<UpdateTransformResult> UpdateTransformAsync(UpdateTransformParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -3066,7 +3130,7 @@ namespace CloudinaryDotNet
         /// Creates Cloudinary transformation resource asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of the new transformation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after transformation manipulation.</returns>
         public Task<TransformResult> CreateTransformAsync(CreateTransformParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -3095,17 +3159,17 @@ namespace CloudinaryDotNet
         /// Deletes transformation by name asynchronously.
         /// </summary>
         /// <param name="transformName">The name of transformation to delete.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after transformation manipulation.</returns>
         public Task<TransformResult> DeleteTransformAsync(string transformName, CancellationToken? cancellationToken = null)
         {
             var url = GetTransformationUrl(transformName);
             return m_api.CallApiAsync<TransformResult>(
-                HttpMethod.DELETE, 
-                url, 
-                null, 
-                null, 
-                null, 
+                HttpMethod.DELETE,
+                url,
+                null,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -3124,7 +3188,7 @@ namespace CloudinaryDotNet
         /// Eagerly generate sprites asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters for sprite generation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response with detailed information about the created sprite.</returns>
         public Task<SpriteResult> MakeSpriteAsync(SpriteParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -3133,11 +3197,11 @@ namespace CloudinaryDotNet
                 BuildUrl();
 
             return m_api.CallApiAsync<SpriteResult>(
-                HttpMethod.POST, 
-                url, 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                url,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -3159,7 +3223,7 @@ namespace CloudinaryDotNet
         /// Creates a single animated GIF file from a group of images asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of Multi operation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response with detailed information about the created animated GIF.</returns>
         public Task<MultiResult> MultiAsync(MultiParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -3168,11 +3232,11 @@ namespace CloudinaryDotNet
                 BuildUrl();
 
             return m_api.CallApiAsync<MultiResult>(
-                HttpMethod.POST, 
-                url, 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                url,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -3194,7 +3258,7 @@ namespace CloudinaryDotNet
         /// Explodes multipage document to single pages asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of explosion operation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response after a call of Explode method.</returns>
         public Task<ExplodeResult> ExplodeAsync(ExplodeParams parameters, CancellationToken? cancellationToken = null)
         {
@@ -3203,11 +3267,11 @@ namespace CloudinaryDotNet
                 BuildUrl();
 
             return m_api.CallApiAsync<ExplodeResult>(
-                HttpMethod.POST, 
-                url, 
-                parameters, 
-                null, 
-                null, 
+                HttpMethod.POST,
+                url,
+                parameters,
+                null,
+                null,
                 cancellationToken);
         }
 
@@ -3234,7 +3298,9 @@ namespace CloudinaryDotNet
         public string GetCloudinaryJsConfig(bool directUpload = false, string dir = "")
         {
             if (string.IsNullOrEmpty(dir))
+            {
                 dir = "/Scripts";
+            }
 
             StringBuilder sb = new StringBuilder(1000);
 
@@ -3255,14 +3321,16 @@ namespace CloudinaryDotNet
             var cloudinaryParams = new JObject(
                 new JProperty[]
                 {
-                    new JProperty("cloud_name",m_api.Account.Cloud),
-                    new JProperty("api_key",m_api.Account.ApiKey),
-                    new JProperty("private_cdn",m_api.UsePrivateCdn),
-                    new JProperty("cdn_subdomain",m_api.CSubDomain)
+                    new JProperty("cloud_name", m_api.Account.Cloud),
+                    new JProperty("api_key", m_api.Account.ApiKey),
+                    new JProperty("private_cdn", m_api.UsePrivateCdn),
+                    new JProperty("cdn_subdomain", m_api.CSubDomain),
                 });
 
             if (!string.IsNullOrEmpty(m_api.PrivateCdn))
+            {
                 cloudinaryParams.Add("secure_distribution", m_api.PrivateCdn);
+            }
 
             sb.AppendLine("<script type='text/javascript'>");
             sb.Append("$.cloudinary.config(");
@@ -3279,7 +3347,9 @@ namespace CloudinaryDotNet
             sb.Append(dir);
 
             if (!dir.EndsWith("/") && !dir.EndsWith("\\"))
+            {
                 sb.Append("/");
+            }
 
             sb.Append(script);
 

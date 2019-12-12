@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Parsed results of uploading image with Responsive breakpoints.
     /// </summary>
@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.Actions
         [JsonProperty("transformation")]
         public string Transformation { get; set; }
     }
-    
+
     /// <summary>
     /// Settings of the responsive breakpoints(images) found.
     /// </summary>
@@ -28,19 +28,19 @@ namespace CloudinaryDotNet.Actions
     public class Breakpoint
     {
         /// <summary>
-        /// Width of the image. 
+        /// Width of the image.
         /// </summary>
         [JsonProperty("width")]
         public int Width { get; set; }
 
         /// <summary>
-        /// Width of the image. 
+        /// Width of the image.
         /// </summary>
         [JsonProperty("height")]
         public int Height { get; set; }
 
         /// <summary>
-        /// Size of the image. 
+        /// Size of the image.
         /// </summary>
         [JsonProperty("bytes")]
         public long Bytes { get; set; }

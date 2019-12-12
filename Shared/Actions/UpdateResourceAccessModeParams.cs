@@ -1,22 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Stores a set of parameters for updating the access_mode of resources.
     /// </summary>
     public class UpdateResourceAccessModeParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
-        ResourceType m_resourceType = ResourceType.Image;
-        string m_accessMode = "public";
-        string m_type = "upload";
+        private List<string> m_publicIds = new List<string>();
+        private ResourceType m_resourceType = ResourceType.Image;
+        private string m_accessMode = "public";
+        private string m_type = "upload";
 
         /// <summary>
-        /// Instantiates the <see cref="UpdateResourceAccessModeParams"/> object.
+        /// Initializes a new instance of the <see cref="UpdateResourceAccessModeParams"/> class.
         /// </summary>
-        public UpdateResourceAccessModeParams() { }
+        public UpdateResourceAccessModeParams()
+        {
+        }
 
         /// <summary>
         /// Update all resources with the given public IDs (array of up to 100 public_ids).
@@ -33,12 +34,7 @@ namespace CloudinaryDotNet.Actions
         public string AccessMode
         {
             get { return m_accessMode; }
-            set { m_accessMode = value;}
-        }
-
-        private bool PublicIdsExist
-        {
-            get { return PublicIds != null && PublicIds.Count > 0; }
+            set { m_accessMode = value; }
         }
 
         /// <summary>
@@ -59,12 +55,16 @@ namespace CloudinaryDotNet.Actions
             set { m_type = value; }
         }
 
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
+        }
+
         /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
         {
-            
         }
 
         /// <summary>

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Globalization;
-using CloudinaryDotNet.Core;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using CloudinaryDotNet.Core;
+
     /// <summary>
     /// Parameters for request to cloudinary.
     /// </summary>
@@ -14,7 +14,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// The dictionary with custom parameters.
         /// </summary>
-        private SortedDictionary<string, object> CustomParams = new SortedDictionary<string, object>();
+        private SortedDictionary<string, object> customParams = new SortedDictionary<string, object>();
 
         /// <summary>
         /// Validate object model.
@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>The dictionary of parameters in cloudinary notation.</returns>
         public virtual SortedDictionary<string, object> ToParamsDictionary()
         {
-            return new SortedDictionary<string, object>(CustomParams);
+            return new SortedDictionary<string, object>(customParams);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace CloudinaryDotNet.Actions
         {
             if (!string.IsNullOrEmpty(value))
             {
-                CustomParams.Add(key, value);
+                customParams.Add(key, value);
             }
         }
 
@@ -61,7 +61,9 @@ namespace CloudinaryDotNet.Actions
         protected void AddParam(SortedDictionary<string, object> dict, string key, string value)
         {
             if (!string.IsNullOrEmpty(value))
+            {
                 dict.Add(key, value);
+            }
         }
 
         /// <summary>
@@ -73,7 +75,9 @@ namespace CloudinaryDotNet.Actions
         protected void AddParam(SortedDictionary<string, object> dict, string key, DateTime value)
         {
             if (value != DateTime.MinValue)
+            {
                 dict.Add(key, value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+            }
         }
 
         /// <summary>
@@ -96,7 +100,9 @@ namespace CloudinaryDotNet.Actions
         protected void AddParam(SortedDictionary<string, object> dict, string key, IEnumerable<string> value)
         {
             if (value != null)
+            {
                 dict.Add(key, value);
+            }
         }
 
         /// <summary>
@@ -118,7 +124,10 @@ namespace CloudinaryDotNet.Actions
         /// <param name="value">The value.</param>
         protected void AddParam(SortedDictionary<string, object> dict, string key, bool? value)
         {
-            if (!value.HasValue) return;
+            if (!value.HasValue)
+            {
+                return;
+            }
 
             AddParam(dict, key, value.Value);
         }
@@ -132,7 +141,10 @@ namespace CloudinaryDotNet.Actions
         /// <param name="coordObj">The value.</param>
         protected void AddCoordinates(SortedDictionary<string, object> dict, string key, object coordObj)
         {
-            if (coordObj == null) return;
+            if (coordObj == null)
+            {
+                return;
+            }
 
             if (coordObj is Rectangle)
             {

@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Base parameters of update streaming profile request.
     /// </summary>
@@ -27,8 +27,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if(Representations == null || !Representations.Any())
-                throw new ArgumentException("Must be specified and not empty", nameof(Representations));
+            if (Representations == null || !Representations.Any())
+            {
+                throw new ArgumentException($"{nameof(Representations)} field must be specified and not empty");
+            }
         }
 
         /// <summary>
@@ -46,15 +48,16 @@ namespace CloudinaryDotNet.Actions
 
             if (Representations != null)
             {
-                dict.Add("representations",
+                dict.Add(
+                        "representations",
                         JsonConvert.SerializeObject(
                                 Representations,
                                 new JsonSerializerSettings
                                 {
-                                    NullValueHandling = NullValueHandling.Ignore, 
+                                    NullValueHandling = NullValueHandling.Ignore,
                                 }));
-
             }
+
             return dict;
         }
     }
@@ -76,16 +79,31 @@ namespace CloudinaryDotNet.Actions
         public Transformation Transformation;
     }
 
+    /// <summary>
+    /// Instructions on how to serialize the instances of <see cref="Transformation"/> class.
+    /// </summary>
     internal class RepresentationsConverter : JsonConverter
     {
+        /// <summary>
+        /// Determines whether this instance can convert the specified object type.
+        /// </summary>
+        /// <param name="objectType">Type of the object.</param>
+        /// <returns> True if this instance can convert the specified object type; otherwise, false.</returns>
         public override bool CanConvert(Type objectType) => true;
 
+        /// <summary>Reads the JSON representation of the object.</summary>
+        /// <param name="reader">The <see cref="Newtonsoft.Json.JsonReader" /> to read from.</param>
+        /// <param name="objectType">Type of the object.</param>
+        /// <param name="existingValue">The existing value of object being read.</param>
+        /// <param name="serializer">The calling serializer.</param>
+        /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null)
             {
                 return null;
             }
+
             var transformation = new Transformation();
             var transformationsResponse = JArray.Load(reader);
             if (transformationsResponse != null && transformationsResponse.Count > 0)
@@ -95,9 +113,14 @@ namespace CloudinaryDotNet.Actions
                     transformation.Add(jTransformProperty.Name, jTransformProperty.Value);
                 }
             }
+
             return transformation;
         }
 
+        /// <summary>Writes the JSON representation of the object.</summary>
+        /// <param name="writer">The <see cref="Newtonsoft.Json.JsonWriter" /> to write to.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The calling serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             writer.WriteValue(((Transformation)value).ToString());

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed result of folders listing.
     /// </summary>
@@ -16,7 +14,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "folders")]
         public List<Folder> Folders { get; set; }
-        
     }
 
     /// <summary>

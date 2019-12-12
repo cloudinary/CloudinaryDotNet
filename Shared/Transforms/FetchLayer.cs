@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents property of the overlay parameter to specify the Url on another image to be added as an overlay.
     /// </summary>
-    public class FetchLayer: BaseLayer<FetchLayer>
+    public class FetchLayer : BaseLayer<FetchLayer>
     {
         /// <summary>
         /// The URL to fetch an image for.
@@ -14,7 +14,8 @@ namespace CloudinaryDotNet
         protected string m_url;
 
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="FetchLayer"/> object.
+        /// Initializes a new instance of the <see cref="FetchLayer"/> class.
+        /// Default parameterless constructor.
         /// </summary>
         public FetchLayer()
         {
@@ -24,6 +25,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// The URL to fetch an image for.
         /// </summary>
+        /// <param name="url">The image URL.</param>
+        /// <returns>The layer with set parameter.</returns>
         public FetchLayer Url(string url)
         {
             this.m_url = UrlEncode(url);
@@ -33,6 +36,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Get an additional parameters for the fetch layer.
         /// </summary>
+        /// <returns>A string that represents additional parameters.</returns>
         public override string AdditionalParams()
         {
             List<string> components = new List<string>();
@@ -40,18 +44,21 @@ namespace CloudinaryDotNet
             {
                 components.Add(string.Format("fetch:{0}", m_url));
             }
+
             return string.Join(":", components.ToArray());
         }
 
         /// <summary>
         /// Get this layer represented as string.
         /// </summary>
+        /// <returns>A string that represents the layer.</returns>
         public override string ToString()
         {
             if (string.IsNullOrEmpty(m_url))
             {
                 throw new ArgumentException("Must supply url.");
             }
+
             return AdditionalParams();
         }
 
@@ -60,11 +67,10 @@ namespace CloudinaryDotNet
         /// </summary>
         private string UrlEncode(string url)
         {
-            //Microsoft.IdentityModel.Tokens
-            //return Base64UrlEncoder.Encode(StringToEncode);
+            // Microsoft.IdentityModel.Tokens
+            // return Base64UrlEncoder.Encode(StringToEncode);
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(url);
             return System.Convert.ToBase64String(plainTextBytes);
         }
-
     }
 }

@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
-    /// The format for the generated archive
+    /// The format for the generated archive.
     /// </summary>
     public enum ArchiveFormat
     {
@@ -12,6 +11,6 @@ namespace CloudinaryDotNet.Actions
         /// Specifies ZIP format for an archive
         /// </summary>
         [EnumMember(Value = "zip")]
-        Zip
+        Zip,
     }
 }

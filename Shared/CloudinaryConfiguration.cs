@@ -3,7 +3,7 @@
     /// <summary>
     /// Struct with Cloudinary configuration parameters.
     /// </summary>
-    public static  class CloudinaryConfiguration
+    public static class CloudinaryConfiguration
     {
         /// <summary>
         /// The name of your cloud.

@@ -1,12 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Represents expression object that can be used in user defined variables and conditional transformations.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     public class Expression : BaseExpression<Expression>
     {
         /// <summary>
@@ -15,17 +17,24 @@ namespace CloudinaryDotNet
         public const string VARIABLE_NAME_REGEX = "^\\$[a-zA-Z][a-zA-Z0-9]*$";
 
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="Expression"/> object.
+        /// Initializes a new instance of the <see cref="Expression"/> class.
+        /// Default parameterless constructor.
         /// </summary>
-        public Expression() { }
+        public Expression()
+        {
+        }
 
         /// <summary>
-        /// Instantiates the <see cref="Expression"/> object with name.
+        /// Initializes a new instance of the <see cref="Expression"/> class with name.
         /// </summary>
-        public Expression(string name) : this()
+        /// <param name="name">Name of the new expression.</param>
+        public Expression(string name)
+            : this()
         {
             if (!string.IsNullOrEmpty(name))
+            {
                 m_expressions.Add(name);
+            }
         }
 
         /// <summary>
@@ -33,6 +42,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="name">The name of variable.</param>
         /// <param name="value">The value.</param>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression Variable(string name, object value)
         {
             CheckVariableName(name);
@@ -49,27 +59,28 @@ namespace CloudinaryDotNet
         public static void CheckVariableName(string name)
         {
             if (string.IsNullOrWhiteSpace(name) || !Regex.IsMatch(name, VARIABLE_NAME_REGEX))
+            {
                 throw new ArgumentException(
-                    $"The name `{name}` can include only alphanumeric characters and must begin with a letter."
-                );
+                   $"The name `{name}` can include only alphanumeric characters and must begin with a letter.");
+            }
         }
 
         /// <summary>
         /// Check if the value contains user defined variable or predefined variable.
         /// </summary>
         /// <param name="value">The value to check.</param>
+        /// <returns>True if the value contains the variable; otherwise, false.</returns>
         public static bool ValueContainsVariable(string value)
         {
             return !string.IsNullOrEmpty(value) &&
                    (value.IndexOf("$", StringComparison.Ordinal) != -1 ||
-                    Parameters.Any(v => value.Contains($"_{v.Value}") || value.Contains($"{v.Value}_")));
+                    parameters.Any(v => value.Contains($"_{v.Value}") || value.Contains($"{v.Value}_")));
         }
-
-        #region Predefined variables
 
         /// <summary>
         /// Predefined variable 'width'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression Width()
         {
             return new Expression("w");
@@ -78,6 +89,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'height'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression Height()
         {
             return new Expression("h");
@@ -86,6 +98,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'initial width'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression InitialWidth()
         {
             return new Expression("iw");
@@ -94,6 +107,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'initial height'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression InitialHeight()
         {
             return new Expression("ih");
@@ -102,6 +116,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'page count'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression PageCount()
         {
             return new Expression("pc");
@@ -110,6 +125,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'face count'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression FaceCount()
         {
             return new Expression("fc");
@@ -118,7 +134,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'illustration score'.
         /// </summary>
-        public static Expression IllustrationScore() 
+        /// <returns>An expression that represents the variable.</returns>
+        public static Expression IllustrationScore()
         {
             return new Expression("ils");
         }
@@ -126,6 +143,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'current page index'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression CurrentPageIndex()
         {
             return new Expression("cp");
@@ -134,6 +152,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'tags'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression Tags()
         {
             return new Expression("tags");
@@ -142,6 +161,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'x-offset'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression XOffset()
         {
             return new Expression("px");
@@ -150,6 +170,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'y-offset'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression YOffset()
         {
             return new Expression("py");
@@ -158,6 +179,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'aspect ratio'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression AspectRatio()
         {
             return new Expression("ar");
@@ -166,11 +188,10 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Predefined variable 'aspect ratio of initial image'.
         /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
         public static Expression AspectRatioOfInitialImage()
         {
             return new Expression("iar");
         }
-
-        #endregion
     }
 }

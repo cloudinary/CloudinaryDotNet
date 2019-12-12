@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Upload preset details.
     /// </summary>

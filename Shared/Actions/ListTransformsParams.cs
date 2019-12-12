@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of the request for a list of transformation.
     /// </summary>
     public class ListTransformsParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ListTransformsParams"/> object.
+        /// Initializes a new instance of the <see cref="ListTransformsParams"/> class.
         /// </summary>
         public ListTransformsParams()
         {
-            NextCursor = String.Empty;
+            NextCursor = string.Empty;
         }
 
         /// <summary>
@@ -27,9 +26,9 @@ namespace CloudinaryDotNet.Actions
         public bool? Named { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="MaxResults"/>, 
+        /// When a listing request has more results to return than <see cref="MaxResults"/>,
         /// the <see cref="ListTransformsResult.NextCursor"/> value is returned as part of the response. You can then
-        /// specify this value as the <see cref="NextCursor"/> parameter of the following listing request. 
+        /// specify this value as the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
         public string NextCursor { get; set; }
 
@@ -50,11 +49,19 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults.ToString());
-            if(Named.HasValue)
+            }
+
+            if (Named.HasValue)
+            {
                 AddParam(dict, "named", Named.Value.ToString());
-            if(!string.IsNullOrWhiteSpace(NextCursor))
+            }
+
+            if (!string.IsNullOrWhiteSpace(NextCursor))
+            {
                 AddParam(dict, "next_cursor", NextCursor);
+            }
 
             return dict;
         }
