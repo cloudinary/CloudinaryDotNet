@@ -5,15 +5,15 @@
     /// </summary>
     public class CustomFunction
     {
-        private readonly string _params;
+        private readonly string parameters;
 
         private CustomFunction(params string[] components)
         {
-            _params = string.Join(":", components);
+            parameters = string.Join(":", components);
         }
 
         /// <summary>
-        /// Generate a web-assembly custom function param to send to CustomFunction(customFunction) transformation. 
+        /// Generate a web-assembly custom function param to send to CustomFunction(customFunction) transformation.
         /// </summary>
         /// <param name="publicId">The public id of the web-assembly file.</param>
         /// <returns>A new instance of custom function param.</returns>
@@ -38,7 +38,7 @@
         /// <returns>String with parameters joined with ':'.</returns>
         public override string ToString()
         {
-            return _params;
+            return parameters;
         }
     }
 }

@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters to publish resource request.
     /// </summary>
     public class PublishResourceParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
-        ResourceType m_resourceType = ResourceType.Image;
-        string m_type = string.Empty;
+        private List<string> m_publicIds = new List<string>();
+        private ResourceType m_resourceType = ResourceType.Image;
+        private string m_type = string.Empty;
 
         /// <summary>
-        /// Instantiates the <see cref="PublishResourceParams"/> object.
+        /// Initializes a new instance of the <see cref="PublishResourceParams"/> class.
         /// </summary>
-        public PublishResourceParams() { }
+        public PublishResourceParams()
+        {
+        }
 
         /// <summary>
         /// Publish all resources with the given public IDs.
@@ -24,11 +25,6 @@ namespace CloudinaryDotNet.Actions
         {
             get { return m_publicIds; }
             set { m_publicIds = value; }
-        }
-
-        private bool PublicIdsExist
-        {
-            get { return PublicIds != null && PublicIds.Count > 0; }
         }
 
         /// <summary>
@@ -41,7 +37,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Gets or sets privacy mode of the image. Valid values: 'private' and 'authenticated'. 
+        /// Gets or sets privacy mode of the image. Valid values: 'private' and 'authenticated'.
         /// Default: 'authenticated'.
         /// </summary>
         public string Type
@@ -50,12 +46,16 @@ namespace CloudinaryDotNet.Actions
             set { m_type = value; }
         }
 
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
+        }
+
         /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
         {
-            
         }
 
         /// <summary>
@@ -67,10 +67,14 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (PublicIdsExist)
+            {
                 dict.Add("public_ids", PublicIds);
+            }
 
             if (!string.IsNullOrWhiteSpace(m_type))
+            {
                 dict.Add("type", m_type);
+            }
 
             return dict;
         }

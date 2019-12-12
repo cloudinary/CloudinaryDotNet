@@ -1,5 +1,8 @@
 ﻿using CloudinaryDotNet.Actions;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
@@ -8,46 +11,74 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestSprite()
         {
-            var publicId1 = GetUniquePublicId(StorageType.sprite);
-            var publicId2 = GetUniquePublicId(StorageType.sprite);
-            var publicId3 = GetUniquePublicId(StorageType.sprite);
-
             var spriteTag = GetMethodTag();
 
-            ImageUploadParams uploadParams = new ImageUploadParams()
+            var testTransformations = new[]{ m_resizeTransformation, m_updateTransformation, m_simpleTransformation };
+
+            var addedPublicIds = testTransformations.Select(t =>
             {
-                File = new FileDescription(m_testImagePath),
-                Tags = $"{spriteTag},{m_apiTag}",
-                PublicId = publicId1,
-                Transformation = m_resizeTransformation
-            };
-            m_cloudinary.Upload(uploadParams);
+                var uploadResult = UploadTestImageResource((uploadParams) =>
+                {
+                    uploadParams.Tags = $"{spriteTag},{m_apiTag}";
+                    uploadParams.Transformation = t;
+                },
+                StorageType.sprite);
 
-            uploadParams.PublicId = publicId2;
-            uploadParams.Transformation = m_updateTransformation;
-            m_cloudinary.Upload(uploadParams);
+                return uploadResult.PublicId;
+            }).ToList();
 
-            uploadParams.PublicId = publicId3;
-            uploadParams.Transformation = m_simpleTransformation;
-            m_cloudinary.Upload(uploadParams);
+            var spriteParams = CreateSpriteParams(spriteTag, FILE_FORMAT_JPG);
 
-            SpriteParams sprite = new SpriteParams(spriteTag)
-            {
-                Format = FILE_FORMAT_JPG
-            };
+            var result = m_cloudinary.MakeSprite(spriteParams);
 
-            SpriteResult result = m_cloudinary.MakeSprite(sprite);
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
 
-            Assert.NotNull(result);
-            Assert.NotNull(result.ImageInfos);
-            Assert.AreEqual(3, result.ImageInfos.Count);
+            AssertSprite(result, addedPublicIds, FILE_FORMAT_JPG);
+        }
 
-            StringAssert.EndsWith(FILE_FORMAT_JPG, result.ImageUri.ToString());
+        [Test]
+        public async Task TestSpriteAsync()
+        {
+            var spriteTag = GetMethodTag();
 
-            Assert.Contains(publicId1, result.ImageInfos.Keys);
-            Assert.Contains(publicId2, result.ImageInfos.Keys);
-            Assert.Contains(publicId3, result.ImageInfos.Keys);
+            var testTransformations = new[] { m_resizeTransformation, m_updateTransformation, m_simpleTransformation };
+
+            var addedPublicIdsTasks = testTransformations.Select(async t =>
+            {
+                var uploadResult = await UploadTestImageResourceAsync((uploadParams) =>
+                {
+                    uploadParams.Tags = $"{spriteTag},{m_apiTag}";
+                    uploadParams.Transformation = t;
+                },
+                StorageType.sprite);
+
+                return uploadResult.PublicId;
+            });
+
+            var addedPublicIdsTask = await Task.WhenAll(addedPublicIdsTasks);
+
+            var spriteParams = CreateSpriteParams(spriteTag, FILE_FORMAT_JPG);
+
+            var result = await m_cloudinary.MakeSpriteAsync(spriteParams);
+
+            AddCreatedPublicId(StorageType.sprite, result.PublicId);
+
+            AssertSprite(result, addedPublicIdsTask, FILE_FORMAT_JPG);
+        }
+
+        private SpriteParams CreateSpriteParams(string tag, string fileFormat)
+        {
+            return new SpriteParams(tag)
+            {
+                Format = fileFormat
+            };
+        }
+
+        private void AssertSprite(SpriteResult result, IEnumerable<string> publicIds, string fileFormat)
+        {
+            Assert.NotNull(result?.ImageInfos);
+            StringAssert.EndsWith(fileFormat, result.ImageUri.ToString());
+            CollectionAssert.AreEqual(publicIds, result.ImageInfos.Keys);
         }
 
         [Test]

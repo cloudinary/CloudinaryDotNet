@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of request to create a single animated GIF file from a group of images.
     /// </summary>
     public class MultiParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="MultiParams"/> object.
+        /// Initializes a new instance of the <see cref="MultiParams"/> class.
         /// </summary>
         /// <param name="tag">The animated GIF is created from all images with this tag.</param>
         public MultiParams(string tag)
@@ -39,7 +38,7 @@ namespace CloudinaryDotNet.Actions
         public bool Async { get; set; }
 
         /// <summary>
-        /// Can be set to 'zip' to generate a zip file containing the images instead of an animated GIF file. 
+        /// Can be set to 'zip' to generate a zip file containing the images instead of an animated GIF file.
         /// Default: gif (deprecated - use the new CreateArchive method to create zip files).
         /// </summary>
         public string Format { get; set; }
@@ -49,8 +48,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(Tag))
+            if (string.IsNullOrEmpty(Tag))
+            {
                 throw new ArgumentException("Tag must be set!");
+            }
         }
 
         /// <summary>
@@ -67,7 +68,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "async", Async);
 
             if (Transformation != null)
+            {
                 AddParam(dict, "transformation", Transformation.Generate());
+            }
 
             return dict;
         }

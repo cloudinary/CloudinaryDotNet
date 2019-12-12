@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of list tags request.
     /// </summary>
     public class ListTagsParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ListTagsParams"/> object.
+        /// Initializes a new instance of the <see cref="ListTagsParams"/> class.
         /// </summary>
         public ListTagsParams()
         {
-            NextCursor = String.Empty;
-            Prefix = String.Empty;
+            NextCursor = string.Empty;
+            Prefix = string.Empty;
         }
 
         /// <summary>
-        /// Optional. The type of file for which to retrieve the tags. Possible values: image, raw, video. 
+        /// Optional. The type of file for which to retrieve the tags. Possible values: image, raw, video.
         /// Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
@@ -29,12 +28,12 @@ namespace CloudinaryDotNet.Actions
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Max number of tags to return. Default=10. Maximum=500.  
+        /// Max number of tags to return. Default=10. Maximum=500.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="MaxResults"/>, the 
+        /// When a listing request has more results to return than <see cref="MaxResults"/>, the
         /// <see cref="ListTagsResult.NextCursor"/> value is returned as part of the response. You can then specify
         /// this value as the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
@@ -57,7 +56,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults.ToString());
+            }
 
             AddParam(dict, "next_cursor", NextCursor);
             AddParam(dict, "prefix", Prefix);

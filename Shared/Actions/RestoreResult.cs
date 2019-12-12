@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed results of resources restore.
     /// </summary>
@@ -22,6 +21,5 @@ namespace CloudinaryDotNet.Actions
         {
             get { return Api.ParseCloudinaryParam<ResourceType>(m_resourceType); }
         }
-        
     }
 }

@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parsed response with the detailed resource information.
     /// </summary>
@@ -191,7 +191,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "pages")]
         public int Pages { get; protected set; }
-
     }
 
     /// <summary>
@@ -290,7 +289,6 @@ namespace CloudinaryDotNet.Actions
         public Ocr Ocr { get; protected set; }
     }
 
-    #region OCR
     /// <summary>
     /// Details of executing an OCR add-on.
     /// </summary>
@@ -319,7 +317,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Data returned by OCR plugin.
         /// </summary>
-        [DataMember (Name = "data")]
+        [DataMember(Name = "data")]
         public List<AdvOcrData> Data { get; protected set; }
     }
 
@@ -365,7 +363,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// The outer bounding polygon for the detected image annotation.
         /// </summary>
-        [DataMember (Name="boundingPoly")]
+        [DataMember(Name="boundingPoly")]
         public BoundingBlock BoundingPoly { get; protected set; }
     }
 
@@ -542,10 +540,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
     }
-
-    #endregion
-
-    #region Rekognition face
 
     /// <summary>
     /// Requested information from executing a Rekognition face add-on.
@@ -842,8 +836,6 @@ namespace CloudinaryDotNet.Actions
         [DataMember(Name = "height")]
         public double Height { get; protected set; }
     }
-
-    #endregion
 
     /// <summary>
     /// Details of the quality analysis.

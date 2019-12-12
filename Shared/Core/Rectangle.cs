@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CloudinaryDotNet.Core
+﻿namespace CloudinaryDotNet.Core
 {
     /// <summary>
     /// Stores a set of four integers that represent the location and size of a rectangle.
@@ -8,13 +6,14 @@ namespace CloudinaryDotNet.Core
     public struct Rectangle
     {
         /// <summary>
-        /// Instantiates the <see cref="Rectangle"/> object with the specified location and size.
+        /// Initializes a new instance of the <see cref="Rectangle"/> struct with the specified location and size.
         /// </summary>
-        /// <param name="x">the x-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure</param>
-        /// <param name="y">the y-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure</param>
-        /// <param name="width">the width of this <see cref="Rectangle"/> structure</param>
-        /// <param name="height">the height of this <see cref="Rectangle"/> structure</param>
-        public Rectangle(int x, int y, int width, int height) : this()
+        /// <param name="x">the x-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure.</param>
+        /// <param name="y">the y-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure.</param>
+        /// <param name="width">the width of this <see cref="Rectangle"/> structure.</param>
+        /// <param name="height">the height of this <see cref="Rectangle"/> structure.</param>
+        public Rectangle(int x, int y, int width, int height)
+            : this()
         {
             X = x;
             Y = y;
@@ -26,14 +25,17 @@ namespace CloudinaryDotNet.Core
         /// Gets or sets the height of this <see cref="Rectangle"/> structure.
         /// </summary>
         public int Height { get; set; }
+
         /// <summary>
         /// Gets or sets the width of this <see cref="Rectangle"/> structure.
         /// </summary>
         public int Width { get; set; }
+
         /// <summary>
         /// Gets or sets the x-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure.
         /// </summary>
         public int X { get; set; }
+
         /// <summary>
         /// Gets or sets the y-coordinate of the upper-left corner of this <see cref="Rectangle"/> structure.
         /// </summary>

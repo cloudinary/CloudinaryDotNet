@@ -1,18 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
+    /// <summary>
+    /// The action to perform on image resources using the given context.
+    /// </summary>
+    public enum ContextCommand
+    {
+        /// <summary>
+        /// Assign the given context to the resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "add")]
+        Add,
+
+        /// <summary>
+        /// Remove all contexts from resources with the given Public IDs.
+        /// </summary>
+        [EnumMember(Value = "remove_all")]
+        RemoveAll,
+    }
+
     /// <summary>
     /// Parameters for context management.
     /// </summary>
     public class ContextParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
+        private List<string> m_publicIds = new List<string>();
 
         /// <summary>
         /// A list of Public IDs of assets uploaded to Cloudinary.
@@ -35,7 +49,7 @@ namespace CloudinaryDotNet.Actions
         public StringDictionary ContextDict { get; set; }
 
         /// <summary>
-        /// (Optional) The specific type of the asset. 
+        /// (Optional) The specific type of the asset.
         /// Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
         public string Type { get; set; }
@@ -46,7 +60,7 @@ namespace CloudinaryDotNet.Actions
         public ContextCommand Command { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -68,7 +82,7 @@ namespace CloudinaryDotNet.Actions
             {
                 contextPairs.AddRange(ContextDict.SafePairs);
             }
-            
+
             if (!string.IsNullOrEmpty(Context))
             {
                 contextPairs.Add(Context);
@@ -78,29 +92,11 @@ namespace CloudinaryDotNet.Actions
             {
                 AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", contextPairs));
             }
-           
 
             AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
             AddParam(dict, Constants.COMMAND, ApiShared.GetCloudinaryParam(Command));
 
             return dict;
         }
-    }
-
-    /// <summary>
-    /// The action to perform on image resources using the given context.
-    /// </summary>
-    public enum ContextCommand
-    {
-        /// <summary>
-        /// Assign the given context to the resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "add")]
-        Add,
-        /// <summary>
-        /// Remove all contexts from resources with the given Public IDs.
-        /// </summary>
-        [EnumMember(Value = "remove_all")]
-        RemoveAll
     }
 }

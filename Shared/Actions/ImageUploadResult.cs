@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Runtime.Serialization;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parsed response after upload of the image resource.
     /// </summary>
@@ -19,7 +17,7 @@ namespace CloudinaryDotNet.Actions
         public int Width { get; protected set; }
 
         /// <summary>
-        /// Parameter "height" of the image. 
+        /// Parameter "height" of the image.
         /// </summary>
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
@@ -44,10 +42,10 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Quality analysis value for the image between 0 and 1, where 0 means the image is blurry and out of focus
-        /// and 1 means the image is sharp and in focus. 
+        /// and 1 means the image is sharp and in focus.
         /// </summary>
         [DataMember(Name = "quality_analysis")]
-        public QualityAnalysis QualityAnalysis{ get; protected set; }
+        public QualityAnalysis QualityAnalysis { get; protected set; }
 
         /// <summary>
         /// The predominant colors and color histogram of the uploaded image.
@@ -64,7 +62,7 @@ namespace CloudinaryDotNet.Actions
         public string Phash { get; protected set; }
 
         /// <summary>
-        /// The deletion token for the image. The token can be used to delete the uploaded asset within 10 minutes 
+        /// The deletion token for the image. The token can be used to delete the uploaded asset within 10 minutes
         /// using an unauthenticated API request.
         /// </summary>
         [DataMember(Name = "delete_token")]
@@ -86,7 +84,12 @@ namespace CloudinaryDotNet.Actions
         /// List of responsive breakpoints for the image.
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
-        
+
+        /// <summary>
+        /// Overrides corresponding method of <see cref="BaseResult"/> class.
+        /// Populates additional token fields.
+        /// </summary>
+        /// <param name="source">JSON token received from the server.</param>
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);

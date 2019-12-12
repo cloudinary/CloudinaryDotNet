@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters for Mapping of folders to URL prefixes for dynamic image fetching from existing online locations.
     /// </summary>
     public class UploadMappingParams : BaseParams
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="UploadMappingParams"/> class.
         /// Default constructor.
         /// </summary>
         public UploadMappingParams()
@@ -42,8 +43,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if(MaxResults > 500)
+            if (MaxResults > 500)
+            {
                 throw new ArgumentException(string.Format("The maximal count of folders to return is 500, but {0} given!", MaxResults));
+            }
         }
 
         /// <summary>
@@ -56,9 +59,15 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "folder", Folder);
             AddParam(dict, "template", Template);
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults);
+            }
+
             if (!string.IsNullOrEmpty(NextCursor))
+            {
                 AddParam(dict, "next_cursor", NextCursor);
+            }
+
             return dict;
         }
     }

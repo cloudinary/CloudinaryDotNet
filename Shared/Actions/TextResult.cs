@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Results of generating an image of a given textual string.
     /// </summary>
@@ -20,6 +19,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
-        
     }
 }

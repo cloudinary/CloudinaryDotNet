@@ -1,42 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+
     /// <summary>
     /// Checksum generator using CRC32 algorithm.
     /// </summary>
     public static class Crc32
     {
-        static uint[] table;
-
-        /// <summary>
-        /// Compute checksum for a byte array.
-        /// </summary>
-        /// <param name="bytes">Byte array to compute CRC.</param>
-        /// <returns>Computed checksum.</returns>
-        public static uint ComputeChecksum(byte[] bytes)
-        {
-            uint crc = 0xffffffff;
-            for (int i = 0; i < bytes.Length; ++i)
-            {
-                byte index = (byte)(((crc) & 0xff) ^ bytes[i]);
-                crc = (uint)((crc >> 8) ^ table[index]);
-            }
-            return ~crc;
-        }
-
-        /// <summary>
-        /// Compute checksum for a byte array.
-        /// </summary>
-        /// <param name="bytes">Byte array to compute CRC.</param>
-        /// <returns>Computed checksum represented as byte array.</returns>
-        public static byte[] ComputeChecksumBytes(byte[] bytes)
-        {
-            return BitConverter.GetBytes(ComputeChecksum(bytes));
-        }
+        private static uint[] table;
 
         static Crc32()
         {
@@ -57,8 +28,36 @@ namespace CloudinaryDotNet
                         temp >>= 1;
                     }
                 }
+
                 table[i] = temp;
             }
+        }
+
+        /// <summary>
+        /// Compute checksum for a byte array.
+        /// </summary>
+        /// <param name="bytes">Byte array to compute CRC.</param>
+        /// <returns>Computed checksum.</returns>
+        public static uint ComputeChecksum(byte[] bytes)
+        {
+            uint crc = 0xffffffff;
+            for (int i = 0; i < bytes.Length; ++i)
+            {
+                byte index = (byte)((crc & 0xff) ^ bytes[i]);
+                crc = (uint)((crc >> 8) ^ table[index]);
+            }
+
+            return ~crc;
+        }
+
+        /// <summary>
+        /// Compute checksum for a byte array.
+        /// </summary>
+        /// <param name="bytes">Byte array to compute CRC.</param>
+        /// <returns>Computed checksum represented as byte array.</returns>
+        public static byte[] ComputeChecksumBytes(byte[] bytes)
+        {
+            return BitConverter.GetBytes(ComputeChecksum(bytes));
         }
     }
 }

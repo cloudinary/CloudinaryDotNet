@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters for deletion of a single asset from your Cloudinary account.
     /// </summary>
     public class DeletionParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="DeletionParams"/> object.
+        /// Initializes a new instance of the <see cref="DeletionParams"/> class.
         /// </summary>
         /// <param name="publicId">The identifier of the uploaded asset. </param>
         public DeletionParams(string publicId)
@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// The identifier of the uploaded asset. 
+        /// The identifier of the uploaded asset.
         /// </summary>
         public string PublicId { get; set; }
 
@@ -37,7 +37,7 @@ namespace CloudinaryDotNet.Actions
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// The type of asset to destroy. Valid values: image, raw, and video. Default: image. 
+        /// The type of asset to destroy. Valid values: image, raw, and video. Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
@@ -46,8 +46,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(PublicId))
+            if (string.IsNullOrEmpty(PublicId))
+            {
                 throw new ArgumentException("PublicId must be specified in UploadParams!");
+            }
         }
 
         /// <summary>

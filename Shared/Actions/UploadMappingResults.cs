@@ -1,12 +1,9 @@
-﻿using System.Net;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Response of upload mappings manipulation.
     /// </summary>
@@ -27,12 +24,19 @@ namespace CloudinaryDotNet.Actions
         /// Holds the cursor value if there are more upload mappings than <see cref="UploadMappingParams.MaxResults"/>.
         /// </summary>
         public string NextCursor { get; protected set; }
-        
+
+        /// <summary>
+        /// Overrides corresponding method of <see cref="BaseResult"/> class.
+        /// Populates additional token fields.
+        /// </summary>
+        /// <param name="source">JSON token received from the server.</param>
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);
             if (Mappings == null)
+            {
                 Mappings = new Dictionary<string, string>();
+            }
 
             if (source != null)
             {
@@ -55,9 +59,11 @@ namespace CloudinaryDotNet.Actions
                 var folder = source.Value<string>("folder") ?? string.Empty;
                 var template = source.Value<string>("template") ?? string.Empty;
                 if (!string.IsNullOrEmpty(folder))
+                {
                     Mappings.Add(folder, template);
+                }
 
-                //parsing NextCursor
+                // parsing NextCursor
                 NextCursor = source.Value<string>("next_cursor") ?? string.Empty;
             }
         }

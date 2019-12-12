@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Definition of the properties for creation of transformation.
     /// </summary>
@@ -24,10 +24,14 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(Name))
+            {
                 throw new ArgumentException("Name must be set!");
+            }
 
             if (Transform == null)
+            {
                 throw new ArgumentException("Transform must be defined!");
+            }
         }
 
         /// <summary>

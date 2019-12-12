@@ -1,9 +1,7 @@
-﻿using System;
-using System.Net;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parsed result of creating the archive.
     /// </summary>
@@ -33,8 +31,12 @@ namespace CloudinaryDotNet.Actions
         /// Count of files in the archive.
         /// </summary>
         public int FileCount { get; private set; }
-        
 
+        /// <summary>
+        /// Overrides corresponding method of <see cref="BaseResult"/> class.
+        /// Populates additional token fields.
+        /// </summary>
+        /// <param name="source">JSON token received from the server.</param>
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);

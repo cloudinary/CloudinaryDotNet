@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of create streaming profile request.
     /// </summary>
     public class StreamingProfileCreateParams : StreamingProfileBaseParams
     {
         /// <summary>
-        /// The identification name to assign to the new streaming profile. The name is 
+        /// The identification name to assign to the new streaming profile. The name is
         /// case-insensitive and can contain alphanumeric characters, underscores (_) and hyphens (-).
         /// </summary>
         public string Name { get; set; }
@@ -20,7 +20,9 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (string.IsNullOrEmpty(Name))
-                throw new ArgumentException("Must be specified", nameof(Name));
+            {
+                throw new ArgumentException($"{nameof(Name)} field must be specified");
+            }
 
             base.Check();
         }

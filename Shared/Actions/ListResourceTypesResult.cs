@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parsed list of resource types.
     /// </summary>
@@ -21,7 +20,12 @@ namespace CloudinaryDotNet.Actions
         /// An array of the resource types.
         /// </summary>
         public ResourceType[] ResourceTypes { get; protected set; }
-        
+
+        /// <summary>
+        /// Overrides corresponding method of <see cref="BaseResult"/> class.
+        /// Populates additional token fields.
+        /// </summary>
+        /// <param name="source">JSON token received from the server.</param>
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);

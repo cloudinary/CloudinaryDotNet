@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed response after a call of Explode method.
     /// </summary>
@@ -20,6 +19,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "batch_id")]
         public string BatchId { get; protected set; }
-        
     }
 }

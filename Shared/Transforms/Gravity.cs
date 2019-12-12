@@ -1,13 +1,10 @@
-﻿
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
     /// <summary>
     /// The gravity values.
     /// </summary>
     public static class Gravity
     {
-        #region Basic gravity values
-
         /// <summary>
         /// The center of the image. Default.
         /// </summary>
@@ -52,10 +49,6 @@ namespace CloudinaryDotNet
         /// South east corner (bottom right).
         /// </summary>
         public const string SouthEast = "south_east";
-
-        #endregion
-
-        #region Advanced gravity values
 
         /// <summary>
         /// An intelligent algorithm analyzes and prioritizes the most prominent elements of the image to include.
@@ -166,7 +159,5 @@ namespace CloudinaryDotNet
         /// Same as the 'custom' gravity, but defaults to 'adv_faces' gravity if no custom coordinates are available.
         /// </summary>
         public const string CustomAdvFaces = "custom:adv_faces";
-
-        #endregion
     }
 }

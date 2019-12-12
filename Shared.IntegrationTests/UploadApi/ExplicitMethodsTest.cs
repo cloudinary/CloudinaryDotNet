@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -6,25 +7,50 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class ExplicitMethodsTest : IntegrationTestBase
     {
+        private readonly string _cloudinaryPublicId = "cloudinary";
+        private readonly string _storageTypeFacebook = StorageType.facebook.ToString();
+
         [Test]
         public void TestExplicit()
         {
-            var facebook = StorageType.facebook.ToString();
-            var cloudinary = "cloudinary";
-            var exp = new ExplicitParams(cloudinary)
+            var explicitParams = PopulateExplicitParams();
+
+            var expResult = m_cloudinary.Explicit(explicitParams);
+
+            AssertExplicitAbsoluteUri(expResult);
+        }
+
+        [Test]
+        public async Task TestExplicitAsync()
+        {
+            var explicitParams = PopulateExplicitParams();
+
+            var expResult = await m_cloudinary.ExplicitAsync(explicitParams);
+
+            AssertExplicitAbsoluteUri(expResult);
+        }
+
+        private ExplicitParams PopulateExplicitParams()
+        {
+            return new ExplicitParams(_cloudinaryPublicId)
             {
                 EagerTransforms = new List<Transformation>() { m_explicitTransformation },
-                Type = facebook,
+                Type = _storageTypeFacebook,
                 Tags = m_apiTag
             };
+        }
 
-            var expResult = m_cloudinary.Explicit(exp);
+        private void AssertExplicitAbsoluteUri(ExplicitResult result)
+        {
+            var url = new Url(m_account.Cloud)
+                .ResourceType(ApiShared.GetCloudinaryParam(ResourceType.Image))
+                .Add(_storageTypeFacebook)
+                .Transform(m_explicitTransformation)
+                .Format(FILE_FORMAT_PNG)
+                .Version(result.Version)
+                .BuildUrl(_cloudinaryPublicId);
 
-            var url = new Url(m_account.Cloud).ResourceType(Api.GetCloudinaryParam(ResourceType.Image)).Add(facebook).
-                Transform(m_explicitTransformation).
-                Format(FILE_FORMAT_PNG).Version(expResult.Version).BuildUrl(cloudinary);
-
-            Assert.AreEqual(url, expResult.Eager[0].Uri.AbsoluteUri);
+            Assert.AreEqual(url, result.Eager[0].Uri.AbsoluteUri);
         }
 
         [Test]

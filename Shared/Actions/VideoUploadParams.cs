@@ -1,5 +1,4 @@
-﻿
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
     /// <summary>
     /// Parameters of video file uploading.

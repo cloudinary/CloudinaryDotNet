@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
     /// <summary>
     /// Results of resource renaming.

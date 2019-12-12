@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed details of a single transformation.
     /// </summary>
@@ -52,19 +52,20 @@ namespace CloudinaryDotNet.Actions
     /// Settings of derived assets generated (and cached) from the original media asset.
     /// </summary>
     [DataContract]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:AccessibleFieldsMustBeginWithUpperCaseLetter", Justification = "Reviewed.")]
     public class TransformDerived
     {
-        /// <summary>
-        /// The public identifier that is used for accessing the media asset.
-        /// </summary>
-        [DataMember(Name = "public_id")]
-        public string PublicId { get; protected set; }
-
         /// <summary>
         /// The type of media asset: image, raw, or video.
         /// </summary>
         [DataMember(Name = "resource_type")]
         public string m_resourceType;
+
+        /// <summary>
+        /// The public identifier that is used for accessing the media asset.
+        /// </summary>
+        [DataMember(Name = "public_id")]
+        public string PublicId { get; protected set; }
 
         /// <summary>
         /// The type of media asset: image, raw, or video.

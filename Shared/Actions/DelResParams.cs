@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters for deletion of resources.
     /// </summary>
     public class DelResParams : BaseParams
     {
-        List<string> m_publicIds = new List<string>();
-        string m_prefix;
-        string m_tag;
-        bool m_all;
+        private List<string> m_publicIds = new List<string>();
+        private string m_prefix;
+        private string m_tag;
+        private bool m_all;
 
         /// <summary>
-        /// Instantiates the <see cref="DelResParams"/> object.
+        /// Initializes a new instance of the <see cref="DelResParams"/> class.
         /// </summary>
         public DelResParams()
         {
@@ -44,18 +44,28 @@ namespace CloudinaryDotNet.Actions
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// Continue deletion from the given cursor. Notice that it doesn't have a lot of meaning unless the 
+        /// Continue deletion from the given cursor. Notice that it doesn't have a lot of meaning unless the
         /// <see cref="KeepOriginal"/> flag is set to True.
         /// </summary>
-        public String NextCursor { get; set; }
+        public string NextCursor { get; set; }
 
         /// <summary>
         /// Delete all resources with the given public IDs (array of up to 100 public_ids).
         /// </summary>
         public List<string> PublicIds
         {
-            get { return m_publicIds; }
-            set { m_publicIds = value; m_prefix = String.Empty; m_tag = String.Empty; m_all = false; }
+            get
+            {
+                return m_publicIds;
+            }
+
+            set
+            {
+                m_publicIds = value;
+                m_prefix = string.Empty;
+                m_tag = string.Empty;
+                m_all = false;
+            }
         }
 
         /// <summary>
@@ -64,8 +74,18 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Prefix
         {
-            get { return m_prefix; }
-            set { m_publicIds = null; m_tag = String.Empty; m_prefix = value; m_all = false; }
+            get
+            {
+                return m_prefix;
+            }
+
+            set
+            {
+                m_publicIds = null;
+                m_tag = string.Empty;
+                m_prefix = value;
+                m_all = false;
+            }
         }
 
         /// <summary>
@@ -74,8 +94,18 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public string Tag
         {
-            get { return m_tag; }
-            set { m_publicIds = null; m_prefix = String.Empty; m_tag = value; m_all = false; }
+            get
+            {
+                return m_tag;
+            }
+
+            set
+            {
+                m_publicIds = null;
+                m_prefix = string.Empty;
+                m_tag = value;
+                m_all = false;
+            }
         }
 
         /// <summary>
@@ -84,15 +114,24 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public bool All
         {
-            get { return m_all; }
+            get
+            {
+                return m_all;
+            }
+
             set
             {
                 if (value)
                 {
-                    m_publicIds = null; m_prefix = String.Empty; m_tag = String.Empty; m_all = value;
+                    m_publicIds = null;
+                    m_prefix = string.Empty;
+                    m_tag = string.Empty;
+                    m_all = value;
                 }
                 else
+                {
                     m_all = value;
+                }
             }
         }
 
@@ -108,8 +147,8 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if ((PublicIds == null || PublicIds.Count == 0) &&
-                String.IsNullOrEmpty(Prefix) &&
-                String.IsNullOrEmpty(Tag) &&
+                string.IsNullOrEmpty(Prefix) &&
+                string.IsNullOrEmpty(Tag) &&
                 !All)
             {
                 throw new ArgumentException("Either PublicIds or Prefix or Tag must be specified!");
@@ -134,11 +173,12 @@ namespace CloudinaryDotNet.Actions
 
             AddParam(dict, "keep_original", KeepOriginal);
 
-            if (!String.IsNullOrEmpty(Tag))
+            if (!string.IsNullOrEmpty(Tag))
             {
                 return dict;
             }
-            if (!String.IsNullOrEmpty(Prefix))
+
+            if (!string.IsNullOrEmpty(Prefix))
             {
                 dict.Add("prefix", Prefix);
             }
@@ -146,6 +186,7 @@ namespace CloudinaryDotNet.Actions
             {
                 dict.Add("public_ids", PublicIds);
             }
+
             if (m_all)
             {
                 AddParam(dict, "all", true);

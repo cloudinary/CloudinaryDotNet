@@ -1,9 +1,7 @@
-﻿using System;
-using System.Net;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed response after upload of the video resource.
     /// </summary>
@@ -51,7 +49,6 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "duration")]
         public double Duration { get; protected set; }
-        
     }
 
     /// <summary>
@@ -79,7 +76,7 @@ namespace CloudinaryDotNet.Actions
         public int? Level { get; protected set; }
 
         /// <summary>
-        /// Bitrate of the video. This parameter controls the number of bits used to represent the video data. 
+        /// Bitrate of the video. This parameter controls the number of bits used to represent the video data.
         /// </summary>
         [DataMember(Name = "bit_rate")]
         public int? BitRate { get; protected set; }
@@ -98,7 +95,7 @@ namespace CloudinaryDotNet.Actions
         public string Codec { get; protected set; }
 
         /// <summary>
-        /// Bitrate of the audio. This parameter controls the number of bits used to represent the audio data. 
+        /// Bitrate of the audio. This parameter controls the number of bits used to represent the audio data.
         /// </summary>
         [DataMember(Name = "bit_rate")]
         public int? BitRate { get; protected set; }
