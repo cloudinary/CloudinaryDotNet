@@ -106,7 +106,7 @@
     <Rule Id="CA1304" Action="Info" />
     <Rule Id="CA1305" Action="Info" />
     <Rule Id="CA1307" Action="Info" />    
-    <Rule Id="CA1507" Action="Info" />
+    <Rule Id="CA1507" Action="Warning" />
     <Rule Id="CA1707" Action="Info" />
     <Rule Id="CA1710" Action="Info" />
     <Rule Id="CA1716" Action="Info" />
