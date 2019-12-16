@@ -154,7 +154,7 @@
             return sParams;
         }
 
-        private Dictionary<string, string> PrepareHeaders()
+        private static Dictionary<string, string> PrepareHeaders()
         {
             Dictionary<string, string> extraHeaders = new Dictionary<string, string>();
             extraHeaders.Add(Constants.HEADER_CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON);

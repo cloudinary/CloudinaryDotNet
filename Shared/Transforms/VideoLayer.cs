@@ -1,11 +1,13 @@
 ﻿namespace CloudinaryDotNet
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Represents the video parameter (l_video: in URLs) to specify the name of another
     /// uploaded video to be added as an overlay.
     /// </summary>
+    [SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Reviewed.")]
     public class VideoLayer : BaseLayer<VideoLayer>
     {
         /// <summary>

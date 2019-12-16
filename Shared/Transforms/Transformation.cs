@@ -633,7 +633,7 @@
             return string.Format(CultureInfo.InvariantCulture, "{0}", obj);
         }
 
-        private string ProcessVariables(Expression[] variables)
+        private static string ProcessVariables(Expression[] variables)
         {
             if (variables == null || variables.Length == 0)
             {
@@ -643,7 +643,7 @@
             return string.Join(",", variables.Select(v => v.ToString()).ToArray());
         }
 
-        private string[] GetStringArray(Dictionary<string, object> options, string key)
+        private static string[] GetStringArray(Dictionary<string, object> options, string key)
         {
             if (!options.ContainsKey(key))
             {
@@ -664,7 +664,7 @@
             }
         }
 
-        private string GetString(Dictionary<string, object> options, string key)
+        private static string GetString(Dictionary<string, object> options, string key)
         {
             if (options.ContainsKey(key))
             {

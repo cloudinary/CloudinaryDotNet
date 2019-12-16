@@ -58,7 +58,7 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        protected void AddParam(SortedDictionary<string, object> dict, string key, string value)
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, string value)
         {
             if (!string.IsNullOrEmpty(value))
             {
@@ -72,7 +72,7 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        protected void AddParam(SortedDictionary<string, object> dict, string key, DateTime value)
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, DateTime value)
         {
             if (value != DateTime.MinValue)
             {
@@ -86,7 +86,7 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        protected void AddParam(SortedDictionary<string, object> dict, string key, float value)
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, float value)
         {
             dict.Add(key, value.ToString(CultureInfo.InvariantCulture));
         }
@@ -97,7 +97,7 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        protected void AddParam(SortedDictionary<string, object> dict, string key, IEnumerable<string> value)
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, IEnumerable<string> value)
         {
             if (value != null)
             {
@@ -111,7 +111,7 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        protected void AddParam(SortedDictionary<string, object> dict, string key, bool value)
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, bool value)
         {
             dict.Add(key, value ? "true" : "false");
         }
@@ -122,7 +122,7 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        protected void AddParam(SortedDictionary<string, object> dict, string key, bool? value)
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, bool? value)
         {
             if (!value.HasValue)
             {
@@ -139,7 +139,7 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="coordObj">The value.</param>
-        protected void AddCoordinates(SortedDictionary<string, object> dict, string key, object coordObj)
+        protected static void AddCoordinates(SortedDictionary<string, object> dict, string key, object coordObj)
         {
             if (coordObj == null)
             {
