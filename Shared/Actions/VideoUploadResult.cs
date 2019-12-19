@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed response after upload of the video resource.
@@ -49,6 +50,19 @@
         /// </summary>
         [DataMember(Name = "duration")]
         public double Duration { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Width = source.ReadValueAsSnakeCase<int>(nameof(Width));
+            Height = source.ReadValueAsSnakeCase<int>(nameof(Height));
+            Video = source.ReadObject(nameof(Video).ToSnakeCase(), _ => new Video(_));
+            Audio = source.ReadObject(nameof(Audio).ToSnakeCase(), _ => new Audio(_));
+            FrameRate = source.ReadValueAsSnakeCase<double>(nameof(FrameRate));
+            BitRate = source.ReadValueAsSnakeCase<int>(nameof(BitRate));
+            Duration = source.ReadValueAsSnakeCase<double>(nameof(Duration));
+        }
     }
 
     /// <summary>
@@ -57,6 +71,25 @@
     [DataContract]
     public class Video
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Video"/> class.
+        /// </summary>
+        public Video()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Video"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal Video(JToken source)
+        {
+            Format = source.ReadValue<string>("pix_format");
+            Codec = source.ReadValueAsSnakeCase<string>(nameof(Codec));
+            Level = source.ReadValueAsSnakeCase<int?>(nameof(Level));
+            BitRate = source.ReadValueAsSnakeCase<int?>(nameof(BitRate));
+        }
+
         /// <summary>
         /// Type of video format.
         /// </summary>
@@ -88,6 +121,26 @@
     [DataContract]
     public class Audio
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Audio"/> class.
+        /// </summary>
+        public Audio()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Audio"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal Audio(JToken source)
+        {
+            ChannelLayout = source.ReadValueAsSnakeCase<string>(nameof(ChannelLayout));
+            Channels = source.ReadValueAsSnakeCase<int?>(nameof(Channels));
+            Codec = source.ReadValueAsSnakeCase<string>(nameof(Codec));
+            Frequency = source.ReadValueAsSnakeCase<int?>(nameof(Frequency));
+            BitRate = source.ReadValueAsSnakeCase<int?>(nameof(BitRate));
+        }
+
         /// <summary>
         /// The audiocodec applied.
         /// </summary>

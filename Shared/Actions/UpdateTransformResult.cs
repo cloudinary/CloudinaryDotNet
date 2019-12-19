@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Response of transformation update.
@@ -38,5 +39,16 @@
         /// </summary>
         [DataMember(Name = "derived")]
         public TransformDerived[] Derived { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Name = source.ReadValueAsSnakeCase<string>(nameof(Name));
+            Used = source.ReadValueAsSnakeCase<bool>(nameof(Used));
+            Strict = source.ReadValue<bool>("allowed_for_strict");
+            Info = source.ReadValueAsSnakeCase<Dictionary<string, string>[]>(nameof(Info));
+            Derived = source.ReadList(nameof(Derived).ToSnakeCase(), _ => new TransformDerived(_)).ToArray();
+        }
     }
 }

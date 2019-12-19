@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ExplodeResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\GetFoldersResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\GetResourceParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\JsonExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\GetResourceResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\GetTransformParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\GetTransformResult.cs" />

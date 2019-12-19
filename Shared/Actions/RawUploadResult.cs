@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Results of raw file upload.
@@ -57,6 +58,19 @@
         /// The Fully Qualified Public ID.
         /// </summary>
         public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Signature = source.ReadValueAsSnakeCase<string>(nameof(Signature));
+            Type = source.ReadValueAsSnakeCase<string>(nameof(Type));
+            CreatedAt = source.ReadValueAsSnakeCase<DateTime>(nameof(CreatedAt));
+            ResourceType = source.ReadValueAsSnakeCase<string>(nameof(ResourceType));
+            Moderation = source.ReadList(nameof(Moderation).ToCamelCase(), _ => new Moderation(_));
+            AccessControl = source.ReadList(nameof(AccessControl).ToSnakeCase(), _ => new AccessControlRule(_));
+            Tags = source.ReadValueAsSnakeCase<string[]>(nameof(Tags));
+        }
     }
 
     /// <summary>
@@ -70,5 +84,12 @@
         /// </summary>
         [DataMember(Name = "upload_id")]
         public string UploadId { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            UploadId = source.ReadValueAsSnakeCase<string>(nameof(UploadId));
+        }
     }
 }

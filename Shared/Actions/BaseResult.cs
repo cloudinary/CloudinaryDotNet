@@ -3,6 +3,7 @@
     using System;
     using System.Net;
     using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -101,12 +102,25 @@
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Format = source.ReadValueAsSnakeCase<string>(nameof(Format));
+            PublicId = source.ReadValueAsSnakeCase<string>(nameof(PublicId));
+            Version = source.ReadValueAsSnakeCase<string>(nameof(Version));
+            Length = source.ReadValue<long>("bytes");
+            Uri = source.ReadValue<Uri>("url");
+            SecureUri = source.ReadValue<Uri>("secure_url");
+        }
     }
 
     /// <summary>
     /// Represents a result of HTTP API call. This is an abstract class.
     /// </summary>
     [DataContract]
+    [JsonObject(MemberSerialization.OptOut)]
     public abstract class BaseResult
     {
         // protected static Dictionary<Type, DataContractJsonSerializer> m_serializers = new Dictionary<Type, DataContractJsonSerializer>();
@@ -120,6 +134,7 @@
         /// <summary>
         /// Raw JSON as received from the server.
         /// </summary>
+        [JsonIgnore]
         public JToken JsonObj
         {
             get
@@ -161,6 +176,11 @@
         /// <param name="source">JSON token received from the server.</param>
         internal virtual void SetValues(JToken source)
         {
+            Error = source.ReadObject(nameof(Error).ToLower(), _ => new Error(_));
+            StatusCode = source.ReadValueAsSnakeCase<HttpStatusCode>(nameof(StatusCode));
+            Remaining = source.ReadValueAsSnakeCase<long>(nameof(Remaining));
+            Limit = source.ReadValueAsSnakeCase<long>(nameof(Limit));
+            Reset = source.ReadValueAsSnakeCase<DateTime>(nameof(Reset));
         }
     }
 
@@ -171,10 +191,26 @@
     public class Error
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Error"/> class.
+        /// </summary>
+        public Error()
+        {
+        }
+
+        /// <summary>
         /// Error description.
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Error"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal Error(JToken source)
+        {
+            this.Message = source.ReadValueAsSnakeCase<string>(nameof(Message));
+        }
     }
 
     /// <summary>
@@ -183,6 +219,25 @@
     [DataContract]
     public class Moderation
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Moderation"/> class.
+        /// </summary>
+        public Moderation()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Moderation"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal Moderation(JToken source)
+        {
+            Status = source.ReadValueAsSnakeCase<ModerationStatus>(nameof(Status));
+            Kind = source.ReadValueAsSnakeCase<string>(nameof(Kind));
+            UpdatedAt = source.ReadValueAsSnakeCase<DateTime>(nameof(UpdatedAt));
+            Response = source.ReadObject(nameof(Response).ToCamelCase(), _ => new ModerationResponse(_));
+        }
+
         /// <summary>
         /// Moderation status of assets.
         /// </summary>
@@ -216,6 +271,25 @@
     public class ModerationResponse
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ModerationResponse"/> class.
+        /// </summary>
+        public ModerationResponse()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModerationResponse"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal ModerationResponse(JToken source)
+        {
+            ModerationLabels =
+                source
+                    .ReadList(nameof(ModerationLabels).ToSnakeCase(), _ => new ModerationLabel(_))
+                    .ToArray();
+        }
+
+        /// <summary>
         /// Detected offensive content categories.
         /// </summary>
         [DataMember(Name = "moderation_labels")]
@@ -228,6 +302,24 @@
     [DataContract]
     public class ModerationLabel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModerationLabel"/> class.
+        /// </summary>
+        public ModerationLabel()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModerationLabel"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal ModerationLabel(JToken source)
+        {
+            Confidence = source.ReadValueAsSnakeCase<float>(nameof(Confidence));
+            Name = source.ReadValueAsSnakeCase<string>(nameof(Name));
+            ParentName = source.ReadValueAsSnakeCase<string>(nameof(ParentName));
+        }
+
         /// <summary>
         /// Amazon Rekognition assigns a moderation confidence score (0 - 100) indicating the chances that an image
         /// belongs to an offensive content category.

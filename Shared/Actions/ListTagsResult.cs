@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed list of tags.
@@ -21,5 +22,13 @@
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            NextCursor = source.ReadValueAsSnakeCase<string>(nameof(NextCursor));
+            Tags = source.ReadValueAsSnakeCase<string[]>(nameof(Tags));
+        }
     }
 }

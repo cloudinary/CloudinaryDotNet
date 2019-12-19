@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Results of tags management.
@@ -13,5 +14,12 @@
         /// </summary>
         [DataMember(Name = "public_ids")]
         public string[] PublicIds { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            PublicIds = source.ReadValueAsSnakeCase<string[]>(nameof(PublicIds));
+        }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed result of deletion derived resources.
@@ -15,5 +16,12 @@
         /// </summary>
         [DataMember(Name = "deleted")]
         public Dictionary<string, string> Deleted { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Deleted = source.ReadValueAsSnakeCase<Dictionary<string, string>>(nameof(Deleted));
+        }
     }
 }

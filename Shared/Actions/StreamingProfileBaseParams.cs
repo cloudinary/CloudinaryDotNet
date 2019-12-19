@@ -69,6 +69,13 @@
     public class Representation
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Representation"/> class.
+        /// </summary>
+        public Representation()
+        {
+        }
+
+        /// <summary>
         /// Specifies the transformation parameters for the representation.
         /// All video transformation parameters except video_sampling are supported.
         /// Common transformation parameters for representations include: width, height
@@ -77,6 +84,24 @@
         [DataMember(Name = "transformation")]
         [JsonConverter(typeof(RepresentationsConverter))]
         public Transformation Transformation;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Representation"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Representation(JToken source)
+        {
+            this.Transformation = new Transformation();
+
+            // TODO: need to test if Newtonsoft works fine deserializing Transformation.
+            // throw new Exception(source["transformation"].ToString());
+            var transformations = source.ReadValueAsSnakeCase<IEnumerable<Dictionary<string, object>>>(nameof(Transformation));
+
+            if (transformations?.Any() ?? false)
+            {
+                this.Transformation = new Transformation(transformations.First());
+            }
+        }
     }
 
     /// <summary>

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Search response with information about the assets matching the search criteria.
@@ -33,6 +34,16 @@
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            NextCursor = source.ReadValueAsSnakeCase<string>(nameof(NextCursor));
+            TotalCount = source.ReadValueAsSnakeCase<int>(nameof(TotalCount));
+            Time = source.ReadValueAsSnakeCase<long>(nameof(Time));
+            Resources = source.ReadList(nameof(Resources).ToSnakeCase(), _ => new SearchResource(_));
+        }
     }
 
     /// <summary>
@@ -41,6 +52,27 @@
     [DataContract]
     public class SearchResource
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchResource"/> class.
+        /// </summary>
+        public SearchResource()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchResource"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal SearchResource(JToken source)
+        {
+            PublicId = source.ReadValueAsSnakeCase<string>(nameof(PublicId));
+            Created = source.ReadValue<string>("created_at");
+            Format = source.ReadValueAsSnakeCase<string>(nameof(Format));
+            Width = source.ReadValueAsSnakeCase<int>(nameof(Width));
+            Height = source.ReadValueAsSnakeCase<int>(nameof(Height));
+            Length = source.ReadValue<long>("bytes");
+        }
+
         /// <summary>
         /// The public id of the asset.
         /// </summary>

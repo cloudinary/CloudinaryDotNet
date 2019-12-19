@@ -1,7 +1,9 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -37,6 +39,7 @@
         /// <summary>
         /// The type of resource. Possible values: image, raw, video.
         /// </summary>
+        [JsonIgnore]
         public ResourceType ResourceType
         {
             get { return Api.ParseCloudinaryParam<ResourceType>(m_resourceType); }
@@ -191,6 +194,40 @@
         /// </summary>
         [DataMember(Name = "pages")]
         public int Pages { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            m_resourceType = source.ReadValue<string>("resource_type");
+            PublicId = source.ReadValueAsSnakeCase<string>(nameof(PublicId));
+            Format = source.ReadValueAsSnakeCase<string>(nameof(Format));
+            Version = source.ReadValueAsSnakeCase<string>(nameof(Version));
+            Type = source.ReadValueAsSnakeCase<string>(nameof(Type));
+            Created = source.ReadValue<string>("created_at");
+            Length = source.ReadValue<long>("bytes");
+            Height = source.ReadValueAsSnakeCase<int>(nameof(Height));
+            Width = source.ReadValueAsSnakeCase<int>(nameof(Width));
+            Url = source.ReadValueAsSnakeCase<string>(nameof(Url));
+            SecureUrl = source.ReadValueAsSnakeCase<string>(nameof(SecureUrl));
+            NextCursor = source.ReadValueAsSnakeCase<string>(nameof(NextCursor));
+            DerivedNextCursor = source.ReadValueAsSnakeCase<string>(nameof(DerivedNextCursor));
+            Exif = source.ReadValueAsSnakeCase<Dictionary<string, string>>(nameof(Exif));
+            Metadata = source.ReadValue<Dictionary<string, string>>("image_metadata");
+            Faces = source.ReadValueAsSnakeCase<int[][]>(nameof(Faces));
+            Colors = source.ReadValueAsSnakeCase<string[][]>(nameof(Colors));
+            QualityAnalysis = source.ReadObject(nameof(QualityAnalysis).ToSnakeCase(), _ => new QualityAnalysis(_));
+            Derived = source.ReadList(nameof(Derived).ToSnakeCase(), _ => new Derived(_)).ToArray();
+            Tags = source.ReadValueAsSnakeCase<string[]>(nameof(Tags));
+            Context = source[nameof(Context).ToCamelCase()];
+            Phash = source.ReadValueAsSnakeCase<string>(nameof(Phash));
+            Predominant = source.ReadObject(nameof(Predominant).ToSnakeCase(), _ => new Predominant(_));
+            Coordinates = source.ReadObject(nameof(Coordinates).ToSnakeCase(), _ => new Coordinates(_));
+            Info = source.ReadObject(nameof(Info).ToSnakeCase(), _ => new Info(_));
+            AccessControl = source.ReadList(nameof(AccessControl).ToSnakeCase(), _ => new AccessControlRule(_));
+            Pages = source.ReadValueAsSnakeCase<int>(nameof(Pages));
+            Moderation = source.ReadList(nameof(Moderation).ToCamelCase(), _ => new Moderation(_));
+        }
     }
 
     /// <summary>
@@ -200,6 +237,23 @@
     [DataContract]
     public class Coordinates
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Coordinates"/> class.
+        /// </summary>
+        public Coordinates()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Coordinates"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal Coordinates(JToken source)
+        {
+            Custom = source.ReadValueAsSnakeCase<int[][]>(nameof(Custom));
+            Faces = source.ReadValueAsSnakeCase<int[][]>(nameof(Faces));
+        }
+
         /// <summary>
         /// A list of custom coordinates.
         /// </summary>
@@ -220,6 +274,22 @@
     public class Predominant
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Predominant"/> class.
+        /// </summary>
+        public Predominant()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Predominant"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal Predominant(JToken source)
+        {
+            Google = source.ReadValueAsSnakeCase<object[][]>(nameof(Google));
+        }
+
+        /// <summary>
         /// Google palette details.
         /// </summary>
         [DataMember(Name = "google")]
@@ -233,6 +303,27 @@
     [DataContract]
     public class Derived
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Derived"/> class.
+        /// </summary>
+        public Derived()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Derived"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal Derived(JToken source)
+        {
+            Transformation = source.ReadValueAsSnakeCase<string>(nameof(Transformation));
+            Format = source.ReadValueAsSnakeCase<string>(nameof(Format));
+            Length = source.ReadValue<long>("bytes");
+            Id = source.ReadValueAsSnakeCase<string>(nameof(Id));
+            Url = source.ReadValueAsSnakeCase<string>(nameof(Url));
+            SecureUrl = source.ReadValueAsSnakeCase<string>(nameof(SecureUrl));
+        }
+
         /// <summary>
         /// The transformation applied to the asset.
         /// </summary>
@@ -277,6 +368,13 @@
     public class Info
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Info"/> class.
+        /// </summary>
+        public Info()
+        {
+        }
+
+        /// <summary>
         /// Requested information from executing a Rekognition face add-ons.
         /// </summary>
         [DataMember(Name = "detection")]
@@ -287,6 +385,16 @@
         /// </summary>
         [DataMember(Name = "ocr")]
         public Ocr Ocr { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Info"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Info(JToken source)
+        {
+            Detection = source.ReadObject(nameof(Detection).ToSnakeCase(), _ => new Detection(_));
+            Ocr = source.ReadObject(nameof(Ocr).ToSnakeCase(), _ => new Ocr(_));
+        }
     }
 
     /// <summary>
@@ -296,10 +404,26 @@
     public class Ocr
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Ocr"/> class.
+        /// </summary>
+        public Ocr()
+        {
+        }
+
+        /// <summary>
         /// Details of executing an ADV_OCR engine.
         /// </summary>
         [DataMember(Name = "adv_ocr")]
         public AdvOcr AdvOcr { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Ocr"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Ocr(JToken source)
+        {
+            AdvOcr = new AdvOcr(source[nameof(AdvOcr).ToSnakeCase()]);
+        }
     }
 
     /// <summary>
@@ -308,6 +432,13 @@
     [DataContract]
     public class AdvOcr
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdvOcr"/> class.
+        /// </summary>
+        public AdvOcr()
+        {
+        }
+
         /// <summary>
         /// The status of the OCR operation.
         /// </summary>
@@ -319,6 +450,16 @@
         /// </summary>
         [DataMember(Name = "data")]
         public List<AdvOcrData> Data { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdvOcr"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal AdvOcr(JToken source)
+        {
+            Status = source.ReadValueAsSnakeCase<string>(nameof(Status));
+            Data = source.ReadList(nameof(Data).ToSnakeCase(), _ => new AdvOcrData(_));
+        }
     }
 
     /// <summary>
@@ -327,6 +468,13 @@
     [DataContract]
     public class AdvOcrData
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdvOcrData"/> class.
+        /// </summary>
+        public AdvOcrData()
+        {
+        }
+
         /// <summary>
         /// Annotations of the recognized text.
         /// </summary>
@@ -339,6 +487,17 @@
         /// </summary>
         [DataMember(Name = "fullTextAnnotation")]
         public FullTextAnnotation FullTextAnnotation { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdvOcrData"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal AdvOcrData(JToken source)
+        {
+            FullTextAnnotation = source.ReadObject("fullTextAnnotation", _ => new FullTextAnnotation(_));
+
+            TextAnnotations = source.ReadList("textAnnotations", _ => new TextAnnotation(_));
+        }
     }
 
     /// <summary>
@@ -347,6 +506,13 @@
     [DataContract]
     public class TextAnnotation
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextAnnotation"/> class.
+        /// </summary>
+        public TextAnnotation()
+        {
+        }
+
         /// <summary>
         /// The detected locale of the text.
         /// </summary>
@@ -363,8 +529,19 @@
         /// <summary>
         /// The outer bounding polygon for the detected image annotation.
         /// </summary>
-        [DataMember(Name="boundingPoly")]
+        [DataMember(Name = "boundingPoly")]
         public BoundingBlock BoundingPoly { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextAnnotation"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal TextAnnotation(JToken source)
+        {
+            BoundingPoly = source.ReadObject("boundingPoly", _ => new BoundingBlock(_));
+            Description = source.ReadValueAsSnakeCase<string>(nameof(Description));
+            Locale = source.ReadValueAsSnakeCase<string>(nameof(Locale));
+        }
     }
 
     /// <summary>
@@ -374,10 +551,26 @@
     public class BoundingBlock
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="BoundingBlock"/> class.
+        /// </summary>
+        public BoundingBlock()
+        {
+        }
+
+        /// <summary>
         /// The bounding polygon vertices.
         /// </summary>
         [DataMember(Name = "vertices")]
         public List<Point> Vertices { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BoundingBlock"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal BoundingBlock(JToken source)
+        {
+            Vertices = source.ReadList(nameof(Vertices).ToLower(), _ => new Point(_));
+        }
     }
 
     /// <summary>
@@ -386,6 +579,13 @@
     [DataContract]
     public class FullTextAnnotation
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FullTextAnnotation"/> class.
+        /// </summary>
+        public FullTextAnnotation()
+        {
+        }
+
         /// <summary>
         /// A list of detected pages.
         /// </summary>
@@ -397,6 +597,16 @@
         /// </summary>
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FullTextAnnotation"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal FullTextAnnotation(JToken source)
+        {
+            Pages = source.ReadList(nameof(Pages).ToLower(), _ => new Page(_));
+            Text = source.ReadValueAsSnakeCase<string>(nameof(Text));
+        }
     }
 
     /// <summary>
@@ -405,6 +615,13 @@
     [DataContract]
     public class Page
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Page"/> class.
+        /// </summary>
+        public Page()
+        {
+        }
+
         /// <summary>
         /// Additional information detected on the page.
         /// </summary>
@@ -428,6 +645,18 @@
         /// </summary>
         [DataMember(Name = "blocks")]
         public List<TextBlock> Blocks { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Page"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Page(JToken source)
+        {
+            Height = source.ReadValueAsSnakeCase<int?>(nameof(Height));
+            Width = source.ReadValueAsSnakeCase<int?>(nameof(Width));
+            Property = source.ReadObject(nameof(Property).ToLower(), _ => new PageProperty(_));
+            Blocks = source.ReadList(nameof(Blocks).ToLower(), _ => new TextBlock(_));
+        }
     }
 
     /// <summary>
@@ -437,10 +666,26 @@
     public class PageProperty
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="PageProperty"/> class.
+        /// </summary>
+        public PageProperty()
+        {
+        }
+
+        /// <summary>
         /// A list of detected languages together with confidence.
         /// </summary>
         [DataMember(Name = "detectedLanguages")]
         public List<DetectedLanguage> DetectedLanguages { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PageProperty"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal PageProperty(JToken source)
+        {
+            DetectedLanguages = source.ReadList("detectedLanguages", _ => new DetectedLanguage(_));
+        }
     }
 
     /// <summary>
@@ -450,11 +695,27 @@
     public class DetectedLanguage
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="DetectedLanguage"/> class.
+        /// </summary>
+        public DetectedLanguage()
+        {
+        }
+
+        /// <summary>
         /// The BCP-47 language code, such as "en-US" or "sr-Latn".
         /// For more information, see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.
         /// </summary>
         [DataMember(Name = "languageCode")]
         public string LanguageCode { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DetectedLanguage"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal DetectedLanguage(JToken source)
+        {
+            LanguageCode = source.ReadValue<string>(nameof(LanguageCode).ToCamelCase());
+        }
     }
 
     /// <summary>
@@ -463,6 +724,13 @@
     [DataContract]
     public abstract class Block
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Block"/> class.
+        /// </summary>
+        public Block()
+        {
+        }
+
         /// <summary>
         /// Additional information detected on the page.
         /// </summary>
@@ -475,6 +743,16 @@
         /// </summary>
         [DataMember(Name = "boundingBox")]
         public BoundingBlock BoundingBox { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Block"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Block(JToken source)
+        {
+            Property = source.ReadObject(nameof(Property).ToCamelCase(), _ => new PageProperty(_));
+            BoundingBox = source.ReadObject(nameof(BoundingBox).ToCamelCase(), _ => new BoundingBlock(_));
+        }
     }
 
     /// <summary>
@@ -483,6 +761,13 @@
     [DataContract]
     public class TextBlock : Block
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextBlock"/> class.
+        /// </summary>
+        public TextBlock()
+        {
+        }
+
         /// <summary>
         /// List of paragraphs in this block.
         /// </summary>
@@ -494,6 +779,17 @@
         /// </summary>
         [DataMember(Name = "blockType")]
         public string BlockType { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextBlock"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal TextBlock(JToken source)
+            : base(source)
+        {
+            Paragraphs = source.ReadList(nameof(Paragraphs).ToSnakeCase(), _ => new Paragraph(_));
+            BlockType = source.ReadValue<string>(nameof(BlockType).ToCamelCase());
+        }
     }
 
     /// <summary>
@@ -502,6 +798,13 @@
     [DataContract]
     public class Paragraph : Block
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Paragraph"/> class.
+        /// </summary>
+        public Paragraph()
+        {
+        }
+
         /// <summary>
         /// List of words in this paragraph.
         /// </summary>
@@ -513,6 +816,17 @@
         /// </summary>
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Paragraph"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Paragraph(JToken source)
+            : base(source)
+        {
+            Text = source.ReadValueAsSnakeCase<string>(nameof(Text));
+            Words = source.ReadList(nameof(Words).ToCamelCase(), _ => new Word(_));
+        }
     }
 
     /// <summary>
@@ -522,10 +836,27 @@
     public class Word : Block
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Word"/> class.
+        /// </summary>
+        public Word()
+        {
+        }
+
+        /// <summary>
         /// List of symbols in the word. The order of the symbols follows the natural reading order.
         /// </summary>
         [DataMember(Name = "symbols")]
         public List<Symbol> Symbols { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Word"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Word(JToken source)
+            : base(source)
+        {
+            Symbols = source.ReadList(nameof(Symbols).ToCamelCase(), _ => new Symbol(_));
+        }
     }
 
     /// <summary>
@@ -535,10 +866,27 @@
     public class Symbol : Block
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Symbol"/> class.
+        /// </summary>
+        public Symbol()
+        {
+        }
+
+        /// <summary>
         /// The actual UTF-8 representation of the symbol.
         /// </summary>
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Symbol"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Symbol(JToken source)
+            : base(source)
+        {
+            Text = source.ReadValueAsSnakeCase<string>(nameof(Text));
+        }
     }
 
     /// <summary>
@@ -547,6 +895,26 @@
     [DataContract]
     public class Detection
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Detection"/> class.
+        /// </summary>
+        public Detection()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Detection"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Detection(JToken source)
+        {
+            var rekognitionFaceToken = source[nameof(RekognitionFace).ToSnakeCase()];
+            if (rekognitionFaceToken != null)
+            {
+                RekognitionFace = new RekognitionFace(rekognitionFaceToken);
+            }
+        }
+
         /// <summary>
         /// Details of the result of recognition.
         /// </summary>
@@ -561,6 +929,13 @@
     public class RekognitionFace
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RekognitionFace"/> class.
+        /// </summary>
+        public RekognitionFace()
+        {
+        }
+
+        /// <summary>
         /// Status of the recognition process.
         /// </summary>
         [DataMember(Name = "status")]
@@ -571,6 +946,16 @@
         /// </summary>
         [DataMember(Name = "data")]
         public List<Face> Faces { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RekognitionFace"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal RekognitionFace(JToken source)
+        {
+            Status = source.ReadValueAsSnakeCase<string>(nameof(Status));
+            Faces = source.ReadList("data", _ => new Face(_));
+        }
     }
 
     /// <summary>
@@ -579,6 +964,13 @@
     [DataContract]
     public class Face
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Face"/> class.
+        /// </summary>
+        public Face()
+        {
+        }
+
         /// <summary>
         /// Bounding box of the face.
         /// </summary>
@@ -779,6 +1171,49 @@
         /// </summary>
         [DataMember(Name = "m_d")]
         public Point MouthDown { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Face"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Face(JToken source)
+        {
+            BoundingBox = new BoundingBox(source["boundingbox"]);
+            Confidence = source.ReadValueAsSnakeCase<double>(nameof(Confidence));
+            Age = source.ReadValueAsSnakeCase<double>(nameof(Age));
+            Age = source.ReadValueAsSnakeCase<double>(nameof(Age));
+            Smile = source.ReadValueAsSnakeCase<double>(nameof(Smile));
+            Glasses = source.ReadValueAsSnakeCase<double>(nameof(Glasses));
+            Sunglasses = source.ReadValueAsSnakeCase<double>(nameof(Sunglasses));
+            Beard = source.ReadValueAsSnakeCase<double>(nameof(Beard));
+            Mustache = source.ReadValueAsSnakeCase<double>(nameof(Mustache));
+            EyeClosed = source.ReadValueAsSnakeCase<double>(nameof(EyeClosed));
+            MouthOpenWide = source.ReadValueAsSnakeCase<double>(nameof(MouthOpenWide));
+            Beauty = source.ReadValueAsSnakeCase<double>(nameof(Beauty));
+            Gender = source.ReadValueAsSnakeCase<double>("Sex");
+            Race = source.ReadValueAsSnakeCase<Dictionary<string, double>>(nameof(Race));
+            Emotion = source.ReadValueAsSnakeCase<Dictionary<string, double>>(nameof(Emotion));
+            Quality = source.ReadValueAsSnakeCase<Dictionary<string, double>>(nameof(Quality));
+            Pose = source.ReadValueAsSnakeCase<Dictionary<string, double>>(nameof(Pose));
+
+            EyeLeftPosition = new Point(source["eye_left"]);
+            EyeRightPosition = new Point(source["eye_right"]);
+            EyeLeft_Left = new Point(source["e_ll"]);
+            EyeLeft_Right = new Point(source["e_lr"]);
+            EyeLeft_Up = new Point(source["e_lu"]);
+            EyeLeft_Down = new Point(source["e_ld"]);
+            EyeRight_Left = new Point(source["e_rl"]);
+            EyeRight_Right = new Point(source["e_rr"]);
+            EyeRight_Up = new Point(source["e_ru"]);
+            EyeRight_Down = new Point(source["e_rd"]);
+            NosePosition = new Point(source["nose"]);
+            NoseLeft = new Point(source["n_l"]);
+            NoseRight = new Point(source["n_r"]);
+            MouthLeft = new Point(source["mouth_l"]);
+            MouthRight = new Point(source["mouth_r"]);
+            MouthUp = new Point(source["m_u"]);
+            MouthDown = new Point(source["m_d"]);
+        }
     }
 
     /// <summary>
@@ -787,6 +1222,13 @@
     [DataContract]
     public class BoundingBox
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BoundingBox"/> class.
+        /// </summary>
+        public BoundingBox()
+        {
+        }
+
         /// <summary>
         /// Top left point of the bounding box.
         /// </summary>
@@ -798,6 +1240,16 @@
         /// </summary>
         [DataMember(Name = "size")]
         public Size Size { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BoundingBox"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal BoundingBox(JToken source)
+        {
+            TopLeft = new Point(source["tl"]);
+            Size = new Size(source[nameof(Size).ToSnakeCase()]);
+        }
     }
 
     /// <summary>
@@ -806,6 +1258,13 @@
     [DataContract]
     public class Point
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Point"/> class.
+        /// </summary>
+        public Point()
+        {
+        }
+
         /// <summary>
         /// X - coordinate.
         /// </summary>
@@ -816,6 +1275,16 @@
         /// Y - coordinate.
         /// </summary>
         public double Y { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Point"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Point(JToken source)
+        {
+            X = source.ReadValueAsSnakeCase<double>(nameof(X));
+            Y = source.ReadValueAsSnakeCase<double>(nameof(Y));
+        }
     }
 
     /// <summary>
@@ -824,6 +1293,13 @@
     [DataContract]
     public class Size
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Size"/> class.
+        /// </summary>
+        public Size()
+        {
+        }
+
         /// <summary>
         /// Width of the block.
         /// </summary>
@@ -835,6 +1311,16 @@
         /// </summary>
         [DataMember(Name = "height")]
         public double Height { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Size"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Size(JToken source)
+        {
+            Width = source.ReadValueAsSnakeCase<double>(nameof(Width));
+            Height = source.ReadValueAsSnakeCase<double>(nameof(Height));
+        }
     }
 
     /// <summary>
@@ -844,9 +1330,25 @@
     public class QualityAnalysis
     {
         /// <summary>
-        /// Focus value.
+        /// Initializes a new instance of the <see cref="QualityAnalysis"/> class.
+        /// </summary>
+        public QualityAnalysis()
+        {
+        }
+
+        /// <summary>
+         /// Focus value.
         /// </summary>
         [DataMember(Name = "focus")]
         public double Focus { get; protected set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QualityAnalysis"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal QualityAnalysis(JToken source)
+        {
+            Focus = source.ReadValueAsSnakeCase<double>(nameof(Focus));
+        }
     }
 }

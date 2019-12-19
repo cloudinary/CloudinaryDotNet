@@ -26,6 +26,15 @@
         /// </summary>
         [DataMember(Name = "settings")]
         public UploadSettings Settings { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Name = source.ReadValueAsSnakeCase<string>(nameof(Name));
+            Unsigned = source.ReadValueAsSnakeCase<bool>(nameof(Unsigned));
+            Settings = source.ReadObject(nameof(Settings).ToCamelCase(), _ => new UploadSettings(_));
+        }
     }
 
     /// <summary>
@@ -34,6 +43,54 @@
     [DataContract]
     public class UploadSettings
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UploadSettings"/> class.
+        /// </summary>
+        public UploadSettings()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UploadSettings"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal UploadSettings(JToken source)
+        {
+            DisallowPublicId = source.ReadValueAsSnakeCase<bool>(nameof(DisallowPublicId));
+            Backup = source.ReadValueAsSnakeCase<bool?>(nameof(Backup));
+            Type = source.ReadValueAsSnakeCase<string>(nameof(Type));
+            Tags = source[nameof(Tags).ToSnakeCase()];
+            Invalidate = source.ReadValueAsSnakeCase<bool>(nameof(Invalidate));
+            UseFilename = source.ReadValueAsSnakeCase<bool>(nameof(UseFilename));
+            UniqueFilename = source.ReadValueAsSnakeCase<bool?>(nameof(UniqueFilename));
+            DiscardOriginalFilename = source.ReadValueAsSnakeCase<bool>(nameof(DiscardOriginalFilename));
+            NotificationUrl = source.ReadValueAsSnakeCase<string>(nameof(NotificationUrl));
+            Proxy = source.ReadValueAsSnakeCase<string>(nameof(Proxy));
+            Folder = source.ReadValueAsSnakeCase<string>(nameof(Folder));
+            Overwrite = source.ReadValueAsSnakeCase<bool?>(nameof(Overwrite));
+            RawConvert = source.ReadValueAsSnakeCase<string>(nameof(RawConvert));
+            Context = source[nameof(Context).ToSnakeCase()];
+            AllowedFormats = source[nameof(AllowedFormats).ToSnakeCase()];
+            Moderation = source.ReadValueAsSnakeCase<string>(nameof(Moderation));
+            Format = source.ReadValueAsSnakeCase<string>(nameof(Format));
+            Transformation = source[nameof(Transformation).ToSnakeCase()];
+            EagerTransforms = source["eager"];
+            Exif = source.ReadValueAsSnakeCase<bool>(nameof(Exif));
+            Colors = source.ReadValueAsSnakeCase<bool>(nameof(Colors));
+            Faces = source.ReadValueAsSnakeCase<bool>(nameof(Faces));
+            QualityAnalysis = source.ReadValueAsSnakeCase<bool>(nameof(QualityAnalysis));
+            FaceCoordinates = source[nameof(FaceCoordinates).ToSnakeCase()];
+            Metadata = source.ReadValue<bool>("image_metadata");
+            EagerAsync = source.ReadValueAsSnakeCase<bool>(nameof(EagerAsync));
+            EagerNotificationUrl = source.ReadValueAsSnakeCase<string>(nameof(EagerNotificationUrl));
+            Categorization = source.ReadValueAsSnakeCase<string>(nameof(Categorization));
+            AutoTagging = source.ReadValueAsSnakeCase<float?>(nameof(AutoTagging));
+            Detection = source.ReadValueAsSnakeCase<string>(nameof(Detection));
+            SimilaritySearch = source.ReadValueAsSnakeCase<string>(nameof(SimilaritySearch));
+            Ocr = source.ReadValueAsSnakeCase<string>(nameof(Ocr));
+            Live = source.ReadValueAsSnakeCase<bool>(nameof(Live));
+        }
+
         /// <summary>
         /// Only relevant when using unsigned presets this setting prevents specifying public_id as one of the extra
         /// parameters for upload.
@@ -246,5 +303,5 @@
         /// </summary>
         [DataMember(Name = "live")]
         public bool Live { get; protected set; }
-   }
+    }
 }

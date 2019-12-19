@@ -19,8 +19,10 @@
     <DefineConstants>SIGN_ASSEMBLY</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="autofixture" Version="4.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="Moq" Version="4.12.0" />
+    <PackageReference Include="nbuilder" Version="6.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.*" />
     <PackageReference Include="NUnit" Version="3.10.*" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.*" />

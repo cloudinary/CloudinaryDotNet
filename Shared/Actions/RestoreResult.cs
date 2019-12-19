@@ -1,6 +1,8 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Runtime.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed results of resources restore.
@@ -17,9 +19,17 @@
         /// <summary>
         /// Get the cloudinary resource type.
         /// </summary>
+        [JsonIgnore]
         public ResourceType ResourceType
         {
             get { return Api.ParseCloudinaryParam<ResourceType>(m_resourceType); }
+        }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            m_resourceType = source.ReadValueAsSnakeCase<string>(nameof(ResourceType));
         }
     }
 }

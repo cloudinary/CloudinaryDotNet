@@ -4,6 +4,7 @@
     using System.Runtime.Serialization;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Access type for the asset.
@@ -29,6 +30,24 @@
     /// </summary>
     public class AccessControlRule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccessControlRule"/> class.
+        /// </summary>
+        public AccessControlRule()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccessControlRule"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal AccessControlRule(JToken source)
+        {
+            Start = source.ReadValueAsSnakeCase<DateTime?>(nameof(Start));
+            End = source.ReadValueAsSnakeCase<DateTime?>(nameof(End));
+            AccessType = source.ReadValueAsSnakeCase<AccessType>(nameof(AccessType));
+        }
+
         /// <summary>
         /// Access type for the asset.
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed response after a call of Explode method.
@@ -19,5 +20,13 @@
         /// </summary>
         [DataMember(Name = "batch_id")]
         public string BatchId { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Status = source.ReadValueAsSnakeCase<string>(nameof(Status));
+            BatchId = source.ReadValueAsSnakeCase<string>(nameof(BatchId));
+        }
     }
 }

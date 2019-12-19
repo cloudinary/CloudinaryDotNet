@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// The report on the status of your Cloudinary account usage details. Note that numbers are updated periodically.
@@ -56,6 +57,20 @@
         /// </summary>
         [DataMember(Name = "derived_resources")]
         public int DerivedResources { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Plan = source.ReadValueAsSnakeCase<string>(nameof(Plan));
+            LastUpdated = source.ReadValueAsSnakeCase<DateTime>(nameof(LastUpdated));
+            Objects = source.ReadObject(nameof(Objects).ToSnakeCase(), _ => new Usage(_));
+            Bandwidth = source.ReadObject(nameof(Bandwidth).ToSnakeCase(), _ => new Usage(_));
+            Storage = source.ReadObject(nameof(Storage).ToSnakeCase(), _ => new Usage(_));
+            Requests = source.ReadValueAsSnakeCase<int>(nameof(Requests));
+            Resources = source.ReadValueAsSnakeCase<int>(nameof(Resources));
+            DerivedResources = source.ReadValueAsSnakeCase<int>(nameof(DerivedResources));
+        }
     }
 
     /// <summary>
@@ -64,6 +79,24 @@
     [DataContract]
     public class Usage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Usage"/> class.
+        /// </summary>
+        public Usage()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Usage"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal Usage(JToken source)
+        {
+            Used = source.ReadValue<long>("usage");
+            Limit = source.ReadValueAsSnakeCase<long>(nameof(Limit));
+            UsedPercent = source.ReadValueAsSnakeCase<float>(nameof(UsedPercent));
+        }
+
         /// <summary>
         /// A number of objects in your account.
         /// </summary>

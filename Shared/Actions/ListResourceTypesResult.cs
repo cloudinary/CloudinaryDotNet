@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -19,6 +20,7 @@
         /// <summary>
         /// An array of the resource types.
         /// </summary>
+        [JsonIgnore]
         public ResourceType[] ResourceTypes { get; protected set; }
 
         /// <summary>
@@ -29,6 +31,7 @@
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);
+            m_resourceTypes = source.ReadValueAsSnakeCase<string[]>(nameof(ResourceTypes));
             List<ResourceType> types = new List<ResourceType>();
             foreach (var type in m_resourceTypes)
             {

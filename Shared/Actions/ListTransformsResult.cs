@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed list of transformations details.
@@ -21,6 +22,14 @@
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            NextCursor = source.ReadValueAsSnakeCase<string>(nameof(NextCursor));
+            Transformations = source.ReadList(nameof(Transformations).ToCamelCase(), _ => new TransformDesc(_)).ToArray();
+        }
     }
 
     /// <summary>
@@ -29,6 +38,25 @@
     [DataContract]
     public class TransformDesc
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransformDesc"/> class.
+        /// </summary>
+        public TransformDesc()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransformDesc"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal TransformDesc(JToken source)
+        {
+            Name = source.ReadValueAsSnakeCase<string>(nameof(Name));
+            Strict = source.ReadValue<bool>("allowed_for_strict");
+            Used = source.ReadValueAsSnakeCase<bool>(nameof(Used));
+            Named = source.ReadValueAsSnakeCase<bool>(nameof(Named));
+        }
+
         /// <summary>
         /// The name of a named transformation (e.g., t_trans1) or the transformation itself as expressed in a dynamic
         /// URL (e.g., w_110,h_100,c_fill).

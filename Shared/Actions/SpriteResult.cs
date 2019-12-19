@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed response with detailed information about the created sprite.
@@ -51,6 +53,22 @@
         /// </summary>
         [DataMember(Name = "image_infos")]
         public Dictionary<string, ImageInfo> ImageInfos { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            CssUri = source.ReadValueAsSnakeCase<Uri>(nameof(CssUri).FixUri());
+            SecureCssUri = source.ReadValueAsSnakeCase<Uri>(nameof(SecureCssUri).FixUri());
+            ImageUri = source.ReadValueAsSnakeCase<Uri>(nameof(ImageUri).FixUri());
+            JsonUri = source.ReadValueAsSnakeCase<Uri>(nameof(JsonUri).FixUri());
+            PublicId = source.ReadValueAsSnakeCase<string>(nameof(PublicId));
+            Version = source.ReadValueAsSnakeCase<string>(nameof(Version));
+
+            ImageInfos = source
+                .ReadValueAsSnakeCase<Dictionary<string, JObject>>(nameof(ImageInfos))
+                .ToDictionary(kvp => kvp.Key, kvp => new ImageInfo(kvp.Value));
+        }
     }
 
     /// <summary>
@@ -59,6 +77,25 @@
     [DataContract]
     public class ImageInfo
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageInfo"/> class.
+        /// </summary>
+        public ImageInfo()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageInfo"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal ImageInfo(JToken source)
+        {
+            Width = source.ReadValueAsSnakeCase<int>(nameof(Width));
+            Height = source.ReadValueAsSnakeCase<int>(nameof(Height));
+            X = source.ReadValueAsSnakeCase<int>(nameof(X));
+            Y = source.ReadValueAsSnakeCase<int>(nameof(Y));
+        }
+
         /// <summary>
         /// Width of the image.
         /// </summary>

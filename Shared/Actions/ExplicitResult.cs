@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.Serialization;
     using Newtonsoft.Json.Linq;
 
@@ -23,6 +24,7 @@
         /// <summary>
         /// List of responsive breakpoint settings of the asset.
         /// </summary>
+        [DataMember(Name = "responsive_breakpoints")]
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
@@ -50,11 +52,12 @@
         /// <param name="source">JSON token received from the server.</param>
         internal override void SetValues(JToken source)
         {
-            var responsiveBreakpoints = source["responsive_breakpoints"];
-            if (responsiveBreakpoints != null)
-            {
-                ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
-            }
+            base.SetValues(source);
+            Status = source.ReadValueAsSnakeCase<string>(nameof(Status));
+            ResponsiveBreakpoints = source.ReadObject(nameof(ResponsiveBreakpoints).ToSnakeCase(), _ => _.ToObject<List<ResponsiveBreakpointList>>());
+            QualityAnalysis = source.ReadObject(nameof(QualityAnalysis).ToSnakeCase(), _ => new QualityAnalysis(_));
+            Info = source.ReadObject(nameof(Info).ToSnakeCase(), _ => new Info(_));
+            Eager = source.ReadList(nameof(Eager).ToSnakeCase(), _ => new Eager(_)).ToArray();
         }
     }
 
@@ -64,6 +67,23 @@
     [DataContract]
     public class Eager
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Eager"/> class.
+        /// </summary>
+        public Eager()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Eager"/> class.
+        /// </summary>
+        /// <param name="source">JSON token.</param>
+        internal Eager(JToken source)
+        {
+            Uri = source.ReadValueAsSnakeCase<Uri>("Url");
+            SecureUri = source.ReadValueAsSnakeCase<Uri>("SecureUrl");
+        }
+
         /// <summary>
         /// URL for accessing the asset.
         /// </summary>

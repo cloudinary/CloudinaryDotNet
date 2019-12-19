@@ -22,6 +22,22 @@
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            NextCursor = source.ReadValueAsSnakeCase<string>(nameof(NextCursor));
+            Resources = source.ReadList(
+                nameof(Resources).ToCamelCase(),
+                token =>
+                {
+                    Resource resource = new Resource();
+                    resource.JsonObj = token;
+                    return resource;
+                })
+            .ToArray();
+        }
     }
 
     /// <summary>
@@ -89,5 +105,20 @@
         /// The Fully Qualified Public ID.
         /// </summary>
         public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            ResourceType = source.ReadValueAsSnakeCase<string>(nameof(ResourceType));
+            Type = source.ReadValueAsSnakeCase<string>(nameof(Type));
+            Created = source.ReadValue<string>("created_at");
+            Width = source.ReadValueAsSnakeCase<int>(nameof(Width));
+            Height = source.ReadValueAsSnakeCase<int>(nameof(Height));
+            Backup = source.ReadValueAsSnakeCase<bool?>(nameof(Backup));
+            ModerationStatus = source.ReadValueAsSnakeCase<ModerationStatus?>(nameof(ModerationStatus));
+            Context = source.ReadValueAsSnakeCase<JToken>(nameof(Context));
+            Tags = source.ReadValueAsSnakeCase<string[]>(nameof(Tags));
+        }
     }
 }

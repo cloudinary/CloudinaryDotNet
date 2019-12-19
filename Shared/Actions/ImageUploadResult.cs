@@ -93,11 +93,18 @@
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);
-            var responsiveBreakpoints = source["responsive_breakpoints"];
-            if (responsiveBreakpoints != null)
-            {
-                ResponsiveBreakpoints = responsiveBreakpoints.ToObject<List<ResponsiveBreakpointList>>();
-            }
+            Width = source.ReadValueAsSnakeCase<int>(nameof(Width));
+            Height = source.ReadValueAsSnakeCase<int>(nameof(Height));
+            Exif = source.ReadValueAsSnakeCase<Dictionary<string, string>>(nameof(Exif));
+            Metadata = source.ReadValue<Dictionary<string, string>>("image_metadata");
+            QualityAnalysis = source.ReadObject(nameof(QualityAnalysis).ToSnakeCase(), _ => new QualityAnalysis(_));
+            Phash = source.ReadValueAsSnakeCase<string>(nameof(Phash));
+            DeleteToken = source.ReadValueAsSnakeCase<string>(nameof(DeleteToken));
+            Info = source.ReadValueAsSnakeCase<Info>(nameof(Info));
+            Pages = source.ReadValueAsSnakeCase<int>(nameof(Pages));
+            Colors = source.ReadValueAsSnakeCase<string[][]>(nameof(Colors));
+            Faces = source.ReadValueAsSnakeCase<int[][]>(nameof(Faces));
+            ResponsiveBreakpoints = source.ReadValueAsSnakeCase<List<ResponsiveBreakpointList>>(nameof(ResponsiveBreakpoints));
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed result of folder deletion.
@@ -14,5 +15,12 @@
         /// </summary>
         [DataMember(Name = "deleted")]
         public List<string> Deleted { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Deleted = source.ReadValueAsSnakeCase<List<string>>(nameof(Deleted));
+        }
     }
 }

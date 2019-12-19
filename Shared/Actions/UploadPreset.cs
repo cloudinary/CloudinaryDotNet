@@ -484,5 +484,13 @@
         /// </summary>
         [DataMember(Name = "name")]
         public string Name { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Message = source.ReadValueAsSnakeCase<string>(nameof(Message));
+            Name = source.ReadValueAsSnakeCase<string>(nameof(Name));
+        }
     }
 }

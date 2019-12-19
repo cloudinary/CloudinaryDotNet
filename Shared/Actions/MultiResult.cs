@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed response with detailed information about the created animated GIF.
@@ -32,5 +33,15 @@
         /// </summary>
         [DataMember(Name = "version")]
         public string Version { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            PublicId = source.ReadValueAsSnakeCase<string>(nameof(PublicId));
+            Version = source.ReadValueAsSnakeCase<string>(nameof(Version));
+            Uri = source.ReadValue<Uri>("url");
+            SecureUri = source.ReadValue<Uri>("secure_url");
+        }
     }
 }

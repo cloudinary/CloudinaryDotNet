@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed details of a single transformation.
@@ -46,6 +47,18 @@
         /// </summary>
         [DataMember(Name = "named")]
         public bool Named { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            Name = source.ReadValueAsSnakeCase<string>(nameof(Name));
+            Strict = source.ReadValue<bool>("allowed_for_strict");
+            Used = source.ReadValueAsSnakeCase<bool>(nameof(Used));
+            Derived = source.ReadList(nameof(Derived).ToSnakeCase(), _ => new TransformDerived(_)).ToArray();
+            Info = source.ReadValueAsSnakeCase<Dictionary<string, object>[]>(nameof(Info));
+            Named = source.ReadValueAsSnakeCase<bool>(nameof(Named));
+        }
     }
 
     /// <summary>
@@ -55,6 +68,29 @@
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:AccessibleFieldsMustBeginWithUpperCaseLetter", Justification = "Reviewed.")]
     public class TransformDerived
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransformDerived"/> class.
+        /// </summary>
+        public TransformDerived()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransformDerived"/> class.
+        /// </summary>
+        /// <param name="source">JSON Token.</param>
+        internal TransformDerived(JToken source)
+        {
+            m_resourceType = source.ReadValue<string>("resource_type");
+            PublicId = source.ReadValueAsSnakeCase<string>(nameof(PublicId));
+            Type = source.ReadValueAsSnakeCase<string>(nameof(Type));
+            Format = source.ReadValueAsSnakeCase<string>(nameof(Format));
+            Url = source.ReadValueAsSnakeCase<string>(nameof(Url));
+            SecureUrl = source.ReadValueAsSnakeCase<string>(nameof(SecureUrl));
+            Length = source.ReadValue<long>("bytes");
+            Id = source.ReadValueAsSnakeCase<string>(nameof(Id));
+        }
+
         /// <summary>
         /// The type of media asset: image, raw, or video.
         /// </summary>

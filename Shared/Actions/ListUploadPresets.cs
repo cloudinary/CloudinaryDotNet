@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     ///  Parameters of list upload presets request.
@@ -62,5 +63,20 @@
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
+
+        /// <inheritdoc/>
+        internal override void SetValues(JToken source)
+        {
+            base.SetValues(source);
+            NextCursor = source.ReadValueAsSnakeCase<string>(nameof(NextCursor));
+            Presets = source.ReadList(
+                nameof(Presets).ToCamelCase(),
+                token =>
+                {
+                    var getUploadPresetResult = new GetUploadPresetResult();
+                    getUploadPresetResult.JsonObj = token;
+                    return getUploadPresetResult;
+                });
+        }
     }
 }

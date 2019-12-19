@@ -40,11 +40,11 @@
         internal override void SetValues(JToken source)
         {
             base.SetValues(source);
-            Url = source.Value<string>("url");
-            SecureUrl = source.Value<string>("secure_url");
-            PublicId = source.Value<string>("public_id");
-            Bytes = source.Value<long>("bytes");
-            FileCount = source.Value<int>("file_count");
+            Url = source.ReadValueAsSnakeCase<string>(nameof(Url));
+            SecureUrl = source.ReadValueAsSnakeCase<string>(nameof(SecureUrl));
+            PublicId = source.ReadValueAsSnakeCase<string>(nameof(PublicId));
+            Bytes = source.ReadValueAsSnakeCase<long>(nameof(Bytes));
+            FileCount = source.ReadValueAsSnakeCase<int>(nameof(FileCount));
         }
     }
 }
