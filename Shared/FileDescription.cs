@@ -1,32 +1,31 @@
-﻿using System;
-using System.IO;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.IO;
+
     /// <summary>
     /// Represents a file for uploading to cloudinary.
     /// </summary>
     public class FileDescription
     {
         /// <summary>
-        /// Maximum size of a single chunk of data to be uploaded
+        /// Maximum size of a single chunk of data to be uploaded.
         /// </summary>
-        internal int BufferLength = Int32.MaxValue;
+        internal int BufferLength = int.MaxValue;
 
         /// <summary>
-        /// End of file flag
+        /// End of file flag.
         /// </summary>
         internal bool Eof => BytesSent == GetFileLength();
 
         /// <summary>
-        /// Byte sent
+        /// Byte sent.
         /// </summary>
         internal int BytesSent;
 
         /// <summary>
-        /// Get file length
+        /// Get file length.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The length of file.</returns>
         internal long GetFileLength()
         {
             return Stream?.Length ?? new FileInfo(FilePath).Length;
@@ -35,7 +34,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Reset stream buffer length and bytes sent values.
         /// </summary>
-        /// <param name="bufferSize"></param>
+        /// <param name="bufferSize">(Optional) Size of the buffer.</param>
         internal void Reset(int bufferSize = int.MaxValue)
         {
             BufferLength = bufferSize;
@@ -43,6 +42,7 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileDescription"/> class.
         /// Constructor to upload file from stream.
         /// </summary>
         /// <param name="name">Resource name.</param>
@@ -52,19 +52,22 @@ namespace CloudinaryDotNet
             FileName = name;
             Stream = stream;
         }
+
         /// <summary>
-        /// Constructor to upload file by path specifying explicit filename
+        /// Initializes a new instance of the <see cref="FileDescription"/> class.
+        /// Constructor to upload file by path specifying explicit filename.
         /// </summary>
-        /// <param name="name">Resource name</param>
-        /// <param name="filePath">Either URL (http/https/s3/data) or local path to file</param>
+        /// <param name="name">Resource name.</param>
+        /// <param name="filePath">Either URL (http/https/s3/data) or local path to file.</param>
         public FileDescription(string name, string filePath)
         {
             IsRemote = Utils.IsRemoteFile(filePath);
             FilePath = filePath;
             FileName = IsRemote ? filePath : name;
         }
-        /// <inheritdoc />
+
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileDescription"/> class.
         /// Constructor to upload file by path.
         /// </summary>
         /// <param name="filePath">Either URL (http/https/s3/data) or local path to file.</param>
@@ -76,22 +79,22 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Stream to upload
+        /// Stream to upload.
         /// </summary>
         public Stream Stream { get; }
 
         /// <summary>
-        /// Name of the file to upload
+        /// Name of the file to upload.
         /// </summary>
         public string FileName { get; set; }
 
         /// <summary>
-        /// Filesystem path to the file to upload
+        /// Filesystem path to the file to upload.
         /// </summary>
         public string FilePath { get; }
 
         /// <summary>
-        /// Whether it is remote (by URL) or local file
+        /// Whether it is remote (by URL) or local file.
         /// </summary>
         public bool IsRemote { get; }
     }

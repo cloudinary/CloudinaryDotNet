@@ -1,12 +1,12 @@
-﻿using CloudinaryDotNet.Core;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using CloudinaryDotNet.Core;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Parameters of upload preset, which enable you to centrally define a set of image upload options instead of
     /// specifying them in each upload call.
@@ -14,12 +14,15 @@ namespace CloudinaryDotNet.Actions
     public class UploadPresetParams : BaseParams
     {
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="UploadPresetParams"/> object.
+        /// Initializes a new instance of the <see cref="UploadPresetParams"/> class.
+        /// Default parameterless constructor.
         /// </summary>
-        public UploadPresetParams() { }
+        public UploadPresetParams()
+        {
+        }
 
         /// <summary>
-        /// Instantiates the <see cref="UploadPresetParams"/> object with result object.
+        /// Initializes a new instance of the <see cref="UploadPresetParams"/> class with result object.
         /// </summary>
         /// <param name="preset">The preset returned from API.</param>
         public UploadPresetParams(GetUploadPresetResult preset)
@@ -27,7 +30,10 @@ namespace CloudinaryDotNet.Actions
             Name = preset.Name;
             Unsigned = preset.Unsigned;
 
-            if (preset.Settings == null) return;
+            if (preset.Settings == null)
+            {
+                return;
+            }
 
             DisallowPublicId = preset.Settings.DisallowPublicId;
             Backup = preset.Settings.Backup;
@@ -36,9 +42,13 @@ namespace CloudinaryDotNet.Actions
             if (preset.Settings.Tags != null)
             {
                 if (preset.Settings.Tags.Type == JTokenType.String)
+                {
                     Tags = preset.Settings.Tags.ToString();
+                }
                 else if (preset.Settings.Tags.Type == JTokenType.Array)
-                    Tags = String.Join(",", preset.Settings.Tags.Values<string>().ToArray());
+                {
+                    Tags = string.Join(",", preset.Settings.Tags.Values<string>().ToArray());
+                }
             }
 
             Invalidate = preset.Settings.Invalidate;
@@ -63,9 +73,13 @@ namespace CloudinaryDotNet.Actions
             if (preset.Settings.AllowedFormats != null)
             {
                 if (preset.Settings.AllowedFormats.Type == JTokenType.String)
+                {
                     AllowedFormats = preset.Settings.AllowedFormats.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                }
                 else if (preset.Settings.AllowedFormats.Type == JTokenType.Array)
+                {
                     AllowedFormats = preset.Settings.AllowedFormats.Select(t => t.ToString()).ToArray();
+                }
             }
 
             Moderation = preset.Settings.Moderation;
@@ -87,6 +101,7 @@ namespace CloudinaryDotNet.Actions
                             dict.Add(prop.Key, prop.Value.ToString());
                         }
                     }
+
                     Transformation = new Transformation(dict);
                 }
             }
@@ -110,6 +125,7 @@ namespace CloudinaryDotNet.Actions
                                 dict.Add(prop.Key, prop.Value.ToString());
                             }
                         }
+
                         EagerTransforms.Add(new Transformation(dict));
                     }
                 }
@@ -213,12 +229,12 @@ namespace CloudinaryDotNet.Actions
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// Proxy to use when Cloudinary accesses remote folders
+        /// Proxy to use when Cloudinary accesses remote folders.
         /// </summary>
         public string Proxy { get; set; }
 
         /// <summary>
-        /// Base Folder to use when building the Cloudinary public_id
+        /// Base Folder to use when building the Cloudinary public_id.
         /// </summary>
         public string Folder { get; set; }
 
@@ -349,12 +365,14 @@ namespace CloudinaryDotNet.Actions
         public bool Live { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
             if (Overwrite.HasValue && Overwrite.Value && Unsigned)
+            {
                 throw new ArgumentException("Don't set both Overwrite and Unsigned to true!");
+            }
         }
 
         /// <summary>
@@ -400,19 +418,24 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "transformation", GetTransformation(Transformation));
 
             if (AutoTagging.HasValue)
+            {
                 AddParam(dict, "auto_tagging", AutoTagging.Value);
+            }
 
             if (FaceCoordinates != null)
+            {
                 AddParam(dict, "face_coordinates", FaceCoordinates.ToString());
+            }
 
             if (EagerTransforms != null && EagerTransforms.Count > 0)
             {
-                AddParam(dict, "eager",
-                    String.Join("|", EagerTransforms.Select(GetTransformation).ToArray()));
+                AddParam(dict, "eager", string.Join("|", EagerTransforms.Select(GetTransformation).ToArray()));
             }
 
             if (AllowedFormats != null)
-                AddParam(dict, "allowed_formats", String.Join(",", AllowedFormats));
+            {
+                AddParam(dict, "allowed_formats", string.Join(",", AllowedFormats));
+            }
 
             if (Context != null && Context.Count > 0)
             {
@@ -424,14 +447,23 @@ namespace CloudinaryDotNet.Actions
 
         private string GetTransformation(object o)
         {
-            if (o == null) return null;
+            if (o == null)
+            {
+                return null;
+            }
 
-            if (o is String)
-                return (String)o;
+            if (o is string)
+            {
+                return (string)o;
+            }
             else if (o is Transformation)
+            {
                 return ((Transformation)o).Generate();
+            }
             else
-                throw new NotSupportedException(String.Format("Instance of type {0} is not supported as Transformation!", o.GetType()));
+            {
+                throw new NotSupportedException(string.Format("Instance of type {0} is not supported as Transformation!", o.GetType()));
+            }
         }
     }
 

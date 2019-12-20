@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Results of tags management.
     /// </summary>
@@ -14,6 +13,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "public_ids")]
         public string[] PublicIds { get; protected set; }
-        
     }
 }

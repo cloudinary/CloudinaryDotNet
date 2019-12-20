@@ -1,20 +1,20 @@
-﻿using CloudinaryDotNet.Actions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using CloudinaryDotNet.Actions;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Provider for the API calls.
     /// </summary>
@@ -30,10 +30,15 @@ namespace CloudinaryDotNet
         /// <param name="extraHeaders">Extra headers.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Return response of specified type.</returns>
-        internal virtual Task<T> CallApiAsync<T>(HttpMethod method,
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
+        internal virtual Task<T> CallApiAsync<T>(
+            HttpMethod method,
             string url,
             BaseParams parameters,
-            FileDescription file, Dictionary<string, string> extraHeaders = null, CancellationToken? cancellationToken = null) where T : BaseResult, new()
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null,
+            CancellationToken? cancellationToken = null)
+            where T : BaseResult, new()
         {
             parameters?.Check();
 
@@ -53,15 +58,18 @@ namespace CloudinaryDotNet
         /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Extra headers.</param>
         /// <returns>Return response of specified type.</returns>
-        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
+        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
         {
             parameters?.Check();
 
-            return CallAndParse<T>(method,
-                                   url,
-                                   (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
-                                   file,
-                                   extraHeaders);
+            return CallAndParse<T>(
+                method,
+                url,
+                (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                file,
+                extraHeaders);
         }
 
         /// <summary>
@@ -69,7 +77,9 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="response">HTTP response.</param>
         /// <returns>New instance of this class.</returns>
-        internal static async Task<T> ParseAsync<T>(HttpResponseMessage response) where T : BaseResult
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
+        internal static async Task<T> ParseAsync<T>(HttpResponseMessage response)
+            where T : BaseResult
         {
             using (var stream = await response.Content.ReadAsStreamAsync())
             using (var reader = new StreamReader(stream))
@@ -84,7 +94,9 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="response">HTTP response.</param>
         /// <returns>New instance of this class.</returns>
-        internal static T Parse<T>(HttpResponseMessage response) where T : BaseResult
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
+        internal static T Parse<T>(HttpResponseMessage response)
+            where T : BaseResult
         {
             using (var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult())
             using (var reader = new StreamReader(stream))
@@ -94,6 +106,16 @@ namespace CloudinaryDotNet
             }
         }
 
+        /// <summary>
+        /// Prepares request body to be sent on custom asynchronous call to Cloudinary API.
+        /// </summary>
+        /// <param name="request">HTTP request to alter.</param>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="parameters">Dictionary of call parameters.</param>
+        /// <param name="file">File to upload.</param>
+        /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Prepared HTTP request.</returns>
         internal async Task<HttpRequestMessage> PrepareRequestBodyAsync(
             HttpRequestMessage request,
             HttpMethod method,
@@ -114,6 +136,15 @@ namespace CloudinaryDotNet
             return request;
         }
 
+        /// <summary>
+        /// Prepares request body to be sent on custom call to Cloudinary API.
+        /// </summary>
+        /// <param name="request">HTTP request to alter.</param>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="parameters">Dictionary of call parameters.</param>
+        /// <param name="file">File to upload.</param>
+        /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
+        /// <returns>Prepared HTTP request.</returns>
         internal HttpRequestMessage PrepareRequestBody(
             HttpRequestMessage request,
             HttpMethod method,
@@ -133,6 +164,10 @@ namespace CloudinaryDotNet
             return request;
         }
 
+        /// <summary>
+        /// Extends Cloudinary upload parameters with additional attributes.
+        /// </summary>
+        /// <param name="parameters">Cloudinary upload parameters.</param>
         internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
         {
             parameters.Add("timestamp", Utils.UnixTimeNowSeconds());
@@ -140,14 +175,16 @@ namespace CloudinaryDotNet
             parameters.Add("api_key", Account.ApiKey);
         }
 
-        private static T CreateResult<T>(HttpResponseMessage response, string s) where T : BaseResult
+        private static T CreateResult<T>(HttpResponseMessage response, string s)
+            where T : BaseResult
         {
             var result = CreateResultFromString<T>(s, response.StatusCode);
             UpdateResultFromResponse(response, result);
             return result;
         }
 
-        private static T CreateResultFromString<T>(string s, HttpStatusCode statusCode) where T : BaseResult
+        private static T CreateResultFromString<T>(string s, HttpStatusCode statusCode)
+            where T : BaseResult
         {
             try
             {
@@ -161,9 +198,13 @@ namespace CloudinaryDotNet
             }
         }
 
-        private static void UpdateResultFromResponse<T>(HttpResponseMessage response, T result) where T : BaseResult
+        private static void UpdateResultFromResponse<T>(HttpResponseMessage response, T result)
+            where T : BaseResult
         {
-            if (response == null) return;
+            if (response == null)
+            {
+                return;
+            }
 
             response?.Headers
                 .Where(_ => _.Key.StartsWith("X-FeatureRateLimit"))
@@ -173,13 +214,19 @@ namespace CloudinaryDotNet
                     var value = header.Value.First();
                     var key = header.Key;
                     if (key.EndsWith("Limit") && long.TryParse(value, out long l))
+                    {
                         result.Limit = l;
+                    }
 
                     if (key.EndsWith("Remaining") && long.TryParse(value, out l))
+                    {
                         result.Remaining = l;
+                    }
 
                     if (key.EndsWith("Reset") && DateTime.TryParse(value, out DateTime t))
+                    {
                         result.Reset = t;
+                    }
                 });
 
             result.StatusCode = response.StatusCode;
@@ -196,7 +243,9 @@ namespace CloudinaryDotNet
         private void SetChunkedEncoding(HttpRequestMessage request)
         {
             if (UseChunkedEncoding)
+            {
                 request.Headers.Add("Transfer-Encoding", "chunked");
+            }
         }
 
         private void PrePrepareRequestBody(HttpRequestMessage request, HttpMethod method, Dictionary<string, string> extraHeaders)
@@ -205,12 +254,13 @@ namespace CloudinaryDotNet
 
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
-            request.Headers.Add("User-Agent", string.IsNullOrEmpty(UserPlatform)
+            var userPlatform = string.IsNullOrEmpty(UserPlatform)
                 ? USER_AGENT
-                : string.Format("{0} {1}", UserPlatform, USER_AGENT));
+                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
+            request.Headers.Add("User-Agent", userPlatform);
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(String.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
             {
@@ -442,7 +492,7 @@ namespace CloudinaryDotNet
             int toSend;
             int cnt;
             while ((toSend = length - bytesSent) > 0
-                && (cnt = stream.Read(buf, 0, (toSend > buf.Length ? buf.Length : toSend))) > 0)
+                && (cnt = stream.Read(buf, 0, toSend > buf.Length ? buf.Length : toSend)) > 0)
             {
                 writer.BaseStream.Write(buf, 0, cnt);
                 bytesSent += cnt;
@@ -490,7 +540,9 @@ namespace CloudinaryDotNet
         protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
         {
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+            {
                 FinalizeUploadParameters(parameters);
+            }
             else if (parameters.ContainsKey("removeUnsignedParam"))
             {
                 parameters.Remove("unsigned");
@@ -529,7 +581,9 @@ namespace CloudinaryDotNet
         protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
         {
             if (parameters == null)
+            {
                 parameters = new SortedDictionary<string, object>();
+            }
 
             parameters.Add("upload_preset", preset);
             parameters.Add("unsigned", true);

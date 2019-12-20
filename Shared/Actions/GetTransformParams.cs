@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of the request for transformation details.
     /// </summary>
     public class GetTransformParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="GetTransformParams"/> object.
+        /// Initializes a new instance of the <see cref="GetTransformParams"/> class.
         /// </summary>
         public GetTransformParams()
         {
-            Transformation = String.Empty;
+            Transformation = string.Empty;
         }
 
         /// <summary>
@@ -31,8 +31,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(Transformation))
+            if (string.IsNullOrEmpty(Transformation))
+            {
                 throw new ArgumentException("Transformation must be set!");
+            }
         }
 
         /// <summary>
@@ -44,7 +46,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults.ToString());
+            }
 
             return dict;
         }

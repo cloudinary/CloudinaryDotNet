@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Results of the resource access mode update.
     /// </summary>
@@ -21,6 +20,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "failed")]
         public List<object> Failed { get; protected set; }
-        
     }
 }

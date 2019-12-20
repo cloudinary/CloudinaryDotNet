@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Base parameters of file upload request.
     /// </summary>
@@ -16,7 +16,7 @@ namespace CloudinaryDotNet.Actions
         public FileDescription File { get; set; }
 
         /// <summary>
-        /// The identifier that is used for accessing the uploaded resource. 
+        /// The identifier that is used for accessing the uploaded resource.
         /// A randomly generated ID is assigned if not specified.
         /// </summary>
         public string PublicId { get; set; }
@@ -45,13 +45,19 @@ namespace CloudinaryDotNet.Actions
         public override void Check()
         {
             if (File == null)
+            {
                 throw new ArgumentException("File must be specified in UploadParams!");
+            }
 
             if (!File.IsRemote && File.Stream == null && string.IsNullOrEmpty(File.FilePath))
+            {
                 throw new ArgumentException("File is not ready!");
+            }
 
             if (string.IsNullOrEmpty(File.FileName))
+            {
                 throw new ArgumentException("File name must be specified in UploadParams!");
+            }
         }
 
         /// <summary>
@@ -66,7 +72,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "type", Type);
 
             if (Backup.HasValue)
+            {
                 AddParam(dict, "backup", Backup.Value);
+            }
 
             return dict;
         }
@@ -78,7 +86,7 @@ namespace CloudinaryDotNet.Actions
     public class RawUploadParams : BasicRawUploadParams
     {
         /// <summary>
-        /// Instantiates the <see cref="RawUploadParams"/> object.
+        /// Initializes a new instance of the <see cref="RawUploadParams"/> class.
         /// </summary>
         public RawUploadParams()
         {
@@ -134,7 +142,7 @@ namespace CloudinaryDotNet.Actions
 
         /// <summary>
         /// Allows the resource to behave as if it's of the authenticated 'type' while still using the default 'upload'
-        /// type in delivery URLs
+        /// type in delivery URLs.
         /// </summary>
         public string AccessMode { get; set; }
 
@@ -198,10 +206,14 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "moderation", Moderation);
 
             if (UseFilename.HasValue && UseFilename.Value)
+            {
                 AddParam(dict, "unique_filename", UniqueFilename);
+            }
 
             if (AllowedFormats != null)
-                AddParam(dict, "allowed_formats", String.Join(",", AllowedFormats));
+            {
+                AddParam(dict, "allowed_formats", string.Join(",", AllowedFormats));
+            }
 
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "discard_original_filename", DiscardOriginalFilename);

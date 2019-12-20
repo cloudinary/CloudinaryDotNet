@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Base abstract non-generic class for creating Layers.
     /// </summary>
@@ -18,7 +17,9 @@ namespace CloudinaryDotNet
     /// <summary>
     /// Base abstract generic class for creating Layers.
     /// </summary>
-    public abstract class BaseLayer<T> : BaseLayer where T : BaseLayer<T>
+    /// <typeparam name="T">Type of the layer.</typeparam>
+    public abstract class BaseLayer<T> : BaseLayer
+        where T : BaseLayer<T>
     {
         /// <summary>
         /// The type of the resource.
@@ -31,7 +32,7 @@ namespace CloudinaryDotNet
         protected string m_type;
 
         /// <summary>
-        /// The identifier of the uploaded asset. 
+        /// The identifier of the uploaded asset.
         /// </summary>
         protected string m_publicId;
 
@@ -43,6 +44,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Sets the type of resource. Valid values: image, raw, and video.
         /// </summary>
+        /// <param name="resourceType">Type of the resource.</param>
         /// <returns>The instance of Layer object with set parameter.</returns>
         public T ResourceType(string resourceType)
         {
@@ -53,6 +55,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Sets the specific type of asset. Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
+        /// <param name="type">Type of the asset.</param>
         /// <returns>The instance of Layer object with set parameter.</returns>
         public T Type(string type)
         {
@@ -85,6 +88,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets an additional parameters for the layer.
         /// </summary>
+        /// <returns>A string that represents additional parameters.</returns>
         public virtual string AdditionalParams()
         {
             return string.Empty;
@@ -122,6 +126,12 @@ namespace CloudinaryDotNet
             return string.Join(":", components.ToArray());
         }
 
+        /// <summary>
+        /// Creates a shallow copy of the current object.
+        /// </summary>
+        /// <returns>A new instance of the current object.</returns>
+        public override object Clone() => MemberwiseClone();
+
         private string FormattedPublicId()
         {
             var transientPublicId = m_publicId;
@@ -133,15 +143,5 @@ namespace CloudinaryDotNet
 
             return transientPublicId;
         }
-
-        #region ICloneable
-
-        /// <summary>
-        /// Creates a shallow copy of the current object.
-        /// </summary>
-        /// <returns>A new instance of the current object.</returns>
-        public override object Clone() => MemberwiseClone();
-
-        #endregion
     }
 }

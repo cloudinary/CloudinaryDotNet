@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
-    /// Parameters for renaming assets immediately and permanently updating them in your cloud storage. 
+    /// Parameters for renaming assets immediately and permanently updating them in your cloud storage.
     /// </summary>
     public class RenameParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="RenameParams"/> object.
+        /// Initializes a new instance of the <see cref="RenameParams"/> class.
         /// </summary>
         /// <param name="fromPublicId">The current identifier of the uploaded asset.</param>
         /// <param name="toPublicId">The new identifier to assign to the uploaded asset.</param>
@@ -37,19 +37,19 @@ namespace CloudinaryDotNet.Actions
         public string ToPublicId { get; set; }
 
         /// <summary>
-        /// The type of asset to rename. 
-        /// Valid values: image, raw, and video. 
+        /// The type of asset to rename.
+        /// Valid values: image, raw, and video.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// The specific type of the resource. 
+        /// The specific type of the resource.
         /// Valid values: upload, private and authenticated.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// The new type for the resource. 
+        /// The new type for the resource.
         /// Valid values: upload, private and authenticated.
         /// </summary>
         public string ToType { get; set; }
@@ -91,17 +91,21 @@ namespace CloudinaryDotNet.Actions
         /// Validate object model.
         /// </summary>
         /// <exception cref="System.ArgumentException">
-        /// FromPublicId can't be null!
+        /// FromPublicId can't be null.
         /// or
-        /// ToPublicId can't be null!
+        /// ToPublicId can't be null.
         /// </exception>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(FromPublicId))
+            if (string.IsNullOrEmpty(FromPublicId))
+            {
                 throw new ArgumentException("FromPublicId can't be null!");
+            }
 
-            if (String.IsNullOrEmpty(ToPublicId))
+            if (string.IsNullOrEmpty(ToPublicId))
+            {
                 throw new ArgumentException("ToPublicId can't be null!");
+            }
         }
     }
 }

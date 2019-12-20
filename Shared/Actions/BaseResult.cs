@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Net;
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+
     /// <summary>
     /// Status of the asset moderation process.
     /// </summary>
@@ -17,21 +16,24 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [EnumMember(Value = "pending")]
         Pending,
+
         /// <summary>
         /// Asset was rejected by moderation service.
         /// </summary>
         [EnumMember(Value = "rejected")]
         Rejected,
+
         /// <summary>
         /// Asset approved.
         /// </summary>
         [EnumMember(Value = "approved")]
         Approved,
+
         /// <summary>
         /// Moderation result was manually overridden.
         /// </summary>
         [EnumMember(Value = "overridden")]
-        Overridden
+        Overridden,
     }
 
     /// <summary>
@@ -44,16 +46,18 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [EnumMember(Value = "image")]
         Image,
+
         /// <summary>
         /// Any files (text, binary)
         /// </summary>
         [EnumMember(Value = "raw")]
         Raw,
+
         /// <summary>
         /// Video files in various formats (mp4, etc.)
         /// </summary>
         [EnumMember(Value = "video")]
-        Video
+        Video,
     }
 
     /// <summary>
@@ -105,22 +109,27 @@ namespace CloudinaryDotNet.Actions
     [DataContract]
     public abstract class BaseResult
     {
-        //protected static Dictionary<Type, DataContractJsonSerializer> m_serializers = new Dictionary<Type, DataContractJsonSerializer>();
+        // protected static Dictionary<Type, DataContractJsonSerializer> m_serializers = new Dictionary<Type, DataContractJsonSerializer>();
+        private JToken rawJson;
 
         /// <summary>
         /// HTTP status code.
         /// </summary>
         public HttpStatusCode StatusCode { get; internal set; }
-        private JToken RawJson;
+
         /// <summary>
         /// Raw JSON as received from the server.
         /// </summary>
         public JToken JsonObj
         {
-            get { return RawJson; }
+            get
+            {
+                return rawJson;
+            }
+
             internal set
             {
-                RawJson = value;
+                rawJson = value;
                 SetValues(value);
             }
         }
@@ -146,9 +155,12 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public DateTime Reset { get; internal set; }
 
+        /// <summary>
+        /// Populates additional token fields.
+        /// </summary>
+        /// <param name="source">JSON token received from the server.</param>
         internal virtual void SetValues(JToken source)
         {
-
         }
     }
 
@@ -242,6 +254,11 @@ namespace CloudinaryDotNet.Actions
     public class ModerationResponseConverter : JsonConverter
     {
         /// <summary>
+        /// Gets a value indicating whether this <see cref="ModerationResponseConverter"/> can write JSON.
+        /// </summary>
+        public override bool CanWrite => false;
+
+        /// <summary>
         /// Reads the JSON representation of the object.
         /// </summary>
         /// <param name="reader">The <see cref="JsonReader"/> to read from.</param>
@@ -249,7 +266,10 @@ namespace CloudinaryDotNet.Actions
         /// <param name="existingValue">The existing value of object being read.</param>
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+        public override object ReadJson(
+            JsonReader reader,
+            Type objectType,
+            object existingValue,
             JsonSerializer serializer)
         {
             return reader.TokenType == JsonToken.StartObject
@@ -263,11 +283,6 @@ namespace CloudinaryDotNet.Actions
         /// <param name="objectType">Type of the object.</param>
         /// <returns>True if this instance can convert the specified object type; otherwise, false.</returns>
         public override bool CanConvert(Type objectType) => true;
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="ModerationResponseConverter"/> can write JSON.
-        /// </summary>
-        public override bool CanWrite => false;
 
         /// <summary>
         /// Writes the JSON representation of the object.

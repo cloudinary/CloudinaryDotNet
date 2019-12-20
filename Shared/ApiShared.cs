@@ -1,21 +1,23 @@
-﻿using CloudinaryDotNet.Actions;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Reflection;
+    using System.Runtime.InteropServices;
+    using System.Runtime.Serialization;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using CloudinaryDotNet.Actions;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Provider for the API calls.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     public partial class ApiShared : ISignProvider
     {
         /// <summary>
@@ -43,7 +45,7 @@ namespace CloudinaryDotNet
         /// </summary>
         public static string USER_AGENT;
 
-        string m_apiAddr = "https://" + ADDR_API;
+        private string m_apiAddr = "https://" + ADDR_API;
 
         /// <summary>
         /// Whether to use a sub domain.
@@ -109,12 +111,13 @@ namespace CloudinaryDotNet
         /// </summary>
         public int ChunkSize = 65000;
 
-        private static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient();
 
-        private readonly Func<string, HttpRequestMessage> RequestBuilder =
+        private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
 
         /// <summary>
+        /// Initializes static members of the <see cref="ApiShared"/> class.
         /// Default static parameterless constructor.
         /// </summary>
         static ApiShared()
@@ -123,49 +126,60 @@ namespace CloudinaryDotNet
 
             var frameworkDescription = RuntimeInformation.FrameworkDescription;
 
-            USER_AGENT = String.Format("CloudinaryDotNet/{0}.{1}.{2} ({3})",
-                version.Major, version.Minor, version.Build, frameworkDescription);
+            USER_AGENT = string.Format(
+                "CloudinaryDotNet/{0}.{1}.{2} ({3})",
+                version.Major,
+                version.Minor,
+                version.Build,
+                frameworkDescription);
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Default parameterless constructor.
         /// Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public ApiShared()
-            : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL")) { }
+            : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL"))
+        {
+        }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public ApiShared(string cloudinaryUrl)
         {
-            if (String.IsNullOrEmpty(cloudinaryUrl))
+            if (string.IsNullOrEmpty(cloudinaryUrl))
+            {
                 throw new ArgumentException("Valid cloudinary init string must be provided!");
+            }
 
             Uri cloudinaryUri = new Uri(cloudinaryUrl);
 
-            if (String.IsNullOrEmpty(cloudinaryUri.Host))
+            if (string.IsNullOrEmpty(cloudinaryUri.Host))
+            {
                 throw new ArgumentException("Cloud name must be specified as host name in URL!");
+            }
 
             string[] creds = cloudinaryUri.UserInfo.Split(':');
             Account = new Account(cloudinaryUri.Host, creds[0], creds[1]);
 
-            UsePrivateCdn = !String.IsNullOrEmpty(cloudinaryUri.AbsolutePath) &&
+            UsePrivateCdn = !string.IsNullOrEmpty(cloudinaryUri.AbsolutePath) &&
                 cloudinaryUri.AbsolutePath != "/";
 
-            PrivateCdn = String.Empty;
+            PrivateCdn = string.Empty;
 
             if (UsePrivateCdn)
             {
                 PrivateCdn = cloudinaryUri.AbsolutePath;
                 Secure = true;
             }
-
         }
 
-        /// <inheritdoc />
         /// <summary>
+        /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
@@ -184,16 +198,21 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="account">Cloudinary account.</param>
         public ApiShared(Account account)
         {
             if (account == null)
+            {
                 throw new ArgumentException("Account can't be null!");
+            }
 
-            if (String.IsNullOrEmpty(account.Cloud))
+            if (string.IsNullOrEmpty(account.Cloud))
+            {
                 throw new ArgumentException("Cloud name must be specified in Account!");
+            }
 
             UsePrivateCdn = false;
             Account = account;
@@ -205,7 +224,7 @@ namespace CloudinaryDotNet
         public Account Account { get; private set; }
 
         /// <summary>
-        /// Gets or sets API base address (https://api.cloudinary.com by default) which is used to build ApiUrl*
+        /// Gets or sets API base address (https://api.cloudinary.com by default) which is used to build ApiUrl*.
         /// </summary>
         public string ApiBaseAddress
         {
@@ -350,7 +369,7 @@ namespace CloudinaryDotNet
         /// <param name="url">API URL.</param>
         /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
         /// <returns>Parsed response from the cloudinary API.</returns>
         public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
         {
@@ -365,17 +384,20 @@ namespace CloudinaryDotNet
         /// <param name="url">A generated URL.</param>
         /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Instance of the parsed response from the cloudinary API.</returns>
-        public async Task<T> CallAndParseAsync<T>(HttpMethod method,
+        public async Task<T> CallAndParseAsync<T>(
+            HttpMethod method,
             string url,
             SortedDictionary<string, object> parameters,
             FileDescription file,
             Dictionary<string, string> extraHeaders = null,
-            CancellationToken? cancellationToken = null) where T : BaseResult, new()
+            CancellationToken? cancellationToken = null)
+            where T : BaseResult, new()
         {
-            using (var response = await CallAsync(method,
+            using (var response = await CallAsync(
+                method,
                 url,
                 parameters,
                 file,
@@ -394,16 +416,18 @@ namespace CloudinaryDotNet
         /// <param name="url">A generated URL.</param>
         /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">(Optional) Add file to the body of the API call.</param>
+        /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
         /// <returns>Instance of the parsed response from the cloudinary API.</returns>
         public T CallAndParse<T>(
             HttpMethod method,
             string url,
             SortedDictionary<string, object> parameters,
             FileDescription file,
-            Dictionary<string, string> extraHeaders = null) where T : BaseResult, new()
+            Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
         {
-            using (var response = Call(method,
+            using (var response = Call(
+                method,
                 url,
                 parameters,
                 file,
@@ -421,7 +445,7 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Dictionary of call parameters (can be null).</param>
         /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Headers to add to the request.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>HTTP response on call.</returns>
         public async Task<HttpResponseMessage> CallAsync(
             HttpMethod method,
@@ -432,10 +456,10 @@ namespace CloudinaryDotNet
             CancellationToken? cancellationToken = null)
         {
             using (var request =
-                await PrepareRequestBodyAsync(RequestBuilder(url), method, parameters, file, extraHeaders, cancellationToken))
+                await PrepareRequestBodyAsync(requestBuilder(url), method, parameters, file, extraHeaders, cancellationToken))
             {
                 var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
-                return await client.SendAsync(request, httpCancellationToken);
+                return await Client.SendAsync(request, httpCancellationToken);
             }
         }
 
@@ -449,19 +473,19 @@ namespace CloudinaryDotNet
         /// <param name="extraHeaders">Headers to add to the request.</param>
         /// <returns>HTTP response on call.</returns>
         public HttpResponseMessage Call(
-            HttpMethod method, 
-            string url, 
-            SortedDictionary<string, object> parameters, 
-            FileDescription file, 
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
-            using (var request = RequestBuilder(url))
+            using (var request = requestBuilder(url))
             {
                 PrepareRequestBody(request, method, parameters, file, extraHeaders);
 
                 var cancellationToken = GetDefaultCancellationToken();
 
-                return client
+                return Client
                     .SendAsync(request, cancellationToken)
                     .GetAwaiter()
                     .GetResult();
@@ -482,7 +506,9 @@ namespace CloudinaryDotNet
                 typeof(EnumMemberAttribute), false);
 
             if (attrs.Length == 0)
+            {
                 throw new ArgumentException("Enum fields must be decorated with EnumMemberAttribute!");
+            }
 
             return attrs[0].Value;
         }
@@ -502,10 +528,14 @@ namespace CloudinaryDotNet
                     typeof(EnumMemberAttribute), false);
 
                 if (attrs.Length == 0)
+                {
                     continue;
+                }
 
                 if (s == attrs[0].Value)
+                {
                     return (T)fi.GetValue(null);
+                }
             }
 
             return default(T);
@@ -531,26 +561,33 @@ namespace CloudinaryDotNet
         public string PrepareUploadParams(IDictionary<string, object> parameters)
         {
             if (parameters == null)
+            {
                 parameters = new SortedDictionary<string, object>();
+            }
 
             if (!(parameters is SortedDictionary<string, object>))
+            {
                 parameters = new SortedDictionary<string, object>(parameters);
+            }
 
-            string path = "";
+            string path = string.Empty;
             if (parameters.ContainsKey("callback") && parameters["callback"] != null)
+            {
                 path = parameters["callback"].ToString();
+            }
 
             try
             {
                 parameters["callback"] = BuildCallbackUrl(path);
             }
-            catch (Exception)
+            catch (ArgumentException)
             {
-
             }
 
             if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+            {
                 FinalizeUploadParameters(parameters);
+            }
 
             return JsonConvert.SerializeObject(parameters);
         }
@@ -563,19 +600,25 @@ namespace CloudinaryDotNet
         public string SignParameters(IDictionary<string, object> parameters)
         {
             List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
-            StringBuilder signBase = new StringBuilder(String.Join("&", parameters.
+            StringBuilder signBase = new StringBuilder(string.Join("&", parameters.
                                                                    Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
-                .Select(pair => String.Format("{0}={1}", pair.Key,
-                    pair.Value is IEnumerable<string>
-                    ? String.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
-                    : pair.Value.ToString()))
+                .Select(pair =>
+                       {
+                           var value = pair.Value is IEnumerable<string>
+                               ? string.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
+                               : pair.Value.ToString();
+                           return string.Format("{0}={1}", pair.Key, value);
+                       })
                 .ToArray()));
 
             signBase.Append(Account.ApiSecret);
 
             var hash = Utils.ComputeHash(signBase.ToString());
             StringBuilder sign = new StringBuilder();
-            foreach (byte b in hash) sign.Append(b.ToString("x2"));
+            foreach (byte b in hash)
+            {
+                sign.Append(b.ToString("x2"));
+            }
 
             return sign.ToString();
         }
@@ -592,17 +635,18 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Validates API response signature against Cloudinary configuration
+        /// Validates API response signature against Cloudinary configuration.
         /// </summary>
-        /// <param name="publicId">Public ID of resource</param>
-        /// <param name="version">Version of resource</param>
-        /// <param name="signature">Response signature</param>
-        /// <returns>Boolean result of the validation</returns>
+        /// <param name="publicId">Public ID of resource.</param>
+        /// <param name="version">Version of resource.</param>
+        /// <param name="signature">Response signature.</param>
+        /// <returns>Boolean result of the validation.</returns>
         public bool VerifyApiResponseSignature(string publicId, string version, string signature)
         {
-            var parametersToSign = new SortedDictionary<string, object>() {
-                { "public_id", publicId},
-                { "version", version}
+            var parametersToSign = new SortedDictionary<string, object>()
+            {
+                { "public_id", publicId },
+                { "version", version },
             };
             var signedParameters = SignParameters(parametersToSign);
 
@@ -610,19 +654,21 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
-        /// Validates notification signature against Cloudinary configuration
+        /// Validates notification signature against Cloudinary configuration.
         /// </summary>
-        /// <param name="body">Request body</param>
-        /// <param name="timestamp">Request timestamp</param>
-        /// <param name="signature">Notification signature</param>
-        /// <param name="validFor">For how long the signature is valid, in seconds</param>
-        /// <returns>Boolean result of the validation</returns>
+        /// <param name="body">Request body.</param>
+        /// <param name="timestamp">Request timestamp.</param>
+        /// <param name="signature">Notification signature.</param>
+        /// <param name="validFor">For how long the signature is valid, in seconds.</param>
+        /// <returns>Boolean result of the validation.</returns>
         public bool VerifyNotificationSignature(string body, long timestamp, string signature, int validFor = 7200)
         {
             var currentTimestamp = Utils.UnixTimeNowSeconds();
             var isSignatureExpired = timestamp <= currentTimestamp - validFor;
             if (isSignatureExpired)
+            {
                 return false;
+            }
 
             var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}");
 
@@ -632,6 +678,7 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Virtual build callback URL method. This method should be overridden in child classes.
         /// </summary>
+        /// <param name="path">File path to check.</param>
         /// <returns>Callback URL.</returns>
         public virtual string BuildCallbackUrl(string path = "")
         {
@@ -679,10 +726,14 @@ namespace CloudinaryDotNet
         public string BuildUploadFormShared(string field, string resourceType, SortedDictionary<string, object> parameters = null, Dictionary<string, string> htmlOptions = null)
         {
             if (htmlOptions == null)
+            {
                 htmlOptions = new Dictionary<string, string>();
+            }
 
-            if (String.IsNullOrEmpty(resourceType))
+            if (string.IsNullOrEmpty(resourceType))
+            {
                 resourceType = "auto";
+            }
 
             StringBuilder builder = new StringBuilder();
 
@@ -702,7 +753,10 @@ namespace CloudinaryDotNet
 
             foreach (var item in htmlOptions)
             {
-                if (item.Key == "class") continue;
+                if (item.Key == "class")
+                {
+                    continue;
+                }
 
                 builder.
                     Append("' ").
@@ -746,18 +800,20 @@ namespace CloudinaryDotNet
         /// DELETE
         /// </summary>
         DELETE,
+
         /// <summary>
         /// GET
         /// </summary>
         GET,
+
         /// <summary>
         /// POST
         /// </summary>
         POST,
+
         /// <summary>
         /// PUT
         /// </summary>
-        PUT
+        PUT,
     }
 }
-

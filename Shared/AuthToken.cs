@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Authentication token for the token-based authentication feature.
     /// Allows you to limit the validity of the image delivery URL.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1307:AccessibleFieldsMustBeginWithUpperCaseLetter", Justification = "Reviewed.")]
     public class AuthToken
     {
         /// <summary>
@@ -68,15 +68,14 @@ namespace CloudinaryDotNet
         private bool isNullToken = false;
 
         /// <summary>
-        /// Instantiates the <see cref="AuthToken"/> object.
+        /// Initializes a new instance of the <see cref="AuthToken"/> class.
         /// </summary>
         public AuthToken()
         {
-
         }
 
         /// <summary>
-        /// Instantiates the <see cref="AuthToken"/> object.
+        /// Initializes a new instance of the <see cref="AuthToken"/> class.
         /// </summary>
         /// <param name="key">The encryption key received from Cloudinary to sign token with.</param>
         public AuthToken(string key)
@@ -85,9 +84,27 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Convert hex string to the array of bytes.
+        /// </summary>
+        /// <param name="s">Hex string to convert.</param>
+        /// <returns>An array of bytes.</returns>
+        public static byte[] HexStringToByteArray(string s)
+        {
+            int len = s.Length;
+            byte[] data = new byte[len / 2];
+            for (int i = 0; i < len; i += 2)
+            {
+                data[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);
+            }
+
+            return data;
+        }
+
+        /// <summary>
         /// Set the Start time when the cookie becomes valid.
         /// </summary>
         /// <param name="startTime">Timestamp in UNIX time when the cookie becomes valid.</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken StartTime(long startTime)
         {
             this.startTime = startTime;
@@ -98,6 +115,7 @@ namespace CloudinaryDotNet
         /// Set the cookie expiration time.
         /// </summary>
         /// <param name="expiration">Timestamp in UNIX time when the cookie will expire.</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken Expiration(long expiration)
         {
             this.expiration = expiration;
@@ -108,6 +126,7 @@ namespace CloudinaryDotNet
         /// Set the IP for access the asset.
         /// </summary>
         /// <param name="ip">Only this IP address can access the resource.</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken Ip(string ip)
         {
             this.ip = ip;
@@ -117,7 +136,8 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Set the Access Control List for limiting the allowed URL path to a specified pattern.
         /// </summary>
-        /// <param name="acl">The pattern (e.g., /image/authenticated/*)</param>
+        /// <param name="acl">The pattern (e.g., /image/authenticated/*).</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken Acl(string acl)
         {
             this.acl = acl;
@@ -128,6 +148,7 @@ namespace CloudinaryDotNet
         /// Set the duration that the cookie is valid.
         /// </summary>
         /// <param name="duration">The duration that the cookie is valid in seconds.</param>
+        /// <returns>The instance of token with set parameter.</returns>
         public AuthToken Duration(long duration)
         {
             this.duration = duration;
@@ -190,6 +211,7 @@ namespace CloudinaryDotNet
             {
                 toSign.Add(string.Format("url={0}", EscapeUrlToLower(url)));
             }
+
             string auth = Digest(string.Join("~", toSign));
             tokenParts.Add(string.Format("hmac={0}", auth));
 
@@ -212,12 +234,6 @@ namespace CloudinaryDotNet
             authToken.duration = duration;
 
             return authToken;
-        }
-
-        private AuthToken SetNull()
-        {
-            isNullToken = true;
-            return this;
         }
 
         /// <summary>
@@ -246,6 +262,30 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Compute a hashcode for the token.
+        /// </summary>
+        /// <returns>The hashcode for the token.</returns>
+        public override int GetHashCode()
+        {
+            if (isNullToken)
+            {
+                return 0;
+            }
+            else
+            {
+                List<string> hashComponents = new List<string>();
+                hashComponents.Add(tokenName);
+                hashComponents.Add(startTime.ToString());
+                hashComponents.Add(expiration.ToString());
+                hashComponents.Add(duration.ToString());
+                hashComponents.Add(ip);
+                hashComponents.Add(acl);
+
+                return hashComponents.GetHashCode();
+            }
+        }
+
+        /// <summary>
         /// Encode and lowercase the URL.
         /// </summary>
         /// <param name="url">URL for escaping.</param>
@@ -255,7 +295,7 @@ namespace CloudinaryDotNet
             var r = new Regex(UNSAFE_RE, RegexOptions.Compiled | RegexOptions.RightToLeft);
             return r.Replace(url, m =>
             {
-                var encodedItem = string.Join("", m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2")));
+                var encodedItem = string.Join(string.Empty, m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2")));
                 return encodedItem.ToLower();
             });
         }
@@ -272,42 +312,10 @@ namespace CloudinaryDotNet
             return hex;
         }
 
-        /// <summary>
-        /// Convert hex string to the array of bytes.
-        /// </summary>
-        /// <param name="s">Hex string to convert.</param>
-        /// <returns>An array of bytes.</returns>
-        public static byte[] HexStringToByteArray(string s)
+        private AuthToken SetNull()
         {
-            int len = s.Length;
-            byte[] data = new byte[len / 2];
-            for (int i = 0; i < len; i += 2)
-            {
-                data[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);
-            }
-            return data;
-        }
-
-        /// <summary>
-        /// Compute a hashcode for the token.
-        /// </summary>
-        /// <returns>The hashcode for the token.</returns>
-        public override int GetHashCode()
-        {
-            if (isNullToken)
-                return 0;
-            else
-            {
-                List<string> hashComponents = new List<string>();
-                hashComponents.Add(tokenName);
-                hashComponents.Add(startTime.ToString());
-                hashComponents.Add(expiration.ToString());
-                hashComponents.Add(duration.ToString());
-                hashComponents.Add(ip);
-                hashComponents.Add(acl);
-
-                return hashComponents.GetHashCode();
-            }
+            isNullToken = true;
+            return this;
         }
     }
 }

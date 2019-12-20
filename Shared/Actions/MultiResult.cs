@@ -1,8 +1,8 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Parsed response with detailed information about the created animated GIF.
     /// </summary>
@@ -22,7 +22,7 @@ namespace CloudinaryDotNet.Actions
         public Uri SecureUri { get; protected set; }
 
         /// <summary>
-        /// Public ID assigned to the created GIF. 
+        /// Public ID assigned to the created GIF.
         /// </summary>
         [DataMember(Name = "public_id")]
         public string PublicId { get; protected set; }
@@ -32,6 +32,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "version")]
         public string Version { get; protected set; }
-        
     }
 }

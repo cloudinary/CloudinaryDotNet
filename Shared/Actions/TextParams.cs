@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of generating an image of a given textual string.
     /// </summary>
     public class TextParams : BaseParams
     {
         /// <summary>
-        /// Instantiates the <see cref="TextParams"/> object.
+        /// Initializes a new instance of the <see cref="TextParams"/> class.
         /// </summary>
         public TextParams()
         {
@@ -17,6 +17,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TextParams"/> class.
         /// Parameterized constructor.
         /// </summary>
         /// <param name="text">The text string to generate an image for.</param>
@@ -40,10 +41,10 @@ namespace CloudinaryDotNet.Actions
         public string PublicId { get; set; }
 
         /// <summary>
-        /// The name of the font family. 
-        /// Supported font families: Andale Mono, Arial, Arial Black, AvantGarde, Bookman, Century Schoolbook, 
-        /// Comic Sans MS, Courier, Courier New, DejaVu Sans, DejaVu Sans Mono, DejaVu Serif, Dingbats, Georgia, 
-        /// Helvetica, Helvetica Narrow, Impact, Liberation Mono, Liberation Sans, Liberation Sans Narrow, 
+        /// The name of the font family.
+        /// Supported font families: Andale Mono, Arial, Arial Black, AvantGarde, Bookman, Century Schoolbook,
+        /// Comic Sans MS, Courier, Courier New, DejaVu Sans, DejaVu Sans Mono, DejaVu Serif, Dingbats, Georgia,
+        /// Helvetica, Helvetica Narrow, Impact, Liberation Mono, Liberation Sans, Liberation Sans Narrow,
         /// Liberation Serif, NewCenturySchlbk, Nimbus Mono, Nimbus Roman No9, Nimbus Sans, Palatino, Standard Symbols,
         /// Symbol, Times, Times New Roman, Trebuchet MS, URW Bookman, URW Chancery, URW Gothic, URW Palladio, Verdana,
         /// Webdings.
@@ -81,7 +82,7 @@ namespace CloudinaryDotNet.Actions
         public string FontStyle { get; set; }
 
         /// <summary>
-        /// Name or RGB representation of the background color of the generated image. 
+        /// Name or RGB representation of the background color of the generated image.
         /// For example: "red", "#ff0000". Default: "transparent".
         /// </summary>
         public string Background { get; set; }
@@ -106,8 +107,10 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         public override void Check()
         {
-            if (String.IsNullOrEmpty(Text))
+            if (string.IsNullOrEmpty(Text))
+            {
                 throw new ArgumentException("Text must be specified in TextParams!");
+            }
         }
 
         /// <summary>

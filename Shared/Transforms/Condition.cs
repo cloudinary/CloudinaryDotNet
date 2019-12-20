@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
     /// <summary>
     /// Represents Condition object that can be used in user defined variables and conditional transformations.
@@ -10,35 +6,25 @@ namespace CloudinaryDotNet
     public class Condition : BaseExpression<Condition>
     {
         /// <summary>
-        /// Default parameterless constructor. Instantiates the <see cref="Condition"/> object.
+        /// Initializes a new instance of the <see cref="Condition"/> class.
+        /// Default parameterless constructor.
         /// </summary>
-        public Condition() { }
-
-        /// <summary>
-        /// Create a <see cref="Condition"/> object. The condition string will be translated to a serialized condition.
-        /// </summary>
-        /// <param name="condition">Condition in string format.</param>
-        public Condition(string condition) : this()
+        public Condition()
         {
-            if (!string.IsNullOrEmpty(condition))
-                m_expressions.Add(Normalize(condition));
         }
 
-
         /// <summary>
-        /// Creates a predicate for binary operators.
+        /// Initializes a new instance of the <see cref="Condition"/> class.
+        /// The condition string will be translated to a serialized condition.
         /// </summary>
-        /// <param name="name">A name of parameter.</param>
-        /// <param name="operator">An operator.</param>
-        /// <param name="value">A value.</param>
-        protected Condition Predicate(string name, string @operator, object value)
+        /// <param name="condition">Condition in string format.</param>
+        public Condition(string condition)
+            : this()
         {
-            if (Operators.ContainsKey(@operator))
+            if (!string.IsNullOrEmpty(condition))
             {
-                @operator = Operators[@operator];
+                m_expressions.Add(Normalize(condition));
             }
-            m_expressions.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
-            return this;
         }
 
         /// <summary>
@@ -56,6 +42,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition Width(string @operator, object value)
         {
             return Predicate("w", @operator, value);
@@ -66,6 +53,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition InitialWidth(string @operator, object value)
         {
             return Predicate("iw", @operator, value);
@@ -76,6 +64,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition Height(string @operator, object value)
         {
             return Predicate("h", @operator, value);
@@ -86,6 +75,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition InitialHeight(string @operator, object value)
         {
             return Predicate("ih", @operator, value);
@@ -96,6 +86,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition AspectRatio(string @operator, string value)
         {
             return Predicate("ar", @operator, value);
@@ -106,6 +97,7 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition FaceCount(string @operator, object value)
         {
             return Predicate("fc", @operator, value);
@@ -116,9 +108,28 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="operator">Applied operator.</param>
         /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
         public Condition PageCount(string @operator, object value)
         {
             return Predicate("pc", @operator, value);
+        }
+
+        /// <summary>
+        /// Creates a predicate for binary operators.
+        /// </summary>
+        /// <param name="name">A name of parameter.</param>
+        /// <param name="operator">An operator.</param>
+        /// <param name="value">A value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
+        protected Condition Predicate(string name, string @operator, object value)
+        {
+            if (operators.ContainsKey(@operator))
+            {
+                @operator = operators[@operator];
+            }
+
+            m_expressions.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
+            return this;
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Response of transformation update.
     /// </summary>
@@ -39,6 +38,5 @@ namespace CloudinaryDotNet.Actions
         /// </summary>
         [DataMember(Name = "derived")]
         public TransformDerived[] Derived { get; protected set; }
-        
     }
 }

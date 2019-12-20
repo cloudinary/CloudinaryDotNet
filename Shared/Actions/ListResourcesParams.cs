@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CloudinaryDotNet.Actions
+﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Parameters of list resources request.
     /// </summary>
@@ -29,7 +29,7 @@ namespace CloudinaryDotNet.Actions
         public bool Tags { get; set; }
 
         /// <summary>
-        /// If true, include moderation status for each resource. 
+        /// If true, include moderation status for each resource.
         /// </summary>
         public bool Moderations { get; set; }
 
@@ -39,7 +39,7 @@ namespace CloudinaryDotNet.Actions
         public bool Context { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>, 
+        /// When a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
@@ -56,7 +56,7 @@ namespace CloudinaryDotNet.Actions
         public DateTime StartAt { get; set; }
 
         /// <summary>
-        /// Validate object model
+        /// Validate object model.
         /// </summary>
         public override void Check()
         {
@@ -64,15 +64,17 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Maps object model to dictionary of parameters in cloudinary notation
+        /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
-        /// <returns>Sorted dictionary of parameters</returns>
+        /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
+            {
                 AddParam(dict, "max_results", MaxResults.ToString());
+            }
 
             AddParam(dict, "start_at", StartAt);
             AddParam(dict, "next_cursor", NextCursor);
@@ -92,7 +94,7 @@ namespace CloudinaryDotNet.Actions
     public class ListSpecificResourcesParams : ListResourcesParams
     {
         /// <summary>
-        /// Instantiates the <see cref="ListSpecificResourcesParams"/> object.
+        /// Initializes a new instance of the <see cref="ListSpecificResourcesParams"/> class.
         /// </summary>
         public ListSpecificResourcesParams()
         {
@@ -118,7 +120,9 @@ namespace CloudinaryDotNet.Actions
                 AddParam(dict, "public_ids", PublicIds);
 
                 if (dict.ContainsKey("direction"))
+                {
                     dict.Remove("direction");
+                }
             }
 
             return dict;
@@ -162,13 +166,15 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Validate object model.
         /// </summary>
-        /// <exception cref="System.ArgumentException">Tag must be set to list resource by tag!</exception>
+        /// <exception cref="System.ArgumentException">Tag must be set to list resource by tag.</exception>
         public override void Check()
         {
             base.Check();
 
-            if (String.IsNullOrEmpty(Tag))
+            if (string.IsNullOrEmpty(Tag))
+            {
                 throw new ArgumentException("Tag must be set to filter resources by tag!");
+            }
         }
 
         /// <summary>
@@ -180,7 +186,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (dict.ContainsKey("type"))
+            {
                 dict.Remove("type");
+            }
 
             return dict;
         }
@@ -208,8 +216,10 @@ namespace CloudinaryDotNet.Actions
         {
             base.Check();
 
-            if (String.IsNullOrEmpty(ModerationKind))
+            if (string.IsNullOrEmpty(ModerationKind))
+            {
                 throw new ArgumentException("ModerationKind must be set to filter resources by moderation kind/status!");
+            }
         }
 
         /// <summary>
@@ -221,7 +231,9 @@ namespace CloudinaryDotNet.Actions
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             if (dict.ContainsKey("type"))
+            {
                 dict.Remove("type");
+            }
 
             return dict;
         }
