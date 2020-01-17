@@ -13,7 +13,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var targetPublicId = GetUniquePublicId();
             var archiveTag = GetMethodTag();
 
-            var res = UploadImageForTestArchive(archiveTag, 2.0, true);
+            var res = UploadResourceForTestArchive<ImageUploadParams>(archiveTag, true, 2.0);
 
             var parameters = new ArchiveParams()
                                             .Tags(new List<string> { archiveTag, "no_such_tag" })
@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual($"{targetPublicId}.{FILE_FORMAT_ZIP}", result.PublicId);
             Assert.AreEqual(1, result.FileCount);
 
-            var res2 = UploadImageForTestArchive(archiveTag, 500, false);
+            var res2 = UploadResourceForTestArchive<ImageUploadParams>(archiveTag, false, 500);
 
             var transformations = new List<Transformation> { m_simpleTransformation, m_updateTransformation };
             parameters = new ArchiveParams().PublicIds(new List<string> { res.PublicId, res2.PublicId })
@@ -79,33 +79,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestCreateArchiveMultipleResourceTypes()
         {
-            var raw = ApiShared.GetCloudinaryParam(ResourceType.Raw);
-
             var tag = GetMethodTag();
-
-            var rawUploadParams = new RawUploadParams()
-            {
-                File = new FileDescription(m_testPdfPath),
-                Tags = $"{tag},{m_apiTag}"
-            };
-
-            var upRes1 = m_cloudinary.Upload(rawUploadParams, raw);
-
-            var imageUploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = $"{tag},{m_apiTag}"
-            };
-
-            var upRes2 = m_cloudinary.Upload(imageUploadParams);
-
-            var videoUploadParams = new VideoUploadParams()
-            {
-                File = new FileDescription(m_testVideoPath),
-                Tags = $"{tag},{m_apiTag}"
-            };
-
-            var upRes3 = m_cloudinary.Upload(videoUploadParams);
+            var upRes1 = UploadResourceForTestArchive<RawUploadParams>(tag);
+            var upRes2 = UploadResourceForTestArchive<ImageUploadParams>(tag);
+            var upRes3 = UploadResourceForTestArchive<VideoUploadParams>(tag);
 
             var fQPublicIds = new List<string>
             {
@@ -156,110 +133,100 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestDownloadArchiveUrlForImage()
         {
-            var tag = GetMethodTag();
-            var uploadParams = new ImageUploadParams
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = $"{tag},{m_apiTag}"
-            };
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+            var archiveTag = GetMethodTag();
+            var uploadResult = UploadResourceForTestArchive<ImageUploadParams>(archiveTag);
             var publicIds = new List<string> { uploadResult.PublicId };
 
             var archiveParams = new ArchiveParams().PublicIds(publicIds);
             var archiveUrl = m_cloudinary.DownloadArchiveUrl(archiveParams);
 
-            Assert.True(CanArchiveFileBeDownloaded(archiveUrl));
+            Assert.True(UrlExists(archiveUrl));
         }
 
         [Test]
         public void TestDownloadArchiveUrlForVideo()
         {
-            var tag = GetMethodTag();
-            var uploadParams = new VideoUploadParams
-            {
-                File = new FileDescription(m_testVideoPath),
-                Tags = $"{tag},{m_apiTag}"
-            };
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+            var archiveTag = GetMethodTag();
+            var uploadResult = UploadResourceForTestArchive<VideoUploadParams>(archiveTag);
             var publicIds = new List<string> { uploadResult.PublicId };
 
-            var video = ApiShared.GetCloudinaryParam(ResourceType.Video);
-            var archiveParams = new ArchiveParams().ResourceType(video).PublicIds(publicIds);
+            var resourceType = ApiShared.GetCloudinaryParam(ResourceType.Video);
+            var archiveParams = new ArchiveParams().ResourceType(resourceType).PublicIds(publicIds);
             var archiveUrl = m_cloudinary.DownloadArchiveUrl(archiveParams);
 
-            Assert.True(CanArchiveFileBeDownloaded(archiveUrl));
+            Assert.True(UrlExists(archiveUrl));
         }
 
         [Test]
         public void TestDownloadArchiveUrlForRaw()
         {
-            var tag = GetMethodTag();
-            var raw = ApiShared.GetCloudinaryParam(ResourceType.Raw);
-            var uploadParams = new RawUploadParams
-            {
-                File = new FileDescription(m_testPdfPath),
-                Tags = $"{tag},{m_apiTag}"
-            };
-            var uploadResult = m_cloudinary.Upload(uploadParams, raw);
+            var archiveTag = GetMethodTag();
+            var uploadResult = UploadResourceForTestArchive<RawUploadParams>(archiveTag);
             var publicIds = new List<string> { uploadResult.PublicId };
 
-            var archiveParams = new ArchiveParams().ResourceType(raw).PublicIds(publicIds);
+            var resourceType = ApiShared.GetCloudinaryParam(ResourceType.Raw);
+            var archiveParams = new ArchiveParams().ResourceType(resourceType).PublicIds(publicIds);
             var archiveUrl = m_cloudinary.DownloadArchiveUrl(archiveParams);
 
-            Assert.True(CanArchiveFileBeDownloaded(archiveUrl));
+            Assert.True(UrlExists(archiveUrl));
         }
 
         [Test]
         public void TestDownloadZipForImage()
         {
-            var tag = GetMethodTag();
-            var uploadParams = new ImageUploadParams
-            {
-                File = new FileDescription(m_testImagePath),
-                Tags = $"{tag},{m_apiTag}"
-            };
-            m_cloudinary.Upload(uploadParams);
+            var archiveTag = GetMethodTag();
+            UploadResourceForTestArchive<ImageUploadParams>(archiveTag);
+            
+            var archiveUrl = m_cloudinary.DownloadZip(archiveTag, null);
 
-            var archiveUrl = m_cloudinary.DownloadZip(tag, null);
-
-            Assert.True(CanArchiveFileBeDownloaded(archiveUrl));
+            Assert.True(UrlExists(archiveUrl));
         }
 
         [Test]
         public void TestDownloadZipForVideo()
         {
-            var tag = GetMethodTag();
-            var video = ApiShared.GetCloudinaryParam(ResourceType.Video);
-            var uploadParams = new VideoUploadParams
-            {
-                File = new FileDescription(m_testVideoPath),
-                Tags = $"{tag},{m_apiTag}"
-            };
-            m_cloudinary.Upload(uploadParams);
-            
-            var archiveUrl = m_cloudinary.DownloadZip(tag, null, video);
+            var archiveTag = GetMethodTag();
+            UploadResourceForTestArchive<VideoUploadParams>(archiveTag);
+            var resourceType = ApiShared.GetCloudinaryParam(ResourceType.Video);
 
-            Assert.True(CanArchiveFileBeDownloaded(archiveUrl));
-        }
+            var archiveUrl = m_cloudinary.DownloadZip(archiveTag, null, resourceType);
 
-        private ImageUploadResult UploadImageForTestArchive(string archiveTag, double width, bool useFileName)
-        {
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(m_testImagePath),
-                EagerTransforms = new List<Transformation>() { new Transformation().Crop("scale").Width(width) },
-                UseFilename = useFileName,
-                Tags = $"{archiveTag},{m_apiTag}"
-            };
-            return m_cloudinary.Upload(uploadParams);
+            Assert.True(UrlExists(archiveUrl));
         }
 
         private ArchiveParams UploadImageForArchiveAndPrepareParameters(string archiveTag)
         {
-            UploadImageForTestArchive($"{archiveTag},{m_apiTag}", 2.0, true);
+            UploadResourceForTestArchive<ImageUploadParams>($"{archiveTag},{m_apiTag}", true, 2.0);
 
             return new ArchiveParams().Tags(new List<string> { archiveTag, "non-existent-tag" }).
                 TargetTags(new List<string> { m_apiTag }).TargetPublicId(GetUniquePublicId());
+        }
+
+        private RawUploadResult UploadResourceForTestArchive<T>(string archiveTag, bool useFileName = false, double imageWidth = 0.0)
+            where T: RawUploadParams
+        {
+            var filesMap = new Dictionary<Type, string>
+            {
+                {typeof(ImageUploadParams), m_testImagePath},
+                {typeof(VideoUploadParams), m_testVideoPath},
+                {typeof(RawUploadParams), m_testPdfPath}
+            };
+
+            var uploadParams = Activator.CreateInstance<T>();
+            uploadParams.File = new FileDescription(filesMap[typeof(T)]);
+            uploadParams.Tags = $"{archiveTag},{m_apiTag}";
+            uploadParams.UseFilename = useFileName;
+            if (imageWidth > 0 && uploadParams is ImageUploadParams)
+            {
+                (uploadParams as ImageUploadParams).EagerTransforms = new List<Transformation>
+                {
+                    new Transformation().Crop("scale").Width(imageWidth)
+                };
+            }
+
+            return uploadParams.GetType() != typeof(RawUploadParams) ? 
+                m_cloudinary.Upload(uploadParams) :
+                m_cloudinary.Upload(uploadParams, ApiShared.GetCloudinaryParam(ResourceType.Raw));
         }
     }
 }

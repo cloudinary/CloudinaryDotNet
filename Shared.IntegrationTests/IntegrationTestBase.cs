@@ -306,10 +306,10 @@ namespace CloudinaryDotNet.IntegrationTest
             return resources;
         }
 
-        protected bool CanArchiveFileBeDownloaded(string url)
+        protected bool UrlExists(string url)
         {
             var request = WebRequest.Create(new Uri(url));
-            request.Method = "GET";
+            request.Method = "HEAD";
             using (var response = (HttpWebResponse)request.GetResponseAsync().Result)
             {
                 return response.StatusCode == HttpStatusCode.OK;
