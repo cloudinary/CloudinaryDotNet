@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Linq;
+using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -421,6 +423,56 @@ namespace CloudinaryDotNet.Test.Asset
                 request.Headers.UserAgent.ToString());
             StringAssert.IsMatch(@"Test\/1\.0 CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\)",
                 request.Headers.UserAgent.ToString());
+        }
+        
+        [Test]
+        public void TestDownloadArchiveUrl()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123");
+            var parameters = new ArchiveParams().Tags(new List<string> { "some_tag" });
+
+            var urlArchiveImage = cloudinary.DownloadArchiveUrl(parameters);
+            var decodedImageUrl = Uri.UnescapeDataString(urlArchiveImage);
+            var rgImage = Regex.IsMatch(decodedImageUrl, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/generate_archive\?api_key=a&mode=download&signature=\w{40}&tags\[]=some_tag&timestamp=\d{10}");
+            Assert.True(rgImage);
+
+            parameters.ResourceType("video");
+
+            var urlArchiveVideo = cloudinary.DownloadArchiveUrl(parameters);
+            var decodedVideoUrl = Uri.UnescapeDataString(urlArchiveVideo);
+            var regVideo = Regex.IsMatch(decodedVideoUrl, @"https://api\.cloudinary\.com/v1_1/[^/]*/video/generate_archive\?api_key=a&mode=download&signature=\w{40}&tags\[]=some_tag&timestamp=\d{10}");
+            Assert.True(regVideo);
+        }
+        
+        [Test]
+        public void TestDownloadPrivate()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123");
+            var expiresAt = Utils.UnixTimeNowSeconds() + 7200;
+            const string testPublicId = "zihltjwsyczm700kqj1z";
+
+            var urlPrivateImage = cloudinary.DownloadPrivate(testPublicId, expiresAt: expiresAt);
+            var rgImage = Regex.IsMatch(urlPrivateImage, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=a&expires_at=" + expiresAt + @"&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}");
+            Assert.True(rgImage);
+
+            var urlPrivateVideo = cloudinary.DownloadPrivate(testPublicId, expiresAt: expiresAt, resourceType: "video");
+            var rgVideo = Regex.IsMatch(urlPrivateVideo, @"https://api\.cloudinary\.com/v1_1/[^/]*/video/download\?api_key=a&expires_at=" + expiresAt + @"&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}");
+            Assert.True(rgVideo);
+        }
+
+        [Test]
+        public void TestDownloadZip()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123");
+            const string testTag = "api_test_custom1";
+
+            var urlZipImage = cloudinary.DownloadZip(testTag, null);
+            var rgImage = Regex.IsMatch(urlZipImage, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download_tag\.zip\?api_key=a&signature=\w{40}&tag=api_test_custom1&timestamp=\d{10}");
+            Assert.True(rgImage);
+
+            var urlZipVideo = cloudinary.DownloadZip(testTag, null, "video");
+            var rgVideo = Regex.IsMatch(urlZipVideo, @"https://api\.cloudinary\.com/v1_1/[^/]*/video/download_tag\.zip\?api_key=a&signature=\w{40}&tag=api_test_custom1&timestamp=\d{10}");
+            Assert.True(rgVideo);
         }
     }
 }

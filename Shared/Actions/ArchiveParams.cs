@@ -32,6 +32,14 @@
         private List<string> m_targetTags;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ArchiveParams"/> class.
+        /// </summary>
+        public ArchiveParams()
+        {
+            m_resourceType = Constants.RESOURCE_TYPE_IMAGE;
+        }
+
+        /// <summary>
         /// Get a list of Public IDs for the specific assets to be included in the archive.
         /// </summary>
         /// <returns>A list of strings where each element represents Public ID.</returns>

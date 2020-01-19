@@ -140,9 +140,16 @@
         /// <param name="format">Format to download (optional).</param>
         /// <param name="type">The type (optional).</param>
         /// <param name="expiresAt">The date (UNIX time in seconds) for the URL expiration. (optional).</param>
+        /// <param name="resourceType">Resource type (image, video or raw) of files to include in the archive (optional).</param>
         /// <returns>Download URL.</returns>
         /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
-        public string DownloadPrivate(string publicId, bool? attachment = null, string format = "", string type = "", long? expiresAt = null)
+        public string DownloadPrivate(
+            string publicId,
+            bool? attachment = null,
+            string format = "",
+            string type = "",
+            long? expiresAt = null,
+            string resourceType = RESOURCE_TYPE_IMAGE)
         {
             if (string.IsNullOrEmpty(publicId))
             {
@@ -151,7 +158,7 @@
 
             var urlBuilder = new UrlBuilder(
                GetApiUrlV()
-               .ResourceType(RESOURCE_TYPE_IMAGE)
+               .ResourceType(resourceType)
                .Action("download")
                .BuildUrl());
 
@@ -190,16 +197,17 @@
         /// <param name="transform">The transformation.</param>
         /// <returns>Download URL.</returns>
         /// <exception cref="System.ArgumentException">Tag should be specified.</exception>
-        public string DownloadZip(string tag, Transformation transform)
+        /// <param name="resourceType">Resource type (image, video or raw) of files to include in the archive (optional).</param>
+        public string DownloadZip(string tag, Transformation transform, string resourceType = RESOURCE_TYPE_IMAGE)
         {
             if (string.IsNullOrEmpty(tag))
             {
                 throw new ArgumentException("Tag should be specified!");
             }
 
-            UrlBuilder urlBuilder = new UrlBuilder(
+            var urlBuilder = new UrlBuilder(
                GetApiUrlV()
-               .ResourceType(RESOURCE_TYPE_IMAGE)
+               .ResourceType(resourceType)
                .Action("download_tag.zip")
                .BuildUrl());
 
@@ -240,7 +248,7 @@
 
             UrlBuilder urlBuilder = new UrlBuilder(
                 GetApiUrlV().
-                ResourceType(RESOURCE_TYPE_IMAGE).
+                ResourceType(parameters.ResourceType()).
                 Action(ACTION_GENERATE_ARCHIVE).
                 BuildUrl());
 
@@ -616,12 +624,7 @@
         /// <returns>Parsed result of creating the archive.</returns>
         public ArchiveResult CreateArchive(ArchiveParams parameters)
         {
-            Url url = GetApiUrlV().ResourceType(RESOURCE_TYPE_IMAGE).Action(ACTION_GENERATE_ARCHIVE);
-
-            if (!string.IsNullOrEmpty(parameters.ResourceType()))
-            {
-                url.ResourceType(parameters.ResourceType());
-            }
+            var url = m_api.ApiUrlV.ResourceType(parameters.ResourceType()).Action(ACTION_GENERATE_ARCHIVE);
 
             parameters.Mode(ArchiveCallMode.Create);
             return m_api.CallApi<ArchiveResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);

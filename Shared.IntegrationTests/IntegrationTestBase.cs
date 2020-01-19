@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
@@ -303,6 +304,16 @@ namespace CloudinaryDotNet.IntegrationTest
             }
 
             return resources;
+        }
+
+        protected bool UrlExists(string url)
+        {
+            var request = WebRequest.Create(new Uri(url));
+            request.Method = "HEAD";
+            using (var response = (HttpWebResponse)request.GetResponseAsync().Result)
+            {
+                return response.StatusCode == HttpStatusCode.OK;
+            }
         }
 
         #region Unique PublicId's
