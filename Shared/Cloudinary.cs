@@ -958,7 +958,7 @@
         {
             if (parameters == null)
             {
-                throw new ArgumentNullException("parameters", "Upload parameters should be defined");
+                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
             }
 
             string uri = GetApiUrlV()

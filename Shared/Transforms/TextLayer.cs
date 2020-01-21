@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -82,6 +83,7 @@
     /// <summary>
     /// Represents property of the overlay parameter (l_text: in URLs) for placing text as an overlay.
     /// </summary>
+    [SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Reviewed.")]
     public class TextLayer : BaseLayer<TextLayer>
     {
         /// <summary>
@@ -365,7 +367,7 @@
             return base.ToString();
         }
 
-        private string Encode(string text)
+        private static string Encode(string text)
         {
             return Utils.Encode(text)
                 .Replace("%2f", "%252f").Replace("/", "%252f")

@@ -328,7 +328,7 @@
         /// </summary>
         /// <param name="value">Value to escape.</param>
         /// <returns>Escaped value.</returns>
-        private string EscapeSafePairString(string value)
+        private static string EscapeSafePairString(string value)
         {
             return value.Replace(@"=", @"\=");
         }

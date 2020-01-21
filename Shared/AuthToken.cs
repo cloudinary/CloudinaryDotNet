@@ -290,7 +290,7 @@
         /// </summary>
         /// <param name="url">URL for escaping.</param>
         /// <returns>Escaped URL in lowercase.</returns>
-        protected string EscapeUrlToLower(string url)
+        protected static string EscapeUrlToLower(string url)
         {
             var r = new Regex(UNSAFE_RE, RegexOptions.Compiled | RegexOptions.RightToLeft);
             return r.Replace(url, m =>

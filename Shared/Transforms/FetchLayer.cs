@@ -65,7 +65,7 @@
         /// <summary>
         /// Prepare text for Overlay.
         /// </summary>
-        private string UrlEncode(string url)
+        private static string UrlEncode(string url)
         {
             // Microsoft.IdentityModel.Tokens
             // return Base64UrlEncoder.Encode(StringToEncode);

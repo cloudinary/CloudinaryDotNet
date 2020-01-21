@@ -308,7 +308,7 @@
             SetHeadersAndContent(request, extraHeaders, content);
         }
 
-        private StringContent CreateStringContent(SortedDictionary<string, object> parameters) =>
+        private static StringContent CreateStringContent(SortedDictionary<string, object> parameters) =>
             new StringContent(ParamsToJson(parameters), Encoding.UTF8, Constants.CONTENT_TYPE_APPLICATION_JSON);
 
         private static bool IsStringContent(Dictionary<string, string> extraHeaders) =>
@@ -528,7 +528,7 @@
         /// </summary>
         /// <param name="value">URL to be encoded.</param>
         /// <returns>Encoded URL.</returns>
-        protected string EncodeApiUrl(string value)
+        protected static string EncodeApiUrl(string value)
         {
             return WebUtility.UrlEncode(value);
         }
@@ -555,7 +555,7 @@
         /// </summary>
         /// <param name="parameters">Parameters to serialize.</param>
         /// <returns>Serialized parameters as JSON string.</returns>
-        protected string ParamsToJson(SortedDictionary<string, object> parameters)
+        protected static string ParamsToJson(SortedDictionary<string, object> parameters)
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
@@ -578,7 +578,7 @@
         /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
         /// <param name="parameters">Cloudinary upload parameters.</param>
         /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
-        protected SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
+        protected static SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
         {
             if (parameters == null)
             {

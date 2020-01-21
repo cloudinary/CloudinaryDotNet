@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
@@ -104,6 +105,7 @@
         /// </summary>
         /// <param name="s"> The input to compute the hash code for.</param>
         /// <returns>The computed hash code.</returns>
+        [SuppressMessage("Security", "CA5350:DoNotUseWeakCryptographicAlgorithms", Justification = "Reviewed.")]
         internal static byte[] ComputeHash(string s)
         {
             using (var sha1 = SHA1.Create())
