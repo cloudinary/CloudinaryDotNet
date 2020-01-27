@@ -15,7 +15,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="12.0" />
+      <dependency id="Newtonsoft.Json" version="12.0.1" />
     </dependencies>
   </metadata>
   <files>
