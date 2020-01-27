@@ -29,10 +29,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
         private void AssertUsageResult(UsageResult result)
         {
-            Assert.IsNotEmpty(result.Plan);
-            Assert.True(result.Resources > 0);
-            Assert.True(result.Objects.Used < result.Objects.Limit);
-            Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
+            Assert.NotNull(result.LastUpdated);
         }
     }
 }
