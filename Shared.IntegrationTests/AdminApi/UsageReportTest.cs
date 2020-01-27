@@ -29,9 +29,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
         private void AssertUsageResult(UsageResult result)
         {
-            var plans = new List<string>() { "Free", "Advanced" };
-
-            Assert.True(plans.Contains(result.Plan));
+            Assert.IsNotEmpty(result.Plan);
             Assert.True(result.Resources > 0);
             Assert.True(result.Objects.Used < result.Objects.Limit);
             Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
