@@ -1,4 +1,20 @@
 
+1.10.0 / 2020-01-29
+===================
+
+New functionality
+-----------------
+
+  * Add response properties to `SearchResult` and `SearchResource`
+  * Add `resourceType` parameter in archive methods
+
+Other Changes
+-------------
+
+  * Fix NuGet dependency warning
+  * Fix `TestUsage` unit test
+  * Fix code style
+
 1.9.1 / 2019-11-18
 ==================
 
