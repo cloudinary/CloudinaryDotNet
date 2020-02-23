@@ -86,8 +86,11 @@ namespace CloudinaryDotNet.IntegrationTest
         protected Dictionary<StorageType, List<string>> m_publicIdsToClear;
         protected List<object> m_transformationsToClear;
         protected List<string> m_presetsToClear;
+        protected List<string> m_metadataFieldsToClear;
 
         protected enum StorageType { text, sprite, multi, facebook, upload }
+
+        protected string m_uniqueTestId;
 
         [OneTimeSetUp]
         public virtual void Initialize()
@@ -115,6 +118,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
             m_transformationsToClear = new List<object>();
             m_presetsToClear = new List<string>();
+            m_metadataFieldsToClear = new List<string>();
 
             InitializeUniqueNames(assembly.GetName().Name);
         }
@@ -134,6 +138,7 @@ namespace CloudinaryDotNet.IntegrationTest
             m_apiTest2 = m_apiTest + "_2";
             m_folderPrefix = $"test_folder_{m_suffix}";
             m_apiTag = $"{m_test_tag}{m_suffix}_api";
+            m_uniqueTestId = $"{m_test_tag}_{m_suffix}";
 
             m_updateTransformationAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100";
             m_updateTransformation = new Transformation().Width(100).Crop("scale").Overlay(new TextLayer().Text(m_suffix + "_update").FontFamily("Arial").FontSize(60));
@@ -370,6 +375,14 @@ namespace CloudinaryDotNet.IntegrationTest
 
         #endregion
 
+        protected string GetUniqueMetadataFieldLabel(string suffix = "")
+        {
+            var label = $"{m_apiTest}_meta_data_label_{m_metadataFieldsToClear.Count + 1}";
+            if (!string.IsNullOrEmpty(suffix))
+                label = $"{label}_{suffix}";
+            return label;
+        }
+
         [OneTimeTearDown]
         public virtual void Cleanup()
         {
@@ -400,6 +413,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
             m_transformationsToClear.ForEach(t => m_cloudinary.DeleteTransform(t.ToString()));
             m_presetsToClear.ForEach(p => m_cloudinary.DeleteUploadPreset(p));
+            m_metadataFieldsToClear.ForEach(p => m_cloudinary.DeleteMetadataField(p));
         }
     }
 

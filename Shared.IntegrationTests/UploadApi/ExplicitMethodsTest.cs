@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -350,6 +351,45 @@ new GetResourceParams(upResult.PublicId) { DerivedNextCursor = result.DerivedNex
             Assert.AreEqual(4, expResult.ResponsiveBreakpoints[0].Breakpoints.Count);
             Assert.AreEqual(900, expResult.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(100, expResult.ResponsiveBreakpoints[0].Breakpoints[3].Width);
+        }
+
+        [Test]
+        public void TestMetadata()
+        {
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+            });
+
+            var metadataLabel = GetUniqueMetadataFieldLabel("resource_update");
+            var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
+            var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
+
+            Assert.NotNull(metadataResult);
+
+            var metadataFieldId = metadataResult.ExternalId;
+            if (!string.IsNullOrEmpty(metadataFieldId))
+                m_metadataFieldsToClear.Add(metadataFieldId);
+
+            const string metadataValue = "test value";
+            var metadata = new StringDictionary
+            {
+                {metadataFieldId, metadataValue}
+            };
+
+            var explicitResult = m_cloudinary.Explicit(new ExplicitParams(uploadResult.PublicId)
+            {
+                Metadata = metadata,
+                Type = STORAGE_TYPE_UPLOAD
+            });
+
+            Assert.NotNull(explicitResult);
+            Assert.AreEqual(HttpStatusCode.OK, explicitResult.StatusCode);
+
+            var getResult = m_cloudinary.GetResource(new GetResourceParams(uploadResult.PublicId));
+
+            Assert.IsNotNull(getResult);
+            Assert.NotNull(getResult.MetadataFields);
         }
     }
 }
