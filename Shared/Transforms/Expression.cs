@@ -193,5 +193,25 @@
         {
             return new Expression("iar");
         }
+
+        /// <summary>
+        /// Predefined variable 'duration'.
+        /// The current duration of the video.
+        /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
+        public static Expression Duration()
+        {
+            return new Expression("du");
+        }
+
+        /// <summary>
+        /// Predefined variable 'initial duration'.
+        /// The video's initial duration.
+        /// </summary>
+        /// <returns>An expression that represents the variable.</returns>
+        public static Expression InitialDuration()
+        {
+            return new Expression("idu");
+        }
     }
 }
