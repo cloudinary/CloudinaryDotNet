@@ -115,6 +115,28 @@
         }
 
         /// <summary>
+        /// Gets a predicate for duration.
+        /// </summary>
+        /// <param name="operator">Applied operator.</param>
+        /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
+        public Condition Duration(string @operator, object value)
+        {
+            return Predicate("du", @operator, value);
+        }
+
+        /// <summary>
+        /// Gets a predicate for initial duration.
+        /// </summary>
+        /// <param name="operator">Applied operator.</param>
+        /// <param name="value">The compared value.</param>
+        /// <returns>A condition that represents the predicate.</returns>
+        public Condition InitialDuration(string @operator, object value)
+        {
+            return Predicate("idu", @operator, value);
+        }
+
+        /// <summary>
         /// Creates a predicate for binary operators.
         /// </summary>
         /// <param name="name">A name of parameter.</param>
