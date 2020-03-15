@@ -245,14 +245,83 @@ namespace CloudinaryDotNet.Test.Asset
         [Test]
         public void TestInitFromUri()
         {
-            CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary("cloudinary://a:b@test123");
+            var cloudinary = new CloudinaryDotNet.Cloudinary("cloudinary://a:b@test123");
+        }
+
+        [Test]
+        public void TestInitFromUriProperlyFormattedUrl()
+        {
+            var cloudinary = new CloudinaryDotNet.Cloudinary("cloudinary://123456789012345:ALKJdjklLJAjhkKJ45hBK92baj3@test");
+        }
+
+        [Test]
+        public void TestInitFromUriProperlyFormattedUrlAsEnvVar()
+        {
+            Environment.SetEnvironmentVariable("CLOUDINARY_URL", "cloudinary://123456789012345:ALKJdjklLJAjhkKJ45hBK92baj3@test");
+
+            var cloudinary = new CloudinaryDotNet.Cloudinary();
+        }
+
+        [Test]
+        public void TestInitFromUriInsensitiveToCaseUrl()
+        {
+            var cloudinary = new CloudinaryDotNet.Cloudinary("CLOUDINARY://123456789012345:ALKJdjklLJAjhkKJ45hBK92baj3@test");
+        }
+
+        [Test]
+        public void TestInitFromUriInsensitiveToCaseUrlAsEnvVar()
+        {
+            Environment.SetEnvironmentVariable("CLOUDINARY_URL", "CLOUDINARY://123456789012345:ALKJdjklLJAjhkKJ45hBK92baj3@test");
+
+            var cloudinary = new CloudinaryDotNet.Cloudinary();
+        }
+
+        [Test]
+        public void TestInitFromUriEmptyUrl()
+        {
+            var exception = Assert.Throws<ArgumentException>(() => new CloudinaryDotNet.Cloudinary(string.Empty));
+
+            AssertCloudinaryUrlExceptionMessage(exception);
+        }
+
+        [Test]
+        public void TestInitFromUriEmptyUrlAsEnvVar()
+        {
+            Environment.SetEnvironmentVariable("CLOUDINARY_URL", string.Empty);
+
+            var exception = Assert.Throws<ArgumentException>(() => new CloudinaryDotNet.Cloudinary());
+
+            AssertCloudinaryUrlExceptionMessage(exception);
+        }
+
+        [Test]
+        public void TestInitFromUriHttpsProtocol()
+        {
+            var exception = Assert.Throws<ArgumentException>(() => new CloudinaryDotNet.Cloudinary("https://123456789012345:ALKJdjklLJAjhkKJ45hBK92baj3@test?cloudinary=foo"));
+
+            AssertCloudinaryUrlExceptionMessage(exception);
+        }
+
+        [Test]
+        public void TestInitFromUriHttpsProtocolAsEnvVar()
+        {
+            Environment.SetEnvironmentVariable("CLOUDINARY_URL", "https://123456789012345:ALKJdjklLJAjhkKJ45hBK92baj3@test?cloudinary=foo");
+
+            var exception = Assert.Throws<ArgumentException>(() => new CloudinaryDotNet.Cloudinary());
+
+            AssertCloudinaryUrlExceptionMessage(exception);
+        }
+
+        private void AssertCloudinaryUrlExceptionMessage(ArgumentException exception)
+        {
+            Assert.That(exception.Message, Is.EqualTo("Invalid CLOUDINARY_URL scheme. Expecting to start with 'cloudinary://'"));
         }
 
         [Test]
         public void TestInitFromEnvironmentVariable()
         {
             Environment.SetEnvironmentVariable("CLOUDINARY_URL", "cloudinary://a:b@test123");
-            CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary();
+            var cloudinary = new CloudinaryDotNet.Cloudinary();
         }
 
         [Test]
@@ -260,7 +329,7 @@ namespace CloudinaryDotNet.Test.Asset
         {
             // should take secure distribution from url if secure=TRUE
 
-            CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary("cloudinary://a:b@test123/config.secure.distribution.com");
+            var cloudinary = new CloudinaryDotNet.Cloudinary("cloudinary://a:b@test123/config.secure.distribution.com");
             string url = cloudinary.Api.UrlImgUp.BuildUrl("test");
 
             Assert.AreEqual("https://config.secure.distribution.com/image/upload/test", url);
