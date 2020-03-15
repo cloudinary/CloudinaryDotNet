@@ -43,6 +43,12 @@
         }
 
         /// <summary>
+        /// Optional. The specific type of the asset.
+        /// Valid values: upload, private and authenticated. Default: upload.
+        /// </summary>
+        public AssetType Type { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -59,12 +65,14 @@
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             if (PublicIdsExist)
             {
                 dict.Add("public_ids", PublicIds);
             }
+
+            AddParam(dict, "type", Api.GetCloudinaryParam<AssetType>(Type));
 
             return dict;
         }

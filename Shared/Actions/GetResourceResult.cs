@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using Newtonsoft.Json.Linq;
@@ -50,16 +51,36 @@
         public string Type { get; protected set; }
 
         /// <summary>
+        /// The size of the media asset in bytes.
+        /// </summary>
+        [Obsolete("Property Created is deprecated, please use CreatedAt instead")]
+        public string Created
+        {
+            get { return CreatedAt; }
+            set { CreatedAt = value; }
+        }
+
+        /// <summary>
         /// Date when the resource was created.
         /// </summary>
         [DataMember(Name = "created_at")]
-        public string Created { get; protected set; }
+        public string CreatedAt { get; protected set; }
 
         /// <summary>
-        /// Size of the resource in bytes.
+        /// The size of the media asset in bytes.
+        /// </summary>
+        [Obsolete("Property Length is deprecated, please use Bytes instead")]
+        public long Length
+        {
+            get { return Bytes; }
+            set { Bytes = value; }
+        }
+
+        /// <summary>
+        /// The size of the media asset in bytes.
         /// </summary>
         [DataMember(Name = "bytes")]
-        public long Length { get; protected set; }
+        public long Bytes { get; protected set; }
 
         /// <summary>
         /// Parameter "width" of the resource. Not relevant for raw files.
@@ -191,6 +212,12 @@
         /// </summary>
         [DataMember(Name = "pages")]
         public int Pages { get; protected set; }
+
+        /// <summary>
+        /// The accessibility mode of the media asset: public, or authenticated.
+        /// </summary>
+        [DataMember(Name = "access_mode")]
+        public string AccessMode { get; protected set; }
     }
 
     /// <summary>
@@ -224,6 +251,12 @@
         /// </summary>
         [DataMember(Name = "google")]
         public object[][] Google { get; protected set; }
+
+        /// <summary>
+        /// Cloudinary palette details.
+        /// </summary>
+        [DataMember(Name = "cloudinary")]
+        public object[][] Cloudinary { get; protected set; }
     }
 
     /// <summary>
@@ -246,10 +279,20 @@
         public string Format { get; protected set; }
 
         /// <summary>
-        /// Size of the derived asset.
+        /// The size of the media asset in bytes.
+        /// </summary>
+        [Obsolete("Property Length is deprecated, please use Bytes instead")]
+        public long Length
+        {
+            get { return Bytes; }
+            set { Bytes = value; }
+        }
+
+        /// <summary>
+        /// The size of the media asset in bytes.
         /// </summary>
         [DataMember(Name = "bytes")]
-        public long Length { get; protected set; }
+        public long Bytes { get; protected set; }
 
         /// <summary>
         /// Id of the derived resource.

@@ -35,6 +35,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.Null(result.Error);
             Assert.IsTrue(result.Folders.Any(folder => folder.Name == $"{m_folderPrefix}1"));
             Assert.IsTrue(result.Folders.Any(folder => folder.Name == $"{m_folderPrefix}2"));
+            Assert.NotZero(result.TotalCount);
 
             // TODO: fix race here (server might be not updated at this point)
             Thread.Sleep(2000);
@@ -44,6 +45,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(2, result.Folders.Count);
             Assert.AreEqual(subFolder1, result.Folders[0].Path);
             Assert.AreEqual(subFolder2, result.Folders[1].Path);
+            Assert.NotZero(result.TotalCount);
 
             result = m_cloudinary.SubFolders(m_folderPrefix);
 

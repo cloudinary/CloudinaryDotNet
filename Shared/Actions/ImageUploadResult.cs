@@ -86,6 +86,52 @@
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
+        /// Cinemagraph analysis result.
+        /// </summary>
+        [DataMember(Name = "cinemagraph_analysis")]
+        public CinemagraphAnalysisResult CinemagraphAnalysis { get; protected set; }
+
+        /// <summary>
+        /// A key-value pairs of context associated with the resource.
+        /// </summary>
+        [DataMember(Name = "context")]
+        public JToken Context { get; protected set; }
+
+        /// <summary>
+        /// The likelihood that the image is an illustration as opposed to a photograph.
+        /// A value between 0 (photo) and 1.0 (illustration).
+        /// </summary>
+        [DataMember(Name = "illustration_score")]
+        public float IllustrationScore { get; protected set; }
+
+        /// <summary>
+        /// If the image has an alpha (transparency) channel.
+        /// </summary>
+        [DataMember(Name = "semi_transparent")]
+        public bool SemiTransparent { get; protected set; }
+
+        /// <summary>
+        /// If the image only contains a single grayscale channel.
+        /// </summary>
+        [DataMember(Name = "grayscale")]
+        public bool Grayscale { get; protected set; }
+
+        /// <summary>
+        /// The specific type of asset.
+        /// </summary>
+        /// <summary>
+        /// The derived images generated as per the requested eager transformations of the method call.
+        /// </summary>
+        [DataMember(Name = "eager")]
+        public Eager[] Eager { get; protected set; }
+
+        /// <summary>
+        /// The predominant colors in the image according to both a Google palette and a Cloudinary palette.
+        /// </summary>
+        [DataMember(Name = "predominant")]
+        public Predominant Predominant { get; protected set; }
+
+        /// <summary>
         /// Overrides corresponding method of <see cref="BaseResult"/> class.
         /// Populates additional token fields.
         /// </summary>

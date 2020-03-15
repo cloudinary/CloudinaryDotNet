@@ -12,14 +12,34 @@
         /// <summary>
         /// The URL for accessing the created animated GIF.
         /// </summary>
+        [Obsolete("Property Uri is deprecated, please use Url instead")]
+        public Uri Uri
+        {
+            get { return Url; }
+            set { Url = value; }
+        }
+
+        /// <summary>
+        /// The URL for accessing the created animated GIF.
+        /// </summary>
         [DataMember(Name = "url")]
-        public Uri Uri { get; protected set; }
+        public Uri Url { get; protected set; }
+
+        /// <summary>
+        /// The HTTPS URL for securely accessing the created animated GIF.
+        /// </summary>
+        [Obsolete("Property SecureUri is deprecated, please use SecureUrl instead")]
+        public Uri SecureUri
+        {
+            get { return SecureUrl; }
+            set { SecureUrl = value; }
+        }
 
         /// <summary>
         /// The HTTPS URL for securely accessing the created animated GIF.
         /// </summary>
         [DataMember(Name = "secure_url")]
-        public Uri SecureUri { get; protected set; }
+        public Uri SecureUrl { get; protected set; }
 
         /// <summary>
         /// Public ID assigned to the created GIF.

@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -39,8 +40,18 @@
         /// <summary>
         /// Indicates whether the transformation can be used when strict transformations are enabled.
         /// </summary>
+        [Obsolete("Property Strict is deprecated, please use AllowedForStrict instead")]
+        public bool Strict
+        {
+            get { return AllowedForStrict; }
+            set { AllowedForStrict = value; }
+        }
+
+        /// <summary>
+        /// Indicates whether the transformation can be used when strict transformations are enabled.
+        /// </summary>
         [DataMember(Name = "allowed_for_strict")]
-        public bool Strict { get; protected set; }
+        public bool AllowedForStrict { get; protected set; }
 
         /// <summary>
         /// Indicates whether the transformation has been used to create a derived asset.

@@ -57,6 +57,31 @@
         /// The Fully Qualified Public ID.
         /// </summary>
         public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
+
+        /// <summary>
+        /// The accessibility mode of the media asset: public, or authenticated.
+        /// </summary>
+        [DataMember(Name = "access_mode")]
+        public string AccessMode { get; protected set; }
+
+        /// <summary>
+        /// Used to determine whether two versions of an asset are identical.
+        /// </summary>
+        [DataMember(Name = "etag")]
+        public string Etag { get; protected set; }
+
+        /// <summary>
+        /// Indicates if a placeholder (default image) is currently used instead of displaying the image (due to moderation).
+        /// </summary>
+        [DataMember(Name = "placeholder")]
+        public bool Placeholder { get; protected set; }
+
+        /// <summary>
+        /// The name of the media asset when originally uploaded. Relevant when delivering assets
+        /// as attachments (setting the flag transformation parameter to attachment).
+        /// </summary>
+        [DataMember(Name = "original_filename")]
+        public string OriginalFilename { get; protected set; }
     }
 
     /// <summary>

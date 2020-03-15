@@ -30,5 +30,30 @@
         /// </summary>
         [DataMember(Name = "partial")]
         public bool Partial { get; protected set; }
+
+        /// <summary>
+        /// Detailed statistics of deleted resourse.
+        /// </summary>
+        [DataMember(Name = "deleted_counts")]
+        public Dictionary<string, DeletedDataStatistics> DeletedCounts { get; protected set; }
+    }
+
+    /// <summary>
+    /// Parsed result of statistics of deleted resource.
+    /// </summary>
+    [DataContract]
+    public class DeletedDataStatistics
+    {
+        /// <summary>
+        /// Count of original resources deleted.
+        /// </summary>
+        [DataMember(Name = "original")]
+        public int Original { get; protected set; }
+
+        /// <summary>
+        /// Count of derived resources deleted.
+        /// </summary>
+        [DataMember(Name = "derived")]
+        public int Derived { get; protected set; }
     }
 }
