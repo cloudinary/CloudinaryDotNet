@@ -133,6 +133,70 @@ namespace CloudinaryDotNet.Actions
         public bool QualityAnalysis { get; set; }
 
         /// <summary>
+        /// Optional. When applying eager for already existing video transformations, this
+        /// setting indicates whether to force the existing derived video resources to be regenerated.
+        /// Default for videos: false. Note that when specifying existing eager transformations for images,
+        /// corresponding derived images are always regenerated.
+        /// </summary>
+        public bool? Overwrite { get; set; }
+
+        /// <summary>
+        /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
+        /// Supported for images, video, and audio.
+        /// </summary>
+        public bool? Metadata { get; set; }
+
+        /// <summary>
+        /// Optional. An HTTP URL to send notification to (a webhook) when the operation or any additional
+        /// requested asynchronous action is completed. If not specified,
+        /// the response is sent to the global Notification URL (if defined)
+        /// in the Upload settings of your account console.
+        /// </summary>
+        public string NotificationUrl { get; set; }
+
+        /// <summary>
+        /// Optional. Whether to retrieve predominant colors and color histogram of the uploaded image.
+        /// If one or more colors contain an alpha channel, then 8-digit RGBA hex quadruplet values are returned.
+        /// Default: false. Relevant for images only.
+        /// </summary>
+        public bool? Colors { get; set; }
+
+        /// <summary>
+        /// Optional. Whether to return the perceptual hash (pHash) on the uploaded image. The pHash acts
+        /// as a fingerprint that allows checking image similarity. Default: false. Relevant for images only.
+        /// </summary>
+        public bool? Phash { get; set; }
+
+        /// <summary>
+        /// Optional. Whether to return the coordinates of faces contained in an uploaded image
+        /// (automatically detected or manually defined).
+        /// </summary>
+        public bool? Faces { get; set; }
+
+        /// <summary>
+        /// Optional. Sets a quality value to override the value used when the image is encoded
+        /// with Cloudinary's automatic content-aware quality algorithm.
+        /// </summary>
+        public string QualityOverride { get; set; }
+
+        /// <summary>
+        /// Optional. Whether to return a cinemagraph analysis value for the media asset between 0 and 1,
+        /// where 0 means the asset is not a cinemagraph and 1 means the asset is a cinemagraph.
+        /// Default: false. Relevant for animated images and video only. A static image will return 0.
+        /// </summary>
+        public bool? CinemagraphAnalysis { get; set; }
+
+        /// <summary>
+        /// Optional. For all asset types: Set to manual to add the asset to a queue of pending assets that can be moderated
+        /// using the Admin API or the Cloudinary Management Console, or set to metascan to automatically moderate
+        /// the uploaded asset using the MetaDefender Anti-malware Protection add-on.
+        /// For images only: Set to webpurify or aws_rek to automatically moderate the image
+        /// using the WebPurify Image Moderation add-on or the Amazon Rekognition AI Moderation add-on respectively.
+        /// Note: Rejected assets are automatically invalidated on the CDN within approximately ten minutes.
+        /// </summary>
+        public string Moderation { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -160,6 +224,19 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "async", Async);
             AddParam(dict, "quality_analysis", QualityAnalysis);
+            AddParam(dict, "overwrite", Overwrite);
+            AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
+            AddParam(dict, "notification_url", NotificationUrl);
+            AddParam(dict, "quality_override", QualityOverride);
+            AddParam(dict, "moderation", Moderation);
+
+            if (ResourceType == ResourceType.Image)
+            {
+                AddParam(dict, "colors", Colors);
+                AddParam(dict, "phash", Phash);
+                AddParam(dict, "faces", Faces);
+            }
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);

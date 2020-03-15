@@ -169,6 +169,13 @@
         public bool? Phash { get; set; }
 
         /// <summary>
+        /// Optional (Boolean, default: false). Whether to return a cinemagraph analysis value for the media asset
+        /// between 0 and 1, where 0 means the asset is not a cinemagraph and 1 means the asset is a cinemagraph.
+        /// Default: false. Relevant for animated images and video only. A static image will return 0.
+        /// </summary>
+        public bool? CinemagraphAnalysis { get; set; }
+
+        /// <summary>
         /// Optional. Allows to pass a list of ResponsiveBreakpoints parameters to request Cloudinary to automatically
         /// find the best breakpoints.
         /// Relevant for images only.
@@ -200,6 +207,7 @@
             AddParam(dict, "phash", Phash);
             AddParam(dict, "background_removal", BackgroundRemoval);
             AddParam(dict, "return_delete_token", ReturnDeleteToken);
+            AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
 
             if (AutoTagging.HasValue)
             {
