@@ -368,7 +368,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 File = new FileDescription(m_testImagePath),
                 EagerTransforms = new List<Transformation>() { m_simpleTransformation },
                 PublicId = GetUniquePublicId(),
-                Metadata = true,
+                ImageMetadata = true,
                 Exif = true,
                 Colors = true,
                 Tags = m_apiTag,
@@ -381,7 +381,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
 
-            Assert.NotNull(result.Metadata);
+            Assert.NotNull(result.ImageMetadata);
             Assert.NotNull(result.Exif);
             Assert.NotNull(result.Colors);
             Assert.Zero(result.IllustrationScore);

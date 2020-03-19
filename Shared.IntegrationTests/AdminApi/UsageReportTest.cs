@@ -30,15 +30,19 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         private void AssertUsageResult(UsageResult result)
         {
             Assert.True(result.Resources > 0);
-            Assert.True(result.Objects.Used < result.Objects.Limit);
-            Assert.True(result.Bandwidth.Used < result.Bandwidth.Limit);
+            Assert.NotNull(result.Objects);
+            Assert.True(result.Objects.Used > 0);
+            Assert.True(result.Objects.Limit > 0);
+            Assert.NotNull(result.Bandwidth);
+            Assert.True(result.Bandwidth.Limit > 0);
+            Assert.True(result.Bandwidth.Used > 0);
             Assert.NotNull(result.Transformations);
             Assert.NotNull(result.AwsRekModeration);
             Assert.NotNull(result.AdvOcr);
             Assert.NotNull(result.Webpurify);
             Assert.NotNull(result.SearchApi);
             Assert.NotNull(result.MediaLimits);
-            Assert.NotNull(result.MediaLimits.Count > 0);
+            Assert.True(result.MediaLimits.Count > 0);
             Assert.NotNull(result.LastUpdated);
         }
     }

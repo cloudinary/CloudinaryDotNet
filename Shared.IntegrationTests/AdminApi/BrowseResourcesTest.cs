@@ -395,7 +395,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(1200, getResult.Height);
             Assert.AreEqual(FILE_FORMAT_JPG, getResult.Format);
             Assert.AreEqual(1, getResult.Derived.Length);
-            Assert.Null(getResult.Metadata);
+            Assert.Null(getResult.ImageMetadata);
             Assert.NotNull(getResult.Phash);
         }
 
@@ -418,12 +418,12 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             GetResourceResult getResult = m_cloudinary.GetResource(
                 new GetResourceParams(publicId)
                 {
-                    Metadata = true
+                    ImageMetadata = true
                 });
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual(publicId, getResult.PublicId);
-            Assert.NotNull(getResult.Metadata);
+            Assert.NotNull(getResult.ImageMetadata);
             Assert.NotNull(getResult.AccessMode);
         }
 
@@ -444,13 +444,13 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             GetResourceResult getResult = m_cloudinary.GetResource(
                 new GetResourceParams(uploadResult.PublicId)
                 {
-                    Metadata = true,
+                    ImageMetadata = true,
                     Pages = true
                 });
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual(uploadResult.PublicId, getResult.PublicId);
-            Assert.NotNull(getResult.Metadata);
+            Assert.NotNull(getResult.ImageMetadata);
             Assert.AreEqual(uploadResult.Pages, getResult.Pages);
             Assert.AreEqual(getResult.Pages, TEST_PDF_PAGES_COUNT);
         }

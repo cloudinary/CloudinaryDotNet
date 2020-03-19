@@ -144,7 +144,18 @@ namespace CloudinaryDotNet.Actions
         /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
         /// Supported for images, video, and audio.
         /// </summary>
-        public bool? Metadata { get; set; }
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public bool? Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
+        /// Supported for images, video, and audio.
+        /// </summary>
+        public bool? ImageMetadata { get; set; }
 
         /// <summary>
         /// Optional. An HTTP URL to send notification to (a webhook) when the operation or any additional
@@ -225,7 +236,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "async", Async);
             AddParam(dict, "quality_analysis", QualityAnalysis);
             AddParam(dict, "overwrite", Overwrite);
-            AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "image_metadata", ImageMetadata);
             AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
             AddParam(dict, "notification_url", NotificationUrl);
             AddParam(dict, "quality_override", QualityOverride);
