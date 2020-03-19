@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using Newtonsoft.Json.Linq;
@@ -31,8 +32,18 @@
         /// <summary>
         /// Returned metadata for the image. Includes: PixelsPerUnitX, PixelsPerUnitY, PixelUnits, Colorspace, and DPI.
         /// </summary>
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public Dictionary<string, string> Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// Returned metadata for the image. Includes: PixelsPerUnitX, PixelsPerUnitY, PixelUnits, Colorspace, and DPI.
+        /// </summary>
         [DataMember(Name = "image_metadata")]
-        public Dictionary<string, string> Metadata { get; protected set; }
+        public Dictionary<string, string> ImageMetadata { get; protected set; }
 
         /// <summary>
         /// The coordinates of faces contained in an uploaded image.

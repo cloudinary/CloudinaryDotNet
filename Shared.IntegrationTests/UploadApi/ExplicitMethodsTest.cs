@@ -393,7 +393,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var explicitResult = ArrangeAndGetExplicitResult();
 
             Assert.NotZero(explicitResult.Colors.Length);
-            Assert.NotZero(explicitResult.Metadata.Count);
+            Assert.NotZero(explicitResult.ImageMetadata.Count);
             Assert.NotNull(explicitResult.Phash);
             Assert.NotZero(explicitResult.Faces.Length);
             Assert.Zero(explicitResult.CinemagraphAnalysis.CinemagraphScore);
@@ -452,7 +452,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var explicitParams = new ExplicitParams(uploadRes.PublicId)
             {
                 Overwrite = true,
-                Metadata = true,
+                ImageMetadata = true,
                 Colors = true,
                 Phash = true,
                 Faces = true,

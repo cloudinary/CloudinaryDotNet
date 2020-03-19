@@ -131,8 +131,18 @@
         /// <summary>
         /// IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
         /// </summary>
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public Dictionary<string, string> Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
+        /// </summary>
         [DataMember(Name = "image_metadata")]
-        public Dictionary<string, string> Metadata { get; protected set; }
+        public Dictionary<string, string> ImageMetadata { get; protected set; }
 
         /// <summary>
         /// A list of coordinates of detected faces.

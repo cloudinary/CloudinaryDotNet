@@ -41,7 +41,7 @@ namespace CloudinaryDotNet.Actions
         public string Type { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). Deprecated. Use <see cref="Metadata"/> instead.
+        /// Optional (Boolean, default: false). Deprecated. Use <see cref="ImageMetadata"/> instead.
         /// </summary>
         public bool Exif { get; set; }
 
@@ -67,7 +67,18 @@ namespace CloudinaryDotNet.Actions
         /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
         /// Supported for images, video, and audio.
         /// </summary>
-        public bool Metadata { get; set; }
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public bool? Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
+        /// Supported for images, video, and audio.
+        /// </summary>
+        public bool? ImageMetadata { get; set; }
 
         /// <summary>
         /// Optional (Boolean, default: false). If true, include previously specified custom cropping coordinates and
@@ -166,7 +177,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "colors", Colors);
             AddParam(dict, "faces", Faces);
             AddParam(dict, "quality_analysis", QualityAnalysis);
-            AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "image_metadata", ImageMetadata);
             AddParam(dict, "phash", Phash);
             AddParam(dict, "coordinates", Coordinates);
             AddParam(dict, "pages", Pages);
