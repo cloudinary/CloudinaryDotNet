@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet
 {
     using System;
+    using System.Globalization;
     using System.Text.RegularExpressions;
     using System.Web;
 
@@ -61,7 +62,7 @@
                 path = "/Content/cloudinary_cors.html";
             }
 
-            if (Regex.IsMatch(path.ToLower(), "^https?:/.*"))
+            if (Regex.IsMatch(path.ToLower(CultureInfo.InvariantCulture), "^https?:/.*"))
             {
                 return path;
             }

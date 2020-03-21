@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
@@ -296,7 +297,7 @@
             return r.Replace(url, m =>
             {
                 var encodedItem = string.Join(string.Empty, m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2")));
-                return encodedItem.ToLower();
+                return encodedItem.ToLowerInvariant();
             });
         }
 
@@ -307,7 +308,9 @@
             HMACSHA256 hmac = new HMACSHA256(binKey);
             hmac.Initialize();
             byte[] signed = hmac.ComputeHash(buffer);
-            string hex = BitConverter.ToString(signed).Replace("-", string.Empty).ToLower();
+            string hex = BitConverter.ToString(signed)
+                .Replace("-", string.Empty)
+                .ToLowerInvariant();
 
             return hex;
         }

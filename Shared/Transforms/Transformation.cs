@@ -443,7 +443,7 @@
             var dprStr = ToString(dpr);
             if (!string.IsNullOrEmpty(dprStr))
             {
-                if (dprStr.ToLower() == "auto")
+                if (dprStr.ToLowerInvariant() == "auto")
                 {
                     HiDpi = true;
                 }

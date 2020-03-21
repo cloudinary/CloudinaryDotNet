@@ -964,7 +964,7 @@
                 source = string.Empty;
             }
 
-            if (Regex.IsMatch(source.ToLower(), "^https?:/.*") &&
+            if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*") &&
                 (m_action == "upload" || m_action == "asset"))
             {
                 return source;
@@ -1052,7 +1052,7 @@
         {
             CSource src = null;
 
-            if (Regex.IsMatch(source.ToLower(), "^https?:/.*"))
+            if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*"))
             {
                 src = new CSource(Encode(source));
             }
@@ -1104,7 +1104,7 @@
             }
             else
             {
-                if (Regex.IsMatch(m_cloudinaryAddr.ToLower(), "^https?:/.*"))
+                if (Regex.IsMatch(m_cloudinaryAddr.ToLowerInvariant(), "^https?:/.*"))
                 {
                     prefix = m_cloudinaryAddr;
                 }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Text;
@@ -346,7 +347,7 @@
 
             Url url = GetApiUrlV()
                 .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLower())
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                 .Add("publish_resources");
 
             return m_api.CallApiAsync<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null, null, cancellationToken);
@@ -361,7 +362,7 @@
 
             Url url = GetApiUrlV()
                 .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLower())
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                 .Add("publish_resources");
 
             return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
@@ -380,7 +381,7 @@
 
             var url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLower())
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                  .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
@@ -402,7 +403,7 @@
 
             Url url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLower())
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                  .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
@@ -1514,7 +1515,7 @@
                 var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
                 if (name != null)
                 {
-                    url.ResourceType(name.ToLower());
+                    url.ResourceType(name.ToLowerInvariant());
                 }
 
                 return url.BuildUrl();
