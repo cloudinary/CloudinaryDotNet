@@ -407,12 +407,12 @@
         {
             List<string> components = new List<string>();
 
-            if (!string.IsNullOrEmpty(m_fontWeight) && !m_fontWeight.Equals("normal"))
+            if (!string.IsNullOrEmpty(m_fontWeight) && !m_fontWeight.Equals("normal", StringComparison.Ordinal))
             {
                 components.Add(m_fontWeight);
             }
 
-            if (!string.IsNullOrEmpty(m_fontStyle) && !m_fontStyle.Equals("normal"))
+            if (!string.IsNullOrEmpty(m_fontStyle) && !m_fontStyle.Equals("normal", StringComparison.Ordinal))
             {
                 components.Add(m_fontStyle);
             }
@@ -427,7 +427,7 @@
                 components.Add($"hinting_{m_fontHinting}");
             }
 
-            if (!string.IsNullOrEmpty(m_textDecoration) && !m_textDecoration.Equals("none"))
+            if (!string.IsNullOrEmpty(m_textDecoration) && !m_textDecoration.Equals("none", StringComparison.Ordinal))
             {
                 components.Add(m_textDecoration);
             }
@@ -437,7 +437,7 @@
                 components.Add(m_textAlign);
             }
 
-            if (!string.IsNullOrEmpty(m_stroke) && !m_stroke.Equals("none"))
+            if (!string.IsNullOrEmpty(m_stroke) && !m_stroke.Equals("none", StringComparison.Ordinal))
             {
                 components.Add(m_stroke);
             }

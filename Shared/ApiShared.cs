@@ -603,7 +603,7 @@
         {
             List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
             StringBuilder signBase = new StringBuilder(string.Join("&", parameters.
-                                                                   Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
+                                                                   Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s, StringComparison.Ordinal)))
                 .Select(pair =>
                        {
                            var value = pair.Value is IEnumerable<string>
@@ -652,7 +652,7 @@
             };
             var signedParameters = SignParameters(parametersToSign);
 
-            return signature.Equals(signedParameters);
+            return signature.Equals(signedParameters, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -674,7 +674,7 @@
 
             var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}");
 
-            return signature.Equals(payloadHash);
+            return signature.Equals(payloadHash, StringComparison.Ordinal);
         }
 
         /// <summary>

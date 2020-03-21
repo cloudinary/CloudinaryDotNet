@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet
 {
+    using System;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
@@ -528,7 +529,7 @@
                 { // if: "w_gt_1000"
                     var value = segment.Params["if"];
                     string ifValue = value.ToString();
-                    if (ifValue.Equals("end"))
+                    if (ifValue.Equals("end", StringComparison.Ordinal))
                     {
                         break;
                     }
@@ -541,7 +542,7 @@
                     }
 
                     // otherwise keep looking for if_condition
-                    if (!string.Equals("else", ifValue))
+                    if (!string.Equals("else", ifValue, StringComparison.Ordinal))
                     {
                         break;
                     }

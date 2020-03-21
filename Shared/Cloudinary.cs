@@ -3350,7 +3350,7 @@
             sb.Append("<script src=\"");
             sb.Append(dir);
 
-            if (!dir.EndsWith("/") && !dir.EndsWith("\\"))
+            if (!dir.EndsWith("/", StringComparison.Ordinal) && !dir.EndsWith("\\", StringComparison.Ordinal))
             {
                 sb.Append("/");
             }

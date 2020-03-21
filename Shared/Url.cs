@@ -611,7 +611,7 @@
         public string BuildSpriteCss(string source)
         {
             m_action = "sprite";
-            if (!source.EndsWith(".css"))
+            if (!source.EndsWith(".css", StringComparison.Ordinal))
             {
                 FormatValue = "css";
             }
@@ -1342,13 +1342,13 @@
             get
             {
                 string path = Path;
-                return path.Substring(path.LastIndexOf("/") + 1);
+                return path.Substring(path.LastIndexOf("/", StringComparison.Ordinal) + 1);
             }
 
             set
             {
                 string path = Path;
-                path = path.Substring(0, path.LastIndexOf("/"));
+                path = path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal));
                 Path = string.Concat(path, "/", value);
             }
         }

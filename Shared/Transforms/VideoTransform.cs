@@ -563,7 +563,7 @@
 
         private static string NormAutoRangeValue(object objectValue)
         {
-            return objectValue != null && string.Equals(objectValue.ToString(), "auto")
+            return objectValue != null && string.Equals(objectValue.ToString(), "auto", StringComparison.Ordinal)
                               ? objectValue.ToString()
                               : NormRangeValue(objectValue);
         }

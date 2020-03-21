@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
 
@@ -102,12 +103,12 @@
         public override string ToString()
         {
             List<string> components = new List<string>();
-            if (!string.IsNullOrEmpty(m_resourceType) && !m_resourceType.Equals("image"))
+            if (!string.IsNullOrEmpty(m_resourceType) && !m_resourceType.Equals("image", StringComparison.Ordinal))
             {
                 components.Add(m_resourceType);
             }
 
-            if (!string.IsNullOrEmpty(m_type) && !m_type.Equals("upload"))
+            if (!string.IsNullOrEmpty(m_type) && !m_type.Equals("upload", StringComparison.Ordinal))
             {
                 components.Add(m_type);
             }

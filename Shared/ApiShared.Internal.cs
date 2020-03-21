@@ -208,23 +208,23 @@
             }
 
             response?.Headers
-                .Where(_ => _.Key.StartsWith("X-FeatureRateLimit"))
+                .Where(_ => _.Key.StartsWith("X-FeatureRateLimit", StringComparison.Ordinal))
                 .ToList()
                 .ForEach(header =>
                 {
                     var value = header.Value.First();
                     var key = header.Key;
-                    if (key.EndsWith("Limit") && long.TryParse(value, out long l))
+                    if (key.EndsWith("Limit", StringComparison.Ordinal) && long.TryParse(value, out long l))
                     {
                         result.Limit = l;
                     }
 
-                    if (key.EndsWith("Remaining") && long.TryParse(value, out l))
+                    if (key.EndsWith("Remaining", StringComparison.Ordinal) && long.TryParse(value, out l))
                     {
                         result.Remaining = l;
                     }
 
-                    if (key.EndsWith("Reset") && DateTime.TryParse(value, out DateTime t))
+                    if (key.EndsWith("Reset", StringComparison.Ordinal) && DateTime.TryParse(value, out DateTime t))
                     {
                         result.Reset = t;
                     }
