@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters of the request for transformation details.
@@ -47,7 +48,7 @@
 
             if (MaxResults > 0)
             {
-                AddParam(dict, "max_results", MaxResults.ToString());
+                AddParam(dict, "max_results", MaxResults.ToString(CultureInfo.InvariantCulture));
             }
 
             return dict;

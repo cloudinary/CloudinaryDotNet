@@ -2,6 +2,7 @@ namespace CloudinaryDotNet.Actions
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters of the request of resource as well as its derived resources.
@@ -118,7 +119,7 @@ namespace CloudinaryDotNet.Actions
 
             if (MaxResults > 0)
             {
-                AddParam(dict, "max_results", MaxResults.ToString());
+                AddParam(dict, "max_results", MaxResults.ToString(CultureInfo.InvariantCulture));
             }
 
             AddParam(dict, "exif", Exif);

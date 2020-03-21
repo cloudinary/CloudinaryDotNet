@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters of the request for a list of transformation.
@@ -50,12 +51,12 @@
 
             if (MaxResults > 0)
             {
-                AddParam(dict, "max_results", MaxResults.ToString());
+                AddParam(dict, "max_results", MaxResults.ToString(CultureInfo.InvariantCulture));
             }
 
             if (Named.HasValue)
             {
-                AddParam(dict, "named", Named.Value.ToString());
+                AddParam(dict, "named", string.Format(CultureInfo.InvariantCulture, "{0}", Named.Value));
             }
 
             if (!string.IsNullOrWhiteSpace(NextCursor))

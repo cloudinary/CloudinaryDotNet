@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters for Mapping of folders to URL prefixes for dynamic image fetching from existing online locations.
@@ -45,7 +46,8 @@
         {
             if (MaxResults > 500)
             {
-                throw new ArgumentException(string.Format("The maximal count of folders to return is 500, but {0} given!", MaxResults));
+                throw new ArgumentException(
+                    string.Format(CultureInfo.InvariantCulture, "The maximal count of folders to return is 500, but {0} given!", MaxResults));
             }
         }
 

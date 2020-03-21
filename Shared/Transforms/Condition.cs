@@ -1,5 +1,7 @@
 ﻿namespace CloudinaryDotNet
 {
+    using System.Globalization;
+
     /// <summary>
     /// Represents Condition object that can be used in user defined variables and conditional transformations.
     /// </summary>
@@ -150,7 +152,7 @@
                 @operator = operators[@operator];
             }
 
-            m_expressions.Add(string.Format("{0}_{1}_{2}", name, @operator, value));
+            m_expressions.Add(string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", name, @operator, value));
             return this;
         }
     }

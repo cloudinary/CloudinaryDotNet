@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -131,7 +132,7 @@
         /// <returns>The expression with set parameter.</returns>
         public virtual T Value(object value)
         {
-            m_expressions.Add(Convert.ToString(value));
+            m_expressions.Add(Convert.ToString(value, CultureInfo.InvariantCulture));
             return (T)this;
         }
 

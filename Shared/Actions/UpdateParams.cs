@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Text;
     using CloudinaryDotNet.Core;
     using Newtonsoft.Json;
@@ -201,7 +202,7 @@
                 StringBuilder sb = new StringBuilder();
                 foreach (var item in Headers)
                 {
-                    sb.AppendFormat("{0}: {1}\n", item.Key, item.Value);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "{0}: {1}\n", item.Key, item.Value);
                 }
 
                 dict.Add("headers", sb.ToString());

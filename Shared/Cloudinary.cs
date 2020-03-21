@@ -1500,7 +1500,7 @@
             {
                 var buffer = new byte[8];
                 new Random().NextBytes(buffer);
-                return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+                return string.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
             }
 
             /// <summary>

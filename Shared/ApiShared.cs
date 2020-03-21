@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Net.Http;
     using System.Reflection;
@@ -127,6 +128,7 @@
             var frameworkDescription = RuntimeInformation.FrameworkDescription;
 
             USER_AGENT = string.Format(
+                CultureInfo.InvariantCulture,
                 "CloudinaryDotNet/{0}.{1}.{2} ({3})",
                 version.Major,
                 version.Minor,
@@ -607,7 +609,7 @@
                            var value = pair.Value is IEnumerable<string>
                                ? string.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
                                : pair.Value.ToString();
-                           return string.Format("{0}={1}", pair.Key, value);
+                           return string.Format(CultureInfo.InvariantCulture, "{0}={1}", pair.Key, value);
                        })
                 .ToArray()));
 
@@ -617,7 +619,7 @@
             StringBuilder sign = new StringBuilder();
             foreach (byte b in hash)
             {
-                sign.Append(b.ToString("x2"));
+                sign.Append(b.ToString("x2", CultureInfo.InvariantCulture));
             }
 
             return sign.ToString();

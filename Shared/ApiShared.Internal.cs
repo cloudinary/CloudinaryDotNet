@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -256,11 +257,11 @@
             // This is intended for platform information and not individual applications!
             var userPlatform = string.IsNullOrEmpty(UserPlatform)
                 ? USER_AGENT
-                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
+                : string.Format(CultureInfo.InvariantCulture, "{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
             {
@@ -410,7 +411,7 @@
         private static void SetContentForRemoteFile(FileDescription file, MultipartFormDataContent content)
         {
             var strContent = new StringContent(file.FilePath);
-            strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));
+            strContent.Headers.Add("Content-Disposition", string.Format(CultureInfo.InvariantCulture, "form-data; name=\"{0}\"", "file"));
             content.Add(strContent);
         }
 
@@ -425,12 +426,12 @@
                     {
                         foreach (var item in (IEnumerable<string>)param.Value)
                         {
-                            content.Add(new StringContent(item), string.Format("\"{0}\"", string.Concat(param.Key, "[]")));
+                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
                         }
                     }
                     else
                     {
-                        content.Add(new StringContent(param.Value.ToString()), string.Format("\"{0}\"", param.Key));
+                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
                     }
                 }
             }

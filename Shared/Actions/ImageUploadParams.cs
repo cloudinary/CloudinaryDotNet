@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using CloudinaryDotNet.Core;
     using Newtonsoft.Json;
@@ -246,7 +247,8 @@
         {
             return string.Join(
                 "|",
-                this.Select(r => string.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
+                this.Select(r =>
+                    string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray());
         }
     }
 }

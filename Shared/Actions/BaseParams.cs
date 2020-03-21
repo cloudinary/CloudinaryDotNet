@@ -76,7 +76,7 @@
         {
             if (value != DateTime.MinValue)
             {
-                dict.Add(key, value.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                dict.Add(key, value.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture));
             }
         }
 
@@ -149,12 +149,13 @@
             if (coordObj is Rectangle)
             {
                 var rect = (Rectangle)coordObj;
-                dict.Add(key, string.Format("{0},{1},{2},{3}", rect.X, rect.Y, rect.Width, rect.Height));
+                dict.Add(key, string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}", rect.X, rect.Y, rect.Width, rect.Height));
             }
             else if (coordObj is List<Rectangle>)
             {
                 var list = (List<Rectangle>)coordObj;
-                dict.Add(key, string.Join("|", list.Select(r => string.Format("{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray()));
+                dict.Add(key, string.Join("|", list.Select(r =>
+                    string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}", r.X, r.Y, r.Width, r.Height)).ToArray()));
             }
             else
             {

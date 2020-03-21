@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters of generating an image of a given textual string.
@@ -124,7 +125,7 @@
             AddParam(dict, "text", Text);
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "font_family", FontFamily);
-            AddParam(dict, "font_size", FontSize.ToString());
+            AddParam(dict, "font_size", FontSize.ToString(CultureInfo.InvariantCulture));
             AddParam(dict, "font_color", FontColor);
             AddParam(dict, "font_weight", FontWeight);
             AddParam(dict, "font_style", FontStyle);

@@ -93,7 +93,7 @@
                 string[] splittedPair = pair.Split('=');
                 if (splittedPair.Length != 2)
                 {
-                    throw new ArgumentException(string.Format("Couldn't parse '{0}'!", pair));
+                    throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Couldn't parse '{0}'!", pair));
                 }
 
                 Add(splittedPair[0], splittedPair[1]);
@@ -489,7 +489,7 @@
             string ifValue = GetString(m_transformParams, "if");
             if (!string.IsNullOrEmpty(ifValue))
             {
-                components.Insert(0, string.Format("if_{0}", new Condition(ifValue).ToString()));
+                components.Insert(0, string.Format(CultureInfo.InvariantCulture, "if_{0}", new Condition(ifValue).ToString()));
             }
 
             SortedSet<string> varParams = new SortedSet<string>();
@@ -519,7 +519,7 @@
             {
                 if (!string.IsNullOrEmpty(param.Value))
                 {
-                    components.Add(string.Format("{0}_{1}", param.Key, param.Value));
+                    components.Add(string.Format(CultureInfo.InvariantCulture, "{0}_{1}", param.Key, param.Value));
                 }
             }
 
@@ -588,7 +588,7 @@
                 }
                 else
                 {
-                    throw new Exception(string.Format("Couldn't clone parameter '{0}'!", key));
+                    throw new Exception(string.Format(CultureInfo.InvariantCulture, "Couldn't clone parameter '{0}'!", key));
                 }
             }
 

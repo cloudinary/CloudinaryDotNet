@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Runtime.Serialization;
     using CloudinaryDotNet.Core;
@@ -462,7 +463,8 @@
             }
             else
             {
-                throw new NotSupportedException(string.Format("Instance of type {0} is not supported as Transformation!", o.GetType()));
+                throw new NotSupportedException(
+                    string.Format(CultureInfo.InvariantCulture, "Instance of type {0} is not supported as Transformation!", o.GetType()));
             }
         }
     }

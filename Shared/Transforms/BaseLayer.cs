@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet
 {
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Base abstract non-generic class for creating Layers.
@@ -138,7 +139,7 @@
 
             if (!string.IsNullOrEmpty(m_format))
             {
-                transientPublicId = string.Format("{0}.{1}", transientPublicId, m_format);
+                transientPublicId = string.Format(CultureInfo.InvariantCulture, "{0}.{1}", transientPublicId, m_format);
             }
 
             return transientPublicId;

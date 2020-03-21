@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Represents property of the overlay parameter to specify the Url on another image to be added as an overlay.
@@ -42,7 +43,7 @@
             List<string> components = new List<string>();
             if (!string.IsNullOrEmpty(m_url))
             {
-                components.Add(string.Format("fetch:{0}", m_url));
+                components.Add(string.Format(CultureInfo.InvariantCulture, "fetch:{0}", m_url));
             }
 
             return string.Join(":", components.ToArray());

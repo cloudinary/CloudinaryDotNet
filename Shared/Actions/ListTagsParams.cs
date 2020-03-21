@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters of list tags request.
@@ -57,7 +58,7 @@
 
             if (MaxResults > 0)
             {
-                AddParam(dict, "max_results", MaxResults.ToString());
+                AddParam(dict, "max_results", MaxResults.ToString(CultureInfo.InvariantCulture));
             }
 
             AddParam(dict, "next_cursor", NextCursor);

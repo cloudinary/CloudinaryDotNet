@@ -1100,7 +1100,7 @@
                         "res-" + Shard(source) + ".cloudinary.com");
                 }
 
-                prefix = string.Format("https://{0}", privateCdn);
+                prefix = string.Format(CultureInfo.InvariantCulture, "https://{0}", privateCdn);
             }
             else
             {
@@ -1185,7 +1185,7 @@
         private static string Shard(string input)
         {
             uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
-            return ((((hash % 5) + 5) % 5) + 1).ToString();
+            return ((((hash % 5) + 5) % 5) + 1).ToString(CultureInfo.InvariantCulture);
         }
 
         private static string Decode(string input)
@@ -1205,7 +1205,7 @@
                 else
                 {
                     resultStr.Append(input.Substring(pos, ppos - pos));
-                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
+                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                     resultStr.Append(ch);
                     pos = ppos + 3;
                 }
@@ -1222,7 +1222,7 @@
                 if (!IsSafe(ch))
                 {
                     resultStr.Append('%');
-                    resultStr.Append(string.Format("{0:X2}", (short)ch));
+                    resultStr.Append(string.Format(CultureInfo.InvariantCulture, "{0:X2}", (short)ch));
                 }
                 else
                 {

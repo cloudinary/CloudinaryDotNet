@@ -1,5 +1,7 @@
 ﻿namespace CloudinaryDotNet.Core
 {
+    using System.Globalization;
+
     /// <summary>
     /// Stores a set of four integers that represent the location and size of a rectangle.
     /// </summary>
@@ -50,7 +52,7 @@
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{{X={0}, Y={1}, Width={2}, Height={3}}}", X, Y, Width, Height);
+            return string.Format(CultureInfo.InvariantCulture, "{{X={0}, Y={1}, Width={2}, Height={3}}}", X, Y, Width, Height);
         }
     }
 }

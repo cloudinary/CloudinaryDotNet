@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -461,7 +462,7 @@
                 throw new ArgumentException("Must supply fontFamily.");
             }
 
-            components.Insert(0, m_fontSize.ToString());
+            components.Insert(0, m_fontSize.ToString(CultureInfo.InvariantCulture));
             components.Insert(0, m_fontFamily);
 
             return string.Join("_", components);
