@@ -32,6 +32,22 @@
         /// <returns>Updated source definition.</returns>
         public static CSource operator +(CSource src, string value)
         {
+            return OpAddition(src, value);
+        }
+
+        /// <summary>
+        /// Add source value to the source part of the URL.
+        /// </summary>
+        /// <param name="src">Source definition of the URL.</param>
+        /// <param name="value">Source value to add.</param>
+        /// <returns>Updated source definition.</returns>
+        public static CSource Add(CSource src, string value)
+        {
+            return OpAddition(src, value);
+        }
+
+        private static CSource OpAddition(CSource src, string value)
+        {
             src.Source += value;
             src.SourceToSign += value;
 
