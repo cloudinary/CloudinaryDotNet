@@ -40,6 +40,11 @@
         /// <returns>A string that represents additional parameters.</returns>
         public override string AdditionalParams()
         {
+            if (string.IsNullOrEmpty(m_url))
+            {
+                throw new ArgumentException("Must supply url.");
+            }
+
             List<string> components = new List<string>();
             if (!string.IsNullOrEmpty(m_url))
             {
@@ -55,11 +60,6 @@
         /// <returns>A string that represents the layer.</returns>
         public override string ToString()
         {
-            if (string.IsNullOrEmpty(m_url))
-            {
-                throw new ArgumentException("Must supply url.");
-            }
-
             return AdditionalParams();
         }
 

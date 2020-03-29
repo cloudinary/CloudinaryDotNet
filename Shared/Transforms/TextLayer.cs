@@ -338,6 +338,11 @@
         /// <returns>A string that represents additional parameters.</returns>
         public override string AdditionalParams()
         {
+            if (string.IsNullOrEmpty(m_publicId) && string.IsNullOrEmpty(m_text))
+            {
+                throw new ArgumentException("Must supply either text or publicId.");
+            }
+
             List<string> components = new List<string>();
 
             var styleIdentifier = TextStyleIdentifier();
@@ -352,20 +357,6 @@
             }
 
             return string.Join(":", components);
-        }
-
-        /// <summary>
-        /// Get this text layer represented as string.
-        /// </summary>
-        /// <returns>A string that represents the layer.</returns>
-        public override string ToString()
-        {
-            if (string.IsNullOrEmpty(m_publicId) && string.IsNullOrEmpty(m_text))
-            {
-                throw new ArgumentException("Must supply either text or publicId.");
-            }
-
-            return base.ToString();
         }
 
         private static string Encode(string text)
