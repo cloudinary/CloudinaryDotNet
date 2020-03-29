@@ -44,7 +44,7 @@
         /// <summary>
         /// User agent for cloudinary API requests.
         /// </summary>
-        public static string USER_AGENT;
+        public static string USER_AGENT = BuildUserAgent();
 
         private string m_apiAddr = "https://" + ADDR_API;
 
@@ -117,23 +117,20 @@
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
 
-        /// <summary>
-        /// Initializes static members of the <see cref="ApiShared"/> class.
-        /// Default static parameterless constructor.
-        /// </summary>
-        static ApiShared()
+        private static string BuildUserAgent()
         {
             var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
 
             var frameworkDescription = RuntimeInformation.FrameworkDescription;
 
-            USER_AGENT = string.Format(
+            var userAgent = string.Format(
                 CultureInfo.InvariantCulture,
                 "CloudinaryDotNet/{0}.{1}.{2} ({3})",
                 version.Major,
                 version.Minor,
                 version.Build,
                 frameworkDescription);
+            return userAgent;
         }
 
         /// <summary>
