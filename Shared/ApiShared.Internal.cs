@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -19,6 +20,7 @@
     /// <summary>
     /// Provider for the API calls.
     /// </summary>
+    [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Reviewed.")]
     public partial class ApiShared : ISignProvider
     {
         /// <summary>

@@ -305,16 +305,17 @@
 
         private string Digest(string message)
         {
-            byte[] binKey = HexStringToByteArray(this.key);
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(message);
-            HMACSHA256 hmac = new HMACSHA256(binKey);
-            hmac.Initialize();
-            byte[] signed = hmac.ComputeHash(buffer);
-            string hex = BitConverter.ToString(signed)
-                .Replace("-", string.Empty)
-                .ToLowerInvariant();
-
-            return hex;
+            var binKey = HexStringToByteArray(this.key);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(message);
+            using (var hmac = new HMACSHA256(binKey))
+            {
+                hmac.Initialize();
+                var signed = hmac.ComputeHash(buffer);
+                var hex = BitConverter.ToString(signed)
+                    .Replace("-", string.Empty)
+                    .ToLowerInvariant();
+                return hex;
+            }
         }
 
         private AuthToken SetNull()
