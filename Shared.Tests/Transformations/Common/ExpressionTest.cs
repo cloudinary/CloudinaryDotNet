@@ -288,5 +288,16 @@ namespace CloudinaryDotNet.Test.Transformations.Common
 
             Assert.AreEqual(transformationStr, clone.ToString());
         }
+
+        [Test]
+        public void TestShouldNotChangeVariableNamesWhenTheyNamedAfterKeyword()
+        {
+            var transformation = new Transformation()
+                    .Variable("$width", 10)
+                    .Chain()
+                    .Width("$width + 10 + width");
+
+            Assert.AreEqual("$width_10/w_$width_add_10_add_w", transformation.Generate());
+        }
     }
 }
