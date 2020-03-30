@@ -1081,12 +1081,13 @@
         /// <summary>
         /// Async call to get a list of folders in the root asynchronously.
         /// </summary>
+        /// <param name="parameters">(optional) Parameters for managing folders list.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public Task<GetFoldersResult> RootFoldersAsync()
+        public Task<GetFoldersResult> RootFoldersAsync(GetFoldersParams parameters = null)
         {
             return m_api.CallApiAsync<GetFoldersResult>(
                 HttpMethod.GET,
-                GetFolderUrl(),
+                GetFolderUrl(parameters: parameters),
                 null,
                 null);
         }
@@ -1094,10 +1095,15 @@
         /// <summary>
         /// Gets a list of folders in the root.
         /// </summary>
+        /// <param name="parameters">(optional) Parameters for managing folders list.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public GetFoldersResult RootFolders()
+        public GetFoldersResult RootFolders(GetFoldersParams parameters = null)
         {
-            return m_api.CallApi<GetFoldersResult>(HttpMethod.GET, GetFolderUrl(), null, null);
+            return m_api.CallApi<GetFoldersResult>(
+                HttpMethod.GET,
+                GetFolderUrl(parameters: parameters),
+                null,
+                null);
         }
 
         /// <summary>
@@ -1105,14 +1111,15 @@
         /// </summary>
         /// <param name="folder">The folder name.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <param name="parameters">(Optional) Parameters for managing folders list.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public Task<GetFoldersResult> SubFoldersAsync(string folder, CancellationToken? cancellationToken = null)
+        public Task<GetFoldersResult> SubFoldersAsync(string folder, CancellationToken? cancellationToken = null, GetFoldersParams parameters = null)
         {
             CheckFolderParameter(folder);
 
             return m_api.CallApiAsync<GetFoldersResult>(
                 HttpMethod.GET,
-                GetApiUrlV().Add("folders").Add(folder).BuildUrl(),
+                GetFolderUrl(folder, parameters),
                 null,
                 null,
                 null,
@@ -1123,21 +1130,24 @@
         /// Gets a list of subfolders in a specified folder.
         /// </summary>
         /// <param name="folder">The folder name.</param>
+        /// <param name="parameters">(Optional) Parameters for managing folders list.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public GetFoldersResult SubFolders(string folder)
+        public GetFoldersResult SubFolders(string folder, GetFoldersParams parameters = null)
         {
             CheckFolderParameter(folder);
 
             return m_api.CallApi<GetFoldersResult>(
                 HttpMethod.GET,
-                GetFolderUrl(folder),
+                GetFolderUrl(folder, parameters),
                 null,
                 null);
         }
 
-        private string GetFolderUrl(string folder = null)
+        private string GetFolderUrl(string folder = null, GetFoldersParams parameters = null)
         {
-            return GetApiUrlV().Add("folders").Add(folder).BuildUrl();
+            var urlWithoutParams = GetApiUrlV().Add("folders").Add(folder).BuildUrl();
+
+            return (parameters != null) ? new UrlBuilder(urlWithoutParams, parameters.ToParamsDictionary()).ToString() : urlWithoutParams;
         }
 
         private static void CheckFolderParameter(string folder)
