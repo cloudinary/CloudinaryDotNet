@@ -15,7 +15,7 @@
         protected string m_resourceType;
 
         /// <summary>
-        /// Get the cloudinary resource type.
+        /// Gets the cloudinary resource type.
         /// </summary>
         public ResourceType ResourceType
         {

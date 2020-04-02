@@ -40,17 +40,17 @@
             }
 
             /// <summary>
-            /// Url for api call.
+            /// Gets url for api call.
             /// </summary>
             public string Url { get; private set; }
 
             /// <summary>
-            /// Parameters of the upload preset.
+            /// Gets parameters of the upload preset.
             /// </summary>
             public UploadPresetParams ParamsCopy { get; private set; }
 
             /// <summary>
-            /// Http request method.
+            /// Gets http request method.
             /// </summary>
             public HttpMethod HttpMethod { get; private set; }
         }
@@ -81,7 +81,7 @@
         protected Api m_api;
 
         /// <summary>
-        /// API object that used by this instance.
+        /// Gets API object that used by this instance.
         /// </summary>
         public Api Api
         {
@@ -1470,22 +1470,22 @@
             }
 
             /// <summary>
-            /// Buffer size.
+            /// Gets buffer size.
             /// </summary>
             public int BufferSize { get; }
 
             /// <summary>
-            /// Url.
+            /// Gets url.
             /// </summary>
             public string Url { get; }
 
             /// <summary>
-            /// Basic raw upload parameters.
+            /// Gets basic raw upload parameters.
             /// </summary>
             public BasicRawUploadParams Parameters { get; }
 
             /// <summary>
-            /// Request headers.
+            /// Gets request headers.
             /// </summary>
             public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>
             {

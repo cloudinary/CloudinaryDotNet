@@ -24,76 +24,76 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Public id assigned to the requested resource.
+        /// Gets or sets public id assigned to the requested resource.
         /// </summary>
         public string PublicId { get; set; }
 
         /// <summary>
-        /// Optional (String, default: image). The type of file.
+        /// Gets or sets the type of file. Optional (String, default: image).
         /// Possible values: image, raw, video.
         /// Note: Use the video resource type for all video resources as well as for audio files, such as .mp3.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// Optional (String, default: upload). The storage type: upload, private, authenticated, facebook, twitter,
+        /// Gets or sets optional (String, default: upload). The storage type: upload, private, authenticated, facebook, twitter,
         /// gplus, instagram_name, gravatar, youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). Deprecated. Use <see cref="Metadata"/> instead.
+        /// Gets or sets a value indicating whether Exif is used. Optional (Boolean, default: false). Deprecated. Use <see cref="Metadata"/> instead.
         /// </summary>
         public bool Exif { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, include color information: predominant colors and histogram
+        /// Gets or sets a value indicating whether to include color information: predominant colors and histogram. Optional (Boolean, default: false).
         /// of 32 leading colors.
         /// </summary>
         public bool Colors { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, include a list of coordinates of detected faces.
+        /// Gets or sets a value indicating whether to include a list of coordinates of detected faces. Optional (Boolean, default: false).
         /// </summary>
         public bool Faces { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, returns a quality analysis value for the image
+        /// Gets or sets a value indicating whether to return a quality analysis value for the image
         /// between 0 and 1, where 0 means the image is blurry and out of focus and 1 means the image is sharp
-        /// and in focus.
+        /// and in focus. Optional (Boolean, default: false).
         /// </summary>
         public bool QualityAnalysis { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
-        /// Supported for images, video, and audio.
+        /// Gets or sets a value indicating whether to include IPTC, XMP, and detailed Exif metadata.
+        /// Supported for images, video, and audio. Optional (Boolean, default: false).
         /// </summary>
         public bool Metadata { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, include previously specified custom cropping coordinates and
-        /// faces coordinates.
+        /// Gets or sets a value indicating whether to include previously specified custom cropping coordinates and
+        /// faces coordinates. Optional (Boolean, default: false).
         /// </summary>
         public bool Coordinates { get; set; }
 
         /// <summary>
-        /// Optional. The number of derived images to return. Default=10. Maximum=100.
+        /// Gets or sets the number of derived images to return. Default=10. Maximum=100. Optional.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, include the perceptual hash (pHash) of the uploaded photo for
-        /// image similarity detection.
+        /// Gets or sets a value indicating whether to include the perceptual hash (pHash) of the uploaded photo for
+        /// image similarity detection. Optional (Boolean, default: false).
         /// </summary>
         public bool Phash { get; set; }
 
         /// <summary>
-        /// Gets a value indicating the number of pages of a multi-page document.
+        /// Gets or sets a value indicating whether there is a number of pages of a multi-page document.
         /// </summary>
         public bool Pages { get; set; }
 
         /// <summary>
-        /// If there are more derived images than max_results, this is returned as part of the response.
+        /// Gets or sets if there are more derived images than max_results, this is returned as part of the response.
         /// You can then specify this value as the derived_next_cursor parameter of the following listing request.
         /// </summary>
         public string DerivedNextCursor { get; set; }

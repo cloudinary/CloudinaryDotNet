@@ -9,7 +9,7 @@
     public class TransformResult : BaseResult
     {
         /// <summary>
-        /// Result message.
+        /// Gets or sets result message.
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }

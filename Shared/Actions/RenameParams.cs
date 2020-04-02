@@ -21,7 +21,7 @@
         }
 
         /// <summary>
-        /// The current identifier of the uploaded asset.
+        /// Gets or sets the current identifier of the uploaded asset.
         /// </summary>
         /// <value>
         /// Existing public id.
@@ -29,7 +29,7 @@
         public string FromPublicId { get; set; }
 
         /// <summary>
-        /// The new identifier to assign to the uploaded asset.
+        /// Gets or sets the new identifier to assign to the uploaded asset.
         /// </summary>
         /// <value>
         /// Target public id.
@@ -37,25 +37,25 @@
         public string ToPublicId { get; set; }
 
         /// <summary>
-        /// The type of asset to rename.
+        /// Gets or sets the type of asset to rename.
         /// Valid values: image, raw, and video.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// The specific type of the resource.
+        /// Gets or sets the specific type of the resource.
         /// Valid values: upload, private and authenticated.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// The new type for the resource.
+        /// Gets or sets the new type for the resource.
         /// Valid values: upload, private and authenticated.
         /// </summary>
         public string ToType { get; set; }
 
         /// <summary>
-        /// Whether to overwrite an existing asset with the target public ID. Default: false.
+        /// Gets or sets a value indicating whether to overwrite an existing asset with the target public ID. Default: false.
         /// </summary>
         /// <value>
         ///   <c>true</c> to overwrite; otherwise, <c>false</c>.
@@ -63,7 +63,7 @@
         public bool Overwrite { get; set; }
 
         /// <summary>
-        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
+        /// Gets or sets a value indicating whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID. Default: false.
         /// </summary>
         /// <value>
         ///   <c>true</c> to invalidate; otherwise, <c>false</c>.

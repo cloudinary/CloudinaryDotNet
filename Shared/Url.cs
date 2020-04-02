@@ -218,12 +218,12 @@
         }
 
         /// <summary>
-        /// File format of the requested resource.
+        /// Gets or sets file format of the requested resource.
         /// </summary>
         public string FormatValue { get; set; }
 
         /// <summary>
-        /// The transformation to be added to the URL.
+        /// Gets the transformation to be added to the URL.
         /// </summary>
         public Transformation Transformation
         {
@@ -1539,19 +1539,19 @@
     public class VideoSource
     {
         /// <summary>
-        /// One of the HTML5 video tag MIME types: video/mp4, video/webm, video/ogg.
+        /// Gets or sets one of the HTML5 video tag MIME types: video/mp4, video/webm, video/ogg.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// A single value, or a comma-separated list of values identifying the codec(s) that should be used to
+        /// Gets or sets a single value, or a comma-separated list of values identifying the codec(s) that should be used to
         /// generate the video. The codec definition can include additional properties,separated with a dot.
         /// For example, codecs="avc1.42E01E,mp4a.40.2".
         /// </summary>
         public string[] Codecs { get; set; }
 
         /// <summary>
-        /// Transformation, applied to the <see cref="Type"/> in video tag.
+        /// Gets or sets transformation, applied to the <see cref="Type"/> in video tag.
         /// </summary>
         public Transformation Transformation { get; set; }
     }

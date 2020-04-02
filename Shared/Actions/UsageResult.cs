@@ -10,49 +10,49 @@
     public class UsageResult : BaseResult
     {
         /// <summary>
-        /// Your current plan.
+        /// Gets or sets your current plan.
         /// </summary>
         [DataMember(Name = "plan")]
         public string Plan { get; protected set; }
 
         /// <summary>
-        /// Date of the last report update.
+        /// Gets or sets date of the last report update.
         /// </summary>
         [DataMember(Name = "last_updated")]
         public DateTime LastUpdated { get; protected set; }
 
         /// <summary>
-        /// Information about the objects in your account.
+        /// Gets or sets information about the objects in your account.
         /// </summary>
         [DataMember(Name = "objects")]
         public Usage Objects { get; protected set; }
 
         /// <summary>
-        /// Information about usage of bandwith in your account.
+        /// Gets or sets information about usage of bandwith in your account.
         /// </summary>
         [DataMember(Name = "bandwidth")]
         public Usage Bandwidth { get; protected set; }
 
         /// <summary>
-        /// Information about usage of storage in your account.
+        /// Gets or sets information about usage of storage in your account.
         /// </summary>
         [DataMember(Name = "storage")]
         public Usage Storage { get; protected set; }
 
         /// <summary>
-        /// Count of requests used.
+        /// Gets or sets count of requests used.
         /// </summary>
         [DataMember(Name = "requests")]
         public int Requests { get; protected set; }
 
         /// <summary>
-        /// Count of resources in your account.
+        /// Gets or sets count of resources in your account.
         /// </summary>
         [DataMember(Name = "resources")]
         public int Resources { get; protected set; }
 
         /// <summary>
-        /// Count of derived resources.
+        /// Gets or sets count of derived resources.
         /// </summary>
         [DataMember(Name = "derived_resources")]
         public int DerivedResources { get; protected set; }
@@ -65,19 +65,19 @@
     public class Usage
     {
         /// <summary>
-        /// A number of objects in your account.
+        /// Gets or sets a number of objects in your account.
         /// </summary>
         [DataMember(Name = "usage")]
         public long Used { get; protected set; }
 
         /// <summary>
-        /// Current limit of objects for account.
+        /// Gets or sets current limit of objects for account.
         /// </summary>
         [DataMember(Name = "limit")]
         public long Limit { get; protected set; }
 
         /// <summary>
-        /// Current usage percentage.
+        /// Gets or sets current usage percentage.
         /// </summary>
         [DataMember(Name = "used_percent")]
         public float UsedPercent { get; protected set; }

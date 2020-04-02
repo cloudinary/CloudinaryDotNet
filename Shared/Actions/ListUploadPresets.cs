@@ -10,12 +10,12 @@
     public class ListUploadPresetsParams : BaseParams
     {
         /// <summary>
-        /// Optional. Max number of resources to return. Default=10. Maximum=500.
+        /// Gets or sets max number of resources to return. Default=10. Maximum=500. Optional.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// Optional.
+        /// Gets or sets next cursor value.
         /// </summary>
         public string NextCursor { get; set; }
 
@@ -53,13 +53,13 @@
     public class ListUploadPresetsResult : BaseResult
     {
         /// <summary>
-        /// Gets presets.
+        /// Gets or sets presets.
         /// </summary>
         [DataMember(Name = "presets")]
         public List<GetUploadPresetResult> Presets { get; protected set; }
 
         /// <summary>
-        /// Holds the cursor value if there are more presets than <see cref="ListUploadPresetsParams.MaxResults"/>.
+        /// Gets or sets the cursor value if there are more presets than <see cref="ListUploadPresetsParams.MaxResults"/>.
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }

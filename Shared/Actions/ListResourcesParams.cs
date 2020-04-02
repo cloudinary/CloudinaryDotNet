@@ -10,49 +10,49 @@
     public class ListResourcesParams : BaseParams
     {
         /// <summary>
-        /// Type of resource (image, raw).
+        /// Gets or sets type of resource (image, raw).
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// Type of resource (upload, facebook, etc).
+        /// Gets or sets type of resource (upload, facebook, etc).
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// Optional. Max number of resources to return. Default=10. Maximum=500.
+        /// Gets or sets max number of resources to return. Default=10. Maximum=500. Optional.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// If true, include list of tag names assigned for each resource.
+        /// Gets or sets a value indicating whether if true, include list of tag names assigned for each resource.
         /// </summary>
         public bool Tags { get; set; }
 
         /// <summary>
-        /// If true, include moderation status for each resource.
+        /// Gets or sets a value indicating whether if true, include moderation status for each resource.
         /// </summary>
         public bool Moderations { get; set; }
 
         /// <summary>
-        /// If true, include context assigned to each resource.
+        /// Gets or sets a value indicating whether if true, include context assigned to each resource.
         /// </summary>
         public bool Context { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>,
+        /// Gets or sets when a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
         public string NextCursor { get; set; }
 
         /// <summary>
-        /// Sorting direction (could be asc, desc, 1, -1).
+        /// Gets or sets sorting direction (could be asc, desc, 1, -1).
         /// </summary>
         public string Direction { get; set; }
 
         /// <summary>
-        /// List resources uploaded later than <see cref="StartAt"/>.
+        /// Gets or sets list resources uploaded later than <see cref="StartAt"/>.
         /// </summary>
         public DateTime StartAt { get; set; }
 
@@ -136,7 +136,7 @@
     public class ListResourcesByPrefixParams : ListResourcesParams
     {
         /// <summary>
-        /// Find all resources that their public ID starts with the given prefix.
+        /// Gets or sets find all resources that their public ID starts with the given prefix.
         /// </summary>
         public string Prefix { get; set; }
 

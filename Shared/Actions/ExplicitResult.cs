@@ -12,7 +12,7 @@
     public class ExplicitResult : RawUploadResult
     {
         /// <summary>
-        /// The specific type of asset.
+        /// Gets or sets the specific type of asset.
         /// </summary>
         /// <summary>
         /// The derived images generated as per the requested eager transformations of the method call.
@@ -21,24 +21,24 @@
         public Eager[] Eager { get; protected set; }
 
         /// <summary>
-        /// List of responsive breakpoint settings of the asset.
+        /// Gets or sets a list of responsive breakpoint settings of the asset.
         /// </summary>
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
-        /// Status is returned when passing 'Async' argument set to 'true' to the server.
+        /// Gets or sets a status that is returned when passing 'Async' argument set to 'true' to the server.
         /// </summary>
         [DataMember(Name = "status")]
         public string Status { get; protected set; }
 
         /// <summary>
-        /// Any requested information from executing one of the Cloudinary Add-ons on the media asset.
+        /// Gets or sets any requested information from executing one of the Cloudinary Add-ons on the media asset.
         /// </summary>
         [DataMember(Name = "info")]
         public Info Info { get; protected set; }
 
         /// <summary>
-        /// Details of the quality analysis.
+        /// Gets or sets details of the quality analysis.
         /// </summary>
         [DataMember(Name = "quality_analysis")]
         public QualityAnalysis QualityAnalysis { get; protected set; }
@@ -65,13 +65,13 @@
     public class Eager
     {
         /// <summary>
-        /// URL for accessing the asset.
+        /// Gets or sets uRL for accessing the asset.
         /// </summary>
         [DataMember(Name = "url")]
         public Uri Uri { get; protected set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the asset.
+        /// Gets or sets the HTTPS URL for securely accessing the asset.
         /// </summary>
         [DataMember(Name = "secure_url")]
         public Uri SecureUri { get; protected set; }

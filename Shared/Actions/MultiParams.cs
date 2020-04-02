@@ -18,27 +18,27 @@
         }
 
         /// <summary>
-        /// The animated GIF is created from all images with this tag.
+        /// Gets or sets the animated GIF that is created from all images with this tag.
         /// </summary>
         public string Tag { get; set; }
 
         /// <summary>
-        /// (Optional) A transformation to run on all the individual images before creating the animated GIF.
+        /// Gets or sets transformation to run on all the individual images before creating the animated GIF. Optional.
         /// </summary>
         public Transformation Transformation { get; set; }
 
         /// <summary>
-        /// An HTTP or HTTPS URL to notify your application (a webhook) when the process has completed.
+        /// Gets or sets an HTTP or HTTPS URL to notify your application (a webhook) when the process has completed.
         /// </summary>
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// Tells Cloudinary whether to perform the GIF generation in the background (asynchronously). Default: false.
+        /// Gets or sets a value indicating whether to perform the GIF generation in the background (asynchronously). Default: false.
         /// </summary>
         public bool Async { get; set; }
 
         /// <summary>
-        /// Can be set to 'zip' to generate a zip file containing the images instead of an animated GIF file.
+        /// Gets or sets a value that can be set to 'zip' to generate a zip file containing the images instead of an animated GIF file.
         /// Default: gif (deprecated - use the new CreateArchive method to create zip files).
         /// </summary>
         public string Format { get; set; }

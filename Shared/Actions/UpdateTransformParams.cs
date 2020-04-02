@@ -17,7 +17,7 @@
         }
 
         /// <summary>
-        /// Transformation represented as string.
+        /// Gets or sets transformation represented as string.
         /// </summary>
         public string Transformation { get; set; }
 
@@ -30,7 +30,7 @@
         public Transformation UnsafeTransform { get; set; }
 
         /// <summary>
-        /// Whether this transformation is allowed when Strict Transformations are enabled.
+        /// Gets or sets a value indicating whether this transformation is allowed when Strict Transformations are enabled.
         /// </summary>
         public bool Strict { get; set; }
 

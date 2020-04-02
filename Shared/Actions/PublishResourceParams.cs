@@ -19,7 +19,7 @@
         }
 
         /// <summary>
-        /// Publish all resources with the given public IDs.
+        /// Gets or sets a value for publishing all resources with the given public IDs.
         /// </summary>
         public List<string> PublicIds
         {
@@ -28,7 +28,7 @@
         }
 
         /// <summary>
-        /// Publish resources with the given resource type. Default: "image".
+        /// Gets or sets a value for publishing resources with the given resource type. Default: "image".
         /// </summary>
         public ResourceType ResourceType
         {

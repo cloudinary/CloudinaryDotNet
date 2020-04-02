@@ -41,17 +41,17 @@
         }
 
         /// <summary>
-        /// Cloud name.
+        /// Gets or sets cloud name.
         /// </summary>
         public string Cloud { get; set; }
 
         /// <summary>
-        /// API key.
+        /// Gets or sets API key.
         /// </summary>
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// API secret.
+        /// Gets or sets API secret.
         /// </summary>
         public string ApiSecret { get; set; }
     }

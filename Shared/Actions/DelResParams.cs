@@ -22,35 +22,35 @@
         }
 
         /// <summary>
-        /// Optional. The type of file to delete. Default: image.
+        /// Gets or sets the type of file to delete. Default: image. Optional.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// Optional. The storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name,
-        /// gravatar, youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion. Default: upload.
+        /// Gets or sets the storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name,
+        /// gravatar, youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion. Default: upload. Optional.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// If true, delete only the derived images of the matching resources.
+        /// Gets or sets a value indicating whether if true, delete only the derived images of the matching resources.
         /// </summary>
         public bool KeepOriginal { get; set; }
 
         /// <summary>
-        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID.
+        /// Gets or sets a value indicating whether whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID.
         /// Default: false.
         /// </summary>
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// Continue deletion from the given cursor. Notice that it doesn't have a lot of meaning unless the
+        /// Gets or sets whether to continue deletion from the given cursor. Notice that it doesn't have a lot of meaning unless the
         /// <see cref="KeepOriginal"/> flag is set to True.
         /// </summary>
         public string NextCursor { get; set; }
 
         /// <summary>
-        /// Delete all resources with the given public IDs (array of up to 100 public_ids).
+        /// Gets or sets whether to delete all resources with the given public IDs (array of up to 100 public_ids).
         /// </summary>
         public List<string> PublicIds
         {
@@ -69,7 +69,7 @@
         }
 
         /// <summary>
-        /// Delete all resources, including derived resources, where the public ID starts with the given prefix
+        /// Gets or sets whether to delete all resources, including derived resources, where the public ID starts with the given prefix
         /// (up to a maximum of 1000 original resources).
         /// </summary>
         public string Prefix
@@ -89,7 +89,7 @@
         }
 
         /// <summary>
-        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of 1000 original
+        /// Gets or sets whether to delete all resources (and their derivatives) with the given tag name (up to a maximum of 1000 original
         /// resources).
         /// </summary>
         public string Tag
@@ -109,7 +109,7 @@
         }
 
         /// <summary>
-        /// Optional. Get or set whether to delete all resources (of the relevant resource type and type), including
+        /// Gets or sets a value indicating whether optional. Get or set whether to delete all resources (of the relevant resource type and type), including
         /// derived resources (up to a maximum of 1000 original resources). Default: false.
         /// </summary>
         public bool All
@@ -136,7 +136,7 @@
         }
 
         /// <summary>
-        /// Get or set a list of transformations. When provided, only derived resources matched by the transformations
+        /// Gets or sets a list of transformations. When provided, only derived resources matched by the transformations
         /// would be deleted.
         /// </summary>
         public List<Transformation> Transformations { get; set; }

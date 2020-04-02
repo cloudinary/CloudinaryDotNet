@@ -8,27 +8,27 @@
     public class ArchiveResult : BaseResult
     {
         /// <summary>
-        /// The URL for accessing the created archive.
+        /// Gets the URL for accessing the created archive.
         /// </summary>
         public string Url { get; private set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the created archive.
+        /// Gets the HTTPS URL for securely accessing the created archive.
         /// </summary>
         public string SecureUrl { get; private set; }
 
         /// <summary>
-        /// PublicId of the created archive.
+        /// Gets publicId of the created archive.
         /// </summary>
         public string PublicId { get; private set; }
 
         /// <summary>
-        /// Size of the created archive (in bytes).
+        /// Gets size of the created archive (in bytes).
         /// </summary>
         public long Bytes { get; private set; }
 
         /// <summary>
-        /// Count of files in the archive.
+        /// Gets count of files in the archive.
         /// </summary>
         public int FileCount { get; private set; }
 

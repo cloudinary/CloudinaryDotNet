@@ -218,7 +218,7 @@
         }
 
         /// <summary>
-        /// Cloudinary account information.
+        /// Gets cloudinary account information.
         /// </summary>
         public Account Account { get; private set; }
 
@@ -232,7 +232,7 @@
         }
 
         /// <summary>
-        /// Default URL for working with resources.
+        /// Gets default URL for working with resources.
         /// </summary>
         public Url Url
         {
@@ -249,7 +249,7 @@
         }
 
         /// <summary>
-        /// Default URL for working with uploaded images.
+        /// Gets default URL for working with uploaded images.
         /// </summary>
         public Url UrlImgUp
         {
@@ -264,7 +264,7 @@
         }
 
         /// <summary>
-        /// Default URL for working with fetched images.
+        /// Gets default URL for working with fetched images.
         /// </summary>
         public Url UrlImgFetch
         {
@@ -279,7 +279,7 @@
         }
 
         /// <summary>
-        /// Default URL for working with uploaded videos.
+        /// Gets default URL for working with uploaded videos.
         /// </summary>
         public Url UrlVideoUp
         {
@@ -294,7 +294,7 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL.
+        /// Gets default cloudinary API URL.
         /// </summary>
         public Url ApiUrl
         {
@@ -306,7 +306,7 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL for uploading images.
+        /// Gets default cloudinary API URL for uploading images.
         /// </summary>
         public Url ApiUrlImgUp
         {
@@ -319,7 +319,7 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL with version.
+        /// Gets default cloudinary API URL with version.
         /// </summary>
         public Url ApiUrlV
         {
@@ -331,12 +331,12 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL for streaming profiles.
+        /// Gets default cloudinary API URL for streaming profiles.
         /// </summary>
         public Url ApiUrlStreamingProfileV => ApiUrlV.Add(Constants.STREAMING_PROFILE_API_URL);
 
         /// <summary>
-        /// Default cloudinary API URL for uploading images with version.
+        /// Gets default cloudinary API URL for uploading images with version.
         /// </summary>
         public Url ApiUrlImgUpV
         {
@@ -349,7 +349,7 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL for uploading video resources with version.
+        /// Gets default cloudinary API URL for uploading video resources with version.
         /// </summary>
         public Url ApiUrlVideoUpV
         {

@@ -22,23 +22,23 @@
         }
 
         /// <summary>
-        /// The identifier of the uploaded multi-page file (PDF or animated GIF).
+        /// Gets or sets the identifier of the uploaded multi-page file (PDF or animated GIF).
         /// Note: The public ID for images does not include a file extension.
         /// </summary>
         public string PublicId { get; set; }
 
         /// <summary>
-        /// A transformation to run on all the pages before storing them as derived images.
+        /// Gets or sets a transformation to run on all the pages before storing them as derived images.
         /// </summary>
         public Transformation Transformation { get; set; }
 
         /// <summary>
-        /// (Optional) An HTTP or HTTPS URL to notify your application (a webhook) when the process has completed.
+        /// Gets or sets an HTTP or HTTPS URL to notify your application (a webhook) when the process has completed. Optional.
         /// </summary>
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// (Optional) An optional format to convert the images before storing them in your Cloudinary account.
+        /// Gets or sets an optional format to convert the images before storing them in your Cloudinary account. Optional.
         /// Default: png.
         /// </summary>
         public string Format { get; set; }

@@ -29,12 +29,12 @@
         }
 
         /// <summary>
-        /// The text string to generate an image for.
+        /// Gets or sets the text string to generate an image for.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
-        /// The identifier that is used for accessing the generated image. If not specified, a unique identifier is
+        /// Gets or sets the identifier that is used for accessing the generated image. If not specified, a unique identifier is
         /// generated, persistently mapped to the given text and style settings. This way, you can keep using
         /// Cloudinary’s API for generating texts. Cloudinary will make sure not to generate multiple images for the
         /// same text and style.
@@ -42,7 +42,7 @@
         public string PublicId { get; set; }
 
         /// <summary>
-        /// The name of the font family.
+        /// Gets or sets the name of the font family.
         /// Supported font families: Andale Mono, Arial, Arial Black, AvantGarde, Bookman, Century Schoolbook,
         /// Comic Sans MS, Courier, Courier New, DejaVu Sans, DejaVu Sans Mono, DejaVu Serif, Dingbats, Georgia,
         /// Helvetica, Helvetica Narrow, Impact, Liberation Mono, Liberation Sans, Liberation Sans Narrow,
@@ -53,17 +53,17 @@
         public string FontFamily { get; set; }
 
         /// <summary>
-        /// Font size in points. Default: 12.
+        /// Gets or sets font size in points. Default: 12.
         /// </summary>
         public int FontSize { get; set; }
 
         /// <summary>
-        /// Name or RGB representation of the font"s color. For example: "red", "#ff0000". Default: "black".
+        /// Gets or sets name or RGB representation of the font"s color. For example: "red", "#ff0000". Default: "black".
         /// </summary>
         public string FontColor { get; set; }
 
         /// <summary>
-        /// Whether to use a "normal" or a "bold" font. Default: "normal".
+        /// Gets or sets whether to use a "normal" or a "bold" font. Default: "normal".
         /// </summary>
         [Obsolete("Property FontWeitgh is deprecated, please use FontWeight instead")]
         public string FontWeitgh
@@ -73,33 +73,33 @@
         }
 
         /// <summary>
-        /// Whether to use a "normal" or a "bold" font. Default: "normal".
+        /// Gets or sets whether to use a "normal" or a "bold" font. Default: "normal".
         /// </summary>
         public string FontWeight { get; set; }
 
         /// <summary>
-        /// Whether to use a "normal" or an "italic" font. Default: "normal".
+        /// Gets or sets whether to use a "normal" or an "italic" font. Default: "normal".
         /// </summary>
         public string FontStyle { get; set; }
 
         /// <summary>
-        /// Name or RGB representation of the background color of the generated image.
+        /// Gets or sets name or RGB representation of the background color of the generated image.
         /// For example: "red", "#ff0000". Default: "transparent".
         /// </summary>
         public string Background { get; set; }
 
         /// <summary>
-        /// Text opacity value between 0 (invisible) and 100. Default: 100.
+        /// Gets or sets text opacity value between 0 (invisible) and 100. Default: 100.
         /// </summary>
         public string Opacity { get; set; }
 
         /// <summary>
-        /// Optionally add an "underline" to the text. Default: "none".
+        /// Gets or sets optionally add an "underline" to the text. Default: "none".
         /// </summary>
         public string TextDecoration { get; set; }
 
         /// <summary>
-        /// Text alignment for the text. Default: "left".
+        /// Gets or sets text alignment for the text. Default: "left".
         /// </summary>
         public string TextAlign { get; set; }
 

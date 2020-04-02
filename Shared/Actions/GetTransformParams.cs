@@ -18,12 +18,12 @@
         }
 
         /// <summary>
-        /// Name of the transformation.
+        /// Gets or sets name of the transformation.
         /// </summary>
         public string Transformation { get; set; }
 
         /// <summary>
-        /// Max number of derived resources to return. Default=10. Maximum=100.
+        /// Gets or sets max number of derived resources to return. Default=10. Maximum=100.
         /// </summary>
         public int MaxResults { get; set; }
 

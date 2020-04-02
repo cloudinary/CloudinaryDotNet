@@ -17,17 +17,17 @@
         }
 
         /// <summary>
-        /// Max number of transformations to return. Default=10. Maximum=500.
+        /// Gets or sets max number of transformations to return. Default=10. Maximum=500.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// Return named transformations or no.
+        /// Gets or sets whether to return named transformations or not.
         /// </summary>
         public bool? Named { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="MaxResults"/>,
+        /// Gets or sets a value for a situation when a listing request has more results to return than <see cref="MaxResults"/>,
         /// the <see cref="ListTransformsResult.NextCursor"/> value is returned as part of the response. You can then
         /// specify this value as the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>

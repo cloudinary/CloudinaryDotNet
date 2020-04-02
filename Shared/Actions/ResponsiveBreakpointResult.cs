@@ -9,13 +9,13 @@
     public class ResponsiveBreakpointList
     {
         /// <summary>
-        /// Array of responsive breakpoints found.
+        /// Gets or sets array of responsive breakpoints found.
         /// </summary>
         [JsonProperty("breakpoints")]
         public List<Breakpoint> Breakpoints { get; set; }
 
         /// <summary>
-        /// The transformation applied to the image before finding the best breakpoints.
+        /// Gets or sets the transformation applied to the image before finding the best breakpoints.
         /// </summary>
         [JsonProperty("transformation")]
         public string Transformation { get; set; }
@@ -28,31 +28,31 @@
     public class Breakpoint
     {
         /// <summary>
-        /// Width of the image.
+        /// Gets or sets width of the image.
         /// </summary>
         [JsonProperty("width")]
         public int Width { get; set; }
 
         /// <summary>
-        /// Width of the image.
+        /// Gets or sets width of the image.
         /// </summary>
         [JsonProperty("height")]
         public int Height { get; set; }
 
         /// <summary>
-        /// Size of the image.
+        /// Gets or sets size of the image.
         /// </summary>
         [JsonProperty("bytes")]
         public long Bytes { get; set; }
 
         /// <summary>
-        /// The URL for accessing the media asset.
+        /// Gets or sets the URL for accessing the media asset.
         /// </summary>
         [JsonProperty("url")]
         public string Url { get; set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the media asset.
+        /// Gets or sets the HTTPS URL for securely accessing the media asset.
         /// </summary>
         [JsonProperty("secure_url")]
         public string SecureUrl { get; set; }

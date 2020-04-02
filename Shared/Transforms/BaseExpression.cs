@@ -83,7 +83,7 @@
         }
 
         /// <summary>
-        /// Parent transformation this expression belongs to.
+        /// Gets parent transformation this expression belongs to.
         /// </summary>
         protected Transformation Parent { get; private set; }
 

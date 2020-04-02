@@ -9,7 +9,7 @@
     public class TagResult : BaseResult
     {
         /// <summary>
-        /// A list of public IDs (up to 1000) of affected assets.
+        /// Gets or sets a list of public IDs (up to 1000) of affected assets.
         /// </summary>
         [DataMember(Name = "public_ids")]
         public string[] PublicIds { get; protected set; }

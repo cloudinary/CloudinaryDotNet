@@ -10,7 +10,7 @@
     public class GetFoldersResult : BaseResult
     {
         /// <summary>
-        /// List of folders.
+        /// Gets or sets list of folders.
         /// </summary>
         [DataMember(Name = "folders")]
         public List<Folder> Folders { get; set; }
@@ -23,13 +23,13 @@
     public class Folder
     {
         /// <summary>
-        /// Name of the folder.
+        /// Gets or sets name of the folder.
         /// </summary>
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Path to the folder.
+        /// Gets or sets path to the folder.
         /// </summary>
         [DataMember(Name = "path")]
         public string Path { get; set; }

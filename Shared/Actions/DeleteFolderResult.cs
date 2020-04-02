@@ -10,7 +10,7 @@
     public class DeleteFolderResult : BaseResult
     {
         /// <summary>
-        /// The list of media assets requested for deletion, with the status of each asset (deleted unless there was an issue).
+        /// Gets or sets the list of media assets requested for deletion, with the status of each asset (deleted unless there was an issue).
         /// </summary>
         [DataMember(Name = "deleted")]
         public List<string> Deleted { get; protected set; }

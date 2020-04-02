@@ -11,50 +11,50 @@
     public class RawUploadResult : UploadResult
     {
         /// <summary>
-        /// The signature for verifying the response is a valid response from Cloudinary.
+        /// Gets or sets the signature for verifying the response is a valid response from Cloudinary.
         /// </summary>
         [DataMember(Name = "signature")]
         public string Signature { get; protected set; }
 
         /// <summary>
-        /// Storage type.
+        /// Gets or sets storage type.
         /// </summary>
         [DataMember(Name = "type")]
         public string Type { get; protected set; }
 
         /// <summary>
-        /// Type of the uploaded asset.
+        /// Gets or sets type of the uploaded asset.
         /// </summary>
         [DataMember(Name = "resource_type")]
         public string ResourceType { get; protected set; }
 
         /// <summary>
-        /// The array of data received from moderation service.
+        /// Gets or sets the array of data received from moderation service.
         /// </summary>
         [DataMember(Name = "moderation")]
         public List<Moderation> Moderation { get; protected set; }
 
         /// <summary>
-        /// Date when the asset was uploaded.
+        /// Gets or sets date when the asset was uploaded.
         /// </summary>
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt { get; protected set; }
 
         /// <summary>
-        /// The list of tags currently assigned to the asset.
+        /// Gets or sets the list of tags currently assigned to the asset.
         /// </summary>
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
 
         /// <summary>
-        /// An array of access types for the asset. The anonymous access type should also include 'start' and 'end'
+        /// Gets or sets an array of access types for the asset. The anonymous access type should also include 'start' and 'end'
         /// dates (in ISO 8601 format) defining when the resource is publicly available.
         /// </summary>
         [DataMember(Name = "access_control")]
         public List<AccessControlRule> AccessControl { get; protected set; }
 
         /// <summary>
-        /// The Fully Qualified Public ID.
+        /// Gets the Fully Qualified Public ID.
         /// </summary>
         public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
     }
@@ -66,7 +66,7 @@
     public class RawPartUploadResult : RawUploadResult
     {
         /// <summary>
-        /// Id of the uploaded chunk of the asset.
+        /// Gets or sets id of the uploaded chunk of the asset.
         /// </summary>
         [DataMember(Name = "upload_id")]
         public string UploadId { get; protected set; }
