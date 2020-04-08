@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -66,6 +68,88 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.Null(deletionRes.Error);
             Assert.AreEqual(1, deletionRes.Deleted.Count);
             Assert.AreEqual(subFolder1, deletionRes.Deleted[0]);
+        }
+
+        [Test]
+        public void TestCreateFolder()
+        {
+            var testFolderName = $"{m_folderPrefix}_create_folder";
+
+            var createFolderResult = m_cloudinary.CreateFolder(testFolderName);
+
+            AssertCreateFolderResult(createFolderResult);
+
+            Thread.Sleep(2000);
+
+            var deletionResult = m_cloudinary.DeleteFolder(testFolderName);
+
+            AssertFolderDeletionAfterCreate(deletionResult, testFolderName);
+        }
+
+        [Test]
+        public async Task TestCreateFolderAsync()
+        {
+            var testFolderName = $"{m_folderPrefix}_create_folder_async";
+
+            var createFolderResult = await m_cloudinary.CreateFolderAsync(testFolderName);
+
+            AssertCreateFolderResult(createFolderResult);
+
+            Thread.Sleep(2000);
+
+            var deletionResult = await m_cloudinary.DeleteFolderAsync(testFolderName);
+
+            AssertFolderDeletionAfterCreate(deletionResult, testFolderName);
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        public void TestCreateFolderWithNullOrEmptyValue(string testFolderName)
+        {
+            Assert.Throws<ArgumentException>(() => m_cloudinary.CreateFolder(testFolderName));
+        }
+
+        [Test]
+        public void TestCreateFolderWithSubFolders()
+        {
+            var testFolderName = $"{m_folderPrefix}_root_folder";
+            var testSubFolderName = "test_sub_folder";
+            var testPath = $"{testFolderName}/{testSubFolderName}";
+
+            var createFolderResult = m_cloudinary.CreateFolder(testPath);
+
+            AssertCreateFolderResult(createFolderResult);
+            Assert.AreEqual(testSubFolderName, createFolderResult.Name);
+            Assert.AreEqual(testPath, createFolderResult.Path);
+
+            Thread.Sleep(2000);
+
+            var result = m_cloudinary.RootFolders();
+            Assert.Null(result.Error);
+            Assert.IsTrue(result.Folders.Any(folder => folder.Name == testFolderName));
+
+            result = m_cloudinary.SubFolders(testFolderName);
+
+            Assert.AreEqual(1, result.Folders.Count);
+            Assert.IsTrue(result.Folders.Count > 0);
+
+            var deletionResult = m_cloudinary.DeleteFolder(testFolderName);
+
+            AssertFolderDeletionAfterCreate(deletionResult, testFolderName);
+        }
+
+        private void AssertCreateFolderResult(CreateFolderResult createFolderResult)
+        {
+            Assert.NotNull(createFolderResult);
+            Assert.IsTrue(createFolderResult.Success);
+            Assert.NotNull(createFolderResult.Name);
+            Assert.NotNull(createFolderResult.Path);
+        }
+
+        private void AssertFolderDeletionAfterCreate(DeleteFolderResult deletionResult, string testFolderName)
+        {
+            Assert.AreEqual(HttpStatusCode.OK, deletionResult.StatusCode);
+            Assert.IsTrue(deletionResult.Deleted.Any(f => f == testFolderName));
         }
     }
 }
