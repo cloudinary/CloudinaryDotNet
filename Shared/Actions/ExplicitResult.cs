@@ -44,6 +44,12 @@
         public QualityAnalysis QualityAnalysis { get; protected set; }
 
         /// <summary>
+        /// Gets or sets details of cinemagraph analysis for the resource.
+        /// </summary>
+        [DataMember(Name = "cinemagraph_analysis")]
+        public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
+
+        /// <summary>
         /// Overrides corresponding method of <see cref="BaseResult"/> class.
         /// Populates additional token fields.
         /// </summary>

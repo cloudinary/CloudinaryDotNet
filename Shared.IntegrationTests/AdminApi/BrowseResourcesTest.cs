@@ -479,5 +479,24 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsNotEmpty(result.Where(res => res.Type == STORAGE_TYPE_UPLOAD));
             Assert.IsEmpty(result.Where(res => res.Type != STORAGE_TYPE_UPLOAD));
         }
+
+        [Test]
+        public void TestGetResourceCinemagraphAnalysis()
+        {
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag
+            };
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            var getResourceParams = new GetResourceParams(uploadResult.PublicId)
+            {
+                CinemagraphAnalysis = true
+            };
+            var getResult = m_cloudinary.GetResource(getResourceParams);
+
+            Assert.GreaterOrEqual(getResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
     }
 }

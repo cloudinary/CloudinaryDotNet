@@ -191,6 +191,12 @@
         /// </summary>
         [DataMember(Name = "pages")]
         public int Pages { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets details of cinemagraph analysis for the resource.
+        /// </summary>
+        [DataMember(Name = "cinemagraph_analysis")]
+        public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
     }
 
     /// <summary>
@@ -848,5 +854,19 @@
         /// </summary>
         [DataMember(Name = "focus")]
         public double Focus { get; protected set; }
+    }
+
+    /// <summary>
+    /// Details of the cinemagraph analysis.
+    /// </summary>
+    [DataContract]
+    public class CinemagraphAnalysis
+    {
+        /// <summary>
+        /// Gets or sets value between 0-1, where 0 means definitely not a cinemagraph
+        /// and 1 means definitely a cinemagraph).
+        /// </summary>
+        [DataMember(Name = "cinemagraph_score")]
+        public double CinemagraphScore { get; protected set; }
     }
 }

@@ -176,6 +176,14 @@
         public List<ResponsiveBreakpoint> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the animation/video is cinemagraph. Optional (Boolean, default: false).
+        /// If true, returns a cinemagraph analysis value for the animation/video between 0 and 1, where 0 means the video/animation
+        /// is NOT a cinemagraph and 1 means the GIF/video IS a cinemagraph.
+        /// Running cinemagraph analysis on static images returns 0.
+        /// </summary>
+        public bool? CinemagraphAnalysis { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
         /// <returns>Sorted dictionary of parameters.</returns>
@@ -200,6 +208,7 @@
             AddParam(dict, "phash", Phash);
             AddParam(dict, "background_removal", BackgroundRemoval);
             AddParam(dict, "return_delete_token", ReturnDeleteToken);
+            AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
 
             if (AutoTagging.HasValue)
             {

@@ -351,5 +351,29 @@ new GetResourceParams(upResult.PublicId) { DerivedNextCursor = result.DerivedNex
             Assert.AreEqual(900, expResult.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(100, expResult.ResponsiveBreakpoints[0].Breakpoints[3].Width);
         }
+
+        [Test]
+        public void TestCinemagraphAnalysis()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                CinemagraphAnalysis = true,
+                Tags = m_apiTag
+            };
+
+            var uploadRes = m_cloudinary.Upload(uploadParams);
+
+            var explicitParams = new ExplicitParams(uploadRes.PublicId)
+            {
+                CinemagraphAnalysis = true,
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            var explicitResult = m_cloudinary.Explicit(explicitParams);
+
+            Assert.GreaterOrEqual(explicitResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
     }
 }

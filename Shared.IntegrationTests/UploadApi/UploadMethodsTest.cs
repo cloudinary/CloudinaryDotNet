@@ -816,6 +816,36 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(200, result.ResponsiveBreakpoints[0].Breakpoints[4].Width);
         }
 
+        [Test]
+        public void TestUploadVideoCinemagraphAnalysis()
+        {
+            var uploadParams = new VideoUploadParams
+            {
+                File = new FileDescription(m_testVideoPath),
+                Tags = m_apiTag,
+                CinemagraphAnalysis = true
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
+
+        [Test]
+        public void TestUploadImageCinemagraphAnalysis()
+        {
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag,
+                CinemagraphAnalysis = true
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
+
         //[Test]
         //public void TestTextAlign()
         //{

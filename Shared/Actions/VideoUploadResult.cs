@@ -49,6 +49,12 @@
         /// </summary>
         [DataMember(Name = "duration")]
         public double Duration { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets details of cinemagraph analysis for the video.
+        /// </summary>
+        [DataMember(Name = "cinemagraph_analysis")]
+        public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
     }
 
     /// <summary>
