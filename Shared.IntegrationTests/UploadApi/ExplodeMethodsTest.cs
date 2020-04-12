@@ -44,6 +44,22 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertExplodeStatus(result);
         }
 
+        [Test]
+        public async Task TestExplodeTypeParamAsync()
+        {
+            var uploadResult = await UploadTestImageResourceAsync((uploadParams) =>
+            {
+                uploadParams.File = new FileDescription(m_testPdfPath);
+            });
+
+            var explodeParams = CreateExplodeParams(uploadResult.PublicId, m_transformationExplode);
+            explodeParams.Type = AssetType.Upload;
+
+            var result = await m_cloudinary.ExplodeAsync(explodeParams);
+
+            AssertExplodeStatus(result);
+        }
+
         private ExplodeParams CreateExplodeParams(string publicId, Transformation transformation)
         {
             return new ExplodeParams(publicId, transformation);

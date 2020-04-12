@@ -26,6 +26,7 @@
         private string m_notificationUrl;
         private bool m_keepDerived;
         private bool m_skipTransformationName;
+        private bool m_allow_missing;
 
         private string m_targetPublicId;
         private bool m_async;
@@ -468,6 +469,29 @@
         }
 
         /// <summary>
+        /// Allows generation of the archive if any of the supplied Public IDs are not found,
+        /// instead of returning an error.
+        /// </summary>
+        /// <returns>True if any of the supplied Public IDs are not found; otherwise, false.</returns>
+        public bool AllowMissing()
+        {
+            return m_allow_missing;
+        }
+
+        /// <summary>
+        /// Optional. Allows generation of the archive if any of the supplied Public IDs are not found,
+        /// instead of returning an error. Default: false.
+        /// </summary>
+        /// <param name="allowMissing">Flag that allows generation of the archive if any of the supplied Public IDs are not found,
+        /// instead of returning an error. Default: false.</param>
+        /// <returns>The instance of Archive parameters with set parameter.</returns>
+        public ArchiveParams AllowMissing(bool allowMissing)
+        {
+            this.m_allow_missing = allowMissing;
+            return this;
+        }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
         /// <returns>Sorted dictionary of parameters.</returns>
@@ -565,6 +589,11 @@
             if (m_expiresAt > 0 && m_mode == ArchiveCallMode.Download)
             {
                 AddParam(dict, "expires_at", m_expiresAt);
+            }
+
+            if (m_allow_missing)
+            {
+                AddParam(dict, "allow_missing", m_allow_missing);
             }
 
             return dict;

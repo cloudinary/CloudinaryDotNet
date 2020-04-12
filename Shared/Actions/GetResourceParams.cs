@@ -41,7 +41,7 @@ namespace CloudinaryDotNet.Actions
         public string Type { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). Deprecated. Use <see cref="Metadata"/> instead.
+        /// Optional (Boolean, default: false). Deprecated. Use <see cref="ImageMetadata"/> instead.
         /// </summary>
         public bool Exif { get; set; }
 
@@ -67,7 +67,18 @@ namespace CloudinaryDotNet.Actions
         /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
         /// Supported for images, video, and audio.
         /// </summary>
-        public bool Metadata { get; set; }
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public bool? Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
+        /// Supported for images, video, and audio.
+        /// </summary>
+        public bool? ImageMetadata { get; set; }
 
         /// <summary>
         /// Optional (Boolean, default: false). If true, include previously specified custom cropping coordinates and
@@ -98,12 +109,53 @@ namespace CloudinaryDotNet.Actions
         public string DerivedNextCursor { get; set; }
 
         /// <summary>
+        /// Optional. Find all assets with a public ID that starts with the given prefix.
+        /// The assets are sorted by public ID in the response.
+        /// </summary>
+        public string Prefix { get; set; }
+
+        /// <summary>
+        /// Optional. When a request has more results to return than max_results,
+        /// the next_cursor value is returned as part of the response.
+        /// You can then specify this value as the next_cursor parameter of a following request.
+        /// </summary>
+        public string NextCursor { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the animation/video is cinemagraph. Optional (Boolean, default: false).
         /// If true, includes a cinemagraph analysis value for the animation/video between 0 and 1, where 0 means the video/animation
         /// is NOT a cinemagraph and 1 means the GIF/video IS a cinemagraph.
         /// Running cinemagraph analysis on static images returns 0.
         /// </summary>
         public bool? CinemagraphAnalysis { get; set; }
+
+        /// <summary>
+        /// Optional. Get assets that were created since the given timestamp.
+        /// Supported unless prefix or public_ids were specified.
+        /// </summary>
+        public string StartAt { get; set; }
+
+        /// <summary>
+        /// Optional. Control the order of returned assets, according to the created_at date.
+        /// Note: if a prefix is specified, this parameter is ignored and the results
+        /// are sorted by public ID. Possible values: desc or -1 (default), asc or 1.
+        /// </summary>
+        public string Direction { get; set; }
+
+        /// <summary>
+        /// Optional. Whether to include the list of tag names assigned to each asset. Default: false.
+        /// </summary>
+        public bool? Tags { get; set; }
+
+        /// <summary>
+        /// Optional. Whether to include key-value pairs of context associated with each asset. Default: false.
+        /// </summary>
+        public bool? Context { get; set; }
+
+        /// <summary>
+        /// Optional. Whether to include the image moderation status of each asset. Default: false.
+        /// </summary>
+        public bool? Moderation { get; set; }
 
         /// <summary>
         /// Validate object model.
@@ -133,12 +185,19 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "colors", Colors);
             AddParam(dict, "faces", Faces);
             AddParam(dict, "quality_analysis", QualityAnalysis);
-            AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "image_metadata", ImageMetadata);
             AddParam(dict, "phash", Phash);
             AddParam(dict, "coordinates", Coordinates);
             AddParam(dict, "pages", Pages);
             AddParam(dict, "derived_next_cursor", DerivedNextCursor);
             AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
+            AddParam(dict, "tags", Tags);
+            AddParam(dict, "context", Context);
+            AddParam(dict, "moderation", Moderation);
+            AddParam(dict, "prefix", Prefix);
+            AddParam(dict, "next_cursor", NextCursor);
+            AddParam(dict, "start_at", StartAt);
+            AddParam(dict, "direction", Direction);
 
             return dict;
         }

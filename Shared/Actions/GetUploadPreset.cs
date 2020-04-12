@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Runtime.Serialization;
     using Newtonsoft.Json.Linq;
 
@@ -191,8 +192,18 @@
         /// <summary>
         /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public bool Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// </summary>
         [DataMember(Name = "image_metadata")]
-        public bool Metadata { get; protected set; }
+        public bool ImageMetadata { get; protected set; }
 
         /// <summary>
         /// Whether to generate the eager transformations asynchronously in the background after the upload request is

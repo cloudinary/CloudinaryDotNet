@@ -27,6 +27,13 @@
         public int MaxResults { get; set; }
 
         /// <summary>
+        /// Optional. When a request has more results to return than max_results,
+        /// the next_cursor value is returned as part of the response.
+        /// You can then specify this value as the next_cursor parameter of a following request.
+        /// </summary>
+        public string NextCursor { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -49,6 +56,8 @@
             {
                 AddParam(dict, "max_results", MaxResults.ToString());
             }
+
+            AddParam(dict, "next_cursor", NextCursor);
 
             return dict;
         }
