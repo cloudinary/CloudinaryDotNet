@@ -470,14 +470,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestCinemagraphAnalysis()
         {
-            var uploadParams = new ImageUploadParams()
+            var uploadRes = UploadTestImageResource(uploadParams =>
             {
-                File = new FileDescription(m_testImagePath),
-                CinemagraphAnalysis = true,
-                Tags = m_apiTag
-            };
-
-            var uploadRes = m_cloudinary.Upload(uploadParams);
+                uploadParams.CinemagraphAnalysis = true;
+            });
 
             var explicitParams = new ExplicitParams(uploadRes.PublicId)
             {

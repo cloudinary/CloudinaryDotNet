@@ -881,14 +881,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestUploadVideoCinemagraphAnalysis()
         {
-            var uploadParams = new VideoUploadParams
+            var uploadResult = UploadTestVideoResource(uploadParams =>
             {
-                File = new FileDescription(m_testVideoPath),
-                Tags = m_apiTag,
-                CinemagraphAnalysis = true
-            };
-
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+                uploadParams.CinemagraphAnalysis = true;
+            });
 
             Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
         }
@@ -896,14 +892,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test]
         public void TestUploadImageCinemagraphAnalysis()
         {
-            var uploadParams = new ImageUploadParams
+            var uploadResult = UploadTestImageResource(uploadParams =>
             {
-                File = new FileDescription(m_testImagePath),
-                Tags = m_apiTag,
-                CinemagraphAnalysis = true
-            };
-
-            var uploadResult = m_cloudinary.Upload(uploadParams);
+                uploadParams.CinemagraphAnalysis = true;
+            });
 
             Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
         }
