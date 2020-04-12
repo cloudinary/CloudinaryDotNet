@@ -142,13 +142,15 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
         private void AssertGetResourceResultAfterDeletion(GetResourceResult resource_backup)
         {
-            Assert.AreEqual(0, resource_backup.Length);
+            Assert.AreEqual(0, resource_backup.Bytes);
         }
 
         private void AssertRestoreResult(RestoreResult rResult_backup, string publicId)
         {
             Assert.IsNotNull(rResult_backup.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId));
             Assert.AreEqual(publicId, rResult_backup.JsonObj[publicId]["public_id"].ToString());
+            Assert.NotNull(rResult_backup.RestoredResources);
+            Assert.IsTrue(rResult_backup.RestoredResources.Count > 0);
         }
 
         private void AssertGetResourceResultAfterRestore(GetResourceResult resource_backup)

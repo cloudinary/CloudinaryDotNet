@@ -94,6 +94,12 @@ namespace CloudinaryDotNet.Test.Transformations.Common
 
             transformation = new Transformation().IfCondition().AspectRatio("gt", "3:4").And().InitialHeight(">", 100).And().InitialWidth("<", 500).Then().Width(100).Crop("scale");
             Assert.AreEqual("if_ar_gt_3:4_and_ih_gt_100_and_iw_lt_500,c_scale,w_100", transformation.ToString(), "passing an operator and a value adds a condition");
+
+            transformation = new Transformation().IfCondition().InitialDuration(">", 30).And().InitialHeight(">", 100).And().InitialWidth("<", 500).Then().Width(100).Crop("scale");
+            Assert.AreEqual("if_idu_gt_30_and_ih_gt_100_and_iw_lt_500,c_scale,w_100", transformation.ToString(), "passing an operator and a value adds a condition");
+
+            transformation = new Transformation().IfCondition().Duration("<", 30).And().InitialHeight(">", 100).And().InitialWidth("<", 500).Then().Width(100).Crop("scale");
+            Assert.AreEqual("if_du_lt_30_and_ih_gt_100_and_iw_lt_500,c_scale,w_100", transformation.ToString(), "passing an operator and a value adds a condition");
         }
 
         [Test]
@@ -155,7 +161,19 @@ namespace CloudinaryDotNet.Test.Transformations.Common
                                     "_ar_gt_3:4_and" +
                                     "_iar_gt_3:4_and" +
                                     "_h_lt_iw_div_2_add_1_and" +
-                                    "_w_lt_ih_sub_$foo" +
+                                    "_w_lt_ih_sub_$foo_and" +
+                                    "_du_eq_$foo_and" +
+                                    "_du_ne_$foo_and" +
+                                    "_du_lt_30_and" +
+                                    "_du_lte_$foo_and" +
+                                    "_du_gt_30_and" +
+                                    "_du_gte_$foo_and" +
+                                    "_idu_eq_$foo_and" +
+                                    "_idu_ne_$foo_and" +
+                                    "_idu_lt_30_and" +
+                                    "_idu_lte_$foo_and" +
+                                    "_idu_gt_30_and" +
+                                    "_idu_gte_$foo" +
                                     "/c_scale,l_$foostr,w_$foo_mul_200_div_fc/if_end";
 
             var transformation = new Transformation()
@@ -181,6 +199,18 @@ namespace CloudinaryDotNet.Test.Transformations.Common
                         .And().Value(Expression.AspectRatioOfInitialImage().Gt().Value("3:4"))
                         .And().Value(Expression.Height().Lt(Expression.InitialWidth().Div().Value(2).Add().Value(1)))
                         .And().Value(Expression.Width().Lt(Expression.InitialHeight().Sub().Value("$foo")))
+                        .And().Value(Expression.Duration().Eq().Value("$foo"))
+                        .And().Value(Expression.Duration().Ne().Value("$foo"))
+                        .And().Value(Expression.Duration().Lt().Value(30))
+                        .And().Value(Expression.Duration().Lte().Value("$foo"))
+                        .And().Value(Expression.Duration().Gt().Value(30))
+                        .And().Value(Expression.Duration().Gte().Value("$foo"))
+                        .And().Value(Expression.InitialDuration().Eq().Value("$foo"))
+                        .And().Value(Expression.InitialDuration().Ne().Value("$foo"))
+                        .And().Value(Expression.InitialDuration().Lt().Value(30))
+                        .And().Value(Expression.InitialDuration().Lte().Value("$foo"))
+                        .And().Value(Expression.InitialDuration().Gt().Value(30))
+                        .And().Value(Expression.InitialDuration().Gte().Value("$foo"))
                 )
                 .Crop("scale")
                 .Width(new Condition("$foo * 200 / faceCount"))
@@ -257,6 +287,17 @@ namespace CloudinaryDotNet.Test.Transformations.Common
             expression.Gt(2);
 
             Assert.AreEqual(transformationStr, clone.ToString());
+        }
+
+        [Test]
+        public void TestShouldNotChangeVariableNamesWhenTheyNamedAfterKeyword()
+        {
+            var transformation = new Transformation()
+                    .Variable("$width", 10)
+                    .Chain()
+                    .Width("$width + 10 + width");
+
+            Assert.AreEqual("$width_10/w_$width_add_10_add_w", transformation.Generate());
         }
     }
 }

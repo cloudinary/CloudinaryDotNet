@@ -155,9 +155,9 @@
         /// <param name="cloudinaryUrl">Cloudinary URL.</param>
         public ApiShared(string cloudinaryUrl)
         {
-            if (string.IsNullOrEmpty(cloudinaryUrl))
+            if (string.IsNullOrEmpty(cloudinaryUrl) || !cloudinaryUrl.StartsWith("cloudinary://", StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException("Valid cloudinary init string must be provided!");
+                throw new ArgumentException("Invalid CLOUDINARY_URL scheme. Expecting to start with 'cloudinary://'");
             }
 
             Uri cloudinaryUri = new Uri(cloudinaryUrl);

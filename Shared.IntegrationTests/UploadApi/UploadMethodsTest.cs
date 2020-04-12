@@ -111,6 +111,25 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         }
 
         [Test]
+        public void TestUploadResultCinemagraphAnalysis()
+        {
+            var imageFileName = GetUniquePublicId(StorageType.upload, FILE_FORMAT_JPG);
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(imageFileName, m_testImagePath),
+                Tags = m_apiTag,
+                UseFilename = true,
+                UniqueFilename = false,
+                CinemagraphAnalysis = true
+            };
+
+            var uploadResultImage = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(imageFileName, uploadResultImage.PublicId);
+            Assert.Zero(uploadResultImage.CinemagraphAnalysis.CinemagraphScore);
+        }
+
+        [Test]
         public void TestUploadLocalPDFPages()
         {
             var uploadParams = new ImageUploadParams()
@@ -184,6 +203,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual("aac", uploadResult.Audio.Codec);
             Assert.NotNull(uploadResult.Video);
             Assert.AreEqual("h264", uploadResult.Video.Codec);
+            Assert.False(uploadResult.IsAudio);
+            Assert.Zero(uploadResult.Pages);
+            Assert.Zero(uploadResult.Rotation);
+            Assert.NotZero(uploadResult.NbFrames);
 
             var getResource = new GetResourceParams(uploadResult.PublicId) { ResourceType = ResourceType.Video };
             var info = m_cloudinary.GetResource(getResource);
@@ -345,17 +368,27 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 File = new FileDescription(m_testImagePath),
                 EagerTransforms = new List<Transformation>() { m_simpleTransformation },
                 PublicId = GetUniquePublicId(),
-                Metadata = true,
+                ImageMetadata = true,
                 Exif = true,
                 Colors = true,
-                Tags = m_apiTag
+                Tags = m_apiTag,
+                UseFilename = true,
+                Faces = true,
+                Phash = true,
+                QualityAnalysis = true,
+                ReturnDeleteToken = true
             };
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
 
-            Assert.NotNull(result.Metadata);
+            Assert.NotNull(result.ImageMetadata);
             Assert.NotNull(result.Exif);
             Assert.NotNull(result.Colors);
+            Assert.Zero(result.IllustrationScore);
+            Assert.False(result.SemiTransparent);
+            Assert.False(result.Grayscale);
+            Assert.NotNull(result.Eager);
+            Assert.NotNull(result.Predominant);
         }
 
         [Test]
@@ -814,6 +847,35 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(5, result.ResponsiveBreakpoints[0].Breakpoints.Count);
             Assert.AreEqual(1000, result.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(200, result.ResponsiveBreakpoints[0].Breakpoints[4].Width);
+        }
+
+        [Test]
+        public void TestUploadAndGetResource()
+        {
+            //should allow sending custom coordinates
+
+            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+
+            var upResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                CustomCoordinates = coordinates,
+                Tags = m_apiTag
+            });
+
+            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) 
+            { 
+                Prefix = m_test_prefix,
+                NextCursor = "test",
+                StartAt = "start",
+                Direction = "-1",
+                Tags = true,
+                Context = true,
+                Moderation = true
+            });
+
+            Assert.NotNull(result.NextCursor);
+            Assert.NotZero(result.Tags.Length);
         }
 
         [Test]

@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Runtime.Serialization;
     using CloudinaryDotNet.Core;
 
     /// <summary>
@@ -243,5 +244,29 @@
                     return string.Empty;
             }
         }
+    }
+
+    /// <summary>
+    /// The specific type of the asset.
+    /// </summary>
+    public enum AssetType
+    {
+        /// <summary>
+        /// Upload type of the asset.
+        /// </summary>
+        [EnumMember(Value = "upload")]
+        Upload,
+
+        /// <summary>
+        /// Private type of the asset.
+        /// </summary>
+        [EnumMember(Value = "private")]
+        Private,
+
+        /// <summary>
+        /// Authenticated type of the asset.
+        /// </summary>
+        [EnumMember(Value = "authenticated")]
+        Authenticated,
     }
 }

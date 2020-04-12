@@ -32,7 +32,8 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                                             .SkipTransformationName(true)
                                             .UseOriginalFilename(true)
                                             .Tags(new List<string> { archiveTag })
-                                            .TargetTags(new List<string> { m_apiTag });
+                                            .TargetTags(new List<string> { m_apiTag })
+                                            .AllowMissing(true);
             result = m_cloudinary.CreateArchive(parameters);
             Assert.AreEqual(2, result.FileCount);
         }
@@ -131,7 +132,39 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         }
 
         [Test]
-        public void TestDownloadArchiveUrlForImage()
+        public void TestArchiveRequestParametersAndResponseFields()
+        {
+            var archiveTag = GetMethodTag();
+
+            var parameters = UploadImageForArchiveAndPrepareParameters(GetMethodTag());
+            parameters.ResourceType(ResourceType.Image.ToString().ToLower());
+            parameters.Type("upload");
+            parameters.Transformations(new List<Transformation>() { new Transformation().Crop("scale").Width(500) });
+            parameters.ExpiresAt(1415060076);
+            parameters.UseOriginalFilename(true);
+            parameters.KeepDerived(true);
+            parameters.FlattenFolders(true);
+            parameters.SkipTransformationName(true);
+            parameters.Tags(new List<string> { archiveTag });
+            parameters.TargetTags(new List<string> { m_apiTag });
+            parameters.AllowMissing(true);
+
+            var result = m_cloudinary.CreateZip(parameters);
+
+            Assert.IsNotNull(result.Version);
+            Assert.IsNotNull(result.Signature);
+            Assert.AreEqual(ResourceType.Raw, result.ResourceType);
+            Assert.Greater(result.CreatedAt, new DateTime(1970, 01, 01));
+            Assert.AreEqual("upload", result.Type);
+            Assert.IsNotNull(result.Etag);
+            Assert.AreEqual(false, result.Placeholder);
+            Assert.IsNotNull(result.AccessMode);
+            Assert.NotZero(result.ResourceCount);
+            Assert.NotZero(result.Tags.Length);
+        }
+
+        [Test]
+        public void TestDownloadArchiveUrl()
         {
             var archiveTag = GetMethodTag();
             var uploadResult = UploadResourceForTestArchive<ImageUploadParams>(archiveTag);

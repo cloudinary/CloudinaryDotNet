@@ -454,7 +454,7 @@
             }
 
             sb.Remove(sb.Length - 1, 1);
-            sb.Append(")(?=[ _])|").Append(string.Join("|", parameters.Keys.ToArray())).Append(")");
+            sb.Append(")(?=[ _])|(?<!\\$)(").Append(string.Join("|", parameters.Keys.ToArray())).Append("))");
             return sb.ToString();
         }
     }
