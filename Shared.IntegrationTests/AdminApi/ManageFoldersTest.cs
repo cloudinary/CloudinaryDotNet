@@ -15,6 +15,20 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         private string _subFolder1;
         private string _subFolder2;
 
+        [TearDown]
+        public void TearDown()
+        {
+            var foldersForDeletion = new List<string>
+            {
+                _rootFolder1,
+                _rootFolder2
+            };
+
+            foldersForDeletion.Where(f => !string.IsNullOrEmpty(f))
+                .ToList()
+                .ForEach(f => m_cloudinary.DeleteFolder(f));
+        }
+
         [Test]
         public void TestFolderApi()
         {
@@ -42,8 +56,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             deletionRes = m_cloudinary.DeleteFolder(_subFolder1);
 
             AssertDeleteFolder(deletionRes);
-
-            DeleteFoldersForTests();
         }
 
         [Test]
@@ -90,8 +102,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             result = m_cloudinary.SubFolders(_rootFolder1, getFoldersParams);
 
             AssertGetFolders(result);
-
-            DeleteFoldersForTests();
         }
 
         [Test]
@@ -121,8 +131,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             deletionRes = await m_cloudinary.DeleteFolderAsync(_subFolder1);
 
             AssertDeleteFolder(deletionRes);
-
-            DeleteFoldersForTests();
         }
 
         [Test]
@@ -169,8 +177,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             result = await m_cloudinary.SubFoldersAsync(_rootFolder1, parameters: getFoldersParams);
 
             AssertGetFolders(result);
-
-            DeleteFoldersForTests();
         }
 
         private static void WaitForServerUpdate()
@@ -199,12 +205,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                 null));
         }
 
-        private void DeleteFoldersForTests()
-        {
-            m_cloudinary.DeleteFolder(_rootFolder1);
-            m_cloudinary.DeleteFolder(_rootFolder2);
-        }
-
         private void AssertGetFolders(GetFoldersResult result)
         {
             Assert.Null(result.Error);
@@ -216,6 +216,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.Null(result.Error);
             Assert.IsTrue(result.Folders.Any(folder => folder.Name == _rootFolder1));
             Assert.IsTrue(result.Folders.Any(folder => folder.Name == _rootFolder2));
+            Assert.NotZero(result.TotalCount);
         }
 
         private void AssertGetSubFolders(GetFoldersResult result)
@@ -223,6 +224,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(3, result.Folders.Count);
             Assert.IsTrue(result.Folders.Any(_ => _.Path == _subFolder1));
             Assert.IsTrue(result.Folders.Any(_ => _.Path == _subFolder2));
+            Assert.NotZero(result.TotalCount);
         }
 
         private void AssertGetSubFoldersError(GetFoldersResult result)
