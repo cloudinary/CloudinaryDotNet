@@ -11,6 +11,25 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
     public class ManageFoldersTest : IntegrationTestBase
     {
+        private string _testCreateFolder;
+        private string _testCreateFolderAsync;
+        private string _testCreateFolderWithSubFolders;
+
+        [TearDown]
+        public void TearDown()
+        {
+            var foldersForDeletion = new List<string>
+            {
+                _testCreateFolder,
+                _testCreateFolderAsync,
+                _testCreateFolderWithSubFolders
+            };
+
+            foldersForDeletion.Where(f => !string.IsNullOrEmpty(f))
+                .ToList()
+                .ForEach(f => m_cloudinary.DeleteFolder(f));
+        }
+
         // For this test to work, "Auto-create folders" should be enabled in the Upload Settings, so this test is disabled by default.
         [Test, IgnoreFeature("auto_create_folders")]
         public void TestFolderApi()
@@ -75,33 +94,21 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public void TestCreateFolder()
         {
-            var testFolderName = $"{m_folderPrefix}_create_folder";
+            _testCreateFolder = $"{m_folderPrefix}_create_folder";
 
-            var createFolderResult = m_cloudinary.CreateFolder(testFolderName);
+            var createFolderResult = m_cloudinary.CreateFolder(_testCreateFolder);
 
             AssertCreateFolderResult(createFolderResult);
-
-            Thread.Sleep(2000);
-
-            var deletionResult = m_cloudinary.DeleteFolder(testFolderName);
-
-            AssertFolderDeletionAfterCreate(deletionResult, testFolderName);
         }
 
         [Test]
         public async Task TestCreateFolderAsync()
         {
-            var testFolderName = $"{m_folderPrefix}_create_folder_async";
+            _testCreateFolderAsync = $"{m_folderPrefix}_create_folder_async";
 
-            var createFolderResult = await m_cloudinary.CreateFolderAsync(testFolderName);
+            var createFolderResult = await m_cloudinary.CreateFolderAsync(_testCreateFolderAsync);
 
             AssertCreateFolderResult(createFolderResult);
-
-            Thread.Sleep(2000);
-
-            var deletionResult = await m_cloudinary.DeleteFolderAsync(testFolderName);
-
-            AssertFolderDeletionAfterCreate(deletionResult, testFolderName);
         }
 
         [TestCase("")]
@@ -114,9 +121,9 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public void TestCreateFolderWithSubFolders()
         {
-            var testFolderName = $"{m_folderPrefix}_root_folder";
+            _testCreateFolderWithSubFolders = $"{m_folderPrefix}_root_folder";
             var testSubFolderName = "test_sub_folder";
-            var testPath = $"{testFolderName}/{testSubFolderName}";
+            var testPath = $"{_testCreateFolderWithSubFolders}/{testSubFolderName}";
 
             var createFolderResult = m_cloudinary.CreateFolder(testPath);
 
@@ -128,16 +135,12 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var result = m_cloudinary.RootFolders();
             Assert.Null(result.Error);
-            Assert.IsTrue(result.Folders.Any(folder => folder.Name == testFolderName));
+            Assert.IsTrue(result.Folders.Any(folder => folder.Name == _testCreateFolderWithSubFolders));
 
-            result = m_cloudinary.SubFolders(testFolderName);
+            result = m_cloudinary.SubFolders(_testCreateFolderWithSubFolders);
 
             Assert.AreEqual(1, result.Folders.Count);
             Assert.IsTrue(result.Folders.Count > 0);
-
-            var deletionResult = m_cloudinary.DeleteFolder(testFolderName);
-
-            AssertFolderDeletionAfterCreate(deletionResult, testFolderName);
         }
 
         private void AssertCreateFolderResult(CreateFolderResult createFolderResult)
@@ -146,12 +149,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsTrue(createFolderResult.Success);
             Assert.NotNull(createFolderResult.Name);
             Assert.NotNull(createFolderResult.Path);
-        }
-
-        private void AssertFolderDeletionAfterCreate(DeleteFolderResult deletionResult, string testFolderName)
-        {
-            Assert.AreEqual(HttpStatusCode.OK, deletionResult.StatusCode);
-            Assert.IsTrue(deletionResult.Deleted.Any(f => f == testFolderName));
         }
     }
 }
