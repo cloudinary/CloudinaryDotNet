@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
 
@@ -97,20 +98,50 @@
         /// <summary>
         /// Date when asset was created.
         /// </summary>
+        [Obsolete("Property Created is deprecated, please use CreatedAt instead")]
+        public string Created
+        {
+            get { return CreatedAt; }
+            set { CreatedAt = value; }
+        }
+
+        /// <summary>
+        /// Date when the resource was created.
+        /// </summary>
         [DataMember(Name = "created_at")]
-        public string Created { get; protected set; }
+        public string CreatedAt { get; protected set; }
+
+        /// <summary>
+        /// Date when asset was created.
+        /// </summary>
+        [Obsolete("Property Uploaded is deprecated, please use UploadedAt instead")]
+        public string Uploaded
+        {
+            get { return UploadedAt; }
+            set { UploadedAt = value; }
+        }
 
         /// <summary>
         /// Date when asset was uploaded (overwritten).
         /// </summary>
         [DataMember(Name = "uploaded_at")]
-        public string Uploaded { get; protected set; }
+        public string UploadedAt { get; protected set; }
 
         /// <summary>
-        /// The size of the asset.
+        /// The predominant colors uploaded image.
+        /// </summary>
+        [Obsolete("Property Length is deprecated, please use Bytes instead")]
+        public long Length
+        {
+            get { return Bytes; }
+            set { Bytes = value; }
+        }
+
+        /// <summary>
+        /// The size of the media asset in bytes.
         /// </summary>
         [DataMember(Name = "bytes")]
-        public long Length { get; protected set; }
+        public long Bytes { get; protected set; }
 
         /// <summary>
         /// If the resource is backed up, indicates the space taken in the backup system by all backed up versions.
@@ -209,6 +240,18 @@
         /// </summary>
         [DataMember(Name = "image_analysis")]
         public ImageAnalysis ImageAnalysis { get; protected set; }
+
+        /// <summary>
+        /// Identity data of asset creator.
+        /// </summary>
+        [DataMember(Name = "created_by")]
+        public IdentityInfo CreatedBy { get; protected set; }
+
+        /// <summary>
+        /// Identity data about resource was uploaded.
+        /// </summary>
+        [DataMember(Name = "uploaded_by")]
+        public IdentityInfo UploadedBy { get; protected set; }
     }
 
     /// <summary>
@@ -259,5 +302,18 @@
         /// </summary>
         [DataMember(Name = "colors")]
         public Dictionary<string, double> Colors { get; protected set; }
+    }
+
+    /// <summary>
+    /// Represents indetity data.
+    /// </summary>
+    [DataContract]
+    public class IdentityInfo
+    {
+        /// <summary>
+        /// Identity access key.
+        /// </summary>
+        [DataMember(Name = "access_key")]
+        public string AccessKey { get; protected set; }
     }
 }

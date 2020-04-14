@@ -14,6 +14,12 @@
         /// </summary>
         [DataMember(Name = "folders")]
         public List<Folder> Folders { get; set; }
+
+        /// <summary>
+        /// The total count of folders.
+        /// </summary>
+        [DataMember(Name = "total_count")]
+        public int TotalCount { get; protected set; }
     }
 
     /// <summary>

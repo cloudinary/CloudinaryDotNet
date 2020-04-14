@@ -77,8 +77,18 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         private void AssertSprite(SpriteResult result, IEnumerable<string> publicIds, string fileFormat)
         {
             Assert.NotNull(result?.ImageInfos);
-            StringAssert.EndsWith(fileFormat, result.ImageUri.ToString());
+            Assert.NotNull(result.ImageUrl);
+            StringAssert.EndsWith(fileFormat, result.ImageUrl.ToString());
             CollectionAssert.AreEqual(publicIds, result.ImageInfos.Keys);
+            Assert.AreEqual(result.ImageUri, result.ImageUrl);
+            Assert.NotNull(result.CssUrl);
+            Assert.AreEqual(result.CssUri, result.CssUrl);
+            Assert.NotNull(result.JsonUrl);
+            Assert.AreEqual(result.JsonUri, result.JsonUrl);
+            Assert.NotNull(result.SecureCssUrl);
+            Assert.AreEqual(result.SecureCssUri, result.SecureCssUrl);
+            Assert.NotNull(result.SecureImageUrl);
+            Assert.NotNull(result.SecureJsonUrl);
         }
 
         [Test]

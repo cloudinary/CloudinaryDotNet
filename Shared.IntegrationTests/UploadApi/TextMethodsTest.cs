@@ -40,6 +40,19 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         {
             Assert.Greater(result.Width, 0);
             Assert.Greater(result.Height, 0);
+
+            Assert.NotNull(result.PublicId);
+            Assert.NotNull(result.Version);
+            Assert.NotNull(result.Signature);
+            Assert.AreEqual(ResourceType.Image, result.ResourceType);
+            Assert.NotNull(result.Format);
+            Assert.NotNull(result.CreatedAt);
+            Assert.NotZero(result.Bytes);
+            Assert.NotNull(result.Type);
+            Assert.NotNull(result.Placeholder);
+            Assert.NotNull(result.Url);
+            Assert.NotNull(result.SecureUrl);
+            Assert.NotNull(result.AccessMode);
         }
 
         [Test]

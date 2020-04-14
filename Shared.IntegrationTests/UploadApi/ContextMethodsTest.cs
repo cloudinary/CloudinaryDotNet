@@ -29,7 +29,8 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Command = ContextCommand.Add,
                 PublicIds = pIds,
                 Type = STORAGE_TYPE_UPLOAD,
-                Context = "TestContext"
+                Context = "TestContext",
+                ResourceType = ResourceType.Image
             });
 
             Assert.True(contextResult.PublicIds.Length > 0);

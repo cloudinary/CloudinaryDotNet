@@ -152,7 +152,7 @@
                 }
             }
 
-            Metadata = preset.Settings.Metadata;
+            ImageMetadata = preset.Settings.ImageMetadata;
             EagerAsync = preset.Settings.EagerAsync;
             EagerNotificationUrl = preset.Settings.EagerNotificationUrl;
             Categorization = preset.Settings.Categorization;
@@ -313,7 +313,17 @@
         /// <summary>
         /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
-        public bool Metadata { get; set; }
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public bool Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// </summary>
+        public bool ImageMetadata { get; set; }
 
         /// <summary>
         /// Whether to generate the eager transformations asynchronously in the background after the upload request is
@@ -397,7 +407,7 @@
             AddParam(dict, "faces", Faces);
             AddParam(dict, "quality_analysis", QualityAnalysis);
             AddParam(dict, "colors", Colors);
-            AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "image_metadata", ImageMetadata);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
             AddParam(dict, "categorization", Categorization);

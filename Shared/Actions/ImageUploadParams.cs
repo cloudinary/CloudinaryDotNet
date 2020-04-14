@@ -94,7 +94,17 @@
         /// <summary>
         /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
-        public bool? Metadata { get; set; }
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public bool? Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// </summary>
+        public bool? ImageMetadata { get; set; }
 
         /// <summary>
         /// Whether to generate the eager transformations asynchronously in the background after the upload request is
@@ -169,6 +179,13 @@
         public bool? Phash { get; set; }
 
         /// <summary>
+        /// Optional (Boolean, default: false). Whether to return a cinemagraph analysis value for the media asset
+        /// between 0 and 1, where 0 means the asset is not a cinemagraph and 1 means the asset is a cinemagraph.
+        /// Default: false. Relevant for animated images and video only. A static image will return 0.
+        /// </summary>
+        public bool? CinemagraphAnalysis { get; set; }
+
+        /// <summary>
         /// Optional. Allows to pass a list of ResponsiveBreakpoints parameters to request Cloudinary to automatically
         /// find the best breakpoints.
         /// Relevant for images only.
@@ -188,7 +205,7 @@
             AddParam(dict, "faces", Faces);
             AddParam(dict, "quality_analysis", QualityAnalysis);
             AddParam(dict, "colors", Colors);
-            AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "image_metadata", ImageMetadata);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
             AddParam(dict, "categorization", Categorization);
@@ -200,6 +217,7 @@
             AddParam(dict, "phash", Phash);
             AddParam(dict, "background_removal", BackgroundRemoval);
             AddParam(dict, "return_delete_token", ReturnDeleteToken);
+            AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
 
             if (AutoTagging.HasValue)
             {
