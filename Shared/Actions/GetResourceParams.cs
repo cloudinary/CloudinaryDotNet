@@ -122,6 +122,14 @@ namespace CloudinaryDotNet.Actions
         public string NextCursor { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the animation/video is cinemagraph. Optional (Boolean, default: false).
+        /// If true, includes a cinemagraph analysis value for the animation/video between 0 and 1, where 0 means the video/animation
+        /// is NOT a cinemagraph and 1 means the GIF/video IS a cinemagraph.
+        /// Running cinemagraph analysis on static images returns 0.
+        /// </summary>
+        public bool? CinemagraphAnalysis { get; set; }
+
+        /// <summary>
         /// Optional. Get assets that were created since the given timestamp.
         /// Supported unless prefix or public_ids were specified.
         /// </summary>
@@ -182,6 +190,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "coordinates", Coordinates);
             AddParam(dict, "pages", Pages);
             AddParam(dict, "derived_next_cursor", DerivedNextCursor);
+            AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
             AddParam(dict, "tags", Tags);
             AddParam(dict, "context", Context);
             AddParam(dict, "moderation", Moderation);

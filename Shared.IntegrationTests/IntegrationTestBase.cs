@@ -191,6 +191,25 @@ namespace CloudinaryDotNet.IntegrationTest
         }
 
         /// <summary>
+        /// A convenient method for uploading a video before testing.
+        /// </summary>
+        /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <returns>The upload result.</returns>
+        protected VideoUploadResult UploadTestVideoResource(
+            Action<VideoUploadParams> setParamsAction = null,
+            StorageType storageType = StorageType.upload)
+        {
+            var uploadParams = new VideoUploadParams();
+            
+            setParamsAction?.Invoke(uploadParams);
+
+            uploadParams.File = uploadParams.File ?? new FileDescription(m_testVideoPath);
+            PopulateMissingRawUploadParams(uploadParams, false, storageType);
+
+            return m_cloudinary.Upload(uploadParams);
+        }
+
+        /// <summary>
         /// A convenient method for uploading an image before testing asynchronously.
         /// </summary>
         /// <param name="setParamsAction">Action to set custom upload parameters.</param>

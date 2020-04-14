@@ -141,6 +141,14 @@ namespace CloudinaryDotNet.Actions
         public bool? Overwrite { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the animation/video is cinemagraph. Optional (Boolean, default: false).
+        /// If true, returns a cinemagraph analysis value for the animation/video between 0 and 1, where 0 means the video/animation
+        /// is NOT a cinemagraph and 1 means the GIF/video IS a cinemagraph.
+        /// Running cinemagraph analysis on static images returns 0.
+        /// </summary>
+        public bool? CinemagraphAnalysis { get; set; }
+
+        /// <summary>
         /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
         /// Supported for images, video, and audio.
         /// </summary>
@@ -191,13 +199,6 @@ namespace CloudinaryDotNet.Actions
         public string QualityOverride { get; set; }
 
         /// <summary>
-        /// Optional. Whether to return a cinemagraph analysis value for the media asset between 0 and 1,
-        /// where 0 means the asset is not a cinemagraph and 1 means the asset is a cinemagraph.
-        /// Default: false. Relevant for animated images and video only. A static image will return 0.
-        /// </summary>
-        public bool? CinemagraphAnalysis { get; set; }
-
-        /// <summary>
         /// Optional. For all asset types: Set to manual to add the asset to a queue of pending assets that can be moderated
         /// using the Admin API or the Cloudinary Management Console, or set to metascan to automatically moderate
         /// the uploaded asset using the MetaDefender Anti-malware Protection add-on.
@@ -235,9 +236,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "invalidate", Invalidate);
             AddParam(dict, "async", Async);
             AddParam(dict, "quality_analysis", QualityAnalysis);
+            AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "image_metadata", ImageMetadata);
-            AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
             AddParam(dict, "notification_url", NotificationUrl);
             AddParam(dict, "quality_override", QualityOverride);
             AddParam(dict, "moderation", Moderation);

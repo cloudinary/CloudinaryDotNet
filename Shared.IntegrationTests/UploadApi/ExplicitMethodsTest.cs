@@ -466,5 +466,25 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             return m_cloudinary.Explicit(explicitParams);
         }
+
+        [Test]
+        public void TestCinemagraphAnalysis()
+        {
+            var uploadRes = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.CinemagraphAnalysis = true;
+            });
+
+            var explicitParams = new ExplicitParams(uploadRes.PublicId)
+            {
+                CinemagraphAnalysis = true,
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            var explicitResult = m_cloudinary.Explicit(explicitParams);
+
+            Assert.GreaterOrEqual(explicitResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
     }
 }
