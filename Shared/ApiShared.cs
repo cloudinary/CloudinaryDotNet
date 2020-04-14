@@ -627,11 +627,14 @@
         /// Signs the specified URI part.
         /// </summary>
         /// <param name="uriPart">The URI part.</param>
+        /// <param name="isLong">Indicates whether to generate long signature.</param>
         /// <returns>Signature of the URI part.</returns>
-        public string SignUriPart(string uriPart)
+        public string SignUriPart(string uriPart, bool isLong = true)
         {
-            var hash = Utils.ComputeHash(uriPart + Account.ApiSecret);
-            return "s--" + Utils.EncodeUrlSafe(hash).Substring(0, 8) + "--/";
+            var extendedUriPart = uriPart + Account.ApiSecret;
+            var hash = isLong ? Utils.ComputeSha256Hash(extendedUriPart) : Utils.ComputeHash(extendedUriPart);
+            var signatureLength = isLong ? 32 : 8;
+            return "s--" + Utils.EncodeUrlSafe(hash).Substring(0, signatureLength) + "--/";
         }
 
         /// <summary>
@@ -787,8 +790,9 @@
         /// Generate digital signature for part of an URI.
         /// </summary>
         /// <param name="uriPart">The part of an URI to sign.</param>
+        /// <param name="isLong">Indicates whether to generate long signature.</param>
         /// <returns>Generated signature.</returns>
-        string SignUriPart(string uriPart);
+        string SignUriPart(string uriPart, bool isLong);
     }
 
     /// <summary>

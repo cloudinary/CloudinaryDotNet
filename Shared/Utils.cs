@@ -101,7 +101,7 @@
         }
 
         /// <summary>
-        /// Computes the hash value for the specified string.
+        /// Computes the hash value for the specified string, using SHA-1 algorithm.
         /// </summary>
         /// <param name="s"> The input to compute the hash code for.</param>
         /// <returns>The computed hash code.</returns>
@@ -109,6 +109,19 @@
         internal static byte[] ComputeHash(string s)
         {
             using (var sha1 = SHA1.Create())
+            {
+                return sha1.ComputeHash(Encoding.UTF8.GetBytes(s));
+            }
+        }
+
+        /// <summary>
+        /// Computes the hash value for the specified string, using SHA-256 algorithm.
+        /// </summary>
+        /// <param name="s"> The input to compute the hash code for.</param>
+        /// <returns>The computed hash code.</returns>
+        internal static byte[] ComputeSha256Hash(string s)
+        {
+            using (var sha1 = SHA256.Create())
             {
                 return sha1.ComputeHash(Encoding.UTF8.GetBytes(s));
             }
