@@ -316,5 +316,36 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                 m_cloudinary.DeleteResources(deleteParams);
             }
         }
+
+        [Test]
+        public void TestDeleteResultDeleteCountProperty()
+        {
+            // should allow deleting resources by transformations
+            var publicId = GetUniquePublicId();
+
+            var transformations = new List<Transformation>
+            {
+                m_simpleTransformation,
+                m_simpleTransformationAngle,
+                m_explicitTransformation
+            };
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Tags = m_apiTag,
+                EagerTransforms = transformations
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            var delParams = new DelResParams { Transformations = transformations };
+            delParams.PublicIds.Add(publicId);
+
+            DelResResult delResult = m_cloudinary.DeleteResources(delParams);
+            Assert.IsNotNull(delResult.Deleted);
+            Assert.AreEqual(1, delResult.DeletedCounts.Count);
+        }
     }
 }

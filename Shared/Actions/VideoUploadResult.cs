@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -49,6 +50,36 @@
         /// </summary>
         [DataMember(Name = "duration")]
         public double Duration { get; protected set; }
+
+        /// <summary>
+        /// The number of page(s) or layers in a multi-page or multi-layer file (PDF, animated GIF, TIFF, PSD).
+        /// </summary>
+        [DataMember(Name = "pages")]
+        public int Pages { get; protected set; }
+
+        /// <summary>
+        /// A key-value pairs of context associated with the resource.
+        /// </summary>
+        [DataMember(Name = "context")]
+        public Dictionary<string, string> Context { get; protected set; }
+
+        /// <summary>
+        /// Determine whether source video has audio.
+        /// </summary>
+        [DataMember(Name = "is_audio")]
+        public bool IsAudio { get; protected set; }
+
+        /// <summary>
+        /// Determine whether source video has rotation.
+        /// </summary>
+        [DataMember(Name = "rotation")]
+        public int Rotation { get; protected set; }
+
+        /// <summary>
+        /// Amount of nb frames in a source video.
+        /// </summary>
+        [DataMember(Name = "nb_frames")]
+        public int NbFrames { get; protected set; }
     }
 
     /// <summary>
@@ -80,6 +111,12 @@
         /// </summary>
         [DataMember(Name = "bit_rate")]
         public int? BitRate { get; protected set; }
+
+        /// <summary>
+        /// Applied profile name.
+        /// </summary>
+        [DataMember(Name = "profile")]
+        public string Profile { get; protected set; }
     }
 
     /// <summary>

@@ -22,6 +22,12 @@
         /// </summary>
         [DataMember(Name = "next_cursor")]
         public string NextCursor { get; protected set; }
+
+        /// <summary>
+        /// The total count of folders.
+        /// </summary>
+        [DataMember(Name = "total_count")]
+        public int TotalCount { get; protected set; }
     }
 
     /// <summary>

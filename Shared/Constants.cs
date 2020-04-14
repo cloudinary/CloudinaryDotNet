@@ -50,6 +50,9 @@
         /// <summary> Resource type name for video asset.</summary>
         public const string RESOURCE_TYPE_VIDEO = "video";
 
+        /// <summary> Parameter name for asset resource type.</summary>
+        public const string RESOURCE_TYPE = "resource_type";
+
         /// <summary> Action name for upload.</summary>
         public const string ACTION_NAME_UPLOAD = "upload";
 
