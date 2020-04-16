@@ -50,7 +50,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 .Version(result.Version)
                 .BuildUrl(_cloudinaryPublicId);
 
-            Assert.AreEqual(url, result.Eager[0].Uri.AbsoluteUri);
+            Assert.AreEqual(url, result.Eager[0].Url.AbsoluteUri);
         }
 
         [Test]
@@ -285,7 +285,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             coordinates = new CloudinaryDotNet.Core.Rectangle(122, 32, 110, 152);
 
-            var exResult = m_cloudinary.Explicit(new ExplicitParams(upResult.PublicId)
+            m_cloudinary.Explicit(new ExplicitParams(upResult.PublicId)
             {
                 CustomCoordinates = coordinates,
                 Type = STORAGE_TYPE_UPLOAD,
@@ -378,8 +378,8 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             Assert.NotZero(expResult.Eager.Length);
             Assert.NotNull(expResult.Eager[0]);
-            Assert.AreEqual(expResult.Eager[0].SecureUri, expResult.Eager[0].SecureUrl);
-            Assert.AreEqual(expResult.Eager[0].Uri, expResult.Eager[0].Url);
+            Assert.AreEqual(expResult.Eager[0].SecureUrl, expResult.Eager[0].SecureUrl);
+            Assert.AreEqual(expResult.Eager[0].Url, expResult.Eager[0].Url);
             Assert.NotZero(expResult.Eager[0].Width);
             Assert.NotZero(expResult.Eager[0].Height);
             Assert.NotNull(expResult.Eager[0].Format);
@@ -397,7 +397,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(explicitResult.Phash);
             Assert.NotZero(explicitResult.Faces.Length);
             Assert.Zero(explicitResult.CinemagraphAnalysis.CinemagraphScore);
-            Assert.NotZero(explicitResult.Moderation.Count);
             Assert.NotNull(explicitResult.AccessMode);
             Assert.NotNull(explicitResult.Etag);
             Assert.NotNull(explicitResult.Placeholder);
@@ -408,9 +407,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(explicitResult.SlotToken);
             Assert.NotZero(explicitResult.Pages);
             Assert.Zero(explicitResult.IllustrationScore);
-            Assert.AreEqual(explicitResult.Length, explicitResult.Bytes);
-            Assert.AreEqual(explicitResult.SecureUri, explicitResult.SecureUrl);
-            Assert.AreEqual(explicitResult.Uri, explicitResult.Url);
             Assert.IsNotNull(explicitResult.Predominant);
             Assert.NotZero(explicitResult.Predominant.Google.Length);
             Assert.NotZero(explicitResult.Predominant.Cloudinary.Length);
@@ -437,7 +433,16 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotZero(explicitResult.Predominant.Cloudinary.Length);
         }
 
-        private ExplicitResult ArrangeAndGetExplicitResult()
+        [Test, IgnoreAddon("webpurify")]
+        public void TestWebPurifyForExplicitResult()
+        {
+            var explicitResult = ArrangeAndGetExplicitResult(true);
+
+            Assert.NotNull(explicitResult.Moderation);
+            Assert.NotZero(explicitResult.Moderation.Count);
+        }
+
+        private ExplicitResult ArrangeAndGetExplicitResult(bool testModeration = false)
         {
             //should return quality analysis information
             var uploadParams = new ImageUploadParams()
@@ -458,11 +463,15 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Faces = true,
                 CinemagraphAnalysis = true,
                 QualityOverride = "auto:best",
-                Moderation = "webpurify",
                 FaceCoordinates = "122,32,111,152",
                 Type = STORAGE_TYPE_UPLOAD,
                 Tags = m_apiTag
             };
+
+            if (testModeration)
+            {
+                explicitParams.Moderation = "webpurify";
+            }
 
             return m_cloudinary.Explicit(explicitParams);
         }
