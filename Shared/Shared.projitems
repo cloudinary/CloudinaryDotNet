@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\BaseResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\CreateFolderResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ListResourcesByContextParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileBaseParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileResult.cs" />

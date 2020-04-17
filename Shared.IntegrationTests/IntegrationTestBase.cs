@@ -86,6 +86,7 @@ namespace CloudinaryDotNet.IntegrationTest
         protected Dictionary<StorageType, List<string>> m_publicIdsToClear;
         protected List<object> m_transformationsToClear;
         protected List<string> m_presetsToClear;
+        protected List<string> FoldersToClear;
 
         protected enum StorageType { text, sprite, multi, facebook, upload }
 
@@ -115,6 +116,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
             m_transformationsToClear = new List<object>();
             m_presetsToClear = new List<string>();
+            FoldersToClear = new List<string>();
 
             InitializeUniqueNames(assembly.GetName().Name);
         }
@@ -132,7 +134,7 @@ namespace CloudinaryDotNet.IntegrationTest
             m_apiTest = m_test_prefix + m_suffix;
             m_apiTest1 = m_apiTest + "_1";
             m_apiTest2 = m_apiTest + "_2";
-            m_folderPrefix = $"test_folder_{m_suffix}";
+            m_folderPrefix = $"{m_test_prefix}test_folder_{m_suffix}";
             m_apiTag = $"{m_test_tag}{m_suffix}_api";
 
             m_updateTransformationAsString = "c_scale,l_text:Arial_60:" + m_suffix + "_update,w_100";
@@ -176,6 +178,7 @@ namespace CloudinaryDotNet.IntegrationTest
         /// A convenient method for uploading an image before testing.
         /// </summary>
         /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <param name="storageType">The storage type of the asset.</param>
         /// <returns>The upload result.</returns>
         protected ImageUploadResult UploadTestImageResource(
             Action<ImageUploadParams> setParamsAction = null,
@@ -200,7 +203,7 @@ namespace CloudinaryDotNet.IntegrationTest
             StorageType storageType = StorageType.upload)
         {
             var uploadParams = new VideoUploadParams();
-            
+
             setParamsAction?.Invoke(uploadParams);
 
             uploadParams.File = uploadParams.File ?? new FileDescription(m_testVideoPath);
@@ -213,6 +216,7 @@ namespace CloudinaryDotNet.IntegrationTest
         /// A convenient method for uploading an image before testing asynchronously.
         /// </summary>
         /// <param name="setParamsAction">Action to set custom upload parameters.</param>
+        /// <param name="storageType">The storage type of the asset.</param>
         /// <returns>The upload result.</returns>
         protected Task<ImageUploadResult> UploadTestImageResourceAsync(
             Action<ImageUploadParams> setParamsAction = null,
@@ -232,6 +236,7 @@ namespace CloudinaryDotNet.IntegrationTest
         /// </summary>
         /// <param name="setParamsAction">Action to set custom upload parameters.</param>
         /// <param name="type">The type ("raw" or "auto", last by default).</param>
+        /// <param name="storageType">The storage type of the asset.</param>
         /// <returns>The upload result.</returns>
         protected RawUploadResult UploadTestRawResource(
             Action<RawUploadParams> setParamsAction = null,
@@ -252,6 +257,7 @@ namespace CloudinaryDotNet.IntegrationTest
         /// </summary>
         /// <param name="setParamsAction">Action to set custom upload parameters.</param>
         /// <param name="type">The type ("raw" or "auto", last by default).</param>
+        /// <param name="storageType">The storage type of the asset.</param>
         /// <returns>The upload result.</returns>
         protected Task<RawUploadResult> UploadTestRawResourceAsync(
             Action<RawUploadParams> setParamsAction = null,
@@ -389,6 +395,19 @@ namespace CloudinaryDotNet.IntegrationTest
 
         #endregion
 
+        #region Unique Folders
+
+        protected string GetUniqueFolder(string suffix = "", string subFolders = "")
+        {
+            string[] folders = {$"{m_folderPrefix}_{FoldersToClear.Count + 1}_{suffix}", subFolders};
+            var fullPath = string.Join("/", folders.Where(f=> !string.IsNullOrEmpty(f)));
+            FoldersToClear.Add(fullPath);
+
+            return fullPath;
+        }
+
+        #endregion
+
         [OneTimeTearDown]
         public virtual void Cleanup()
         {
@@ -419,6 +438,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
             m_transformationsToClear.ForEach(t => m_cloudinary.DeleteTransform(t.ToString()));
             m_presetsToClear.ForEach(p => m_cloudinary.DeleteUploadPreset(p));
+            FoldersToClear.ForEach(f => m_cloudinary.DeleteFolder(f));
         }
     }
 

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -68,6 +71,67 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.Null(deletionRes.Error);
             Assert.AreEqual(1, deletionRes.Deleted.Count);
             Assert.AreEqual(subFolder1, deletionRes.Deleted[0]);
+        }
+
+        [Test]
+        public void TestCreateFolder()
+        {
+            var folder  = GetUniqueFolder("create_folder");
+
+            var createFolderResult = m_cloudinary.CreateFolder(folder);
+
+            AssertCreateFolderResult(createFolderResult);
+        }
+
+        [Test]
+        public async Task TestCreateFolderAsync()
+        {
+            var folder  = GetUniqueFolder("create_folder_async");
+
+            var createFolderResult = await m_cloudinary.CreateFolderAsync(folder);
+
+            AssertCreateFolderResult(createFolderResult);
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        public void TestCreateFolderWithNullOrEmptyValue(string testFolderName)
+        {
+            Assert.Throws<ArgumentException>(() => m_cloudinary.CreateFolder(testFolderName));
+        }
+
+        [Test]
+        public void TestCreateFolderWithSubFolders()
+        {
+            var testFolderName = GetUniqueFolder("root_folder");
+            const string testSubFolderName = "test_sub_folder";
+            var testPath = $"{testFolderName}/{testSubFolderName}";
+
+            var createFolderResult = m_cloudinary.CreateFolder(testPath);
+
+            AssertCreateFolderResult(createFolderResult);
+            Assert.AreEqual(testSubFolderName, createFolderResult.Name);
+            Assert.AreEqual(testPath, createFolderResult.Path);
+
+            Thread.Sleep(2000);
+
+            var result = m_cloudinary.RootFolders();
+
+            Assert.Null(result.Error);
+            Assert.IsTrue(result.Folders.Any(folder => folder.Name == testFolderName));
+
+            result = m_cloudinary.SubFolders(testFolderName);
+
+            Assert.AreEqual(1, result.Folders.Count);
+            Assert.IsTrue(result.Folders.Count > 0);
+        }
+
+        private void AssertCreateFolderResult(CreateFolderResult createFolderResult)
+        {
+            Assert.NotNull(createFolderResult);
+            Assert.IsTrue(createFolderResult.Success);
+            Assert.NotNull(createFolderResult.Name);
+            Assert.NotNull(createFolderResult.Path);
         }
     }
 }
