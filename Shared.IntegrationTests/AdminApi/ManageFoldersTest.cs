@@ -105,7 +105,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             var testFolderName = GetUniqueFolder("root_folder");
             const string testSubFolderName = "test_sub_folder";
-            var testPath = Path.Combine(testFolderName, testSubFolderName);
+            var testPath = $"{testFolderName}/{testSubFolderName}";
 
             var createFolderResult = m_cloudinary.CreateFolder(testPath);
 
@@ -116,7 +116,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Thread.Sleep(2000);
 
             var result = m_cloudinary.RootFolders();
-            
+
             Assert.Null(result.Error);
             Assert.IsTrue(result.Folders.Any(folder => folder.Name == testFolderName));
 

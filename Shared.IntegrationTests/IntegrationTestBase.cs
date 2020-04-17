@@ -203,7 +203,7 @@ namespace CloudinaryDotNet.IntegrationTest
             StorageType storageType = StorageType.upload)
         {
             var uploadParams = new VideoUploadParams();
-            
+
             setParamsAction?.Invoke(uploadParams);
 
             uploadParams.File = uploadParams.File ?? new FileDescription(m_testVideoPath);
@@ -400,7 +400,7 @@ namespace CloudinaryDotNet.IntegrationTest
         protected string GetUniqueFolder(string suffix = "", string subFolders = "")
         {
             string[] folders = {$"{m_folderPrefix}_{FoldersToClear.Count + 1}_{suffix}", subFolders};
-            var fullPath = Path.Combine(folders.Where(f=> !string.IsNullOrEmpty(f)).ToArray());
+            var fullPath = string.Join("/", folders.Where(f=> !string.IsNullOrEmpty(f)));
             FoldersToClear.Add(fullPath);
 
             return fullPath;
