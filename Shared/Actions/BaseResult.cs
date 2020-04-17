@@ -325,18 +325,4 @@
             throw new NotImplementedException("Unnecessary because of using just for Deserialization");
         }
     }
-
-    /// <summary>
-    /// Cinemagraph analysis result.
-    /// </summary>
-    [DataContract]
-    public class CinemagraphAnalysisResult
-    {
-        /// <summary>
-        /// Value for the media asset between 0 and 1, where 0 means the asset
-        /// is not a cinemagraph and 1 means the asset is a cinemagraph.
-        /// </summary>
-        [DataMember(Name = "cinemagraph_score")]
-        public double CinemagraphScore { get; protected set; }
-    }
 }

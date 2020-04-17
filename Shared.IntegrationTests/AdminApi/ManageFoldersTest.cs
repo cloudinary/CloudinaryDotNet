@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -11,25 +12,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
     public class ManageFoldersTest : IntegrationTestBase
     {
-        private string _testCreateFolder;
-        private string _testCreateFolderAsync;
-        private string _testCreateFolderWithSubFolders;
-
-        [TearDown]
-        public void TearDown()
-        {
-            var foldersForDeletion = new List<string>
-            {
-                _testCreateFolder,
-                _testCreateFolderAsync,
-                _testCreateFolderWithSubFolders
-            };
-
-            foldersForDeletion.Where(f => !string.IsNullOrEmpty(f))
-                .ToList()
-                .ForEach(f => m_cloudinary.DeleteFolder(f));
-        }
-
         // For this test to work, "Auto-create folders" should be enabled in the Upload Settings, so this test is disabled by default.
         [Test, IgnoreFeature("auto_create_folders")]
         public void TestFolderApi()
@@ -94,9 +76,9 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public void TestCreateFolder()
         {
-            _testCreateFolder = $"{m_folderPrefix}_create_folder";
+            var folder  = GetUniqueFolder("create_folder");
 
-            var createFolderResult = m_cloudinary.CreateFolder(_testCreateFolder);
+            var createFolderResult = m_cloudinary.CreateFolder(folder);
 
             AssertCreateFolderResult(createFolderResult);
         }
@@ -104,9 +86,9 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public async Task TestCreateFolderAsync()
         {
-            _testCreateFolderAsync = $"{m_folderPrefix}_create_folder_async";
+            var folder  = GetUniqueFolder("create_folder_async");
 
-            var createFolderResult = await m_cloudinary.CreateFolderAsync(_testCreateFolderAsync);
+            var createFolderResult = await m_cloudinary.CreateFolderAsync(folder);
 
             AssertCreateFolderResult(createFolderResult);
         }
@@ -121,9 +103,9 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         [Test]
         public void TestCreateFolderWithSubFolders()
         {
-            _testCreateFolderWithSubFolders = $"{m_folderPrefix}_root_folder";
-            var testSubFolderName = "test_sub_folder";
-            var testPath = $"{_testCreateFolderWithSubFolders}/{testSubFolderName}";
+            var testFolderName = GetUniqueFolder("root_folder");
+            const string testSubFolderName = "test_sub_folder";
+            var testPath = Path.Combine(testFolderName, testSubFolderName);
 
             var createFolderResult = m_cloudinary.CreateFolder(testPath);
 
@@ -134,10 +116,11 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Thread.Sleep(2000);
 
             var result = m_cloudinary.RootFolders();
+            
             Assert.Null(result.Error);
-            Assert.IsTrue(result.Folders.Any(folder => folder.Name == _testCreateFolderWithSubFolders));
+            Assert.IsTrue(result.Folders.Any(folder => folder.Name == testFolderName));
 
-            result = m_cloudinary.SubFolders(_testCreateFolderWithSubFolders);
+            result = m_cloudinary.SubFolders(testFolderName);
 
             Assert.AreEqual(1, result.Folders.Count);
             Assert.IsTrue(result.Folders.Count > 0);
