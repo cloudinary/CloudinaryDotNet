@@ -80,13 +80,13 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(result.ImageUrl);
             StringAssert.EndsWith(fileFormat, result.ImageUrl.ToString());
             CollectionAssert.AreEqual(publicIds, result.ImageInfos.Keys);
-            Assert.AreEqual(result.ImageUri, result.ImageUrl);
+            Assert.AreEqual(result.ImageUrl, result.ImageUrl);
             Assert.NotNull(result.CssUrl);
-            Assert.AreEqual(result.CssUri, result.CssUrl);
+            Assert.AreEqual(result.CssUrl, result.CssUrl);
             Assert.NotNull(result.JsonUrl);
-            Assert.AreEqual(result.JsonUri, result.JsonUrl);
+            Assert.AreEqual(result.JsonUrl, result.JsonUrl);
             Assert.NotNull(result.SecureCssUrl);
-            Assert.AreEqual(result.SecureCssUri, result.SecureCssUrl);
+            Assert.AreEqual(result.SecureCssUrl, result.SecureCssUrl);
             Assert.NotNull(result.SecureImageUrl);
             Assert.NotNull(result.SecureJsonUrl);
         }

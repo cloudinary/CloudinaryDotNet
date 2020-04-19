@@ -350,14 +350,14 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var img2 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img2);
-            Assert.AreEqual(img1.Length, img2.Length);
+            Assert.AreEqual(img1.Bytes, img2.Bytes);
 
             uploadParams.Overwrite = true;
 
             img2 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img2);
-            Assert.AreNotEqual(img1.Length, img2.Length);
+            Assert.AreNotEqual(img1.Bytes, img2.Bytes);
         }
 
         [Test]
@@ -458,7 +458,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(3381, uploadResult.Length);
+            Assert.AreEqual(3381, uploadResult.Bytes);
             Assert.AreEqual(241, uploadResult.Width);
             Assert.AreEqual(51, uploadResult.Height);
             Assert.AreEqual(FILE_FORMAT_PNG, uploadResult.Format);
@@ -542,7 +542,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
         private void AssertUploadLarge(RawUploadResult result, int fileLength)
         {
-            Assert.AreEqual(fileLength, result.Length);
+            Assert.AreEqual(fileLength, result.Bytes);
         }
 
         [Test]
@@ -558,7 +558,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Tags = m_apiTag
             }, 5 * 1024 * 1024);
 
-            Assert.AreEqual(fileLength, result.Length);
+            Assert.AreEqual(fileLength, result.Bytes);
         }
 
         /// <summary>
@@ -648,7 +648,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Tags = $"{m_apiTag},{GetMethodTag()}"
             };
 
-            var result = m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(uploadParams);
             //TODO: fix this test, implement assertions
         }
 
@@ -876,6 +876,28 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             Assert.NotNull(result.NextCursor);
             Assert.NotZero(result.Tags.Length);
+        }
+
+        [Test]
+        public void TestUploadVideoCinemagraphAnalysis()
+        {
+            var uploadResult = UploadTestVideoResource(uploadParams =>
+            {
+                uploadParams.CinemagraphAnalysis = true;
+            });
+
+            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
+
+        [Test]
+        public void TestUploadImageCinemagraphAnalysis()
+        {
+            var uploadResult = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.CinemagraphAnalysis = true;
+            });
+
+            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
         }
 
         //[Test]

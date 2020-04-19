@@ -158,5 +158,47 @@ namespace CloudinaryDotNet.Test.Parameters
             p.Representations = new List<Representation>();
             Assert.Throws<ArgumentException>(p.Check, "Should require Representations to not be empty");
         }
+
+        [Test]
+        public void TestImageUploadParamsDictionary()
+        {
+            var parameters = new ImageUploadParams
+            {
+                CinemagraphAnalysis = true,
+                Tags = TestConstants.TestTag
+            };
+
+            var dictionary = parameters.ToParamsDictionary();
+
+            Assert.AreEqual(TestConstants.TestTag, dictionary["tags"]);
+            Assert.AreEqual("true", dictionary["cinemagraph_analysis"]);
+        }
+
+        [Test]
+        public void TestExplicitParamsDictionary()
+        {
+            var parameters = new ExplicitParams(TestConstants.TestPublicId)
+            {
+                CinemagraphAnalysis = true
+            };
+
+            var dictionary = parameters.ToParamsDictionary();
+
+            Assert.AreEqual(TestConstants.TestPublicId, dictionary["public_id"]);
+            Assert.AreEqual("true", dictionary["cinemagraph_analysis"]);
+        }
+
+        [Test]
+        public void TestGetResourceParamsDictionary()
+        {
+            var parameters = new GetResourceParams(TestConstants.TestPublicId)
+            {
+                CinemagraphAnalysis = true
+            };
+
+            var dictionary = parameters.ToParamsDictionary();
+
+            Assert.AreEqual("true", dictionary["cinemagraph_analysis"]);
+        }
     }
 }

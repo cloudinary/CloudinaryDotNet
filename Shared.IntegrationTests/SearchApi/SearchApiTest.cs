@@ -166,9 +166,9 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsNotEmpty(foundResource.Version);
             Assert.AreEqual(ResourceType.Image, foundResource.ResourceType);
             Assert.AreEqual(STORAGE_TYPE_UPLOAD, foundResource.Type);
-            Assert.IsNotEmpty(foundResource.Created);
-            Assert.IsNotEmpty(foundResource.Uploaded);
-            Assert.AreEqual(93502, foundResource.Length);
+            Assert.IsNotEmpty(foundResource.CreatedAt);
+            Assert.IsNotEmpty(foundResource.UploadedAt);
+            Assert.AreEqual(93502, foundResource.Bytes);
             Assert.IsTrue(foundResource.BackupBytes >= 0);
             Assert.AreEqual(1920, foundResource.Width);
             Assert.AreEqual(1200, foundResource.Height);

@@ -179,18 +179,19 @@
         public bool? Phash { get; set; }
 
         /// <summary>
-        /// Optional (Boolean, default: false). Whether to return a cinemagraph analysis value for the media asset
-        /// between 0 and 1, where 0 means the asset is not a cinemagraph and 1 means the asset is a cinemagraph.
-        /// Default: false. Relevant for animated images and video only. A static image will return 0.
-        /// </summary>
-        public bool? CinemagraphAnalysis { get; set; }
-
-        /// <summary>
         /// Optional. Allows to pass a list of ResponsiveBreakpoints parameters to request Cloudinary to automatically
         /// find the best breakpoints.
         /// Relevant for images only.
         /// </summary>
         public List<ResponsiveBreakpoint> ResponsiveBreakpoints { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the animation/video is cinemagraph. Optional (Boolean, default: false).
+        /// If true, returns a cinemagraph analysis value for the animation/video between 0 and 1, where 0 means the video/animation
+        /// is NOT a cinemagraph and 1 means the GIF/video IS a cinemagraph.
+        /// Running cinemagraph analysis on static images returns 0.
+        /// </summary>
+        public bool? CinemagraphAnalysis { get; set; }
 
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.

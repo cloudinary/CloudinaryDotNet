@@ -1189,6 +1189,49 @@
         }
 
         /// <summary>
+        /// Create a new empty folder.
+        /// </summary>
+        /// <param name="folder">The full path of the new folder to create.</param>
+        /// <returns>Parsed result of folder creation.</returns>
+        public CreateFolderResult CreateFolder(string folder)
+        {
+            CheckIfNotEmpty(folder);
+
+            return m_api.CallApi<CreateFolderResult>(
+                HttpMethod.POST,
+                GetFolderUrl(folder),
+                null,
+                null);
+        }
+
+        /// <summary>
+        /// Create a new empty folder.
+        /// </summary>
+        /// <param name="folder">The full path of the new folder to create.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of folder creation.</returns>
+        public Task<CreateFolderResult> CreateFolderAsync(string folder, CancellationToken? cancellationToken = null)
+        {
+            CheckIfNotEmpty(folder);
+
+            return m_api.CallApiAsync<CreateFolderResult>(
+                HttpMethod.POST,
+                GetFolderUrl(folder),
+                null,
+                null,
+                null,
+                cancellationToken);
+        }
+
+        private static void CheckIfNotEmpty(string folder)
+        {
+            if (string.IsNullOrEmpty(folder))
+            {
+                throw new ArgumentException("Folder must be set.");
+            }
+        }
+
+        /// <summary>
         /// Gets the Cloudinary account usage details asynchronously.
         /// </summary>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>

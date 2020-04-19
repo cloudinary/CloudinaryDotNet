@@ -9,5 +9,7 @@
         public const string DefaultVideoUpPath = DefaultRootPath + "video/upload/";
         public const string DefaultImageUpPath = DefaultRootPath + "image/upload/";
         public const string DefaultImageFetchPath = DefaultRootPath + "image/fetch/";
+        public const string TestPublicId = "test_id";
+        public const string TestTag = "test_tag";
     }
 }
