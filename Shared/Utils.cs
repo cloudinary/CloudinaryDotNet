@@ -121,9 +121,9 @@
         /// <returns>The computed hash code.</returns>
         internal static byte[] ComputeSha256Hash(string s)
         {
-            using (var sha1 = SHA256.Create())
+            using (var sha256 = SHA256.Create())
             {
-                return sha1.ComputeHash(Encoding.UTF8.GetBytes(s));
+                return sha256.ComputeHash(Encoding.UTF8.GetBytes(s));
             }
         }
 
