@@ -50,6 +50,12 @@
         public string[][] Colors { get; protected set; }
 
         /// <summary>
+        /// Gets or sets details of cinemagraph analysis for the resource.
+        /// </summary>
+        [DataMember(Name = "cinemagraph_analysis")]
+        public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
+
+        /// <summary>
         /// IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
         /// </summary>
         [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
@@ -76,12 +82,6 @@
         /// </summary>
         [DataMember(Name = "faces")]
         public int[][] Faces { get; protected set; }
-
-        /// <summary>
-        /// Cinemagraph analysis result.
-        /// </summary>
-        [DataMember(Name = "cinemagraph_analysis")]
-        public CinemagraphAnalysisResult CinemagraphAnalysis { get; protected set; }
 
         /// <summary>
         /// Parameter "width" of the resource. Not relevant for raw files.

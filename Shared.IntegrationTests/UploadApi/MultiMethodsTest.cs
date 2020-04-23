@@ -97,10 +97,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         private void AssertMultiResult(MultiResult result, string transformation, string fileFormat)
         {
             if (!string.IsNullOrEmpty(transformation))
-                Assert.True(result.Uri.AbsoluteUri.Contains(transformation));
+                Assert.True(result.Url.AbsoluteUri.Contains(transformation));
 
             if (!string.IsNullOrEmpty(fileFormat))
-                Assert.True(result.Uri.AbsoluteUri.EndsWith($".{fileFormat}"));
+                Assert.True(result.Url.AbsoluteUri.EndsWith($".{fileFormat}"));
         }
     }
 }

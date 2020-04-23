@@ -97,12 +97,6 @@
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
-        /// Cinemagraph analysis result.
-        /// </summary>
-        [DataMember(Name = "cinemagraph_analysis")]
-        public CinemagraphAnalysisResult CinemagraphAnalysis { get; protected set; }
-
-        /// <summary>
         /// A key-value pairs of context associated with the resource.
         /// </summary>
         [DataMember(Name = "context")]
@@ -141,6 +135,12 @@
         /// </summary>
         [DataMember(Name = "predominant")]
         public Predominant Predominant { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets details of cinemagraph analysis for the image.
+        /// </summary>
+        [DataMember(Name = "cinemagraph_analysis")]
+        public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
 
         /// <summary>
         /// Overrides corresponding method of <see cref="BaseResult"/> class.

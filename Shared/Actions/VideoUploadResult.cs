@@ -58,6 +58,12 @@
         public int Pages { get; protected set; }
 
         /// <summary>
+        /// Gets or sets details of cinemagraph analysis for the video.
+        /// </summary>
+        [DataMember(Name = "cinemagraph_analysis")]
+        public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
+
+        /// <summary>
         /// A key-value pairs of context associated with the resource.
         /// </summary>
         [DataMember(Name = "context")]
