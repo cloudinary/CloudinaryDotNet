@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Runtime.Serialization;
     using CloudinaryDotNet.Core;
 
@@ -37,7 +38,9 @@
         /// <returns>The dictionary of parameters in cloudinary notation.</returns>
         public virtual SortedDictionary<string, object> ToParamsDictionary()
         {
-            return new SortedDictionary<string, object>(customParams);
+            var dictionary = new SortedDictionary<string, object>(customParams);
+            AddParamsToDictionary(dictionary);
+            return dictionary;
         }
 
         /// <summary>
@@ -51,6 +54,14 @@
             {
                 customParams.Add(key, value);
             }
+        }
+
+        /// <summary>
+        /// Add parameters to the object model dictionary.
+        /// </summary>
+        /// <param name="dict">Dictionary to be updated with parameters.</param>
+        protected virtual void AddParamsToDictionary(SortedDictionary<string, object> dict)
+        {
         }
 
         /// <summary>
@@ -160,6 +171,77 @@
             else
             {
                 dict.Add(key, coordObj.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Validate that an object's property is specified.
+        /// </summary>
+        /// <param name="propertyExpr">Function that gets object's property value.</param>
+        protected static void ShouldBeSpecified(Expression<Func<object>> propertyExpr)
+        {
+            var propertyValue = propertyExpr.Compile()();
+            if (propertyValue == null)
+            {
+                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must be specified");
+            }
+        }
+
+        /// <summary>
+        /// Validate that an object's property is not specified.
+        /// </summary>
+        /// <param name="propertyExpr">Expression that gets object's property value.</param>
+        protected static void ShouldNotBeSpecified(Expression<Func<object>> propertyExpr)
+        {
+            var propertyValue = propertyExpr.Compile()();
+            if (propertyValue != null)
+            {
+                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must not be specified");
+            }
+        }
+
+        /// <summary>
+        /// Validate that an object's property is not empty collection.
+        /// </summary>
+        /// <param name="propertyExpr">Expression that gets object's property value.</param>
+        /// <typeparam name="TP">Collection item type.</typeparam>
+        protected static void ShouldNotBeEmpty<TP>(Expression<Func<List<TP>>> propertyExpr)
+        {
+            var propertyValue = propertyExpr.Compile()();
+            if (propertyValue == null || !propertyValue.Any())
+            {
+                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must not be empty");
+            }
+        }
+
+        /// <summary>
+        /// Validate that an object's property is not empty string.
+        /// </summary>
+        /// <param name="propertyExpr">Expression that gets object's property value.</param>
+        protected static void ShouldNotBeEmpty(Expression<Func<string>> propertyExpr)
+        {
+            var propertyValue = propertyExpr.Compile()();
+            if (string.IsNullOrEmpty(propertyValue))
+            {
+                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must not be empty");
+            }
+        }
+
+        private static string GetPropertyName(Expression propertyExpr)
+        {
+            switch (propertyExpr)
+            {
+                case MemberExpression memberExpression:
+                    return memberExpression.Member.Name;
+
+                case UnaryExpression unaryExpression:
+                {
+                    var operandExpr = (MemberExpression)unaryExpression.Operand;
+                    return operandExpr.Member.Name;
+                }
+
+                default:
+                    return string.Empty;
             }
         }
     }

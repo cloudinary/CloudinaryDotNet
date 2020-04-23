@@ -131,6 +131,12 @@
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
+
+        /// <summary>
+        /// A key-value pairs of custom metadata fields associated with the resource.
+        /// </summary>
+        [DataMember(Name = "metadata")]
+        public JToken MetadataFields { get; protected set; }
     }
 
     /// <summary>

@@ -17,6 +17,12 @@
         /// <summary> API URL pattern for streaming profiles.</summary>
         public const string STREAMING_PROFILE_API_URL = "streaming_profiles";
 
+        /// <summary> API URL pattern for metadata fields.</summary>
+        public const string METADATA_FIELDS_API_URL = "metadata_fields";
+
+        /// <summary> API URL action name for metadata operations.</summary>
+        public const string METADATA = "metadata";
+
         /// <summary> API URL action name for access mode update.</summary>
         public const string UPDATE_ACESS_MODE = "update_access_mode";
 
@@ -26,11 +32,17 @@
         /// <summary> API URL action name for context management.</summary>
         public const string CONTEXT_MANAGMENT = "context";
 
+        /// <summary> API URL action name for data source management.</summary>
+        public const string DATASOURCE_MANAGMENT = "datasource";
+
         /// <summary> Parameter name for tag.</summary>
         public const string TAG_PARAM_NAME = "tag";
 
         /// <summary> Parameter name for context.</summary>
         public const string CONTEXT_PARAM_NAME = "context";
+
+        /// <summary> Parameter name for metadata.</summary>
+        public const string METADATA_PARAM_NAME = "metadata";
 
         /// <summary> Parameter name for prefix.</summary>
         public const string PREFIX_PARAM_NAME = "prefix";

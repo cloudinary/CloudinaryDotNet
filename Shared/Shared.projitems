@@ -18,10 +18,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\BaseParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\BaseResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataUpdateResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\CreateFolderResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ListResourcesByContextParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataFieldParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataUpdateParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileBaseParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataFieldResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileUpdateParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\StreamingProfileCreateParams.cs" />
@@ -87,6 +91,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ApiShared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApiShared.Internal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AuthToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Cloudinary.MetadataFields.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cloudinary.StreamingProfiles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Cloudinary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CloudinaryConfiguration.cs" />

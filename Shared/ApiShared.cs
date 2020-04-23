@@ -18,6 +18,7 @@
     /// Provider for the API calls.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
+    [SuppressMessage("Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Reviewed.")]
     public partial class ApiShared : ISignProvider
     {
         /// <summary>
@@ -111,7 +112,10 @@
         /// </summary>
         public int ChunkSize = 65000;
 
-        private static readonly HttpClient Client = new HttpClient();
+        /// <summary>
+        /// Sends HTTP requests and receives HTTP responses.
+        /// </summary>
+        public static HttpClient Client = new HttpClient();
 
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
@@ -335,6 +339,11 @@
         /// Default cloudinary API URL for streaming profiles.
         /// </summary>
         public Url ApiUrlStreamingProfileV => ApiUrlV.Add(Constants.STREAMING_PROFILE_API_URL);
+
+        /// <summary>
+        /// Default cloudinary API URL for metadata fields.
+        /// </summary>
+        public Url ApiUrlMetadataFieldV => ApiUrlV.Add(Constants.METADATA_FIELDS_API_URL);
 
         /// <summary>
         /// Default cloudinary API URL for uploading images with version.
