@@ -15,7 +15,9 @@
     <Content Include="$(MSBuildThisFileDirectory)appsettings.json.sample" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AccountApi\AccountProvisioningAsyncTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AdminApi\MetaDataTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AccountApi\AccountProvisioningTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadApi\PublishMethodsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadApi\MultiMethodsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadApi\ExplodeMethodsTest.cs" />

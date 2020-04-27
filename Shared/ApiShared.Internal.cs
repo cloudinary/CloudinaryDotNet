@@ -50,6 +50,44 @@
         }
 
         /// <summary>
+        /// Call account api asynchronous and return response of specified type asynchronously.
+        /// </summary>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">Url for api call.</param>
+        /// <param name="parameters">Parameters for api call.</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
+        /// <param name="extraHeaders">Extra headers.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Return response of specified type.</returns>
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
+        internal virtual Task<T> CallAccountApiAsync<T>(
+            HttpMethod method,
+            string url,
+            BaseParams parameters,
+            FileDescription file,
+            Dictionary<string, string> extraHeaders = null,
+            CancellationToken? cancellationToken = null)
+            where T : BaseResult, new()
+        {
+            ValidateAccountApiCredentials();
+            parameters?.Check();
+
+            var callParams = (method == HttpMethod.PUT || method == HttpMethod.POST)
+                ? parameters?.ToParamsDictionary()
+                : null;
+
+            return CallAndParseAsync<T>(
+                method,
+                url,
+                callParams,
+                file,
+                extraHeaders,
+                cancellationToken,
+                ProvisioningApiAccount.ApiKey,
+                ProvisioningApiAccount.ApiSecret);
+        }
+
+        /// <summary>
         /// Call api synchronous and return response of specified type.
         /// </summary>
         /// <param name="method">HTTP method.</param>
@@ -70,6 +108,32 @@
                 (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
                 file,
                 extraHeaders);
+        }
+
+        /// <summary>
+        /// Call account api synchronous and return response of specified type.
+        /// </summary>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">Url for api call.</param>
+        /// <param name="parameters">Parameters for api call.</param>
+        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
+        /// <param name="extraHeaders">Extra headers.</param>
+        /// <returns>Return response of specified type.</returns>
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
+        internal virtual T CallAccountApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
+        {
+            ValidateAccountApiCredentials();
+            parameters?.Check();
+
+            return CallAndParse<T>(
+                method,
+                url,
+                (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                file,
+                extraHeaders,
+                ProvisioningApiAccount.ApiKey,
+                ProvisioningApiAccount.ApiSecret);
         }
 
         /// <summary>
@@ -115,6 +179,8 @@
         /// <param name="file">File to upload.</param>
         /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <param name="apiKey">(Optional) Api key of the account.</param>
+        /// <param name="apiSecret">(Optional) Api secret of the account.</param>
         /// <returns>Prepared HTTP request.</returns>
         internal async Task<HttpRequestMessage> PrepareRequestBodyAsync(
             HttpRequestMessage request,
@@ -122,9 +188,11 @@
             SortedDictionary<string, object> parameters,
             FileDescription file,
             Dictionary<string, string> extraHeaders = null,
-            CancellationToken? cancellationToken = null)
+            CancellationToken? cancellationToken = null,
+            string apiKey = null,
+            string apiSecret = null)
         {
-            PrePrepareRequestBody(request, method, extraHeaders);
+            PrePrepareRequestBody(request, method, extraHeaders, apiKey, apiSecret);
 
             if (ShouldPrepareContent(method, parameters))
             {
@@ -144,15 +212,19 @@
         /// <param name="parameters">Dictionary of call parameters.</param>
         /// <param name="file">File to upload.</param>
         /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
+        /// <param name="apiKey">(Optional) Api key of the account.</param>
+        /// <param name="apiSecret">(Optional) Api secret of the account.</param>
         /// <returns>Prepared HTTP request.</returns>
         internal HttpRequestMessage PrepareRequestBody(
             HttpRequestMessage request,
             HttpMethod method,
             SortedDictionary<string, object> parameters,
             FileDescription file,
-            Dictionary<string, string> extraHeaders = null)
+            Dictionary<string, string> extraHeaders = null,
+            string apiKey = null,
+            string apiSecret = null)
         {
-            PrePrepareRequestBody(request, method, extraHeaders);
+            PrePrepareRequestBody(request, method, extraHeaders, apiKey, apiSecret);
 
             if (ShouldPrepareContent(method, parameters))
             {
@@ -173,6 +245,13 @@
             parameters.Add("timestamp", Utils.UnixTimeNowSeconds());
             parameters.Add("signature", SignParameters(parameters));
             parameters.Add("api_key", Account.ApiKey);
+        }
+
+        private void ValidateAccountApiCredentials()
+        {
+            const string message = "for account provisioning API cannot be null";
+            Utils.ShouldNotBeEmpty(() => ProvisioningApiAccount.ApiKey, message);
+            Utils.ShouldNotBeEmpty(() => ProvisioningApiAccount.ApiSecret, message);
         }
 
         private static T CreateResult<T>(HttpResponseMessage response, string s)
@@ -248,7 +327,12 @@
             }
         }
 
-        private void PrePrepareRequestBody(HttpRequestMessage request, HttpMethod method, Dictionary<string, string> extraHeaders)
+        private void PrePrepareRequestBody(
+            HttpRequestMessage request,
+            HttpMethod method,
+            Dictionary<string, string> extraHeaders,
+            string apiKey = null,
+            string apiSecret = null)
         {
             SetHttpMethod(method, request);
 
@@ -259,7 +343,9 @@
                 : string.Format("{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            var accountApiKey = apiKey ?? Account.ApiKey;
+            var accountApiSecret = apiSecret ?? Account.ApiSecret;
+            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", accountApiKey, accountApiSecret));
             request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)

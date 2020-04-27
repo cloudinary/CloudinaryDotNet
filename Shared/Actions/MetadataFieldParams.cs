@@ -83,7 +83,7 @@
         /// <param name="allowedValidationTypes">List of validation types allowed for the metadata field type.</param>
         protected void CheckScalarDataModel(List<Type> allowedValidationTypes)
         {
-            ShouldNotBeSpecified(() => DataSource);
+            Utils.ShouldNotBeSpecified(() => DataSource);
 
             if (Validation == null)
             {
@@ -123,11 +123,11 @@
         /// </summary>
         public override void Check()
         {
-            ShouldBeSpecified(() => Label);
+            Utils.ShouldBeSpecified(() => Label);
 
             if (Mandatory)
             {
-                ShouldBeSpecified(() => DefaultValue);
+                Utils.ShouldBeSpecified(() => DefaultValue);
             }
         }
 
@@ -446,8 +446,8 @@
         public override void Check()
         {
             base.Check();
-            ShouldBeSpecified(() => DataSource);
-            ShouldNotBeSpecified(() => Validation);
+            Utils.ShouldBeSpecified(() => DataSource);
+            Utils.ShouldNotBeSpecified(() => Validation);
             DataSource.Check();
         }
 
@@ -485,7 +485,7 @@
         {
             base.Check();
             DataSource?.Check();
-            ShouldNotBeSpecified(() => Validation);
+            Utils.ShouldNotBeSpecified(() => Validation);
         }
 
         /// <summary>
@@ -526,11 +526,11 @@
 
             if (Mandatory)
             {
-                ShouldNotBeEmpty(() => DefaultValue);
+                Utils.ShouldNotBeEmpty(() => DefaultValue);
             }
 
-            ShouldBeSpecified(() => DataSource);
-            ShouldNotBeSpecified(() => Validation);
+            Utils.ShouldBeSpecified(() => DataSource);
+            Utils.ShouldNotBeSpecified(() => Validation);
             DataSource.Check();
         }
 
@@ -568,7 +568,7 @@
         {
             base.Check();
             DataSource?.Check();
-            ShouldNotBeSpecified(() => Validation);
+            Utils.ShouldNotBeSpecified(() => Validation);
         }
 
         /// <summary>
@@ -610,7 +610,7 @@
         /// </summary>
         public override void Check()
         {
-            ShouldNotBeEmpty(() => Values);
+            Utils.ShouldNotBeEmpty(() => Values);
             Values.ForEach(value => value.Check());
         }
 
@@ -668,7 +668,7 @@
         /// </summary>
         public override void Check()
         {
-            ShouldNotBeEmpty(() => Value);
+            Utils.ShouldNotBeEmpty(() => Value);
         }
 
         /// <summary>
@@ -803,7 +803,7 @@
         /// </summary>
         public override void Check()
         {
-            ShouldBeSpecified(() => Value);
+            Utils.ShouldBeSpecified(() => Value);
         }
 
         /// <summary>
@@ -947,7 +947,7 @@
         /// </summary>
         public override void Check()
         {
-            ShouldNotBeEmpty(() => Rules);
+            Utils.ShouldNotBeEmpty(() => Rules);
         }
 
         /// <summary>
@@ -1054,7 +1054,7 @@
         /// </summary>
         public override void Check()
         {
-            ShouldNotBeEmpty(() => ExternalIds);
+            Utils.ShouldNotBeEmpty(() => ExternalIds);
         }
 
         /// <summary>

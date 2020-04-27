@@ -88,5 +88,20 @@
 
         /// <summary> HTTP protocol Content-Type header value for application/json.</summary>
         public const string CONTENT_TYPE_APPLICATION_JSON = "application/json";
+
+        /// <summary> Part of general API URL pattern for account api.</summary>
+        public const string PROVISIONING = "provisioning";
+
+        /// <summary> Part of general API URL pattern for account api.</summary>
+        public const string ACCOUNTS = "accounts";
+
+        /// <summary> Sub-accounts resource of account api.</summary>
+        public const string SUB_ACCOUNTS = "sub_accounts";
+
+        /// <summary> Users resource of account api.</summary>
+        public const string USERS = "users";
+
+        /// <summary> User groups resource of account api.</summary>
+        public const string USER_GROUPS = "user_groups";
     }
 }
