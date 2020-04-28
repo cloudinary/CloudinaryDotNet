@@ -123,5 +123,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Url.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudinaryVersion.cs" />
   </ItemGroup>
 </Project>
