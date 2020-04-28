@@ -1082,14 +1082,16 @@
         /// Async call to get a list of folders in the root asynchronously.
         /// </summary>
         /// <param name="parameters">(optional) Parameters for managing folders list.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public Task<GetFoldersResult> RootFoldersAsync(GetFoldersParams parameters = null)
+        public Task<GetFoldersResult> RootFoldersAsync(GetFoldersParams parameters = null, CancellationToken? cancellationToken = null)
         {
             return m_api.CallApiAsync<GetFoldersResult>(
                 HttpMethod.GET,
                 GetFolderUrl(parameters: parameters),
                 null,
-                null);
+                null,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1111,9 +1113,20 @@
         /// </summary>
         /// <param name="folder">The folder name.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <param name="parameters">(Optional) Parameters for managing folders list.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public Task<GetFoldersResult> SubFoldersAsync(string folder, CancellationToken? cancellationToken = null, GetFoldersParams parameters = null)
+        public Task<GetFoldersResult> SubFoldersAsync(string folder, CancellationToken? cancellationToken = null)
+        {
+            return SubFoldersAsync(folder, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets a list of subfolders in a specified folder asynchronously.
+        /// </summary>
+        /// <param name="folder">The folder name.</param>
+        /// <param name="parameters">(Optional) Parameters for managing folders list.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of folders listing.</returns>
+        public Task<GetFoldersResult> SubFoldersAsync(string folder, GetFoldersParams parameters, CancellationToken? cancellationToken = null)
         {
             CheckFolderParameter(folder);
 
@@ -1122,8 +1135,7 @@
                 GetFolderUrl(folder, parameters),
                 null,
                 null,
-                null,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>

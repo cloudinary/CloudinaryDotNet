@@ -17,24 +17,23 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         private string _subFolder1;
         private string _subFolder2;
 
-        [SetUp]
+        [SetUp] 
         public void SetUp()
         {
-            _rootFolder1 = GetUniqueFolder("1") ;
-            _rootFolder2 = GetUniqueFolder("2");
-            _subFolder1 = $"{_rootFolder1}/test_subfolder1";
-            _subFolder2 = $"{_rootFolder1}/test_subfolder2";
+            PrepareFoldersForTests();
+            WaitForServerUpdate();
+        }
 
-            var folders = new List<string> {
-                $"{_rootFolder1}/item",
-                $"{_rootFolder2}/item",
-                $"{_subFolder1}/item",
-                $"{_subFolder2}/item"
+        [TearDown]
+        public void TearDown()
+        {
+            var foldersForDeletion = new List<string>
+            {
+                _rootFolder1,
+                _rootFolder2
             };
 
-            folders.ForEach(folder => { AssertCreateFolderResult(m_cloudinary.CreateFolder(folder)); });
-
-            WaitForServerUpdate();
+            foldersForDeletion.ForEach(f => m_cloudinary.DeleteFolder(f));
         }
 
         [Test]
@@ -156,7 +155,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                 MaxResults = 2
             };
 
-            result = await m_cloudinary.SubFoldersAsync(_rootFolder1, parameters: getFoldersParams);
+            result = await m_cloudinary.SubFoldersAsync(_rootFolder1, getFoldersParams);
 
             AssertGetFolders(result);
             Assert.IsNotNull(result.NextCursor);
@@ -166,7 +165,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                 MaxResults = 2,
                 NextCursor = result.NextCursor
             };
-            result = await m_cloudinary.SubFoldersAsync(_rootFolder1, parameters: getFoldersParams);
+            result = await m_cloudinary.SubFoldersAsync(_rootFolder1, getFoldersParams);
 
             AssertGetFolders(result);
         }
@@ -175,6 +174,26 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // TODO: fix race here (server might be not updated at this point)
             Thread.Sleep(2000);
+        }
+
+        private void PrepareFoldersForTests()
+        {
+            _rootFolder1 = $"{m_folderPrefix}1";
+            _rootFolder2 = $"{m_folderPrefix}2";
+            _subFolder1 = $"{_rootFolder1}/test_subfolder1";
+            _subFolder2 = $"{_rootFolder1}/test_subfolder2";
+
+            var folders = new List<string> {
+                $"{_rootFolder1}/item",
+                $"{_rootFolder2}/item",
+                $"{_subFolder1}/item",
+                $"{_subFolder2}/item"
+            };
+
+            folders.ForEach(folder => m_cloudinary.Api.Call(HttpMethod.POST,
+                m_cloudinary.Api.ApiUrlV.Add("folders").Add(folder).BuildUrl(),
+                null,
+                null));
         }
 
         private void AssertGetFolders(GetFoldersResult result)
