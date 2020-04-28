@@ -24,5 +24,10 @@
         /// Authentication token for the token-based authentication.
         /// </summary>
         public static AuthToken AuthToken = null;
+
+        /// <summary>
+        /// Defines whether to generate 32 characters length signature for URIs.
+        /// </summary>
+        public static bool LongUrlSignature = false;
     }
 }

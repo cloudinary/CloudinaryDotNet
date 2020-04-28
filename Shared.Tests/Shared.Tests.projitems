@@ -9,6 +9,9 @@
     <Import_RootNamespace>Shared.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)MetaDataTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parameters\MetadataFieldParamsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parameters\MetadataUpdateParamsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parameters\ParametersTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
@@ -31,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Asset\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Parameters\" />
     <Folder Include="$(MSBuildThisFileDirectory)Transformations\Image\" />
     <Folder Include="$(MSBuildThisFileDirectory)Transformations\Video\" />
     <Folder Include="$(MSBuildThisFileDirectory)Util\" />

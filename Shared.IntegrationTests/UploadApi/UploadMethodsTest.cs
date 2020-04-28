@@ -900,6 +900,36 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
         }
 
+        [Test]
+        public void TestMetadata()
+        {
+            var metadataLabel = GetUniqueMetadataFieldLabel("resource_upload");
+            var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
+            var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
+
+            Assert.NotNull(metadataResult);
+
+            var metadataFieldId = metadataResult.ExternalId;
+            if (!string.IsNullOrEmpty(metadataFieldId))
+                m_metadataFieldsToClear.Add(metadataFieldId);
+
+            const string metadataValue = "test value";
+            var metadata = new StringDictionary
+            {
+                {metadataFieldId, metadataValue}
+            };
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+                MetadataFields = metadata
+            });
+
+            Assert.NotNull(uploadResult);
+            Assert.AreEqual(HttpStatusCode.OK, uploadResult.StatusCode);
+            Assert.NotNull(uploadResult.MetadataFields);
+        }
+
         //[Test]
         //public void TestTextAlign()
         //{

@@ -103,6 +103,11 @@ namespace CloudinaryDotNet.Actions
         public StringDictionary Context { get; set; }
 
         /// <summary>
+        /// A list of custom metadata fields (by external_id) and the values to assign to each of them.
+        /// </summary>
+        public StringDictionary Metadata { get; set; }
+
+        /// <summary>
         /// Requests that Cloudinary automatically find the best breakpoints from the array of breakpoint request
         /// settings.
         /// </summary>
@@ -147,17 +152,6 @@ namespace CloudinaryDotNet.Actions
         /// Running cinemagraph analysis on static images returns 0.
         /// </summary>
         public bool? CinemagraphAnalysis { get; set; }
-
-        /// <summary>
-        /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
-        /// Supported for images, video, and audio.
-        /// </summary>
-        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
-        public bool? Metadata
-        {
-            get { return ImageMetadata; }
-            set { ImageMetadata = value; }
-        }
 
         /// <summary>
         /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
@@ -264,6 +258,11 @@ namespace CloudinaryDotNet.Actions
             if (Context != null && Context.Count > 0)
             {
                 AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", Context.SafePairs));
+            }
+
+            if (Metadata != null && Metadata.Count > 0)
+            {
+                AddParam(dict, Constants.METADATA_PARAM_NAME, Utils.SafeJoin("|", Metadata.SafePairs));
             }
 
             if (ResponsiveBreakpoints != null && ResponsiveBreakpoints.Count > 0)
