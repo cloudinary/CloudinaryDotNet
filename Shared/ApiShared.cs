@@ -126,16 +126,7 @@
         /// </summary>
         static ApiShared()
         {
-            var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
-
-            var frameworkDescription = RuntimeInformation.FrameworkDescription;
-
-            USER_AGENT = string.Format(
-                "CloudinaryDotNet/{0}.{1}.{2} ({3})",
-                version.Major,
-                version.Minor,
-                version.Build,
-                frameworkDescription);
+            USER_AGENT = $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
         }
 
         /// <summary>
