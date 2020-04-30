@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -17,23 +16,14 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         private string _subFolder1;
         private string _subFolder2;
 
-        [SetUp] 
+        private const string NON_EXISTING_FOLDER = "non_existing_folder";
+        private const string TEST_SUB_FOLDER = "test_sub_folder";
+
+        [SetUp]
         public void SetUp()
         {
             PrepareFoldersForTests();
             WaitForServerUpdate();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            var foldersForDeletion = new List<string>
-            {
-                _rootFolder1,
-                _rootFolder2
-            };
-
-            foldersForDeletion.ForEach(f => m_cloudinary.DeleteFolder(f));
         }
 
         [Test]
@@ -50,7 +40,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             AssertGetSubFoldersError(result);
 
-            var deletionRes = m_cloudinary.DeleteFolder($"{_subFolder1}_");
+            var deletionRes = m_cloudinary.DeleteFolder(NON_EXISTING_FOLDER);
 
             AssertDeleteFolderError(deletionRes);
 
@@ -117,7 +107,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             AssertGetSubFoldersError(result);
 
-            var deletionRes = await m_cloudinary.DeleteFolderAsync($"{_subFolder1}_");
+            var deletionRes = await m_cloudinary.DeleteFolderAsync(NON_EXISTING_FOLDER);
 
             AssertDeleteFolderError(deletionRes);
 
@@ -178,22 +168,30 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
         private void PrepareFoldersForTests()
         {
-            _rootFolder1 = $"{m_folderPrefix}1";
-            _rootFolder2 = $"{m_folderPrefix}2";
-            _subFolder1 = $"{_rootFolder1}/test_subfolder1";
-            _subFolder2 = $"{_rootFolder1}/test_subfolder2";
+            _rootFolder1 = GetUniqueFolder("1");
+            _rootFolder2 = GetUniqueFolder("2");
+            _subFolder1 = GetSubFolder(_rootFolder1, "1");
+            _subFolder2 = GetSubFolder(_rootFolder1, "2");
 
-            var folders = new List<string> {
-                $"{_rootFolder1}/item",
-                $"{_rootFolder2}/item",
-                $"{_subFolder1}/item",
-                $"{_subFolder2}/item"
+            var folders = new List<string> 
+            {
+                GetItemSubFolder(_rootFolder1),
+                GetItemSubFolder(_rootFolder2),
+                GetItemSubFolder(_subFolder1),
+                GetItemSubFolder(_subFolder2)
             };
 
-            folders.ForEach(folder => m_cloudinary.Api.Call(HttpMethod.POST,
-                m_cloudinary.Api.ApiUrlV.Add("folders").Add(folder).BuildUrl(),
-                null,
-                null));
+            folders.ForEach(folder => m_cloudinary.CreateFolder(folder));
+        }
+
+        private string GetSubFolder(string folder, string subFolderSuffix = "")
+        {
+            return $"{folder}/{TEST_SUB_FOLDER}{subFolderSuffix}";
+        }
+
+        private string GetItemSubFolder(string folder)
+        {
+            return $"{folder}/item";
         }
 
         private void AssertGetFolders(GetFoldersResult result)
@@ -271,16 +269,15 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         public void TestCreateFolderWithSubFolders()
         {
             var testFolderName = GetUniqueFolder("root_folder");
-            const string testSubFolderName = "test_sub_folder";
-            var testPath = $"{testFolderName}/{testSubFolderName}";
+            var testPath = GetSubFolder(testFolderName);
 
             var createFolderResult = m_cloudinary.CreateFolder(testPath);
 
             AssertCreateFolderResult(createFolderResult);
-            Assert.AreEqual(testSubFolderName, createFolderResult.Name);
+            Assert.AreEqual(TEST_SUB_FOLDER, createFolderResult.Name);
             Assert.AreEqual(testPath, createFolderResult.Path);
 
-            Thread.Sleep(2000);
+            WaitForServerUpdate();
 
             var result = m_cloudinary.RootFolders();
 
