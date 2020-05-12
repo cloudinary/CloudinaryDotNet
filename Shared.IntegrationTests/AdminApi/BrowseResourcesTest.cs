@@ -496,5 +496,19 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             Assert.GreaterOrEqual(getResult.CinemagraphAnalysis.CinemagraphScore, 0);
         }
+
+        [Test]
+        public void TestGetResourceAccessibilityAnalysis()
+        {
+            var uploadResult = UploadTestImageResource();
+            var getResourceParams = new GetResourceParams(uploadResult.PublicId)
+            {
+                AccessibilityAnalysis = true
+            };
+
+            var getResult = m_cloudinary.GetResource(getResourceParams);
+
+            CloudinaryAssert.AccessibilityAnalysisNotEmpty(getResult.AccessibilityAnalysis);
+        }
     }
 }

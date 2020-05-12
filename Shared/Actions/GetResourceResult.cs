@@ -240,6 +240,13 @@
         /// </summary>
         [DataMember(Name = "cinemagraph_analysis")]
         public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
+
+        /// <summary>
+        /// The color ambiguity score that indicate how good\bad an image is for colorblind people.
+        /// Will they be able to differentiate between different elements in the image.
+        /// </summary>
+        [DataMember(Name = "accessibility_analysis")]
+        public AccessibilityAnalysis AccessibilityAnalysis { get; set; }
     }
 
     /// <summary>
@@ -927,5 +934,49 @@
         /// </summary>
         [DataMember(Name = "cinemagraph_score")]
         public double CinemagraphScore { get; protected set; }
+    }
+
+    /// <summary>
+    /// Details of the accessibility analysis.
+    /// </summary>
+    [DataContract]
+    public class AccessibilityAnalysis
+    {
+        /// <summary>
+        /// Details of colorblind accessibility analysis.
+        /// </summary>
+        [DataMember(Name = "colorblind_accessibility_analysis")]
+        public ColorblindAccessibilityAnalysis ColorblindAccessibilityAnalysis { get; set; }
+
+        /// <summary>
+        /// Gets value between 0-1.
+        /// </summary>
+        [DataMember(Name = "colorblind_accessibility_score")]
+        public double ColorblindAccessibilityScore { get; set; }
+    }
+
+    /// <summary>
+    /// Details of colorblind accessibility analysis.
+    /// </summary>
+    [DataContract]
+    public class ColorblindAccessibilityAnalysis
+    {
+        /// <summary>
+        /// Gets distinct edges value between 0-1.
+        /// </summary>
+        [DataMember(Name = "distinct_edges")]
+        public double DistinctEdges { get; set; }
+
+        /// <summary>
+        /// Gets distinct colors value between 0-1.
+        /// </summary>
+        [DataMember(Name = "distinct_colors")]
+        public double DistinctColors { get; set; }
+
+        /// <summary>
+        /// Gets most indistinct pair of colors.
+        /// </summary>
+        [DataMember(Name = "most_indistinct_pair")]
+        public string[] MostIndistinctPair { get; set; }
     }
 }

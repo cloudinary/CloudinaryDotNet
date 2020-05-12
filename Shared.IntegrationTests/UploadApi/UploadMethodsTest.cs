@@ -901,6 +901,17 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         }
 
         [Test]
+        public void TestUploadImageAccessibilityAnalysis()
+        {
+            var uploadResult = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.AccessibilityAnalysis = true;
+            });
+
+            CloudinaryAssert.AccessibilityAnalysisNotEmpty(uploadResult.AccessibilityAnalysis);
+        }
+
+        [Test]
         public void TestMetadata()
         {
             var metadataLabel = GetUniqueMetadataFieldLabel("resource_upload");

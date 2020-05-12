@@ -203,6 +203,11 @@ namespace CloudinaryDotNet.Actions
         public string Moderation { get; set; }
 
         /// <summary>
+        /// Optional. Include accessibility analysis information. Default: false.
+        /// </summary>
+        public bool? AccessibilityAnalysis { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -219,7 +224,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "tags", Tags);
@@ -236,6 +241,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "notification_url", NotificationUrl);
             AddParam(dict, "quality_override", QualityOverride);
             AddParam(dict, "moderation", Moderation);
+            AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
 
             if (ResourceType == ResourceType.Image)
             {

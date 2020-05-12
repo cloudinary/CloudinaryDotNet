@@ -522,6 +522,17 @@ namespace CloudinaryDotNet.IntegrationTest
         {
             return string.Join(newChar, s.Split(oldChars, StringSplitOptions.RemoveEmptyEntries));
         }
+
+        public static void AccessibilityAnalysisNotEmpty(AccessibilityAnalysis accessibilityAnalysisResult)
+        {
+            Assert.IsNotNull(accessibilityAnalysisResult);
+            Assert.GreaterOrEqual(accessibilityAnalysisResult.ColorblindAccessibilityScore, 0);
+
+            Assert.IsNotNull(accessibilityAnalysisResult.ColorblindAccessibilityAnalysis);
+            Assert.GreaterOrEqual(accessibilityAnalysisResult.ColorblindAccessibilityAnalysis.DistinctColors, 0);
+            Assert.GreaterOrEqual(accessibilityAnalysisResult.ColorblindAccessibilityAnalysis.DistinctEdges, 0);
+            Assert.GreaterOrEqual(accessibilityAnalysisResult.ColorblindAccessibilityAnalysis.MostIndistinctPair.Length, 0);
+        }
     }
 
 }
