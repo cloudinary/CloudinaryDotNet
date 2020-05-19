@@ -570,7 +570,20 @@
                 parameters = new SortedDictionary<string, object>(parameters);
             }
 
-            string path = string.Empty;
+            foreach (var key in parameters.Keys.ToList())
+            {
+                var paramValue = parameters[key];
+                if (paramValue is IEnumerable<string> value)
+                {
+                    parameters[key] = Utils.SafeJoin("|", value);
+                }
+                else if (paramValue is Transformation transformation)
+                {
+                    parameters[key] = transformation.Generate();
+                }
+            }
+
+            var path = string.Empty;
             if (parameters.ContainsKey("callback") && parameters["callback"] != null)
             {
                 path = parameters["callback"].ToString();

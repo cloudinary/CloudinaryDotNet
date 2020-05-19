@@ -38,6 +38,35 @@ namespace CloudinaryDotNet.Test.Tag
         }
 
         [Test]
+        public void TestImageDirectUploadTags()
+        {
+            var htmlOptions = new Dictionary<string, string> ();
+            var parameters = new SortedDictionary<string, object>
+            {
+                {"tags", new List<string> {"user_218", "screencast"}}
+            };
+
+            var result = m_api.BuildUploadForm("test-field", "auto", parameters, htmlOptions);
+
+            Assert.IsTrue(result.Contains(@"""tags"":""user_218|screencast"""));
+        }
+
+        [Test]
+        public void TestImageDirectUploadTransformations()
+        {
+            var htmlOptions = new Dictionary<string, string>();
+            var transformation = new EagerTransformation().SetFormat("m3u8").RawTransformation("sp_full_hd");
+            var parameters = new SortedDictionary<string, object>
+            {
+                { "eager", transformation}
+            };
+
+            var result = m_api.BuildUploadForm("test-field", "auto", parameters, htmlOptions);
+
+            Assert.IsTrue(result.Contains(@"""eager"":""sp_full_hd/m3u8"""));
+        }
+
+        [Test]
         public void TestImageTag()
         {
             var transformation = new Transformation().Width(100).Height(101).Crop("crop");
