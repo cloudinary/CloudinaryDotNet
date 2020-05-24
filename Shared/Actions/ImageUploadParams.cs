@@ -194,12 +194,17 @@
         public bool? CinemagraphAnalysis { get; set; }
 
         /// <summary>
+        /// Optional. Include accessibility analysis information. Default: false.
+        /// </summary>
+        public bool? AccessibilityAnalysis { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             AddParam(dict, "format", Format);
             AddParam(dict, "exif", Exif);
@@ -219,6 +224,7 @@
             AddParam(dict, "background_removal", BackgroundRemoval);
             AddParam(dict, "return_delete_token", ReturnDeleteToken);
             AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
+            AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
 
             if (AutoTagging.HasValue)
             {

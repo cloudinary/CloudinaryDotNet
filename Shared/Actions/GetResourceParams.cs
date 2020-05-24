@@ -158,6 +158,11 @@ namespace CloudinaryDotNet.Actions
         public bool? Moderation { get; set; }
 
         /// <summary>
+        /// Optional. Include accessibility analysis information. Default: false.
+        /// </summary>
+        public bool? AccessibilityAnalysis { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -174,7 +179,7 @@ namespace CloudinaryDotNet.Actions
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
             {
@@ -198,6 +203,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "next_cursor", NextCursor);
             AddParam(dict, "start_at", StartAt);
             AddParam(dict, "direction", Direction);
+            AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
 
             return dict;
         }

@@ -127,6 +127,13 @@
         public ProfilingData[] ProfilingData { get; protected set; }
 
         /// <summary>
+        /// The color ambiguity score that indicate how good\bad an image is for colorblind people.
+        /// Will they be able to differentiate between different elements in the image.
+        /// </summary>
+        [DataMember(Name = "accessibility_analysis")]
+        public AccessibilityAnalysis AccessibilityAnalysis { get; set; }
+
+        /// <summary>
         /// Overrides corresponding method of <see cref="BaseResult"/> class.
         /// Populates additional token fields.
         /// </summary>

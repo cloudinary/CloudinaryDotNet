@@ -535,5 +535,25 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             Assert.GreaterOrEqual(explicitResult.CinemagraphAnalysis.CinemagraphScore, 0);
         }
+
+        [Test]
+        public void TestAccessibilityAnalysis()
+        {
+            var uploadRes = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.AccessibilityAnalysis = true;
+            });
+
+            var explicitParams = new ExplicitParams(uploadRes.PublicId)
+            {
+                AccessibilityAnalysis = true,
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            var explicitResult = m_cloudinary.Explicit(explicitParams);
+
+            CloudinaryAssert.AccessibilityAnalysisNotEmpty(explicitResult.AccessibilityAnalysis);
+        }
     }
 }
