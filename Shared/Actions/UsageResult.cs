@@ -44,7 +44,7 @@
         /// Count of requests used.
         /// </summary>
         [DataMember(Name = "requests")]
-        public int Requests { get; protected set; }
+        public long Requests { get; protected set; }
 
         /// <summary>
         /// Count of resources in your account.
