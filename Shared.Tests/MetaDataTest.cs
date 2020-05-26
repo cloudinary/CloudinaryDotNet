@@ -1,11 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+using SystemHttp = System.Net.Http;
 using CloudinaryDotNet.Actions;
-using Moq;
-using Moq.Protected;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
@@ -18,8 +13,6 @@ namespace CloudinaryDotNet.Test
         private const string externalIdEnum = "metadata_external_id_enum";
         private const string externalIdDelete = "metadata_deletion";
         private const string datasourceEntryExternalId = "metadata_datasource_entry_external_id";
-
-        private const string cloudName = "test_cloud";
 
         /// <summary>
         /// <para>Getting a list of all metadata fields.</para>
@@ -35,7 +28,7 @@ namespace CloudinaryDotNet.Test
 
             mockedCloudinary.ListMetadataFields();
 
-            AssertHttpCall(mockedCloudinary, System.Net.Http.HttpMethod.Get, localPath: "metadata_fields");
+            mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Get, "metadata_fields");
         }
 
 
@@ -57,7 +50,7 @@ namespace CloudinaryDotNet.Test
 
             mockedCloudinary.AddMetadataField(parameters);
 
-            AssertHttpCall(mockedCloudinary, System.Net.Http.HttpMethod.Post, localPath: "metadata_fields");
+            mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "metadata_fields");
             AssertEncodedRequestFields(mockedCloudinary, "string", externalIdString);
         }
 
@@ -79,7 +72,7 @@ namespace CloudinaryDotNet.Test
 
             mockedCloudinary.AddMetadataField(parameters);
 
-            AssertHttpCall(mockedCloudinary, System.Net.Http.HttpMethod.Post, localPath: "metadata_fields");
+            mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "metadata_fields");
             AssertEncodedRequestFields(mockedCloudinary, "integer", externalIdInt);
         }
 
@@ -107,7 +100,7 @@ namespace CloudinaryDotNet.Test
 
             mockedCloudinary.AddMetadataField(parameters);
 
-            AssertHttpCall(mockedCloudinary, System.Net.Http.HttpMethod.Post, localPath: "metadata_fields");
+            mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "metadata_fields");
             AssertEncodedRequestFields(mockedCloudinary, "enum", externalIdEnum, singleEntry[0]);
         }
 
@@ -125,27 +118,7 @@ namespace CloudinaryDotNet.Test
 
             mockedCloudinary.DeleteMetadataField(externalIdDelete);
 
-            AssertHttpCall(mockedCloudinary, System.Net.Http.HttpMethod.Delete, localPath: $"metadata_fields/{externalIdDelete}");
-        }
-
-        /// <summary>
-        /// <para>Asserts that a given HTTP call was sent with expected parameters.</para>
-        /// </summary>
-        /// <param name="mockedCloudinary">An instance of the <see cref="Cloudinary"/> class with mocked HttpClient.</param>
-        /// <param name="httpMethod">Expected HTTP method type.</param>
-        /// <param name="localPath">Expected local part of the called Uri.</param>
-        private static void AssertHttpCall(MockedCloudinary mockedCloudinary, System.Net.Http.HttpMethod httpMethod, string localPath)
-        {
-            mockedCloudinary.HandlerMock.Protected().Verify(
-                "SendAsync",
-                Times.Exactly(1),
-                ItExpr.Is<HttpRequestMessage>(req =>
-                    req.Method == httpMethod &&
-                    req.RequestUri.LocalPath == $"/v1_1/{cloudName}/{localPath}" &&
-                    req.Properties.Count == 0
-                ),
-                ItExpr.IsAny<CancellationToken>()
-            );
+            mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Delete, $"metadata_fields/{externalIdDelete}");
         }
 
         /// <summary>
@@ -172,36 +145,6 @@ namespace CloudinaryDotNet.Test
             var firstDataSource = requestJson["datasource"]["values"].First;
             Assert.AreEqual(dataSourceEntry.Value, firstDataSource["value"].Value<string>());
             Assert.AreEqual(dataSourceEntry.ExternalId, firstDataSource["external_id"].Value<string>());
-        }
-    }
-
-    public class MockedCloudinary : Cloudinary
-    {
-        public Mock<HttpMessageHandler> HandlerMock;
-        public string HttpRequestContent;
-
-        public MockedCloudinary() : base("cloudinary://a:b@test_cloud")
-        {
-            HandlerMock = new Mock<HttpMessageHandler>();
-            HandlerMock.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync", 
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>())
-                .Callback<HttpRequestMessage, CancellationToken>(
-                    (httpRequestMessage, cancellationToken) =>
-                    {
-                        HttpRequestContent = httpRequestMessage.Content?
-                            .ReadAsStringAsync()
-                            .GetAwaiter()
-                            .GetResult();
-                    })
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{}")
-                });
-            ApiShared.Client = new HttpClient(HandlerMock.Object);
         }
     }
 }
