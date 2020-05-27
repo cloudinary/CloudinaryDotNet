@@ -553,5 +553,16 @@ namespace CloudinaryDotNet.Test.Asset
 
             Assert.IsTrue(url.EndsWith("/folders/sub%5Efolder%20test"));
         }
+        
+        [Test]
+        public void TestApiUrlWithPrivateCdn()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123/test123-res.cloudinary.com?cname=mycname.com");
+            
+            const string testTag = "api_test_custom1";
+            var urlZipImage = cloudinary.DownloadZip(testTag, null);
+            
+            StringAssert.StartsWith("https://api.cloudinary.com", urlZipImage);
+        }
     }
 }
