@@ -286,7 +286,7 @@
         {
             if (!string.IsNullOrEmpty(part))
             {
-                m_customParts.Add(part);
+                m_customParts.Add(Uri.EscapeUriString(part));
             }
 
             return this;
