@@ -1099,8 +1099,16 @@
 
         private string GetPrefix(string source, out bool sharedDomain)
         {
-            string prefix;
             sharedDomain = !m_usePrivateCdn;
+
+            // API url starts with https://, no prefix manipulation for it
+            if (Regex.IsMatch(m_cloudinaryAddr.ToLower(), "^https?:/.*"))
+            {
+                return m_cloudinaryAddr;
+            }
+
+            string prefix;
+
             string privateCdn = m_privateCdn;
             if (m_secure)
             {
@@ -1122,11 +1130,7 @@
             }
             else
             {
-                if (Regex.IsMatch(m_cloudinaryAddr.ToLower(), "^https?:/.*"))
-                {
-                    prefix = m_cloudinaryAddr;
-                }
-                else if (m_cName != null)
+                if (m_cName != null)
                 {
                     string subDomain = m_useSubDomain ? "a" + Shard(source) + "." : string.Empty;
                     prefix = "http://" + subDomain + m_cName;
