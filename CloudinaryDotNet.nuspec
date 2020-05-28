@@ -6,7 +6,7 @@
     <title>Cloudinary DotNet Library</title>
     <authors>Cloudinary</authors>
     <owners>Cloudinary</owners>
-    <licenseUrl>https://github.com/cloudinary/CloudinaryDotNet/blob/master/LICENSE</licenseUrl>
+    <license type="expression">MIT</license>
     <projectUrl>http://cloudinary.com</projectUrl>
     <iconUrl>http://res.cloudinary.com/cloudinary/image/upload/c_scale,w_64/v1/logo/for_white_bg/cloudinary_icon_for_white_bg.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -15,13 +15,13 @@
     <copyright>Copyright 2017</copyright>
     <tags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</tags>
     <dependencies>
+     <group>
+         <dependency id="Newtonsoft.Json" version="12.0.1" />
+     </group>
       <group targetFramework="net45">
-        <dependency id="Newtonsoft.Json" version="12.0.1" />
-        <dependency id="System.Runtime.InteropServices.RuntimeInformation" version="4.3.0" />
-        <dependency id="System.Text.Encodings.Web" version="4.5.0" />
+         <dependency id="System.Runtime.InteropServices.RuntimeInformation" version="4.3.0" />
+         <dependency id="System.Text.Encodings.Web" version="4.5.0" />
       </group>
-      <group targetFramework="netstandard1.3">
-        <dependency id="Newtonsoft.Json" version="12.0.1" />
       </group>
     </dependencies>
   </metadata>
