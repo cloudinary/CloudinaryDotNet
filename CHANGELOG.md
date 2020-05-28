@@ -1,4 +1,36 @@
 
+1.11.0 / 2020-05-28
+===================
+
+New functionality
+-----------------
+  * Add `duration` and `initial_duration` predefined variables
+  * Add `CinemagraphAnalysis` parameter
+  * Add `AccessibilityAnalysis` parameter
+  * Add `CreateFolder` Admin API
+  * Add structured metadata support
+  * Add support for 32 char SHA-256 URL signatures
+  * Add support for `pow` operator
+  * Add support for `max_results` and `next_cursor` in Folders API
+
+Other Changes
+-------------
+
+  * Address some issues with NuGet package creation
+  * Fix API Url when private CDN is set
+  * Fix special characters escaping in API urls
+  * Verify protocol in CLOUDINARY_URL
+  * Fix type of `Requests` data member of `UsageResult`
+  * Implement more flexible way of boolean values deserialization
+  * Fix for serialization of  transformation and tags for direct-upload input field
+  * Fix permissions issue when getting version in restricted environment
+  * Fix integration tests
+  * Update issue templates
+  * Fix/update admin upload api request response objects
+  * Fix `normalize_expression` when variable is named as a keyword
+  * Fix code style in AssemblyInfo
+  * Cleanup nuspec file
+
 1.10.0 / 2020-01-29
 ===================
 
