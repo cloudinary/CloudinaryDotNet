@@ -29,5 +29,10 @@
         /// Defines whether to generate 32 characters length signature for URIs.
         /// </summary>
         public static bool LongUrlSignature = false;
+
+        /// <summary>
+        /// Address of the proxy server that will be used for API calls.
+        /// </summary>
+        public static string ApiProxy = string.Empty;
     }
 }

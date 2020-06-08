@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Reflection;
     using System.Runtime.InteropServices;
@@ -115,7 +116,7 @@
         /// <summary>
         /// Sends HTTP requests and receives HTTP responses.
         /// </summary>
-        public static HttpClient Client = new HttpClient();
+        public static HttpClient Client;
 
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
@@ -127,6 +128,21 @@
         static ApiShared()
         {
             USER_AGENT = $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
+            if (!string.IsNullOrEmpty(CloudinaryConfiguration.ApiProxy))
+            {
+                var proxyAddress = new Uri(CloudinaryConfiguration.ApiProxy);
+                var webProxy = new WebProxy(proxyAddress, false);
+                var httpClientHandler = new HttpClientHandler
+                {
+                    Proxy = webProxy,
+                    UseProxy = true,
+                };
+                Client = new HttpClient(httpClientHandler);
+            }
+            else
+            {
+                Client = new HttpClient();
+            }
         }
 
         /// <summary>
