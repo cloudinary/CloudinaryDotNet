@@ -151,5 +151,19 @@ namespace CloudinaryDotNet.Test.Asset
 
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void TestSignatureLength()
+        {
+            var api = new Api("cloudinary://a:b@test123");
+
+            var shortUrl = api.UrlImgUp.Signed(true).BuildUrl("sample.jpg");
+            const string expectedShortUrl = "http://res.cloudinary.com/test123/image/upload/s--v2fTPYTu--/sample.jpg";
+            Assert.AreEqual(expectedShortUrl, shortUrl);
+
+            var longUrl = api.UrlImgUp.Signed(true).LongUrlSignature(true).BuildUrl("sample.jpg");
+            const string expectedLongUrl = "http://res.cloudinary.com/test123/image/upload/s--2hbrSMPOjj5BJ4xV7SgFbRDevFaQNUFf--/sample.jpg";
+            Assert.AreEqual(expectedLongUrl, longUrl);
+        }
     }
 }

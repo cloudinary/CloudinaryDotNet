@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Runtime.Serialization;
     using Newtonsoft.Json.Linq;
 
@@ -46,8 +47,18 @@
         /// <summary>
         /// Gets or sets the UTC date and time when the asset was originally uploaded in ISO8601 syntax: [yyyy-mm-dd]T[hh:mm:ss]Z.
         /// </summary>
+        [Obsolete("Property Created is deprecated, please use CreatedAt instead")]
+        public string Created
+        {
+            get { return CreatedAt; }
+            set { CreatedAt = value; }
+        }
+
+        /// <summary>
+        /// The UTC date and time when the asset was originally uploaded in ISO8601 syntax: [yyyy-mm-dd]T[hh:mm:ss]Z.
+        /// </summary>
         [DataMember(Name = "created_at")]
-        public string Created { get; protected set; }
+        public string CreatedAt { get; protected set; }
 
         /// <summary>
         /// Gets or sets the width of the media asset in pixels.
@@ -89,5 +100,11 @@
         /// Gets the Fully Qualified Public ID.
         /// </summary>
         public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
+
+        /// <summary>
+        /// The accessibility mode of the media asset: public, or authenticated.
+        /// </summary>
+        [DataMember(Name = "access_mode")]
+        public string AccessMode { get; protected set; }
     }
 }

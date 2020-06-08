@@ -95,6 +95,25 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.AreEqual(SECOND_PAGE_SIZE, result.Resources.Count);
             Assert.AreEqual(RESOURCES_COUNT, result.TotalCount);
             Assert.AreEqual(m_publicIdsSorted.Last(), result.Resources.Last().PublicId);
+
+            Assert.True(string.IsNullOrEmpty(result.Resources[0].Folder));
+            Assert.NotNull(result.Resources[0].FileName);
+            Assert.NotNull(result.Resources[0].Version);
+            Assert.AreEqual(ResourceType.Image, result.Resources[0].ResourceType);
+            Assert.NotNull(result.Resources[0].Type);
+            Assert.NotNull(result.Resources[0].UploadedAt);
+            Assert.Zero(result.Resources[0].BackupBytes);
+            Assert.NotZero(result.Resources[0].AspectRatio);
+            Assert.NotZero(result.Resources[0].Pixels);
+            Assert.NotZero(result.Resources[0].Pages);
+            Assert.NotNull(result.Resources[0].Url);
+            Assert.NotNull(result.Resources[0].SecureUrl);
+            Assert.NotNull(result.Resources[0].Status);
+            Assert.NotNull(result.Resources[0].AccessMode);
+            Assert.Null(result.Resources[0].AccessControl);
+            Assert.NotNull(result.Resources[0].Etag);
+            Assert.NotNull(result.Resources[0].UploadedBy);
+            Assert.NotNull(result.Resources[0].CreatedBy);
         }
 
         [Test]
@@ -147,9 +166,9 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsNotEmpty(foundResource.Version);
             Assert.AreEqual(ResourceType.Image, foundResource.ResourceType);
             Assert.AreEqual(STORAGE_TYPE_UPLOAD, foundResource.Type);
-            Assert.IsNotEmpty(foundResource.Created);
-            Assert.IsNotEmpty(foundResource.Uploaded);
-            Assert.AreEqual(93502, foundResource.Length);
+            Assert.IsNotEmpty(foundResource.CreatedAt);
+            Assert.IsNotEmpty(foundResource.UploadedAt);
+            Assert.AreEqual(93502, foundResource.Bytes);
             Assert.IsTrue(foundResource.BackupBytes >= 0);
             Assert.AreEqual(1920, foundResource.Width);
             Assert.AreEqual(1200, foundResource.Height);

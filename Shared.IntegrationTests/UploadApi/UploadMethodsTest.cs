@@ -111,6 +111,25 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         }
 
         [Test]
+        public void TestUploadResultCinemagraphAnalysis()
+        {
+            var imageFileName = GetUniquePublicId(StorageType.upload, FILE_FORMAT_JPG);
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(imageFileName, m_testImagePath),
+                Tags = m_apiTag,
+                UseFilename = true,
+                UniqueFilename = false,
+                CinemagraphAnalysis = true
+            };
+
+            var uploadResultImage = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(imageFileName, uploadResultImage.PublicId);
+            Assert.Zero(uploadResultImage.CinemagraphAnalysis.CinemagraphScore);
+        }
+
+        [Test]
         public void TestUploadLocalPDFPages()
         {
             var uploadParams = new ImageUploadParams()
@@ -184,6 +203,10 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual("aac", uploadResult.Audio.Codec);
             Assert.NotNull(uploadResult.Video);
             Assert.AreEqual("h264", uploadResult.Video.Codec);
+            Assert.False(uploadResult.IsAudio);
+            Assert.Zero(uploadResult.Pages);
+            Assert.Zero(uploadResult.Rotation);
+            Assert.NotZero(uploadResult.NbFrames);
 
             var getResource = new GetResourceParams(uploadResult.PublicId) { ResourceType = ResourceType.Video };
             var info = m_cloudinary.GetResource(getResource);
@@ -327,14 +350,14 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var img2 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img2);
-            Assert.AreEqual(img1.Length, img2.Length);
+            Assert.AreEqual(img1.Bytes, img2.Bytes);
 
             uploadParams.Overwrite = true;
 
             img2 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img2);
-            Assert.AreNotEqual(img1.Length, img2.Length);
+            Assert.AreNotEqual(img1.Bytes, img2.Bytes);
         }
 
         [Test]
@@ -345,17 +368,27 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 File = new FileDescription(m_testImagePath),
                 EagerTransforms = new List<Transformation>() { m_simpleTransformation },
                 PublicId = GetUniquePublicId(),
-                Metadata = true,
+                ImageMetadata = true,
                 Exif = true,
                 Colors = true,
-                Tags = m_apiTag
+                Tags = m_apiTag,
+                UseFilename = true,
+                Faces = true,
+                Phash = true,
+                QualityAnalysis = true,
+                ReturnDeleteToken = true
             };
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
 
-            Assert.NotNull(result.Metadata);
+            Assert.NotNull(result.ImageMetadata);
             Assert.NotNull(result.Exif);
             Assert.NotNull(result.Colors);
+            Assert.Zero(result.IllustrationScore);
+            Assert.False(result.SemiTransparent);
+            Assert.False(result.Grayscale);
+            Assert.NotNull(result.Eager);
+            Assert.NotNull(result.Predominant);
         }
 
         [Test]
@@ -425,7 +458,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(3381, uploadResult.Length);
+            Assert.AreEqual(3381, uploadResult.Bytes);
             Assert.AreEqual(241, uploadResult.Width);
             Assert.AreEqual(51, uploadResult.Height);
             Assert.AreEqual(FILE_FORMAT_PNG, uploadResult.Format);
@@ -509,7 +542,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
         private void AssertUploadLarge(RawUploadResult result, int fileLength)
         {
-            Assert.AreEqual(fileLength, result.Length);
+            Assert.AreEqual(fileLength, result.Bytes);
         }
 
         [Test]
@@ -525,7 +558,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Tags = m_apiTag
             }, 5 * 1024 * 1024);
 
-            Assert.AreEqual(fileLength, result.Length);
+            Assert.AreEqual(fileLength, result.Bytes);
         }
 
         /// <summary>
@@ -615,7 +648,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Tags = $"{m_apiTag},{GetMethodTag()}"
             };
 
-            var result = m_cloudinary.Upload(uploadParams);
+            m_cloudinary.Upload(uploadParams);
             //TODO: fix this test, implement assertions
         }
 
@@ -814,6 +847,98 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(5, result.ResponsiveBreakpoints[0].Breakpoints.Count);
             Assert.AreEqual(1000, result.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(200, result.ResponsiveBreakpoints[0].Breakpoints[4].Width);
+        }
+
+        [Test]
+        public void TestUploadAndGetResource()
+        {
+            //should allow sending custom coordinates
+
+            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+
+            var upResult = m_cloudinary.Upload(new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                CustomCoordinates = coordinates,
+                Tags = m_apiTag
+            });
+
+            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) 
+            { 
+                Prefix = m_test_prefix,
+                NextCursor = "test",
+                StartAt = "start",
+                Direction = "-1",
+                Tags = true,
+                Context = true,
+                Moderation = true
+            });
+
+            Assert.NotNull(result.NextCursor);
+            Assert.NotZero(result.Tags.Length);
+        }
+
+        [Test]
+        public void TestUploadVideoCinemagraphAnalysis()
+        {
+            var uploadResult = UploadTestVideoResource(uploadParams =>
+            {
+                uploadParams.CinemagraphAnalysis = true;
+            });
+
+            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
+
+        [Test]
+        public void TestUploadImageCinemagraphAnalysis()
+        {
+            var uploadResult = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.CinemagraphAnalysis = true;
+            });
+
+            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
+
+        [Test]
+        public void TestUploadImageAccessibilityAnalysis()
+        {
+            var uploadResult = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.AccessibilityAnalysis = true;
+            });
+
+            CloudinaryAssert.AccessibilityAnalysisNotEmpty(uploadResult.AccessibilityAnalysis);
+        }
+
+        [Test]
+        public void TestMetadata()
+        {
+            var metadataLabel = GetUniqueMetadataFieldLabel("resource_upload");
+            var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
+            var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
+
+            Assert.NotNull(metadataResult);
+
+            var metadataFieldId = metadataResult.ExternalId;
+            if (!string.IsNullOrEmpty(metadataFieldId))
+                m_metadataFieldsToClear.Add(metadataFieldId);
+
+            const string metadataValue = "test value";
+            var metadata = new StringDictionary
+            {
+                {metadataFieldId, metadataValue}
+            };
+
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+                MetadataFields = metadata
+            });
+
+            Assert.NotNull(uploadResult);
+            Assert.AreEqual(HttpStatusCode.OK, uploadResult.StatusCode);
+            Assert.NotNull(uploadResult.MetadataFields);
         }
 
         //[Test]

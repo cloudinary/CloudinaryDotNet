@@ -174,7 +174,12 @@
         public StringDictionary Context { get; set; }
 
         /// <summary>
-        /// Gets or sets a set of allowed formats.
+        /// Allows to store a set of custom metadata fields (by external_id) and the values to assign to each of them.
+        /// </summary>
+        public StringDictionary MetadataFields { get; set; }
+
+        /// <summary>
+        ///Gets or sets a set of allowed formats.
         /// </summary>
         public string[] AllowedFormats { get; set; }
 
@@ -229,6 +234,11 @@
             if (Context != null && Context.Count > 0)
             {
                 AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", Context.SafePairs));
+            }
+
+            if (MetadataFields != null && MetadataFields.Count > 0)
+            {
+                AddParam(dict, Constants.METADATA_PARAM_NAME, Utils.SafeJoin("|", MetadataFields.SafePairs));
             }
 
             if (Headers != null && Headers.Count > 0)

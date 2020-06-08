@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -50,7 +51,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 .Version(result.Version)
                 .BuildUrl(_cloudinaryPublicId);
 
-            Assert.AreEqual(url, result.Eager[0].Uri.AbsoluteUri);
+            Assert.AreEqual(url, result.Eager[0].Url.AbsoluteUri);
         }
 
         [Test]
@@ -250,7 +251,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             CollectionAssert.Contains(eagerTransformStrings, result.Derived[0].Transformation);
 
             var derivedResult = m_cloudinary.GetResource(
-new GetResourceParams(upResult.PublicId) { DerivedNextCursor = result.DerivedNextCursor });
+            new GetResourceParams(upResult.PublicId) { DerivedNextCursor = result.DerivedNextCursor });
 
             Assert.IsNull(derivedResult.DerivedNextCursor);
             CollectionAssert.Contains(eagerTransformStrings, derivedResult.Derived[0].Transformation);
@@ -285,7 +286,7 @@ new GetResourceParams(upResult.PublicId) { DerivedNextCursor = result.DerivedNex
 
             coordinates = new CloudinaryDotNet.Core.Rectangle(122, 32, 110, 152);
 
-            var exResult = m_cloudinary.Explicit(new ExplicitParams(upResult.PublicId)
+            m_cloudinary.Explicit(new ExplicitParams(upResult.PublicId)
             {
                 CustomCoordinates = coordinates,
                 Type = STORAGE_TYPE_UPLOAD,
@@ -350,6 +351,209 @@ new GetResourceParams(upResult.PublicId) { DerivedNextCursor = result.DerivedNex
             Assert.AreEqual(4, expResult.ResponsiveBreakpoints[0].Breakpoints.Count);
             Assert.AreEqual(900, expResult.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(100, expResult.ResponsiveBreakpoints[0].Breakpoints[3].Width);
+        }
+        
+        [Test]
+        public void TestMetadata()
+        {
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+            });
+
+            var metadataLabel = GetUniqueMetadataFieldLabel("resource_update");
+            var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
+            var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
+
+            Assert.NotNull(metadataResult);
+
+            var metadataFieldId = metadataResult.ExternalId;
+            if (!string.IsNullOrEmpty(metadataFieldId))
+                m_metadataFieldsToClear.Add(metadataFieldId);
+
+            const string metadataValue = "test value";
+            var metadata = new StringDictionary
+            {
+                {metadataFieldId, metadataValue}
+            };
+
+            var explicitResult = m_cloudinary.Explicit(new ExplicitParams(uploadResult.PublicId)
+            {
+                Metadata = metadata,
+                Type = STORAGE_TYPE_UPLOAD
+            });
+
+            Assert.NotNull(explicitResult);
+            Assert.AreEqual(HttpStatusCode.OK, explicitResult.StatusCode);
+
+            var getResult = m_cloudinary.GetResource(new GetResourceParams(uploadResult.PublicId));
+
+            Assert.IsNotNull(getResult);
+            Assert.NotNull(getResult.MetadataFields);
+        }
+
+        [Test]
+        public void TestEager()
+        {
+            var publicId = GetUniquePublicId();
+
+            // An array of breakpoints
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Tags = m_apiTag
+            };
+            m_cloudinary.Upload(uploadParams);
+
+            // responsive breakpoints for Explicit()
+            var exp = new ExplicitParams(publicId)
+            {
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            ExplicitResult expResult = m_cloudinary.Explicit(exp);
+
+            Assert.NotZero(expResult.Eager.Length);
+            Assert.NotNull(expResult.Eager[0]);
+            Assert.AreEqual(expResult.Eager[0].SecureUrl, expResult.Eager[0].SecureUrl);
+            Assert.AreEqual(expResult.Eager[0].Url, expResult.Eager[0].Url);
+            Assert.NotZero(expResult.Eager[0].Width);
+            Assert.NotZero(expResult.Eager[0].Height);
+            Assert.NotNull(expResult.Eager[0].Format);
+            Assert.NotZero(expResult.Eager[0].Bytes);
+            Assert.NotNull(expResult.Eager[0].Transformation);
+        }
+
+        [Test]
+        public void TestExplicitOptionalParameters()
+        {
+            var explicitResult = ArrangeAndGetExplicitResult();
+
+            Assert.NotZero(explicitResult.Colors.Length);
+            Assert.NotZero(explicitResult.ImageMetadata.Count);
+            Assert.NotNull(explicitResult.Phash);
+            Assert.NotZero(explicitResult.Faces.Length);
+            Assert.Zero(explicitResult.CinemagraphAnalysis.CinemagraphScore);
+            Assert.NotNull(explicitResult.AccessMode);
+            Assert.NotNull(explicitResult.Etag);
+            Assert.NotNull(explicitResult.Placeholder);
+            Assert.NotNull(explicitResult.OriginalFilename);
+            Assert.NotZero(explicitResult.Width);
+            Assert.NotZero(explicitResult.Height);
+            Assert.NotNull(explicitResult.OriginalFilename);
+            Assert.NotNull(explicitResult.SlotToken);
+            Assert.NotZero(explicitResult.Pages);
+            Assert.Zero(explicitResult.IllustrationScore);
+            Assert.IsNotNull(explicitResult.Predominant);
+            Assert.NotZero(explicitResult.Predominant.Google.Length);
+            Assert.NotZero(explicitResult.Predominant.Cloudinary.Length);
+        }
+
+        [Test]
+        public void TestProfilingData()
+        {
+            var explicitResult = ArrangeAndGetExplicitResult();
+
+            Assert.NotNull(explicitResult.ProfilingData);
+            Assert.NotZero(explicitResult.ProfilingData.Length);
+            Assert.NotZero(explicitResult.ProfilingData[0].Action.Postsize.Length);
+            Assert.NotZero(explicitResult.ProfilingData[0].Action.Presize.Length);
+        }
+
+        [Test]
+        public void TestPredominant()
+        {
+            var explicitResult = ArrangeAndGetExplicitResult();
+
+            Assert.IsNotNull(explicitResult.Predominant);
+            Assert.NotZero(explicitResult.Predominant.Google.Length);
+            Assert.NotZero(explicitResult.Predominant.Cloudinary.Length);
+        }
+
+        [Test, IgnoreAddon("webpurify")]
+        public void TestWebPurifyForExplicitResult()
+        {
+            var explicitResult = ArrangeAndGetExplicitResult(true);
+
+            Assert.NotNull(explicitResult.Moderation);
+            Assert.NotZero(explicitResult.Moderation.Count);
+        }
+
+        private ExplicitResult ArrangeAndGetExplicitResult(bool testModeration = false)
+        {
+            //should return quality analysis information
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                QualityAnalysis = true,
+                Tags = m_apiTag
+            };
+
+            var uploadRes = m_cloudinary.Upload(uploadParams);
+
+            var explicitParams = new ExplicitParams(uploadRes.PublicId)
+            {
+                Overwrite = true,
+                ImageMetadata = true,
+                Colors = true,
+                Phash = true,
+                Faces = true,
+                CinemagraphAnalysis = true,
+                QualityOverride = "auto:best",
+                FaceCoordinates = "122,32,111,152",
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            if (testModeration)
+            {
+                explicitParams.Moderation = "webpurify";
+            }
+
+            return m_cloudinary.Explicit(explicitParams);
+        }
+
+        [Test]
+        public void TestCinemagraphAnalysis()
+        {
+            var uploadRes = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.CinemagraphAnalysis = true;
+            });
+
+            var explicitParams = new ExplicitParams(uploadRes.PublicId)
+            {
+                CinemagraphAnalysis = true,
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            var explicitResult = m_cloudinary.Explicit(explicitParams);
+
+            Assert.GreaterOrEqual(explicitResult.CinemagraphAnalysis.CinemagraphScore, 0);
+        }
+
+        [Test]
+        public void TestAccessibilityAnalysis()
+        {
+            var uploadRes = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.AccessibilityAnalysis = true;
+            });
+
+            var explicitParams = new ExplicitParams(uploadRes.PublicId)
+            {
+                AccessibilityAnalysis = true,
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            var explicitResult = m_cloudinary.Explicit(explicitParams);
+
+            CloudinaryAssert.AccessibilityAnalysisNotEmpty(explicitResult.AccessibilityAnalysis);
         }
     }
 }

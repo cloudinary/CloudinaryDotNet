@@ -29,7 +29,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
         private void AssertUsageResult(UsageResult result)
         {
-            Assert.NotNull(result.LastUpdated);
+            Assert.NotNull(result);
         }
     }
 }

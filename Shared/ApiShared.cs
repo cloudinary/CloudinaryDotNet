@@ -19,6 +19,7 @@
     /// Provider for the API calls.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
+    [SuppressMessage("Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Reviewed.")]
     public partial class ApiShared : ISignProvider
     {
         /// <summary>
@@ -112,24 +113,18 @@
         /// </summary>
         public int ChunkSize = 65000;
 
-        private static readonly HttpClient Client = new HttpClient();
+        /// <summary>
+        /// Sends HTTP requests and receives HTTP responses.
+        /// </summary>
+        public static HttpClient Client = new HttpClient();
 
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
 
         private static string BuildUserAgent()
         {
-            var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
-
-            var frameworkDescription = RuntimeInformation.FrameworkDescription;
-
-            var userAgent = string.Format(
+            USER_AGENT = $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
                 CultureInfo.InvariantCulture,
-                "CloudinaryDotNet/{0}.{1}.{2} ({3})",
-                version.Major,
-                version.Minor,
-                version.Build,
-                frameworkDescription);
             return userAgent;
         }
 
@@ -334,6 +329,11 @@
         /// Gets default cloudinary API URL for streaming profiles.
         /// </summary>
         public Url ApiUrlStreamingProfileV => ApiUrlV.Add(Constants.STREAMING_PROFILE_API_URL);
+
+        /// <summary>
+        /// Gets default cloudinary API URL for metadata fields.
+        /// </summary>
+        public Url ApiUrlMetadataFieldV => ApiUrlV.Add(Constants.METADATA_FIELDS_API_URL);
 
         /// <summary>
         /// Gets default cloudinary API URL for uploading images with version.
@@ -569,7 +569,20 @@
                 parameters = new SortedDictionary<string, object>(parameters);
             }
 
-            string path = string.Empty;
+            foreach (var key in parameters.Keys.ToList())
+            {
+                var paramValue = parameters[key];
+                if (paramValue is IEnumerable<string> value)
+                {
+                    parameters[key] = Utils.SafeJoin("|", value);
+                }
+                else if (paramValue is Transformation transformation)
+                {
+                    parameters[key] = transformation.Generate();
+                }
+            }
+
+            var path = string.Empty;
             if (parameters.ContainsKey("callback") && parameters["callback"] != null)
             {
                 path = parameters["callback"].ToString();
@@ -626,11 +639,14 @@
         /// Signs the specified URI part.
         /// </summary>
         /// <param name="uriPart">The URI part.</param>
+        /// <param name="isLong">Indicates whether to generate long signature.</param>
         /// <returns>Signature of the URI part.</returns>
-        public string SignUriPart(string uriPart)
+        public string SignUriPart(string uriPart, bool isLong = true)
         {
-            var hash = Utils.ComputeHash(uriPart + Account.ApiSecret);
-            return "s--" + Utils.EncodeUrlSafe(hash).Substring(0, 8) + "--/";
+            var extendedUriPart = uriPart + Account.ApiSecret;
+            var hash = isLong ? Utils.ComputeSha256Hash(extendedUriPart) : Utils.ComputeHash(extendedUriPart);
+            var signatureLength = isLong ? 32 : 8;
+            return "s--" + Utils.EncodeUrlSafe(hash).Substring(0, signatureLength) + "--/";
         }
 
         /// <summary>
@@ -786,8 +802,9 @@
         /// Generate digital signature for part of an URI.
         /// </summary>
         /// <param name="uriPart">The part of an URI to sign.</param>
+        /// <param name="isLong">Indicates whether to generate long signature.</param>
         /// <returns>Generated signature.</returns>
-        string SignUriPart(string uriPart);
+        string SignUriPart(string uriPart, bool isLong);
     }
 
     /// <summary>

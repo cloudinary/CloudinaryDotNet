@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using Newtonsoft.Json.Linq;
@@ -52,14 +53,34 @@
         /// <summary>
         /// Gets or sets date when the resource was created.
         /// </summary>
+        [Obsolete("Property Created is deprecated, please use CreatedAt instead")]
+        public string Created
+        {
+            get { return CreatedAt; }
+            set { CreatedAt = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets date when the resource was created.
+        /// </summary>
         [DataMember(Name = "created_at")]
-        public string Created { get; protected set; }
+        public string CreatedAt { get; protected set; }
 
         /// <summary>
         /// Gets or sets size of the resource in bytes.
         /// </summary>
+        [Obsolete("Property Length is deprecated, please use Bytes instead")]
+        public long Length
+        {
+            get { return Bytes; }
+            set { Bytes = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets size of the resource in bytes.        
+        /// </summary>
         [DataMember(Name = "bytes")]
-        public long Length { get; protected set; }
+        public long Bytes { get; protected set; }
 
         /// <summary>
         /// Gets or sets parameter "width" of the resource. Not relevant for raw files.
@@ -110,8 +131,18 @@
         /// <summary>
         /// Gets or sets iPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
         /// </summary>
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public Dictionary<string, string> Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
+        /// </summary>
         [DataMember(Name = "image_metadata")]
-        public Dictionary<string, string> Metadata { get; protected set; }
+        public Dictionary<string, string> ImageMetadata { get; protected set; }
 
         /// <summary>
         /// Gets or sets a list of coordinates of detected faces.
@@ -156,6 +187,12 @@
         public JToken Context { get; protected set; }
 
         /// <summary>
+        /// A key-value pairs of custom metadata fields associated with the resource.
+        /// </summary>
+        [DataMember(Name = "metadata")]
+        public JToken MetadataFields { get; protected set; }
+
+        /// <summary>
         /// Gets or sets a perceptual hash (pHash) of the uploaded resource for image similarity detection.
         /// </summary>
         [DataMember(Name = "phash")]
@@ -191,6 +228,25 @@
         /// </summary>
         [DataMember(Name = "pages")]
         public int Pages { get; protected set; }
+
+        /// <summary>
+        /// The accessibility mode of the media asset: public, or authenticated.
+        /// </summary>
+        [DataMember(Name = "access_mode")]
+        public string AccessMode { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets details of cinemagraph analysis for the resource.
+        /// </summary>
+        [DataMember(Name = "cinemagraph_analysis")]
+        public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
+
+        /// <summary>
+        /// The color ambiguity score that indicate how good\bad an image is for colorblind people.
+        /// Will they be able to differentiate between different elements in the image.
+        /// </summary>
+        [DataMember(Name = "accessibility_analysis")]
+        public AccessibilityAnalysis AccessibilityAnalysis { get; set; }
     }
 
     /// <summary>
@@ -224,6 +280,12 @@
         /// </summary>
         [DataMember(Name = "google")]
         public object[][] Google { get; protected set; }
+
+        /// <summary>
+        /// Cloudinary palette details.
+        /// </summary>
+        [DataMember(Name = "cloudinary")]
+        public object[][] Cloudinary { get; protected set; }
     }
 
     /// <summary>
@@ -248,8 +310,18 @@
         /// <summary>
         /// Gets or sets size of the derived asset.
         /// </summary>
+        [Obsolete("Property Length is deprecated, please use Bytes instead")]
+        public long Length
+        {
+            get { return Bytes; }
+            set { Bytes = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets size of the derived asset.
+        /// </summary>
         [DataMember(Name = "bytes")]
-        public long Length { get; protected set; }
+        public long Bytes { get; protected set; }
 
         /// <summary>
         /// Gets or sets id of the derived resource.
@@ -848,5 +920,63 @@
         /// </summary>
         [DataMember(Name = "focus")]
         public double Focus { get; protected set; }
+    }
+
+    /// <summary>
+    /// Details of the cinemagraph analysis.
+    /// </summary>
+    [DataContract]
+    public class CinemagraphAnalysis
+    {
+        /// <summary>
+        /// Gets or sets value between 0-1, where 0 means definitely not a cinemagraph
+        /// and 1 means definitely a cinemagraph).
+        /// </summary>
+        [DataMember(Name = "cinemagraph_score")]
+        public double CinemagraphScore { get; protected set; }
+    }
+
+    /// <summary>
+    /// Details of the accessibility analysis.
+    /// </summary>
+    [DataContract]
+    public class AccessibilityAnalysis
+    {
+        /// <summary>
+        /// Details of colorblind accessibility analysis.
+        /// </summary>
+        [DataMember(Name = "colorblind_accessibility_analysis")]
+        public ColorblindAccessibilityAnalysis ColorblindAccessibilityAnalysis { get; set; }
+
+        /// <summary>
+        /// Gets value between 0-1.
+        /// </summary>
+        [DataMember(Name = "colorblind_accessibility_score")]
+        public double ColorblindAccessibilityScore { get; set; }
+    }
+
+    /// <summary>
+    /// Details of colorblind accessibility analysis.
+    /// </summary>
+    [DataContract]
+    public class ColorblindAccessibilityAnalysis
+    {
+        /// <summary>
+        /// Gets distinct edges value between 0-1.
+        /// </summary>
+        [DataMember(Name = "distinct_edges")]
+        public double DistinctEdges { get; set; }
+
+        /// <summary>
+        /// Gets distinct colors value between 0-1.
+        /// </summary>
+        [DataMember(Name = "distinct_colors")]
+        public double DistinctColors { get; set; }
+
+        /// <summary>
+        /// Gets most indistinct pair of colors.
+        /// </summary>
+        [DataMember(Name = "most_indistinct_pair")]
+        public string[] MostIndistinctPair { get; set; }
     }
 }

@@ -267,5 +267,67 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(1, updateResult.Moderation.Count);
             Assert.AreEqual(ModerationStatus.Approved, updateResult.Moderation[0].Status);
         }
+
+        [Test]
+        public void TestUpdateResourceMetadata()
+        {
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+            });
+            var metadataFieldId = CreateMetadataField();
+
+            const string metadataValue = "test value";
+            var metadata = new StringDictionary
+            {
+                {metadataFieldId, metadataValue}
+            };
+
+            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            {
+                Metadata = metadata
+            });
+
+            Assert.NotNull(updateResult);
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            Assert.NotNull(updateResult.MetadataFields);
+        }
+
+        [Test]
+        public void TestUpdateMetadata()
+        {
+            var uploadResult = m_cloudinary.Upload(new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+            });
+            var metadataExternalId = CreateMetadataField();
+
+            var updateParams = new MetadataUpdateParams
+            {
+                PublicIds = new List<string> { uploadResult.PublicId },
+            };
+            updateParams.Metadata.Add(metadataExternalId, "new value");
+
+            var updateResult = m_cloudinary.UpdateMetadata(updateParams);
+
+            Assert.NotNull(updateResult);
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            Assert.IsNotEmpty(updateResult.PublicIds);
+        }
+
+        private string CreateMetadataField()
+        {
+            var metadataLabel = GetUniqueMetadataFieldLabel("metadata_update");
+            var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
+            var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
+
+            Assert.NotNull(metadataResult);
+
+            var metadataFieldId = metadataResult.ExternalId;
+            if (!string.IsNullOrEmpty(metadataFieldId))
+                m_metadataFieldsToClear.Add(metadataFieldId);
+
+            return metadataFieldId;
+        }
     }
 }

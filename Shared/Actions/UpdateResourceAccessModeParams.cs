@@ -61,6 +61,17 @@
         }
 
         /// <summary>
+        /// Update all assets where the public ID starts with the given
+        /// prefix (up to a maximum of 100 matching original assets).
+        /// </summary>
+        public string Prefix { get; set; }
+
+        /// <summary>
+        /// Update all assets with the given tag (up to a maximum of 100 matching original assets).
+        /// </summary>
+        public string Tag { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -78,6 +89,14 @@
             if (PublicIdsExist)
             {
                 dict.Add("public_ids", PublicIds);
+            }
+            else if (!string.IsNullOrEmpty(Prefix))
+            {
+                dict.Add("prefix", Prefix);
+            }
+            else if (!string.IsNullOrEmpty(Tag))
+            {
+                dict.Add("tag", Tag);
             }
 
             dict.Add("access_mode", m_accessMode);

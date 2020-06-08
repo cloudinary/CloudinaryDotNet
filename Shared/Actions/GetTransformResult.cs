@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
@@ -20,8 +21,18 @@
         /// <summary>
         /// Gets or sets a value indicating whether indicates whether the transformation can be used when strict transformations are enabled.
         /// </summary>
+        [Obsolete("Property Strict is deprecated, please use AllowedForStrict instead")]
+        public bool Strict
+        {
+            get { return AllowedForStrict; }
+            set { AllowedForStrict = value; }
+        }
+
+        /// <summary>
+        /// Indicates whether the transformation can be used when strict transformations are enabled.
+        /// </summary>
         [DataMember(Name = "allowed_for_strict")]
-        public bool Strict { get; protected set; }
+        public bool AllowedForStrict { get; protected set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether indicates whether the transformation has been used to create a derived asset.
@@ -102,8 +113,18 @@
         /// <summary>
         /// Gets or sets the size of the media asset in bytes.
         /// </summary>
+        [Obsolete("Property Length is deprecated, please use Bytes instead")]
+        public long Length
+        {
+            get { return Bytes; }
+            set { Bytes = value; }
+        }
+
+        /// <summary>
+        /// The size of the media asset in bytes.
+        /// </summary>
         [DataMember(Name = "bytes")]
-        public long Length { get; protected set; }
+        public long Bytes { get; protected set; }
 
         /// <summary>
         /// Gets or sets id of the generated derived resource.

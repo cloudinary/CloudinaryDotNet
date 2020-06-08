@@ -56,6 +56,11 @@
         public StringDictionary Context { get; set; }
 
         /// <summary>
+        /// Allows to store a set of custom metadata fields (by external_id) and the values to assign to each of them.
+        /// </summary>
+        public StringDictionary Metadata { get; set; }
+
+        /// <summary>
         /// Gets or sets a possibility to use "aspose" to automatically convert Office documents to PDF files and other image formats using the
         /// Aspose Document Conversion add-on.
         /// </summary>
@@ -187,6 +192,11 @@
             if (Context != null && Context.Count > 0)
             {
                 AddParam(dict, Constants.CONTEXT_PARAM_NAME, Utils.SafeJoin("|", Context.SafePairs));
+            }
+
+            if (Metadata != null && Metadata.Count > 0)
+            {
+                AddParam(dict, Constants.METADATA_PARAM_NAME, Utils.SafeJoin("|", Metadata.SafePairs));
             }
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);

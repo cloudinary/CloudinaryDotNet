@@ -176,7 +176,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
 
-            updateParams.Strict = false;
+            updateParams.AllowedForStrict = false;
             m_cloudinary.UpdateTransform(updateParams);
 
             getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
@@ -202,7 +202,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
 
-            updateParams.Strict = false;
+            updateParams.AllowedForStrict = false;
             await m_cloudinary.UpdateTransformAsync(updateParams);
 
             getResult = await m_cloudinary.GetTransformAsync(m_simpleTransformationAsString);
@@ -215,14 +215,14 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             return new UpdateTransformParams()
             {
                 Transformation = transformation,
-                Strict = true
+                AllowedForStrict = true
             };
         }
 
         private void AssertGetTransformResultIsStrict(GetTransformResult result, string transformName, bool isStrict)
         {
             StringAssert.AreEqualIgnoringCase(transformName, result?.Name);
-            Assert.AreEqual(isStrict, result.Strict);
+            Assert.AreEqual(isStrict, result.AllowedForStrict);
         }
 
         [Test]
@@ -240,7 +240,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             var updateParams = new UpdateTransformParams()
             {
                 Transformation = transformationName,
-                UnsafeTransform = m_updateTransformation
+                UnsafeUpdate = m_updateTransformation
             };
 
             m_cloudinary.UpdateTransform(updateParams);
@@ -249,7 +249,19 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             Assert.IsNotNull(getResult.Info);
             Assert.IsTrue(getResult.Named);
-            Assert.AreEqual(updateParams.UnsafeTransform.Generate(), new Transformation(getResult.Info).Generate());
+            Assert.AreEqual(updateParams.UnsafeUpdate.Generate(), new Transformation(getResult.Info).Generate());
+        }
+
+        [Test]
+        public void TestUpdateUnsafeUpdate()
+        {
+            TestUpdateTransformWithUnsafeUpdate();
+        }
+
+        [Test]
+        public void TestCreateTransformAllowStrict()
+        {
+            TestUpdateTransformWithUnsafeUpdate(true);
         }
 
         [Test]
@@ -282,6 +294,26 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertCreateTransform(getResult, m_simpleTransformation);
         }
 
+
+        [Test]
+        public async Task TestGetTransformNextCursorAsync()
+        {
+            // should allow creating named transformation
+
+            var createParams = GetCreateTransformParams(m_simpleTransformation);
+
+            await m_cloudinary.CreateTransformAsync(createParams);
+
+            var getResult = await m_cloudinary.GetTransformAsync(new GetTransformParams 
+            { 
+                Transformation = createParams.Name,
+                MaxResults = 1,
+                NextCursor = "   "
+            });
+
+            AssertCreateTransform(getResult, m_simpleTransformation);
+        }
+
         private CreateTransformParams GetCreateTransformParams(Transformation transformation)
         {
             return new CreateTransformParams()
@@ -294,10 +326,37 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         private void AssertCreateTransform(GetTransformResult result, Transformation testTransformation)
         {
             Assert.IsNotNull(result);
-            Assert.AreEqual(true, result.Strict);
+            Assert.AreEqual(true, result.AllowedForStrict);
             Assert.AreEqual(false, result.Used);
             Assert.AreEqual(1, result.Info.Length);
             Assert.AreEqual(testTransformation.Generate(), new Transformation(result.Info[0]).Generate());
+        }
+
+        private void TestUpdateTransformWithUnsafeUpdate(bool allowedForstrict = false)
+        {
+            string transformationName = GetUniqueTransformationName();
+            // should allow unsafe update of named transformation
+            m_cloudinary.CreateTransform(
+                new CreateTransformParams()
+                {
+                    Name = transformationName,
+                    Transform = m_simpleTransformation
+                });
+
+            var updateParams = new UpdateTransformParams()
+            {
+                Transformation = transformationName,
+                UnsafeUpdate = m_updateTransformation,
+                AllowedForStrict = allowedForstrict
+            };
+
+            m_cloudinary.UpdateTransform(updateParams);
+
+            var getResult = m_cloudinary.GetTransform(transformationName);
+
+            Assert.IsNotNull(getResult.Info);
+            Assert.IsTrue(getResult.Named);
+            Assert.AreEqual(updateParams.UnsafeUpdate.Generate(), new Transformation(getResult.Info).Generate());
         }
     }
 }

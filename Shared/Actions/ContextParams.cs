@@ -26,16 +26,10 @@
     /// </summary>
     public class ContextParams : BaseParams
     {
-        private List<string> m_publicIds = new List<string>();
-
         /// <summary>
         /// Gets or sets a list of Public IDs of assets uploaded to Cloudinary.
         /// </summary>
-        public List<string> PublicIds
-        {
-            get { return m_publicIds; }
-            set { m_publicIds = value; }
-        }
+        public List<string> PublicIds { get; set; }
 
         /// <summary>
         /// Gets or sets the context name to assign or remove.
@@ -58,6 +52,11 @@
         /// Gets or sets the action to perform on assets using the given context.
         /// </summary>
         public ContextCommand Command { get; set; }
+
+        /// <summary>
+        /// (Optional) The type of asset.
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
 
         /// <summary>
         /// Validate object model.
@@ -95,6 +94,7 @@
 
             AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
             AddParam(dict, Constants.COMMAND, ApiShared.GetCloudinaryParam(Command));
+            AddParam(dict, Constants.RESOURCE_TYPE, ApiShared.GetCloudinaryParam(ResourceType));
 
             return dict;
         }

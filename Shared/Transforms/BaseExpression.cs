@@ -38,6 +38,7 @@
             { "/", "div" },
             { "+", "add" },
             { "-", "sub" },
+            { "^", "pow" },
         };
 
         /// <summary>
@@ -417,6 +418,29 @@
         }
 
         /// <summary>
+        /// Adds "to the power of" sub-expression to the end of the list
+        /// of already present sub-expressions in this expression instance.
+        /// </summary>
+        /// <returns>The expression with operation added.</returns>
+        public T Pow()
+        {
+            m_expressions.Add("pow");
+            return (T)this;
+        }
+
+        /// <summary>
+        /// Utility shortcut method which invokes on this Expression instance method,
+        /// takes its result and invokes method on it. Effectively, invocation of this shortcut results in
+        /// "to the power of value" sub-expression added to the end of current expression instance.
+        /// </summary>
+        /// <param name="value">Value argument for the call.</param>
+        /// <returns>The result of the call.</returns>
+        public T Pow(object value)
+        {
+            return Pow().Value(value);
+        }
+
+        /// <summary>
         /// Helper method to replace the operator to the Cloudinary URL syntax.
         /// </summary>
         /// <param name="value">An operator to replace.</param>
@@ -455,7 +479,7 @@
             }
 
             sb.Remove(sb.Length - 1, 1);
-            sb.Append(")(?=[ _])|").Append(string.Join("|", parameters.Keys.ToArray())).Append(")");
+            sb.Append(")(?=[ _])|(?<!\\$)(").Append(string.Join("|", parameters.Keys.ToArray())).Append("))");
             return sb.ToString();
         }
     }

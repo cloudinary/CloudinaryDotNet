@@ -95,7 +95,17 @@
         /// <summary>
         /// Gets or sets whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
-        public bool? Metadata { get; set; }
+        [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
+        public bool? Metadata
+        {
+            get { return ImageMetadata; }
+            set { ImageMetadata = value; }
+        }
+
+        /// <summary>
+        /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// </summary>
+        public bool? ImageMetadata { get; set; }
 
         /// <summary>
         /// Gets or sets whether to generate the eager transformations asynchronously in the background after the upload request is
@@ -182,19 +192,32 @@
         public List<ResponsiveBreakpoint> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the animation/video is cinemagraph. Optional (Boolean, default: false).
+        /// If true, returns a cinemagraph analysis value for the animation/video between 0 and 1, where 0 means the video/animation
+        /// is NOT a cinemagraph and 1 means the GIF/video IS a cinemagraph.
+        /// Running cinemagraph analysis on static images returns 0.
+        /// </summary>
+        public bool? CinemagraphAnalysis { get; set; }
+
+        /// <summary>
+        /// Optional. Include accessibility analysis information. Default: false.
+        /// </summary>
+        public bool? AccessibilityAnalysis { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             AddParam(dict, "format", Format);
             AddParam(dict, "exif", Exif);
             AddParam(dict, "faces", Faces);
             AddParam(dict, "quality_analysis", QualityAnalysis);
             AddParam(dict, "colors", Colors);
-            AddParam(dict, "image_metadata", Metadata);
+            AddParam(dict, "image_metadata", ImageMetadata);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
             AddParam(dict, "categorization", Categorization);
@@ -206,6 +229,8 @@
             AddParam(dict, "phash", Phash);
             AddParam(dict, "background_removal", BackgroundRemoval);
             AddParam(dict, "return_delete_token", ReturnDeleteToken);
+            AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
+            AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
 
             if (AutoTagging.HasValue)
             {

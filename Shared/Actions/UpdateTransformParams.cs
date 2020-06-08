@@ -22,17 +22,42 @@
         public string Transformation { get; set; }
 
         /// <summary>
-        /// Gets or sets the transformation for unsafe updating.
+        /// Optional. Allows updating an existing named transformation without updating all associated derived images
+        /// (the new settings of the named transformation only take effect from now on).
         /// </summary>
         /// <value>
         /// New transformation.
         /// </value>
-        public Transformation UnsafeTransform { get; set; }
+        [Obsolete("Property UnsafeTransform is deprecated, please use UnsafeUpdate instead")]
+        public Transformation UnsafeTransform
+        {
+            get { return UnsafeUpdate; }
+            set { UnsafeUpdate = value; }
+        }
+
+        /// <summary>
+        /// Optional. Allows updating an existing named transformation without updating all associated derived images
+        /// (the new settings of the named transformation only take effect from now on).
+        /// </summary>
+        /// <value>
+        /// New transformation.
+        /// </value>
+        public Transformation UnsafeUpdate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this transformation is allowed when Strict Transformations are enabled.
         /// </summary>
-        public bool Strict { get; set; }
+        [Obsolete("Property Strict is deprecated, please use AllowedForStrict instead")]
+        public bool Strict
+        {
+            get { return AllowedForStrict; }
+            set { AllowedForStrict = value; }
+        }
+
+        /// <summary>
+        /// Optional. Whether this transformation is allowed when Strict Transformations are enabled.
+        /// </summary>
+        public bool AllowedForStrict { get; set; }
 
         /// <summary>
         /// Validate object model.
@@ -53,11 +78,11 @@
         {
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
-            AddParam(dict, "allowed_for_strict", Strict ? "true" : "false");
+            AddParam(dict, "allowed_for_strict", AllowedForStrict);
 
-            if (UnsafeTransform != null)
+            if (UnsafeUpdate != null)
             {
-                AddParam(dict, "unsafe_update", UnsafeTransform.Generate());
+                AddParam(dict, "unsafe_update", UnsafeUpdate.Generate());
             }
 
             return dict;
