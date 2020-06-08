@@ -66,7 +66,7 @@
         {
             return Regex.IsMatch(
                 filePath,
-                @"^((ftp|https?|s3|gs):.*)|data:([\w-]+/[\w-]+)?(;[\w-]+=[\w-]+)*;base64,([a-zA-Z0-9/+\n=]+)");
+                @"^((ftp|https?|s3|gs):.*)|data:([\w-]+/[\w-]+(\+[\w-]+)?)?(;[\w-]+=[\w-]+)*;base64,([a-zA-Z0-9/+\n=]+)");
         }
 
         /// <summary>
