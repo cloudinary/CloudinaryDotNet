@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -492,7 +493,7 @@
                 throw new ArgumentException("The range for keyframe interval should be greater than 0.");
             }
 
-            return Add("keyframe_interval", string.Format("{0:0.0}", value));
+            return Add("keyframe_interval", string.Format(CultureInfo.InvariantCulture, "{0:0.0}", value));
         }
 
         /// <summary>
@@ -562,7 +563,7 @@
 
         private static string NormAutoRangeValue(object objectValue)
         {
-            return objectValue != null && string.Equals(objectValue.ToString(), "auto")
+            return objectValue != null && string.Equals(objectValue.ToString(), "auto", StringComparison.Ordinal)
                               ? objectValue.ToString()
                               : NormRangeValue(objectValue);
         }

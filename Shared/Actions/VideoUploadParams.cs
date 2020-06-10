@@ -6,7 +6,7 @@
     public class VideoUploadParams : ImageUploadParams
     {
         /// <summary>
-        /// Get the type of video asset for upload.
+        /// Gets get the type of video asset for upload.
         /// </summary>
         public override ResourceType ResourceType
         {

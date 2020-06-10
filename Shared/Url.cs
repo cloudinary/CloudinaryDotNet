@@ -224,12 +224,12 @@
         }
 
         /// <summary>
-        /// File format of the requested resource.
+        /// Gets or sets file format of the requested resource.
         /// </summary>
         public string FormatValue { get; set; }
 
         /// <summary>
-        /// The transformation to be added to the URL.
+        /// Gets the transformation to be added to the URL.
         /// </summary>
         public Transformation Transformation
         {
@@ -629,7 +629,7 @@
         public string BuildSpriteCss(string source)
         {
             m_action = "sprite";
-            if (!source.EndsWith(".css"))
+            if (!source.EndsWith(".css", StringComparison.Ordinal))
             {
                 FormatValue = "css";
             }
@@ -982,7 +982,7 @@
                 source = string.Empty;
             }
 
-            if (Regex.IsMatch(source.ToLower(), "^https?:/.*") &&
+            if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*") &&
                 (m_action == "upload" || m_action == "asset"))
             {
                 return source;
@@ -1070,7 +1070,7 @@
         {
             CSource src = null;
 
-            if (Regex.IsMatch(source.ToLower(), "^https?:/.*"))
+            if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*"))
             {
                 src = new CSource(Encode(source));
             }
@@ -1102,7 +1102,7 @@
             sharedDomain = !m_usePrivateCdn;
 
             // API url starts with https://, no prefix manipulation for it
-            if (Regex.IsMatch(m_cloudinaryAddr.ToLower(), "^https?:/.*"))
+            if (Regex.IsMatch(m_cloudinaryAddr.ToLowerInvariant(), "^https?:/.*"))
             {
                 return m_cloudinaryAddr;
             }
@@ -1126,7 +1126,7 @@
                         "res-" + Shard(source) + ".cloudinary.com");
                 }
 
-                prefix = string.Format("https://{0}", privateCdn);
+                prefix = string.Format(CultureInfo.InvariantCulture, "https://{0}", privateCdn);
             }
             else
             {
@@ -1207,7 +1207,7 @@
         private static string Shard(string input)
         {
             uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
-            return ((((hash % 5) + 5) % 5) + 1).ToString();
+            return ((((hash % 5) + 5) % 5) + 1).ToString(CultureInfo.InvariantCulture);
         }
 
         private static string Decode(string input)
@@ -1227,7 +1227,7 @@
                 else
                 {
                     resultStr.Append(input.Substring(pos, ppos - pos));
-                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber);
+                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                     resultStr.Append(ch);
                     pos = ppos + 3;
                 }
@@ -1244,7 +1244,7 @@
                 if (!IsSafe(ch))
                 {
                     resultStr.Append('%');
-                    resultStr.Append(string.Format("{0:X2}", (short)ch));
+                    resultStr.Append(string.Format(CultureInfo.InvariantCulture, "{0:X2}", (short)ch));
                 }
                 else
                 {
@@ -1364,13 +1364,13 @@
             get
             {
                 string path = Path;
-                return path.Substring(path.LastIndexOf("/") + 1);
+                return path.Substring(path.LastIndexOf("/", StringComparison.Ordinal) + 1);
             }
 
             set
             {
                 string path = Path;
-                path = path.Substring(0, path.LastIndexOf("/"));
+                path = path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal));
                 Path = string.Concat(path, "/", value);
             }
         }
@@ -1561,19 +1561,19 @@
     public class VideoSource
     {
         /// <summary>
-        /// One of the HTML5 video tag MIME types: video/mp4, video/webm, video/ogg.
+        /// Gets or sets one of the HTML5 video tag MIME types: video/mp4, video/webm, video/ogg.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// A single value, or a comma-separated list of values identifying the codec(s) that should be used to
+        /// Gets or sets a single value, or a comma-separated list of values identifying the codec(s) that should be used to
         /// generate the video. The codec definition can include additional properties,separated with a dot.
         /// For example, codecs="avc1.42E01E,mp4a.40.2".
         /// </summary>
         public string[] Codecs { get; set; }
 
         /// <summary>
-        /// Transformation, applied to the <see cref="Type"/> in video tag.
+        /// Gets or sets transformation, applied to the <see cref="Type"/> in video tag.
         /// </summary>
         public Transformation Transformation { get; set; }
     }

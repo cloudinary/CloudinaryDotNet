@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Text;
     using Newtonsoft.Json;
 
@@ -11,18 +12,18 @@
     public class BasicRawUploadParams : BaseParams
     {
         /// <summary>
-        /// Either the actual data of the image or an HTTP URL of a public image on the Internet.
+        /// Gets or sets either the actual data of the image or an HTTP URL of a public image on the Internet.
         /// </summary>
         public FileDescription File { get; set; }
 
         /// <summary>
-        /// The identifier that is used for accessing the uploaded resource.
+        /// Gets or sets the identifier that is used for accessing the uploaded resource.
         /// A randomly generated ID is assigned if not specified.
         /// </summary>
         public string PublicId { get; set; }
 
         /// <summary>
-        /// Tell Cloudinary whether to backup the uploaded file. Overrides the default backup settings of your account.
+        /// Gets or sets a value indicating whether to backup the uploaded file. Overrides the default backup settings of your account.
         /// </summary>
         public bool? Backup { get; set; }
 
@@ -32,7 +33,7 @@
         public string Type { get; set; }
 
         /// <summary>
-        /// Defines the 'raw' type of file you are uploading.
+        /// Gets the 'raw' type of file you are uploading.
         /// </summary>
         public virtual ResourceType ResourceType
         {
@@ -96,12 +97,12 @@
         }
 
         /// <summary>
-        /// A comma-separated list of tag names to assign to the uploaded image for later group reference.
+        /// Gets or sets a comma-separated list of tag names to assign to the uploaded image for later group reference.
         /// </summary>
         public string Tags { get; set; }
 
         /// <summary>
-        /// Whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID.
+        /// Gets or sets whether to invalidate CDN cache copies of a previously uploaded image that shares the same public ID.
         /// Default: false.
         /// </summary>
         /// <value>
@@ -110,91 +111,91 @@
         public bool? Invalidate { get; set; }
 
         /// <summary>
-        /// An HTTP header or a list of headers lines for returning as response HTTP headers when delivering the
+        /// Gets or sets an HTTP header or a list of headers lines for returning as response HTTP headers when delivering the
         /// uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'.
         /// For example 'X-Robots-Tag: noindex'.
         /// </summary>
         public Dictionary<string, string> Headers { get; set; }
 
         /// <summary>
-        /// Whether to use the original file name of the uploaded image if available for the public ID. The file name
+        /// Gets or sets whether to use the original file name of the uploaded image if available for the public ID. The file name
         /// is normalized and random characters are appended to ensure uniqueness. Default: false.
         /// </summary>
         public bool? UseFilename { get; set; }
 
         /// <summary>
-        /// Only relevant if <see cref="UseFilename"/> is True. When set to false, should not add random characters at
-        /// the end of the filename to guarantee its uniqueness.
+        /// Gets or sets unique file name usage setting. Only relevant if <see cref="UseFilename"/> is True.
+        /// When set to false, should not add random characters at the end of the filename to guarantee its uniqueness.
         /// </summary>
         public bool? UniqueFilename { get; set; }
 
         /// <summary>
-        /// Whether to discard the name of the original uploaded file. Relevant when delivering images as attachments
+        /// Gets or sets whether to discard the name of the original uploaded file. Relevant when delivering images as attachments
         /// (setting the 'flags' transformation parameter to 'attachment'). Default: false.
         /// </summary>
         public bool? DiscardOriginalFilename { get; set; }
 
         /// <summary>
-        /// An HTTP or HTTPS URL to receive the upload response (a webhook) when the upload is completed or a
+        /// Gets or sets an HTTP or HTTPS URL to receive the upload response (a webhook) when the upload is completed or a
         /// notification when any requested asynchronous action is completed.
         /// </summary>
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// Allows the resource to behave as if it's of the authenticated 'type' while still using the default 'upload'
+        /// Gets or sets a possibility for the resource to behave as if it's of the authenticated 'type' while still using the default 'upload'
         /// type in delivery URLs.
         /// </summary>
         public string AccessMode { get; set; }
 
         /// <summary>
-        /// Proxy to use when Cloudinary accesses remote folders.
+        /// Gets or sets proxy to use when Cloudinary accesses remote folders.
         /// </summary>
         public string Proxy { get; set; }
 
         /// <summary>
-        /// Base Folder to use when building the Cloudinary public_id.
+        /// Gets or sets base Folder to use when building the Cloudinary public_id.
         /// </summary>
         public string Folder { get; set; }
 
         /// <summary>
-        /// Whether to overwrite existing resources with the same public ID.
+        /// Gets or sets whether to overwrite existing resources with the same public ID.
         /// </summary>
         public bool? Overwrite { get; set; }
 
         /// <summary>
-        /// Set to "aspose" to automatically convert Office documents to PDF files and other image formats using the
-        /// Aspose Document Conversion add-on.
+        /// Gets or sets conversion mode. Set to "aspose" to automatically convert Office documents to PDF files
+        /// and other image formats using the Aspose Document Conversion add-on.
         /// </summary>
         public string RawConvert { get; set; }
 
         /// <summary>
-        /// Allows to store a set of key-value pairs together with resource.
+        /// Gets or sets a possibility to store a set of key-value pairs together with resource.
         /// </summary>
         public StringDictionary Context { get; set; }
 
         /// <summary>
-        /// Allows to store a set of custom metadata fields (by external_id) and the values to assign to each of them.
+        /// Gets or sets allows to store a set of custom metadata fields (by external_id) and the values to assign to each of them.
         /// </summary>
         public StringDictionary MetadataFields { get; set; }
 
         /// <summary>
-        /// Sets a set of allowed formats.
+        /// Gets or sets a set of allowed formats.
         /// </summary>
         public string[] AllowedFormats { get; set; }
 
         /// <summary>
-        /// Set to "manual" to add the uploaded image to a queue of pending moderation images. Set to "webpurify"
-        /// to automatically moderate the uploaded image using the WebPurify Image Moderation add-on.
+        /// Gets or sets moderation mode. Set to "manual" to add the uploaded image to a queue of pending moderation images.
+        /// Set to "webpurify" to automatically moderate the uploaded image using the WebPurify Image Moderation add-on.
         /// </summary>
         public string Moderation { get; set; }
 
         /// <summary>
-        /// Tells Cloudinary whether to perform the upload request in the background (asynchronously).
+        /// Gets or sets whether to perform the upload request in the background (asynchronously).
         /// </summary>
         public string Async { get; set; }
 
         /// <summary>
-        /// Optional. Pass a list of AccessControlRule parameters.
+        /// Gets or sets a list of AccessControlRule parameters. Optional.
         /// </summary>
         public List<AccessControlRule> AccessControl { get; set; }
 
@@ -245,7 +246,7 @@
                 StringBuilder sb = new StringBuilder();
                 foreach (var item in Headers)
                 {
-                    sb.AppendFormat("{0}: {1}\n", item.Key, item.Value);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "{0}: {1}\n", item.Key, item.Value);
                 }
 
                 dict.Add("headers", sb.ToString());

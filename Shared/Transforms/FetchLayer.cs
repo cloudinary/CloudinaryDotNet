@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Represents property of the overlay parameter to specify the Url on another image to be added as an overlay.
@@ -39,10 +40,15 @@
         /// <returns>A string that represents additional parameters.</returns>
         public override string AdditionalParams()
         {
+            if (string.IsNullOrEmpty(m_url))
+            {
+                throw new ArgumentException("Must supply url.");
+            }
+
             List<string> components = new List<string>();
             if (!string.IsNullOrEmpty(m_url))
             {
-                components.Add(string.Format("fetch:{0}", m_url));
+                components.Add(string.Format(CultureInfo.InvariantCulture, "fetch:{0}", m_url));
             }
 
             return string.Join(":", components.ToArray());
@@ -54,11 +60,6 @@
         /// <returns>A string that represents the layer.</returns>
         public override string ToString()
         {
-            if (string.IsNullOrEmpty(m_url))
-            {
-                throw new ArgumentException("Must supply url.");
-            }
-
             return AdditionalParams();
         }
 

@@ -20,24 +20,24 @@
         }
 
         /// <summary>
-        /// The identifier of the uploaded asset.
+        /// Gets or sets the identifier of the uploaded asset.
         /// </summary>
         public string PublicId { get; set; }
 
         /// <summary>
-        /// The specific type of the asset. Valid values: upload, private and authenticated. Default: upload.
+        /// Gets or sets the specific type of the asset. Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// If true, invalidates CDN cached copies of the asset (and all its transformed versions). Default: false.
+        /// Gets or sets a value indicating whether if true, invalidates CDN cached copies of the asset (and all its transformed versions). Default: false.
         /// Note that it usually takes a few minutes (although it might take up to an hour) for the invalidation to
         /// fully propagate through the CDN.
         /// </summary>
         public bool Invalidate { get; set; }
 
         /// <summary>
-        /// The type of asset to destroy. Valid values: image, raw, and video. Default: image.
+        /// Gets or sets the type of asset to destroy. Valid values: image, raw, and video. Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 

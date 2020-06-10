@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters for managing folders list.
@@ -8,12 +9,12 @@
     public class GetFoldersParams : BaseParams
     {
         /// <summary>
-        /// Maximum number of results to return (up to 500). Default: 10.
+        /// Gets or sets maximum number of results to return (up to 500). Default: 10.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// When a request has more results to return than <see cref="MaxResults"/>, this value is returned as part of the response.
+        /// Gets or sets when a request has more results to return than <see cref="MaxResults"/>, this value is returned as part of the response.
         /// </summary>
         public string NextCursor { get; set; }
 
@@ -35,7 +36,7 @@
 
             if (MaxResults > 0)
             {
-                AddParam(dict, "max_results", MaxResults.ToString());
+                AddParam(dict, "max_results", MaxResults.ToString(CultureInfo.InvariantCulture));
             }
 
             AddParam(dict, "next_cursor", NextCursor);

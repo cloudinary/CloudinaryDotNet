@@ -18,27 +18,27 @@
         }
 
         /// <summary>
-        /// The sprite is created from all images with this tag.
+        /// Gets or sets a value for which the sprite is created from all images with this tag.
         /// </summary>
         public string Tag { get; set; }
 
         /// <summary>
-        /// (Optional) A transformation to run on all the individual images before creating the sprite.
+        /// Gets or sets a transformation to run on all the individual images before creating the sprite. Optional.
         /// </summary>
         public Transformation Transformation { get; set; }
 
         /// <summary>
-        /// (Optional) A format to convert the sprite before saving it in your Cloudinary account. Default: png.
+        /// Gets or sets a format to convert the sprite before saving it in your Cloudinary account. Default: png. Optional.
         /// </summary>
         public string Format { get; set; }
 
         /// <summary>
-        /// (Optional) An HTTP or HTTPS URL to notify your application (a webhook) when the process has completed.
+        /// Gets or sets an HTTP or HTTPS URL to notify your application (a webhook) when the process has completed. Optional.
         /// </summary>
         public string NotificationUrl { get; set; }
 
         /// <summary>
-        /// Tells Cloudinary whether to perform the sprite generation in the background (asynchronously).
+        /// Gets or sets a value indicating whether to perform the sprite generation in the background (asynchronously).
         /// Default: false.
         /// </summary>
         public bool Async { get; set; }

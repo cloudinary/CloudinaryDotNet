@@ -10,13 +10,13 @@
     public class ListTransformsResult : BaseResult
     {
         /// <summary>
-        /// A listing of transformations specified in your account.
+        /// Gets or sets a listing of transformations specified in your account.
         /// </summary>
         [DataMember(Name = "transformations")]
         public TransformDesc[] Transformations { get; protected set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="ListTransformsParams.MaxResults"/>,
+        /// Gets or sets a value for a situation when a listing request has more results to return than <see cref="ListTransformsParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="ListTransformsParams.NextCursor"/> parameter of the following listing request.
         /// </summary>
@@ -31,14 +31,14 @@
     public class TransformDesc
     {
         /// <summary>
-        /// The name of a named transformation (e.g., t_trans1) or the transformation itself as expressed in a dynamic
+        /// Gets or sets the name of a named transformation (e.g., t_trans1) or the transformation itself as expressed in a dynamic
         /// URL (e.g., w_110,h_100,c_fill).
         /// </summary>
         [DataMember(Name = "name")]
         public string Name { get; protected set; }
 
         /// <summary>
-        /// Indicates whether the transformation can be used when strict transformations are enabled.
+        /// Gets or sets a value indicating whether the transformation can be used when strict transformations are enabled.
         /// </summary>
         [Obsolete("Property Strict is deprecated, please use AllowedForStrict instead")]
         public bool Strict
@@ -48,19 +48,19 @@
         }
 
         /// <summary>
-        /// Indicates whether the transformation can be used when strict transformations are enabled.
+        /// Gets or sets a value indicating whether the transformation can be used when strict transformations are enabled.
         /// </summary>
         [DataMember(Name = "allowed_for_strict")]
         public bool AllowedForStrict { get; protected set; }
 
         /// <summary>
-        /// Indicates whether the transformation has been used to create a derived asset.
+        /// Gets or sets a value indicating whether the transformation has been used to create a derived asset.
         /// </summary>
         [DataMember(Name = "used")]
         public bool Used { get; protected set; }
 
         /// <summary>
-        /// Indicates whether the transformation is a named transformation.
+        /// Gets or sets a value indicating whether the transformation is a named transformation.
         /// </summary>
         [DataMember(Name = "named")]
         public bool Named { get; protected set; }

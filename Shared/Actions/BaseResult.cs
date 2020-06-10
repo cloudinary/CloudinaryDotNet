@@ -67,19 +67,19 @@
     public abstract class UploadResult : BaseResult
     {
         /// <summary>
-        /// Public ID of uploaded asset.
+        /// Gets or sets public ID of uploaded asset.
         /// </summary>
         [DataMember(Name = "public_id")]
         public string PublicId { get; protected set; }
 
         /// <summary>
-        /// Version of uploaded asset.
+        /// Gets or sets version of uploaded asset.
         /// </summary>
         [DataMember(Name = "version")]
         public string Version { get; protected set; }
 
         /// <summary>
-        /// The URL for accessing the uploaded asset.
+        /// Gets or sets the URL for accessing the uploaded asset.
         /// </summary>
         [Obsolete("Property Uri is deprecated, please use Url instead")]
         public Uri Uri
@@ -89,13 +89,13 @@
         }
 
         /// <summary>
-        /// The URL for accessing the uploaded asset.
+        /// Gets or sets the URL for accessing the uploaded asset.
         /// </summary>
         [DataMember(Name = "url")]
         public Uri Url { get; protected set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the uploaded asset.
+        /// Gets or sets the HTTPS URL for securely accessing the uploaded asset.
         /// </summary>
         [Obsolete("Property SecureUri is deprecated, please use SecureUrl instead")]
         public Uri SecureUri
@@ -105,13 +105,13 @@
         }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the uploaded asset.
+        /// Gets or sets the HTTPS URL for securely accessing the uploaded asset.
         /// </summary>
         [DataMember(Name = "secure_url")]
         public Uri SecureUrl { get; protected set; }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets resource length in bytes.
         /// </summary>
         [Obsolete("Property Length is deprecated, please use Bytes instead")]
         public long Length
@@ -121,19 +121,19 @@
         }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets resource length in bytes..
         /// </summary>
         [DataMember(Name = "bytes")]
         public long Bytes { get; protected set; }
 
         /// <summary>
-        /// Asset format.
+        /// Gets or sets asset format.
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
 
         /// <summary>
-        /// A key-value pairs of custom metadata fields associated with the resource.
+        /// Gets or sets a key-value pairs of custom metadata fields associated with the resource.
         /// </summary>
         [DataMember(Name = "metadata")]
         public JToken MetadataFields { get; protected set; }
@@ -149,12 +149,12 @@
         private JToken rawJson;
 
         /// <summary>
-        /// HTTP status code.
+        /// Gets hTTP status code.
         /// </summary>
         public HttpStatusCode StatusCode { get; internal set; }
 
         /// <summary>
-        /// Raw JSON as received from the server.
+        /// Gets raw JSON as received from the server.
         /// </summary>
         public JToken JsonObj
         {
@@ -171,7 +171,7 @@
         }
 
         /// <summary>
-        /// Description of server-side error (if one has occurred).
+        /// Gets description of server-side error (if one has occurred).
         /// </summary>
         [DataMember(Name = "error")]
         public Error Error { get; internal set; }
@@ -207,7 +207,7 @@
     public class Error
     {
         /// <summary>
-        /// Error description.
+        /// Gets or sets error description.
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }

@@ -18,25 +18,25 @@
         protected string m_resourceType;
 
         /// <summary>
-        /// Public ID assigned to the resource.
+        /// Gets or sets public ID assigned to the resource.
         /// </summary>
         [DataMember(Name = "public_id")]
         public string PublicId { get; protected set; }
 
         /// <summary>
-        /// The format this resource is delivered in.
+        /// Gets or sets the format this resource is delivered in.
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
 
         /// <summary>
-        /// Current version of the resource.
+        /// Gets or sets current version of the resource.
         /// </summary>
         [DataMember(Name = "version")]
         public string Version { get; protected set; }
 
         /// <summary>
-        /// The type of resource. Possible values: image, raw, video.
+        /// Gets the type of resource. Possible values: image, raw, video.
         /// </summary>
         public ResourceType ResourceType
         {
@@ -44,14 +44,14 @@
         }
 
         /// <summary>
-        /// The storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
+        /// Gets or sets the storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
         /// youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         [DataMember(Name = "type")]
         public string Type { get; protected set; }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets date when the resource was created.
         /// </summary>
         [Obsolete("Property Created is deprecated, please use CreatedAt instead")]
         public string Created
@@ -61,13 +61,13 @@
         }
 
         /// <summary>
-        /// Date when the resource was created.
+        /// Gets or sets date when the resource was created.
         /// </summary>
         [DataMember(Name = "created_at")]
         public string CreatedAt { get; protected set; }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets size of the resource in bytes.
         /// </summary>
         [Obsolete("Property Length is deprecated, please use Bytes instead")]
         public long Length
@@ -77,37 +77,37 @@
         }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets size of the resource in bytes.
         /// </summary>
         [DataMember(Name = "bytes")]
         public long Bytes { get; protected set; }
 
         /// <summary>
-        /// Parameter "width" of the resource. Not relevant for raw files.
+        /// Gets or sets parameter "width" of the resource. Not relevant for raw files.
         /// </summary>
         [DataMember(Name = "width")]
         public int Width { get; protected set; }
 
         /// <summary>
-        /// Parameter "height" of the resource. Not relevant for raw files.
+        /// Gets or sets parameter "height" of the resource. Not relevant for raw files.
         /// </summary>
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
 
         /// <summary>
-        /// URL to the resource.
+        /// Gets or sets URL to the resource.
         /// </summary>
         [DataMember(Name = "url")]
         public string Url { get; protected set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the media asset.
+        /// Gets or sets the HTTPS URL for securely accessing the media asset.
         /// </summary>
         [DataMember(Name = "secure_url")]
         public string SecureUrl { get; protected set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="GetResourceParams.MaxResults"/>,
+        /// Gets or sets when a listing request has more results to return than <see cref="GetResourceParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
@@ -115,7 +115,7 @@
         public string NextCursor { get; protected set; }
 
         /// <summary>
-        /// If there are more derived images than <see cref="GetResourceParams.MaxResults"/>,
+        /// Gets or sets if there are more derived images than <see cref="GetResourceParams.MaxResults"/>,
         /// the <see cref="DerivedNextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="DerivedNextCursor"/> parameter of the following listing request.
         /// </summary>
@@ -123,13 +123,13 @@
         public string DerivedNextCursor { get; protected set; }
 
         /// <summary>
-        /// Exif metadata of the resource.
+        /// Gets or sets exif metadata of the resource.
         /// </summary>
         [DataMember(Name = "exif")]
         public Dictionary<string, string> Exif { get; protected set; }
 
         /// <summary>
-        /// IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
+        /// Gets or sets iPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
         /// </summary>
         [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
         public Dictionary<string, string> Metadata
@@ -139,98 +139,98 @@
         }
 
         /// <summary>
-        /// IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
+        /// Gets or sets iPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
         /// </summary>
         [DataMember(Name = "image_metadata")]
         public Dictionary<string, string> ImageMetadata { get; protected set; }
 
         /// <summary>
-        /// A list of coordinates of detected faces.
+        /// Gets or sets a list of coordinates of detected faces.
         /// </summary>
         [DataMember(Name = "faces")]
         public int[][] Faces { get; protected set; }
 
         /// <summary>
-        /// A quality analysis value for the image.
+        /// Gets or sets a quality analysis value for the image.
         /// </summary>
         [DataMember(Name = "quality_analysis")]
         public QualityAnalysis QualityAnalysis { get; protected set; }
 
         /// <summary>
-        /// Color information: predominant colors and histogram of 32 leading colors.
+        /// Gets or sets color information: predominant colors and histogram of 32 leading colors.
         /// </summary>
         [DataMember(Name = "colors")]
         public string[][] Colors { get; protected set; }
 
         /// <summary>
-        /// A list of derived resources.
+        /// Gets or sets a list of derived resources.
         /// </summary>
         [DataMember(Name = "derived")]
         public Derived[] Derived { get; protected set; }
 
         /// <summary>
-        /// A list of tag names assigned to resource.
+        /// Gets or sets a list of tag names assigned to resource.
         /// </summary>
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
 
         /// <summary>
-        /// Image moderation status of the resource.
+        /// Gets or sets image moderation status of the resource.
         /// </summary>
         [DataMember(Name = "moderation")]
         public List<Moderation> Moderation { get; protected set; }
 
         /// <summary>
-        /// A key-value pairs of context associated with the resource.
+        /// Gets or sets a key-value pairs of context associated with the resource.
         /// </summary>
         [DataMember(Name = "context")]
         public JToken Context { get; protected set; }
 
         /// <summary>
-        /// A key-value pairs of custom metadata fields associated with the resource.
+        /// Gets or sets a key-value pairs of custom metadata fields associated with the resource.
         /// </summary>
         [DataMember(Name = "metadata")]
         public JToken MetadataFields { get; protected set; }
 
         /// <summary>
-        /// A perceptual hash (pHash) of the uploaded resource for image similarity detection.
+        /// Gets or sets a perceptual hash (pHash) of the uploaded resource for image similarity detection.
         /// </summary>
         [DataMember(Name = "phash")]
         public string Phash { get; protected set; }
 
         /// <summary>
-        /// The predominant colors in the image according to both a Google palette and a Cloudinary palette.
+        /// Gets or sets the predominant colors in the image according to both a Google palette and a Cloudinary palette.
         /// </summary>
         [DataMember(Name = "predominant")]
         public Predominant Predominant { get; protected set; }
 
         /// <summary>
-        /// The coordinates of a single region contained in an image that is subsequently used for cropping the image using
+        /// Gets or sets the coordinates of a single region contained in an image that is subsequently used for cropping the image using
         /// the custom gravity mode.
         /// </summary>
         [DataMember(Name = "coordinates")]
         public Coordinates Coordinates { get; protected set; }
 
         /// <summary>
-        /// Any requested information from executing one of the Cloudinary Add-ons on the media asset.
+        /// Gets or sets any requested information from executing one of the Cloudinary Add-ons on the media asset.
         /// </summary>
         [DataMember(Name = "info")]
         public Info Info { get; protected set; }
 
         /// <summary>
-        /// Parameters of the asset access management.
+        /// Gets or sets parameters of the asset access management.
         /// </summary>
         [DataMember(Name = "access_control")]
         public List<AccessControlRule> AccessControl { get; protected set; }
 
         /// <summary>
-        /// The number of pages in the asset: included if the asset has multiple pages (e.g., PDF or animated GIF).
+        /// Gets or sets the number of pages in the asset: included if the asset has multiple pages (e.g., PDF or animated GIF).
         /// </summary>
         [DataMember(Name = "pages")]
         public int Pages { get; protected set; }
 
         /// <summary>
-        /// The accessibility mode of the media asset: public, or authenticated.
+        /// Gets or sets the accessibility mode of the media asset: public, or authenticated.
         /// </summary>
         [DataMember(Name = "access_mode")]
         public string AccessMode { get; protected set; }
@@ -242,7 +242,7 @@
         public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
 
         /// <summary>
-        /// The color ambiguity score that indicate how good\bad an image is for colorblind people.
+        /// Gets or sets the color ambiguity score that indicate how good\bad an image is for colorblind people.
         /// Will they be able to differentiate between different elements in the image.
         /// </summary>
         [DataMember(Name = "accessibility_analysis")]
@@ -257,13 +257,13 @@
     public class Coordinates
     {
         /// <summary>
-        /// A list of custom coordinates.
+        /// Gets or sets a list of custom coordinates.
         /// </summary>
         [DataMember(Name = "custom")]
         public int[][] Custom { get; protected set; }
 
         /// <summary>
-        /// A list of coordinates of detected faces.
+        /// Gets or sets a list of coordinates of detected faces.
         /// </summary>
         [DataMember(Name = "faces")]
         public int[][] Faces { get; protected set; }
@@ -276,13 +276,13 @@
     public class Predominant
     {
         /// <summary>
-        /// Google palette details.
+        /// Gets or sets google palette details.
         /// </summary>
         [DataMember(Name = "google")]
         public object[][] Google { get; protected set; }
 
         /// <summary>
-        /// Cloudinary palette details.
+        /// Gets or sets cloudinary palette details.
         /// </summary>
         [DataMember(Name = "cloudinary")]
         public object[][] Cloudinary { get; protected set; }
@@ -296,19 +296,19 @@
     public class Derived
     {
         /// <summary>
-        /// The transformation applied to the asset.
+        /// Gets or sets the transformation applied to the asset.
         /// </summary>
         [DataMember(Name = "transformation")]
         public string Transformation { get; protected set; }
 
         /// <summary>
-        /// Format of the derived asset.
+        /// Gets or sets format of the derived asset.
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets size of the derived asset.
         /// </summary>
         [Obsolete("Property Length is deprecated, please use Bytes instead")]
         public long Length
@@ -318,25 +318,25 @@
         }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets size of the derived asset.
         /// </summary>
         [DataMember(Name = "bytes")]
         public long Bytes { get; protected set; }
 
         /// <summary>
-        /// Id of the derived resource.
+        /// Gets or sets id of the derived resource.
         /// </summary>
         [DataMember(Name = "id")]
         public string Id { get; protected set; }
 
         /// <summary>
-        /// URL for accessing the derived media asset.
+        /// Gets or sets uRL for accessing the derived media asset.
         /// </summary>
         [DataMember(Name = "url")]
         public string Url { get; protected set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the derived media asset.
+        /// Gets or sets the HTTPS URL for securely accessing the derived media asset.
         /// </summary>
         [DataMember(Name = "secure_url")]
         public string SecureUrl { get; protected set; }
@@ -349,13 +349,13 @@
     public class Info
     {
         /// <summary>
-        /// Requested information from executing a Rekognition face add-ons.
+        /// Gets or sets requested information from executing a Rekognition face add-ons.
         /// </summary>
         [DataMember(Name = "detection")]
         public Detection Detection { get; protected set; }
 
         /// <summary>
-        /// Requested information from executing an OCR add-ons.
+        /// Gets or sets requested information from executing an OCR add-ons.
         /// </summary>
         [DataMember(Name = "ocr")]
         public Ocr Ocr { get; protected set; }
@@ -368,7 +368,7 @@
     public class Ocr
     {
         /// <summary>
-        /// Details of executing an ADV_OCR engine.
+        /// Gets or sets details of executing an ADV_OCR engine.
         /// </summary>
         [DataMember(Name = "adv_ocr")]
         public AdvOcr AdvOcr { get; protected set; }
@@ -381,13 +381,13 @@
     public class AdvOcr
     {
         /// <summary>
-        /// The status of the OCR operation.
+        /// Gets or sets the status of the OCR operation.
         /// </summary>
         [DataMember(Name = "status")]
         public string Status { get; protected set; }
 
         /// <summary>
-        /// Data returned by OCR plugin.
+        /// Gets or sets data returned by OCR plugin.
         /// </summary>
         [DataMember(Name = "data")]
         public List<AdvOcrData> Data { get; protected set; }
@@ -400,13 +400,13 @@
     public class AdvOcrData
     {
         /// <summary>
-        /// Annotations of the recognized text.
+        /// Gets or sets annotations of the recognized text.
         /// </summary>
         [DataMember(Name = "textAnnotations")]
         public List<TextAnnotation> TextAnnotations { get; protected set; }
 
         /// <summary>
-        /// This annotation provides the structural hierarchy for the OCR detected text.
+        /// Gets or sets this annotation provides the structural hierarchy for the OCR detected text.
         /// If present, text (OCR) detection or document (OCR) text detection has completed successfully.
         /// </summary>
         [DataMember(Name = "fullTextAnnotation")]
@@ -420,20 +420,20 @@
     public class TextAnnotation
     {
         /// <summary>
-        /// The detected locale of the text.
+        /// Gets or sets the detected locale of the text.
         /// </summary>
         [DataMember(Name = "locale")]
         public string Locale { get; protected set; }
 
         /// <summary>
-        /// A description listing the entirety of the detected text content, with a newline character (\n) separating
+        /// Gets or sets a description listing the entirety of the detected text content, with a newline character (\n) separating
         /// groups of text.
         /// </summary>
         [DataMember(Name = "description")]
         public string Description { get; protected set; }
 
         /// <summary>
-        /// The outer bounding polygon for the detected image annotation.
+        /// Gets or sets the outer bounding polygon for the detected image annotation.
         /// </summary>
         [DataMember(Name="boundingPoly")]
         public BoundingBlock BoundingPoly { get; protected set; }
@@ -446,7 +446,7 @@
     public class BoundingBlock
     {
         /// <summary>
-        /// The bounding polygon vertices.
+        /// Gets the bounding polygon vertices.
         /// </summary>
         [DataMember(Name = "vertices")]
         public List<Point> Vertices { get; private set; }
@@ -459,13 +459,13 @@
     public class FullTextAnnotation
     {
         /// <summary>
-        /// A list of detected pages.
+        /// Gets or sets a list of detected pages.
         /// </summary>
         [DataMember(Name = "pages")]
         public List<Page> Pages { get; protected set; }
 
         /// <summary>
-        /// Recognized text.
+        /// Gets or sets recognized text.
         /// </summary>
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
@@ -478,25 +478,25 @@
     public class Page
     {
         /// <summary>
-        /// Additional information detected on the page.
+        /// Gets or sets additional information detected on the page.
         /// </summary>
         [DataMember(Name = "property")]
         public PageProperty Property { get; protected set; }
 
         /// <summary>
-        /// Page width. For PDFs the unit is points. For images (including TIFFs) the unit is pixels.
+        /// Gets or sets page width. For PDFs the unit is points. For images (including TIFFs) the unit is pixels.
         /// </summary>
         [DataMember(Name = "width")]
         public int? Width { get; protected set; }
 
         /// <summary>
-        /// Page height. For PDFs the unit is points. For images (including TIFFs) the unit is pixels.
+        /// Gets or sets page height. For PDFs the unit is points. For images (including TIFFs) the unit is pixels.
         /// </summary>
         [DataMember(Name = "height")]
         public int? Height { get; protected set; }
 
         /// <summary>
-        /// List of text blocks on this page.
+        /// Gets or sets list of text blocks on this page.
         /// </summary>
         [DataMember(Name = "blocks")]
         public List<TextBlock> Blocks { get; protected set; }
@@ -509,7 +509,7 @@
     public class PageProperty
     {
         /// <summary>
-        /// A list of detected languages together with confidence.
+        /// Gets or sets a list of detected languages together with confidence.
         /// </summary>
         [DataMember(Name = "detectedLanguages")]
         public List<DetectedLanguage> DetectedLanguages { get; protected set; }
@@ -522,7 +522,7 @@
     public class DetectedLanguage
     {
         /// <summary>
-        /// The BCP-47 language code, such as "en-US" or "sr-Latn".
+        /// Gets or sets the BCP-47 language code, such as "en-US" or "sr-Latn".
         /// For more information, see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.
         /// </summary>
         [DataMember(Name = "languageCode")]
@@ -536,13 +536,13 @@
     public abstract class Block
     {
         /// <summary>
-        /// Additional information detected on the page.
+        /// Gets or sets additional information detected on the page.
         /// </summary>
         [DataMember(Name = "property")]
         public PageProperty Property { get; protected set; }
 
         /// <summary>
-        /// The bounding box for the block.
+        /// Gets or sets the bounding box for the block.
         /// The vertices are in the order of top-left, top-right, bottom-right, bottom-left.
         /// </summary>
         [DataMember(Name = "boundingBox")]
@@ -556,13 +556,13 @@
     public class TextBlock : Block
     {
         /// <summary>
-        /// List of paragraphs in this block.
+        /// Gets or sets list of paragraphs in this block.
         /// </summary>
         [DataMember(Name = "paragraphs")]
         public List<Paragraph> Paragraphs { get; protected set; }
 
         /// <summary>
-        /// Detected block type (text, image etc) for this block.
+        /// Gets or sets detected block type (text, image etc) for this block.
         /// </summary>
         [DataMember(Name = "blockType")]
         public string BlockType { get; protected set; }
@@ -575,13 +575,13 @@
     public class Paragraph : Block
     {
         /// <summary>
-        /// List of words in this paragraph.
+        /// Gets or sets list of words in this paragraph.
         /// </summary>
         [DataMember(Name = "words")]
         public List<Word> Words { get; protected set; }
 
         /// <summary>
-        /// The actual text representation of this paragraph.
+        /// Gets or sets the actual text representation of this paragraph.
         /// </summary>
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
@@ -594,7 +594,7 @@
     public class Word : Block
     {
         /// <summary>
-        /// List of symbols in the word. The order of the symbols follows the natural reading order.
+        /// Gets or sets list of symbols in the word. The order of the symbols follows the natural reading order.
         /// </summary>
         [DataMember(Name = "symbols")]
         public List<Symbol> Symbols { get; protected set; }
@@ -607,7 +607,7 @@
     public class Symbol : Block
     {
         /// <summary>
-        /// The actual UTF-8 representation of the symbol.
+        /// Gets or sets the actual UTF-8 representation of the symbol.
         /// </summary>
         [DataMember(Name = "text")]
         public string Text { get; protected set; }
@@ -620,7 +620,7 @@
     public class Detection
     {
         /// <summary>
-        /// Details of the result of recognition.
+        /// Gets or sets details of the result of recognition.
         /// </summary>
         [DataMember(Name = "rekognition_face")]
         public RekognitionFace RekognitionFace { get; protected set; }
@@ -633,13 +633,13 @@
     public class RekognitionFace
     {
         /// <summary>
-        /// Status of the recognition process.
+        /// Gets or sets status of the recognition process.
         /// </summary>
         [DataMember(Name = "status")]
         public string Status { get; protected set; }
 
         /// <summary>
-        /// Properties of each detected face.
+        /// Gets or sets properties of each detected face.
         /// </summary>
         [DataMember(Name = "data")]
         public List<Face> Faces { get; protected set; }
@@ -652,202 +652,202 @@
     public class Face
     {
         /// <summary>
-        /// Bounding box of the face.
+        /// Gets or sets bounding box of the face.
         /// </summary>
         [DataMember(Name = "boundingbox")]
         public BoundingBox BoundingBox { get; protected set; }
 
         /// <summary>
-        /// Confidence level that the bounding box contains a face (and not a different object such as a tree).
+        /// Gets or sets confidence level that the bounding box contains a face (and not a different object such as a tree).
         /// Valid Range: Minimum value of 0. Maximum value of 100.
         /// </summary>
         [DataMember(Name = "confidence")]
         public double Confidence { get; protected set; }
 
         /// <summary>
-        /// Estimated age of the person.
+        /// Gets or sets estimated age of the person.
         /// </summary>
         [DataMember(Name = "age")]
         public double Age { get; protected set; }
 
         /// <summary>
-        /// Indicates whether or not the face is smiling, and the confidence level in the determination.
+        /// Gets or sets indication whether or not the face is smiling, and the confidence level in the determination.
         /// Float values: 0.0 to 1.0.
         /// </summary>
         [DataMember(Name = "smile")]
         public double Smile { get; protected set; }
 
         /// <summary>
-        /// Score of whether the person is wearing glasses.
+        /// Gets or sets score of whether the person is wearing glasses.
         /// </summary>
         [DataMember(Name = "glasses")]
         public double Glasses { get; protected set; }
 
         /// <summary>
-        /// Indicates the confidence level whether the face is wearing sunglasses.
+        /// Gets or sets indication the confidence level whether the face is wearing sunglasses.
         /// </summary>
         [DataMember(Name = "sunglasses")]
         public double Sunglasses { get; protected set; }
 
         /// <summary>
-        /// Indicates the confidence level whether the face has beard.
+        /// Gets or sets indication the confidence level whether the face has beard.
         /// </summary>
         [DataMember(Name = "beard")]
         public double Beard { get; protected set; }
 
         /// <summary>
-        /// Indicates the confidence level whether the face has a mustache.
+        /// Gets or sets indication the confidence level whether the face has a mustache.
         /// </summary>
         [DataMember(Name = "mustache")]
         public double Mustache { get; protected set; }
 
         /// <summary>
-        /// Score of whether the eyes of the person are closed.
+        /// Gets or sets score of whether the eyes of the person are closed.
         /// </summary>
         [DataMember(Name = "eye_closed")]
         public double EyeClosed { get; protected set; }
 
         /// <summary>
-        /// Score of whether the mouse of the person is wide open.
+        /// Gets or sets score of whether the mouse of the person is wide open.
         /// </summary>
         [DataMember(Name = "mouth_open_wide")]
         public double MouthOpenWide { get; protected set; }
 
         /// <summary>
-        /// Score of whether the detected face of the person is treated as beautiful.
+        /// Gets or sets score of whether the detected face of the person is treated as beautiful.
         /// </summary>
         [DataMember(Name = "beauty")]
         public double Beauty { get; protected set; }
 
         /// <summary>
-        /// Whether the person is a male or a female (high value towards 1 means male).
+        /// Gets or sets whether the person is a male or a female (high value towards 1 means male).
         /// </summary>
         [DataMember(Name = "sex")]
         public double Gender { get; protected set; }
 
         /// <summary>
-        /// Detected data about the person's race.
+        /// Gets or sets detected data about the person's race.
         /// </summary>
         [DataMember(Name = "race")]
         public Dictionary<string, double> Race { get; protected set; }
 
         /// <summary>
-        /// The emotions detected on the face, and the confidence level in the determination.
+        /// Gets or sets the emotions detected on the face, and the confidence level in the determination.
         /// For example, HAPPY, SAD, and ANGRY.
         /// </summary>
         [DataMember(Name = "emotion")]
         public Dictionary<string, double> Emotion { get; protected set; }
 
         /// <summary>
-        /// Identifies image brightness and sharpness.
+        /// Gets or sets identifies image brightness and sharpness.
         /// </summary>
         [DataMember(Name = "quality")]
         public Dictionary<string, double> Quality { get; protected set; }
 
         /// <summary>
-        /// Indicates the pose of the face as determined by its pitch, roll, and yaw.
+        /// Gets or sets indication the pose of the face as determined by its pitch, roll, and yaw.
         /// </summary>
         [DataMember(Name = "pose")]
         public Dictionary<string, double> Pose { get; protected set; }
 
         /// <summary>
-        /// Position of the left eye.
+        /// Gets or sets position of the left eye.
         /// </summary>
         [DataMember(Name = "eye_left")]
         public Point EyeLeftPosition { get; protected set; }
 
         /// <summary>
-        /// Position of the right eye.
+        /// Gets or sets position of the right eye.
         /// </summary>
         [DataMember(Name = "eye_right")]
         public Point EyeRightPosition { get; protected set; }
 
         /// <summary>
-        /// Left point of the left eye.
+        /// Gets or sets left point of the left eye.
         /// </summary>
         [DataMember(Name = "e_ll")]
         public Point EyeLeft_Left { get; protected set; }
 
         /// <summary>
-        /// Right point of the left eye.
+        /// Gets or sets right point of the left eye.
         /// </summary>
         [DataMember(Name = "e_lr")]
         public Point EyeLeft_Right { get; protected set; }
 
         /// <summary>
-        /// Up point of the left eye.
+        /// Gets or sets up point of the left eye.
         /// </summary>
         [DataMember(Name = "e_lu")]
         public Point EyeLeft_Up { get; protected set; }
 
         /// <summary>
-        /// Down point of the left eye.
+        /// Gets or sets down point of the left eye.
         /// </summary>
         [DataMember(Name = "e_ld")]
         public Point EyeLeft_Down { get; protected set; }
 
         /// <summary>
-        /// Left point of the right eye.
+        /// Gets or sets left point of the right eye.
         /// </summary>
         [DataMember(Name = "e_rl")]
         public Point EyeRight_Left { get; protected set; }
 
         /// <summary>
-        /// Right point of the right eye.
+        /// Gets or sets right point of the right eye.
         /// </summary>
         [DataMember(Name = "e_rr")]
         public Point EyeRight_Right { get; protected set; }
 
         /// <summary>
-        /// Up point of the right eye.
+        /// Gets or sets up point of the right eye.
         /// </summary>
         [DataMember(Name = "e_ru")]
         public Point EyeRight_Up { get; protected set; }
 
         /// <summary>
-        /// Down point of the right eye.
+        /// Gets or sets down point of the right eye.
         /// </summary>
         [DataMember(Name = "e_rd")]
         public Point EyeRight_Down { get; protected set; }
 
         /// <summary>
-        /// Position of the nose.
+        /// Gets or sets position of the nose.
         /// </summary>
         [DataMember(Name = "nose")]
         public Point NosePosition { get; protected set; }
 
         /// <summary>
-        /// Left point of the nose.
+        /// Gets or sets left point of the nose.
         /// </summary>
         [DataMember(Name = "n_l")]
         public Point NoseLeft { get; protected set; }
 
         /// <summary>
-        /// Right point of the nose.
+        /// Gets or sets right point of the nose.
         /// </summary>
         [DataMember(Name = "n_r")]
         public Point NoseRight { get; protected set; }
 
         /// <summary>
-        /// Left point of the mouth.
+        /// Gets or sets left point of the mouth.
         /// </summary>
         [DataMember(Name = "mouth_l")]
         public Point MouthLeft { get; protected set; }
 
         /// <summary>
-        /// Right point of the mouth.
+        /// Gets or sets right point of the mouth.
         /// </summary>
         [DataMember(Name = "mouth_r")]
         public Point MouthRight { get; protected set; }
 
         /// <summary>
-        /// Up point of the mouth.
+        /// Gets or sets up point of the mouth.
         /// </summary>
         [DataMember(Name = "m_u")]
         public Point MouthUp { get; protected set; }
 
         /// <summary>
-        /// Down point of the mouth.
+        /// Gets or sets down point of the mouth.
         /// </summary>
         [DataMember(Name = "m_d")]
         public Point MouthDown { get; protected set; }
@@ -860,13 +860,13 @@
     public class BoundingBox
     {
         /// <summary>
-        /// Top left point of the bounding box.
+        /// Gets or sets top left point of the bounding box.
         /// </summary>
         [DataMember(Name = "tl")]
         public Point TopLeft { get; protected set; }
 
         /// <summary>
-        /// Size of the bounding box.
+        /// Gets or sets size of the bounding box.
         /// </summary>
         [DataMember(Name = "size")]
         public Size Size { get; protected set; }
@@ -879,13 +879,13 @@
     public class Point
     {
         /// <summary>
-        /// X - coordinate.
+        /// Gets or sets x - coordinate.
         /// </summary>
         [DataMember(Name = "x")]
         public double X { get; protected set; }
 
         /// <summary>
-        /// Y - coordinate.
+        /// Gets or sets y - coordinate.
         /// </summary>
         public double Y { get; protected set; }
     }
@@ -897,13 +897,13 @@
     public class Size
     {
         /// <summary>
-        /// Width of the block.
+        /// Gets or sets width of the block.
         /// </summary>
         [DataMember(Name = "width")]
         public double Width { get; protected set; }
 
         /// <summary>
-        /// Width of the block.
+        /// Gets or sets width of the block.
         /// </summary>
         [DataMember(Name = "height")]
         public double Height { get; protected set; }
@@ -916,7 +916,7 @@
     public class QualityAnalysis
     {
         /// <summary>
-        /// Focus value.
+        /// Gets or sets focus value.
         /// </summary>
         [DataMember(Name = "focus")]
         public double Focus { get; protected set; }
@@ -943,13 +943,13 @@
     public class AccessibilityAnalysis
     {
         /// <summary>
-        /// Details of colorblind accessibility analysis.
+        /// Gets or sets details of colorblind accessibility analysis.
         /// </summary>
         [DataMember(Name = "colorblind_accessibility_analysis")]
         public ColorblindAccessibilityAnalysis ColorblindAccessibilityAnalysis { get; set; }
 
         /// <summary>
-        /// Gets value between 0-1.
+        /// Gets or sets value between 0-1.
         /// </summary>
         [DataMember(Name = "colorblind_accessibility_score")]
         public double ColorblindAccessibilityScore { get; set; }
@@ -962,19 +962,19 @@
     public class ColorblindAccessibilityAnalysis
     {
         /// <summary>
-        /// Gets distinct edges value between 0-1.
+        /// Gets or sets distinct edges value between 0-1.
         /// </summary>
         [DataMember(Name = "distinct_edges")]
         public double DistinctEdges { get; set; }
 
         /// <summary>
-        /// Gets distinct colors value between 0-1.
+        /// Gets or sets distinct colors value between 0-1.
         /// </summary>
         [DataMember(Name = "distinct_colors")]
         public double DistinctColors { get; set; }
 
         /// <summary>
-        /// Gets most indistinct pair of colors.
+        /// Gets or sets most indistinct pair of colors.
         /// </summary>
         [DataMember(Name = "most_indistinct_pair")]
         public string[] MostIndistinctPair { get; set; }

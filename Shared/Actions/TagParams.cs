@@ -57,7 +57,7 @@
         }
 
         /// <summary>
-        /// A list of public IDs (up to 1000) of assets uploaded to Cloudinary.
+        /// Gets or sets a list of public IDs (up to 1000) of assets uploaded to Cloudinary.
         /// </summary>
         public List<string> PublicIds
         {
@@ -66,22 +66,22 @@
         }
 
         /// <summary>
-        /// The tag to assign, remove, or replace. Not relevant when removing all tags.
+        /// Gets or sets the tag to assign, remove, or replace. Not relevant when removing all tags.
         /// </summary>
         public string Tag { get; set; }
 
         /// <summary>
-        /// The type of asset. Valid values: image, raw, and video. Default: image.
+        /// Gets or sets the type of asset. Valid values: image, raw, and video. Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// The specific type of the asset. Valid values: upload, private and authenticated.Default: upload.
+        /// Gets or sets the specific type of the asset. Valid values: upload, private and authenticated.Default: upload.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// The action to perform on the assets.
+        /// Gets or sets the action to perform on the assets.
         /// </summary>
         public TagCommand Command { get; set; }
 

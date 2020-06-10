@@ -9,13 +9,13 @@
     public class ListResourcesByContextParams : ListResourcesParams
     {
         /// <summary>
-        /// Required. Only resources with the given key should be returned.
+        /// Gets or sets if only resources with the given key should be returned. Required.
         /// </summary>
         public string Key { get; set; }
 
         /// <summary>
-        /// Optional. When provided should only return resources with this given value for the context key.
-        /// When not provided, return all resources for which the context key exists.
+        /// Gets or sets whether should only return resources with this given value for the context key.
+        /// When not provided, return all resources for which the context key exists. Optional.
         /// </summary>
         public string Value { get; set; }
 

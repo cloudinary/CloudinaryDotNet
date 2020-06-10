@@ -10,13 +10,13 @@
     public class UpdateResourceAccessModeResult : BaseResult
     {
         /// <summary>
-        /// List of successfully updated results.
+        /// Gets or sets list of successfully updated results.
         /// </summary>
         [DataMember(Name = "updated")]
         public List<object> Updated { get; protected set; }
 
         /// <summary>
-        /// List of failed results.
+        /// Gets or sets list of failed results.
         /// </summary>
         [DataMember(Name = "failed")]
         public List<object> Failed { get; protected set; }

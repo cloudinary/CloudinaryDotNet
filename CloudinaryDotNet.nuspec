@@ -20,6 +20,7 @@
      </group>
       <group targetFramework="net45">
          <dependency id="System.Runtime.InteropServices.RuntimeInformation" version="4.3.0" />
+         <dependency id="System.Globalization" version="4.3.0" />
          <dependency id="System.Text.Encodings.Web" version="4.5.0" />
       </group>
     </dependencies>

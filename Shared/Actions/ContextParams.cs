@@ -27,34 +27,34 @@
     public class ContextParams : BaseParams
     {
         /// <summary>
-        /// A list of Public IDs of assets uploaded to Cloudinary.
+        /// Gets or sets a list of Public IDs of assets uploaded to Cloudinary.
         /// </summary>
         public List<string> PublicIds { get; set; }
 
         /// <summary>
-        /// The context name to assign or remove.
+        /// Gets or sets the context name to assign or remove.
         /// </summary>
         public string Context { get; set; }
 
         /// <summary>
-        /// (Only relevant when adding context) A list of the key-value pairs of general textual context metadata to
-        /// add to the asset.
+        /// Gets or sets a list of the key-value pairs of general textual context metadata to
+        /// add to the asset. Only relevant when adding context.
         /// </summary>
         public StringDictionary ContextDict { get; set; }
 
         /// <summary>
-        /// (Optional) The specific type of the asset.
-        /// Valid values: upload, private and authenticated. Default: upload.
+        /// Gets or sets the specific type of the asset.
+        /// Valid values: upload, private and authenticated. Default: upload. Optional.
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// The action to perform on assets using the given context.
+        /// Gets or sets the action to perform on assets using the given context.
         /// </summary>
         public ContextCommand Command { get; set; }
 
         /// <summary>
-        /// (Optional) The type of asset.
+        /// Gets or sets (Optional) The type of asset.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 

@@ -9,7 +9,7 @@
     public class DeleteUploadPresetResult : BaseResult
     {
         /// <summary>
-        /// API message.
+        /// Gets or sets API message.
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }
