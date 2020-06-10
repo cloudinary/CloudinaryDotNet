@@ -106,13 +106,13 @@
         }
 
         /// <summary>
-        /// Date when the resource was created.
+        /// Gets or sets date when the resource was created.
         /// </summary>
         [DataMember(Name = "created_at")]
         public string CreatedAt { get; protected set; }
 
         /// <summary>
-        /// Date when asset was created.
+        /// Gets or sets date when asset was uploaded (overwritten).
         /// </summary>
         [Obsolete("Property Uploaded is deprecated, please use UploadedAt instead")]
         public string Uploaded
@@ -242,13 +242,13 @@
         public ImageAnalysis ImageAnalysis { get; protected set; }
 
         /// <summary>
-        /// Identity data of asset creator.
+        /// Gets or sets identity data of asset creator.
         /// </summary>
         [DataMember(Name = "created_by")]
         public IdentityInfo CreatedBy { get; protected set; }
 
         /// <summary>
-        /// Identity data about resource was uploaded.
+        /// Gets or sets identity data about resource was uploaded.
         /// </summary>
         [DataMember(Name = "uploaded_by")]
         public IdentityInfo UploadedBy { get; protected set; }
@@ -311,7 +311,7 @@
     public class IdentityInfo
     {
         /// <summary>
-        /// Identity access key.
+        /// Gets or sets identity access key.
         /// </summary>
         [DataMember(Name = "access_key")]
         public string AccessKey { get; protected set; }

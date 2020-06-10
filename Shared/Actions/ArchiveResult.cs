@@ -14,22 +14,22 @@
         protected string m_resourceType;
 
         /// <summary>
-        /// Gets the URL for accessing the created archive.
+        /// Gets or sets the URL for accessing the created archive.
         /// </summary>
         public string Url { get; protected set; }
 
         /// <summary>
-        /// Gets the HTTPS URL for securely accessing the created archive.
+        /// Gets or sets the HTTPS URL for securely accessing the created archive.
         /// </summary>
         public string SecureUrl { get; protected set; }
 
         /// <summary>
-        /// Gets publicId of the created archive.
+        /// Gets or sets publicId of the created archive.
         /// </summary>
         public string PublicId { get; protected set; }
 
         /// <summary>
-        /// Gets size of the created archive (in bytes).
+        /// Gets or sets size of the created archive (in bytes).
         /// </summary>
         public long Bytes { get; protected set; }
 
@@ -39,17 +39,17 @@
         public int FileCount { get; private set; }
 
         /// <summary>
-        /// Version of uploaded asset.
+        /// Gets or sets version of uploaded asset.
         /// </summary>
         public string Version { get; protected set; }
 
         /// <summary>
-        /// The signature for verifying the response is a valid response from Cloudinary.
+        /// Gets or sets the signature for verifying the response is a valid response from Cloudinary.
         /// </summary>
         public string Signature { get; protected set; }
 
         /// <summary>
-        /// The type of resource. Possible values: image, raw, video.
+        /// Gets the type of resource. Possible values: image, raw, video.
         /// </summary>
         public ResourceType ResourceType
         {
@@ -57,38 +57,38 @@
         }
 
         /// <summary>
-        /// Date when the asset was uploaded.
+        /// Gets or sets date when the asset was uploaded.
         /// </summary>
         public DateTime CreatedAt { get; protected set; }
 
         /// <summary>
-        /// The storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
+        /// Gets or sets the storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
         /// youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         public string Type { get; protected set; }
 
         /// <summary>
-        /// Used to determine whether two versions of an asset are identical.
+        /// Gets or sets etag used to determine whether two versions of an asset are identical.
         /// </summary>
         public string Etag { get; protected set; }
 
         /// <summary>
-        /// Indicates if a placeholder (default image) is currently used instead of displaying the image (due to moderation).
+        /// Gets or sets a value indicating whether a placeholder (default image) is currently used instead of displaying the image (due to moderation).
         /// </summary>
         public bool Placeholder { get; protected set; }
 
         /// <summary>
-        /// The accessibility mode of the media asset: public, or authenticated.
+        /// Gets or sets the accessibility mode of the media asset: public, or authenticated.
         /// </summary>
         public string AccessMode { get; protected set; }
 
         /// <summary>
-        /// The total number of assets.
+        /// Gets or sets the total number of assets.
         /// </summary>
         public int ResourceCount { get; protected set; }
 
         /// <summary>
-        /// A list of tag names assigned to resource.
+        /// Gets or sets a list of tag names assigned to resource.
         /// </summary>
         public string[] Tags { get; protected set; }
 

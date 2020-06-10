@@ -41,7 +41,7 @@
         public TransformDerived[] Derived { get; protected set; }
 
         /// <summary>
-        /// Whether this transformation is allowed when Strict Transformations are enabled.
+        /// Gets or sets a value indicating whether this transformation is allowed when Strict Transformations are enabled.
         /// </summary>
         [Obsolete("Property Strict is deprecated, please use AllowedForStrict instead")]
         public bool Strict
@@ -51,7 +51,7 @@
         }
 
         /// <summary>
-        /// Result message.
+        /// Gets or sets result message.
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }

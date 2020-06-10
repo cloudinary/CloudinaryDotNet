@@ -32,7 +32,7 @@
         public bool Partial { get; protected set; }
 
         /// <summary>
-        /// Detailed statistics of deleted resourse.
+        /// Gets or sets detailed statistics of deleted resource.
         /// </summary>
         [DataMember(Name = "deleted_counts")]
         public Dictionary<string, DeletedDataStatistics> DeletedCounts { get; protected set; }
@@ -45,13 +45,13 @@
     public class DeletedDataStatistics
     {
         /// <summary>
-        /// Count of original resources deleted.
+        /// Gets or sets count of original resources deleted.
         /// </summary>
         [DataMember(Name = "original")]
         public int Original { get; protected set; }
 
         /// <summary>
-        /// Count of derived resources deleted.
+        /// Gets or sets count of derived resources deleted.
         /// </summary>
         [DataMember(Name = "derived")]
         public int Derived { get; protected set; }

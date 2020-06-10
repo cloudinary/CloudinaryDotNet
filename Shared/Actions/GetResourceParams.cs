@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.Actions
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// Gets or sets optional (String, default: upload). The storage type: upload, private, authenticated, facebook, twitter,
+        /// Gets or sets the storage type: upload, private, authenticated, facebook, twitter,
         /// gplus, instagram_name, gravatar, youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         public string Type { get; set; }
@@ -76,7 +76,7 @@ namespace CloudinaryDotNet.Actions
         }
 
         /// <summary>
-        /// Optional (Boolean, default: false). If true, include IPTC, XMP, and detailed Exif metadata.
+        /// Gets or sets a value indicating whether to include IPTC, XMP, and detailed Exif metadata.
         /// Supported for images, video, and audio.
         /// </summary>
         public bool? ImageMetadata { get; set; }
@@ -110,13 +110,13 @@ namespace CloudinaryDotNet.Actions
         public string DerivedNextCursor { get; set; }
 
         /// <summary>
-        /// Optional. Find all assets with a public ID that starts with the given prefix.
+        /// Gets or sets find all assets with a public ID that starts with the given prefix.
         /// The assets are sorted by public ID in the response.
         /// </summary>
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Optional. When a request has more results to return than max_results,
+        ///  Gets or sets when a request has more results to return than max_results,
         /// the next_cursor value is returned as part of the response.
         /// You can then specify this value as the next_cursor parameter of a following request.
         /// </summary>
@@ -131,35 +131,35 @@ namespace CloudinaryDotNet.Actions
         public bool? CinemagraphAnalysis { get; set; }
 
         /// <summary>
-        /// Optional. Get assets that were created since the given timestamp.
+        /// Gets or sets get assets that were created since the given timestamp.
         /// Supported unless prefix or public_ids were specified.
         /// </summary>
         public string StartAt { get; set; }
 
         /// <summary>
-        /// Optional. Control the order of returned assets, according to the created_at date.
+        /// Gets or sets the order of returned assets, according to the created_at date.
         /// Note: if a prefix is specified, this parameter is ignored and the results
         /// are sorted by public ID. Possible values: desc or -1 (default), asc or 1.
         /// </summary>
         public string Direction { get; set; }
 
         /// <summary>
-        /// Optional. Whether to include the list of tag names assigned to each asset. Default: false.
+        /// Gets or sets whether to include the list of tag names assigned to each asset. Default: false.
         /// </summary>
         public bool? Tags { get; set; }
 
         /// <summary>
-        /// Optional. Whether to include key-value pairs of context associated with each asset. Default: false.
+        /// Gets or sets whether to include key-value pairs of context associated with each asset. Default: false.
         /// </summary>
         public bool? Context { get; set; }
 
         /// <summary>
-        /// Optional. Whether to include the image moderation status of each asset. Default: false.
+        /// Gets or sets whether to optionally include the image moderation status of each asset. Default: false.
         /// </summary>
         public bool? Moderation { get; set; }
 
         /// <summary>
-        /// Optional. Include accessibility analysis information. Default: false.
+        /// Gets or sets a value indicating whether to include accessibility analysis information. Default: false.
         /// </summary>
         public bool? AccessibilityAnalysis { get; set; }
 

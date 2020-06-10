@@ -22,6 +22,8 @@
         public string Transformation { get; set; }
 
         /// <summary>
+        /// Gets or sets unsafe update transformation.
+        ///
         /// Optional. Allows updating an existing named transformation without updating all associated derived images
         /// (the new settings of the named transformation only take effect from now on).
         /// </summary>
@@ -36,6 +38,8 @@
         }
 
         /// <summary>
+        /// Gets or sets unsafe update transformation.
+        ///
         /// Optional. Allows updating an existing named transformation without updating all associated derived images
         /// (the new settings of the named transformation only take effect from now on).
         /// </summary>
@@ -55,7 +59,7 @@
         }
 
         /// <summary>
-        /// Optional. Whether this transformation is allowed when Strict Transformations are enabled.
+        /// Gets or sets a value indicating whether this transformation is allowed when Strict Transformations are enabled.
         /// </summary>
         public bool AllowedForStrict { get; set; }
 

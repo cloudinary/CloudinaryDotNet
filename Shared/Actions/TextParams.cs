@@ -94,7 +94,7 @@
         public string Opacity { get; set; }
 
         /// <summary>
-        /// Gets or sets optionally add an "underline" to the text. Default: "none".
+        /// Gets or sets an "underline" to the text. Default: "none".
         /// </summary>
         public string TextDecoration { get; set; }
 

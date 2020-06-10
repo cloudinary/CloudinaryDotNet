@@ -54,7 +54,7 @@
         public ContextCommand Command { get; set; }
 
         /// <summary>
-        /// (Optional) The type of asset.
+        /// Gets or sets (Optional) The type of asset.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 

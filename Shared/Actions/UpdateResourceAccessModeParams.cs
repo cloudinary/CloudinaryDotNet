@@ -61,12 +61,16 @@
         }
 
         /// <summary>
+        /// Gets or sets prefix.
+        ///
         /// Update all assets where the public ID starts with the given
         /// prefix (up to a maximum of 100 matching original assets).
         /// </summary>
         public string Prefix { get; set; }
 
         /// <summary>
+        /// Gets or sets tag.
+        ///
         /// Update all assets with the given tag (up to a maximum of 100 matching original assets).
         /// </summary>
         public string Tag { get; set; }

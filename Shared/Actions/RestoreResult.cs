@@ -25,7 +25,7 @@
         }
 
         /// <summary>
-        /// Collection of restored resources.
+        /// Gets or sets collection of restored resources.
         /// </summary>
         public Dictionary<string, RestoredResource> RestoredResources { get; protected set; }
 
@@ -63,37 +63,37 @@
     public class RestoredResource
     {
         /// <summary>
-        /// PublicId of the created archive.
+        /// Gets or sets publicId of the created archive.
         /// </summary>
         [DataMember(Name = "public_id")]
         public string PublicId { get; protected set; }
 
         /// <summary>
-        /// Version of uploaded asset.
+        /// Gets or sets version of uploaded asset.
         /// </summary>
         [DataMember(Name = "version")]
         public string Version { get; protected set; }
 
         /// <summary>
-        /// The signature for verifying the response is a valid response from Cloudinary.
+        /// Gets or sets the signature for verifying the response is a valid response from Cloudinary.
         /// </summary>
         [DataMember(Name = "signature")]
         public string Signature { get; protected set; }
 
         /// <summary>
-        /// Parameter "width" of the resource. Not relevant for raw files.
+        /// Gets or sets parameter "width" of the resource. Not relevant for raw files.
         /// </summary>
         [DataMember(Name = "width")]
         public int Width { get; protected set; }
 
         /// <summary>
-        /// Parameter "height" of the resource. Not relevant for raw files.
+        /// Gets or sets parameter "height" of the resource. Not relevant for raw files.
         /// </summary>
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
 
         /// <summary>
-        /// Asset format.
+        /// Gets or sets asset format.
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
@@ -105,7 +105,7 @@
         protected string m_resourceType;
 
         /// <summary>
-        /// Get the cloudinary resource type.
+        /// Gets get the cloudinary resource type.
         /// </summary>
         public ResourceType ResourceType
         {
@@ -113,44 +113,44 @@
         }
 
         /// <summary>
-        /// The UTC date and time when the asset was originally uploaded in ISO8601 syntax: [yyyy-mm-dd]T[hh:mm:ss]Z.
+        /// Gets or sets the UTC date and time when the asset was originally uploaded in ISO8601 syntax: [yyyy-mm-dd]T[hh:mm:ss]Z.
         /// </summary>
         [DataMember(Name = "created_at")]
         public string CreatedAt { get; protected set; }
 
         /// <summary>
-        /// A list of tag names assigned to resource.
+        /// Gets or sets a list of tag names assigned to resource.
         /// </summary>
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets the size of the media asset in bytes.
         /// </summary>
         [DataMember(Name = "bytes")]
         public long Bytes { get; protected set; }
 
         /// <summary>
-        /// The storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
+        /// Gets or sets the storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
         /// youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         [DataMember(Name = "type")]
         public string Type { get; protected set; }
 
         /// <summary>
-        /// Indicates if a placeholder (default image) is currently used instead of displaying the image (due to moderation).
+        /// Gets or sets a value indicating whether a placeholder (default image) is currently used instead of displaying the image (due to moderation).
         /// </summary>
         [DataMember(Name = "placeholder")]
         public bool Placeholder { get; protected set; }
 
         /// <summary>
-        /// HTTP URL of asset backup.
+        /// Gets or sets HTTP URL of asset backup.
         /// </summary>
         [DataMember(Name = "backup_url")]
         public string BackupUrl { get; protected set; }
 
         /// <summary>
-        /// The accessibility mode of the media asset: public, or authenticated.
+        /// Gets or sets the accessibility mode of the media asset: public, or authenticated.
         /// </summary>
         [DataMember(Name = "access_mode")]
         public string AccessMode { get; protected set; }

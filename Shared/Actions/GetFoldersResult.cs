@@ -16,6 +16,8 @@
         public List<Folder> Folders { get; set; }
 
         /// <summary>
+        /// Gets or sets the next cursor.
+        ///
         /// When a listing request has more results to return than <see cref="GetFoldersParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="NextCursor"/> parameter of the following listing request.
@@ -24,7 +26,7 @@
         public string NextCursor { get; protected set; }
 
         /// <summary>
-        /// The total count of folders.
+        /// Gets or sets the total count of folders.
         /// </summary>
         [DataMember(Name = "total_count")]
         public int TotalCount { get; protected set; }

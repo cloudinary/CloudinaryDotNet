@@ -103,7 +103,7 @@
         }
 
         /// <summary>
-        /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// Gets or sets whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
         public bool? ImageMetadata { get; set; }
 
@@ -200,7 +200,7 @@
         public bool? CinemagraphAnalysis { get; set; }
 
         /// <summary>
-        /// Optional. Include accessibility analysis information. Default: false.
+        /// Gets or sets whether to include accessibility analysis information. Default: false.
         /// </summary>
         public bool? AccessibilityAnalysis { get; set; }
 

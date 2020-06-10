@@ -174,12 +174,12 @@
         public StringDictionary Context { get; set; }
 
         /// <summary>
-        /// Allows to store a set of custom metadata fields (by external_id) and the values to assign to each of them.
+        /// Gets or sets allows to store a set of custom metadata fields (by external_id) and the values to assign to each of them.
         /// </summary>
         public StringDictionary MetadataFields { get; set; }
 
         /// <summary>
-        ///Gets or sets a set of allowed formats.
+        /// Gets or sets a set of allowed formats.
         /// </summary>
         public string[] AllowedFormats { get; set; }
 

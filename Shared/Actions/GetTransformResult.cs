@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// Indicates whether the transformation can be used when strict transformations are enabled.
+        /// Gets or sets a value indicating whether the transformation can be used when strict transformations are enabled.
         /// </summary>
         [DataMember(Name = "allowed_for_strict")]
         public bool AllowedForStrict { get; protected set; }
@@ -121,7 +121,7 @@
         }
 
         /// <summary>
-        /// The size of the media asset in bytes.
+        /// Gets or sets the size of the media asset in bytes.
         /// </summary>
         [DataMember(Name = "bytes")]
         public long Bytes { get; protected set; }

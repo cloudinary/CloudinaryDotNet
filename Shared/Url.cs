@@ -1102,7 +1102,7 @@
             sharedDomain = !m_usePrivateCdn;
 
             // API url starts with https://, no prefix manipulation for it
-            if (Regex.IsMatch(m_cloudinaryAddr..ToLowerInvariant(), "^https?:/.*"))
+            if (Regex.IsMatch(m_cloudinaryAddr.ToLowerInvariant(), "^https?:/.*"))
             {
                 return m_cloudinaryAddr;
             }

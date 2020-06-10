@@ -20,13 +20,13 @@
         }
 
         /// <summary>
-        /// The URL for accessing the created animated GIF.
+        /// Gets or sets the URL for accessing the created animated GIF.
         /// </summary>
         [DataMember(Name = "url")]
         public Uri Url { get; protected set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the created animated GIF.
+        /// Gets or sets the HTTPS URL for securely accessing the created animated GIF.
         /// </summary>
         [Obsolete("Property SecureUri is deprecated, please use SecureUrl instead")]
         public Uri SecureUri

@@ -55,7 +55,7 @@
         }
 
         /// <summary>
-        /// The UTC date and time when the asset was originally uploaded in ISO8601 syntax: [yyyy-mm-dd]T[hh:mm:ss]Z.
+        /// Gets or sets the UTC date and time when the asset was originally uploaded in ISO8601 syntax: [yyyy-mm-dd]T[hh:mm:ss]Z.
         /// </summary>
         [DataMember(Name = "created_at")]
         public string CreatedAt { get; protected set; }
@@ -102,7 +102,7 @@
         public string FullyQualifiedPublicId => $"{ResourceType}/{Type}/{PublicId}";
 
         /// <summary>
-        /// The accessibility mode of the media asset: public, or authenticated.
+        /// Gets or sets the accessibility mode of the media asset: public, or authenticated.
         /// </summary>
         [DataMember(Name = "access_mode")]
         public string AccessMode { get; protected set; }

@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System;
+    using System.Globalization;
     using System.Runtime.Serialization;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -203,7 +204,7 @@
         }
 
         /// <summary>
-        /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// Gets or sets a value indicating whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
         /// </summary>
         [DataMember(Name = "image_metadata")]
         public bool ImageMetadata { get; protected set; }
@@ -296,8 +297,8 @@
 
             var isBinaryString = value.ToString() == "0" || value.ToString() == "1";
             return isBinaryString ?
-                Convert.ToBoolean(Convert.ToInt16(value)) :
-                Convert.ToBoolean(value);
+                Convert.ToBoolean(Convert.ToInt16(value, CultureInfo.InvariantCulture)) :
+                Convert.ToBoolean(value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>

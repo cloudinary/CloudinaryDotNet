@@ -56,6 +56,8 @@
         public StringDictionary Context { get; set; }
 
         /// <summary>
+        /// Gets or sets metadata.
+        ///
         /// Allows to store a set of custom metadata fields (by external_id) and the values to assign to each of them.
         /// </summary>
         public StringDictionary Metadata { get; set; }

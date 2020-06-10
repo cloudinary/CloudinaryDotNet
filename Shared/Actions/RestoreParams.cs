@@ -43,7 +43,7 @@
         }
 
         /// <summary>
-        /// Optional. The specific type of the asset.
+        /// Gets or sets the specific type of the asset.
         /// Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
         public AssetType Type { get; set; }

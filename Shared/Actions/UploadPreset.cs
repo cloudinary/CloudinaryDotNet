@@ -322,7 +322,8 @@
         }
 
         /// <summary>
-        /// Whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// Gets or sets a value indicating whether to retrieve IPTC and detailed Exif metadata of the uploaded photo.
+        /// Default: false.
         /// </summary>
         public bool ImageMetadata { get; set; }
 

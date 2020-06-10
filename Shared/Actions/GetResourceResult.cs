@@ -77,7 +77,7 @@
         }
 
         /// <summary>
-        /// Gets or sets size of the resource in bytes.        
+        /// Gets or sets size of the resource in bytes.
         /// </summary>
         [DataMember(Name = "bytes")]
         public long Bytes { get; protected set; }
@@ -139,7 +139,7 @@
         }
 
         /// <summary>
-        /// IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
+        /// Gets or sets iPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
         /// </summary>
         [DataMember(Name = "image_metadata")]
         public Dictionary<string, string> ImageMetadata { get; protected set; }
@@ -187,7 +187,7 @@
         public JToken Context { get; protected set; }
 
         /// <summary>
-        /// A key-value pairs of custom metadata fields associated with the resource.
+        /// Gets or sets a key-value pairs of custom metadata fields associated with the resource.
         /// </summary>
         [DataMember(Name = "metadata")]
         public JToken MetadataFields { get; protected set; }
@@ -230,7 +230,7 @@
         public int Pages { get; protected set; }
 
         /// <summary>
-        /// The accessibility mode of the media asset: public, or authenticated.
+        /// Gets or sets the accessibility mode of the media asset: public, or authenticated.
         /// </summary>
         [DataMember(Name = "access_mode")]
         public string AccessMode { get; protected set; }
@@ -242,7 +242,7 @@
         public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
 
         /// <summary>
-        /// The color ambiguity score that indicate how good\bad an image is for colorblind people.
+        /// Gets or sets the color ambiguity score that indicate how good\bad an image is for colorblind people.
         /// Will they be able to differentiate between different elements in the image.
         /// </summary>
         [DataMember(Name = "accessibility_analysis")]
@@ -282,7 +282,7 @@
         public object[][] Google { get; protected set; }
 
         /// <summary>
-        /// Cloudinary palette details.
+        /// Gets or sets cloudinary palette details.
         /// </summary>
         [DataMember(Name = "cloudinary")]
         public object[][] Cloudinary { get; protected set; }
@@ -943,13 +943,13 @@
     public class AccessibilityAnalysis
     {
         /// <summary>
-        /// Details of colorblind accessibility analysis.
+        /// Gets or sets details of colorblind accessibility analysis.
         /// </summary>
         [DataMember(Name = "colorblind_accessibility_analysis")]
         public ColorblindAccessibilityAnalysis ColorblindAccessibilityAnalysis { get; set; }
 
         /// <summary>
-        /// Gets value between 0-1.
+        /// Gets or sets value between 0-1.
         /// </summary>
         [DataMember(Name = "colorblind_accessibility_score")]
         public double ColorblindAccessibilityScore { get; set; }
@@ -962,19 +962,19 @@
     public class ColorblindAccessibilityAnalysis
     {
         /// <summary>
-        /// Gets distinct edges value between 0-1.
+        /// Gets or sets distinct edges value between 0-1.
         /// </summary>
         [DataMember(Name = "distinct_edges")]
         public double DistinctEdges { get; set; }
 
         /// <summary>
-        /// Gets distinct colors value between 0-1.
+        /// Gets or sets distinct colors value between 0-1.
         /// </summary>
         [DataMember(Name = "distinct_colors")]
         public double DistinctColors { get; set; }
 
         /// <summary>
-        /// Gets most indistinct pair of colors.
+        /// Gets or sets most indistinct pair of colors.
         /// </summary>
         [DataMember(Name = "most_indistinct_pair")]
         public string[] MostIndistinctPair { get; set; }

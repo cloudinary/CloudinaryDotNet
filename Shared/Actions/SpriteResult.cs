@@ -21,7 +21,7 @@
         }
 
         /// <summary>
-        /// URL to css file for the sprite.
+        /// Gets or sets URL to css file for the sprite.
         /// </summary>
         [DataMember(Name = "css_url")]
         public Uri CssUrl { get; protected set; }
@@ -43,7 +43,7 @@
         public Uri SecureCssUrl { get; protected set; }
 
         /// <summary>
-        /// URL to access the created sprite.
+        /// Gets or sets URL to access the created sprite.
         /// </summary>
         [Obsolete("Property ImageUri is deprecated, please use ImageUrl instead")]
         public Uri ImageUri
@@ -59,13 +59,13 @@
         public Uri ImageUrl { get; protected set; }
 
         /// <summary>
-        /// HTTPS URL to access the created sprite.
+        /// Gets or sets HTTPS URL to access the created sprite.
         /// </summary>
         [DataMember(Name = "secure_image_url")]
         public Uri SecureImageUrl { get; protected set; }
 
         /// <summary>
-        /// URL to json file with detailed parameters of the created sprite.
+        /// Gets or sets URL to json file with detailed parameters of the created sprite.
         /// </summary>
         [Obsolete("Property JsonUri is deprecated, please use JsonUrl instead")]
         public Uri JsonUri
@@ -81,7 +81,7 @@
         public Uri JsonUrl { get; protected set; }
 
         /// <summary>
-        /// HTTPS URL to json file with detailed parameters of the created sprite.
+        /// Gets or sets HTTPS URL to json file with detailed parameters of the created sprite.
         /// </summary>
         [DataMember(Name = "secure_json_url")]
         public Uri SecureJsonUrl { get; protected set; }

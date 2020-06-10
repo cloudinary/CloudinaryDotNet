@@ -40,7 +40,8 @@
         }
 
         /// <summary>
-        /// Returned metadata for the image. Includes: PixelsPerUnitX, PixelsPerUnitY, PixelUnits, Colorspace, and DPI.
+        /// Gets or sets the returned metadata for the image.
+        /// Includes: PixelsPerUnitX, PixelsPerUnitY, PixelUnits, Colorspace, and DPI.
         /// </summary>
         [DataMember(Name = "image_metadata")]
         public Dictionary<string, string> ImageMetadata { get; protected set; }
@@ -97,32 +98,32 @@
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
-        /// A key-value pairs of context associated with the resource.
+        /// Gets or sets a key-value pairs of context associated with the resource.
         /// </summary>
         [DataMember(Name = "context")]
         public JToken Context { get; protected set; }
 
         /// <summary>
-        /// The likelihood that the image is an illustration as opposed to a photograph.
+        /// Gets or sets the likelihood that the image is an illustration as opposed to a photograph.
         /// A value between 0 (photo) and 1.0 (illustration).
         /// </summary>
         [DataMember(Name = "illustration_score")]
         public float IllustrationScore { get; protected set; }
 
         /// <summary>
-        /// If the image has an alpha (transparency) channel.
+        /// Gets or sets a value indicating whether if the image has an alpha (transparency) channel.
         /// </summary>
         [DataMember(Name = "semi_transparent")]
         public bool SemiTransparent { get; protected set; }
 
         /// <summary>
-        /// If the image only contains a single grayscale channel.
+        /// Gets or sets a value indicating whether the image only contains a single grayscale channel.
         /// </summary>
         [DataMember(Name = "grayscale")]
         public bool Grayscale { get; protected set; }
 
         /// <summary>
-        /// The specific type of asset.
+        /// Gets or sets the specific type of asset.
         /// </summary>
         /// <summary>
         /// The derived images generated as per the requested eager transformations of the method call.
@@ -131,7 +132,7 @@
         public Eager[] Eager { get; protected set; }
 
         /// <summary>
-        /// The predominant colors in the image according to both a Google palette and a Cloudinary palette.
+        /// Gets or sets the predominant colors in the image according to both a Google palette and a Cloudinary palette.
         /// </summary>
         [DataMember(Name = "predominant")]
         public Predominant Predominant { get; protected set; }
@@ -143,7 +144,7 @@
         public CinemagraphAnalysis CinemagraphAnalysis { get; protected set; }
 
         /// <summary>
-        /// The color ambiguity score that indicate how good\bad an image is for colorblind people.
+        /// Gets or sets the color ambiguity score that indicate how good\bad an image is for colorblind people.
         /// Will they be able to differentiate between different elements in the image.
         /// </summary>
         [DataMember(Name = "accessibility_analysis")]

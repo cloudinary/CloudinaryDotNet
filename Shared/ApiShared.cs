@@ -123,9 +123,7 @@
 
         private static string BuildUserAgent()
         {
-            USER_AGENT = $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
-                CultureInfo.InvariantCulture,
-            return userAgent;
+            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
         }
 
         /// <summary>
