@@ -1465,7 +1465,7 @@
 
             if (parameters.File.IsRemote)
             {
-                return await UploadAsync<T>(parameters);
+                return await UploadAsync<T>(parameters).ConfigureAwait(false);
             }
 
             var internalParams = new UploadLargeParams(parameters, bufferSize, m_api);
@@ -1480,7 +1480,7 @@
                     parameters,
                     parameters.File,
                     internalParams.Headers,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 CheckUploadResult(result);
             }
 
