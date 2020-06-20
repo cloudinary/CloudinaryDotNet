@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using System.Collections.Generic;
 
 namespace CloudinaryDotNet.Test.Transformations.Common
@@ -120,6 +121,28 @@ namespace CloudinaryDotNet.Test.Transformations.Common
             
             Assert.AreEqual(transformation.Generate(), "l_text:Arial_20:Hello");
             Assert.AreEqual(clone.Generate(), "l_text:Arial_10:Hello");
+        }
+
+        [Test]
+        public void TestTextLayersUnmodifiableFields()
+        {
+            var textLayer = new TextLayer();
+            const string testValue = "some value";
+
+            Assert.Throws<InvalidOperationException>(() => textLayer.ResourceType(testValue));
+            Assert.Throws<InvalidOperationException>(() => textLayer.Format(testValue));
+            Assert.Throws<InvalidOperationException>(() => textLayer.Type(testValue));
+        }
+
+        [Test]
+        public void TestVideoLayersUnmodifiableFields()
+        {
+            var textLayer = new VideoLayer();
+            const string testValue = "some value";
+
+            Assert.Throws<InvalidOperationException>(() => textLayer.ResourceType(testValue));
+            Assert.Throws<InvalidOperationException>(() => textLayer.Format(testValue));
+            Assert.Throws<InvalidOperationException>(() => textLayer.Type(testValue));
         }
     }
 }

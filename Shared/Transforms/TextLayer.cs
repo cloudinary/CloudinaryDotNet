@@ -175,7 +175,7 @@
         /// <returns>The layer with parameter applied.</returns>
         public new TextLayer ResourceType(string resourceType)
         {
-            throw new InvalidOperationException("Cannot modify resourceType for text layers");
+            throw new InvalidOperationException($"Cannot modify resourceType {resourceType} for text layers");
         }
 
         /// <summary>
@@ -185,7 +185,7 @@
         /// <returns>The layer with parameter applied.</returns>
         public new TextLayer Type(string type)
         {
-            throw new InvalidOperationException("Cannot modify type for text layers");
+            throw new InvalidOperationException($"Cannot modify type {type} for text layers");
         }
 
         /// <summary>
@@ -195,7 +195,7 @@
         /// <returns>The layer with parameter applied.</returns>
         public new TextLayer Format(string format)
         {
-            throw new InvalidOperationException("Cannot modify format for text layers");
+            throw new InvalidOperationException($"Cannot modify format {format} for text layers");
         }
 
         /// <summary>
