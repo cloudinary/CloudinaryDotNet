@@ -18,7 +18,7 @@ namespace CloudinaryDotNet.Test
             HandlerMock = new Mock<HttpMessageHandler>();
             HandlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync", 
+                    "SendAsync",
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>())
                 .Callback<HttpRequestMessage, CancellationToken>(
