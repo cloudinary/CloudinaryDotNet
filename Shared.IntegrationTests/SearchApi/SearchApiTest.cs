@@ -54,7 +54,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
                 m_publicIdsSorted[i] = publicId;
                 m_cloudinary.Upload(uploadParams);
             }
-            
+
             Array.Sort(m_publicIdsSorted);
             m_expressionPublicId = $"public_id: {m_publicIdsSorted[0]}";
             Thread.Sleep(INDEXING_WAIT_TIME);
@@ -68,7 +68,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.NotNull(result.Resources);
             Assert.AreEqual(RESOURCES_COUNT, result.Resources.Count);
         }
-        
+
         [Test]
         public void TestSearchResourceByPublicId()
         {
@@ -121,6 +121,8 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             var result = m_cloudinary.Search()
                 .Expression(m_expressionTag).Aggregate(AGG_FIELD_VALUE).Execute();
 
+            AssertSupportsAggregation(result);
+
             Assert.NotNull(result.Resources);
             Assert.AreEqual(RESOURCES_COUNT, result.Resources.Count);
             Assert.IsNotEmpty(result.Aggregations);
@@ -142,6 +144,8 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
         {
             var result = m_cloudinary.Search().MaxResults(FIRST_PAGE_SIZE)
                 .Expression(m_expressionTag).Aggregate(AGG_FIELD_VALUE).Execute();
+
+            AssertSupportsAggregation(result);
 
             Assert.Greater(result.TotalCount, 1);
             Assert.Greater(result.Time, 0);
@@ -184,6 +188,14 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.AreEqual(1, foundResource.Context.Count);
             Assert.AreEqual(0, foundResource.ImageAnalysis.FaceCount);
             Assert.IsNotNull(foundResource.ImageAnalysis);
+        }
+
+        private static void AssertSupportsAggregation(SearchResult result)
+        {
+            if (result.Error?.Message.Contains("does not support aggregations") == true)
+            {
+                Assert.Inconclusive(result.Error.Message);
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var uploadResult2 = m_cloudinary.Upload(uploadParams);
 
             var renameResult = m_cloudinary.Rename(uploadResult1.PublicId, toPublicId);
-            Assert.Equals(HttpStatusCode.OK, renameResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, renameResult.StatusCode);
             
             var getResult = m_cloudinary.GetResource(toPublicId);
             Assert.NotNull(getResult);

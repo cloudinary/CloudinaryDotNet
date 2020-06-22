@@ -854,7 +854,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         {
             //should allow sending custom coordinates
 
-            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
 
             var upResult = m_cloudinary.Upload(new ImageUploadParams()
             {
