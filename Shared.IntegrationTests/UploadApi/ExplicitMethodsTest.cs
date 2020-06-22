@@ -437,7 +437,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(explicitResult.Phash);
             Assert.NotZero(explicitResult.Faces.Length);
             Assert.Zero(explicitResult.CinemagraphAnalysis.CinemagraphScore);
-            Assert.NotNull(explicitResult.AccessMode);
             Assert.NotNull(explicitResult.Etag);
             Assert.NotNull(explicitResult.Placeholder);
             Assert.NotNull(explicitResult.OriginalFilename);

@@ -109,7 +109,6 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.NotNull(result.Resources[0].Url);
             Assert.NotNull(result.Resources[0].SecureUrl);
             Assert.NotNull(result.Resources[0].Status);
-            Assert.NotNull(result.Resources[0].AccessMode);
             Assert.Null(result.Resources[0].AccessControl);
             Assert.NotNull(result.Resources[0].Etag);
             Assert.NotNull(result.Resources[0].UploadedBy);
@@ -178,7 +177,6 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsTrue(foundResource.Url.Contains("http://"));
             Assert.IsTrue(foundResource.SecureUrl.Contains("https://"));
             Assert.AreEqual("active", foundResource.Status);
-            Assert.AreEqual("public", foundResource.AccessMode);
             Assert.IsNull(foundResource.AccessControl);
             Assert.IsNotEmpty(foundResource.Etag);
             Assert.Contains(m_searchTag, foundResource.Tags);

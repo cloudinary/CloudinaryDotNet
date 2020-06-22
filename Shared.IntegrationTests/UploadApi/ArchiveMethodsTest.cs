@@ -158,7 +158,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual("upload", result.Type);
             Assert.IsNotNull(result.Etag);
             Assert.AreEqual(false, result.Placeholder);
-            Assert.IsNotNull(result.AccessMode);
             Assert.NotZero(result.ResourceCount);
             Assert.NotZero(result.Tags.Length);
         }

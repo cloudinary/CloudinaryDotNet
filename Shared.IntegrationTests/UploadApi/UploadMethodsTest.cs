@@ -863,8 +863,8 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Tags = m_apiTag
             });
 
-            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) 
-            { 
+            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId)
+            {
                 Prefix = m_test_prefix,
                 NextCursor = "test",
                 StartAt = "start",
@@ -921,6 +921,9 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(metadataResult);
 
             var metadataFieldId = metadataResult.ExternalId;
+            
+            Assert.NotNull(metadataFieldId);
+            
             if (!string.IsNullOrEmpty(metadataFieldId))
                 m_metadataFieldsToClear.Add(metadataFieldId);
 
