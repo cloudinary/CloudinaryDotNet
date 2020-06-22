@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet
 {
+    using System;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
@@ -88,7 +89,7 @@
         /// <returns>The transformation with aspect ratio applied.</returns>
         public Transformation AspectRatio(int nom, int denom)
         {
-            return AspectRatio(string.Format("{0}:{1}", nom, denom));
+            return AspectRatio(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", nom, denom));
         }
 
         /// <summary>
@@ -528,7 +529,7 @@
                 { // if: "w_gt_1000"
                     var value = segment.Params["if"];
                     string ifValue = value.ToString();
-                    if (ifValue.Equals("end"))
+                    if (ifValue.Equals("end", StringComparison.Ordinal))
                     {
                         break;
                     }
@@ -537,11 +538,11 @@
                     {
                         segment.Params.Remove("if"); // {c: fill, w: 500}
                         m_nestedTransforms[i] = segment; // [..., {c: fill, w: 500}, ...]
-                        m_nestedTransforms.Insert(i, new Transformation(string.Format("if={0}", value.ToString()))); // [..., "if_w_gt_1000", {c: fill, w: 500}, ...]
+                        m_nestedTransforms.Insert(i, new Transformation(string.Format(CultureInfo.InvariantCulture, "if={0}", value.ToString()))); // [..., "if_w_gt_1000", {c: fill, w: 500}, ...]
                     }
 
                     // otherwise keep looking for if_condition
-                    if (!string.Equals("else", ifValue))
+                    if (!string.Equals("else", ifValue, StringComparison.Ordinal))
                     {
                         break;
                     }

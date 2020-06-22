@@ -20,7 +20,7 @@
         }
 
         /// <summary>
-        /// Update all resources with the given public IDs (array of up to 100 public_ids).
+        /// Gets or sets a possibility to update all resources with the given public IDs (array of up to 100 public_ids).
         /// </summary>
         public List<string> PublicIds
         {
@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// The new access mode to be set ("public" or "authenticated").
+        /// Gets or sets the new access mode ("public" or "authenticated").
         /// </summary>
         public string AccessMode
         {
@@ -38,7 +38,7 @@
         }
 
         /// <summary>
-        /// Update resources with the given resource type. Default resource type: "image".
+        /// Gets or sets a possibility to update resources with the given resource type. Default resource type: "image".
         /// </summary>
         public ResourceType ResourceType
         {
@@ -47,7 +47,7 @@
         }
 
         /// <summary>
-        /// Update resources with the given type. Default resource type: "upload".
+        /// Gets or sets a possibility to update resources with the given type. Default resource type: "upload".
         /// </summary>
         public string Type
         {
@@ -61,12 +61,16 @@
         }
 
         /// <summary>
+        /// Gets or sets prefix.
+        ///
         /// Update all assets where the public ID starts with the given
         /// prefix (up to a maximum of 100 matching original assets).
         /// </summary>
         public string Prefix { get; set; }
 
         /// <summary>
+        /// Gets or sets tag.
+        ///
         /// Update all assets with the given tag (up to a maximum of 100 matching original assets).
         /// </summary>
         public string Tag { get; set; }

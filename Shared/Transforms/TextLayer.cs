@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -337,6 +338,11 @@
         /// <returns>A string that represents additional parameters.</returns>
         public override string AdditionalParams()
         {
+            if (string.IsNullOrEmpty(m_publicId) && string.IsNullOrEmpty(m_text))
+            {
+                throw new ArgumentException("Must supply either text or publicId.");
+            }
+
             List<string> components = new List<string>();
 
             var styleIdentifier = TextStyleIdentifier();
@@ -351,20 +357,6 @@
             }
 
             return string.Join(":", components);
-        }
-
-        /// <summary>
-        /// Get this text layer represented as string.
-        /// </summary>
-        /// <returns>A string that represents the layer.</returns>
-        public override string ToString()
-        {
-            if (string.IsNullOrEmpty(m_publicId) && string.IsNullOrEmpty(m_text))
-            {
-                throw new ArgumentException("Must supply either text or publicId.");
-            }
-
-            return base.ToString();
         }
 
         private static string Encode(string text)
@@ -406,12 +398,12 @@
         {
             List<string> components = new List<string>();
 
-            if (!string.IsNullOrEmpty(m_fontWeight) && !m_fontWeight.Equals("normal"))
+            if (!string.IsNullOrEmpty(m_fontWeight) && !m_fontWeight.Equals("normal", StringComparison.Ordinal))
             {
                 components.Add(m_fontWeight);
             }
 
-            if (!string.IsNullOrEmpty(m_fontStyle) && !m_fontStyle.Equals("normal"))
+            if (!string.IsNullOrEmpty(m_fontStyle) && !m_fontStyle.Equals("normal", StringComparison.Ordinal))
             {
                 components.Add(m_fontStyle);
             }
@@ -426,7 +418,7 @@
                 components.Add($"hinting_{m_fontHinting}");
             }
 
-            if (!string.IsNullOrEmpty(m_textDecoration) && !m_textDecoration.Equals("none"))
+            if (!string.IsNullOrEmpty(m_textDecoration) && !m_textDecoration.Equals("none", StringComparison.Ordinal))
             {
                 components.Add(m_textDecoration);
             }
@@ -436,7 +428,7 @@
                 components.Add(m_textAlign);
             }
 
-            if (!string.IsNullOrEmpty(m_stroke) && !m_stroke.Equals("none"))
+            if (!string.IsNullOrEmpty(m_stroke) && !m_stroke.Equals("none", StringComparison.Ordinal))
             {
                 components.Add(m_stroke);
             }
@@ -461,7 +453,7 @@
                 throw new ArgumentException("Must supply fontFamily.");
             }
 
-            components.Insert(0, m_fontSize.ToString());
+            components.Insert(0, m_fontSize.ToString(CultureInfo.InvariantCulture));
             components.Insert(0, m_fontFamily);
 
             return string.Join("_", components);

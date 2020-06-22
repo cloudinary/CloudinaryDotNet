@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -18,6 +20,7 @@
     /// <summary>
     /// Provider for the API calls.
     /// </summary>
+    [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Reviewed.")]
     public partial class ApiShared : ISignProvider
     {
         /// <summary>
@@ -207,23 +210,23 @@
             }
 
             response?.Headers
-                .Where(_ => _.Key.StartsWith("X-FeatureRateLimit"))
+                .Where(_ => _.Key.StartsWith("X-FeatureRateLimit", StringComparison.Ordinal))
                 .ToList()
                 .ForEach(header =>
                 {
                     var value = header.Value.First();
                     var key = header.Key;
-                    if (key.EndsWith("Limit") && long.TryParse(value, out long l))
+                    if (key.EndsWith("Limit", StringComparison.Ordinal) && long.TryParse(value, out long l))
                     {
                         result.Limit = l;
                     }
 
-                    if (key.EndsWith("Remaining") && long.TryParse(value, out l))
+                    if (key.EndsWith("Remaining", StringComparison.Ordinal) && long.TryParse(value, out l))
                     {
                         result.Remaining = l;
                     }
 
-                    if (key.EndsWith("Reset") && DateTime.TryParse(value, out DateTime t))
+                    if (key.EndsWith("Reset", StringComparison.Ordinal) && DateTime.TryParse(value, out DateTime t))
                     {
                         result.Reset = t;
                     }
@@ -256,11 +259,11 @@
             // This is intended for platform information and not individual applications!
             var userPlatform = string.IsNullOrEmpty(UserPlatform)
                 ? USER_AGENT
-                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
+                : string.Format(CultureInfo.InvariantCulture, "{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Account.ApiKey, Account.ApiSecret));
-            request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
             {
@@ -410,7 +413,7 @@
         private static void SetContentForRemoteFile(FileDescription file, MultipartFormDataContent content)
         {
             var strContent = new StringContent(file.FilePath);
-            strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));
+            strContent.Headers.Add("Content-Disposition", string.Format(CultureInfo.InvariantCulture, "form-data; name=\"{0}\"", "file"));
             content.Add(strContent);
         }
 
@@ -425,12 +428,12 @@
                     {
                         foreach (var item in (IEnumerable<string>)param.Value)
                         {
-                            content.Add(new StringContent(item), string.Format("\"{0}\"", string.Concat(param.Key, "[]")));
+                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
                         }
                     }
                     else
                     {
-                        content.Add(new StringContent(param.Value.ToString()), string.Format("\"{0}\"", param.Key));
+                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
                     }
                 }
             }

@@ -20,12 +20,12 @@
         }
 
         /// <summary>
-        /// Delete all derived resources with the given IDs.
+        /// Gets or sets whether to delete all derived resources with the given IDs.
         /// </summary>
         public List<string> DerivedResources { get; set; }
 
         /// <summary>
-        /// Delete all derived resources with the given transformation.
+        /// Gets or sets whether to delete all derived resources with the given transformation.
         /// </summary>
         public List<Transformation> Transformations
         {
@@ -34,7 +34,7 @@
         }
 
         /// <summary>
-        /// Delete all derived resources with the given public id.
+        /// Gets or sets whether to delete all derived resources with the given public id.
         /// </summary>
         public string PublicId
         {

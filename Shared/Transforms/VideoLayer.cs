@@ -59,17 +59,17 @@
         }
 
         /// <summary>
-        /// Get the string representation of the video layer parameters.
+        /// Get an additional parameters for the text layer.
         /// </summary>
-        /// <returns>A string that represents the layer.</returns>
-        public override string ToString()
+        /// <returns>A string that represents additional parameters.</returns>
+        public override string AdditionalParams()
         {
             if (string.IsNullOrEmpty(m_publicId))
             {
                 throw new ArgumentException("Must supply publicId.");
             }
 
-            return base.ToString();
+            return base.AdditionalParams();
         }
     }
 }

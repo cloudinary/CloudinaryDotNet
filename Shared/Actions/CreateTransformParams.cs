@@ -9,12 +9,12 @@
     public class CreateTransformParams : BaseParams
     {
         /// <summary>
-        /// Name of the transformation.
+        /// Gets or sets name of the transformation.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Strict representation of transformation parameters.
+        /// Gets or sets strict representation of transformation parameters.
         /// </summary>
         public Transformation Transform { get; set; }
 

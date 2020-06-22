@@ -9,37 +9,37 @@
     public class TextResult : BaseResult
     {
         /// <summary>
-        /// Parameter "width" of the asset.
+        /// Gets or sets parameter "width" of the asset.
         /// </summary>
         [DataMember(Name = "width")]
         public int Width { get; protected set; }
 
         /// <summary>
-        /// Parameter "height" of the asset.
+        /// Gets or sets parameter "height" of the asset.
         /// </summary>
         [DataMember(Name = "height")]
         public int Height { get; protected set; }
 
         /// <summary>
-        /// Public ID assigned to the asset.
+        /// Gets or sets public ID assigned to the asset.
         /// </summary>
         [DataMember(Name = "public_id")]
         public string PublicId { get; protected set; }
 
         /// <summary>
-        /// Version of uploaded asset.
+        /// Gets or sets version of uploaded asset.
         /// </summary>
         [DataMember(Name = "version")]
         public string Version { get; protected set; }
 
         /// <summary>
-        /// The signature for verifying the response is a valid response from Cloudinary.
+        /// Gets or sets the signature for verifying the response is a valid response from Cloudinary.
         /// </summary>
         [DataMember(Name = "signature")]
         public string Signature { get; protected set; }
 
         /// <summary>
-        /// Asset format.
+        /// Gets or sets asset format.
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; protected set; }
@@ -51,7 +51,7 @@
         protected string m_resourceType;
 
         /// <summary>
-        /// The type of resource. Possible values: image, raw, video.
+        /// Gets the type of resource. Possible values: image, raw, video.
         /// </summary>
         public ResourceType ResourceType
         {
@@ -59,50 +59,50 @@
         }
 
         /// <summary>
-        /// Date when the resource was created.
+        /// Gets or sets date when the resource was created.
         /// </summary>
         [DataMember(Name = "created_at")]
         public string CreatedAt { get; protected set; }
 
         /// <summary>
-        /// A list of tag names assigned to resource.
+        /// Gets or sets a list of tag names assigned to resource.
         /// </summary>
         [DataMember(Name = "tags")]
         public string[] Tags { get; protected set; }
 
         /// <summary>
-        /// Size of the created archive (in bytes).
+        /// Gets or sets size of the created archive (in bytes).
         /// </summary>
         [DataMember(Name = "bytes")]
         public long Bytes { get; protected set; }
 
         /// <summary>
-        /// The storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
+        /// Gets or sets the storage type: upload, private, authenticated, facebook, twitter, gplus, instagram_name, gravatar,
         /// youtube, hulu, vimeo, animoto, worldstarhiphop or dailymotion.
         /// </summary>
         [DataMember(Name = "type")]
         public string Type { get; protected set; }
 
         /// <summary>
-        /// Indicates if a placeholder (default image) is currently used instead of displaying the image (due to moderation).
+        /// Gets or sets a value indicating whether a placeholder (default image) is currently used instead of displaying the image (due to moderation).
         /// </summary>
         [DataMember(Name = "placeholder")]
         public bool Placeholder { get; protected set; }
 
         /// <summary>
-        /// The URL for accessing the created archive.
+        /// Gets or sets the URL for accessing the created archive.
         /// </summary>
         [DataMember(Name = "url")]
         public string Url { get; protected set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the created archive.
+        /// Gets or sets the HTTPS URL for securely accessing the created archive.
         /// </summary>
         [DataMember(Name = "secure_url")]
         public string SecureUrl { get; protected set; }
 
         /// <summary>
-        /// The accessibility mode of the media asset: public, or authenticated.
+        /// Gets or sets the accessibility mode of the media asset: public, or authenticated.
         /// </summary>
         [DataMember(Name = "access_mode")]
         public string AccessMode { get; protected set; }

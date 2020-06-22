@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Text;
@@ -39,17 +40,17 @@
             }
 
             /// <summary>
-            /// Url for api call.
+            /// Gets url for api call.
             /// </summary>
             public string Url { get; private set; }
 
             /// <summary>
-            /// Parameters of the upload preset.
+            /// Gets parameters of the upload preset.
             /// </summary>
             public UploadPresetParams ParamsCopy { get; private set; }
 
             /// <summary>
-            /// Http request method.
+            /// Gets http request method.
             /// </summary>
             public HttpMethod HttpMethod { get; private set; }
         }
@@ -80,7 +81,7 @@
         protected Api m_api;
 
         /// <summary>
-        /// API object that used by this instance.
+        /// Gets API object that used by this instance.
         /// </summary>
         public Api Api
         {
@@ -346,7 +347,7 @@
 
             Url url = GetApiUrlV()
                 .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLower())
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                 .Add("publish_resources");
 
             return m_api.CallApiAsync<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null, null, cancellationToken);
@@ -361,7 +362,7 @@
 
             Url url = GetApiUrlV()
                 .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLower())
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                 .Add("publish_resources");
 
             return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
@@ -380,7 +381,7 @@
 
             var url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLower())
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                  .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
@@ -402,7 +403,7 @@
 
             Url url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLower())
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                  .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
@@ -1534,22 +1535,22 @@
             }
 
             /// <summary>
-            /// Buffer size.
+            /// Gets buffer size.
             /// </summary>
             public int BufferSize { get; }
 
             /// <summary>
-            /// Url.
+            /// Gets url.
             /// </summary>
             public string Url { get; }
 
             /// <summary>
-            /// Basic raw upload parameters.
+            /// Gets basic raw upload parameters.
             /// </summary>
             public BasicRawUploadParams Parameters { get; }
 
             /// <summary>
-            /// Request headers.
+            /// Gets request headers.
             /// </summary>
             public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>
             {
@@ -1564,7 +1565,7 @@
             {
                 var buffer = new byte[8];
                 new Random().NextBytes(buffer);
-                return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+                return string.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
             }
 
             /// <summary>
@@ -1579,7 +1580,7 @@
                 var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
                 if (name != null)
                 {
-                    url.ResourceType(name.ToLower());
+                    url.ResourceType(name.ToLowerInvariant());
                 }
 
                 return url.BuildUrl();
@@ -3414,7 +3415,7 @@
             sb.Append("<script src=\"");
             sb.Append(dir);
 
-            if (!dir.EndsWith("/") && !dir.EndsWith("\\"))
+            if (!dir.EndsWith("/", StringComparison.Ordinal) && !dir.EndsWith("\\", StringComparison.Ordinal))
             {
                 sb.Append("/");
             }

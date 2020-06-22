@@ -41,7 +41,7 @@
         }
 
         /// <summary>
-        /// Whether the list should be sorted before enumerating.
+        /// Gets or sets a value indicating whether the list should be sorted before enumerating.
         /// </summary>
         public bool Sort { get; set; }
 
@@ -58,7 +58,7 @@
         }
 
         /// <summary>
-        /// Returns all keys and values.
+        /// Gets all keys and values.
         /// </summary>
         public string[] Pairs
         {
@@ -71,7 +71,7 @@
         }
 
         /// <summary>
-        /// Returns all keys and values with escaped "=" symbol.
+        /// Gets all keys and values with escaped "=" symbol.
         /// </summary>
         public string[] SafePairs
         {

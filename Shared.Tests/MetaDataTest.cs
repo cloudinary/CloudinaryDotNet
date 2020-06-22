@@ -13,6 +13,13 @@ namespace CloudinaryDotNet.Test
         private const string externalIdEnum = "metadata_external_id_enum";
         private const string externalIdDelete = "metadata_deletion";
         private const string datasourceEntryExternalId = "metadata_datasource_entry_external_id";
+        private MockedCloudinary mockedCloudinary;
+
+        [SetUp]
+        public void OneTimeSetUp()
+        {
+            mockedCloudinary = new MockedCloudinary();
+        }
 
         /// <summary>
         /// <para>Getting a list of all metadata fields.</para>
@@ -24,8 +31,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestListMetadataFields()
         {
-            var mockedCloudinary = new MockedCloudinary();
-
             mockedCloudinary.ListMetadataFields();
 
             mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Get, "metadata_fields");
@@ -42,7 +47,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestCreateStringMetadataField()
         {
-            var mockedCloudinary = new MockedCloudinary();
             var parameters = new StringMetadataFieldCreateParams(externalIdString)
             {
                 ExternalId = externalIdString
@@ -64,7 +68,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestCreateIntMetadataField()
         {
-            var mockedCloudinary = new MockedCloudinary();
             var parameters = new IntMetadataFieldCreateParams(externalIdInt)
             {
                 ExternalId = externalIdInt
@@ -86,7 +89,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestCreateEnumMetadataField()
         {
-            var mockedCloudinary = new MockedCloudinary();
             var singleEntry = new List<EntryParams>
             {
                 new EntryParams("v1", datasourceEntryExternalId)
@@ -114,8 +116,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestDeleteMetadataField()
         {
-            var mockedCloudinary = new MockedCloudinary();
-
             mockedCloudinary.DeleteMetadataField(externalIdDelete);
 
             mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Delete, $"metadata_fields/{externalIdDelete}");

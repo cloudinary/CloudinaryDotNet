@@ -93,7 +93,7 @@
                 string[] splittedPair = pair.Split('=');
                 if (splittedPair.Length != 2)
                 {
-                    throw new ArgumentException(string.Format("Couldn't parse '{0}'!", pair));
+                    throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Couldn't parse '{0}'!", pair));
                 }
 
                 Add(splittedPair[0], splittedPair[1]);
@@ -136,19 +136,19 @@
         }
 
         /// <summary>
-        /// Default Device Pixel Ratio (float, integer and "auto" values are allowed").
+        /// Gets or sets default Device Pixel Ratio (float, integer and "auto" values are allowed").
         /// </summary>
         public static object DefaultDpr { get; set; }
 
         /// <summary>
-        /// Whether to enable automatic adaptation of website images by default.
+        /// Gets or sets a value indicating whether to enable automatic adaptation of website images by default.
         /// See http://cloudinary.com/blog/how_to_automatically_adapt_website_images_to_retina_and_hidpi_devices for
         /// further info.
         /// </summary>
         public static bool DefaultIsResponsive { get; set; }
 
         /// <summary>
-        /// Common responsive width transformation.
+        /// Gets or sets common responsive width transformation.
         /// </summary>
         public static Transformation ResponsiveWidthTransform
         {
@@ -171,7 +171,7 @@
         }
 
         /// <summary>
-        /// Get the transformation parameters dictionary.
+        /// Gets the transformation parameters dictionary.
         /// </summary>
         public Dictionary<string, object> Params
         {
@@ -179,7 +179,7 @@
         }
 
         /// <summary>
-        /// Get list of nested transformations.
+        /// Gets list of nested transformations.
         /// </summary>
         public List<Transformation> NestedTransforms
         {
@@ -187,17 +187,17 @@
         }
 
         /// <summary>
-        /// Whether to support a HiDPI devices.
+        /// Gets a value indicating whether to support a HiDPI devices.
         /// </summary>
         public bool HiDpi { get; private set; }
 
         /// <summary>
-        /// Whether to support a responsive layout.
+        /// Gets a value indicating whether to support a responsive layout.
         /// </summary>
         public bool IsResponsive { get; private set; }
 
         /// <summary>
-        /// Get the HTML width parameter.
+        /// Gets the HTML width parameter.
         /// </summary>
         public string HtmlWidth
         {
@@ -205,7 +205,7 @@
         }
 
         /// <summary>
-        /// Get the HTML height parameter.
+        /// Gets the HTML height parameter.
         /// </summary>
         public string HtmlHeight
         {
@@ -443,7 +443,7 @@
             var dprStr = ToString(dpr);
             if (!string.IsNullOrEmpty(dprStr))
             {
-                if (dprStr.ToLower() == "auto")
+                if (dprStr.ToLowerInvariant() == "auto")
                 {
                     HiDpi = true;
                 }
@@ -489,7 +489,7 @@
             string ifValue = GetString(m_transformParams, "if");
             if (!string.IsNullOrEmpty(ifValue))
             {
-                components.Insert(0, string.Format("if_{0}", new Condition(ifValue).ToString()));
+                components.Insert(0, string.Format(CultureInfo.InvariantCulture, "if_{0}", new Condition(ifValue).ToString()));
             }
 
             SortedSet<string> varParams = new SortedSet<string>();
@@ -519,7 +519,7 @@
             {
                 if (!string.IsNullOrEmpty(param.Value))
                 {
-                    components.Add(string.Format("{0}_{1}", param.Key, param.Value));
+                    components.Add(string.Format(CultureInfo.InvariantCulture, "{0}_{1}", param.Key, param.Value));
                 }
             }
 
@@ -588,7 +588,7 @@
                 }
                 else
                 {
-                    throw new Exception(string.Format("Couldn't clone parameter '{0}'!", key));
+                    throw new Exception(string.Format(CultureInfo.InvariantCulture, "Couldn't clone parameter '{0}'!", key));
                 }
             }
 

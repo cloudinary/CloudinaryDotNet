@@ -9,7 +9,7 @@
     public class DeletionResult : BaseResult
     {
         /// <summary>
-        /// Result description.
+        /// Gets or sets result description.
         /// </summary>
         [DataMember(Name = "result")]
         public string Result { get; protected set; }

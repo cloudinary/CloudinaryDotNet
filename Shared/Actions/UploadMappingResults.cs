@@ -11,17 +11,17 @@
     public class UploadMappingResults : BaseResult
     {
         /// <summary>
-        /// Result of CRUD operations.
+        /// Gets or sets result of CRUD operations.
         /// </summary>
         public string Message { get; protected set; }
 
         /// <summary>
-        /// Returned upload mappings.
+        /// Gets or sets returned upload mappings.
         /// </summary>
         public Dictionary<string, string> Mappings { get; protected set; }
 
         /// <summary>
-        /// Holds the cursor value if there are more upload mappings than <see cref="UploadMappingParams.MaxResults"/>.
+        /// Gets or sets the cursor value if there are more upload mappings than <see cref="UploadMappingParams.MaxResults"/>.
         /// </summary>
         public string NextCursor { get; protected set; }
 

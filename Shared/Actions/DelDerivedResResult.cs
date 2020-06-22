@@ -10,7 +10,7 @@
     public class DelDerivedResResult : BaseResult
     {
         /// <summary>
-        /// The list of media assets requested for deletion, with the status of each asset
+        /// Gets or sets the list of media assets requested for deletion, with the status of each asset
         /// (deleted unless there was an issue).
         /// </summary>
         [DataMember(Name = "deleted")]

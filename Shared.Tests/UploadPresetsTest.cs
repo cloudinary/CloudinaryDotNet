@@ -9,12 +9,17 @@ namespace CloudinaryDotNet.Test
         private const string uploadPresetsRootUrl = "upload_presets";
         private const string folderName = "api_test_folder_name";
         private const string apiTestPreset = "api_test_upload_preset";
+        private MockedCloudinary mockedCloudinary;
+
+        [SetUp]
+        public void OneTimeSetUp()
+        {
+            mockedCloudinary = new MockedCloudinary();
+        }
 
         [Test]
         public void TestListUploadPresets()
         {
-            var mockedCloudinary = new MockedCloudinary();
-
             mockedCloudinary.ListUploadPresets();
 
             mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Get, uploadPresetsRootUrl);
@@ -23,8 +28,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestGetUploadPreset()
         {
-            var mockedCloudinary = new MockedCloudinary();
-            
             mockedCloudinary.GetUploadPreset(apiTestPreset);
 
             mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Get, $"{uploadPresetsRootUrl}/{apiTestPreset}");
@@ -33,8 +36,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestDeleteUploadPreset()
         {
-            var mockedCloudinary = new MockedCloudinary();
-
             mockedCloudinary.DeleteUploadPreset(apiTestPreset);
 
             mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Delete, $"{uploadPresetsRootUrl}/{apiTestPreset}");
@@ -43,7 +44,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestUpdateUploadPreset()
         {
-            var mockedCloudinary = new MockedCloudinary();
             var parameters = new UploadPresetParams
             {
                 Name = apiTestPreset,
@@ -59,7 +59,6 @@ namespace CloudinaryDotNet.Test
         [Test]
         public void TestCreateUploadPreset()
         {
-            var mockedCloudinary = new MockedCloudinary();
             var parameters = new UploadPresetParams
             {
                 Name = apiTestPreset,

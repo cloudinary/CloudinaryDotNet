@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters of the request for transformation details.
@@ -17,16 +18,18 @@
         }
 
         /// <summary>
-        /// Name of the transformation.
+        /// Gets or sets name of the transformation.
         /// </summary>
         public string Transformation { get; set; }
 
         /// <summary>
-        /// Max number of derived resources to return. Default=10. Maximum=100.
+        /// Gets or sets max number of derived resources to return. Default=10. Maximum=100.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
+        /// Gets or sets the next cursor.
+        ///
         /// Optional. When a request has more results to return than max_results,
         /// the next_cursor value is returned as part of the response.
         /// You can then specify this value as the next_cursor parameter of a following request.
@@ -54,7 +57,7 @@
 
             if (MaxResults > 0)
             {
-                AddParam(dict, "max_results", MaxResults.ToString());
+                AddParam(dict, "max_results", MaxResults.ToString(CultureInfo.InvariantCulture));
             }
 
             AddParam(dict, "next_cursor", NextCursor);

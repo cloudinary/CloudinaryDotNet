@@ -10,7 +10,7 @@
     public class MultiResult : BaseResult
     {
         /// <summary>
-        /// The URL for accessing the created animated GIF.
+        /// Gets or sets the URL for accessing the created animated GIF.
         /// </summary>
         [Obsolete("Property Uri is deprecated, please use Url instead")]
         public Uri Uri
@@ -20,13 +20,13 @@
         }
 
         /// <summary>
-        /// The URL for accessing the created animated GIF.
+        /// Gets or sets the URL for accessing the created animated GIF.
         /// </summary>
         [DataMember(Name = "url")]
         public Uri Url { get; protected set; }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the created animated GIF.
+        /// Gets or sets the HTTPS URL for securely accessing the created animated GIF.
         /// </summary>
         [Obsolete("Property SecureUri is deprecated, please use SecureUrl instead")]
         public Uri SecureUri
@@ -36,19 +36,19 @@
         }
 
         /// <summary>
-        /// The HTTPS URL for securely accessing the created animated GIF.
+        /// Gets or sets the HTTPS URL for securely accessing the created animated GIF.
         /// </summary>
         [DataMember(Name = "secure_url")]
         public Uri SecureUrl { get; protected set; }
 
         /// <summary>
-        /// Public ID assigned to the created GIF.
+        /// Gets or sets public ID assigned to the created GIF.
         /// </summary>
         [DataMember(Name = "public_id")]
         public string PublicId { get; protected set; }
 
         /// <summary>
-        /// Version of the created GIF.
+        /// Gets or sets version of the created GIF.
         /// </summary>
         [DataMember(Name = "version")]
         public string Version { get; protected set; }
