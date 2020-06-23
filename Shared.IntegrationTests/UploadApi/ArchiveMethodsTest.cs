@@ -7,7 +7,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class ArchiveMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateArchive()
         {
             var targetPublicId = GetUniquePublicId();
