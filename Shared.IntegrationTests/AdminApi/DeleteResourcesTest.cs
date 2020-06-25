@@ -273,50 +273,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsFalse(String.IsNullOrEmpty(resource.PublicId));
         }
 
-        // Test disabled because it deletes all images in the remote account.
-        [Test, Ignore("will delete all resources in the account")]
-        public void DeleteAllInLoop()
-        {
-            string nextCursor = String.Empty;
-
-            do
-            {
-                var response = m_cloudinary.ListUploadPresets(nextCursor);
-                nextCursor = response.NextCursor;
-
-                foreach (var preset in response.Presets)
-                {
-                    m_cloudinary.DeleteUploadPreset(preset.Name);
-                }
-            } while (!String.IsNullOrEmpty(nextCursor));
-
-            HashSet<string> types = new HashSet<string>();
-
-            do
-            {
-                var listParams = new ListResourcesParams()
-                {
-                    NextCursor = nextCursor,
-                    MaxResults = MAX_RESULTS
-                };
-
-                var existingResources = m_cloudinary.ListResources(listParams);
-                nextCursor = existingResources.NextCursor;
-
-                foreach (var res in existingResources.Resources)
-                {
-                    types.Add(res.Type);
-                }
-            } while (!String.IsNullOrEmpty(nextCursor));
-
-            foreach (var type in types)
-            {
-                var deleteParams = new DelResParams() { Type = type, All = true };
-
-                m_cloudinary.DeleteResources(deleteParams);
-            }
-        }
-
         [Test]
         public void TestDeleteResultDeleteCountProperty()
         {
