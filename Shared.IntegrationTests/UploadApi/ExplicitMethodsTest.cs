@@ -444,7 +444,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotZero(explicitResult.Width);
             Assert.NotZero(explicitResult.Height);
             Assert.NotNull(explicitResult.OriginalFilename);
-            Assert.NotNull(explicitResult.SlotToken);
             Assert.NotZero(explicitResult.Pages);
             Assert.Zero(explicitResult.IllustrationScore);
             Assert.IsNotNull(explicitResult.Predominant);
