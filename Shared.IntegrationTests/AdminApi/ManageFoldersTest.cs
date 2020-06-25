@@ -173,7 +173,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             _subFolder1 = GetSubFolder(_rootFolder1, "1");
             _subFolder2 = GetSubFolder(_rootFolder1, "2");
 
-            var folders = new List<string> 
+            var folders = new List<string>
             {
                 GetItemSubFolder(_rootFolder1),
                 GetItemSubFolder(_rootFolder2),
@@ -235,7 +235,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             Assert.Null(deletionRes.Error);
             Assert.AreEqual(2, deletionRes.Deleted.Count);
-            Assert.AreEqual(_subFolder1, deletionRes.Deleted[0]);
+            Assert.Contains(_subFolder1, deletionRes.Deleted);
         }
 
         [Test]
