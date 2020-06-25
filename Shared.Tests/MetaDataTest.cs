@@ -16,7 +16,7 @@ namespace CloudinaryDotNet.Test
         private MockedCloudinary mockedCloudinary;
 
         [SetUp]
-        public void OneTimeSetUp()
+        public void SetUp()
         {
             mockedCloudinary = new MockedCloudinary();
         }
@@ -124,7 +124,7 @@ namespace CloudinaryDotNet.Test
         /// <summary>
         /// <para>Asserts that a given HTTP call was sent with expected JSON content.</para>
         /// </summary>
-        /// 
+        ///
         /// <para>Asserts that a metadata field has expected structure and property values.
         /// See <a href="https://cloudinary.com/documentation/admin_api#generic_structure_of_a_metadata_field">
         /// Generic structure of a metadata field in API reference.</a></para>

@@ -12,7 +12,7 @@ namespace CloudinaryDotNet.Test
         private MockedCloudinary mockedCloudinary;
 
         [SetUp]
-        public void OneTimeSetUp()
+        public void SetUp()
         {
             mockedCloudinary = new MockedCloudinary();
         }
