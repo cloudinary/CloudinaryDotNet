@@ -273,7 +273,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsFalse(String.IsNullOrEmpty(resource.PublicId));
         }
 
-        [Test, RetryWithDelay]
+        [Test]
         public void TestDeleteResultDeleteCountProperty()
         {
             // should allow deleting resources by transformations

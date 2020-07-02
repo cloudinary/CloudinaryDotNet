@@ -26,7 +26,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(1, publishResult.Published.Count);
         }
 
-        [Test, RetryWithDelay]
+        [Test]
         public async Task TestPublishByIdsAsync()
         {
             var publicId = GetUniquePublicId(StorageType.upload, "test");

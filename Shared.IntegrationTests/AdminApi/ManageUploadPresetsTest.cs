@@ -5,7 +5,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
     public class ManageUploadPresetsTest : IntegrationTestBase
     {
-        [Test, RetryWithDelay]
+        [Test]
         public void TestUnsignedUpload()
         {
             // should support unsigned uploading using presets
