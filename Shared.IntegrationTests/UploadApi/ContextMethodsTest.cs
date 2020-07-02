@@ -6,7 +6,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class ContextMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestAddContext()
         {
             var publicId = GetUniquePublicId();
@@ -43,7 +43,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             });
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestContextEscaping()
         {
             var context = new StringDictionary();
@@ -63,7 +63,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(@"key=val\=ue|hello\=world\|2=goodbye\|wo\=rld2|val\=ue", contextParams.ToParamsDictionary()["context"]);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestContext()
         {
             //should allow sending context

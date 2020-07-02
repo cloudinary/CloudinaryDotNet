@@ -7,7 +7,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
     public class UsageReportTest: IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUsage()
         {
             UploadTestImageResource(); // making sure at least one resource exists
@@ -17,7 +17,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertUsageResult(result);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestUsageAsync()
         {
             await UploadTestImageResourceAsync(); // making sure at least one resource exists

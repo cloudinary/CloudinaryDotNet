@@ -399,9 +399,9 @@
                 parameters,
                 file,
                 extraHeaders,
-                cancellationToken))
+                cancellationToken).ConfigureAwait(false))
             {
-                return await ParseAsync<T>(response);
+                return await ParseAsync<T>(response).ConfigureAwait(false);
             }
         }
 
@@ -453,10 +453,11 @@
             CancellationToken? cancellationToken = null)
         {
             using (var request =
-                await PrepareRequestBodyAsync(requestBuilder(url), method, parameters, file, extraHeaders, cancellationToken))
+                await PrepareRequestBodyAsync(requestBuilder(url), method, parameters, file, extraHeaders, cancellationToken)
+                    .ConfigureAwait(false))
             {
                 var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
-                return await Client.SendAsync(request, httpCancellationToken);
+                return await Client.SendAsync(request, httpCancellationToken).ConfigureAwait(false);
             }
         }
 

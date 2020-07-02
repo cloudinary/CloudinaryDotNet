@@ -6,7 +6,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class MultiMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestMultiTransformation()
         {
             var tag = GetMethodTag();
@@ -50,7 +50,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertMultiResult(result, TRANSFORM_A_45, FILE_FORMAT_PDF);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestMultiTransformationAsync()
         {
             var tag = GetMethodTag();

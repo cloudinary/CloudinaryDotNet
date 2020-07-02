@@ -8,7 +8,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
     public class DeleteResourcesTest: IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDelete()
         {
             // should allow deleting resources
@@ -30,7 +30,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertResourceDoesNotExist(resource);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestDeleteAsync()
         {
             // should allow deleting resources
@@ -71,7 +71,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual("deleted", result.Deleted[deletedPublicId]);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByTransformation()
         {
             // should allow deleting resources by transformations
@@ -111,7 +111,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(resource.Derived.Length, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByPrefix()
         {
             // should allow deleting resources
@@ -135,7 +135,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByPrefixAndTransformation()
         {
             // should allow deleting resources
@@ -174,7 +174,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(resource.Derived.Length, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByTag()
         {
             // should allow deleting resources
@@ -201,7 +201,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByTagAndTransformation()
         {
             // should allow deleting resources
@@ -245,7 +245,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(resource.Derived.Length, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteDerived()
         {
             // should allow deleting derived resource
@@ -273,51 +273,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsFalse(String.IsNullOrEmpty(resource.PublicId));
         }
 
-        // Test disabled because it deletes all images in the remote account.
-        [Test, Ignore("will delete all resources in the account")]
-        public void DeleteAllInLoop()
-        {
-            string nextCursor = String.Empty;
-
-            do
-            {
-                var response = m_cloudinary.ListUploadPresets(nextCursor);
-                nextCursor = response.NextCursor;
-
-                foreach (var preset in response.Presets)
-                {
-                    m_cloudinary.DeleteUploadPreset(preset.Name);
-                }
-            } while (!String.IsNullOrEmpty(nextCursor));
-
-            HashSet<string> types = new HashSet<string>();
-
-            do
-            {
-                var listParams = new ListResourcesParams()
-                {
-                    NextCursor = nextCursor,
-                    MaxResults = MAX_RESULTS
-                };
-
-                var existingResources = m_cloudinary.ListResources(listParams);
-                nextCursor = existingResources.NextCursor;
-
-                foreach (var res in existingResources.Resources)
-                {
-                    types.Add(res.Type);
-                }
-            } while (!String.IsNullOrEmpty(nextCursor));
-
-            foreach (var type in types)
-            {
-                var deleteParams = new DelResParams() { Type = type, All = true };
-
-                m_cloudinary.DeleteResources(deleteParams);
-            }
-        }
-
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteResultDeleteCountProperty()
         {
             // should allow deleting resources by transformations

@@ -11,7 +11,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         private readonly string _cloudinaryPublicId = "cloudinary";
         private readonly string _storageTypeFacebook = StorageType.facebook.ToString();
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestExplicit()
         {
             var explicitParams = PopulateExplicitParams();
@@ -21,7 +21,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertExplicitAbsoluteUri(expResult);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestExplicitAsync()
         {
             var explicitParams = PopulateExplicitParams();
@@ -54,7 +54,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(url, result.Eager[0].Url.AbsoluteUri);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestExplicitContext()
         {
             var facebook = StorageType.facebook.ToString();
@@ -77,7 +77,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString());
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestExplicitAsyncProcessing()
         {
             var publicId = GetUniquePublicId();
@@ -98,7 +98,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(publicId, expAsyncResult.PublicId);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestExplicitVideo()
         {
             var uploadParams = new VideoUploadParams()
@@ -126,7 +126,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString());
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestFaceCoordinates()
         {
             //should allow sending face coordinates
@@ -179,7 +179,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(152, res.Faces[0][3]);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestQualityAnalysis()
         {
             //should return quality analysis information
@@ -213,7 +213,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.IsInstanceOf<double>(res.QualityAnalysis.Focus);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestJsonObject()
         {
             var exp = new ExplicitParams("cloudinary")
@@ -230,7 +230,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(result.PublicId, result.JsonObj["public_id"].ToString());
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestResourceDerivedNextCursor()
         {
             var eagerTransforms = new List<Transformation> { m_simpleTransformation, m_resizeTransformation };
@@ -259,7 +259,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreNotEqual(result.Derived[0].Transformation, derivedResult.Derived[0].Transformation);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCustomCoordinates()
         {
             //should allow sending custom coordinates
@@ -305,7 +305,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestResponsiveBreakpoints()
         {
             var publicId = GetUniquePublicId();
@@ -353,7 +353,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(100, expResult.ResponsiveBreakpoints[0].Breakpoints[3].Width);
         }
         
-        [Test]
+        [Test, RetryWithDelay]
         public void TestMetadata()
         {
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams
@@ -392,7 +392,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(getResult.MetadataFields);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestEager()
         {
             var publicId = GetUniquePublicId();
@@ -427,7 +427,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(expResult.Eager[0].Transformation);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestExplicitOptionalParameters()
         {
             var explicitResult = ArrangeAndGetExplicitResult();
@@ -444,7 +444,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotZero(explicitResult.Width);
             Assert.NotZero(explicitResult.Height);
             Assert.NotNull(explicitResult.OriginalFilename);
-            Assert.NotNull(explicitResult.SlotToken);
             Assert.NotZero(explicitResult.Pages);
             Assert.Zero(explicitResult.IllustrationScore);
             Assert.IsNotNull(explicitResult.Predominant);
@@ -452,7 +451,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotZero(explicitResult.Predominant.Cloudinary.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestProfilingData()
         {
             var explicitResult = ArrangeAndGetExplicitResult();
@@ -463,7 +462,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotZero(explicitResult.ProfilingData[0].Action.Presize.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestPredominant()
         {
             var explicitResult = ArrangeAndGetExplicitResult();
@@ -516,7 +515,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             return m_cloudinary.Explicit(explicitParams);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCinemagraphAnalysis()
         {
             var uploadRes = UploadTestImageResource(uploadParams =>
@@ -536,7 +535,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.GreaterOrEqual(explicitResult.CinemagraphAnalysis.CinemagraphScore, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestAccessibilityAnalysis()
         {
             var uploadRes = UploadTestImageResource(uploadParams =>

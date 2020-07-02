@@ -6,7 +6,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
     public class RestoreResourcesTest: IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestRestoreNoBackup()
         {
             var publicId = GetUniquePublicId();
@@ -32,7 +32,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertRestoreResultNoBackup(rResult, publicId);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestRestoreNoBackupAsync()
         {
             var publicId = GetUniqueAsyncPublicId();
@@ -69,7 +69,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual("no_backup", rResult.JsonObj[publicId]["error"].ToString());
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestRestore()
         {
             var publicId = GetUniquePublicId();
@@ -99,7 +99,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertGetResourceResultAfterRestore(resource_backup);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestRestoreAsync()
         {
             var publicId = GetUniqueAsyncPublicId();

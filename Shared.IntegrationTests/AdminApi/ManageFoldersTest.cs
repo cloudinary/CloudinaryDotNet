@@ -26,7 +26,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             WaitForServerUpdate();
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestFolderApi()
         {
             var result = m_cloudinary.RootFolders();
@@ -51,7 +51,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertDeleteFolder(deletionRes);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestFolderApiWithParameters()
         {
             var getFoldersParams = new GetFoldersParams
@@ -93,7 +93,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertGetFolders(result);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestFolderApiAsync()
         {
             var result = await m_cloudinary.RootFoldersAsync();
@@ -118,7 +118,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertDeleteFolder(deletionRes);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestFolderApiWithParametersAsync()
         {
             var getFoldersParams = new GetFoldersParams
@@ -173,7 +173,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             _subFolder1 = GetSubFolder(_rootFolder1, "1");
             _subFolder2 = GetSubFolder(_rootFolder1, "2");
 
-            var folders = new List<string> 
+            var folders = new List<string>
             {
                 GetItemSubFolder(_rootFolder1),
                 GetItemSubFolder(_rootFolder2),
@@ -235,10 +235,10 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             Assert.Null(deletionRes.Error);
             Assert.AreEqual(2, deletionRes.Deleted.Count);
-            Assert.AreEqual(_subFolder1, deletionRes.Deleted[0]);
+            Assert.Contains(_subFolder1, deletionRes.Deleted);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateFolder()
         {
             var folder  = GetUniqueFolder("create_folder");
@@ -248,7 +248,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertCreateFolderResult(createFolderResult);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestCreateFolderAsync()
         {
             var folder  = GetUniqueFolder("create_folder_async");
@@ -258,14 +258,14 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertCreateFolderResult(createFolderResult);
         }
 
-        [TestCase("")]
+        [TestCase(""), RetryWithDelay]
         [TestCase(null)]
         public void TestCreateFolderWithNullOrEmptyValue(string testFolderName)
         {
             Assert.Throws<ArgumentException>(() => m_cloudinary.CreateFolder(testFolderName));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateFolderWithSubFolders()
         {
             var testFolderName = GetUniqueFolder("root_folder");

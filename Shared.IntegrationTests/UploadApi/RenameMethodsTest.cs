@@ -6,7 +6,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class RenameMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestRename()
         {
             var toPublicId = GetUniquePublicId();
@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(FILE_FORMAT_ICO, getResult.Format);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestRenameToType()
         {
             string publicId = GetUniquePublicId();
