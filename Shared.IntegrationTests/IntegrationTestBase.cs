@@ -35,6 +35,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
         protected const string TEST_MOVIE = "movie.mp4";
         protected const string TEST_IMAGE = "TestImage.jpg";
+        protected const string TEST_UNICODE_IMAGE_NAME = "TestüniNämeLögö";
         protected const string TEST_UNICODE_IMAGE = "TestüniNämeLögö.jpg";
         protected const string TEST_LARGEIMAGE = "TestLargeImage.jpg";
         protected const string TEST_PDF = "multipage.pdf";

@@ -121,7 +121,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var uploadResultImage = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(TEST_UNICODE_IMAGE, uploadResultImage.OriginalFilename);
+            Assert.AreEqual(TEST_UNICODE_IMAGE_NAME, uploadResultImage.OriginalFilename);
         }
 
         [Test]
