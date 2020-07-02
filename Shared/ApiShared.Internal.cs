@@ -407,7 +407,11 @@
             var streamContent = new StreamContent(stream);
 
             streamContent.Headers.Add("Content-Type", "application/octet-stream");
-            streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + file.FileName + "\"");
+            streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "file",
+                FileNameStar = file.FileName,
+            };
             content.Add(streamContent, "file", file.FileName);
         }
 

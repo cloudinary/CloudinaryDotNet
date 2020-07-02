@@ -111,6 +111,20 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         }
 
         [Test]
+        public void TestUploadLocalUnicodeFilename()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(TEST_UNICODE_IMAGE, m_testUnicodeImagePath),
+                Tags = m_apiTag
+            };
+
+            var uploadResultImage = m_cloudinary.Upload(uploadParams);
+
+            Assert.AreEqual(TEST_UNICODE_IMAGE, uploadResultImage.OriginalFilename);
+        }
+
+        [Test]
         public void TestUploadResultCinemagraphAnalysis()
         {
             var imageFileName = GetUniquePublicId(StorageType.upload, FILE_FORMAT_JPG);
@@ -863,8 +877,8 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Tags = m_apiTag
             });
 
-            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) 
-            { 
+            var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId)
+            {
                 Prefix = m_test_prefix,
                 NextCursor = "test",
                 StartAt = "start",
