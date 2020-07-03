@@ -12,7 +12,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
     {
         private const string MODERATION_MANUAL = "manual";
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListResources()
         {
             // should allow listing resources
@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.NotNull(resources.Resources[0].AccessMode);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListByModerationUpdate()
         {
             // should support listing by moderation kind and value
@@ -101,7 +101,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             }
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestResourcesCursor()
         {
             // should allow listing resources with cursor
@@ -144,7 +144,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreNotEqual(result1.Resources[0].PublicId, result2.Resources[0].PublicId);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestResourceFullyQualifiedPublicId()
         {
             // should return correct FullyQualifiedPublicId
@@ -175,7 +175,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(expectedFullQualifiedPublicId, res.FullyQualifiedPublicId);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListResourcesStartAt()
         {
             // should allow listing resources by start date - make sure your clock is set correctly!!!
@@ -203,7 +203,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsNotNull(resources.Resources.FirstOrDefault(res => res.PublicId == result.PublicId));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListResourcesByPrefix()
         {
             // should allow listing resources by prefix
@@ -229,7 +229,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                     .Count() > 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListResourcesByPublicIds()
         {
             var publicId1 = GetUniquePublicId();
@@ -267,7 +267,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.True(result.Resources.Where(r => r.Context != null).Count() == 2);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListResourcesByTag()
         {
             // should allow listing resources by tag
@@ -282,7 +282,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertListResourcesByTagResult(result);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestListResourcesByTagAsync()
         {
             // should allow listing resources by tag
@@ -311,7 +311,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(2, result.Resources.Count());
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListTags()
         {
             // should allow listing tags
@@ -322,7 +322,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertListTagNotEmpty(result);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestListTagsAsync()
         {
             // should allow listing tags
@@ -338,7 +338,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.Greater(result.Tags.Length, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListTagsPrefix()
         {
             // should allow listing tag by prefix
@@ -371,7 +371,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsTrue(result.Tags.Length == 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetResource()
         {
             // should allow get resource details
@@ -399,7 +399,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.NotNull(getResult.Phash);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetResourceWithMetadata()
         {
             // should allow get resource metadata
@@ -427,7 +427,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.NotNull(getResult.AccessMode);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetPdfResourceWithNumberOfPages()
         {
             var uploadParams = new ImageUploadParams()
@@ -455,7 +455,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(getResult.Pages, TEST_PDF_PAGES_COUNT);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListResourceTypes()
         {
             // should allow listing resource_types
@@ -483,7 +483,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsEmpty(result.Where(res => res.Type != STORAGE_TYPE_UPLOAD));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetResourceCinemagraphAnalysis()
         {
             var uploadResult = UploadTestImageResource();
@@ -497,7 +497,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.GreaterOrEqual(getResult.CinemagraphAnalysis.CinemagraphScore, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetResourceAccessibilityAnalysis()
         {
             var uploadResult = UploadTestImageResource();

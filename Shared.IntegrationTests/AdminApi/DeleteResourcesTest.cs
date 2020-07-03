@@ -8,7 +8,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
     public class DeleteResourcesTest: IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDelete()
         {
             // should allow deleting resources
@@ -30,7 +30,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertResourceDoesNotExist(resource);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestDeleteAsync()
         {
             // should allow deleting resources
@@ -71,7 +71,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual("deleted", result.Deleted[deletedPublicId]);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByTransformation()
         {
             // should allow deleting resources by transformations
@@ -111,7 +111,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(resource.Derived.Length, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByPrefix()
         {
             // should allow deleting resources
@@ -135,7 +135,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByPrefixAndTransformation()
         {
             // should allow deleting resources
@@ -174,7 +174,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(resource.Derived.Length, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByTag()
         {
             // should allow deleting resources
@@ -201,7 +201,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteByTagAndTransformation()
         {
             // should allow deleting resources
@@ -245,7 +245,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(resource.Derived.Length, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteDerived()
         {
             // should allow deleting derived resource

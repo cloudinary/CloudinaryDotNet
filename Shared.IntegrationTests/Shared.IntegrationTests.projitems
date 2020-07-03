@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AdminApi\MetaDataTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RetryWithDelayAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadApi\PublishMethodsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadApi\MultiMethodsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadApi\ExplodeMethodsTest.cs" />

@@ -24,7 +24,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             m_implicitTransformation = new Transformation().Crop("scale").Overlay(new TextLayer().Text(m_implicitTransformationText).FontFamily("Arial").FontSize(60));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestOcrUpdate()
         {
             // should support requesting ocr info
@@ -68,7 +68,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                 "_- \n");
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestRawConvertUpdate()
         {
             // should support requesting raw conversion
@@ -88,7 +88,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCategorizationUpdate()
         {
             // should support requesting categorization
@@ -108,7 +108,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDetectionUpdate()
         {
             // should support requesting detection
@@ -131,7 +131,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// <summary>
         /// Test that we can update access control of the resource
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateAccessControl()
         {
             var start = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -175,7 +175,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(start, updateResult.AccessControl[0].End);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateQuality()
         {
             //should update quality
@@ -187,7 +187,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(updResult.PublicId, publicId);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateCustomCoordinates()
         {
             //should update custom coordinates
@@ -211,7 +211,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertUpdatedCustomCoordinates(result, coordinates);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestUpdateCustomCoordinatesAsync()
         {
             //should update custom coordinates
@@ -246,7 +246,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(coordinates.Height, result.Coordinates.Custom[0][3]);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestManualModeration()
         {
             // should support setting manual moderation status
@@ -268,7 +268,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(ModerationStatus.Approved, updateResult.Moderation[0].Status);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateResourceMetadata()
         {
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams
@@ -293,7 +293,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.NotNull(updateResult.MetadataFields);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateMetadata()
         {
             var uploadResult = m_cloudinary.Upload(new ImageUploadParams

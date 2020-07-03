@@ -6,7 +6,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class DestroyMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDestroyRaw()
         {
             var uploadResult = UploadTestRawResource(type: ApiShared.GetCloudinaryParam(ResourceType.Raw));
@@ -17,7 +17,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertDestroyed(destroyResult);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestDestroyRawAsync()
         {
             var uploadResult = await UploadTestRawResourceAsync(type: ApiShared.GetCloudinaryParam(ResourceType.Raw));

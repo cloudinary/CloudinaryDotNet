@@ -9,7 +9,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
     {
         private const string STORAGE_TYPE_AUTHENTICATED = "authenticated";
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestPublishByIds()
         {
             var publicId = GetUniquePublicId(StorageType.upload, "test");
@@ -44,7 +44,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(1, publishResult.Published.Count);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestPublishByPrefix()
         {
             var uploadParams = new ImageUploadParams
@@ -65,7 +65,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(1, publishResult.Published.Count);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestPublishByTag()
         {
             var publishTag = GetMethodTag();
@@ -90,7 +90,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(1, publishResult.Published.Count);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestPublishWithType()
         {
             var uploadParams = new ImageUploadParams
