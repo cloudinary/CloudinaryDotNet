@@ -84,10 +84,10 @@
         internal static async Task<T> ParseAsync<T>(HttpResponseMessage response)
             where T : BaseResult
         {
-            using (var stream = await response.Content.ReadAsStreamAsync())
+            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
             using (var reader = new StreamReader(stream))
             {
-                var s = await reader.ReadToEndAsync();
+                var s = await reader.ReadToEndAsync().ConfigureAwait(false);
                 return CreateResult<T>(response, s);
             }
         }
@@ -133,7 +133,8 @@
             {
                 SetChunkedEncoding(request);
 
-                await PrepareRequestContentAsync(request, parameters, file, extraHeaders, cancellationToken);
+                await PrepareRequestContentAsync(request, parameters, file, extraHeaders, cancellationToken)
+                    .ConfigureAwait(false);
             }
 
             return request;
@@ -291,7 +292,7 @@
 
             var content = IsStringContent(extraHeaders)
                 ? CreateStringContent(parameters)
-                : await PrepareMultipartFormDataContentAsync(parameters, file, extraHeaders, cancellationToken);
+                : await PrepareMultipartFormDataContentAsync(parameters, file, extraHeaders, cancellationToken).ConfigureAwait(false);
 
             SetHeadersAndContent(request, extraHeaders, content);
         }
@@ -354,7 +355,7 @@
                     {
                         // Unfortunately we don't have ByteRangeStreamContent here,
                         // let's create another stream from the original one
-                        stream = await GetRangeFromFileAsync(file, stream, cancellationToken);
+                        stream = await GetRangeFromFileAsync(file, stream, cancellationToken).ConfigureAwait(false);
                     }
 
                     SetStreamContent(file, stream, content);
@@ -406,7 +407,11 @@
             var streamContent = new StreamContent(stream);
 
             streamContent.Headers.Add("Content-Type", "application/octet-stream");
-            streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + file.FileName + "\"");
+            streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "file",
+                FileNameStar = file.FileName,
+            };
             content.Add(streamContent, "file", file.FileName);
         }
 
@@ -444,7 +449,7 @@
         private async Task<Stream> GetRangeFromFileAsync(FileDescription file, Stream stream, CancellationToken? cancellationToken = null)
         {
             var writer = SetStreamToStartAndCreateWriter(file, stream);
-            file.BytesSent += await ReadBytesAsync(writer, stream, file.BufferLength, cancellationToken);
+            file.BytesSent += await ReadBytesAsync(writer, stream, file.BufferLength, cancellationToken).ConfigureAwait(false);
             return WriterStreamFromBegin(writer);
         }
 
@@ -479,9 +484,9 @@
             int cnt;
             var token = cancellationToken ?? CancellationToken.None;
             while ((toSend = length - bytesSent) > 0
-                && (cnt = await stream.ReadAsync(buf, 0, toSend > buf.Length ? buf.Length : toSend, token)) > 0)
+                && (cnt = await stream.ReadAsync(buf, 0, toSend > buf.Length ? buf.Length : toSend, token).ConfigureAwait(false)) > 0)
             {
-                await writer.BaseStream.WriteAsync(buf, 0, cnt, token);
+                await writer.BaseStream.WriteAsync(buf, 0, cnt, token).ConfigureAwait(false);
                 bytesSent += cnt;
             }
 

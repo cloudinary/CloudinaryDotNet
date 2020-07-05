@@ -315,6 +315,7 @@
         /// <param name="parameters">Parameters for publishing of resources.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Structure with the results of publishing.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
         public Task<PublishResourceResult> PublishResourceByIdsAsync(
             string tag,
             PublishResourceParams parameters,
@@ -329,6 +330,7 @@
         /// <param name="tag">Not used.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
         /// <returns>Structure with the results of publishing.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
         public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams parameters)
         {
             return PublishResource(string.Empty, string.Empty, parameters);
@@ -1463,7 +1465,7 @@
 
             if (parameters.File.IsRemote)
             {
-                return await UploadAsync<T>(parameters);
+                return await UploadAsync<T>(parameters).ConfigureAwait(false);
             }
 
             var internalParams = new UploadLargeParams(parameters, bufferSize, m_api);
@@ -1478,7 +1480,7 @@
                     parameters,
                     parameters.File,
                     internalParams.Headers,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 CheckUploadResult(result);
             }
 

@@ -6,7 +6,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class TextMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestEnglishText()
         {
             var textParams = GetEnglishTextParams();
@@ -16,7 +16,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertEnglishText(textResult);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestEnglishTextAsync()
         {
             var textParams = GetEnglishTextParams();
@@ -54,7 +54,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(result.SecureUrl);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestRussianText()
         {
             TextParams tParams = new TextParams("Пример текста.")

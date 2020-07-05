@@ -72,7 +72,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             return name;
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestCreateStreamingProfileAsync()
         {
             var name = GetUniqueStreamingProfileName(CREATE_STREAMING_PROFILE_SUFFIX);
@@ -82,7 +82,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertStreamingProfileWith2Transforms(result, name);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateStreamingProfile()
         {
             string name = GetUniqueStreamingProfileName(CREATE_STREAMING_PROFILE_SUFFIX);
@@ -101,7 +101,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(PROFILE_TRANSFORMATION_2.ToString(), result.Data.Representations[1].Transformation.ToString());
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetStreamingProfile()
         {
             Assert.Throws<ArgumentException>(() => m_cloudinary.GetStreamingProfile(null));
@@ -113,14 +113,14 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(PREDEFINED_PROFILES[0], result.Data.Name);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListStreamingProfile()
         {
             StreamingProfileListResult profiles = m_cloudinary.ListStreamingProfiles();
             Assert.That(PREDEFINED_PROFILES, Is.SubsetOf(profiles.Data.Select(i => i.Name)));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteStreamingProfile()
         {
             string name = GetUniqueStreamingProfileName("delete");
@@ -136,7 +136,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual("deleted", result.Message);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateStreamingProfile()
         {
             string name = GetUniqueStreamingProfileName("update");

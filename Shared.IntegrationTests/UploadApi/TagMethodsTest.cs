@@ -8,7 +8,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class TagMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestTagAdd()
         {
             var uploadResult = UploadTestImageResource();
@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertTagParamsAdd(tagResult, uploadResult.PublicId);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestTagAddAsync()
         {
             var uploadResult = await UploadTestImageResourceAsync();
@@ -54,7 +54,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         /// <summary>
         /// Test that we can add a tag for a video resource
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestVideoTagAdd()
         {
             var uploadParams = new VideoUploadParams()
@@ -78,7 +78,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestTagMultiple()
         {
             var methodTag = GetMethodTag();
@@ -142,7 +142,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.True(r.Tags.SequenceEqual(new string[] { m_apiTag, testTag3 }));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestTagReplace()
         {
             var tag = GetMethodTag();
@@ -168,7 +168,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestClearAllTags()
         {
             var publicId = GetUniquePublicId();
