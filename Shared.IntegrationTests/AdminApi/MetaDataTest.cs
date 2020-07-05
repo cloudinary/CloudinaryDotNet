@@ -87,7 +87,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#get_a_metadata_field_by_external_id">
         /// Get a metadata field by external id.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetMetadataField()
         {
             var result = m_cloudinary.GetMetadataField(m_externalIdGeneral);
@@ -102,7 +102,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#create_a_metadata_field">
         /// Create a metadata field.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateDateMetadataField()
         {
             var result = CreateMetadataFieldForTest<DateMetadataFieldCreateParams, DateTime?>(m_externalIdDate);
@@ -117,7 +117,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#create_a_metadata_field">
         /// Create a metadata field.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateSetMetadataField()
         {
             var result = CreateMetadataFieldForTest<SetMetadataFieldCreateParams, List<string>>(m_externalIdSet, m_datasourceMultiple);
@@ -132,7 +132,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#update_a_metadata_field_by_external_id">
         /// Update a metadata field by external id.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateMetadataField()
         {
             var newLabel = $"update_metadata_test_new_label{m_externalIdGeneral}";
@@ -160,7 +160,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#update_a_metadata_field_datasource">
         /// Update a metadata field datasource.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateMetadataFieldDatasource()
         {
             var result = m_cloudinary.UpdateMetadataDataSourceEntries(m_externalIdEnum2, m_datasourceSingle);
@@ -180,7 +180,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#delete_a_metadata_field_by_external_id">
         /// Delete a metadata field by external id.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteMetadataFieldDoesNotReleaseExternalId()
         {
             m_cloudinary.DeleteMetadataField(m_externalIdDelete2);
@@ -197,7 +197,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#delete_entries_in_a_metadata_field_datasource">
         /// Delete entries in a metadata field datasource.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteMetadataFieldDataSource()
         {
             var entriesExternalIds = new List<string> {m_datasourceEntryExternalId};
@@ -219,7 +219,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#validating_data">
         /// Validating data.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDateFieldDefaultValueValidation()
         {
             var todayDate = DateTime.Today.Date;
@@ -269,7 +269,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#validating_data">
         /// Validating data.</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestIntegerFieldValidation()
         {
             var validation = new IntLessThanValidationParams(5)
@@ -310,7 +310,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         /// See <a href="https://cloudinary.com/documentation/admin_api#restore_entries_in_a_metadata_field_datasource">
         /// Restore entries in a metadata field datasource</a></para>
         /// </summary>
-        [Test]
+        [Test, RetryWithDelay]
         public void TestRestoreMetadataFieldDataSource()
         {
             var entriesExternalIds = new List<string> {m_datasourceEntryExternalId};

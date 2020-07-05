@@ -8,7 +8,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class SpriteMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestSprite()
         {
             var spriteTag = GetMethodTag();
@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertSprite(result, addedPublicIds, FILE_FORMAT_JPG);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestSpriteAsync()
         {
             var spriteTag = GetMethodTag();
@@ -91,7 +91,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(result.SecureJsonUrl);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestSpriteTransformation()
         {
             var publicId1 = GetUniquePublicId(StorageType.sprite);

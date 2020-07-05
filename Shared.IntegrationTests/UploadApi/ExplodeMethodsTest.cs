@@ -14,7 +14,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AddCreatedTransformation(m_transformationExplode);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestExplode()
         {
             var uploadResult = UploadTestImageResource((uploadParams) =>
@@ -29,7 +29,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertExplodeStatus(result);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestExplodeAsync()
         {
             var uploadResult = await UploadTestImageResourceAsync((uploadParams) =>
@@ -44,7 +44,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             AssertExplodeStatus(result);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestExplodeTypeParamAsync()
         {
             var uploadResult = await UploadTestImageResourceAsync((uploadParams) =>
