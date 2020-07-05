@@ -124,6 +124,18 @@ namespace CloudinaryDotNet.Test.Transformations.Common
         }
 
         [Test]
+        public void TestTransformationWithCustomFunctionNoException()
+        {
+            var testDelegate = new TestDelegate(() => new Transformation()
+                  .Variable("$overlay", "ref:!docs:sale!").Chain()
+                  .CustomFunction(CustomFunction.Wasm("docs:pnglayer.wasm")).Chain()
+                  .Border("1px_solid_black")
+            );
+
+            Assert.DoesNotThrow(testDelegate);
+        }
+ 
+        [Test]
         public void TestTextLayersUnmodifiableFields()
         {
             var textLayer = new TextLayer();

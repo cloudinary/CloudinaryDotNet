@@ -3,7 +3,7 @@
     /// <summary>
     /// Parameters of custom function.
     /// </summary>
-    public class CustomFunction
+    public class CustomFunction : Core.ICloneable
     {
         private readonly string parameters;
 
@@ -39,6 +39,15 @@
         public override string ToString()
         {
             return parameters;
+        }
+
+        /// <summary>
+        /// Creates a new object that is a deep copy of the current instance.
+        /// </summary>
+        /// <returns> A new object that is a deep copy of this instance.</returns>
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
