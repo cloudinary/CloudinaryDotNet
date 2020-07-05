@@ -124,7 +124,7 @@ namespace CloudinaryDotNet.Test.Transformations.Common
         }
 
         [Test]
-        public void TestTransformationWithCustonFunctionNoException()
+        public void TestTransformationWithCustomFunctionNoException()
         {
             var testDelegate = new TestDelegate(() => new Transformation()
                   .Variable("$overlay", "ref:!docs:sale!").Chain()
