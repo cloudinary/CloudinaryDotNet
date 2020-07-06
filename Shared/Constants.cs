@@ -71,6 +71,12 @@
         /// <summary> Action name for fetch.</summary>
         public const string ACTION_NAME_FETCH = "fetch";
 
+        /// <summary> Action name for multi.</summary>
+        public const string ACTION_NAME_MULTI = "multi";
+
+        /// <summary> Action name for multi.</summary>
+        public const string ACTION_NAME_SPRITE = "sprite";
+
         /// <summary> URL for shared CDN.</summary>
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
