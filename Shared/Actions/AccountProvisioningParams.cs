@@ -18,18 +18,18 @@
         }
 
         /// <summary>
-        /// Optional. Whether to return enabled sub-accounts only (true) or disabled accounts (false).
+        /// Gets or sets whether to return enabled sub-accounts only (true) or disabled accounts (false).
         /// Default: all accounts are returned(both enabled and disabled).
         /// </summary>
         public bool? Enabled { get; set; }
 
         /// <summary>
-        /// Optional. List of up to 100 sub-account IDs. When provided, other parameters are ignored.
+        /// Gets or sets the list of up to 100 sub-account IDs. When provided, other parameters are ignored.
         /// </summary>
         public List<string> Ids { get; set; }
 
         /// <summary>
-        /// Optional. Returns accounts where the name begins with the specified case-insensitive string.
+        /// Gets or sets accounts where the name begins with the specified case-insensitive string.
         /// </summary>
         public string Prefix { get; set; }
 
@@ -70,24 +70,24 @@
     public abstract class BaseSubAccountParams : BaseParams
     {
         /// <summary>
-        /// The display name as shown in the management console.
+        /// Gets or sets the display name as shown in the management console.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Optional. A case-insensitive cloud name comprised of alphanumeric and underscore characters.
+        /// Gets or sets a case-insensitive cloud name comprised of alphanumeric and underscore characters.
         /// Generates an error if the specified cloud name is not unique across all Cloudinary accounts.
         /// Note: Once created, the name can only be changed for accounts with fewer than 1000 assets.
         /// </summary>
         public string CloudName { get; set; }
 
         /// <summary>
-        /// Optional. Any custom attributes you want to associate with the sub-account, as a map/hash of key/value pairs.
+        /// Gets or sets any custom attributes you want to associate with the sub-account, as a map/hash of key/value pairs.
         /// </summary>
         public StringDictionary CustomAttributes { get; set; }
 
         /// <summary>
-        /// Optional. Whether the sub-account is enabled. Default: true.
+        /// Gets or sets whether the sub-account is enabled. Default: true.
         /// </summary>
         public bool? Enabled { get; set; }
 
@@ -135,7 +135,7 @@
         }
 
         /// <summary>
-        /// Optional. The ID of another sub-account, from which to copy all of
+        /// Gets or sets he ID of another sub-account, from which to copy all of
         /// the following  settings:Size limits, Timed limits, and Flags.
         /// </summary>
         public string BaseSubAccountId { get; set; }
@@ -177,7 +177,7 @@
         }
 
         /// <summary>
-        /// The ID of the sub-account.
+        /// Gets or sets the ID of the sub-account.
         /// </summary>
         public string SubAccountId { get; set; }
 
@@ -196,23 +196,23 @@
     public class ListUsersParams : BaseParams
     {
         /// <summary>
-        /// Optional. Whether to only return pending users. Default: false (all users).
+        /// Gets or sets whether to only return pending users. Default: false (all users).
         /// </summary>
         public bool? Pending { get; set; }
 
         /// <summary>
-        /// Optional. A list of up to 100 user IDs. When provided, other parameters are ignored.
+        /// Gets or sets a list of up to 100 user IDs. When provided, other parameters are ignored.
         /// </summary>
         public List<string> UserIds { get; set; }
 
         /// <summary>
-        /// Optional. Returns users where the name or email address begins
+        /// Gets or sets users where the name or email address begins
         /// with the specified case-insensitive string.
         /// </summary>
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Optional. Only returns users who have access to the specified account.
+        ///  Gets or sets users who have access to the specified account.
         /// </summary>
         public string SubAccountId { get; set; }
 
@@ -258,22 +258,22 @@
     public abstract class BaseUserParams : BaseParams
     {
         /// <summary>
-        /// The name of the user.
+        /// Gets or sets the name of the user.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// A unique email address, which serves as the login name and notification address.
+        /// Gets or sets a unique email address, which serves as the login name and notification address.
         /// </summary>
         public string Email { get; set; }
 
         /// <summary>
-        /// The role to assign to the user.
+        /// Gets or sets the role to assign to the user.
         /// </summary>
         public Role? Role { get; set; }
 
         /// <summary>
-        /// Optional. The list of sub-account IDs that this user can access.
+        /// Gets or sets the list of sub-account IDs that this user can access.
         /// Note: This parameter is ignored if the role is specified as master_admin.
         /// </summary>
         public List<string> SubAccountIds { get; set; }
@@ -350,7 +350,7 @@
         }
 
         /// <summary>
-        /// The ID of the user.
+        /// Gets or sets the ID of the user.
         /// </summary>
         public string UserId { get; set; }
 
@@ -378,7 +378,7 @@
         }
 
         /// <summary>
-        /// The name of the user group.
+        /// Gets or sets the name of the user group.
         /// </summary>
         public string Name { get; set; }
 
@@ -432,7 +432,7 @@
         }
 
         /// <summary>
-        /// The ID of the user.
+        /// Gets or sets the ID of the user.
         /// </summary>
         public string UserGroupId { get; set; }
 

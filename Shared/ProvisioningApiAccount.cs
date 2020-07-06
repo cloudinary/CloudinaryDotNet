@@ -27,17 +27,17 @@
         }
 
         /// <summary>
-        /// Cloud name.
+        /// Gets or sets cloud name.
         /// </summary>
         public string AccountId { get; set; }
 
         /// <summary>
-        /// API key.
+        /// Gets or sets aPI key.
         /// </summary>
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// API secret.
+        /// Gets or sets aPI secret.
         /// </summary>
         public string ApiSecret { get; set; }
     }
