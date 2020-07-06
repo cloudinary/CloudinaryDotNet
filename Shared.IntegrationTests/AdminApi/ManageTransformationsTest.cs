@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             m_implicitTransformation = new Transformation().Crop("scale").Overlay(new TextLayer().Text(implicitTransformationText).FontFamily("Arial").FontSize(60));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestListTransformations()
         {
             // should allow listing transformations
@@ -35,7 +35,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestListTransformationsAsync()
         {
             // should allow listing transformations
@@ -63,7 +63,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsTrue(td.Used);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetTransform()
         {
             // should allow getting transformation metadata
@@ -77,7 +77,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertGetTransform(result, m_updateTransformation);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestGetTransformAsync()
         {
             // should allow getting transformation metadata
@@ -97,13 +97,13 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(transformation.ToString(), new Transformation(result.Info[0]).ToString());
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetTransformParamsCheck()
         {
             Assert.Throws<ArgumentException>(new GetTransformParams().Check, "Should require Transformation");
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteTransform()
         {
             // should allow deleting named transformation
@@ -129,7 +129,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDeleteTransformImplicit()
         {
             // should allow deleting implicit transformation
@@ -158,7 +158,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateTransformStrict()
         {
             // should allow updating transformation allowed_for_strict
@@ -184,7 +184,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestUpdateTransformStrictAsync()
         {
             // should allow updating transformation allowed_for_strict
@@ -225,7 +225,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(isStrict, result.AllowedForStrict);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateTransformUnsafe()
         {
             string transformationName = GetUniqueTransformationName();
@@ -252,19 +252,19 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.AreEqual(updateParams.UnsafeUpdate.Generate(), new Transformation(getResult.Info).Generate());
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateUnsafeUpdate()
         {
             TestUpdateTransformWithUnsafeUpdate();
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateTransformAllowStrict()
         {
             TestUpdateTransformWithUnsafeUpdate(true);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateTransform()
         {
             // should allow creating named transformation
@@ -279,7 +279,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertCreateTransform(getResult, m_simpleTransformation);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestCreateTransformAsync()
         {
             // should allow creating named transformation
@@ -295,7 +295,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         }
 
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestGetTransformNextCursorAsync()
         {
             // should allow creating named transformation

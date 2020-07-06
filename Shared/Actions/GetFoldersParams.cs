@@ -2,20 +2,19 @@
 {
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Runtime.Serialization;
 
     /// <summary>
-    ///  Parameters of list upload presets request.
+    /// Parameters for managing folders list.
     /// </summary>
-    public class ListUploadPresetsParams : BaseParams
+    public class GetFoldersParams : BaseParams
     {
         /// <summary>
-        /// Gets or sets max number of resources to return. Default=10. Maximum=500. Optional.
+        /// Gets or sets maximum number of results to return (up to 500). Default: 10.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// Gets or sets next cursor value.
+        /// Gets or sets when a request has more results to return than <see cref="MaxResults"/>, this value is returned as part of the response.
         /// </summary>
         public string NextCursor { get; set; }
 
@@ -33,7 +32,7 @@
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
             {
@@ -44,24 +43,5 @@
 
             return dict;
         }
-    }
-
-    /// <summary>
-    /// Parsed result of upload presets listing.
-    /// </summary>
-    [DataContract]
-    public class ListUploadPresetsResult : BaseResult
-    {
-        /// <summary>
-        /// Gets or sets presets.
-        /// </summary>
-        [DataMember(Name = "presets")]
-        public List<GetUploadPresetResult> Presets { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the cursor value if there are more presets than <see cref="ListUploadPresetsParams.MaxResults"/>.
-        /// </summary>
-        [DataMember(Name = "next_cursor")]
-        public string NextCursor { get; protected set; }
     }
 }

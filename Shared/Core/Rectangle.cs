@@ -1,9 +1,12 @@
 ﻿namespace CloudinaryDotNet.Core
 {
+    using System;
+    using System.Globalization;
+
     /// <summary>
     /// Stores a set of four integers that represent the location and size of a rectangle.
     /// </summary>
-    public struct Rectangle
+    public struct Rectangle : IEquatable<Rectangle>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Rectangle"/> struct with the specified location and size.
@@ -50,7 +53,69 @@
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{{X={0}, Y={1}, Width={2}, Height={3}}}", X, Y, Width, Height);
+            return string.Format(CultureInfo.InvariantCulture, "{{X={0}, Y={1}, Width={2}, Height={3}}}", X, Y, Width, Height);
+        }
+
+        /// <summary>
+        /// Check the equality of two rectangles.
+        /// </summary>
+        /// <param name="other">The rectangle to compare.</param>
+        /// <returns>True - if rectangles are equal. Otherwise false.</returns>
+        public bool Equals(Rectangle other)
+        {
+            return Height == other.Height && Width == other.Width && X == other.X && Y == other.Y;
+        }
+
+        /// <summary>
+        /// Check the equality of two rectangles.
+        /// </summary>
+        /// <param name="obj">The rectangle to compare.</param>
+        /// <returns>True - if rectangles are equal. Otherwise false.</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            return obj is Rectangle other && Equals(other);
+        }
+
+        /// <summary>
+        /// Compute a hashcode for the rectangle.
+        /// </summary>
+        /// <returns>The computed hashcode.</returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Height;
+                hashCode = (hashCode * 397) ^ Width;
+                hashCode = (hashCode * 397) ^ X;
+                hashCode = (hashCode * 397) ^ Y;
+                return hashCode;
+            }
+        }
+
+        /// <summary>
+        /// Equality operator for two rectangles.
+        /// </summary>
+        /// <param name="left">First rectangle to compare.</param>
+        /// <param name="right">Second rectangle to compare.</param>
+        /// <returns>The computed hashcode.</returns>
+        public static bool operator ==(Rectangle left, Rectangle right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Inequality operator for two rectangles.
+        /// </summary>
+        /// <param name="left">First rectangle to compare.</param>
+        /// <param name="right">Second rectangle to compare.</param>
+        public static bool operator !=(Rectangle left, Rectangle right)
+        {
+            return !left.Equals(right);
         }
     }
 }

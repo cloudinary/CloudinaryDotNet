@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Parameters\AccountProvisioningParamsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MockedCloudinary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UploadPresetsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parameters\DeserializationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MetaDataTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parameters\MetadataFieldParamsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parameters\MetadataUpdateParamsTest.cs" />

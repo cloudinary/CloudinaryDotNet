@@ -13,7 +13,7 @@
         internal int BufferLength = int.MaxValue;
 
         /// <summary>
-        /// End of file flag.
+        /// Gets a value indicating whether the pointer is at the end of file.
         /// </summary>
         internal bool Eof => BytesSent == GetFileLength();
 
@@ -79,22 +79,22 @@
         }
 
         /// <summary>
-        /// Stream to upload.
+        /// Gets stream to upload.
         /// </summary>
         public Stream Stream { get; }
 
         /// <summary>
-        /// Name of the file to upload.
+        /// Gets or sets name of the file to upload.
         /// </summary>
         public string FileName { get; set; }
 
         /// <summary>
-        /// Filesystem path to the file to upload.
+        /// Gets filesystem path to the file to upload.
         /// </summary>
         public string FilePath { get; }
 
         /// <summary>
-        /// Whether it is remote (by URL) or local file.
+        /// Gets a value indicating whether it is remote (by URL) or local file.
         /// </summary>
         public bool IsRemote { get; }
     }

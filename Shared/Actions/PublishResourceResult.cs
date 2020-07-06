@@ -10,13 +10,13 @@
     public class PublishResourceResult : BaseResult
     {
         /// <summary>
-        /// List of details of published resources.
+        /// Gets or sets list of details of published resources.
         /// </summary>
         [DataMember(Name = "published")]
         public List<object> Published { get; protected set; }
 
         /// <summary>
-        /// List of details of the resources with failed publish.
+        /// Gets or sets list of details of the resources with failed publish.
         /// </summary>
         [DataMember(Name = "failed")]
         public List<object> Failed { get; protected set; }

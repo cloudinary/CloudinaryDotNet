@@ -1,5 +1,6 @@
 ﻿namespace CloudinaryDotNet
 {
+    using System;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -30,7 +31,7 @@
         /// <returns>True if derived images are to be created; otherwise, false.</returns>
         public bool IsCreateDerived()
         {
-            return GetValue(CREATEDERIVED).Value<bool>();
+            return GetValue(CREATEDERIVED, StringComparison.Ordinal).Value<bool>();
         }
 
         /// <summary>

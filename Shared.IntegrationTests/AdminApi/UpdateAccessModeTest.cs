@@ -8,7 +8,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
     {
         private const string ACCESS_MODE_PUBLIC = "public";
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateAccessModeByTag()
         {
             var updateTag = GetMethodTag();
@@ -37,7 +37,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             //Assert.AreEqual(publish_result.Published.Count, 1);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateAccessModeById()
         {
             var publicId = GetUniquePublicId();

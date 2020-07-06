@@ -10,13 +10,13 @@
     public class StreamingProfileResult : BaseResult
     {
         /// <summary>
-        /// An API message.
+        /// Gets or sets an API message.
         /// </summary>
         [DataMember(Name = "message")]
         public string Message { get; protected set; }
 
         /// <summary>
-        /// Details of the streaming profile.
+        /// Gets or sets details of the streaming profile.
         /// </summary>
         [DataMember(Name = "data")]
         public StreamingProfileData Data { get; protected set; }
@@ -29,7 +29,7 @@
     public class StreamingProfileData : StreamingProfileBaseData
     {
         /// <summary>
-        /// A collection of Representations that defines a custom streaming profile.
+        /// Gets or sets a collection of Representations that defines a custom streaming profile.
         /// </summary>
         [DataMember(Name = "representations")]
         public List<Representation> Representations { get; set; }
@@ -42,7 +42,7 @@
     public class StreamingProfileListResult : BaseResult
     {
         /// <summary>
-        /// List of basic details of the streaming profiles.
+        /// Gets or sets list of basic details of the streaming profiles.
         /// </summary>
         [DataMember(Name = "data")]
         public IEnumerable<StreamingProfileBaseData> Data { get; protected set; }
@@ -55,19 +55,19 @@
     public class StreamingProfileBaseData
     {
         /// <summary>
-        /// The identification name of the new streaming profile.
+        /// Gets or sets the identification name of the new streaming profile.
         /// </summary>
         [DataMember(Name = "name")]
         public string Name { get; protected set; }
 
         /// <summary>
-        /// A descriptive name for the profile.
+        /// Gets or sets a descriptive name for the profile.
         /// </summary>
         [DataMember(Name = "display_name")]
         public string DisplayName { get; protected set; }
 
         /// <summary>
-        /// True if streaming profile is defined.
+        /// Gets or sets a value indicating whether streaming profile is defined.
         /// </summary>
         [DataMember(Name = "predefined")]
         public bool Predefined { get; protected set; }

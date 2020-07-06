@@ -19,6 +19,7 @@ namespace CloudinaryDotNet.IntegrationTest
         protected string m_suffix;
 
         protected string m_testImagePath;
+        protected string m_testUnicodeImagePath;
         protected string m_testLargeImagePath;
         protected string m_testVideoPath;
         protected string m_testPdfPath;
@@ -34,6 +35,8 @@ namespace CloudinaryDotNet.IntegrationTest
 
         protected const string TEST_MOVIE = "movie.mp4";
         protected const string TEST_IMAGE = "TestImage.jpg";
+        protected const string TEST_UNICODE_IMAGE_NAME = "TestüniNämeLögö";
+        protected const string TEST_UNICODE_IMAGE = "TestüniNämeLögö.jpg";
         protected const string TEST_LARGEIMAGE = "TestLargeImage.jpg";
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
@@ -155,11 +158,13 @@ namespace CloudinaryDotNet.IntegrationTest
             string filePrefix = Path.GetDirectoryName(assembly.Location);
             m_testVideoPath = Path.Combine(filePrefix, TEST_MOVIE);
             m_testImagePath = Path.Combine(filePrefix, TEST_IMAGE);
+            m_testUnicodeImagePath = Path.Combine(filePrefix, TEST_UNICODE_IMAGE);
             m_testLargeImagePath = Path.Combine(filePrefix, TEST_LARGEIMAGE);
             m_testPdfPath = Path.Combine(filePrefix, TEST_PDF);
             m_testIconPath = Path.Combine(filePrefix, TEST_FAVICON);
 
             SaveEmbeddedToDisk(assembly, TEST_IMAGE, m_testImagePath);
+            SaveEmbeddedToDisk(assembly, TEST_IMAGE, m_testUnicodeImagePath);
             SaveEmbeddedToDisk(assembly, TEST_LARGEIMAGE, m_testLargeImagePath);
             SaveEmbeddedToDisk(assembly, TEST_MOVIE, m_testVideoPath);
             SaveEmbeddedToDisk(assembly, TEST_FAVICON, m_testIconPath);
@@ -521,6 +526,17 @@ namespace CloudinaryDotNet.IntegrationTest
         private static string Replace(this string s, char[] oldChars, string newChar)
         {
             return string.Join(newChar, s.Split(oldChars, StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        public static void AccessibilityAnalysisNotEmpty(AccessibilityAnalysis accessibilityAnalysisResult)
+        {
+            Assert.IsNotNull(accessibilityAnalysisResult);
+            Assert.GreaterOrEqual(accessibilityAnalysisResult.ColorblindAccessibilityScore, 0);
+
+            Assert.IsNotNull(accessibilityAnalysisResult.ColorblindAccessibilityAnalysis);
+            Assert.GreaterOrEqual(accessibilityAnalysisResult.ColorblindAccessibilityAnalysis.DistinctColors, 0);
+            Assert.GreaterOrEqual(accessibilityAnalysisResult.ColorblindAccessibilityAnalysis.DistinctEdges, 0);
+            Assert.GreaterOrEqual(accessibilityAnalysisResult.ColorblindAccessibilityAnalysis.MostIndistinctPair.Length, 0);
         }
     }
 

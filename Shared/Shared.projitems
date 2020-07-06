@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataUpdateResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ContextResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\CreateFolderResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\GetFoldersParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\ListResourcesByContextParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataFieldParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataUpdateParams.cs" />
@@ -127,5 +128,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\VideoTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Url.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CloudinaryVersion.cs" />
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Security.Cryptography;
@@ -67,7 +68,7 @@
         {
             return Regex.IsMatch(
                 filePath,
-                @"^((ftp|https?|s3|gs):.*)|data:([\w-]+/[\w-]+)?(;[\w-]+=[\w-]+)*;base64,([a-zA-Z0-9/+\n=]+)");
+                @"^((ftp|https?|s3|gs):.*)|data:([\w-]+/[\w-]+(\+[\w-]+)?)?(;[\w-]+=[\w-]+)*;base64,([a-zA-Z0-9/+\n=]+)");
         }
 
         /// <summary>
@@ -139,7 +140,7 @@
             var signature = new StringBuilder();
             foreach (var b in bytesHash)
             {
-                signature.Append(b.ToString("x2"));
+                signature.Append(b.ToString("x2", CultureInfo.InvariantCulture));
             }
 
             return signature.ToString();

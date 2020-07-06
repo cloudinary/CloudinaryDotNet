@@ -60,7 +60,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Thread.Sleep(INDEXING_WAIT_TIME);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestSearchApiFindResourcesByTag()
         {
             var result = m_cloudinary.Search().Expression(m_expressionTag).Execute();
@@ -69,14 +69,14 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.AreEqual(RESOURCES_COUNT, result.Resources.Count);
         }
         
-        [Test]
+        [Test, RetryWithDelay]
         public void TestSearchResourceByPublicId()
         {
             var result = m_cloudinary.Search().Expression(m_expressionPublicId).Execute();
             Assert.Greater(result.TotalCount, 0);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestPaginateResourcesLimitedByTagAndOrderedByAscendingPublicId()
         {
             var result = m_cloudinary.Search().MaxResults(FIRST_PAGE_SIZE)
@@ -116,7 +116,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.NotNull(result.Resources[0].CreatedBy);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestSearchAggregate()
         {
             var result = m_cloudinary.Search()
@@ -127,7 +127,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsNotEmpty(result.Aggregations);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestSearchWithField()
         {
             var result = m_cloudinary.Search().MaxResults(FIRST_PAGE_SIZE)
@@ -138,7 +138,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsNotEmpty(result.Resources.First().ImageMetadata);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestRootResponseFieldsAreParsed()
         {
             var result = m_cloudinary.Search().MaxResults(FIRST_PAGE_SIZE)
@@ -151,7 +151,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsNotEmpty(result.Aggregations);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestResourceResponseFieldsAreParsed()
         {
             var result = m_cloudinary.Search().Expression($"public_id: {m_singleResourcePublicId}")

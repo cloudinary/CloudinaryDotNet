@@ -19,7 +19,7 @@
         }
 
         /// <summary>
-        /// The public IDs of (deleted or existing) backed up resources to restore. Reverts to the latest backed up
+        /// Gets or sets the public IDs of (deleted or existing) backed up resources to restore. Reverts to the latest backed up
         /// version of the resource.
         /// </summary>
         public List<string> PublicIds
@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// Restore resources with the given resource type. Default: image.
+        /// Gets or sets restore resources with the given resource type. Default: image.
         /// </summary>
         public ResourceType ResourceType
         {
@@ -43,7 +43,7 @@
         }
 
         /// <summary>
-        /// Optional. The specific type of the asset.
+        /// Gets or sets the specific type of the asset.
         /// Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
         public AssetType Type { get; set; }

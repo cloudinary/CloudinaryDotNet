@@ -83,7 +83,7 @@
     <Rule Id="SA1615" Action="Warning" />
     <Rule Id="SA1616" Action="Warning" />
     <Rule Id="SA1618" Action="Warning" />
-    <Rule Id="SA1623" Action="Info" />
+    <Rule Id="SA1623" Action="Warning" />
     <Rule Id="SA1625" Action="Warning" />
     <Rule Id="SA1627" Action="Warning" />
     <Rule Id="SA1629" Action="Warning" />
@@ -100,30 +100,31 @@
     <Rule Id="CA1055" Action="None" />
     <Rule Id="CA1056" Action="None" />
     <Rule Id="CA1062" Action="None" />
-    <Rule Id="CA1065" Action="Info" />
+    <Rule Id="CA1065" Action="Warning" />
     <Rule Id="CA1200" Action="None" />
     <Rule Id="CA1303" Action="Info" />
-    <Rule Id="CA1304" Action="Info" />
-    <Rule Id="CA1305" Action="Info" />
-    <Rule Id="CA1307" Action="Info" />    
+    <Rule Id="CA1304" Action="Warning" />
+    <Rule Id="CA1305" Action="Warning" />
+    <Rule Id="CA1307" Action="Warning" />    
+    <Rule Id="CA1308" Action="None" />    
     <Rule Id="CA1507" Action="Warning" />
     <Rule Id="CA1707" Action="None" />
     <Rule Id="CA1710" Action="None" />
     <Rule Id="CA1716" Action="None" />
     <Rule Id="CA1720" Action="None" />
-    <Rule Id="CA1801" Action="Info" />
-    <Rule Id="CA1810" Action="Info" />
-    <Rule Id="CA1815" Action="Info" />
+    <Rule Id="CA1801" Action="Warning" />
+    <Rule Id="CA1810" Action="Warning" />
+    <Rule Id="CA1815" Action="Warning" />
     <Rule Id="CA1819" Action="None" />
     <Rule Id="CA1820" Action="Warning" />
     <Rule Id="CA1822" Action="Warning" />
-    <Rule Id="CA1825" Action="Info" />
-    <Rule Id="CA2000" Action="Info" />
-    <Rule Id="CA2007" Action="None" />
+    <Rule Id="CA1825" Action="None" />
+    <Rule Id="CA2000" Action="Warning" />
+    <Rule Id="CA2007" Action="Warning" />
   	<Rule Id="CA2008" Action="Warning" />    
     <Rule Id="CA2208" Action="Warning" />
     <Rule Id="CA2211" Action="None" />
-    <Rule Id="CA2225" Action="Info" />
+    <Rule Id="CA2225" Action="Warning" />
     <Rule Id="CA2227" Action="None" />
     <Rule Id="CA2234" Action="None" />
     <Rule Id="CA5350" Action="Warning" />

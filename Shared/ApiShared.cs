@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Net.Http;
     using System.Reflection;
@@ -44,7 +45,7 @@
         /// <summary>
         /// User agent for cloudinary API requests.
         /// </summary>
-        public static string USER_AGENT;
+        public static string USER_AGENT = BuildUserAgent();
 
         private string m_apiAddr = "https://" + ADDR_API;
 
@@ -120,22 +121,9 @@
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
 
-        /// <summary>
-        /// Initializes static members of the <see cref="ApiShared"/> class.
-        /// Default static parameterless constructor.
-        /// </summary>
-        static ApiShared()
+        private static string BuildUserAgent()
         {
-            var version = typeof(Api).GetTypeInfo().Assembly.GetName().Version;
-
-            var frameworkDescription = RuntimeInformation.FrameworkDescription;
-
-            USER_AGENT = string.Format(
-                "CloudinaryDotNet/{0}.{1}.{2} ({3})",
-                version.Major,
-                version.Minor,
-                version.Build,
-                frameworkDescription);
+            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
         }
 
         /// <summary>
@@ -226,12 +214,12 @@
         }
 
         /// <summary>
-        /// Cloudinary account information.
+        /// Gets cloudinary account information.
         /// </summary>
         public Account Account { get; private set; }
 
         /// <summary>
-        /// Cloudinary account API credentials.
+        /// Gets cloudinary account API credentials.
         /// </summary>
         public ProvisioningApiAccount ProvisioningApiAccount { get; private set; }
 
@@ -245,7 +233,7 @@
         }
 
         /// <summary>
-        /// Default URL for working with resources.
+        /// Gets default URL for working with resources.
         /// </summary>
         public Url Url
         {
@@ -262,7 +250,7 @@
         }
 
         /// <summary>
-        /// Default URL for working with uploaded images.
+        /// Gets default URL for working with uploaded images.
         /// </summary>
         public Url UrlImgUp
         {
@@ -277,7 +265,7 @@
         }
 
         /// <summary>
-        /// Default URL for working with fetched images.
+        /// Gets default URL for working with fetched images.
         /// </summary>
         public Url UrlImgFetch
         {
@@ -292,7 +280,7 @@
         }
 
         /// <summary>
-        /// Default URL for working with uploaded videos.
+        /// Gets default URL for working with uploaded videos.
         /// </summary>
         public Url UrlVideoUp
         {
@@ -307,7 +295,7 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL.
+        /// Gets default cloudinary API URL.
         /// </summary>
         public Url ApiUrl
         {
@@ -319,7 +307,7 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL for uploading images.
+        /// Gets default cloudinary API URL for uploading images.
         /// </summary>
         public Url ApiUrlImgUp
         {
@@ -332,7 +320,7 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL with version.
+        /// Gets default cloudinary API URL with version.
         /// </summary>
         public Url ApiUrlV
         {
@@ -344,17 +332,17 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL for streaming profiles.
+        /// Gets default cloudinary API URL for streaming profiles.
         /// </summary>
         public Url ApiUrlStreamingProfileV => ApiUrlV.Add(Constants.STREAMING_PROFILE_API_URL);
 
         /// <summary>
-        /// Default cloudinary API URL for metadata fields.
+        /// Gets default cloudinary API URL for metadata fields.
         /// </summary>
         public Url ApiUrlMetadataFieldV => ApiUrlV.Add(Constants.METADATA_FIELDS_API_URL);
 
         /// <summary>
-        /// Default cloudinary API URL for uploading images with version.
+        /// Gets default cloudinary API URL for uploading images with version.
         /// </summary>
         public Url ApiUrlImgUpV
         {
@@ -367,7 +355,7 @@
         }
 
         /// <summary>
-        /// Default cloudinary API URL for uploading video resources with version.
+        /// Gets default cloudinary API URL for uploading video resources with version.
         /// </summary>
         public Url ApiUrlVideoUpV
         {
@@ -380,17 +368,12 @@
         }
 
         /// <summary>
-        /// Cloudinary account API URL.
+        /// Gets cloudinary account API URL.
         /// </summary>
         public Url AccountApiUrlV
         {
             get
             {
-                if (string.IsNullOrEmpty(ProvisioningApiAccount.AccountId))
-                {
-                    throw new ArgumentException("AccountId for account provisioning API can't be null!");
-                }
-
                 return new Url(Constants.PROVISIONING)
                     .CloudinaryAddr(m_apiAddr)
                     .ApiVersion(API_VERSION)
@@ -445,9 +428,9 @@
                 extraHeaders,
                 cancellationToken,
                 apiKey,
-                apiSecret))
+                apiSecret).ConfigureAwait(false))
             {
-                return await ParseAsync<T>(response);
+                return await ParseAsync<T>(response).ConfigureAwait(false);
             }
         }
 
@@ -517,10 +500,10 @@
                     extraHeaders,
                     cancellationToken,
                     apiKey,
-                    apiSecret))
+                    apiSecret).ConfigureAwait(false))
             {
                 var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
-                return await Client.SendAsync(request, httpCancellationToken);
+                return await Client.SendAsync(request, httpCancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -635,7 +618,20 @@
                 parameters = new SortedDictionary<string, object>(parameters);
             }
 
-            string path = string.Empty;
+            foreach (var key in parameters.Keys.ToList())
+            {
+                var paramValue = parameters[key];
+                if (paramValue is IEnumerable<string> value)
+                {
+                    parameters[key] = Utils.SafeJoin("|", value);
+                }
+                else if (paramValue is Transformation transformation)
+                {
+                    parameters[key] = transformation.Generate();
+                }
+            }
+
+            var path = string.Empty;
             if (parameters.ContainsKey("callback") && parameters["callback"] != null)
             {
                 path = parameters["callback"].ToString();
@@ -666,13 +662,13 @@
         {
             List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
             StringBuilder signBase = new StringBuilder(string.Join("&", parameters.
-                                                                   Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s)))
+                                                                   Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s, StringComparison.Ordinal)))
                 .Select(pair =>
                        {
                            var value = pair.Value is IEnumerable<string>
                                ? string.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
                                : pair.Value.ToString();
-                           return string.Format("{0}={1}", pair.Key, value);
+                           return string.Format(CultureInfo.InvariantCulture, "{0}={1}", pair.Key, value);
                        })
                 .ToArray()));
 
@@ -682,7 +678,7 @@
             StringBuilder sign = new StringBuilder();
             foreach (byte b in hash)
             {
-                sign.Append(b.ToString("x2"));
+                sign.Append(b.ToString("x2", CultureInfo.InvariantCulture));
             }
 
             return sign.ToString();
@@ -718,7 +714,7 @@
             };
             var signedParameters = SignParameters(parametersToSign);
 
-            return signature.Equals(signedParameters);
+            return signature.Equals(signedParameters, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -740,7 +736,7 @@
 
             var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}");
 
-            return signature.Equals(payloadHash);
+            return signature.Equals(payloadHash, StringComparison.Ordinal);
         }
 
         /// <summary>

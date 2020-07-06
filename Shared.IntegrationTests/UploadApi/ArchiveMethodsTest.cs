@@ -7,7 +7,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
     public class ArchiveMethodsTest : IntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateArchive()
         {
             var targetPublicId = GetUniquePublicId();
@@ -38,7 +38,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(2, result.FileCount);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateArchiveRawResources()
         {
             var raw = Api.GetCloudinaryParam(ResourceType.Raw);
@@ -66,7 +66,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(2, result.FileCount);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateArchiveMultiplePublicIds()
         {
             // should support archiving based on multiple public IDs
@@ -77,7 +77,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(1, result.FileCount);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateArchiveMultipleResourceTypes()
         {
             var tag = GetMethodTag();
@@ -121,7 +121,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(3, result.FileCount);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestCreateZip()
         {
             var parameters = UploadImageForArchiveAndPrepareParameters(GetMethodTag());
@@ -131,7 +131,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(1, result.FileCount);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestArchiveRequestParametersAndResponseFields()
         {
             var archiveTag = GetMethodTag();
@@ -163,7 +163,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotZero(result.Tags.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDownloadArchiveUrl()
         {
             var archiveTag = GetMethodTag();
@@ -176,7 +176,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.True(UrlExists(archiveUrl));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDownloadArchiveUrlForVideo()
         {
             var archiveTag = GetMethodTag();
@@ -190,7 +190,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.True(UrlExists(archiveUrl));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDownloadArchiveUrlForRaw()
         {
             var archiveTag = GetMethodTag();
@@ -204,7 +204,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.True(UrlExists(archiveUrl));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDownloadZipForImage()
         {
             var archiveTag = GetMethodTag();
@@ -215,7 +215,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.True(UrlExists(archiveUrl));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDownloadZipForVideo()
         {
             var archiveTag = GetMethodTag();

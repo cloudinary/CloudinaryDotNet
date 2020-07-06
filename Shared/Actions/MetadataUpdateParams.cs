@@ -19,24 +19,24 @@
         }
 
         /// <summary>
-        /// A list of Public IDs of assets uploaded to Cloudinary.
+        /// Gets or sets a list of Public IDs of assets uploaded to Cloudinary.
         /// </summary>
         public List<string> PublicIds { get; set; } = new List<string>();
 
         /// <summary>
-        /// A dictionary of custom metadata fields (by external_id) and the values to assign to each of them.
+        /// Gets or sets a dictionary of custom metadata fields (by external_id) and the values to assign to each of them.
         /// Any metadata-value pairs given are merged with any existing metadata-value pairs
         /// (an empty value for an existing metadata field clears the value).
         /// </summary>
         public StringDictionary Metadata { get; set; } = new StringDictionary();
 
         /// <summary>
-        /// The type of file. Possible values: image, raw, video. Default: image.
+        /// Gets or sets the type of file. Possible values: image, raw, video. Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// The storage type. Default: upload. Valid values: upload, private, authenticated.
+        /// Gets or sets the storage type. Default: upload. Valid values: upload, private, authenticated.
         /// </summary>
         public string Type { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Parameters of list tags request.
@@ -17,23 +18,23 @@
         }
 
         /// <summary>
-        /// Optional. The type of file for which to retrieve the tags. Possible values: image, raw, video.
-        /// Default: image.
+        /// Gets or sets the type of file for which to retrieve the tags. Possible values: image, raw, video.
+        /// Default: image. Optional.
         /// </summary>
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
-        /// Find all tags that start with the given prefix.
+        /// Gets or sets a parameter to find all tags that start with the given prefix.
         /// </summary>
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Max number of tags to return. Default=10. Maximum=500.
+        /// Gets or sets max number of tags to return. Default=10. Maximum=500.
         /// </summary>
         public int MaxResults { get; set; }
 
         /// <summary>
-        /// When a listing request has more results to return than <see cref="MaxResults"/>, the
+        /// Gets or sets parameter used when a listing request has more results to return than <see cref="MaxResults"/>, the
         /// <see cref="ListTagsResult.NextCursor"/> value is returned as part of the response. You can then specify
         /// this value as the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
@@ -57,7 +58,7 @@
 
             if (MaxResults > 0)
             {
-                AddParam(dict, "max_results", MaxResults.ToString());
+                AddParam(dict, "max_results", MaxResults.ToString(CultureInfo.InvariantCulture));
             }
 
             AddParam(dict, "next_cursor", NextCursor);

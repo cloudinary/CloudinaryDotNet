@@ -35,7 +35,7 @@
         /// <returns>The layer with parameter applied.</returns>
         public new VideoLayer ResourceType(string resourceType)
         {
-            throw new InvalidOperationException("Cannot modify resourceType for video layers");
+            throw new InvalidOperationException($"Cannot modify resourceType {resourceType} for video layers");
         }
 
         /// <summary>
@@ -45,7 +45,7 @@
         /// <returns>The layer with parameter applied.</returns>
         public new VideoLayer Type(string type)
         {
-            throw new InvalidOperationException("Cannot modify type for video layers");
+            throw new InvalidOperationException($"Cannot modify type {type} for video layers");
         }
 
         /// <summary>
@@ -55,21 +55,21 @@
         /// <returns>The layer with parameter applied.</returns>
         public new VideoLayer Format(string format)
         {
-            throw new InvalidOperationException("Cannot modify format for video layers");
+            throw new InvalidOperationException($"Cannot modify format {format} for video layers");
         }
 
         /// <summary>
-        /// Get the string representation of the video layer parameters.
+        /// Get an additional parameters for the text layer.
         /// </summary>
-        /// <returns>A string that represents the layer.</returns>
-        public override string ToString()
+        /// <returns>A string that represents additional parameters.</returns>
+        public override string AdditionalParams()
         {
             if (string.IsNullOrEmpty(m_publicId))
             {
                 throw new ArgumentException("Must supply publicId.");
             }
 
-            return base.ToString();
+            return base.AdditionalParams();
         }
     }
 }

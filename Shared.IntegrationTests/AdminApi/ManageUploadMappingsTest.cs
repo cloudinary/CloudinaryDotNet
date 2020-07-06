@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             catch (Exception) { }
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUploadMapping()
         {
             UploadMappingResults result;
@@ -49,7 +49,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             StringAssert.AreEqualIgnoringCase("deleted", result.Message);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUploadMappingNextCursor()
         {
             UploadMappingResults result;

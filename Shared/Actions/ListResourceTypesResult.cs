@@ -17,7 +17,7 @@
         protected string[] m_resourceTypes;
 
         /// <summary>
-        /// An array of the resource types.
+        /// Gets or sets an array of the resource types.
         /// </summary>
         public ResourceType[] ResourceTypes { get; protected set; }
 

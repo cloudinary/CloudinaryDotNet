@@ -10,7 +10,6 @@ $libPath = "lib"
 $targetFrameworks = @{
  "\net45" = $netClassicPath;
  "\netstandard1.3" = $netCorePath;
- "\netcore" = $netCorePath;
 }
 
 

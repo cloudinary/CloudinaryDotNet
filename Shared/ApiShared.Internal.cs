@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -18,6 +20,7 @@
     /// <summary>
     /// Provider for the API calls.
     /// </summary>
+    [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Reviewed.")]
     public partial class ApiShared : ISignProvider
     {
         /// <summary>
@@ -145,10 +148,10 @@
         internal static async Task<T> ParseAsync<T>(HttpResponseMessage response)
             where T : BaseResult
         {
-            using (var stream = await response.Content.ReadAsStreamAsync())
+            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
             using (var reader = new StreamReader(stream))
             {
-                var s = await reader.ReadToEndAsync();
+                var s = await reader.ReadToEndAsync().ConfigureAwait(false);
                 return CreateResult<T>(response, s);
             }
         }
@@ -198,7 +201,8 @@
             {
                 SetChunkedEncoding(request);
 
-                await PrepareRequestContentAsync(request, parameters, file, extraHeaders, cancellationToken);
+                await PrepareRequestContentAsync(request, parameters, file, extraHeaders, cancellationToken)
+                    .ConfigureAwait(false);
             }
 
             return request;
@@ -286,23 +290,23 @@
             }
 
             response?.Headers
-                .Where(_ => _.Key.StartsWith("X-FeatureRateLimit"))
+                .Where(_ => _.Key.StartsWith("X-FeatureRateLimit", StringComparison.Ordinal))
                 .ToList()
                 .ForEach(header =>
                 {
                     var value = header.Value.First();
                     var key = header.Key;
-                    if (key.EndsWith("Limit") && long.TryParse(value, out long l))
+                    if (key.EndsWith("Limit", StringComparison.Ordinal) && long.TryParse(value, out long l))
                     {
                         result.Limit = l;
                     }
 
-                    if (key.EndsWith("Remaining") && long.TryParse(value, out l))
+                    if (key.EndsWith("Remaining", StringComparison.Ordinal) && long.TryParse(value, out l))
                     {
                         result.Remaining = l;
                     }
 
-                    if (key.EndsWith("Reset") && DateTime.TryParse(value, out DateTime t))
+                    if (key.EndsWith("Reset", StringComparison.Ordinal) && DateTime.TryParse(value, out DateTime t))
                     {
                         result.Reset = t;
                     }
@@ -340,13 +344,13 @@
             // This is intended for platform information and not individual applications!
             var userPlatform = string.IsNullOrEmpty(UserPlatform)
                 ? USER_AGENT
-                : string.Format("{0} {1}", UserPlatform, USER_AGENT);
+                : string.Format(CultureInfo.InvariantCulture, "{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
 
             var accountApiKey = apiKey ?? Account.ApiKey;
             var accountApiSecret = apiSecret ?? Account.ApiSecret;
-            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", accountApiKey, accountApiSecret));
-            request.Headers.Add("Authorization", string.Format("Basic {0}", Convert.ToBase64String(authBytes)));
+            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", accountApiKey, accountApiSecret));
+            request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
             {
@@ -374,7 +378,7 @@
 
             var content = IsStringContent(extraHeaders)
                 ? CreateStringContent(parameters)
-                : await PrepareMultipartFormDataContentAsync(parameters, file, extraHeaders, cancellationToken);
+                : await PrepareMultipartFormDataContentAsync(parameters, file, extraHeaders, cancellationToken).ConfigureAwait(false);
 
             SetHeadersAndContent(request, extraHeaders, content);
         }
@@ -437,7 +441,7 @@
                     {
                         // Unfortunately we don't have ByteRangeStreamContent here,
                         // let's create another stream from the original one
-                        stream = await GetRangeFromFileAsync(file, stream, cancellationToken);
+                        stream = await GetRangeFromFileAsync(file, stream, cancellationToken).ConfigureAwait(false);
                     }
 
                     SetStreamContent(file, stream, content);
@@ -489,14 +493,18 @@
             var streamContent = new StreamContent(stream);
 
             streamContent.Headers.Add("Content-Type", "application/octet-stream");
-            streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + file.FileName + "\"");
+            streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "file",
+                FileNameStar = file.FileName,
+            };
             content.Add(streamContent, "file", file.FileName);
         }
 
         private static void SetContentForRemoteFile(FileDescription file, MultipartFormDataContent content)
         {
             var strContent = new StringContent(file.FilePath);
-            strContent.Headers.Add("Content-Disposition", string.Format("form-data; name=\"{0}\"", "file"));
+            strContent.Headers.Add("Content-Disposition", string.Format(CultureInfo.InvariantCulture, "form-data; name=\"{0}\"", "file"));
             content.Add(strContent);
         }
 
@@ -511,12 +519,12 @@
                     {
                         foreach (var item in (IEnumerable<string>)param.Value)
                         {
-                            content.Add(new StringContent(item), string.Format("\"{0}\"", string.Concat(param.Key, "[]")));
+                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
                         }
                     }
                     else
                     {
-                        content.Add(new StringContent(param.Value.ToString()), string.Format("\"{0}\"", param.Key));
+                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
                     }
                 }
             }
@@ -527,7 +535,7 @@
         private async Task<Stream> GetRangeFromFileAsync(FileDescription file, Stream stream, CancellationToken? cancellationToken = null)
         {
             var writer = SetStreamToStartAndCreateWriter(file, stream);
-            file.BytesSent += await ReadBytesAsync(writer, stream, file.BufferLength, cancellationToken);
+            file.BytesSent += await ReadBytesAsync(writer, stream, file.BufferLength, cancellationToken).ConfigureAwait(false);
             return WriterStreamFromBegin(writer);
         }
 
@@ -562,9 +570,9 @@
             int cnt;
             var token = cancellationToken ?? CancellationToken.None;
             while ((toSend = length - bytesSent) > 0
-                && (cnt = await stream.ReadAsync(buf, 0, toSend > buf.Length ? buf.Length : toSend, token)) > 0)
+                && (cnt = await stream.ReadAsync(buf, 0, toSend > buf.Length ? buf.Length : toSend, token).ConfigureAwait(false)) > 0)
             {
-                await writer.BaseStream.WriteAsync(buf, 0, cnt, token);
+                await writer.BaseStream.WriteAsync(buf, 0, cnt, token).ConfigureAwait(false);
                 bytesSent += cnt;
             }
 

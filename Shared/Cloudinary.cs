@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Text;
@@ -39,17 +40,17 @@
             }
 
             /// <summary>
-            /// Url for api call.
+            /// Gets url for api call.
             /// </summary>
             public string Url { get; private set; }
 
             /// <summary>
-            /// Parameters of the upload preset.
+            /// Gets parameters of the upload preset.
             /// </summary>
             public UploadPresetParams ParamsCopy { get; private set; }
 
             /// <summary>
-            /// Http request method.
+            /// Gets http request method.
             /// </summary>
             public HttpMethod HttpMethod { get; private set; }
         }
@@ -80,7 +81,7 @@
         protected Api m_api;
 
         /// <summary>
-        /// API object that used by this instance.
+        /// Gets API object that used by this instance.
         /// </summary>
         public Api Api
         {
@@ -314,6 +315,7 @@
         /// <param name="parameters">Parameters for publishing of resources.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Structure with the results of publishing.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
         public Task<PublishResourceResult> PublishResourceByIdsAsync(
             string tag,
             PublishResourceParams parameters,
@@ -328,6 +330,7 @@
         /// <param name="tag">Not used.</param>
         /// <param name="parameters">Parameters for publishing of resources.</param>
         /// <returns>Structure with the results of publishing.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
         public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams parameters)
         {
             return PublishResource(string.Empty, string.Empty, parameters);
@@ -346,7 +349,7 @@
 
             Url url = GetApiUrlV()
                 .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLower())
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                 .Add("publish_resources");
 
             return m_api.CallApiAsync<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null, null, cancellationToken);
@@ -361,7 +364,7 @@
 
             Url url = GetApiUrlV()
                 .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLower())
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                 .Add("publish_resources");
 
             return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
@@ -380,7 +383,7 @@
 
             var url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLower())
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                  .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
@@ -402,7 +405,7 @@
 
             Url url = GetApiUrlV()
                  .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLower())
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
                  .Add(parameters.Type)
                  .Add(Constants.UPDATE_ACESS_MODE);
 
@@ -1081,23 +1084,31 @@
         /// <summary>
         /// Async call to get a list of folders in the root asynchronously.
         /// </summary>
+        /// <param name="parameters">(optional) Parameters for managing folders list.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public Task<GetFoldersResult> RootFoldersAsync()
+        public Task<GetFoldersResult> RootFoldersAsync(GetFoldersParams parameters = null, CancellationToken? cancellationToken = null)
         {
             return m_api.CallApiAsync<GetFoldersResult>(
                 HttpMethod.GET,
-                GetFolderUrl(),
+                GetFolderUrl(parameters: parameters),
                 null,
-                null);
+                null,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
         /// Gets a list of folders in the root.
         /// </summary>
+        /// <param name="parameters">(optional) Parameters for managing folders list.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public GetFoldersResult RootFolders()
+        public GetFoldersResult RootFolders(GetFoldersParams parameters = null)
         {
-            return m_api.CallApi<GetFoldersResult>(HttpMethod.GET, GetFolderUrl(), null, null);
+            return m_api.CallApi<GetFoldersResult>(
+                HttpMethod.GET,
+                GetFolderUrl(parameters: parameters),
+                null,
+                null);
         }
 
         /// <summary>
@@ -1108,36 +1119,50 @@
         /// <returns>Parsed result of folders listing.</returns>
         public Task<GetFoldersResult> SubFoldersAsync(string folder, CancellationToken? cancellationToken = null)
         {
+            return SubFoldersAsync(folder, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets a list of subfolders in a specified folder asynchronously.
+        /// </summary>
+        /// <param name="folder">The folder name.</param>
+        /// <param name="parameters">(Optional) Parameters for managing folders list.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of folders listing.</returns>
+        public Task<GetFoldersResult> SubFoldersAsync(string folder, GetFoldersParams parameters, CancellationToken? cancellationToken = null)
+        {
             CheckFolderParameter(folder);
 
             return m_api.CallApiAsync<GetFoldersResult>(
                 HttpMethod.GET,
-                GetApiUrlV().Add("folders").Add(folder).BuildUrl(),
+                GetFolderUrl(folder, parameters),
                 null,
                 null,
-                null,
-                cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
         /// Gets a list of subfolders in a specified folder.
         /// </summary>
         /// <param name="folder">The folder name.</param>
+        /// <param name="parameters">(Optional) Parameters for managing folders list.</param>
         /// <returns>Parsed result of folders listing.</returns>
-        public GetFoldersResult SubFolders(string folder)
+        public GetFoldersResult SubFolders(string folder, GetFoldersParams parameters = null)
         {
             CheckFolderParameter(folder);
 
             return m_api.CallApi<GetFoldersResult>(
                 HttpMethod.GET,
-                GetFolderUrl(folder),
+                GetFolderUrl(folder, parameters),
                 null,
                 null);
         }
 
-        private string GetFolderUrl(string folder = null)
+        private string GetFolderUrl(string folder = null, GetFoldersParams parameters = null)
         {
-            return GetApiUrlV().Add("folders").Add(folder).BuildUrl();
+            var urlWithoutParams = GetApiUrlV().Add("folders").Add(folder).BuildUrl();
+
+            return (parameters != null) ? new UrlBuilder(urlWithoutParams, parameters.ToParamsDictionary()).ToString() : urlWithoutParams;
         }
 
         private static void CheckFolderParameter(string folder)
@@ -1440,7 +1465,7 @@
 
             if (parameters.File.IsRemote)
             {
-                return await UploadAsync<T>(parameters);
+                return await UploadAsync<T>(parameters).ConfigureAwait(false);
             }
 
             var internalParams = new UploadLargeParams(parameters, bufferSize, m_api);
@@ -1455,7 +1480,7 @@
                     parameters,
                     parameters.File,
                     internalParams.Headers,
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
                 CheckUploadResult(result);
             }
 
@@ -1512,22 +1537,22 @@
             }
 
             /// <summary>
-            /// Buffer size.
+            /// Gets buffer size.
             /// </summary>
             public int BufferSize { get; }
 
             /// <summary>
-            /// Url.
+            /// Gets url.
             /// </summary>
             public string Url { get; }
 
             /// <summary>
-            /// Basic raw upload parameters.
+            /// Gets basic raw upload parameters.
             /// </summary>
             public BasicRawUploadParams Parameters { get; }
 
             /// <summary>
-            /// Request headers.
+            /// Gets request headers.
             /// </summary>
             public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>
             {
@@ -1542,7 +1567,7 @@
             {
                 var buffer = new byte[8];
                 new Random().NextBytes(buffer);
-                return string.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+                return string.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
             }
 
             /// <summary>
@@ -1557,7 +1582,7 @@
                 var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
                 if (name != null)
                 {
-                    url.ResourceType(name.ToLower());
+                    url.ResourceType(name.ToLowerInvariant());
                 }
 
                 return url.BuildUrl();
@@ -3392,7 +3417,7 @@
             sb.Append("<script src=\"");
             sb.Append(dir);
 
-            if (!dir.EndsWith("/") && !dir.EndsWith("\\"))
+            if (!dir.EndsWith("/", StringComparison.Ordinal) && !dir.EndsWith("\\", StringComparison.Ordinal))
             {
                 sb.Append("/");
             }

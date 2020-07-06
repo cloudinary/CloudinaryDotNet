@@ -13,12 +13,12 @@
     public class StreamingProfileBaseParams : BaseParams
     {
         /// <summary>
-        /// A descriptive name for the profile.
+        /// Gets or sets a descriptive name for the profile.
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// A list of representations that defines a custom streaming profile.
+        /// Gets or sets a list of representations that defines a custom streaming profile.
         /// </summary>
         public List<Representation> Representations { get; set; }
 

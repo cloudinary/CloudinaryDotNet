@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
@@ -189,19 +190,19 @@
 
             if (!string.IsNullOrWhiteSpace(ip))
             {
-                tokenParts.Add(string.Format("ip={0}", ip));
+                tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "ip={0}", ip));
             }
 
             if (startTime > 0)
             {
-                tokenParts.Add(string.Format("st={0}", startTime.ToString()));
+                tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "st={0}", startTime.ToString(CultureInfo.InvariantCulture)));
             }
 
-            tokenParts.Add(string.Format("exp={0}", expiration.ToString()));
+            tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "exp={0}", expiration.ToString(CultureInfo.InvariantCulture)));
 
             if (!string.IsNullOrWhiteSpace(acl))
             {
-                tokenParts.Add(string.Format("acl={0}", EscapeUrlToLower(acl)));
+                tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "acl={0}", EscapeUrlToLower(acl)));
             }
 
             List<string> toSign = new List<string>(tokenParts);
@@ -209,11 +210,11 @@
             // Add URL only if ACL is not provided
             if (!string.IsNullOrWhiteSpace(url) && string.IsNullOrWhiteSpace(acl))
             {
-                toSign.Add(string.Format("url={0}", EscapeUrlToLower(url)));
+                toSign.Add(string.Format(CultureInfo.InvariantCulture, "url={0}", EscapeUrlToLower(url)));
             }
 
             string auth = Digest(string.Join("~", toSign));
-            tokenParts.Add(string.Format("hmac={0}", auth));
+            tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "hmac={0}", auth));
 
             return tokenName + "=" + string.Join("~", tokenParts);
         }
@@ -275,9 +276,9 @@
             {
                 List<string> hashComponents = new List<string>();
                 hashComponents.Add(tokenName);
-                hashComponents.Add(startTime.ToString());
-                hashComponents.Add(expiration.ToString());
-                hashComponents.Add(duration.ToString());
+                hashComponents.Add(startTime.ToString(CultureInfo.InvariantCulture));
+                hashComponents.Add(expiration.ToString(CultureInfo.InvariantCulture));
+                hashComponents.Add(duration.ToString(CultureInfo.InvariantCulture));
                 hashComponents.Add(ip);
                 hashComponents.Add(acl);
 
@@ -295,21 +296,26 @@
             var r = new Regex(UNSAFE_RE, RegexOptions.Compiled | RegexOptions.RightToLeft);
             return r.Replace(url, m =>
             {
-                var encodedItem = string.Join(string.Empty, m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2")));
-                return encodedItem.ToLower();
+                var encodedItem = string.Join(
+                    string.Empty,
+                    m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2", CultureInfo.InvariantCulture)));
+                return encodedItem.ToLowerInvariant();
             });
         }
 
         private string Digest(string message)
         {
-            byte[] binKey = HexStringToByteArray(this.key);
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(message);
-            HMACSHA256 hmac = new HMACSHA256(binKey);
-            hmac.Initialize();
-            byte[] signed = hmac.ComputeHash(buffer);
-            string hex = BitConverter.ToString(signed).Replace("-", string.Empty).ToLower();
-
-            return hex;
+            var binKey = HexStringToByteArray(this.key);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(message);
+            using (var hmac = new HMACSHA256(binKey))
+            {
+                hmac.Initialize();
+                var signed = hmac.ComputeHash(buffer);
+                var hex = BitConverter.ToString(signed)
+                    .Replace("-", string.Empty)
+                    .ToLowerInvariant();
+                return hex;
+            }
         }
 
         private AuthToken SetNull()

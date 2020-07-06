@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -37,6 +38,7 @@
             { "/", "div" },
             { "+", "add" },
             { "-", "sub" },
+            { "^", "pow" },
         };
 
         /// <summary>
@@ -82,7 +84,7 @@
         }
 
         /// <summary>
-        /// Parent transformation this expression belongs to.
+        /// Gets parent transformation this expression belongs to.
         /// </summary>
         protected Transformation Parent { get; private set; }
 
@@ -131,7 +133,7 @@
         /// <returns>The expression with set parameter.</returns>
         public virtual T Value(object value)
         {
-            m_expressions.Add(Convert.ToString(value));
+            m_expressions.Add(Convert.ToString(value, CultureInfo.InvariantCulture));
             return (T)this;
         }
 
@@ -413,6 +415,29 @@
         public T Nin(object value)
         {
             return Nin().Value(value);
+        }
+
+        /// <summary>
+        /// Adds "to the power of" sub-expression to the end of the list
+        /// of already present sub-expressions in this expression instance.
+        /// </summary>
+        /// <returns>The expression with operation added.</returns>
+        public T Pow()
+        {
+            m_expressions.Add("pow");
+            return (T)this;
+        }
+
+        /// <summary>
+        /// Utility shortcut method which invokes on this Expression instance method,
+        /// takes its result and invokes method on it. Effectively, invocation of this shortcut results in
+        /// "to the power of value" sub-expression added to the end of current expression instance.
+        /// </summary>
+        /// <param name="value">Value argument for the call.</param>
+        /// <returns>The result of the call.</returns>
+        public T Pow(object value)
+        {
+            return Pow().Value(value);
         }
 
         /// <summary>

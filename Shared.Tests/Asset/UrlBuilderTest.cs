@@ -543,5 +543,26 @@ namespace CloudinaryDotNet.Test.Asset
             var rgVideo = Regex.IsMatch(urlZipVideo, @"https://api\.cloudinary\.com/v1_1/[^/]*/video/download_tag\.zip\?api_key=a&signature=\w{40}&tag=api_test_custom1&timestamp=\d{10}");
             Assert.True(rgVideo);
         }
+
+        [Test]
+        public void TestEscapeApiUrl()
+        {
+            const string folderName = "sub^folder test";
+
+            var url = m_api.ApiUrlV.Add("folders").Add(folderName).BuildUrl();
+
+            Assert.IsTrue(url.EndsWith("/folders/sub%5Efolder%20test"));
+        }
+        
+        [Test]
+        public void TestApiUrlWithPrivateCdn()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123/test123-res.cloudinary.com?cname=mycname.com");
+            
+            const string testTag = "api_test_custom1";
+            var urlZipImage = cloudinary.DownloadZip(testTag, null);
+            
+            StringAssert.StartsWith("https://api.cloudinary.com", urlZipImage);
+        }
     }
 }
