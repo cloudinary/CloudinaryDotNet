@@ -13,13 +13,13 @@
         /// Gets or sets an API message.
         /// </summary>
         [DataMember(Name = "message")]
-        public string Message { get; protected set; }
+        public string Message { get; set; }
 
         /// <summary>
         /// Gets or sets details of the streaming profile.
         /// </summary>
         [DataMember(Name = "data")]
-        public StreamingProfileData Data { get; protected set; }
+        public StreamingProfileData Data { get; set; }
     }
 
     /// <summary>
@@ -45,7 +45,7 @@
         /// Gets or sets list of basic details of the streaming profiles.
         /// </summary>
         [DataMember(Name = "data")]
-        public IEnumerable<StreamingProfileBaseData> Data { get; protected set; }
+        public IEnumerable<StreamingProfileBaseData> Data { get; set; }
     }
 
     /// <summary>
@@ -58,18 +58,18 @@
         /// Gets or sets the identification name of the new streaming profile.
         /// </summary>
         [DataMember(Name = "name")]
-        public string Name { get; protected set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets a descriptive name for the profile.
         /// </summary>
         [DataMember(Name = "display_name")]
-        public string DisplayName { get; protected set; }
+        public string DisplayName { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether streaming profile is defined.
         /// </summary>
         [DataMember(Name = "predefined")]
-        public bool Predefined { get; protected set; }
+        public bool Predefined { get; set; }
     }
 }

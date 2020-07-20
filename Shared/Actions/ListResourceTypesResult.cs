@@ -19,7 +19,7 @@
         /// <summary>
         /// Gets or sets an array of the resource types.
         /// </summary>
-        public ResourceType[] ResourceTypes { get; protected set; }
+        public ResourceType[] ResourceTypes { get; set; }
 
         /// <summary>
         /// Overrides corresponding method of <see cref="BaseResult"/> class.

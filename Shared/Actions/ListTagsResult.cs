@@ -12,7 +12,7 @@
         /// Gets or sets the list of tags currently assigned to the media asset.
         /// </summary>
         [DataMember(Name = "tags")]
-        public string[] Tags { get; protected set; }
+        public string[] Tags { get; set; }
 
         /// <summary>
         /// Gets or sets a value for a situation when a listing request has more results to return than <see cref="ListTagsParams.MaxResults"/>, the
@@ -20,6 +20,6 @@
         /// <see cref="ListTagsParams.NextCursor"/> parameter of the following listing request.
         /// </summary>
         [DataMember(Name = "next_cursor")]
-        public string NextCursor { get; protected set; }
+        public string NextCursor { get; set; }
     }
 }
