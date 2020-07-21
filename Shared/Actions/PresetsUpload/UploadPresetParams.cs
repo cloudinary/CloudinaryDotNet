@@ -376,6 +376,12 @@
         public bool Live { get; set; }
 
         /// <summary>
+        /// Gets or sets accessibility analysis information.
+        /// Optional (Boolean, default: false).
+        /// </summary>
+        public bool? AccessibilityAnalysis { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -425,6 +431,7 @@
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "unique_filename", UniqueFilename);
             AddParam(dict, "live", Live);
+            AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
 
             AddParam(dict, "transformation", GetTransformation(Transformation));
 
