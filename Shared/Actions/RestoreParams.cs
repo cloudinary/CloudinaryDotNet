@@ -9,6 +9,7 @@
     public class RestoreParams : BaseParams
     {
         private List<string> m_publicIds = new List<string>();
+        private List<string> m_versions = new List<string>();
         private ResourceType m_resourceType = ResourceType.Image;
 
         /// <summary>
@@ -29,6 +30,15 @@
         }
 
         /// <summary>
+        /// Gets or sets version IDs of backed up resources to restore.
+        /// </summary>
+        public List<string> Versions
+        {
+            get { return m_versions; }
+            set { m_versions = value; }
+        }
+
+        /// <summary>
         /// Gets or sets restore resources with the given resource type. Default: image.
         /// </summary>
         public ResourceType ResourceType
@@ -40,6 +50,11 @@
         private bool PublicIdsExist
         {
             get { return PublicIds != null && PublicIds.Count > 0; }
+        }
+
+        private bool VersionsExist
+        {
+            get { return Versions != null && Versions.Count > 0; }
         }
 
         /// <summary>
@@ -70,6 +85,11 @@
             if (PublicIdsExist)
             {
                 dict.Add("public_ids", PublicIds);
+            }
+
+            if (VersionsExist)
+            {
+                dict.Add("versions", Versions);
             }
 
             AddParam(dict, "type", Api.GetCloudinaryParam<AssetType>(Type));

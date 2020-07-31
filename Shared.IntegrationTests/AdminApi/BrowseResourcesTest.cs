@@ -510,5 +510,29 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             CloudinaryAssert.AccessibilityAnalysisNotEmpty(getResult.AccessibilityAnalysis);
         }
+
+        [Test, RetryWithDelay]
+        public void TestGetResourceVersions()
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Backup = true
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            var resultWithVersion = m_cloudinary.GetResource(new GetResourceParams(uploadResult.PublicId)
+            {
+                Versions = true
+            });
+
+            Assert.IsNotNull(resultWithVersion.Versions);
+            Assert.NotZero(resultWithVersion.Versions.Count);
+
+            var result = m_cloudinary.GetResource(new GetResourceParams(uploadResult.PublicId));
+
+            Assert.IsNull(result.Versions);
+        }
     }
 }
