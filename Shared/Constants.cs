@@ -62,6 +62,9 @@
         /// <summary> Resource type name for video asset.</summary>
         public const string RESOURCE_TYPE_VIDEO = "video";
 
+        /// <summary> Resource type name for all asset types.</summary>
+        public const string RESOURCE_TYPE_ALL = "all";
+
         /// <summary> Parameter name for asset resource type.</summary>
         public const string RESOURCE_TYPE = "resource_type";
 
