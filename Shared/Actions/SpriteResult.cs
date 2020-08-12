@@ -24,7 +24,7 @@
         /// Gets or sets URL to css file for the sprite.
         /// </summary>
         [DataMember(Name = "css_url")]
-        public Uri CssUrl { get; protected set; }
+        public Uri CssUrl { get; set; }
 
         /// <summary>
         /// Gets or sets secure URL to css file for the sprite.
@@ -40,7 +40,7 @@
         /// Gets or sets secure URL to css file for the sprite.
         /// </summary>
         [DataMember(Name = "secure_css_url")]
-        public Uri SecureCssUrl { get; protected set; }
+        public Uri SecureCssUrl { get; set; }
 
         /// <summary>
         /// Gets or sets URL to access the created sprite.
@@ -56,13 +56,13 @@
         /// Gets or sets URL to access the created sprite.
         /// </summary>
         [DataMember(Name = "image_url")]
-        public Uri ImageUrl { get; protected set; }
+        public Uri ImageUrl { get; set; }
 
         /// <summary>
         /// Gets or sets HTTPS URL to access the created sprite.
         /// </summary>
         [DataMember(Name = "secure_image_url")]
-        public Uri SecureImageUrl { get; protected set; }
+        public Uri SecureImageUrl { get; set; }
 
         /// <summary>
         /// Gets or sets URL to json file with detailed parameters of the created sprite.
@@ -78,31 +78,31 @@
         /// Gets or sets URL to json file with detailed parameters of the created sprite.
         /// </summary>
         [DataMember(Name = "json_url")]
-        public Uri JsonUrl { get; protected set; }
+        public Uri JsonUrl { get; set; }
 
         /// <summary>
         /// Gets or sets HTTPS URL to json file with detailed parameters of the created sprite.
         /// </summary>
         [DataMember(Name = "secure_json_url")]
-        public Uri SecureJsonUrl { get; protected set; }
+        public Uri SecureJsonUrl { get; set; }
 
         /// <summary>
         /// Gets or sets public ID assigned to the sprite.
         /// </summary>
         [DataMember(Name = "public_id")]
-        public string PublicId { get; protected set; }
+        public string PublicId { get; set; }
 
         /// <summary>
         /// Gets or sets version of the created sprite.
         /// </summary>
         [DataMember(Name = "version")]
-        public string Version { get; protected set; }
+        public string Version { get; set; }
 
         /// <summary>
         /// Gets or sets details of the images included in the sprite.
         /// </summary>
         [DataMember(Name = "image_infos")]
-        public Dictionary<string, ImageInfo> ImageInfos { get; protected set; }
+        public Dictionary<string, ImageInfo> ImageInfos { get; set; }
     }
 
     /// <summary>
@@ -115,24 +115,24 @@
         /// Gets or sets width of the image.
         /// </summary>
         [DataMember(Name = "width")]
-        public int Width { get; protected set; }
+        public int Width { get; set; }
 
         /// <summary>
         /// Gets or sets width of the image.
         /// </summary>
         [DataMember(Name = "height")]
-        public int Height { get; protected set; }
+        public int Height { get; set; }
 
         /// <summary>
         /// Gets or sets x-coordinate of the image in sprite.
         /// </summary>
         [DataMember(Name = "x")]
-        public int X { get; protected set; }
+        public int X { get; set; }
 
         /// <summary>
         /// Gets or sets y-coordinate of the image in sprite.
         /// </summary>
         [DataMember(Name = "y")]
-        public int Y { get; protected set; }
+        public int Y { get; set; }
     }
 }

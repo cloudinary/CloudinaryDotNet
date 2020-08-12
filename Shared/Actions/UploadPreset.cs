@@ -496,12 +496,12 @@
         /// Gets or sets response message.
         /// </summary>
         [DataMember(Name = "message")]
-        public string Message { get; protected set; }
+        public string Message { get; set; }
 
         /// <summary>
         /// Gets or sets name assigned to the upload preset.
         /// </summary>
         [DataMember(Name = "name")]
-        public string Name { get; protected set; }
+        public string Name { get; set; }
     }
 }
