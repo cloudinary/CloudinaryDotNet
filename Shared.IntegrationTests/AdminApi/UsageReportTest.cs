@@ -43,13 +43,13 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertUsageResult(result);
         }
 
-        private void AssertUsageResult(UsageResult result)
+        private static void AssertUsageResult(UsageResult result)
         {
             Assert.NotNull(result.LastUpdated);
             Assert.IsNull(result.Error?.Message);
         }
 
-        private DateTime GetYesterdayDate()
+        private static DateTime GetYesterdayDate()
         {
             return DateTime.Today.AddDays(-1);
         }

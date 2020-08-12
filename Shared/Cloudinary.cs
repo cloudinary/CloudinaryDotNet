@@ -1301,7 +1301,7 @@
 
             if (date.HasValue)
             {
-                url = url.Add(date.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture));
+                url.Add(date.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture));
             }
 
             return url.BuildUrl();
