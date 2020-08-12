@@ -1253,7 +1253,26 @@
         /// <returns>The report on the status of your Cloudinary account usage details.</returns>
         public Task<UsageResult> GetUsageAsync(CancellationToken? cancellationToken = null)
         {
-            string uri = GetApiUrlV().Action("usage").BuildUrl();
+            string uri = GetUsageUrl(null);
+
+            return m_api.CallApiAsync<UsageResult>(
+                HttpMethod.GET,
+                uri,
+                null,
+                null,
+                null,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets the Cloudinary account usage details asynchronously.
+        /// </summary>
+        /// <param name="date">(Optional) The date for the usage report. Must be within the last 3 months.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The report on the status of your Cloudinary account usage details.</returns>
+        public Task<UsageResult> GetUsageAsync(DateTime? date, CancellationToken? cancellationToken = null)
+        {
+            string uri = GetUsageUrl(date);
 
             return m_api.CallApiAsync<UsageResult>(
                 HttpMethod.GET,
@@ -1267,12 +1286,25 @@
         /// <summary>
         /// Gets the Cloudinary account usage details.
         /// </summary>
+        /// <param name="date">(Optional) The date for the usage report. Must be within the last 3 months.</param>
         /// <returns>The report on the status of your Cloudinary account usage details.</returns>
-        public UsageResult GetUsage()
+        public UsageResult GetUsage(DateTime? date = null)
         {
-            string uri = GetApiUrlV().Action("usage").BuildUrl();
+            string uri = GetUsageUrl(date);
 
             return m_api.CallApi<UsageResult>(HttpMethod.GET, uri, null, null);
+        }
+
+        private string GetUsageUrl(DateTime? date)
+        {
+            var url = GetApiUrlV().Action("usage");
+
+            if (date.HasValue)
+            {
+                url.Add(date.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture));
+            }
+
+            return url.BuildUrl();
         }
 
         /// <summary>
