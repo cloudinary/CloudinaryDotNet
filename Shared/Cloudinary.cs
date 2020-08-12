@@ -265,7 +265,7 @@
         public string DownloadFolder(string folderPath, ArchiveParams parameters = null)
         {
             var downloadParameters = parameters ?? new ArchiveParams();
-            downloadParameters.Mode(ArchiveCallMode.Download);
+
             downloadParameters.Prefixes(new List<string> { folderPath });
             downloadParameters.ResourceType(Constants.RESOURCE_TYPE_ALL);
 
