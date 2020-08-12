@@ -261,5 +261,55 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 m_cloudinary.Upload(uploadParams) :
                 m_cloudinary.Upload(uploadParams, ApiShared.GetCloudinaryParam(ResourceType.Raw));
         }
+
+        [Test, RetryWithDelay]
+        public void TestDownloadFolderWithResourceTypeAll()
+        {
+            var folderUrl = m_cloudinary.DownloadFolder("samples/", null);
+
+            Assert.True(folderUrl.Contains(Constants.RESOURCE_TYPE_ALL));
+        }
+
+        [Test, RetryWithDelay]
+        public void TestDownloadFolderValidUrl()
+        {
+            var folderUrl = m_cloudinary.DownloadFolder("folder/");
+
+            Assert.IsNotEmpty(folderUrl);
+            Assert.True(folderUrl.Contains("generate_archive"));
+        }
+
+        [Test, RetryWithDelay]
+        public void TestDownloadFolderFlattenFolder()
+        {
+            var parameters = new ArchiveParams();
+            parameters.FlattenFolders(true);
+
+            var folderUrl = m_cloudinary.DownloadFolder("folder/", parameters);
+
+            Assert.True(folderUrl.Contains("flatten_folders"));
+        }
+
+        [Test, RetryWithDelay]
+        public void TestDownloadFolderExpireAt()
+        {
+            var parameters = new ArchiveParams();
+            parameters.ExpiresAt(1415060076);
+
+            var folderUrl = m_cloudinary.DownloadFolder("folder/", parameters);
+
+            Assert.True(folderUrl.Contains("expires_at"));
+        }
+
+        [Test, RetryWithDelay]
+        public void TestDownloadFolderUseOriginalFileName()
+        {
+            var parameters = new ArchiveParams();
+            parameters.UseOriginalFilename(true);
+
+            var folderUrl = m_cloudinary.DownloadFolder("folder/", parameters);
+
+            Assert.True(folderUrl.Contains("use_original_filename"));
+        }
     }
 }

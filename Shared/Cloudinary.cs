@@ -257,6 +257,22 @@
         }
 
         /// <summary>
+        ///  Creates and returns an URL that when invoked creates an archive of a folder.
+        /// </summary>
+        /// <param name="folderPath">Full path from the root.</param>
+        /// <param name="parameters">Optional parameters of generated archive.</param>
+        /// <returns>Url for downloading an archive of a folder.</returns>
+        public string DownloadFolder(string folderPath, ArchiveParams parameters = null)
+        {
+            var downloadParameters = parameters ?? new ArchiveParams();
+
+            downloadParameters.Prefixes(new List<string> { folderPath });
+            downloadParameters.ResourceType(Constants.RESOURCE_TYPE_ALL);
+
+            return DownloadArchiveUrl(downloadParameters);
+        }
+
+        /// <summary>
         /// Publishes resources by prefix asynchronously.
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>
