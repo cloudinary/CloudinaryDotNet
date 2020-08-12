@@ -12,6 +12,6 @@
         /// Gets or sets API message.
         /// </summary>
         [DataMember(Name = "message")]
-        public string Message { get; protected set; }
+        public string Message { get; set; }
     }
 }

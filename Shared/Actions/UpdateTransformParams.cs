@@ -84,6 +84,10 @@
 
             AddParam(dict, "allowed_for_strict", AllowedForStrict);
 
+            // FIXME: dirty hack to avoid signing of admin api parameters.
+            AddParam(dict, "unsigned", "true");
+            AddParam(dict, "removeUnsignedParam", "true");
+
             if (UnsafeUpdate != null)
             {
                 AddParam(dict, "unsafe_update", UnsafeUpdate.Generate());
