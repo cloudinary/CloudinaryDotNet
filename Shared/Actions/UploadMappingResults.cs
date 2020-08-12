@@ -13,17 +13,17 @@
         /// <summary>
         /// Gets or sets result of CRUD operations.
         /// </summary>
-        public string Message { get; protected set; }
+        public string Message { get; set; }
 
         /// <summary>
         /// Gets or sets returned upload mappings.
         /// </summary>
-        public Dictionary<string, string> Mappings { get; protected set; }
+        public Dictionary<string, string> Mappings { get; set; }
 
         /// <summary>
         /// Gets or sets the cursor value if there are more upload mappings than <see cref="UploadMappingParams.MaxResults"/>.
         /// </summary>
-        public string NextCursor { get; protected set; }
+        public string NextCursor { get; set; }
 
         /// <summary>
         /// Overrides corresponding method of <see cref="BaseResult"/> class.
