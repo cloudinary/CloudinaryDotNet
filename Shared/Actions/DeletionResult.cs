@@ -12,6 +12,6 @@
         /// Gets or sets result description.
         /// </summary>
         [DataMember(Name = "result")]
-        public string Result { get; protected set; }
+        public string Result { get; set; }
     }
 }

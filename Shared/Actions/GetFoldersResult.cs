@@ -23,13 +23,13 @@
         /// the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
         [DataMember(Name = "next_cursor")]
-        public string NextCursor { get; protected set; }
+        public string NextCursor { get; set; }
 
         /// <summary>
         /// Gets or sets the total count of folders.
         /// </summary>
         [DataMember(Name = "total_count")]
-        public int TotalCount { get; protected set; }
+        public int TotalCount { get; set; }
     }
 
     /// <summary>
