@@ -109,6 +109,17 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, long value)
+        {
+            dict.Add(key, value.ToString(CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Add parameter to the dictionary.
+        /// </summary>
+        /// <param name="dict">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         protected static void AddParam(SortedDictionary<string, object> dict, string key, IEnumerable<string> value)
         {
             if (value != null)

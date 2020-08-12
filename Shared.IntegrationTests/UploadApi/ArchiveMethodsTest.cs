@@ -209,7 +209,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         {
             var archiveTag = GetMethodTag();
             UploadResourceForTestArchive<ImageUploadParams>(archiveTag);
-            
+
             var archiveUrl = m_cloudinary.DownloadZip(archiveTag, null);
 
             Assert.True(UrlExists(archiveUrl));
@@ -257,7 +257,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 };
             }
 
-            return uploadParams.GetType() != typeof(RawUploadParams) ? 
+            return uploadParams.GetType() != typeof(RawUploadParams) ?
                 m_cloudinary.Upload(uploadParams) :
                 m_cloudinary.Upload(uploadParams, ApiShared.GetCloudinaryParam(ResourceType.Raw));
         }
@@ -291,14 +291,16 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         }
 
         [Test, RetryWithDelay]
-        public void TestDownloadFolderExpireAt()
+        public void TestDownloadFolderExpiresAt()
         {
+            const int expiresAt = 1415060076;
+
             var parameters = new ArchiveParams();
-            parameters.ExpiresAt(1415060076);
+            parameters.ExpiresAt(expiresAt);
 
             var folderUrl = m_cloudinary.DownloadFolder("folder/", parameters);
 
-            Assert.True(folderUrl.Contains("expires_at"));
+            Assert.True(folderUrl.Contains($"expires_at={expiresAt}"));
         }
 
         [Test, RetryWithDelay]
