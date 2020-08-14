@@ -3312,7 +3312,7 @@
         public Task<SpriteResult> MakeSpriteAsync(SpriteParams parameters, CancellationToken? cancellationToken = null)
         {
             var url = m_api.ApiUrlImgUpV.
-                Action("sprite").
+                Action(Constants.ACTION_NAME_SPRITE).
                 BuildUrl();
 
             return m_api.CallApiAsync<SpriteResult>(
@@ -3332,10 +3332,26 @@
         public SpriteResult MakeSprite(SpriteParams parameters)
         {
             var url = m_api.ApiUrlImgUpV.
-                Action("sprite").
+                Action(Constants.ACTION_NAME_SPRITE).
                 BuildUrl();
 
             return m_api.CallApi<SpriteResult>(HttpMethod.POST, url, parameters, null);
+        }
+
+        /// <summary>
+        /// Gets a signed URL to download generated sprite.
+        /// </summary>
+        /// <param name="parameters">Parameters of Sprite operation.</param>
+        /// <returns>Download URL.</returns>
+        public string DownloadSprite(SpriteParams parameters)
+        {
+            parameters.Mode = ArchiveCallMode.Download;
+            var urlBuilder = new UrlBuilder(
+                m_api.ApiUrlImgUpV.
+                    Action(Constants.ACTION_NAME_SPRITE).
+                    BuildUrl());
+
+            return GetDownloadUrl(urlBuilder, parameters.ToParamsDictionary());
         }
 
         /// <summary>
@@ -3347,7 +3363,7 @@
         public Task<MultiResult> MultiAsync(MultiParams parameters, CancellationToken? cancellationToken = null)
         {
             var url = m_api.ApiUrlImgUpV.
-                Action("multi").
+                Action(Constants.ACTION_NAME_MULTI).
                 BuildUrl();
 
             return m_api.CallApiAsync<MultiResult>(
@@ -3367,10 +3383,26 @@
         public MultiResult Multi(MultiParams parameters)
         {
             var url = m_api.ApiUrlImgUpV.
-                Action("multi").
+                Action(Constants.ACTION_NAME_MULTI).
                 BuildUrl();
 
             return m_api.CallApi<MultiResult>(HttpMethod.POST, url, parameters, null);
+        }
+
+        /// <summary>
+        /// Gets a signed URL to download animated GIF file generated through multi request.
+        /// </summary>
+        /// <param name="parameters">Parameters of Multi operation.</param>
+        /// <returns>Download URL.</returns>
+        public string DownloadMulti(MultiParams parameters)
+        {
+            parameters.Mode = ArchiveCallMode.Download;
+            var urlBuilder = new UrlBuilder(
+                    m_api.ApiUrlImgUpV.
+                    Action(Constants.ACTION_NAME_MULTI).
+                    BuildUrl());
+
+            return GetDownloadUrl(urlBuilder, parameters.ToParamsDictionary());
         }
 
         /// <summary>

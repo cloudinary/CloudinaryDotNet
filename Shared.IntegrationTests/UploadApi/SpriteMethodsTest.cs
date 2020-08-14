@@ -1,8 +1,10 @@
-﻿using CloudinaryDotNet.Actions;
-using NUnit.Framework;
+﻿using System;
 using System.Collections.Generic;
+using CloudinaryDotNet.Actions;
+using NUnit.Framework;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Web;
 
 namespace CloudinaryDotNet.IntegrationTest.UploadApi
 {
@@ -12,38 +14,43 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         public void TestSprite()
         {
             var spriteTag = GetMethodTag();
-
             var testTransformations = new[]{ m_resizeTransformation, m_updateTransformation, m_simpleTransformation };
-
-            var addedPublicIds = testTransformations.Select(t =>
-            {
-                var uploadResult = UploadTestImageResource((uploadParams) =>
+            var uploadResults = testTransformations.Select(t =>
+                UploadTestImageResource((uploadParams) =>
                 {
                     uploadParams.Tags = $"{spriteTag},{m_apiTag}";
                     uploadParams.Transformation = t;
                 },
-                StorageType.sprite);
+                StorageType.sprite)
+            ).ToList();
+            var addedPublicIds = uploadResults.Select(uploadResult => uploadResult.PublicId).ToList();
 
-                return uploadResult.PublicId;
-            }).ToList();
-
-            var spriteParams = CreateSpriteParams(spriteTag, FILE_FORMAT_JPG);
-
+            var spriteParams = new SpriteParams(spriteTag)
+            {
+                Format = FILE_FORMAT_JPG
+            };
             var result = m_cloudinary.MakeSprite(spriteParams);
-
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
+            AssertSprite(result, FILE_FORMAT_JPG);
+            CollectionAssert.AreEqual(addedPublicIds, result.ImageInfos.Keys);
 
-            AssertSprite(result, addedPublicIds, FILE_FORMAT_JPG);
+            var urls = uploadResults.Select(uploadResult => uploadResult.Url.ToString()).ToList();
+            spriteParams = new SpriteParams(urls)
+            {
+                Format = FILE_FORMAT_JPG
+            };
+            result = m_cloudinary.MakeSprite(spriteParams);
+            AddCreatedPublicId(StorageType.sprite, result.PublicId);
+            AssertSprite(result, FILE_FORMAT_JPG);
+            Assert.AreEqual(addedPublicIds.Count, result.ImageInfos.Keys.Count);
         }
 
         [Test, RetryWithDelay]
         public async Task TestSpriteAsync()
         {
             var spriteTag = GetMethodTag();
-
             var testTransformations = new[] { m_resizeTransformation, m_updateTransformation, m_simpleTransformation };
-
-            var addedPublicIdsTasks = testTransformations.Select(async t =>
+            var uploadTasks = testTransformations.Select(async t =>
             {
                 var uploadResult = await UploadTestImageResourceAsync((uploadParams) =>
                 {
@@ -51,35 +58,36 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                     uploadParams.Transformation = t;
                 },
                 StorageType.sprite);
-
-                return uploadResult.PublicId;
+                return uploadResult;
             });
+            var uploadResults = await Task.WhenAll(uploadTasks);
+            var addedPublicIds = uploadResults.Select(uploadResult => uploadResult.PublicId).ToList();
 
-            var addedPublicIdsTask = await Task.WhenAll(addedPublicIdsTasks);
-
-            var spriteParams = CreateSpriteParams(spriteTag, FILE_FORMAT_JPG);
-
-            var result = await m_cloudinary.MakeSpriteAsync(spriteParams);
-
-            AddCreatedPublicId(StorageType.sprite, result.PublicId);
-
-            AssertSprite(result, addedPublicIdsTask, FILE_FORMAT_JPG);
-        }
-
-        private SpriteParams CreateSpriteParams(string tag, string fileFormat)
-        {
-            return new SpriteParams(tag)
+            var spriteParams = new SpriteParams(spriteTag)
             {
-                Format = fileFormat
+                Format = FILE_FORMAT_JPG
             };
+            var result = await m_cloudinary.MakeSpriteAsync(spriteParams);
+            AddCreatedPublicId(StorageType.sprite, result.PublicId);
+            AssertSprite(result, FILE_FORMAT_JPG);
+            CollectionAssert.AreEqual(addedPublicIds, result.ImageInfos.Keys);
+
+            var urls = uploadResults.Select(uploadResult => uploadResult.Url.ToString()).ToList();
+            spriteParams = new SpriteParams(urls)
+            {
+                Format = FILE_FORMAT_JPG
+            };
+            result = await m_cloudinary.MakeSpriteAsync(spriteParams);
+            AddCreatedPublicId(StorageType.sprite, result.PublicId);
+            AssertSprite(result, FILE_FORMAT_JPG);
+            Assert.AreEqual(addedPublicIds.Count, result.ImageInfos.Keys.Count);
         }
 
-        private void AssertSprite(SpriteResult result, IEnumerable<string> publicIds, string fileFormat)
+        private void AssertSprite(SpriteResult result, string fileFormat)
         {
             Assert.NotNull(result?.ImageInfos);
             Assert.NotNull(result.ImageUrl);
             StringAssert.EndsWith(fileFormat, result.ImageUrl.ToString());
-            CollectionAssert.AreEqual(publicIds, result.ImageInfos.Keys);
             Assert.AreEqual(result.ImageUrl, result.ImageUrl);
             Assert.NotNull(result.CssUrl);
             Assert.AreEqual(result.CssUrl, result.CssUrl);
@@ -132,6 +140,38 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 Assert.AreEqual(m_resizeTransformationWidth, item.Value.Width);
                 Assert.AreEqual(m_resizeTransformationHeight, item.Value.Height);
             }
+        }
+
+        [Test]
+        public void TestDownloadSprite()
+        {
+            const string spriteTestTag = "sprite_test_tag";
+            const string url1 = "https://res.cloudinary.com/demo/image/upload/sample";
+            const string url2 = "https://res.cloudinary.com/demo/image/upload/car";
+
+            var paramsFromTag = new SpriteParams(spriteTestTag);
+            var urlFromTag = m_cloudinary.DownloadSprite(paramsFromTag);
+            var paramsFromUrl = new SpriteParams(new List<string> { url1, url2 });
+            var urlFromUrls = m_cloudinary.DownloadSprite(paramsFromUrl);
+
+            var expectedUrl = "https://api.cloudinary.com/v1_1/" + m_cloudinary.Api.Account.Cloud + "/image/sprite";
+            var uriFromTag = new Uri(urlFromTag);
+            var uriFromUrls = new Uri(urlFromUrls);
+            Assert.True(uriFromTag.ToString().StartsWith(expectedUrl));
+            Assert.True(uriFromUrls.ToString().StartsWith(expectedUrl));
+
+            var uriParamsFromTag = HttpUtility.ParseQueryString(uriFromTag.Query);
+            Assert.AreEqual("download", uriParamsFromTag["mode"]);
+            Assert.AreEqual(spriteTestTag, uriParamsFromTag["tag"]);
+            Assert.NotNull(uriParamsFromTag["timestamp"]);
+            Assert.NotNull(uriParamsFromTag["signature"]);
+
+            var uriParamsFromUrls = HttpUtility.ParseQueryString(uriFromUrls.Query);
+            Assert.AreEqual("download", uriParamsFromUrls["mode"]);
+            Assert.True(uriParamsFromUrls["urls[]"].Contains(url1));
+            Assert.True(uriParamsFromUrls["urls[]"].Contains(url2));
+            Assert.NotNull(uriParamsFromUrls["timestamp"]);
+            Assert.NotNull(uriParamsFromUrls["signature"]);
         }
     }
 }
