@@ -13,7 +13,7 @@
         /// Default parameterless constructor. Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public Api()
-            : base()
+            : base(Environment.GetEnvironmentVariable("CLOUDINARY_URL"))
         {
         }
 
