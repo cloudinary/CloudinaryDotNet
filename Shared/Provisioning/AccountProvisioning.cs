@@ -1,14 +1,19 @@
-﻿namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet.Provisioning
 {
     using System.Threading;
     using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
 
     /// <summary>
-    /// Part of Cloudinary .NET API main class, responsible for streaming profiles management.
+    /// Account provisioning.
     /// </summary>
-    public partial class Cloudinary
+    public class AccountProvisioning
     {
+        /// <summary>
+        /// Gets Provisioning API object that used by this instance.
+        /// </summary>
+        public ProvisioningApi ProvisioningApi { get; } = new ProvisioningApi();
+
         /// <summary>
         /// Retrieves the details of the specified sub-account.
         /// </summary>
@@ -464,10 +469,10 @@
         {
             if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
             {
-                return m_api.CallAccountApi<T>(httpMethod, url, parameters, null, Utils.PrepareJsonHeaders());
+                return ProvisioningApi.CallAccountApi<T>(httpMethod, url, parameters, null, Utils.PrepareJsonHeaders());
             }
 
-            return m_api.CallAccountApi<T>(httpMethod, url, parameters, null);
+            return ProvisioningApi.CallAccountApi<T>(httpMethod, url, parameters, null);
         }
 
         private Task<T> CallAccountApiAsync<T>(
@@ -479,10 +484,10 @@
         {
             if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
             {
-                return m_api.CallAccountApiAsync<T>(httpMethod, url, parameters, null, Utils.PrepareJsonHeaders(), cancellationToken);
+                return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, null, Utils.PrepareJsonHeaders(), cancellationToken);
             }
 
-            return m_api.CallAccountApiAsync<T>(httpMethod, url, parameters, null, null, cancellationToken);
+            return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, null, null, cancellationToken);
         }
 
         private string GetSubAccountsUrl(string subAccountId = null)
@@ -502,13 +507,13 @@
 
         private string GetUserGroupsUrlForUsers(string groupId, string userId = null)
         {
-            var baseUrl = m_api.AccountApiUrlV.Add(Constants.USER_GROUPS).Add(groupId).Add(Constants.USERS);
+            var baseUrl = ProvisioningApi.AccountApiUrlV.Add(Constants.USER_GROUPS).Add(groupId).Add(Constants.USERS);
             return UrlWithOptionalParameter(baseUrl, userId);
         }
 
         private string BuildAccountApiUrl(string resourceName, string urlParameter)
         {
-            var baseUrl = m_api.AccountApiUrlV.Add(resourceName);
+            var baseUrl = ProvisioningApi.AccountApiUrlV.Add(resourceName);
             return UrlWithOptionalParameter(baseUrl, urlParameter);
         }
 

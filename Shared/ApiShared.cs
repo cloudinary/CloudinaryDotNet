@@ -47,7 +47,10 @@
         /// </summary>
         public static string USER_AGENT = BuildUserAgent();
 
-        private string m_apiAddr = "https://" + ADDR_API;
+        /// <summary>
+        /// URL of the cloudinary API.
+        /// </summary>
+        protected string m_apiAddr = "https://" + ADDR_API;
 
         /// <summary>
         /// Whether to use a sub domain.
@@ -168,8 +171,6 @@
                 PrivateCdn = cloudinaryUri.AbsolutePath;
                 Secure = true;
             }
-
-            ProvisioningApiAccount = new ProvisioningApiAccount();
         }
 
         /// <summary>
@@ -210,18 +211,12 @@
 
             UsePrivateCdn = false;
             Account = account;
-            ProvisioningApiAccount = new ProvisioningApiAccount();
         }
 
         /// <summary>
         /// Gets cloudinary account information.
         /// </summary>
         public Account Account { get; private set; }
-
-        /// <summary>
-        /// Gets cloudinary account API credentials.
-        /// </summary>
-        public ProvisioningApiAccount ProvisioningApiAccount { get; private set; }
 
         /// <summary>
         /// Gets or sets API base address (https://api.cloudinary.com by default) which is used to build ApiUrl*.
@@ -368,35 +363,6 @@
         }
 
         /// <summary>
-        /// Gets cloudinary account API URL.
-        /// </summary>
-        public Url AccountApiUrlV
-        {
-            get
-            {
-                return new Url(Constants.PROVISIONING)
-                    .CloudinaryAddr(m_apiAddr)
-                    .ApiVersion(API_VERSION)
-                    .Add(Constants.ACCOUNTS)
-                    .Add(ProvisioningApiAccount.AccountId);
-            }
-        }
-
-        /// <summary>
-        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
-        /// </summary>
-        /// <param name="method">Http request method.</param>
-        /// <param name="url">API URL.</param>
-        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
-        /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">Headers to add to the request.</param>
-        /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-        {
-            throw new Exception("Please call overriden method");
-        }
-
-        /// <summary>
         /// Call the Cloudinary API and parse HTTP response asynchronously.
         /// </summary>
         /// <typeparam name="T">Type of the response.</typeparam>
@@ -406,8 +372,6 @@
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
         /// <param name="extraHeaders">Headers to add to the request.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <param name="apiKey">(Optional) Api key of the account.</param>
-        /// <param name="apiSecret">(Optional) Api secret of the account.</param>
         /// <returns>Instance of the parsed response from the cloudinary API.</returns>
         public async Task<T> CallAndParseAsync<T>(
             HttpMethod method,
@@ -415,9 +379,7 @@
             SortedDictionary<string, object> parameters,
             FileDescription file,
             Dictionary<string, string> extraHeaders = null,
-            CancellationToken? cancellationToken = null,
-            string apiKey = null,
-            string apiSecret = null)
+            CancellationToken? cancellationToken = null)
             where T : BaseResult, new()
         {
             using (var response = await CallAsync(
@@ -426,9 +388,7 @@
                 parameters,
                 file,
                 extraHeaders,
-                cancellationToken,
-                apiKey,
-                apiSecret).ConfigureAwait(false))
+                cancellationToken).ConfigureAwait(false))
             {
                 return await ParseAsync<T>(response).ConfigureAwait(false);
             }
@@ -443,17 +403,13 @@
         /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
         /// <param name="file">(Optional) Add file to the body of the API call.</param>
         /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
-        /// <param name="apiKey">(Optional) Api key of the account.</param>
-        /// <param name="apiSecret">(Optional) Api secret of the account.</param>
         /// <returns>Instance of the parsed response from the cloudinary API.</returns>
         public T CallAndParse<T>(
             HttpMethod method,
             string url,
             SortedDictionary<string, object> parameters,
             FileDescription file,
-            Dictionary<string, string> extraHeaders = null,
-            string apiKey = null,
-            string apiSecret = null)
+            Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
         {
             using (var response = Call(
@@ -461,9 +417,7 @@
                 url,
                 parameters,
                 file,
-                extraHeaders,
-                apiKey,
-                apiSecret))
+                extraHeaders))
             {
                 return Parse<T>(response);
             }
@@ -478,8 +432,6 @@
         /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Headers to add to the request.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <param name="apiKey">(Optional) Api key of the account.</param>
-        /// <param name="apiSecret">(Optional) Api secret of the account.</param>
         /// <returns>HTTP response on call.</returns>
         public async Task<HttpResponseMessage> CallAsync(
             HttpMethod method,
@@ -487,9 +439,7 @@
             SortedDictionary<string, object> parameters,
             FileDescription file,
             Dictionary<string, string> extraHeaders = null,
-            CancellationToken? cancellationToken = null,
-            string apiKey = null,
-            string apiSecret = null)
+            CancellationToken? cancellationToken = null)
         {
             using (var request =
                 await PrepareRequestBodyAsync(
@@ -498,9 +448,7 @@
                     parameters,
                     file,
                     extraHeaders,
-                    cancellationToken,
-                    apiKey,
-                    apiSecret).ConfigureAwait(false))
+                    cancellationToken).ConfigureAwait(false))
             {
                 var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
                 return await Client.SendAsync(request, httpCancellationToken).ConfigureAwait(false);
@@ -515,21 +463,17 @@
         /// <param name="parameters">Dictionary of call parameters (can be null).</param>
         /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Headers to add to the request.</param>
-        /// <param name="apiKey">(Optional) Api key of the account.</param>
-        /// <param name="apiSecret">(Optional) Api secret of the account.</param>
         /// <returns>HTTP response on call.</returns>
         public HttpResponseMessage Call(
             HttpMethod method,
             string url,
             SortedDictionary<string, object> parameters,
             FileDescription file,
-            Dictionary<string, string> extraHeaders = null,
-            string apiKey = null,
-            string apiSecret = null)
+            Dictionary<string, string> extraHeaders = null)
         {
             using (var request = requestBuilder(url))
             {
-                PrepareRequestBody(request, method, parameters, file, extraHeaders, apiKey, apiSecret);
+                PrepareRequestBody(request, method, parameters, file, extraHeaders);
 
                 var cancellationToken = GetDefaultCancellationToken();
 
