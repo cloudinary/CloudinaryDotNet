@@ -1,6 +1,5 @@
 namespace CloudinaryDotNet.Provisioning
 {
-    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading;
@@ -26,17 +25,12 @@ namespace CloudinaryDotNet.Provisioning
         /// <summary>
         /// Gets cloudinary account API URL.
         /// </summary>
-        public Url AccountApiUrlV
-        {
-            get
-            {
-                return new Url(Constants.PROVISIONING)
-                    .CloudinaryAddr(m_apiAddr)
-                    .ApiVersion(API_VERSION)
-                    .Add(Constants.ACCOUNTS)
-                    .Add(ProvisioningApiAccount.AccountId);
-            }
-        }
+        public Url AccountApiUrlV =>
+            new Url(Constants.PROVISIONING)
+                .CloudinaryAddr(m_apiAddr)
+                .ApiVersion(API_VERSION)
+                .Add(Constants.ACCOUNTS)
+                .Add(ProvisioningApiAccount.AccountId);
 
         /// <summary>
         /// Call account api asynchronous and return response of specified type asynchronously.

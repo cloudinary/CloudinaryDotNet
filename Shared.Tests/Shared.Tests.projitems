@@ -9,8 +9,9 @@
     <Import_RootNamespace>Shared.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Parameters\AccountProvisioningParamsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MockedCloudinary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Provisioning\AccountProvisioningParamsTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Provisioning\ProvisioningApiAccountTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadPresetsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Parameters\DeserializationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MetaDataTest.cs" />

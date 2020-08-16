@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Parameters
+namespace CloudinaryDotNet.Test.Provisioning.Parameters
 {
     public class AccountProvisioningParamsTest
     {
-        private const string prefix = "test_prefix";
-        private const string testName = "sub_account_name";
-        private const string cloudName = "cloud_name";
-        private const string testId = "base_id";
-        private const string email = "some@email.com";
-        private const Role role = Role.Admin;
+        private const string Prefix = "test_prefix";
+        private const string TestName = "sub_account_name";
+        private const string CloudName = "cloud_name";
+        private const string TestId = "base_id";
+        private const string Email = "some@email.com";
+        private const Role Role = Actions.Role.Admin;
         private readonly List<string> idList = new List<string> {"id1", "id2"};
         private readonly StringDictionary customAttributes = new StringDictionary("key1=value1", "key2=value2");
 
         [Test]
         public void TestCreateSubAccountParamsCheck()
         {
-            var parameters = new CreateSubAccountParams(testName);
+            var parameters = new CreateSubAccountParams(TestName);
             parameters.Name = string.Empty;
             AssertCheck(parameters, "Name must not be empty");
         }
@@ -27,7 +27,7 @@ namespace CloudinaryDotNet.Test.Parameters
         [Test]
         public void TestUpdateSubAccountParamsCheck()
         {
-            var parameters = new UpdateSubAccountParams(testId);
+            var parameters = new UpdateSubAccountParams(TestId);
             parameters.SubAccountId = string.Empty;
             AssertCheck(parameters, "SubAccountId must not be empty");
         }
@@ -35,16 +35,16 @@ namespace CloudinaryDotNet.Test.Parameters
         [Test]
         public void TestCreateUserParamsCheck()
         {
-            var parameters = new CreateUserParams(testName, email, role);
+            var parameters = new CreateUserParams(TestName, Email, Role);
 
             parameters.Name = string.Empty;
             AssertCheck(parameters, "Name must not be empty");
 
-            parameters.Name = testName;
+            parameters.Name = TestName;
             parameters.Email = null;
             AssertCheck(parameters, "Email must not be empty");
 
-            parameters.Email = email;
+            parameters.Email = Email;
             parameters.Role = null;
             AssertCheck(parameters, "Role must not be empty");
         }
@@ -52,7 +52,7 @@ namespace CloudinaryDotNet.Test.Parameters
         [Test]
         public void TestUpdateUserParamsCheck()
         {
-            var parameters = new UpdateUserParams(testId);
+            var parameters = new UpdateUserParams(TestId);
             parameters.UserId = string.Empty;
             AssertCheck(parameters, "UserId must not be empty");
         }
@@ -60,7 +60,7 @@ namespace CloudinaryDotNet.Test.Parameters
         [Test]
         public void TestCreateUserGroupParamsCheck()
         {
-            var parameters = new CreateUserGroupParams(testName);
+            var parameters = new CreateUserGroupParams(TestName);
             parameters.Name = string.Empty;
             AssertCheck(parameters, "Name must not be empty");
         }
@@ -68,12 +68,12 @@ namespace CloudinaryDotNet.Test.Parameters
         [Test]
         public void TestUpdateUserGroupParamsCheck()
         {
-            var parameters = new UpdateUserGroupParams(testId, testName);
+            var parameters = new UpdateUserGroupParams(TestId, TestName);
 
             parameters.Name = string.Empty;
             AssertCheck(parameters, "Name must not be empty");
 
-            parameters.Name = testName;
+            parameters.Name = TestName;
             parameters.UserGroupId = null;
             AssertCheck(parameters, "UserGroupId must not be empty");
         }
@@ -84,43 +84,43 @@ namespace CloudinaryDotNet.Test.Parameters
             var parameters = new ListSubAccountsParams
             {
                 Enabled = true,
-                Prefix = prefix,
+                Prefix = Prefix,
                 Ids = idList
             };
             Assert.DoesNotThrow(() => parameters.Check());
 
             var dictionary = parameters.ToParamsDictionary();
             Assert.AreEqual("true", dictionary["enabled"]);
-            Assert.AreEqual(prefix, dictionary["prefix"]);
+            Assert.AreEqual(Prefix, dictionary["prefix"]);
             Assert.AreEqual(idList, dictionary["ids"]);
         }
 
         [Test]
         public void TestCreateSubAccountParamsDictionary()
         {
-            var parameters = new CreateSubAccountParams(testName)
+            var parameters = new CreateSubAccountParams(TestName)
             {
-                CloudName = cloudName,
-                BaseSubAccountId = testId,
+                CloudName = CloudName,
+                BaseSubAccountId = TestId,
                 CustomAttributes = customAttributes
             };
             Assert.DoesNotThrow(() => parameters.Check());
 
             var dictionary = parameters.ToParamsDictionary();
             Assert.AreEqual("true", dictionary["enabled"]);
-            Assert.AreEqual(testName, dictionary["name"]);
-            Assert.AreEqual(cloudName, dictionary["cloud_name"]);
-            Assert.AreEqual(testId, dictionary["base_sub_account_id"]);
+            Assert.AreEqual(TestName, dictionary["name"]);
+            Assert.AreEqual(CloudName, dictionary["cloud_name"]);
+            Assert.AreEqual(TestId, dictionary["base_sub_account_id"]);
             Assert.AreEqual("key1=value1|key2=value2", dictionary["custom_attributes"]);
         }
 
         [Test]
         public void TestUpdateSubAccountParamsDictionary()
         {
-            var parameters = new UpdateSubAccountParams(testId)
+            var parameters = new UpdateSubAccountParams(TestId)
             {
-                Name = testName,
-                CloudName = cloudName,
+                Name = TestName,
+                CloudName = CloudName,
                 Enabled = false,
                 CustomAttributes = customAttributes
             };
@@ -128,8 +128,8 @@ namespace CloudinaryDotNet.Test.Parameters
 
             var dictionary = parameters.ToParamsDictionary();
             Assert.AreEqual("false", dictionary["enabled"]);
-            Assert.AreEqual(testName, dictionary["name"]);
-            Assert.AreEqual(cloudName, dictionary["cloud_name"]);
+            Assert.AreEqual(TestName, dictionary["name"]);
+            Assert.AreEqual(CloudName, dictionary["cloud_name"]);
             Assert.AreEqual("key1=value1|key2=value2", dictionary["custom_attributes"]);
         }
 
@@ -139,31 +139,31 @@ namespace CloudinaryDotNet.Test.Parameters
             var parameters = new ListUsersParams
             {
                 Pending = true,
-                Prefix = prefix,
+                Prefix = Prefix,
                 UserIds = idList,
-                SubAccountId = testId
+                SubAccountId = TestId
             };
             Assert.DoesNotThrow(() => parameters.Check());
 
             var dictionary = parameters.ToParamsDictionary();
             Assert.AreEqual("true", dictionary["pending"]);
-            Assert.AreEqual(prefix, dictionary["prefix"]);
+            Assert.AreEqual(Prefix, dictionary["prefix"]);
             Assert.AreEqual(idList, dictionary["ids"]);
-            Assert.AreEqual(testId, dictionary["sub_account_id"]);
+            Assert.AreEqual(TestId, dictionary["sub_account_id"]);
         }
 
         [Test]
         public void TestCreateUserParamsDictionary()
         {
-            var parameters = new CreateUserParams(testName, email, role)
+            var parameters = new CreateUserParams(TestName, Email, Role)
             {
                 SubAccountIds = idList
             };
             Assert.DoesNotThrow(() => parameters.Check());
 
             var dictionary = parameters.ToParamsDictionary();
-            Assert.AreEqual(testName, dictionary["name"]);
-            Assert.AreEqual(email, dictionary["email"]);
+            Assert.AreEqual(TestName, dictionary["name"]);
+            Assert.AreEqual(Email, dictionary["email"]);
             Assert.AreEqual("admin", dictionary["role"]);
             Assert.AreEqual(idList, dictionary["sub_account_ids"]);
         }
@@ -171,18 +171,18 @@ namespace CloudinaryDotNet.Test.Parameters
         [Test]
         public void TestUpdateUserParamsDictionary()
         {
-            var parameters = new UpdateUserParams(testId)
+            var parameters = new UpdateUserParams(TestId)
             {
-                Name = testName,
-                Email = email,
-                Role = role,
+                Name = TestName,
+                Email = Email,
+                Role = Role,
                 SubAccountIds = idList
             };
             Assert.DoesNotThrow(() => parameters.Check());
 
             var dictionary = parameters.ToParamsDictionary();
-            Assert.AreEqual(testName, dictionary["name"]);
-            Assert.AreEqual(email, dictionary["email"]);
+            Assert.AreEqual(TestName, dictionary["name"]);
+            Assert.AreEqual(Email, dictionary["email"]);
             Assert.AreEqual("admin", dictionary["role"]);
             Assert.AreEqual(idList, dictionary["sub_account_ids"]);
         }
@@ -190,21 +190,21 @@ namespace CloudinaryDotNet.Test.Parameters
         [Test]
         public void TestCreateUserGroupParamsDictionary()
         {
-            var parameters = new CreateUserGroupParams(testName);
+            var parameters = new CreateUserGroupParams(TestName);
             Assert.DoesNotThrow(() => parameters.Check());
 
             var dictionary = parameters.ToParamsDictionary();
-            Assert.AreEqual(testName, dictionary["name"]);
+            Assert.AreEqual(TestName, dictionary["name"]);
         }
 
         [Test]
         public void TestUpdateUserGroupParamsDictionary()
         {
-            var parameters = new UpdateUserGroupParams(testId, testName);
+            var parameters = new UpdateUserGroupParams(TestId, TestName);
             Assert.DoesNotThrow(() => parameters.Check());
 
             var dictionary = parameters.ToParamsDictionary();
-            Assert.AreEqual(testName, dictionary["name"]);
+            Assert.AreEqual(TestName, dictionary["name"]);
         }
 
         private static void AssertCheck<T>(T parameters, string expectedMessage)

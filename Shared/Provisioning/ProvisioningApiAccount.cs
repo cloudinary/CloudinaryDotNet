@@ -7,11 +7,13 @@
     /// </summary>
     public class ProvisioningApiAccount
     {
+        private const string CloudinaryAccountUrl = "CLOUDINARY_ACCOUNT_URL";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProvisioningApiAccount"/> class.
         /// </summary>
         public ProvisioningApiAccount()
-            : this(Environment.GetEnvironmentVariable("CLOUDINARY_ACCOUNT_URL"))
+            : this(Environment.GetEnvironmentVariable(CloudinaryAccountUrl))
         {
         }
 
