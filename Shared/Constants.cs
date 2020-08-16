@@ -62,6 +62,9 @@
         /// <summary> Resource type name for video asset.</summary>
         public const string RESOURCE_TYPE_VIDEO = "video";
 
+        /// <summary> Resource type name for all asset types.</summary>
+        public const string RESOURCE_TYPE_ALL = "all";
+
         /// <summary> Parameter name for asset resource type.</summary>
         public const string RESOURCE_TYPE = "resource_type";
 
@@ -70,6 +73,12 @@
 
         /// <summary> Action name for fetch.</summary>
         public const string ACTION_NAME_FETCH = "fetch";
+
+        /// <summary> Action name for multi.</summary>
+        public const string ACTION_NAME_MULTI = "multi";
+
+        /// <summary> Action name for multi.</summary>
+        public const string ACTION_NAME_SPRITE = "sprite";
 
         /// <summary> URL for shared CDN.</summary>
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";

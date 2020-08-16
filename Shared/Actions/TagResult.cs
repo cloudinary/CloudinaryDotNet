@@ -12,6 +12,6 @@
         /// Gets or sets a list of public IDs (up to 1000) of affected assets.
         /// </summary>
         [DataMember(Name = "public_ids")]
-        public string[] PublicIds { get; protected set; }
+        public string[] PublicIds { get; set; }
     }
 }

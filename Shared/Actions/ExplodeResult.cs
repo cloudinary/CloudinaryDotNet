@@ -12,12 +12,12 @@
         /// Gets or sets status that is returned when passing 'Async' argument set to 'true' to the server.
         /// </summary>
         [DataMember(Name = "status")]
-        public string Status { get; protected set; }
+        public string Status { get; set; }
 
         /// <summary>
         /// Gets or sets id of the batch.
         /// </summary>
         [DataMember(Name = "batch_id")]
-        public string BatchId { get; protected set; }
+        public string BatchId { get; set; }
     }
 }

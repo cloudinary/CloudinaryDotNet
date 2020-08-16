@@ -13,43 +13,43 @@
         /// Gets or sets a unique immutable identification string for the metadata field.
         /// </summary>
         [DataMember(Name = "external_id")]
-        public string ExternalId { get; protected set; }
+        public string ExternalId { get; set; }
 
         /// <summary>
         ///  Gets or sets the type of value that can be assigned to the metadata field.
         /// </summary>
         [DataMember(Name = "type")]
-        public string Type { get; protected set; }
+        public string Type { get; set; }
 
         /// <summary>
         ///  Gets or sets the label of the metadata field for display purposes.
         /// </summary>
         [DataMember(Name = "label")]
-        public string Label { get; protected set; }
+        public string Label { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a value must be given for this field.
         /// </summary>
         [DataMember(Name = "mandatory")]
-        public bool Mandatory { get; protected set; }
+        public bool Mandatory { get; set; }
 
         /// <summary>
         /// Gets or sets the default value for the field.
         /// </summary>
         [DataMember(Name = "default_value")]
-        public object DefaultValue { get; protected set; }
+        public object DefaultValue { get; set; }
 
         /// <summary>
         /// Gets or sets any validation rules to apply when values are entered (or updated) for this field.
         /// </summary>
         [DataMember(Name = "validation")]
-        public MetadataValidationResult Validation { get; protected set; }
+        public MetadataValidationResult Validation { get; set; }
 
         /// <summary>
         ///  Gets or sets the predefined list of values, referenced by external_ids, available for this field.
         /// </summary>
         [DataMember(Name = "datasource")]
-        public MetadataDataSourceResult DataSource { get; protected set; }
+        public MetadataDataSourceResult DataSource { get; set; }
     }
 
     /// <summary>
@@ -62,7 +62,7 @@
         /// Gets or sets an API message.
         /// </summary>
         [DataMember(Name = "message")]
-        public string Message { get; protected set; }
+        public string Message { get; set; }
     }
 
     /// <summary>
@@ -75,7 +75,7 @@
         ///  Gets or sets a list of basic details of listed metadata fields.
         /// </summary>
         [DataMember(Name = "metadata_fields")]
-        public IEnumerable<MetadataFieldResult> MetadataFields { get; protected set; }
+        public IEnumerable<MetadataFieldResult> MetadataFields { get; set; }
     }
 
     /// <summary>
@@ -88,7 +88,7 @@
         ///  Gets or sets  a list of datasource values.
         /// </summary>
         [DataMember(Name = "values")]
-        public List<EntryResult> Values { get; protected set; }
+        public List<EntryResult> Values { get; set; }
     }
 
     /// <summary>
@@ -101,13 +101,13 @@
         /// Gets or sets a unique immutable identification string for the datasource entry.
         /// </summary>
         [DataMember(Name = "external_id")]
-        public string ExternalId { get; protected set; }
+        public string ExternalId { get; set; }
 
         /// <summary>
         /// Gets or sets the value for this datasource.
         /// </summary>
         [DataMember(Name = "value")]
-        public string Value { get; protected set; }
+        public string Value { get; set; }
 
         /// <summary>
         /// Gets or sets the state.
@@ -117,7 +117,7 @@
         /// Possible values: 'active' and 'inactive'.
         /// </summary>
         [DataMember(Name = "state")]
-        public string State { get; protected set; }
+        public string State { get; set; }
     }
 
     /// <summary>
@@ -130,36 +130,36 @@
         /// Gets or sets validation type.
         /// </summary>
         [DataMember(Name = "type")]
-        public string Type { get; protected set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the value for validation.
         /// </summary>
         [DataMember(Name = "value")]
-        public object Value { get; protected set; }
+        public object Value { get; set; }
 
         /// <summary>
         /// Gets or sets a value to indicate whether to check for equality.
         /// </summary>
         [DataMember(Name = "equals")]
-        public bool? IsEqual { get; protected set; }
+        public bool? IsEqual { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum string length.
         /// </summary>
         [DataMember(Name = "min")]
-        public int? Min { get; protected set; }
+        public int? Min { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum string length.
         /// </summary>
         [DataMember(Name = "max")]
-        public int? Max { get; protected set; }
+        public int? Max { get; set; }
 
         /// <summary>
         /// Gets or sets rules combined with an 'AND' logic relation between them.
         /// </summary>
         [DataMember(Name = "rules")]
-        public List<MetadataValidationResult> Rules { get; protected set; }
+        public List<MetadataValidationResult> Rules { get; set; }
     }
 }

@@ -257,6 +257,22 @@
         }
 
         /// <summary>
+        ///  Creates and returns an URL that when invoked creates an archive of a folder.
+        /// </summary>
+        /// <param name="folderPath">Full path from the root.</param>
+        /// <param name="parameters">Optional parameters of generated archive.</param>
+        /// <returns>Url for downloading an archive of a folder.</returns>
+        public string DownloadFolder(string folderPath, ArchiveParams parameters = null)
+        {
+            var downloadParameters = parameters ?? new ArchiveParams();
+
+            downloadParameters.Prefixes(new List<string> { folderPath });
+            downloadParameters.ResourceType(Constants.RESOURCE_TYPE_ALL);
+
+            return DownloadArchiveUrl(downloadParameters);
+        }
+
+        /// <summary>
         /// Publishes resources by prefix asynchronously.
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>
@@ -1253,7 +1269,26 @@
         /// <returns>The report on the status of your Cloudinary account usage details.</returns>
         public Task<UsageResult> GetUsageAsync(CancellationToken? cancellationToken = null)
         {
-            string uri = GetApiUrlV().Action("usage").BuildUrl();
+            string uri = GetUsageUrl(null);
+
+            return m_api.CallApiAsync<UsageResult>(
+                HttpMethod.GET,
+                uri,
+                null,
+                null,
+                null,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets the Cloudinary account usage details asynchronously.
+        /// </summary>
+        /// <param name="date">(Optional) The date for the usage report. Must be within the last 3 months.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The report on the status of your Cloudinary account usage details.</returns>
+        public Task<UsageResult> GetUsageAsync(DateTime? date, CancellationToken? cancellationToken = null)
+        {
+            string uri = GetUsageUrl(date);
 
             return m_api.CallApiAsync<UsageResult>(
                 HttpMethod.GET,
@@ -1267,12 +1302,25 @@
         /// <summary>
         /// Gets the Cloudinary account usage details.
         /// </summary>
+        /// <param name="date">(Optional) The date for the usage report. Must be within the last 3 months.</param>
         /// <returns>The report on the status of your Cloudinary account usage details.</returns>
-        public UsageResult GetUsage()
+        public UsageResult GetUsage(DateTime? date = null)
         {
-            string uri = GetApiUrlV().Action("usage").BuildUrl();
+            string uri = GetUsageUrl(date);
 
             return m_api.CallApi<UsageResult>(HttpMethod.GET, uri, null, null);
+        }
+
+        private string GetUsageUrl(DateTime? date)
+        {
+            var url = GetApiUrlV().Action("usage");
+
+            if (date.HasValue)
+            {
+                url.Add(date.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture));
+            }
+
+            return url.BuildUrl();
         }
 
         /// <summary>
@@ -3264,7 +3312,7 @@
         public Task<SpriteResult> MakeSpriteAsync(SpriteParams parameters, CancellationToken? cancellationToken = null)
         {
             var url = m_api.ApiUrlImgUpV.
-                Action("sprite").
+                Action(Constants.ACTION_NAME_SPRITE).
                 BuildUrl();
 
             return m_api.CallApiAsync<SpriteResult>(
@@ -3284,10 +3332,26 @@
         public SpriteResult MakeSprite(SpriteParams parameters)
         {
             var url = m_api.ApiUrlImgUpV.
-                Action("sprite").
+                Action(Constants.ACTION_NAME_SPRITE).
                 BuildUrl();
 
             return m_api.CallApi<SpriteResult>(HttpMethod.POST, url, parameters, null);
+        }
+
+        /// <summary>
+        /// Gets a signed URL to download generated sprite.
+        /// </summary>
+        /// <param name="parameters">Parameters of Sprite operation.</param>
+        /// <returns>Download URL.</returns>
+        public string DownloadSprite(SpriteParams parameters)
+        {
+            parameters.Mode = ArchiveCallMode.Download;
+            var urlBuilder = new UrlBuilder(
+                m_api.ApiUrlImgUpV.
+                    Action(Constants.ACTION_NAME_SPRITE).
+                    BuildUrl());
+
+            return GetDownloadUrl(urlBuilder, parameters.ToParamsDictionary());
         }
 
         /// <summary>
@@ -3299,7 +3363,7 @@
         public Task<MultiResult> MultiAsync(MultiParams parameters, CancellationToken? cancellationToken = null)
         {
             var url = m_api.ApiUrlImgUpV.
-                Action("multi").
+                Action(Constants.ACTION_NAME_MULTI).
                 BuildUrl();
 
             return m_api.CallApiAsync<MultiResult>(
@@ -3319,10 +3383,26 @@
         public MultiResult Multi(MultiParams parameters)
         {
             var url = m_api.ApiUrlImgUpV.
-                Action("multi").
+                Action(Constants.ACTION_NAME_MULTI).
                 BuildUrl();
 
             return m_api.CallApi<MultiResult>(HttpMethod.POST, url, parameters, null);
+        }
+
+        /// <summary>
+        /// Gets a signed URL to download animated GIF file generated through multi request.
+        /// </summary>
+        /// <param name="parameters">Parameters of Multi operation.</param>
+        /// <returns>Download URL.</returns>
+        public string DownloadMulti(MultiParams parameters)
+        {
+            parameters.Mode = ArchiveCallMode.Download;
+            var urlBuilder = new UrlBuilder(
+                    m_api.ApiUrlImgUpV.
+                    Action(Constants.ACTION_NAME_MULTI).
+                    BuildUrl());
+
+            return GetDownloadUrl(urlBuilder, parameters.ToParamsDictionary());
         }
 
         /// <summary>

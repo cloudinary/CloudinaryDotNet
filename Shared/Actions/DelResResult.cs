@@ -14,7 +14,7 @@
         /// an issue).
         /// </summary>
         [DataMember(Name = "deleted")]
-        public Dictionary<string, string> Deleted { get; protected set; }
+        public Dictionary<string, string> Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets a value for a situation when a deletion request has more than 1000 resources to delete, the response includes the
@@ -23,19 +23,19 @@
         /// parameter of the following deletion request.
         /// </summary>
         [DataMember(Name = "next_cursor")]
-        public string NextCursor { get; protected set; }
+        public string NextCursor { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether whether resources were partially deleted. Use it with the <see cref="NextCursor"/> property.
         /// </summary>
         [DataMember(Name = "partial")]
-        public bool Partial { get; protected set; }
+        public bool Partial { get; set; }
 
         /// <summary>
         /// Gets or sets detailed statistics of deleted resource.
         /// </summary>
         [DataMember(Name = "deleted_counts")]
-        public Dictionary<string, DeletedDataStatistics> DeletedCounts { get; protected set; }
+        public Dictionary<string, DeletedDataStatistics> DeletedCounts { get; set; }
     }
 
     /// <summary>
@@ -48,12 +48,12 @@
         /// Gets or sets count of original resources deleted.
         /// </summary>
         [DataMember(Name = "original")]
-        public int Original { get; protected set; }
+        public int Original { get; set; }
 
         /// <summary>
         /// Gets or sets count of derived resources deleted.
         /// </summary>
         [DataMember(Name = "derived")]
-        public int Derived { get; protected set; }
+        public int Derived { get; set; }
     }
 }

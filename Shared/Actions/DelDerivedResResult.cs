@@ -14,6 +14,6 @@
         /// (deleted unless there was an issue).
         /// </summary>
         [DataMember(Name = "deleted")]
-        public Dictionary<string, string> Deleted { get; protected set; }
+        public Dictionary<string, string> Deleted { get; set; }
     }
 }
