@@ -132,11 +132,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Default parameterless constructor.
-        /// Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public ApiShared()
-            : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL"))
         {
+            Account = new Account();
         }
 
         /// <summary>
