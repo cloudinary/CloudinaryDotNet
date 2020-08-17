@@ -60,6 +60,12 @@
         public QualityAnalysis QualityAnalysis { get; set; }
 
         /// <summary>
+        /// Gets or sets the quality score.
+        /// </summary>
+        [DataMember(Name = "quality_score")]
+        public double QualityScore { get; set; }
+
+        /// <summary>
         /// Gets or sets the predominant colors and color histogram of the uploaded image.
         /// Note: If all returned colors are opaque, then 6-digit RGB hex values are returned.
         /// If one or more colors contain an alpha channel, then 8-digit RGBA hex quadruplet values are returned.
