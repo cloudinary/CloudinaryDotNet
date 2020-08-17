@@ -44,6 +44,12 @@
         public QualityAnalysis QualityAnalysis { get; set; }
 
         /// <summary>
+        /// Gets or sets the quality score.
+        /// </summary>
+        [DataMember(Name = "quality_score")]
+        public double QualityScore { get; set; }
+
+        /// <summary>
         /// Gets or sets color information: predominant colors and histogram of 32 leading colors.
         /// </summary>
         [DataMember(Name = "colors")]
