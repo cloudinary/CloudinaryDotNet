@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Security.Cryptography;
     using System.Text;
     using System.Text.Encodings.Web;
@@ -143,6 +144,106 @@
             }
 
             return signature.ToString();
+        }
+
+        /// <summary>
+        /// Prepare HTTP headers that denote that request content is encoded in JSON format.
+        /// </summary>
+        /// <returns>Map of HTTP headers.</returns>
+        internal static Dictionary<string, string> PrepareJsonHeaders()
+        {
+            var extraHeaders = new Dictionary<string, string>
+            {
+                {
+                    Constants.HEADER_CONTENT_TYPE,
+                    Constants.CONTENT_TYPE_APPLICATION_JSON
+                },
+            };
+
+            return extraHeaders;
+        }
+
+        /// <summary>
+        /// Validate that an object's property is specified.
+        /// </summary>
+        /// <param name="propertyExpr">Function that gets object's property value.</param>
+        internal static void ShouldBeSpecified(Expression<Func<object>> propertyExpr)
+        {
+            CheckProperty(propertyExpr, val => val == null, "must be specified");
+        }
+
+        /// <summary>
+        /// Validate that an object's property is specified.
+        /// </summary>
+        /// <param name="propertyExpr">Function that gets object's property value.</param>
+        /// <typeparam name="T">Value type.</typeparam>
+        internal static void ShouldBeSpecified<T>(Expression<Func<T?>> propertyExpr)
+            where T : struct
+        {
+            CheckProperty(propertyExpr, val => !val.HasValue, "must be specified");
+        }
+
+        /// <summary>
+        /// Validate that an object's property is not specified.
+        /// </summary>
+        /// <param name="propertyExpr">Expression that gets object's property value.</param>
+        internal static void ShouldNotBeSpecified(Expression<Func<object>> propertyExpr)
+        {
+            CheckProperty(propertyExpr, val => val != null, "must not be specified");
+        }
+
+        /// <summary>
+        /// Validate that an object's property is not empty string.
+        /// </summary>
+        /// <param name="propertyExpr">Expression that gets object's property value.</param>
+        /// <param name="message">General part of the validation exception message.</param>
+        internal static void ShouldNotBeEmpty(Expression<Func<string>> propertyExpr, string message = "must not be empty")
+        {
+            CheckProperty(propertyExpr, string.IsNullOrEmpty, message);
+        }
+
+        /// <summary>
+        /// Validate that an object's property is not empty collection.
+        /// </summary>
+        /// <param name="propertyExpr">Expression that gets object's property value.</param>
+        /// <typeparam name="TP">Collection item type.</typeparam>
+        internal static void ShouldNotBeEmpty<TP>(Expression<Func<List<TP>>> propertyExpr)
+        {
+            var propertyValue = propertyExpr.Compile()();
+            if (propertyValue == null || !propertyValue.Any())
+            {
+                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must not be empty");
+            }
+        }
+
+        private static void CheckProperty<T>(Expression<Func<T>> propertyExpr, Func<T, bool> condition, string message = null)
+        {
+            var propertyValue = propertyExpr.Compile()();
+            if (condition.Invoke(propertyValue))
+            {
+                var errorMessage = string.IsNullOrEmpty(message)
+                    ? $"{GetPropertyName(propertyExpr.Body)}"
+                    : $"{GetPropertyName(propertyExpr.Body)} {message}";
+                throw new ArgumentException(errorMessage);
+            }
+        }
+
+        private static string GetPropertyName(System.Linq.Expressions.Expression propertyExpr)
+        {
+            switch (propertyExpr)
+            {
+                case MemberExpression memberExpression:
+                    return memberExpression.Member.Name;
+
+                case UnaryExpression unaryExpression:
+                    {
+                        var operandExpr = (MemberExpression)unaryExpression.Operand;
+                        return operandExpr.Member.Name;
+                    }
+
+                default:
+                    return string.Empty;
+            }
         }
     }
 }

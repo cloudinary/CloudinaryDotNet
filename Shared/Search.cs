@@ -154,14 +154,6 @@
             return sParams;
         }
 
-        private static Dictionary<string, string> PrepareHeaders()
-        {
-            Dictionary<string, string> extraHeaders = new Dictionary<string, string>();
-            extraHeaders.Add(Constants.HEADER_CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON);
-
-            return extraHeaders;
-        }
-
         /// <summary>
         /// Execute search request.
         /// </summary>
@@ -173,7 +165,7 @@
                 SearchResourcesUrl.BuildUrl(),
                 PrepareSearchParams(),
                 null,
-                PrepareHeaders());
+                Utils.PrepareJsonHeaders());
         }
 
         /// <summary>
@@ -188,7 +180,7 @@
                 SearchResourcesUrl.BuildUrl(),
                 PrepareSearchParams(),
                 null,
-                PrepareHeaders(),
+                Utils.PrepareJsonHeaders(),
                 cancellationToken);
         }
     }

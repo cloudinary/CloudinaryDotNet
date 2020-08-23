@@ -13,12 +13,12 @@
         /// Gets or sets list of details of published resources.
         /// </summary>
         [DataMember(Name = "published")]
-        public List<object> Published { get; protected set; }
+        public List<object> Published { get; set; }
 
         /// <summary>
         /// Gets or sets list of details of the resources with failed publish.
         /// </summary>
         [DataMember(Name = "failed")]
-        public List<object> Failed { get; protected set; }
+        public List<object> Failed { get; set; }
     }
 }

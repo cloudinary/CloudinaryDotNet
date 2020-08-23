@@ -15,7 +15,10 @@
     <Content Include="$(MSBuildThisFileDirectory)appsettings.json.sample" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Provisioning\AccountApi\AccountProvisioningAsyncTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Provisioning\AccountApi\AccountProvisioningTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AdminApi\MetaDataTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Provisioning\ProvisioningIntegrationTestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RetryWithDelayAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadApi\PublishMethodsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UploadApi\MultiMethodsTest.cs" />
@@ -52,6 +55,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\TestLargeImage.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Provisioning" />
     <Folder Include="$(MSBuildThisFileDirectory)SearchApi\" />
     <Folder Include="$(MSBuildThisFileDirectory)UploadApi\" />
   </ItemGroup>

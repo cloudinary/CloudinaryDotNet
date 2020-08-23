@@ -47,7 +47,10 @@
         /// </summary>
         public static string USER_AGENT = BuildUserAgent();
 
-        private string m_apiAddr = "https://" + ADDR_API;
+        /// <summary>
+        /// URL of the cloudinary API.
+        /// </summary>
+        protected string m_apiAddr = "https://" + ADDR_API;
 
         /// <summary>
         /// Whether to use a sub domain.
@@ -129,11 +132,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiShared"/> class.
         /// Default parameterless constructor.
-        /// Assumes that environment variable CLOUDINARY_URL is set.
         /// </summary>
         public ApiShared()
-            : this(Environment.GetEnvironmentVariable("CLOUDINARY_URL"))
         {
+            Account = new Account();
         }
 
         /// <summary>
@@ -360,20 +362,6 @@
         }
 
         /// <summary>
-        /// Virtual method to call the cloudinary API. This method should be overridden in child classes.
-        /// </summary>
-        /// <param name="method">Http request method.</param>
-        /// <param name="url">API URL.</param>
-        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
-        /// <param name="file">(Optional) Add file to the body of the API call.</param>
-        /// <param name="extraHeaders">Headers to add to the request.</param>
-        /// <returns>Parsed response from the cloudinary API.</returns>
-        public virtual object InternalCall(HttpMethod method, string url, SortedDictionary<string, object> parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
-        {
-            throw new Exception("Please call overriden method");
-        }
-
-        /// <summary>
         /// Call the Cloudinary API and parse HTTP response asynchronously.
         /// </summary>
         /// <typeparam name="T">Type of the response.</typeparam>
@@ -453,8 +441,13 @@
             CancellationToken? cancellationToken = null)
         {
             using (var request =
-                await PrepareRequestBodyAsync(requestBuilder(url), method, parameters, file, extraHeaders, cancellationToken)
-                    .ConfigureAwait(false))
+                await PrepareRequestBodyAsync(
+                    requestBuilder(url),
+                    method,
+                    parameters,
+                    file,
+                    extraHeaders,
+                    cancellationToken).ConfigureAwait(false))
             {
                 var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
                 return await Client.SendAsync(request, httpCancellationToken).ConfigureAwait(false);

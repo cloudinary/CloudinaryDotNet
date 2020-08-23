@@ -252,7 +252,19 @@
             }
         }
 
-        private void PrePrepareRequestBody(HttpRequestMessage request, HttpMethod method, Dictionary<string, string> extraHeaders)
+        /// <summary>
+        /// Gets authentication credentials.
+        /// </summary>
+        /// <returns>Credentials string for authentication.</returns>
+        protected virtual string GetApiCredentials()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Account.ApiKey, Account.ApiSecret);
+        }
+
+        private void PrePrepareRequestBody(
+            HttpRequestMessage request,
+            HttpMethod method,
+            Dictionary<string, string> extraHeaders)
         {
             SetHttpMethod(method, request);
 
@@ -263,7 +275,7 @@
                 : string.Format(CultureInfo.InvariantCulture, "{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Account.ApiKey, Account.ApiSecret));
+            byte[] authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
             request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -27,9 +27,31 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             AssertUsageResult(result);
         }
 
-        private void AssertUsageResult(UsageResult result)
+        [Test, RetryWithDelay]
+        public void TestUsageByDate()
         {
-            Assert.NotNull(result);
+            var result = m_cloudinary.GetUsage(GetYesterdayDate());
+
+            AssertUsageResult(result);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestUsageByDateAsync()
+        {
+            var result = await m_cloudinary.GetUsageAsync(GetYesterdayDate());
+
+            AssertUsageResult(result);
+        }
+
+        private static void AssertUsageResult(UsageResult result)
+        {
+            Assert.NotNull(result.LastUpdated);
+            Assert.IsNull(result.Error?.Message);
+        }
+
+        private static DateTime GetYesterdayDate()
+        {
+            return DateTime.Today.AddDays(-1);
         }
     }
 }
