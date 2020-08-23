@@ -273,6 +273,28 @@
         }
 
         /// <summary>
+        /// Creates and returns an URL that allows downloading the backed-up asset
+        /// based on the the asset ID and the version ID.
+        /// </summary>
+        /// <param name="assetId">ID of the asset.</param>
+        /// <param name="versionId">Version ID of the asset.</param>
+        /// <returns>Url for downloading the backed-up asset.</returns>
+        public string DownloadBackedUpAsset(string assetId, string versionId)
+        {
+            Utils.ShouldNotBeEmpty(() => assetId);
+            Utils.ShouldNotBeEmpty(() => versionId);
+
+            var parameters = new SortedDictionary<string, object>
+            {
+                { "asset_id", assetId },
+                { "version_id", versionId },
+            };
+
+            var urlBuilder = new UrlBuilder(GetApiUrlV().Action("download_backup").BuildUrl());
+            return GetDownloadUrl(urlBuilder, parameters);
+        }
+
+        /// <summary>
         /// Publishes resources by prefix asynchronously.
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>

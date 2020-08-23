@@ -154,9 +154,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             AssertGetResourceResultAfterRestore(resource_backup1);
             AssertGetResourceResultAfterRestore(resource_backup2);
-
-            m_cloudinary.DeleteResources(publicIdBackup1);
-            m_cloudinary.DeleteResources(publicIdBackup2);
         }
 
         [Test, RetryWithDelay]
