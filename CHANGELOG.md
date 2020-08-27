@@ -1,4 +1,32 @@
 
+1.12.0 / 2020-08-17
+===================
+
+New functionality
+-----------------
+
+  * Add Account Provisioning - User Management API
+  * Add `DownloadSprite` and `DownloadMulti` helpers
+  * Add `DownloadFolder` helper
+  * Add support for `Date` in `Usage` Admin API
+  * Add enhanced quality scores to `QualityAnalysis` result
+  
+Other Changes
+-------------
+
+  * Fix unicode filename handling in upload API
+  * Fix support for integer parameter value
+  * Fix `UpdateTransform` Admin API
+  * Fix `CustomFunction` causes exception in Transformation
+  * Detect data URLs with a suffix in mime type
+  * Make response objects setters public
+  * Improve visibility of supported frameworks in nuspec
+  * Enable code style rules
+  * Normalise line endings
+  * Add pull request template
+  * Add an attribute that retries one test with delay
+  * Add CONTRIBUTING.md
+
 1.11.0 / 2020-05-28
 ===================
 

@@ -45,7 +45,7 @@
         /// </summary>
         public override void Check()
         {
-            ShouldNotBeEmpty(() => PublicIds);
+            Utils.ShouldNotBeEmpty(() => PublicIds);
         }
 
         /// <summary>

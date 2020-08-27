@@ -62,6 +62,9 @@
         /// <summary> Resource type name for video asset.</summary>
         public const string RESOURCE_TYPE_VIDEO = "video";
 
+        /// <summary> Resource type name for all asset types.</summary>
+        public const string RESOURCE_TYPE_ALL = "all";
+
         /// <summary> Parameter name for asset resource type.</summary>
         public const string RESOURCE_TYPE = "resource_type";
 
@@ -70,6 +73,12 @@
 
         /// <summary> Action name for fetch.</summary>
         public const string ACTION_NAME_FETCH = "fetch";
+
+        /// <summary> Action name for multi.</summary>
+        public const string ACTION_NAME_MULTI = "multi";
+
+        /// <summary> Action name for multi.</summary>
+        public const string ACTION_NAME_SPRITE = "sprite";
 
         /// <summary> URL for shared CDN.</summary>
         public const string CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
@@ -88,5 +97,20 @@
 
         /// <summary> HTTP protocol Content-Type header value for application/json.</summary>
         public const string CONTENT_TYPE_APPLICATION_JSON = "application/json";
+
+        /// <summary> Part of general API URL pattern for account api.</summary>
+        public const string PROVISIONING = "provisioning";
+
+        /// <summary> Part of general API URL pattern for account api.</summary>
+        public const string ACCOUNTS = "accounts";
+
+        /// <summary> Sub-accounts resource of account api.</summary>
+        public const string SUB_ACCOUNTS = "sub_accounts";
+
+        /// <summary> Users resource of account api.</summary>
+        public const string USERS = "users";
+
+        /// <summary> User groups resource of account api.</summary>
+        public const string USER_GROUPS = "user_groups";
     }
 }
