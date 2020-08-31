@@ -13,12 +13,12 @@
         /// Gets or sets list of successfully updated results.
         /// </summary>
         [DataMember(Name = "updated")]
-        public List<object> Updated { get; protected set; }
+        public List<object> Updated { get; set; }
 
         /// <summary>
         /// Gets or sets list of failed results.
         /// </summary>
         [DataMember(Name = "failed")]
-        public List<object> Failed { get; protected set; }
+        public List<object> Failed { get; set; }
     }
 }

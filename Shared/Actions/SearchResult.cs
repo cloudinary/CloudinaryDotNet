@@ -14,32 +14,32 @@
         /// Gets or sets the total count of assets matching the search criteria.
         /// </summary>
         [DataMember(Name = "total_count")]
-        public int TotalCount { get; protected set; }
+        public int TotalCount { get; set; }
 
         /// <summary>
         /// Gets or sets the time taken to process the request.
         /// </summary>
         [DataMember(Name = "time")]
-        public long Time { get; protected set; }
+        public long Time { get; set; }
 
         /// <summary>
         /// Gets or sets the details of each of the assets (resources) found.
         /// </summary>
         [DataMember(Name = "resources")]
-        public List<SearchResource> Resources { get; protected set; }
+        public List<SearchResource> Resources { get; set; }
 
         /// <summary>
         /// Gets or sets when a search request has more results to return than max_results, the next_cursor value is returned as
         /// part of the response.
         /// </summary>
         [DataMember(Name = "next_cursor")]
-        public string NextCursor { get; protected set; }
+        public string NextCursor { get; set; }
 
         /// <summary>
         /// Gets or sets counts of assets, grouped by specified parameters.
         /// </summary>
         [DataMember(Name = "aggregations")]
-        public Dictionary<string, Dictionary<string, int>> Aggregations { get; protected set; }
+        public Dictionary<string, Dictionary<string, int>> Aggregations { get; set; }
     }
 
     /// <summary>
@@ -58,31 +58,31 @@
         /// Gets or sets the public id of the asset.
         /// </summary>
         [DataMember(Name = "public_id")]
-        public string PublicId { get; protected set; }
+        public string PublicId { get; set; }
 
         /// <summary>
         /// Gets or sets folder name where the resource is stored.
         /// </summary>
         [DataMember(Name = "folder")]
-        public string Folder { get; protected set; }
+        public string Folder { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the resource file.
         /// </summary>
         [DataMember(Name = "filename")]
-        public string FileName { get; protected set; }
+        public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the format of the asset (png, mp4, etc...).
         /// </summary>
         [DataMember(Name = "format")]
-        public string Format { get; protected set; }
+        public string Format { get; set; }
 
         /// <summary>
         /// Gets or sets current version of the resource.
         /// </summary>
         [DataMember(Name = "version")]
-        public string Version { get; protected set; }
+        public string Version { get; set; }
 
         /// <summary>
         /// Gets the type of resource. Possible values: image, raw, video.
@@ -93,7 +93,7 @@
         /// Gets or sets the storage type.
         /// </summary>
         [DataMember(Name = "type")]
-        public string Type { get; protected set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets date when asset was created.
@@ -109,7 +109,7 @@
         /// Gets or sets date when the resource was created.
         /// </summary>
         [DataMember(Name = "created_at")]
-        public string CreatedAt { get; protected set; }
+        public string CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets date when asset was uploaded (overwritten).
@@ -125,7 +125,7 @@
         /// Gets or sets date when asset was uploaded (overwritten).
         /// </summary>
         [DataMember(Name = "uploaded_at")]
-        public string UploadedAt { get; protected set; }
+        public string UploadedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the asset.
@@ -141,117 +141,117 @@
         /// Gets or sets the size of the asset.
         /// </summary>
         [DataMember(Name = "bytes")]
-        public long Bytes { get; protected set; }
+        public long Bytes { get; set; }
 
         /// <summary>
         /// Gets or sets if the resource is backed up, indicates the space taken in the backup system by all backed up versions.
         /// </summary>
         [DataMember(Name = "backup_bytes")]
-        public long BackupBytes { get; protected set; }
+        public long BackupBytes { get; set; }
 
         /// <summary>
         /// Gets or sets width of the media asset.
         /// </summary>
         [DataMember(Name = "width")]
-        public int Width { get; protected set; }
+        public int Width { get; set; }
 
         /// <summary>
         /// Gets or sets width of the media asset.
         /// </summary>
         [DataMember(Name = "height")]
-        public int Height { get; protected set; }
+        public int Height { get; set; }
 
         /// <summary>
         /// Gets or sets aspect ratio of the media asset.
         /// </summary>
         [DataMember(Name = "aspect_ratio")]
-        public double AspectRatio { get; protected set; }
+        public double AspectRatio { get; set; }
 
         /// <summary>
         /// Gets or sets number of total pixels of the media asset.
         /// </summary>
         [DataMember(Name = "pixels")]
-        public long Pixels { get; protected set; }
+        public long Pixels { get; set; }
 
         /// <summary>
         /// Gets or sets the number of pages in the image, if the image has multiple pages.
         /// </summary>
         [DataMember(Name = "pages")]
-        public int Pages { get; protected set; }
+        public int Pages { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP URL for accessing the media asset.
         /// </summary>
         [DataMember(Name = "url")]
-        public string Url { get; protected set; }
+        public string Url { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTPS URL for securely accessing the media asset.
         /// </summary>
         [DataMember(Name = "secure_url")]
-        public string SecureUrl { get; protected set; }
+        public string SecureUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the status of the resource. Possible values: active, deleted.
         /// By default, a search response includes only resources with active status.
         /// </summary>
         [DataMember(Name = "status")]
-        public string Status { get; protected set; }
+        public string Status { get; set; }
 
         /// <summary>
         /// Gets or sets the authentication level currently set for the resource.
         /// Possible values: public, authenticated.
         /// </summary>
         [DataMember(Name = "access_mode")]
-        public string AccessMode { get; protected set; }
+        public string AccessMode { get; set; }
 
         /// <summary>
         /// Gets or sets parameters of the asset access management.
         /// </summary>
         [DataMember(Name = "access_control")]
-        public List<AccessControlRule> AccessControl { get; protected set; }
+        public List<AccessControlRule> AccessControl { get; set; }
 
         /// <summary>
         /// Gets or sets a value to determine whether two versions of an asset are identical.
         /// </summary>
         [DataMember(Name = "etag")]
-        public string Etag { get; protected set; }
+        public string Etag { get; set; }
 
         /// <summary>
         /// Gets or sets a list of tag names assigned to resource.
         /// </summary>
         [DataMember(Name = "tags")]
-        public string[] Tags { get; protected set; }
+        public string[] Tags { get; set; }
 
         /// <summary>
         /// Gets or sets IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
         /// </summary>
         [DataMember(Name = "image_metadata")]
-        public Dictionary<string, string> ImageMetadata { get; protected set; }
+        public Dictionary<string, string> ImageMetadata { get; set; }
 
         /// <summary>
         /// Gets or sets the key-value pairs of general textual context metadata attached to the media asset.
         /// </summary>
         [DataMember(Name = "context")]
-        public Dictionary<string, string> Context { get; protected set; }
+        public Dictionary<string, string> Context { get; set; }
 
         /// <summary>
         /// Gets or sets image analysis results.
         /// </summary>
         [DataMember(Name = "image_analysis")]
-        public ImageAnalysis ImageAnalysis { get; protected set; }
+        public ImageAnalysis ImageAnalysis { get; set; }
 
         /// <summary>
         /// Gets or sets identity data of asset creator.
         /// </summary>
         [DataMember(Name = "created_by")]
-        public IdentityInfo CreatedBy { get; protected set; }
+        public IdentityInfo CreatedBy { get; set; }
 
         /// <summary>
         /// Gets or sets identity data about resource was uploaded.
         /// </summary>
         [DataMember(Name = "uploaded_by")]
-        public IdentityInfo UploadedBy { get; protected set; }
+        public IdentityInfo UploadedBy { get; set; }
     }
 
     /// <summary>
@@ -264,44 +264,44 @@
         /// Gets or sets amount of faces the image contains.
         /// </summary>
         [DataMember(Name = "face_count")]
-        public int FaceCount { get; protected set; }
+        public int FaceCount { get; set; }
 
         /// <summary>
         /// Gets or sets a list of coordinates of detected faces.
         /// </summary>
         [DataMember(Name = "faces")]
-        public int[][] Faces { get; protected set; }
+        public int[][] Faces { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the image only contains a single grayscale channel.
         /// </summary>
         [DataMember(Name = "grayscale")]
-        public bool GrayScale { get; protected set; }
+        public bool GrayScale { get; set; }
 
         /// <summary>
         /// Gets or sets the likelihood that the image is an illustration as opposed to a photograph.
         /// A value between 0 (photo) and 1.0 (illustration).
         /// </summary>
         [DataMember(Name = "illustration_score")]
-        public double IllustrationScore { get; protected set; }
+        public double IllustrationScore { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the image contains one or more colors with an alpha channel.
         /// </summary>
         [DataMember(Name = "transparent")]
-        public bool Transparent { get; protected set; }
+        public bool Transparent { get; set; }
 
         /// <summary>
         /// Gets or sets a values to determine whether two versions of an analysis are identical.
         /// </summary>
         [DataMember(Name = "etag")]
-        public string Etag { get; protected set; }
+        public string Etag { get; set; }
 
         /// <summary>
         /// Gets or sets the predominant colors uploaded image.
         /// </summary>
         [DataMember(Name = "colors")]
-        public Dictionary<string, double> Colors { get; protected set; }
+        public Dictionary<string, double> Colors { get; set; }
     }
 
     /// <summary>
@@ -314,6 +314,6 @@
         /// Gets or sets identity access key.
         /// </summary>
         [DataMember(Name = "access_key")]
-        public string AccessKey { get; protected set; }
+        public string AccessKey { get; set; }
     }
 }

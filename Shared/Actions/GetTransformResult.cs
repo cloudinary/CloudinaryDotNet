@@ -16,7 +16,7 @@
         /// URL (e.g., w_110,h_100,c_fill).
         /// </summary>
         [DataMember(Name = "name")]
-        public string Name { get; protected set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether indicates whether the transformation can be used when strict transformations are enabled.
@@ -32,31 +32,31 @@
         /// Gets or sets a value indicating whether the transformation can be used when strict transformations are enabled.
         /// </summary>
         [DataMember(Name = "allowed_for_strict")]
-        public bool AllowedForStrict { get; protected set; }
+        public bool AllowedForStrict { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether indicates whether the transformation has been used to create a derived asset.
         /// </summary>
         [DataMember(Name = "used")]
-        public bool Used { get; protected set; }
+        public bool Used { get; set; }
 
         /// <summary>
         /// Gets or sets any requested information from executing one of the Cloudinary Add-ons on the media asset.
         /// </summary>
         [DataMember(Name = "info")]
-        public Dictionary<string, object>[] Info { get; protected set; }
+        public Dictionary<string, object>[] Info { get; set; }
 
         /// <summary>
         /// Gets or sets the list of derived assets generated (and cached) from the original media asset.
         /// </summary>
         [DataMember(Name = "derived")]
-        public TransformDerived[] Derived { get; protected set; }
+        public TransformDerived[] Derived { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether indicates whether the transformation is a named transformation.
         /// </summary>
         [DataMember(Name = "named")]
-        public bool Named { get; protected set; }
+        public bool Named { get; set; }
     }
 
     /// <summary>
@@ -76,7 +76,7 @@
         /// Gets or sets the public identifier that is used for accessing the media asset.
         /// </summary>
         [DataMember(Name = "public_id")]
-        public string PublicId { get; protected set; }
+        public string PublicId { get; set; }
 
         /// <summary>
         /// Gets the type of media asset: image, raw, or video.
@@ -90,25 +90,25 @@
         /// Gets or sets the accessibility type of the media asset: upload, private or authenticated.
         /// </summary>
         [DataMember(Name = "type")]
-        public string Type { get; protected set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the format of the media asset.
         /// </summary>
         [DataMember(Name = "format")]
-        public string Format { get; protected set; }
+        public string Format { get; set; }
 
         /// <summary>
         /// Gets or sets URL for accessing the derived media asset.
         /// </summary>
         [DataMember(Name = "url")]
-        public string Url { get; protected set; }
+        public string Url { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTPS URL for securely accessing the derived media asset.
         /// </summary>
         [DataMember(Name = "secure_url")]
-        public string SecureUrl { get; protected set; }
+        public string SecureUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the media asset in bytes.
@@ -124,12 +124,12 @@
         /// Gets or sets the size of the media asset in bytes.
         /// </summary>
         [DataMember(Name = "bytes")]
-        public long Bytes { get; protected set; }
+        public long Bytes { get; set; }
 
         /// <summary>
         /// Gets or sets id of the generated derived resource.
         /// </summary>
         [DataMember(Name = "id")]
-        public string Id { get; protected set; }
+        public string Id { get; set; }
     }
 }

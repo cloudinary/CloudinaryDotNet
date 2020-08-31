@@ -109,6 +109,17 @@
         /// <param name="dict">The dictionary.</param>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, long value)
+        {
+            dict.Add(key, value.ToString(CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Add parameter to the dictionary.
+        /// </summary>
+        /// <param name="dict">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         protected static void AddParam(SortedDictionary<string, object> dict, string key, IEnumerable<string> value)
         {
             if (value != null)
@@ -172,77 +183,6 @@
             else
             {
                 dict.Add(key, coordObj.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Validate that an object's property is specified.
-        /// </summary>
-        /// <param name="propertyExpr">Function that gets object's property value.</param>
-        protected static void ShouldBeSpecified(Expression<Func<object>> propertyExpr)
-        {
-            var propertyValue = propertyExpr.Compile()();
-            if (propertyValue == null)
-            {
-                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must be specified");
-            }
-        }
-
-        /// <summary>
-        /// Validate that an object's property is not specified.
-        /// </summary>
-        /// <param name="propertyExpr">Expression that gets object's property value.</param>
-        protected static void ShouldNotBeSpecified(Expression<Func<object>> propertyExpr)
-        {
-            var propertyValue = propertyExpr.Compile()();
-            if (propertyValue != null)
-            {
-                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must not be specified");
-            }
-        }
-
-        /// <summary>
-        /// Validate that an object's property is not empty collection.
-        /// </summary>
-        /// <param name="propertyExpr">Expression that gets object's property value.</param>
-        /// <typeparam name="TP">Collection item type.</typeparam>
-        protected static void ShouldNotBeEmpty<TP>(Expression<Func<List<TP>>> propertyExpr)
-        {
-            var propertyValue = propertyExpr.Compile()();
-            if (propertyValue == null || !propertyValue.Any())
-            {
-                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must not be empty");
-            }
-        }
-
-        /// <summary>
-        /// Validate that an object's property is not empty string.
-        /// </summary>
-        /// <param name="propertyExpr">Expression that gets object's property value.</param>
-        protected static void ShouldNotBeEmpty(Expression<Func<string>> propertyExpr)
-        {
-            var propertyValue = propertyExpr.Compile()();
-            if (string.IsNullOrEmpty(propertyValue))
-            {
-                throw new ArgumentException($"{GetPropertyName(propertyExpr.Body)} must not be empty");
-            }
-        }
-
-        private static string GetPropertyName(Expression propertyExpr)
-        {
-            switch (propertyExpr)
-            {
-                case MemberExpression memberExpression:
-                    return memberExpression.Member.Name;
-
-                case UnaryExpression unaryExpression:
-                {
-                    var operandExpr = (MemberExpression)unaryExpression.Operand;
-                    return operandExpr.Member.Name;
-                }
-
-                default:
-                    return string.Empty;
             }
         }
     }

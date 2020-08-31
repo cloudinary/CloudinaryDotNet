@@ -23,7 +23,7 @@
         /// Gets or sets the URL for accessing the created animated GIF.
         /// </summary>
         [DataMember(Name = "url")]
-        public Uri Url { get; protected set; }
+        public Uri Url { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTPS URL for securely accessing the created animated GIF.
@@ -39,18 +39,18 @@
         /// Gets or sets the HTTPS URL for securely accessing the created animated GIF.
         /// </summary>
         [DataMember(Name = "secure_url")]
-        public Uri SecureUrl { get; protected set; }
+        public Uri SecureUrl { get; set; }
 
         /// <summary>
         /// Gets or sets public ID assigned to the created GIF.
         /// </summary>
         [DataMember(Name = "public_id")]
-        public string PublicId { get; protected set; }
+        public string PublicId { get; set; }
 
         /// <summary>
         /// Gets or sets version of the created GIF.
         /// </summary>
         [DataMember(Name = "version")]
-        public string Version { get; protected set; }
+        public string Version { get; set; }
     }
 }
