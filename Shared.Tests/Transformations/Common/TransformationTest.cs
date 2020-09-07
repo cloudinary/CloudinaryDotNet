@@ -54,6 +54,21 @@ namespace CloudinaryDotNet.Test.Transformations.Common
         }
 
         [Test]
+        public void TestContextMetadataToUserVariables()
+        {
+            var transformation = new Transformation()
+                .Variables(
+                    Expression.Variable("$xpos", "ctx:!x_pos!_to_f"),
+                    Expression.Variable("$ypos", "ctx:!y_pos!_to_f"))
+                .Crop("crop")
+                .X("$xpos * w")
+                .Y("$ypos * h");
+
+            const string expected = "$xpos_ctx:!x_pos!_to_f,$ypos_ctx:!y_pos!_to_f,c_crop,x_$xpos_mul_w,y_$ypos_mul_h";
+            Assert.AreEqual(expected, transformation.ToString());
+        }
+
+        [Test]
         public void TestShouldSupportTextVariableValues()
         {
             var t = new Transformation()
