@@ -9,7 +9,8 @@ namespace CloudinaryDotNet.Actions
     public class ListUsersParams : BaseParams
     {
         /// <summary>
-        /// Gets or sets whether to only return pending users. Default: false (all users).
+        /// Gets or sets whether to limit results to pending users (true), users that are not pending (false),
+        /// or all users (undefined, the default).
         /// </summary>
         public bool? Pending { get; set; }
 
