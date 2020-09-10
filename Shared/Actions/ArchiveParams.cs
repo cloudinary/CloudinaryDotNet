@@ -568,16 +568,16 @@
                 AddParam(dict, "skip_transformation_name", m_skipTransformationName);
             }
 
+            if (!string.IsNullOrEmpty(m_targetPublicId))
+            {
+                AddParam(dict, "target_public_id", m_targetPublicId);
+            }
+
             if (m_mode == ArchiveCallMode.Create)
             {
                 if (m_async)
                 {
                     AddParam(dict, "async", m_async);
-                }
-
-                if (!string.IsNullOrEmpty(m_targetPublicId))
-                {
-                    AddParam(dict, "target_public_id", m_targetPublicId);
                 }
 
                 if (m_targetTags != null && m_targetTags.Count > 0)
