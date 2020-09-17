@@ -1,4 +1,19 @@
 
+1.13.0 / 2020-09-17
+===================
+
+New functionality
+-----------------
+
+  * Add support for `TargetPublicId` in `DownloadArchiveUrl`
+  
+Other Changes
+-------------
+
+  * Fix `ImageMetadata` list values support in `SearchResult`
+  * Add tests to Provisioning API
+  * Add test for context metadata as user variables
+
 1.12.0 / 2020-08-17
 ===================
 
