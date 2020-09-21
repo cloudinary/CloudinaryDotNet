@@ -102,8 +102,25 @@
             }
 
             expression = Regex.Replace(expression, "[ _]+", "_");
-            string pattern = GetPattern();
-            return Regex.Replace(expression, pattern, m => GetOperatorReplacement(m.Value));
+            const string userVariablePattern = "\\$_*[^_]+";
+
+            var generalPattern = GetPattern();
+            var matcher = new Regex(userVariablePattern, RegexOptions.IgnoreCase).Match(expression);
+            var sb = new StringBuilder();
+            var lastMatchEnd = 0;
+            while (matcher.Success)
+            {
+                var matcherGroup = matcher.Groups[0];
+                var beforeMatch = expression.Substring(lastMatchEnd, matcherGroup.Index - lastMatchEnd);
+                sb.Append(Regex.Replace(beforeMatch, generalPattern, m => GetOperatorReplacement(m.Value)));
+                sb.Append(matcherGroup.Value);
+                lastMatchEnd = matcherGroup.Index + matcherGroup.Length;
+                matcher = matcher.NextMatch();
+            }
+
+            var tail = expression.Substring(lastMatchEnd);
+            sb.Append(Regex.Replace(tail, generalPattern, m => GetOperatorReplacement(m.Value)));
+            return sb.ToString();
         }
 
         /// <summary>
