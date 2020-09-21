@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Search response with information about the assets matching the search criteria.
@@ -228,6 +229,12 @@
         /// </summary>
         [DataMember(Name = "image_metadata")]
         public Dictionary<string, object> ImageMetadata { get; set; }
+
+        /// <summary>
+        /// Gets or sets a key-value pairs of custom metadata fields associated with the resource.
+        /// </summary>
+        [DataMember(Name = "metadata")]
+        public JToken MetadataFields { get; set; }
 
         /// <summary>
         /// Gets or sets the key-value pairs of general textual context metadata attached to the media asset.
