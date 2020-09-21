@@ -282,6 +282,25 @@ namespace CloudinaryDotNet.IntegrationTest
 
             return m_cloudinary.UploadAsync(uploadParams, type);
         }
+        /// <summary>
+        /// A convenient method for creating a structured metadata field before testing.
+        /// </summary>
+        /// <param name="fieldLabelSuffix">The distinguishable suffix.</param>
+        /// <returns>The ExternalId of the structured metadata field.</returns>
+        protected string CreateMetadataField(string fieldLabelSuffix)
+        {
+            var metadataLabel = GetUniqueMetadataFieldLabel(fieldLabelSuffix);
+            var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
+            var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
+
+            Assert.NotNull(metadataResult);
+
+            var metadataFieldId = metadataResult.ExternalId;
+            if (!string.IsNullOrEmpty(metadataFieldId))
+                m_metadataFieldsToClear.Add(metadataFieldId);
+
+            return metadataFieldId;
+        }
 
         private void PopulateMissingRawUploadParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
         {

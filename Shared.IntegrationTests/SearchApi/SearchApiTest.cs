@@ -21,6 +21,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
 
         private const string AGG_FIELD_VALUE = "resource_type";
         private const string METADATA_FIELD_NAME = "image_metadata";
+        private const string STRUCTURED_METADATA_FIELD_NAME = "metadata";
         private const string TAGS_FIELD_NAME = "tags";
         private const string CONTEXT_FIELD_NAME = "context";
         private const string IMAGE_ANALYSIS_FIELD_NAME = "image_analysis";
@@ -36,6 +37,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             m_expressionTag = $"tags:{m_searchTag}";
             m_publicIdsSorted = new string[RESOURCES_COUNT];
 
+            CreateMetadataField("metadata_search");
 
             for (var i = 0; i < RESOURCES_COUNT; i++)
             {
@@ -54,7 +56,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
                 m_publicIdsSorted[i] = publicId;
                 m_cloudinary.Upload(uploadParams);
             }
-            
+
             Array.Sort(m_publicIdsSorted);
             m_expressionPublicId = $"public_id: {m_publicIdsSorted[0]}";
             Thread.Sleep(INDEXING_WAIT_TIME);
@@ -68,7 +70,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.NotNull(result.Resources);
             Assert.AreEqual(RESOURCES_COUNT, result.Resources.Count);
         }
-        
+
         [Test, RetryWithDelay]
         public void TestSearchResourceByPublicId()
         {
@@ -156,7 +158,8 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
         {
             var result = m_cloudinary.Search().Expression($"public_id: {m_singleResourcePublicId}")
                 .WithField(METADATA_FIELD_NAME).WithField(IMAGE_ANALYSIS_FIELD_NAME)
-                .WithField(CONTEXT_FIELD_NAME).WithField(TAGS_FIELD_NAME).Execute();
+                .WithField(CONTEXT_FIELD_NAME).WithField(TAGS_FIELD_NAME).WithField(STRUCTURED_METADATA_FIELD_NAME)
+                .Execute();
             var foundResource = result.Resources.First();
 
             Assert.AreEqual(m_singleResourcePublicId, foundResource.PublicId);
@@ -183,6 +186,7 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsNotEmpty(foundResource.Etag);
             Assert.Contains(m_searchTag, foundResource.Tags);
             Assert.IsNotEmpty(foundResource.ImageMetadata);
+            Assert.IsNotEmpty(foundResource.MetadataFields);
             Assert.AreEqual(1, foundResource.Context.Count);
             Assert.AreEqual(0, foundResource.ImageAnalysis.FaceCount);
             Assert.IsNotNull(foundResource.ImageAnalysis);
