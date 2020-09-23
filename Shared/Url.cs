@@ -1341,41 +1341,6 @@
         private StringDictionary queryString = null;
 
         /// <summary>
-        /// Gets the query information included in the Url.
-        /// </summary>
-        public StringDictionary QueryString
-        {
-            get
-            {
-                if (queryString == null)
-                {
-                    queryString = new StringDictionary();
-                }
-
-                return queryString;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a path to the resource referenced by the Url.
-        /// </summary>
-        public string PageName
-        {
-            get
-            {
-                string path = Path;
-                return path.Substring(path.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            }
-
-            set
-            {
-                string path = Path;
-                path = path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal));
-                Path = string.Concat(path, "/", value);
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="UrlBuilder"/> class.
         /// Default parameterless constructor.
         /// </summary>
@@ -1462,6 +1427,41 @@
         public UrlBuilder(string scheme, string host, int port, string path, string extraValue)
             : base(scheme, host, port, path, extraValue)
         {
+        }
+
+        /// <summary>
+        /// Gets the query information included in the Url.
+        /// </summary>
+        public StringDictionary QueryString
+        {
+            get
+            {
+                if (queryString == null)
+                {
+                    queryString = new StringDictionary();
+                }
+
+                return queryString;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a path to the resource referenced by the Url.
+        /// </summary>
+        public string PageName
+        {
+            get
+            {
+                string path = Path;
+                return path.Substring(path.LastIndexOf("/", StringComparison.Ordinal) + 1);
+            }
+
+            set
+            {
+                string path = Path;
+                path = path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal));
+                Path = string.Concat(path, "/", value);
+            }
         }
 
         /// <summary>

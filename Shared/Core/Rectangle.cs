@@ -45,6 +45,27 @@
         public int Y { get; set; }
 
         /// <summary>
+        /// Equality operator for two rectangles.
+        /// </summary>
+        /// <param name="left">First rectangle to compare.</param>
+        /// <param name="right">Second rectangle to compare.</param>
+        /// <returns>The computed hashcode.</returns>
+        public static bool operator ==(Rectangle left, Rectangle right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Inequality operator for two rectangles.
+        /// </summary>
+        /// <param name="left">First rectangle to compare.</param>
+        /// <param name="right">Second rectangle to compare.</param>
+        public static bool operator !=(Rectangle left, Rectangle right)
+        {
+            return !left.Equals(right);
+        }
+
+        /// <summary>
         /// Converts the attributes of this <see cref="Rectangle"/> to a human-readable string.
         /// </summary>
         /// <returns>
@@ -95,27 +116,6 @@
                 hashCode = (hashCode * 397) ^ Y;
                 return hashCode;
             }
-        }
-
-        /// <summary>
-        /// Equality operator for two rectangles.
-        /// </summary>
-        /// <param name="left">First rectangle to compare.</param>
-        /// <param name="right">Second rectangle to compare.</param>
-        /// <returns>The computed hashcode.</returns>
-        public static bool operator ==(Rectangle left, Rectangle right)
-        {
-            return left.Equals(right);
-        }
-
-        /// <summary>
-        /// Inequality operator for two rectangles.
-        /// </summary>
-        /// <param name="left">First rectangle to compare.</param>
-        /// <param name="right">Second rectangle to compare.</param>
-        public static bool operator !=(Rectangle left, Rectangle right)
-        {
-            return !left.Equals(right);
         }
     }
 }

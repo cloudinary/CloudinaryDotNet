@@ -19,43 +19,6 @@
     public partial class Cloudinary
     {
         /// <summary>
-        /// Private helper class for specifying parameters for upload preset api call.
-        /// </summary>
-        private class UploadPresetApiParams
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="UploadPresetApiParams"/> class.
-            /// </summary>
-            /// <param name="httpMethod">Http request method.</param>
-            /// <param name="url">Url for api call.</param>
-            /// <param name="paramsCopy">Parameters of the upload preset.</param>
-            public UploadPresetApiParams(
-                HttpMethod httpMethod,
-                string url,
-                UploadPresetParams paramsCopy)
-            {
-                Url = url;
-                ParamsCopy = paramsCopy;
-                HttpMethod = httpMethod;
-            }
-
-            /// <summary>
-            /// Gets url for api call.
-            /// </summary>
-            public string Url { get; private set; }
-
-            /// <summary>
-            /// Gets parameters of the upload preset.
-            /// </summary>
-            public UploadPresetParams ParamsCopy { get; private set; }
-
-            /// <summary>
-            /// Gets http request method.
-            /// </summary>
-            public HttpMethod HttpMethod { get; private set; }
-        }
-
-        /// <summary>
         /// Resource type 'image'.
         /// </summary>
         protected const string RESOURCE_TYPE_IMAGE = "image";
@@ -79,23 +42,6 @@
         /// Cloudinary <see cref="Api"/> object.
         /// </summary>
         protected Api m_api;
-
-        /// <summary>
-        /// Gets API object that used by this instance.
-        /// </summary>
-        public Api Api
-        {
-            get { return m_api; }
-        }
-
-        /// <summary>
-        /// Gets the advanced search provider used by the Cloudinary instance.
-        /// </summary>
-        /// <returns>Instance of the <see cref="Search"/> class.</returns>
-        public Search Search()
-        {
-            return new Search(m_api);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cloudinary"/> class.
@@ -122,6 +68,23 @@
         public Cloudinary(Account account)
         {
             m_api = new Api(account);
+        }
+
+        /// <summary>
+        /// Gets API object that used by this instance.
+        /// </summary>
+        public Api Api
+        {
+            get { return m_api; }
+        }
+
+        /// <summary>
+        /// Gets the advanced search provider used by the Cloudinary instance.
+        /// </summary>
+        /// <returns>Instance of the <see cref="Search"/> class.</returns>
+        public Search Search()
+        {
+            return new Search(m_api);
         }
 
         /// <summary>
@@ -1563,78 +1526,6 @@
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Upload large file parameters.
-        /// </summary>
-        internal class UploadLargeParams
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="UploadLargeParams"/> class.
-            /// </summary>
-            /// <param name="parameters">Basic raw upload parameters.</param>
-            /// <param name="bufferSize">Buffer size.</param>
-            /// <param name="api">Technological layer to work with cloudinary API.</param>
-            public UploadLargeParams(BasicRawUploadParams parameters, int bufferSize, Api api)
-            {
-                parameters.File.Reset(bufferSize);
-                this.Parameters = parameters;
-                this.Url = GetUploadUrl(parameters, api);
-                this.BufferSize = bufferSize;
-            }
-
-            /// <summary>
-            /// Gets buffer size.
-            /// </summary>
-            public int BufferSize { get; }
-
-            /// <summary>
-            /// Gets url.
-            /// </summary>
-            public string Url { get; }
-
-            /// <summary>
-            /// Gets basic raw upload parameters.
-            /// </summary>
-            public BasicRawUploadParams Parameters { get; }
-
-            /// <summary>
-            /// Gets request headers.
-            /// </summary>
-            public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>
-            {
-                ["X-Unique-Upload-Id"] = RandomPublicId(),
-            };
-
-            /// <summary>
-            /// Generate random PublicId.
-            /// </summary>
-            /// <returns>Randomly generated PublicId.</returns>
-            private static string RandomPublicId()
-            {
-                var buffer = new byte[8];
-                new Random().NextBytes(buffer);
-                return string.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
-            }
-
-            /// <summary>
-            /// A convenient method for uploading an image before testing.
-            /// </summary>
-            /// <param name="parameters">Parameters of type BasicRawUploadParams.</param>
-            /// <param name="mApi">Action to set custom upload parameters.</param>
-            /// <returns>The upload url.</returns>
-            private string GetUploadUrl(BasicRawUploadParams parameters, Api mApi)
-            {
-                var url = mApi.ApiUrlImgUpV;
-                var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
-                if (name != null)
-                {
-                    url.ResourceType(name.ToLowerInvariant());
-                }
-
-                return url.BuildUrl();
-            }
         }
 
         private static void UpdateContentRange(UploadLargeParams internalParams)
@@ -3512,6 +3403,115 @@
             m_api.FinalizeUploadParameters(parameters);
             builder.SetParameters(parameters);
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Private helper class for specifying parameters for upload preset api call.
+        /// </summary>
+        private class UploadPresetApiParams
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="UploadPresetApiParams"/> class.
+            /// </summary>
+            /// <param name="httpMethod">Http request method.</param>
+            /// <param name="url">Url for api call.</param>
+            /// <param name="paramsCopy">Parameters of the upload preset.</param>
+            public UploadPresetApiParams(
+                HttpMethod httpMethod,
+                string url,
+                UploadPresetParams paramsCopy)
+            {
+                Url = url;
+                ParamsCopy = paramsCopy;
+                HttpMethod = httpMethod;
+            }
+
+            /// <summary>
+            /// Gets url for api call.
+            /// </summary>
+            public string Url { get; private set; }
+
+            /// <summary>
+            /// Gets parameters of the upload preset.
+            /// </summary>
+            public UploadPresetParams ParamsCopy { get; private set; }
+
+            /// <summary>
+            /// Gets http request method.
+            /// </summary>
+            public HttpMethod HttpMethod { get; private set; }
+        }
+
+        /// <summary>
+        /// Upload large file parameters.
+        /// </summary>
+        internal class UploadLargeParams
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="UploadLargeParams"/> class.
+            /// </summary>
+            /// <param name="parameters">Basic raw upload parameters.</param>
+            /// <param name="bufferSize">Buffer size.</param>
+            /// <param name="api">Technological layer to work with cloudinary API.</param>
+            public UploadLargeParams(BasicRawUploadParams parameters, int bufferSize, Api api)
+            {
+                parameters.File.Reset(bufferSize);
+                this.Parameters = parameters;
+                this.Url = GetUploadUrl(parameters, api);
+                this.BufferSize = bufferSize;
+            }
+
+            /// <summary>
+            /// Gets buffer size.
+            /// </summary>
+            public int BufferSize { get; }
+
+            /// <summary>
+            /// Gets url.
+            /// </summary>
+            public string Url { get; }
+
+            /// <summary>
+            /// Gets basic raw upload parameters.
+            /// </summary>
+            public BasicRawUploadParams Parameters { get; }
+
+            /// <summary>
+            /// Gets request headers.
+            /// </summary>
+            public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>
+            {
+                ["X-Unique-Upload-Id"] = RandomPublicId(),
+            };
+
+            /// <summary>
+            /// Generate random PublicId.
+            /// </summary>
+            /// <returns>Randomly generated PublicId.</returns>
+            private static string RandomPublicId()
+            {
+                var buffer = new byte[8];
+                new Random().NextBytes(buffer);
+                return string.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
+            }
+
+            /// <summary>
+            /// A convenient method for uploading an image before testing.
+            /// </summary>
+            /// <param name="parameters">Parameters of type BasicRawUploadParams.</param>
+            /// <param name="mApi">Action to set custom upload parameters.</param>
+            /// <returns>The upload url.</returns>
+            private string GetUploadUrl(BasicRawUploadParams parameters, Api mApi)
+            {
+                var url = mApi.ApiUrlImgUpV;
+                var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
+                if (name != null)
+                {
+                    url.ResourceType(name.ToLowerInvariant());
+                }
+
+                return url.BuildUrl();
+            }
         }
     }
 }
