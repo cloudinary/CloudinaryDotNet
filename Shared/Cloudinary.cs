@@ -88,15 +88,6 @@
         }
 
         /// <summary>
-        /// Get default API URL with version.
-        /// </summary>
-        /// <returns>URL of the API.</returns>
-        private Url GetApiUrlV()
-        {
-            return m_api.ApiUrlV;
-        }
-
-        /// <summary>
         /// Gets URL to download private image.
         /// </summary>
         /// <param name="publicId">The image public ID.</param>
@@ -186,19 +177,6 @@
             }
 
             return GetDownloadUrl(urlBuilder, parameters);
-        }
-
-        private string GetUploadMappingUrl()
-        {
-            return GetApiUrlV().
-                ResourceType("upload_mappings").
-                BuildUrl();
-        }
-
-        private string GetUploadMappingUrl(UploadMappingParams parameters)
-        {
-            var uri = GetUploadMappingUrl();
-            return (parameters == null) ? uri : new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
         }
 
         /// <summary>
@@ -313,82 +291,6 @@
         public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams parameters)
         {
             return PublishResource(string.Empty, string.Empty, parameters);
-        }
-
-        private Task<PublishResourceResult> PublishResourceAsync(
-            string byKey,
-            string value,
-            PublishResourceParams parameters,
-            CancellationToken? cancellationToken)
-        {
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                parameters.AddCustomParam(byKey, value);
-            }
-
-            Url url = GetApiUrlV()
-                .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
-                .Add("publish_resources");
-
-            return m_api.CallApiAsync<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null, null, cancellationToken);
-        }
-
-        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams parameters)
-        {
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                parameters.AddCustomParam(byKey, value);
-            }
-
-            Url url = GetApiUrlV()
-                .Add("resources")
-                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
-                .Add("publish_resources");
-
-            return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
-        }
-
-        private Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeAsync(
-            string byKey,
-            string value,
-            UpdateResourceAccessModeParams parameters,
-            CancellationToken? cancellationToken = null)
-        {
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                parameters.AddCustomParam(byKey, value);
-            }
-
-            var url = GetApiUrlV()
-                 .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
-                 .Add(parameters.Type)
-                 .Add(Constants.UPDATE_ACESS_MODE);
-
-            return m_api.CallApiAsync<UpdateResourceAccessModeResult>(
-                HttpMethod.POST,
-                url.BuildUrl(),
-                parameters,
-                null,
-                null,
-                cancellationToken);
-        }
-
-        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
-        {
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                parameters.AddCustomParam(byKey, value);
-            }
-
-            Url url = GetApiUrlV()
-                 .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
-                 .Add(parameters.Type)
-                 .Add(Constants.UPDATE_ACESS_MODE);
-
-            return m_api.CallApi<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
 
         /// <summary>
@@ -738,36 +640,6 @@
         public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters) =>
             CallApi<UploadPresetResult>(PrepareUploadPresetApiParams(parameters));
 
-        private UploadPresetApiParams PrepareUploadPresetApiParams(UploadPresetParams parameters)
-        {
-            var paramsCopy = (UploadPresetParams)parameters.Copy();
-            paramsCopy.Name = null;
-
-            var url = GetApiUrlV()
-                .Add("upload_presets")
-                .Add(parameters.Name)
-                .BuildUrl();
-
-            return new UploadPresetApiParams(HttpMethod.PUT, url, paramsCopy);
-        }
-
-        /// <summary>
-        /// Call api with specified parameters.
-        /// </summary>
-        /// <param name="apiParams">New parameters for upload preset.</param>
-        private T CallApi<T>(UploadPresetApiParams apiParams)
-            where T : BaseResult, new() =>
-            m_api.CallApi<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null);
-
-        /// <summary>
-        /// Call api with specified parameters asynchronously.
-        /// </summary>
-        /// <param name="apiParams">New parameters for upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null)
-            where T : BaseResult, new() =>
-            m_api.CallApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null, null, cancellationToken);
-
         /// <summary>
         /// Gets the upload preset asynchronously.
         /// </summary>
@@ -903,56 +775,6 @@
         }
 
         /// <summary>
-        /// Uploads a resource to Cloudinary asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters of uploading .</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Results of uploading.</returns>
-        private Task<T> UploadAsync<T>(BasicRawUploadParams parameters, CancellationToken? cancellationToken = null)
-            where T : UploadResult, new()
-        {
-            var uri = CheckUploadParametersAndGetUploadUrl(parameters);
-
-            return m_api.CallApiAsync<T>(
-                HttpMethod.POST,
-                uri,
-                parameters,
-                parameters.File,
-                null,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// Uploads a resource to Cloudinary.
-        /// </summary>
-        /// <param name="parameters">Parameters of uploading .</param>
-        /// <returns>Results of uploading.</returns>
-        private T Upload<T, TP>(TP parameters)
-            where T : UploadResult, new()
-            where TP : BasicRawUploadParams, new()
-        {
-            var uri = CheckUploadParametersAndGetUploadUrl(parameters);
-
-            return m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File);
-        }
-
-        private string CheckUploadParametersAndGetUploadUrl(BasicRawUploadParams parameters)
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
-            }
-
-            string uri = GetApiUrlV()
-                .Action(Constants.ACTION_NAME_UPLOAD)
-                .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
-                .BuildUrl();
-
-            parameters.File.Reset();
-            return uri;
-        }
-
-        /// <summary>
         /// Uploads an image file to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of image uploading .</param>
@@ -1045,21 +867,6 @@
                 fileDescription);
         }
 
-        private static SortedDictionary<string, object> NormalizeParameters(IDictionary<string, object> parameters)
-        {
-            if (parameters == null)
-            {
-                return new SortedDictionary<string, object>();
-            }
-
-            return parameters as SortedDictionary<string, object> ?? new SortedDictionary<string, object>(parameters);
-        }
-
-        private string GetUploadUrl(string resourceType)
-        {
-            return GetApiUrlV().Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
-        }
-
         /// <summary>
         /// Async call to get a list of folders in the root asynchronously.
         /// </summary>
@@ -1137,22 +944,6 @@
                 null);
         }
 
-        private string GetFolderUrl(string folder = null, GetFoldersParams parameters = null)
-        {
-            var urlWithoutParams = GetApiUrlV().Add("folders").Add(folder).BuildUrl();
-
-            return (parameters != null) ? new UrlBuilder(urlWithoutParams, parameters.ToParamsDictionary()).ToString() : urlWithoutParams;
-        }
-
-        private static void CheckFolderParameter(string folder)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException(
-                    "folder must be set. Please use RootFolders() to get list of folders in root.");
-            }
-        }
-
         /// <summary>
         /// Deletes folder asynchronously.
         /// </summary>
@@ -1217,14 +1008,6 @@
                 cancellationToken);
         }
 
-        private static void CheckIfNotEmpty(string folder)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException("Folder must be set.");
-            }
-        }
-
         /// <summary>
         /// Gets the Cloudinary account usage details asynchronously.
         /// </summary>
@@ -1272,18 +1055,6 @@
             string uri = GetUsageUrl(date);
 
             return m_api.CallApi<UsageResult>(HttpMethod.GET, uri, null, null);
-        }
-
-        private string GetUsageUrl(DateTime? date)
-        {
-            var url = GetApiUrlV().Action("usage");
-
-            if (date.HasValue)
-            {
-                url.Add(date.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture));
-            }
-
-            return url.BuildUrl();
         }
 
         /// <summary>
@@ -1528,40 +1299,6 @@
             return result;
         }
 
-        private static void UpdateContentRange(UploadLargeParams internalParams)
-        {
-            var fileDescription = internalParams.Parameters.File;
-            var fileLength = fileDescription.GetFileLength();
-            var startOffset = fileDescription.BytesSent;
-            var endOffset = startOffset + Math.Min(internalParams.BufferSize, fileLength - startOffset) - 1;
-
-            internalParams.Headers["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
-        }
-
-        private static void CheckUploadResult<T>(T result)
-            where T : UploadResult, new()
-        {
-            if (result.StatusCode != HttpStatusCode.OK)
-            {
-                var error = result.Error != null ? result.Error.Message : "Unknown error";
-                throw new Exception(
-                    $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
-            }
-        }
-
-        private static void CheckUploadParameters(BasicRawUploadParams parameters)
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
-            }
-
-            if (parameters.File == null)
-            {
-                throw new ArgumentException("Parameters.File parameter should be defined");
-            }
-        }
-
         /// <summary>
         /// Changes public identifier of a file asynchronously.
         /// </summary>
@@ -1624,13 +1361,6 @@
             var uri = GetRenameUrl(parameters);
             return m_api.CallApi<RenameResult>(HttpMethod.POST, uri, parameters, null);
         }
-
-        private string GetRenameUrl(RenameParams parameters) =>
-            m_api
-                .ApiUrlImgUpV
-                .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
-                .Action("rename")
-                .BuildUrl();
 
         /// <summary>
         /// Delete file from Cloudinary asynchronously.
@@ -2143,44 +1873,6 @@
         {
             var url = GetListResourcesUrl(parameters);
             return m_api.CallApi<ListResourcesResult>(HttpMethod.GET, url, parameters, null);
-        }
-
-        private string GetListResourcesUrl(ListResourcesParams parameters)
-        {
-            var url = GetApiUrlV().ResourceType("resources").Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
-
-            switch (parameters)
-            {
-                case ListResourcesByTagParams tagParams:
-                    if (!string.IsNullOrEmpty(tagParams.Tag))
-                    {
-                        url.Add("tags").Add(tagParams.Tag);
-                    }
-
-                    break;
-                case ListResourcesByModerationParams modParams:
-                    if (!string.IsNullOrEmpty(modParams.ModerationKind))
-                    {
-                        url.Add("moderations")
-                            .Add(modParams.ModerationKind)
-                            .Add(Api.GetCloudinaryParam(modParams.ModerationStatus));
-                    }
-
-                    break;
-                case ListResourcesByContextParams _:
-                    {
-                        url.Add("context");
-                    }
-
-                    break;
-            }
-
-            var urlBuilder = new UrlBuilder(
-                url.BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            var s = urlBuilder.ToString();
-            return s;
         }
 
         /// <summary>
@@ -2901,45 +2593,6 @@
         }
 
         /// <summary>
-        /// Calls an upload mappings API asynchronously.
-        /// </summary>
-        /// <param name="httpMethod">HTTP method.</param>
-        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
-        /// existing online locations.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
-        private Task<UploadMappingResults> CallUploadMappingsApiAsync(HttpMethod httpMethod, UploadMappingParams parameters, CancellationToken? cancellationToken = null)
-        {
-            var url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-                ? GetUploadMappingUrl()
-                : GetUploadMappingUrl(parameters);
-
-            return m_api.CallApiAsync<UploadMappingResults>(
-                httpMethod,
-                url,
-                parameters,
-                null,
-                null,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// Calls an upload mappings API.
-        /// </summary>
-        /// <param name="httpMethod">HTTP method.</param>
-        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
-        /// existing online locations.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
-        private UploadMappingResults CallUploadMappingsAPI(HttpMethod httpMethod, UploadMappingParams parameters)
-        {
-            string url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-                ? GetUploadMappingUrl()
-                : GetUploadMappingUrl(parameters);
-
-            return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
-        }
-
-        /// <summary>
         /// Returns list of all upload mappings asynchronously.
         /// </summary>
         /// <param name="parameters">
@@ -3051,26 +2704,6 @@
             return CallUploadMappingsAPI(HttpMethod.PUT, parameters);
         }
 
-        private static UploadMappingParams CreateUploadMappingParams(string folder, string template)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException("Folder property must be specified.");
-            }
-
-            if (string.IsNullOrEmpty(template))
-            {
-                throw new ArgumentException("Template must be specified.");
-            }
-
-            var parameters = new UploadMappingParams()
-            {
-                Folder = folder,
-                Template = template,
-            };
-            return parameters;
-        }
-
         /// <summary>
         /// Deletes all upload mappings asynchronously.
         /// </summary>
@@ -3147,12 +2780,6 @@
             var url = GetTransformationUrl(parameters.Name);
             return m_api.CallApiAsync<TransformResult>(HttpMethod.POST, url, parameters, null, null, cancellationToken);
         }
-
-        private string GetTransformationUrl(string transformationName) =>
-            GetApiUrlV().
-                ResourceType("transformations").
-                Add(transformationName).
-                BuildUrl();
 
         /// <summary>
         /// Creates Cloudinary transformation resource.
@@ -3383,6 +3010,379 @@
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Get default API URL with version.
+        /// </summary>
+        /// <returns>URL of the API.</returns>
+        private Url GetApiUrlV()
+        {
+            return m_api.ApiUrlV;
+        }
+
+        private string GetUploadMappingUrl()
+        {
+            return GetApiUrlV().
+                ResourceType("upload_mappings").
+                BuildUrl();
+        }
+
+        private string GetUploadMappingUrl(UploadMappingParams parameters)
+        {
+            var uri = GetUploadMappingUrl();
+            return (parameters == null) ? uri : new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
+        }
+
+        private UploadPresetApiParams PrepareUploadPresetApiParams(UploadPresetParams parameters)
+        {
+            var paramsCopy = (UploadPresetParams)parameters.Copy();
+            paramsCopy.Name = null;
+
+            var url = GetApiUrlV()
+                .Add("upload_presets")
+                .Add(parameters.Name)
+                .BuildUrl();
+
+            return new UploadPresetApiParams(HttpMethod.PUT, url, paramsCopy);
+        }
+
+        /// <summary>
+        /// Call api with specified parameters.
+        /// </summary>
+        /// <param name="apiParams">New parameters for upload preset.</param>
+        private T CallApi<T>(UploadPresetApiParams apiParams)
+            where T : BaseResult, new() =>
+            m_api.CallApi<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null);
+
+        /// <summary>
+        /// Call api with specified parameters asynchronously.
+        /// </summary>
+        /// <param name="apiParams">New parameters for upload preset.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null)
+            where T : BaseResult, new() =>
+            m_api.CallApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null, null, cancellationToken);
+
+        private Task<PublishResourceResult> PublishResourceAsync(
+            string byKey,
+            string value,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken)
+        {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
+                parameters.AddCustomParam(byKey, value);
+            }
+
+            Url url = GetApiUrlV()
+                .Add("resources")
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
+                .Add("publish_resources");
+
+            return m_api.CallApiAsync<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null, null, cancellationToken);
+        }
+
+        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams parameters)
+        {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
+                parameters.AddCustomParam(byKey, value);
+            }
+
+            Url url = GetApiUrlV()
+                .Add("resources")
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
+                .Add("publish_resources");
+
+            return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
+        }
+
+        private Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeAsync(
+            string byKey,
+            string value,
+            UpdateResourceAccessModeParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
+                parameters.AddCustomParam(byKey, value);
+            }
+
+            var url = GetApiUrlV()
+                 .Add(Constants.RESOURCES_API_URL)
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
+                 .Add(parameters.Type)
+                 .Add(Constants.UPDATE_ACESS_MODE);
+
+            return m_api.CallApiAsync<UpdateResourceAccessModeResult>(
+                HttpMethod.POST,
+                url.BuildUrl(),
+                parameters,
+                null,
+                null,
+                cancellationToken);
+        }
+
+        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
+        {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
+                parameters.AddCustomParam(byKey, value);
+            }
+
+            Url url = GetApiUrlV()
+                 .Add(Constants.RESOURCES_API_URL)
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
+                 .Add(parameters.Type)
+                 .Add(Constants.UPDATE_ACESS_MODE);
+
+            return m_api.CallApi<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
+        }
+
+        /// <summary>
+        /// Uploads a resource to Cloudinary asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of uploading .</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Results of uploading.</returns>
+        private Task<T> UploadAsync<T>(BasicRawUploadParams parameters, CancellationToken? cancellationToken = null)
+            where T : UploadResult, new()
+        {
+            var uri = CheckUploadParametersAndGetUploadUrl(parameters);
+
+            return m_api.CallApiAsync<T>(
+                HttpMethod.POST,
+                uri,
+                parameters,
+                parameters.File,
+                null,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Uploads a resource to Cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of uploading .</param>
+        /// <returns>Results of uploading.</returns>
+        private T Upload<T, TP>(TP parameters)
+            where T : UploadResult, new()
+            where TP : BasicRawUploadParams, new()
+        {
+            var uri = CheckUploadParametersAndGetUploadUrl(parameters);
+
+            return m_api.CallApi<T>(HttpMethod.POST, uri, parameters, parameters.File);
+        }
+
+        private string CheckUploadParametersAndGetUploadUrl(BasicRawUploadParams parameters)
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
+            }
+
+            string uri = GetApiUrlV()
+                .Action(Constants.ACTION_NAME_UPLOAD)
+                .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
+                .BuildUrl();
+
+            parameters.File.Reset();
+            return uri;
+        }
+
+        private static SortedDictionary<string, object> NormalizeParameters(IDictionary<string, object> parameters)
+        {
+            if (parameters == null)
+            {
+                return new SortedDictionary<string, object>();
+            }
+
+            return parameters as SortedDictionary<string, object> ?? new SortedDictionary<string, object>(parameters);
+        }
+
+        private string GetUploadUrl(string resourceType)
+        {
+            return GetApiUrlV().Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
+        }
+
+        private static void CheckIfNotEmpty(string folder)
+        {
+            if (string.IsNullOrEmpty(folder))
+            {
+                throw new ArgumentException("Folder must be set.");
+            }
+        }
+
+        private string GetFolderUrl(string folder = null, GetFoldersParams parameters = null)
+        {
+            var urlWithoutParams = GetApiUrlV().Add("folders").Add(folder).BuildUrl();
+
+            return (parameters != null) ? new UrlBuilder(urlWithoutParams, parameters.ToParamsDictionary()).ToString() : urlWithoutParams;
+        }
+
+        private static void CheckFolderParameter(string folder)
+        {
+            if (string.IsNullOrEmpty(folder))
+            {
+                throw new ArgumentException(
+                    "folder must be set. Please use RootFolders() to get list of folders in root.");
+            }
+        }
+
+        private string GetUsageUrl(DateTime? date)
+        {
+            var url = GetApiUrlV().Action("usage");
+
+            if (date.HasValue)
+            {
+                url.Add(date.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture));
+            }
+
+            return url.BuildUrl();
+        }
+
+        private static void UpdateContentRange(UploadLargeParams internalParams)
+        {
+            var fileDescription = internalParams.Parameters.File;
+            var fileLength = fileDescription.GetFileLength();
+            var startOffset = fileDescription.BytesSent;
+            var endOffset = startOffset + Math.Min(internalParams.BufferSize, fileLength - startOffset) - 1;
+
+            internalParams.Headers["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
+        }
+
+        private static void CheckUploadResult<T>(T result)
+            where T : UploadResult, new()
+        {
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                var error = result.Error != null ? result.Error.Message : "Unknown error";
+                throw new Exception(
+                    $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
+            }
+        }
+
+        private static void CheckUploadParameters(BasicRawUploadParams parameters)
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
+            }
+
+            if (parameters.File == null)
+            {
+                throw new ArgumentException("Parameters.File parameter should be defined");
+            }
+        }
+
+        private string GetRenameUrl(RenameParams parameters) =>
+            m_api
+                .ApiUrlImgUpV
+                .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
+                .Action("rename")
+                .BuildUrl();
+
+        private string GetListResourcesUrl(ListResourcesParams parameters)
+        {
+            var url = GetApiUrlV().ResourceType("resources").Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
+
+            switch (parameters)
+            {
+                case ListResourcesByTagParams tagParams:
+                    if (!string.IsNullOrEmpty(tagParams.Tag))
+                    {
+                        url.Add("tags").Add(tagParams.Tag);
+                    }
+
+                    break;
+                case ListResourcesByModerationParams modParams:
+                    if (!string.IsNullOrEmpty(modParams.ModerationKind))
+                    {
+                        url.Add("moderations")
+                            .Add(modParams.ModerationKind)
+                            .Add(Api.GetCloudinaryParam(modParams.ModerationStatus));
+                    }
+
+                    break;
+                case ListResourcesByContextParams _:
+                    {
+                        url.Add("context");
+                    }
+
+                    break;
+            }
+
+            var urlBuilder = new UrlBuilder(
+                url.BuildUrl(),
+                parameters.ToParamsDictionary());
+
+            var s = urlBuilder.ToString();
+            return s;
+        }
+
+        /// <summary>
+        /// Calls an upload mappings API asynchronously.
+        /// </summary>
+        /// <param name="httpMethod">HTTP method.</param>
+        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
+        /// existing online locations.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        private Task<UploadMappingResults> CallUploadMappingsApiAsync(HttpMethod httpMethod, UploadMappingParams parameters, CancellationToken? cancellationToken = null)
+        {
+            var url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
+                ? GetUploadMappingUrl()
+                : GetUploadMappingUrl(parameters);
+
+            return m_api.CallApiAsync<UploadMappingResults>(
+                httpMethod,
+                url,
+                parameters,
+                null,
+                null,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Calls an upload mappings API.
+        /// </summary>
+        /// <param name="httpMethod">HTTP method.</param>
+        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
+        /// existing online locations.</param>
+        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        private UploadMappingResults CallUploadMappingsAPI(HttpMethod httpMethod, UploadMappingParams parameters)
+        {
+            string url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
+                ? GetUploadMappingUrl()
+                : GetUploadMappingUrl(parameters);
+
+            return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
+        }
+
+        private static UploadMappingParams CreateUploadMappingParams(string folder, string template)
+        {
+            if (string.IsNullOrEmpty(folder))
+            {
+                throw new ArgumentException("Folder property must be specified.");
+            }
+
+            if (string.IsNullOrEmpty(template))
+            {
+                throw new ArgumentException("Template must be specified.");
+            }
+
+            var parameters = new UploadMappingParams()
+            {
+                Folder = folder,
+                Template = template,
+            };
+            return parameters;
+        }
+
+        private string GetTransformationUrl(string transformationName) =>
+            GetApiUrlV().
+                ResourceType("transformations").
+                Add(transformationName).
+                BuildUrl();
+
         private static void AppendScriptLine(StringBuilder sb, string dir, string script)
         {
             sb.Append("<script src=\"");
@@ -3403,43 +3403,6 @@
             m_api.FinalizeUploadParameters(parameters);
             builder.SetParameters(parameters);
             return builder.ToString();
-        }
-
-        /// <summary>
-        /// Private helper class for specifying parameters for upload preset api call.
-        /// </summary>
-        private class UploadPresetApiParams
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="UploadPresetApiParams"/> class.
-            /// </summary>
-            /// <param name="httpMethod">Http request method.</param>
-            /// <param name="url">Url for api call.</param>
-            /// <param name="paramsCopy">Parameters of the upload preset.</param>
-            public UploadPresetApiParams(
-                HttpMethod httpMethod,
-                string url,
-                UploadPresetParams paramsCopy)
-            {
-                Url = url;
-                ParamsCopy = paramsCopy;
-                HttpMethod = httpMethod;
-            }
-
-            /// <summary>
-            /// Gets url for api call.
-            /// </summary>
-            public string Url { get; private set; }
-
-            /// <summary>
-            /// Gets parameters of the upload preset.
-            /// </summary>
-            public UploadPresetParams ParamsCopy { get; private set; }
-
-            /// <summary>
-            /// Gets http request method.
-            /// </summary>
-            public HttpMethod HttpMethod { get; private set; }
         }
 
         /// <summary>
@@ -3512,6 +3475,43 @@
 
                 return url.BuildUrl();
             }
+        }
+
+        /// <summary>
+        /// Private helper class for specifying parameters for upload preset api call.
+        /// </summary>
+        private class UploadPresetApiParams
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="UploadPresetApiParams"/> class.
+            /// </summary>
+            /// <param name="httpMethod">Http request method.</param>
+            /// <param name="url">Url for api call.</param>
+            /// <param name="paramsCopy">Parameters of the upload preset.</param>
+            public UploadPresetApiParams(
+                HttpMethod httpMethod,
+                string url,
+                UploadPresetParams paramsCopy)
+            {
+                Url = url;
+                ParamsCopy = paramsCopy;
+                HttpMethod = httpMethod;
+            }
+
+            /// <summary>
+            /// Gets url for api call.
+            /// </summary>
+            public string Url { get; private set; }
+
+            /// <summary>
+            /// Gets parameters of the upload preset.
+            /// </summary>
+            public UploadPresetParams ParamsCopy { get; private set; }
+
+            /// <summary>
+            /// Gets http request method.
+            /// </summary>
+            public HttpMethod HttpMethod { get; private set; }
         }
     }
 }

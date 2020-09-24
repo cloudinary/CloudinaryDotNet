@@ -806,6 +806,177 @@
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Generate a transformation URL directly, without the containing image tag.
+        /// </summary>
+        /// <returns>The Url without image tag.</returns>
+        public string BuildUrl()
+        {
+            return BuildUrl(null);
+        }
+
+        /// <summary>
+        /// Generate a transformation URL directly, without the containing image tag.
+        /// </summary>
+        /// <param name="source">The source part of the Url.</param>
+        /// <returns>The Url without image tag.</returns>
+        public string BuildUrl(string source)
+        {
+            if (string.IsNullOrEmpty(m_cloudName))
+            {
+                throw new ArgumentException("cloudName must be specified!");
+            }
+
+            if (source == null)
+            {
+                source = m_source;
+            }
+
+            if (source == null)
+            {
+                source = string.Empty;
+            }
+
+            if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*") &&
+                (m_action == "upload" || m_action == "asset"))
+            {
+                return source;
+            }
+
+            if (m_action == "fetch" && !string.IsNullOrEmpty(FormatValue))
+            {
+                Transformation.FetchFormat(FormatValue);
+                FormatValue = null;
+            }
+
+            string transformationStr = Transformation.Generate();
+
+            var src = UpdateSource(source);
+
+            bool sharedDomain;
+            var prefix = GetPrefix(src.Source, out sharedDomain);
+
+            List<string> urlParts = new List<string>(new string[] { prefix });
+            if (!string.IsNullOrEmpty(m_apiVersion))
+            {
+                urlParts.Add(m_apiVersion);
+                urlParts.Add(m_cloudName);
+            }
+            else if (sharedDomain)
+            {
+                urlParts.Add(m_cloudName);
+            }
+
+            UpdateAction();
+
+            urlParts.Add(m_resourceType);
+            urlParts.Add(m_action);
+            urlParts.AddRange(m_customParts);
+
+            if (m_forceVersion &&
+                src.SourceToSign.Contains("/") && !Regex.IsMatch(src.SourceToSign, "^v[0-9]+/") &&
+                !Regex.IsMatch(src.SourceToSign, "https?:/.*") && string.IsNullOrEmpty(m_version))
+            {
+                m_version = "1";
+            }
+
+            var version = string.IsNullOrEmpty(m_version) ? string.Empty : $"v{m_version}";
+
+            if (m_signed && (m_AuthToken == null && CloudinaryConfiguration.AuthToken == null))
+            {
+                if (m_signProvider == null)
+                {
+                    throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
+                }
+
+                var signedPart = string.Join("/", new string[] { transformationStr, src.SourceToSign });
+                signedPart = Regex.Replace(signedPart, "^/+", string.Empty);
+                signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
+                signedPart = Regex.Replace(signedPart, "/$", string.Empty);
+
+                signedPart = m_signProvider.SignUriPart(signedPart, m_longUrlSignature);
+                urlParts.Add(signedPart);
+            }
+
+            urlParts.Add(transformationStr);
+            urlParts.Add(version);
+            urlParts.Add(src.Source);
+
+            string uriStr = string.Join("/", urlParts.ToArray());
+            uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
+            uriStr = Regex.Replace(uriStr, "/$", string.Empty);
+
+            if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
+            {
+                AuthToken token = m_AuthToken != null ? m_AuthToken : (CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken : null);
+
+                if (token != null && !Equals(token, CloudinaryDotNet.AuthToken.NULL_AUTH_TOKEN))
+                {
+                    var path = new Uri(uriStr).AbsolutePath;
+                    var tokenStr = token.Generate(path);
+                    uriStr = $"{uriStr}?{tokenStr}";
+                }
+            }
+
+            return uriStr;
+        }
+
+        /// <summary>
+        /// Creates a new object that is a deep copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a deep copy of this instance.
+        /// </returns>
+        public Url Clone()
+        {
+            Url newUrl = (Url)this.MemberwiseClone();
+
+            if (m_transformation != null)
+            {
+                newUrl.m_transformation = this.m_transformation.Clone();
+            }
+
+            if (m_posterTransformation != null)
+            {
+                newUrl.m_posterTransformation = m_posterTransformation.Clone();
+            }
+
+            if (m_posterUrl != null)
+            {
+                newUrl.m_posterUrl = m_posterUrl.Clone();
+            }
+
+            if (m_sourceTypes != null)
+            {
+                newUrl.m_sourceTypes = new string[m_sourceTypes.Length];
+                Array.Copy(m_sourceTypes, newUrl.m_sourceTypes, m_sourceTypes.Length);
+            }
+
+            if (m_sourceTransforms != null)
+            {
+                newUrl.m_sourceTransforms = new Dictionary<string, Transformation>();
+                foreach (var item in m_sourceTransforms)
+                {
+                    newUrl.m_sourceTransforms.Add(item.Key, item.Value.Clone());
+                }
+            }
+
+            newUrl.m_customParts = new List<string>(m_customParts);
+
+            return newUrl;
+        }
+
+        /// <summary>
+        /// Creates a new object that is a deep copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a deep copy of this instance.
+        /// </returns>
+        object CloudinaryDotNet.Core.ICloneable.Clone()
+        {
+            return Clone();
+        }
+
         private string[] GetSourceTypes()
         {
             if (m_sourceTypes != null && m_sourceTypes.Length > 0)
@@ -949,121 +1120,6 @@
             }
 
             return posterUrl;
-        }
-
-        /// <summary>
-        /// Generate a transformation URL directly, without the containing image tag.
-        /// </summary>
-        /// <returns>The Url without image tag.</returns>
-        public string BuildUrl()
-        {
-            return BuildUrl(null);
-        }
-
-        /// <summary>
-        /// Generate a transformation URL directly, without the containing image tag.
-        /// </summary>
-        /// <param name="source">The source part of the Url.</param>
-        /// <returns>The Url without image tag.</returns>
-        public string BuildUrl(string source)
-        {
-            if (string.IsNullOrEmpty(m_cloudName))
-            {
-                throw new ArgumentException("cloudName must be specified!");
-            }
-
-            if (source == null)
-            {
-                source = m_source;
-            }
-
-            if (source == null)
-            {
-                source = string.Empty;
-            }
-
-            if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*") &&
-                (m_action == "upload" || m_action == "asset"))
-            {
-                return source;
-            }
-
-            if (m_action == "fetch" && !string.IsNullOrEmpty(FormatValue))
-            {
-                Transformation.FetchFormat(FormatValue);
-                FormatValue = null;
-            }
-
-            string transformationStr = Transformation.Generate();
-
-            var src = UpdateSource(source);
-
-            bool sharedDomain;
-            var prefix = GetPrefix(src.Source, out sharedDomain);
-
-            List<string> urlParts = new List<string>(new string[] { prefix });
-            if (!string.IsNullOrEmpty(m_apiVersion))
-            {
-                urlParts.Add(m_apiVersion);
-                urlParts.Add(m_cloudName);
-            }
-            else if (sharedDomain)
-            {
-                urlParts.Add(m_cloudName);
-            }
-
-            UpdateAction();
-
-            urlParts.Add(m_resourceType);
-            urlParts.Add(m_action);
-            urlParts.AddRange(m_customParts);
-
-            if (m_forceVersion &&
-                src.SourceToSign.Contains("/") && !Regex.IsMatch(src.SourceToSign, "^v[0-9]+/") &&
-                !Regex.IsMatch(src.SourceToSign, "https?:/.*") && string.IsNullOrEmpty(m_version))
-            {
-                m_version = "1";
-            }
-
-            var version = string.IsNullOrEmpty(m_version) ? string.Empty : $"v{m_version}";
-
-            if (m_signed && (m_AuthToken == null && CloudinaryConfiguration.AuthToken == null))
-            {
-                if (m_signProvider == null)
-                {
-                    throw new NullReferenceException("Reference to ISignProvider-compatible object must be provided in order to sign URI!");
-                }
-
-                var signedPart = string.Join("/", new string[] { transformationStr, src.SourceToSign });
-                signedPart = Regex.Replace(signedPart, "^/+", string.Empty);
-                signedPart = Regex.Replace(signedPart, "([^:])/{2,}", "$1/");
-                signedPart = Regex.Replace(signedPart, "/$", string.Empty);
-
-                signedPart = m_signProvider.SignUriPart(signedPart, m_longUrlSignature);
-                urlParts.Add(signedPart);
-            }
-
-            urlParts.Add(transformationStr);
-            urlParts.Add(version);
-            urlParts.Add(src.Source);
-
-            string uriStr = string.Join("/", urlParts.ToArray());
-            uriStr = Regex.Replace(uriStr, "([^:])/{2,}", "$1/");
-            uriStr = Regex.Replace(uriStr, "/$", string.Empty);
-
-            if (m_signed && (m_AuthToken != null || CloudinaryConfiguration.AuthToken != null))
-            {
-                AuthToken token = m_AuthToken != null ? m_AuthToken : (CloudinaryConfiguration.AuthToken != null ? CloudinaryConfiguration.AuthToken : null);
-
-                if (token != null && !Equals(token, CloudinaryDotNet.AuthToken.NULL_AUTH_TOKEN))
-                {
-                    var path = new Uri(uriStr).AbsolutePath;
-                    var tokenStr = token.Generate(path);
-                    uriStr = $"{uriStr}?{tokenStr}";
-                }
-            }
-
-            return uriStr;
         }
 
         private CSource UpdateSource(string source)
@@ -1273,62 +1329,6 @@
             }
 
             return "/:-_.*".IndexOf(ch) >= 0;
-        }
-
-        /// <summary>
-        /// Creates a new object that is a deep copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a deep copy of this instance.
-        /// </returns>
-        public Url Clone()
-        {
-            Url newUrl = (Url)this.MemberwiseClone();
-
-            if (m_transformation != null)
-            {
-                newUrl.m_transformation = this.m_transformation.Clone();
-            }
-
-            if (m_posterTransformation != null)
-            {
-                newUrl.m_posterTransformation = m_posterTransformation.Clone();
-            }
-
-            if (m_posterUrl != null)
-            {
-                newUrl.m_posterUrl = m_posterUrl.Clone();
-            }
-
-            if (m_sourceTypes != null)
-            {
-                newUrl.m_sourceTypes = new string[m_sourceTypes.Length];
-                Array.Copy(m_sourceTypes, newUrl.m_sourceTypes, m_sourceTypes.Length);
-            }
-
-            if (m_sourceTransforms != null)
-            {
-                newUrl.m_sourceTransforms = new Dictionary<string, Transformation>();
-                foreach (var item in m_sourceTransforms)
-                {
-                    newUrl.m_sourceTransforms.Add(item.Key, item.Value.Clone());
-                }
-            }
-
-            newUrl.m_customParts = new List<string>(m_customParts);
-
-            return newUrl;
-        }
-
-        /// <summary>
-        /// Creates a new object that is a deep copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a deep copy of this instance.
-        /// </returns>
-        object CloudinaryDotNet.Core.ICloneable.Clone()
-        {
-            return Clone();
         }
     }
 

@@ -55,11 +55,6 @@
         }
 
         /// <summary>
-        /// Gets a value indicating whether the pointer is at the end of file.
-        /// </summary>
-        internal bool Eof => BytesSent == GetFileLength();
-
-        /// <summary>
         /// Gets stream to upload.
         /// </summary>
         public Stream Stream { get; }
@@ -78,6 +73,11 @@
         /// Gets a value indicating whether it is remote (by URL) or local file.
         /// </summary>
         public bool IsRemote { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the pointer is at the end of file.
+        /// </summary>
+        internal bool Eof => BytesSent == GetFileLength();
 
         /// <summary>
         /// Get file length.

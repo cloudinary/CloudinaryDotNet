@@ -145,15 +145,6 @@
             return queryParams;
         }
 
-        private SortedDictionary<string, object> PrepareSearchParams()
-        {
-            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
-            sParams.Add("unsigned", string.Empty);
-            sParams.Add("removeUnsignedParam", string.Empty);
-
-            return sParams;
-        }
-
         /// <summary>
         /// Execute search request.
         /// </summary>
@@ -182,6 +173,15 @@
                 null,
                 Utils.PrepareJsonHeaders(),
                 cancellationToken);
+        }
+
+        private SortedDictionary<string, object> PrepareSearchParams()
+        {
+            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
+            sParams.Add("unsigned", string.Empty);
+            sParams.Add("removeUnsignedParam", string.Empty);
+
+            return sParams;
         }
     }
 }

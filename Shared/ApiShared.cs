@@ -95,11 +95,6 @@
         public static string USER_AGENT = BuildUserAgent();
 
         /// <summary>
-        /// URL of the cloudinary API.
-        /// </summary>
-        protected string m_apiAddr = "https://" + ADDR_API;
-
-        /// <summary>
         /// Whether to use a sub domain.
         /// </summary>
         public bool CSubDomain;
@@ -167,6 +162,11 @@
         /// Sends HTTP requests and receives HTTP responses.
         /// </summary>
         public static HttpClient Client = new HttpClient();
+
+        /// <summary>
+        /// URL of the cloudinary API.
+        /// </summary>
+        protected string m_apiAddr = "https://" + ADDR_API;
 
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
@@ -401,11 +401,6 @@
                     Action(Constants.ACTION_NAME_UPLOAD).
                     ResourceType(Constants.RESOURCE_TYPE_VIDEO);
             }
-        }
-
-        private static string BuildUserAgent()
-        {
-            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
         }
 
         /// <summary>
@@ -822,6 +817,11 @@
             builder.Append("'/>");
 
             return builder.ToString();
+        }
+
+        private static string BuildUserAgent()
+        {
+            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
         }
     }
 }

@@ -179,6 +179,83 @@
             parameters.Add("api_key", Account.ApiKey);
         }
 
+        /// <summary>
+        /// Gets authentication credentials.
+        /// </summary>
+        /// <returns>Credentials string for authentication.</returns>
+        protected virtual string GetApiCredentials()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Account.ApiKey, Account.ApiSecret);
+        }
+
+        /// <summary>
+        /// Virtual encode API URL method. This method should be overridden in child classes.
+        /// </summary>
+        /// <param name="value">URL to be encoded.</param>
+        /// <returns>Encoded URL.</returns>
+        protected static string EncodeApiUrl(string value)
+        {
+            return WebUtility.UrlEncode(value);
+        }
+
+        /// <summary>
+        /// Check 'unsigned' parameter value and add signature into parameters if unsigned=false or not specified.
+        /// </summary>
+        /// <param name="parameters">Parameters to check signature.</param>
+        protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
+        {
+            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+            {
+                FinalizeUploadParameters(parameters);
+            }
+            else if (parameters.ContainsKey("removeUnsignedParam"))
+            {
+                parameters.Remove("unsigned");
+                parameters.Remove("removeUnsignedParam");
+            }
+        }
+
+        /// <summary>
+        /// Serialize the cloudinary parameters to JSON.
+        /// </summary>
+        /// <param name="parameters">Parameters to serialize.</param>
+        /// <returns>Serialized parameters as JSON string.</returns>
+        protected static string ParamsToJson(SortedDictionary<string, object> parameters)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+
+            using (var writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, parameters);
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Build unsigned upload params with defined preset.
+        /// </summary>
+        /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
+        /// <param name="parameters">Cloudinary upload parameters.</param>
+        /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
+        protected static SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
+        {
+            if (parameters == null)
+            {
+                parameters = new SortedDictionary<string, object>();
+            }
+
+            parameters.Add("upload_preset", preset);
+            parameters.Add("unsigned", true);
+
+            return parameters;
+        }
+
         private static T CreateResult<T>(HttpResponseMessage response, string s)
             where T : BaseResult
         {
@@ -250,15 +327,6 @@
             {
                 request.Headers.Add("Transfer-Encoding", "chunked");
             }
-        }
-
-        /// <summary>
-        /// Gets authentication credentials.
-        /// </summary>
-        /// <returns>Credentials string for authentication.</returns>
-        protected virtual string GetApiCredentials()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Account.ApiKey, Account.ApiSecret);
         }
 
         private void PrePrepareRequestBody(
@@ -541,74 +609,6 @@
                     req.Method = System.Net.Http.HttpMethod.Get;
                     break;
             }
-        }
-
-        /// <summary>
-        /// Virtual encode API URL method. This method should be overridden in child classes.
-        /// </summary>
-        /// <param name="value">URL to be encoded.</param>
-        /// <returns>Encoded URL.</returns>
-        protected static string EncodeApiUrl(string value)
-        {
-            return WebUtility.UrlEncode(value);
-        }
-
-        /// <summary>
-        /// Check 'unsigned' parameter value and add signature into parameters if unsigned=false or not specified.
-        /// </summary>
-        /// <param name="parameters">Parameters to check signature.</param>
-        protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
-        {
-            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
-            {
-                FinalizeUploadParameters(parameters);
-            }
-            else if (parameters.ContainsKey("removeUnsignedParam"))
-            {
-                parameters.Remove("unsigned");
-                parameters.Remove("removeUnsignedParam");
-            }
-        }
-
-        /// <summary>
-        /// Serialize the cloudinary parameters to JSON.
-        /// </summary>
-        /// <param name="parameters">Parameters to serialize.</param>
-        /// <returns>Serialized parameters as JSON string.</returns>
-        protected static string ParamsToJson(SortedDictionary<string, object> parameters)
-        {
-            var serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            var sb = new StringBuilder();
-            var sw = new StringWriter(sb);
-
-            using (var writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, parameters);
-            }
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Build unsigned upload params with defined preset.
-        /// </summary>
-        /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
-        /// <param name="parameters">Cloudinary upload parameters.</param>
-        /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
-        protected static SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
-        {
-            if (parameters == null)
-            {
-                parameters = new SortedDictionary<string, object>();
-            }
-
-            parameters.Add("upload_preset", preset);
-            parameters.Add("unsigned", true);
-
-            return parameters;
         }
     }
 }
