@@ -977,16 +977,6 @@
             return Clone();
         }
 
-        private string[] GetSourceTypes()
-        {
-            if (m_sourceTypes != null && m_sourceTypes.Length > 0)
-            {
-                return m_sourceTypes;
-            }
-
-            return DEFAULT_VIDEO_SOURCE_TYPES;
-        }
-
         /// <summary>
         /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs.
         /// </summary>
@@ -1050,6 +1040,87 @@
                     url.m_transformation.Add(param.Key, param.Value);
                 }
             }
+        }
+
+        private static string Shard(string input)
+        {
+            uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
+            return ((((hash % 5) + 5) % 5) + 1).ToString(CultureInfo.InvariantCulture);
+        }
+
+        private static string Decode(string input)
+        {
+            StringBuilder resultStr = new StringBuilder(input.Length);
+
+            int pos = 0;
+
+            while (pos < input.Length)
+            {
+                int ppos = input.IndexOf('%', pos);
+                if (ppos == -1)
+                {
+                    resultStr.Append(input.Substring(pos));
+                    pos = input.Length;
+                }
+                else
+                {
+                    resultStr.Append(input.Substring(pos, ppos - pos));
+                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    resultStr.Append(ch);
+                    pos = ppos + 3;
+                }
+            }
+
+            return resultStr.ToString();
+        }
+
+        private static string Encode(string input)
+        {
+            StringBuilder resultStr = new StringBuilder(input.Length);
+            foreach (char ch in input)
+            {
+                if (!IsSafe(ch))
+                {
+                    resultStr.Append('%');
+                    resultStr.Append(string.Format(CultureInfo.InvariantCulture, "{0:X2}", (short)ch));
+                }
+                else
+                {
+                    resultStr.Append(ch);
+                }
+            }
+
+            return resultStr.ToString();
+        }
+
+        private static bool IsSafe(char ch)
+        {
+            if (ch >= 0x30 && ch <= 0x39)
+            {
+                return true; // 0-9
+            }
+
+            if (ch >= 0x41 && ch <= 0x5a)
+            {
+                return true; // A-Z
+            }
+
+            if (ch >= 0x61 && ch <= 0x7a)
+            {
+                return true; // a-z
+            }
+
+            return "/:-_.*".IndexOf(ch) >= 0;
+        }
+
+        private string[] GetSourceTypes()
+        {
+            if (m_sourceTypes != null && m_sourceTypes.Length > 0)
+            {
+                return m_sourceTypes;
+            }
+
+            return DEFAULT_VIDEO_SOURCE_TYPES;
         }
 
         /// <summary>
@@ -1258,77 +1329,6 @@
                 m_resourceType = string.Empty;
                 m_action = "iu";
             }
-        }
-
-        private static string Shard(string input)
-        {
-            uint hash = Crc32.ComputeChecksum(Encoding.UTF8.GetBytes(input));
-            return ((((hash % 5) + 5) % 5) + 1).ToString(CultureInfo.InvariantCulture);
-        }
-
-        private static string Decode(string input)
-        {
-            StringBuilder resultStr = new StringBuilder(input.Length);
-
-            int pos = 0;
-
-            while (pos < input.Length)
-            {
-                int ppos = input.IndexOf('%', pos);
-                if (ppos == -1)
-                {
-                    resultStr.Append(input.Substring(pos));
-                    pos = input.Length;
-                }
-                else
-                {
-                    resultStr.Append(input.Substring(pos, ppos - pos));
-                    char ch = (char)short.Parse(input.Substring(ppos + 1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-                    resultStr.Append(ch);
-                    pos = ppos + 3;
-                }
-            }
-
-            return resultStr.ToString();
-        }
-
-        private static string Encode(string input)
-        {
-            StringBuilder resultStr = new StringBuilder(input.Length);
-            foreach (char ch in input)
-            {
-                if (!IsSafe(ch))
-                {
-                    resultStr.Append('%');
-                    resultStr.Append(string.Format(CultureInfo.InvariantCulture, "{0:X2}", (short)ch));
-                }
-                else
-                {
-                    resultStr.Append(ch);
-                }
-            }
-
-            return resultStr.ToString();
-        }
-
-        private static bool IsSafe(char ch)
-        {
-            if (ch >= 0x30 && ch <= 0x39)
-            {
-                return true; // 0-9
-            }
-
-            if (ch >= 0x41 && ch <= 0x5a)
-            {
-                return true; // A-Z
-            }
-
-            if (ch >= 0x61 && ch <= 0x7a)
-            {
-                return true; // a-z
-            }
-
-            return "/:-_.*".IndexOf(ch) >= 0;
         }
     }
 

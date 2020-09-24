@@ -3010,6 +3010,102 @@
             return sb.ToString();
         }
 
+        private static SortedDictionary<string, object> NormalizeParameters(IDictionary<string, object> parameters)
+        {
+            if (parameters == null)
+            {
+                return new SortedDictionary<string, object>();
+            }
+
+            return parameters as SortedDictionary<string, object> ?? new SortedDictionary<string, object>(parameters);
+        }
+
+        private static void CheckIfNotEmpty(string folder)
+        {
+            if (string.IsNullOrEmpty(folder))
+            {
+                throw new ArgumentException("Folder must be set.");
+            }
+        }
+
+        private static void CheckFolderParameter(string folder)
+        {
+            if (string.IsNullOrEmpty(folder))
+            {
+                throw new ArgumentException(
+                    "folder must be set. Please use RootFolders() to get list of folders in root.");
+            }
+        }
+
+        private static void UpdateContentRange(UploadLargeParams internalParams)
+        {
+            var fileDescription = internalParams.Parameters.File;
+            var fileLength = fileDescription.GetFileLength();
+            var startOffset = fileDescription.BytesSent;
+            var endOffset = startOffset + Math.Min(internalParams.BufferSize, fileLength - startOffset) - 1;
+
+            internalParams.Headers["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
+        }
+
+        private static void CheckUploadResult<T>(T result)
+            where T : UploadResult, new()
+        {
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                var error = result.Error != null ? result.Error.Message : "Unknown error";
+                throw new Exception(
+                    $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
+            }
+        }
+
+        private static void CheckUploadParameters(BasicRawUploadParams parameters)
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
+            }
+
+            if (parameters.File == null)
+            {
+                throw new ArgumentException("Parameters.File parameter should be defined");
+            }
+        }
+
+        private static UploadMappingParams CreateUploadMappingParams(string folder, string template)
+        {
+            if (string.IsNullOrEmpty(folder))
+            {
+                throw new ArgumentException("Folder property must be specified.");
+            }
+
+            if (string.IsNullOrEmpty(template))
+            {
+                throw new ArgumentException("Template must be specified.");
+            }
+
+            var parameters = new UploadMappingParams()
+            {
+                Folder = folder,
+                Template = template,
+            };
+            return parameters;
+        }
+
+        private static void AppendScriptLine(StringBuilder sb, string dir, string script)
+        {
+            sb.Append("<script src=\"");
+            sb.Append(dir);
+
+            if (!dir.EndsWith("/", StringComparison.Ordinal) && !dir.EndsWith("\\", StringComparison.Ordinal))
+            {
+                sb.Append("/");
+            }
+
+            sb.Append(script);
+
+            sb.AppendLine("\"></script>");
+        }
+
         /// <summary>
         /// Get default API URL with version.
         /// </summary>
@@ -3188,27 +3284,9 @@
             return uri;
         }
 
-        private static SortedDictionary<string, object> NormalizeParameters(IDictionary<string, object> parameters)
-        {
-            if (parameters == null)
-            {
-                return new SortedDictionary<string, object>();
-            }
-
-            return parameters as SortedDictionary<string, object> ?? new SortedDictionary<string, object>(parameters);
-        }
-
         private string GetUploadUrl(string resourceType)
         {
             return GetApiUrlV().Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
-        }
-
-        private static void CheckIfNotEmpty(string folder)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException("Folder must be set.");
-            }
         }
 
         private string GetFolderUrl(string folder = null, GetFoldersParams parameters = null)
@@ -3216,15 +3294,6 @@
             var urlWithoutParams = GetApiUrlV().Add("folders").Add(folder).BuildUrl();
 
             return (parameters != null) ? new UrlBuilder(urlWithoutParams, parameters.ToParamsDictionary()).ToString() : urlWithoutParams;
-        }
-
-        private static void CheckFolderParameter(string folder)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException(
-                    "folder must be set. Please use RootFolders() to get list of folders in root.");
-            }
         }
 
         private string GetUsageUrl(DateTime? date)
@@ -3237,40 +3306,6 @@
             }
 
             return url.BuildUrl();
-        }
-
-        private static void UpdateContentRange(UploadLargeParams internalParams)
-        {
-            var fileDescription = internalParams.Parameters.File;
-            var fileLength = fileDescription.GetFileLength();
-            var startOffset = fileDescription.BytesSent;
-            var endOffset = startOffset + Math.Min(internalParams.BufferSize, fileLength - startOffset) - 1;
-
-            internalParams.Headers["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
-        }
-
-        private static void CheckUploadResult<T>(T result)
-            where T : UploadResult, new()
-        {
-            if (result.StatusCode != HttpStatusCode.OK)
-            {
-                var error = result.Error != null ? result.Error.Message : "Unknown error";
-                throw new Exception(
-                    $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
-            }
-        }
-
-        private static void CheckUploadParameters(BasicRawUploadParams parameters)
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
-            }
-
-            if (parameters.File == null)
-            {
-                throw new ArgumentException("Parameters.File parameter should be defined");
-            }
         }
 
         private string GetRenameUrl(RenameParams parameters) =>
@@ -3357,46 +3392,11 @@
             return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
         }
 
-        private static UploadMappingParams CreateUploadMappingParams(string folder, string template)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException("Folder property must be specified.");
-            }
-
-            if (string.IsNullOrEmpty(template))
-            {
-                throw new ArgumentException("Template must be specified.");
-            }
-
-            var parameters = new UploadMappingParams()
-            {
-                Folder = folder,
-                Template = template,
-            };
-            return parameters;
-        }
-
         private string GetTransformationUrl(string transformationName) =>
             GetApiUrlV().
                 ResourceType("transformations").
                 Add(transformationName).
                 BuildUrl();
-
-        private static void AppendScriptLine(StringBuilder sb, string dir, string script)
-        {
-            sb.Append("<script src=\"");
-            sb.Append(dir);
-
-            if (!dir.EndsWith("/", StringComparison.Ordinal) && !dir.EndsWith("\\", StringComparison.Ordinal))
-            {
-                sb.Append("/");
-            }
-
-            sb.Append(script);
-
-            sb.AppendLine("\"></script>");
-        }
 
         private string GetDownloadUrl(UrlBuilder builder, IDictionary<string, object> parameters)
         {

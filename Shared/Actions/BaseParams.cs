@@ -81,14 +81,6 @@
         }
 
         /// <summary>
-        /// Add parameters to the object model dictionary.
-        /// </summary>
-        /// <param name="dict">Dictionary to be updated with parameters.</param>
-        protected virtual void AddParamsToDictionary(SortedDictionary<string, object> dict)
-        {
-        }
-
-        /// <summary>
         /// Add parameter to the dictionary.
         /// </summary>
         /// <param name="dict">The dictionary.</param>
@@ -208,6 +200,14 @@
             {
                 dict.Add(key, coordObj.ToString());
             }
+        }
+
+        /// <summary>
+        /// Add parameters to the object model dictionary.
+        /// </summary>
+        /// <param name="dict">Dictionary to be updated with parameters.</param>
+        protected virtual void AddParamsToDictionary(SortedDictionary<string, object> dict)
+        {
         }
     }
 }

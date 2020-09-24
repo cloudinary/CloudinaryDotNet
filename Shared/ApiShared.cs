@@ -95,6 +95,11 @@
         public static string USER_AGENT = BuildUserAgent();
 
         /// <summary>
+        /// Sends HTTP requests and receives HTTP responses.
+        /// </summary>
+        public static HttpClient Client = new HttpClient();
+
+        /// <summary>
         /// Whether to use a sub domain.
         /// </summary>
         public bool CSubDomain;
@@ -157,11 +162,6 @@
         /// Maximum size of chunk when uploading a file.
         /// </summary>
         public int ChunkSize = 65000;
-
-        /// <summary>
-        /// Sends HTTP requests and receives HTTP responses.
-        /// </summary>
-        public static HttpClient Client = new HttpClient();
 
         /// <summary>
         /// URL of the cloudinary API.
@@ -404,6 +404,55 @@
         }
 
         /// <summary>
+        /// Gets cloudinary parameter from enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
+        /// <param name="e">Field of enum.</param>
+        /// <returns>Cloudinary-compatible parameter.</returns>
+        public static string GetCloudinaryParam<T>(T e)
+        {
+            Type eType = typeof(T);
+            FieldInfo fi = eType.GetField(e.ToString());
+            EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
+                typeof(EnumMemberAttribute), false);
+
+            if (attrs.Length == 0)
+            {
+                throw new ArgumentException("Enum fields must be decorated with EnumMemberAttribute!");
+            }
+
+            return attrs[0].Value;
+        }
+
+        /// <summary>
+        /// Parse cloudinary-compatible parameter as enum field.
+        /// </summary>
+        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
+        /// <param name="s">Field of enum represented as string.</param>
+        /// <returns>Field of enum.</returns>
+        public static T ParseCloudinaryParam<T>(string s)
+        {
+            Type eType = typeof(T);
+            foreach (var fi in eType.GetFields())
+            {
+                EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
+                    typeof(EnumMemberAttribute), false);
+
+                if (attrs.Length == 0)
+                {
+                    continue;
+                }
+
+                if (s == attrs[0].Value)
+                {
+                    return (T)fi.GetValue(null);
+                }
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
         /// Call the Cloudinary API and parse HTTP response asynchronously.
         /// </summary>
         /// <typeparam name="T">Type of the response.</typeparam>
@@ -523,55 +572,6 @@
                     .GetAwaiter()
                     .GetResult();
             }
-        }
-
-        /// <summary>
-        /// Gets cloudinary parameter from enumeration.
-        /// </summary>
-        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
-        /// <param name="e">Field of enum.</param>
-        /// <returns>Cloudinary-compatible parameter.</returns>
-        public static string GetCloudinaryParam<T>(T e)
-        {
-            Type eType = typeof(T);
-            FieldInfo fi = eType.GetField(e.ToString());
-            EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
-                typeof(EnumMemberAttribute), false);
-
-            if (attrs.Length == 0)
-            {
-                throw new ArgumentException("Enum fields must be decorated with EnumMemberAttribute!");
-            }
-
-            return attrs[0].Value;
-        }
-
-        /// <summary>
-        /// Parse cloudinary-compatible parameter as enum field.
-        /// </summary>
-        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
-        /// <param name="s">Field of enum represented as string.</param>
-        /// <returns>Field of enum.</returns>
-        public static T ParseCloudinaryParam<T>(string s)
-        {
-            Type eType = typeof(T);
-            foreach (var fi in eType.GetFields())
-            {
-                EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
-                    typeof(EnumMemberAttribute), false);
-
-                if (attrs.Length == 0)
-                {
-                    continue;
-                }
-
-                if (s == attrs[0].Value)
-                {
-                    return (T)fi.GetValue(null);
-                }
-            }
-
-            return default(T);
         }
 
         /// <summary>
