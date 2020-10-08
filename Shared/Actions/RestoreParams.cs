@@ -37,16 +37,16 @@
             set { m_resourceType = value; }
         }
 
-        private bool PublicIdsExist
-        {
-            get { return PublicIds != null && PublicIds.Count > 0; }
-        }
-
         /// <summary>
         /// Gets or sets the specific type of the asset.
         /// Valid values: upload, private and authenticated. Default: upload.
         /// </summary>
         public AssetType Type { get; set; }
+
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
+        }
 
         /// <summary>
         /// Validate object model.

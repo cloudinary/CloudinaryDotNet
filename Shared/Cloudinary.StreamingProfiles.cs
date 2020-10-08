@@ -134,6 +134,28 @@
                 HttpMethod.GET, m_api.ApiUrlStreamingProfileV.BuildUrl(), null, null);
         }
 
+        private static void ValidateCallStreamingProfileApiParameters(string name, StreamingProfileUpdateParams parameters)
+        {
+            ValidateNameForCallStreamingProfileApiParameters(name);
+            ValidateStreamingProfileUpdateParams(parameters);
+        }
+
+        private static void ValidateStreamingProfileUpdateParams(StreamingProfileUpdateParams parameters)
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+        }
+
+        private static void ValidateNameForCallStreamingProfileApiParameters(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Name parameter should be defined", nameof(name));
+            }
+        }
+
         private Task<StreamingProfileResult> CallStreamingProfileApiAsync(
             HttpMethod httpMethod,
             BaseParams parameters,
@@ -156,28 +178,6 @@
                 m_api.ApiUrlStreamingProfileV.Add(name).BuildUrl(),
                 parameters,
                 null);
-        }
-
-        private static void ValidateCallStreamingProfileApiParameters(string name, StreamingProfileUpdateParams parameters)
-        {
-            ValidateNameForCallStreamingProfileApiParameters(name);
-            ValidateStreamingProfileUpdateParams(parameters);
-        }
-
-        private static void ValidateStreamingProfileUpdateParams(StreamingProfileUpdateParams parameters)
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
-        }
-
-        private static void ValidateNameForCallStreamingProfileApiParameters(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("Name parameter should be defined", nameof(name));
-            }
         }
     }
 }

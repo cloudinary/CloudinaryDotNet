@@ -55,11 +55,6 @@
             set { m_type = value; }
         }
 
-        private bool PublicIdsExist
-        {
-            get { return PublicIds != null && PublicIds.Count > 0; }
-        }
-
         /// <summary>
         /// Gets or sets prefix.
         ///
@@ -74,6 +69,11 @@
         /// Update all assets with the given tag (up to a maximum of 100 matching original assets).
         /// </summary>
         public string Tag { get; set; }
+
+        private bool PublicIdsExist
+        {
+            get { return PublicIds != null && PublicIds.Count > 0; }
+        }
 
         /// <summary>
         /// Validate object model.

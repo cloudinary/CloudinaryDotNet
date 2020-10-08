@@ -16,6 +16,53 @@
     using Newtonsoft.Json;
 
     /// <summary>
+    /// HTTP method.
+    /// </summary>
+    public enum HttpMethod
+    {
+        /// <summary>
+        /// DELETE
+        /// </summary>
+        DELETE,
+
+        /// <summary>
+        /// GET
+        /// </summary>
+        GET,
+
+        /// <summary>
+        /// POST
+        /// </summary>
+        POST,
+
+        /// <summary>
+        /// PUT
+        /// </summary>
+        PUT,
+    }
+
+    /// <summary>
+    /// Digital signature provider.
+    /// </summary>
+    public interface ISignProvider
+    {
+        /// <summary>
+        /// Generate digital signature for parameters.
+        /// </summary>
+        /// <param name="parameters">The parameters to sign.</param>
+        /// <returns>Generated signature.</returns>
+        string SignParameters(IDictionary<string, object> parameters);
+
+        /// <summary>
+        /// Generate digital signature for part of an URI.
+        /// </summary>
+        /// <param name="uriPart">The part of an URI to sign.</param>
+        /// <param name="isLong">Indicates whether to generate long signature.</param>
+        /// <returns>Generated signature.</returns>
+        string SignUriPart(string uriPart, bool isLong);
+    }
+
+    /// <summary>
     /// Provider for the API calls.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
@@ -48,9 +95,9 @@
         public static string USER_AGENT = BuildUserAgent();
 
         /// <summary>
-        /// URL of the cloudinary API.
+        /// Sends HTTP requests and receives HTTP responses.
         /// </summary>
-        protected string m_apiAddr = "https://" + ADDR_API;
+        public static HttpClient Client = new HttpClient();
 
         /// <summary>
         /// Whether to use a sub domain.
@@ -117,17 +164,12 @@
         public int ChunkSize = 65000;
 
         /// <summary>
-        /// Sends HTTP requests and receives HTTP responses.
+        /// URL of the cloudinary API.
         /// </summary>
-        public static HttpClient Client = new HttpClient();
+        protected string m_apiAddr = "https://" + ADDR_API;
 
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
-
-        private static string BuildUserAgent()
-        {
-            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiShared"/> class.
@@ -362,6 +404,55 @@
         }
 
         /// <summary>
+        /// Gets cloudinary parameter from enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
+        /// <param name="e">Field of enum.</param>
+        /// <returns>Cloudinary-compatible parameter.</returns>
+        public static string GetCloudinaryParam<T>(T e)
+        {
+            Type eType = typeof(T);
+            FieldInfo fi = eType.GetField(e.ToString());
+            EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
+                typeof(EnumMemberAttribute), false);
+
+            if (attrs.Length == 0)
+            {
+                throw new ArgumentException("Enum fields must be decorated with EnumMemberAttribute!");
+            }
+
+            return attrs[0].Value;
+        }
+
+        /// <summary>
+        /// Parse cloudinary-compatible parameter as enum field.
+        /// </summary>
+        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
+        /// <param name="s">Field of enum represented as string.</param>
+        /// <returns>Field of enum.</returns>
+        public static T ParseCloudinaryParam<T>(string s)
+        {
+            Type eType = typeof(T);
+            foreach (var fi in eType.GetFields())
+            {
+                EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
+                    typeof(EnumMemberAttribute), false);
+
+                if (attrs.Length == 0)
+                {
+                    continue;
+                }
+
+                if (s == attrs[0].Value)
+                {
+                    return (T)fi.GetValue(null);
+                }
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
         /// Call the Cloudinary API and parse HTTP response asynchronously.
         /// </summary>
         /// <typeparam name="T">Type of the response.</typeparam>
@@ -481,55 +572,6 @@
                     .GetAwaiter()
                     .GetResult();
             }
-        }
-
-        /// <summary>
-        /// Gets cloudinary parameter from enumeration.
-        /// </summary>
-        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
-        /// <param name="e">Field of enum.</param>
-        /// <returns>Cloudinary-compatible parameter.</returns>
-        public static string GetCloudinaryParam<T>(T e)
-        {
-            Type eType = typeof(T);
-            FieldInfo fi = eType.GetField(e.ToString());
-            EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
-                typeof(EnumMemberAttribute), false);
-
-            if (attrs.Length == 0)
-            {
-                throw new ArgumentException("Enum fields must be decorated with EnumMemberAttribute!");
-            }
-
-            return attrs[0].Value;
-        }
-
-        /// <summary>
-        /// Parse cloudinary-compatible parameter as enum field.
-        /// </summary>
-        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
-        /// <param name="s">Field of enum represented as string.</param>
-        /// <returns>Field of enum.</returns>
-        public static T ParseCloudinaryParam<T>(string s)
-        {
-            Type eType = typeof(T);
-            foreach (var fi in eType.GetFields())
-            {
-                EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
-                    typeof(EnumMemberAttribute), false);
-
-                if (attrs.Length == 0)
-                {
-                    continue;
-                }
-
-                if (s == attrs[0].Value)
-                {
-                    return (T)fi.GetValue(null);
-                }
-            }
-
-            return default(T);
         }
 
         /// <summary>
@@ -776,52 +818,10 @@
 
             return builder.ToString();
         }
-    }
 
-    /// <summary>
-    /// Digital signature provider.
-    /// </summary>
-    public interface ISignProvider
-    {
-        /// <summary>
-        /// Generate digital signature for parameters.
-        /// </summary>
-        /// <param name="parameters">The parameters to sign.</param>
-        /// <returns>Generated signature.</returns>
-        string SignParameters(IDictionary<string, object> parameters);
-
-        /// <summary>
-        /// Generate digital signature for part of an URI.
-        /// </summary>
-        /// <param name="uriPart">The part of an URI to sign.</param>
-        /// <param name="isLong">Indicates whether to generate long signature.</param>
-        /// <returns>Generated signature.</returns>
-        string SignUriPart(string uriPart, bool isLong);
-    }
-
-    /// <summary>
-    /// HTTP method.
-    /// </summary>
-    public enum HttpMethod
-    {
-        /// <summary>
-        /// DELETE
-        /// </summary>
-        DELETE,
-
-        /// <summary>
-        /// GET
-        /// </summary>
-        GET,
-
-        /// <summary>
-        /// POST
-        /// </summary>
-        POST,
-
-        /// <summary>
-        /// PUT
-        /// </summary>
-        PUT,
+        private static string BuildUserAgent()
+        {
+            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
+        }
     }
 }

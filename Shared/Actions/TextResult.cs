@@ -9,6 +9,12 @@
     public class TextResult : BaseResult
     {
         /// <summary>
+        /// The type of file. Possible values: image, raw, video.
+        /// </summary>
+        [DataMember(Name = "resource_type")]
+        protected string m_resourceType;
+
+        /// <summary>
         /// Gets or sets parameter "width" of the asset.
         /// </summary>
         [DataMember(Name = "width")]
@@ -43,12 +49,6 @@
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; set; }
-
-        /// <summary>
-        /// The type of file. Possible values: image, raw, video.
-        /// </summary>
-        [DataMember(Name = "resource_type")]
-        protected string m_resourceType;
 
         /// <summary>
         /// Gets the type of resource. Possible values: image, raw, video.

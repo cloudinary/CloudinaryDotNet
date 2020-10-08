@@ -63,6 +63,12 @@
     public class RestoredResource
     {
         /// <summary>
+        /// The type of file. Possible values: image, raw, video. Default: image.
+        /// </summary>
+        [DataMember(Name = "resource_type")]
+        protected string m_resourceType;
+
+        /// <summary>
         /// Gets or sets publicId of the created archive.
         /// </summary>
         [DataMember(Name = "public_id")]
@@ -97,12 +103,6 @@
         /// </summary>
         [DataMember(Name = "format")]
         public string Format { get; set; }
-
-        /// <summary>
-        /// The type of file. Possible values: image, raw, video. Default: image.
-        /// </summary>
-        [DataMember(Name = "resource_type")]
-        protected string m_resourceType;
 
         /// <summary>
         /// Gets get the cloudinary resource type.

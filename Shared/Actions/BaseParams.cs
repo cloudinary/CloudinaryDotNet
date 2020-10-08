@@ -9,6 +9,30 @@
     using CloudinaryDotNet.Core;
 
     /// <summary>
+    /// The specific type of the asset.
+    /// </summary>
+    public enum AssetType
+    {
+        /// <summary>
+        /// Upload type of the asset.
+        /// </summary>
+        [EnumMember(Value = "upload")]
+        Upload,
+
+        /// <summary>
+        /// Private type of the asset.
+        /// </summary>
+        [EnumMember(Value = "private")]
+        Private,
+
+        /// <summary>
+        /// Authenticated type of the asset.
+        /// </summary>
+        [EnumMember(Value = "authenticated")]
+        Authenticated,
+    }
+
+    /// <summary>
     /// Parameters for request to cloudinary.
     /// </summary>
     public abstract class BaseParams
@@ -54,14 +78,6 @@
             {
                 customParams.Add(key, value);
             }
-        }
-
-        /// <summary>
-        /// Add parameters to the object model dictionary.
-        /// </summary>
-        /// <param name="dict">Dictionary to be updated with parameters.</param>
-        protected virtual void AddParamsToDictionary(SortedDictionary<string, object> dict)
-        {
         }
 
         /// <summary>
@@ -185,29 +201,13 @@
                 dict.Add(key, coordObj.ToString());
             }
         }
-    }
-
-    /// <summary>
-    /// The specific type of the asset.
-    /// </summary>
-    public enum AssetType
-    {
-        /// <summary>
-        /// Upload type of the asset.
-        /// </summary>
-        [EnumMember(Value = "upload")]
-        Upload,
 
         /// <summary>
-        /// Private type of the asset.
+        /// Add parameters to the object model dictionary.
         /// </summary>
-        [EnumMember(Value = "private")]
-        Private,
-
-        /// <summary>
-        /// Authenticated type of the asset.
-        /// </summary>
-        [EnumMember(Value = "authenticated")]
-        Authenticated,
+        /// <param name="dict">Dictionary to be updated with parameters.</param>
+        protected virtual void AddParamsToDictionary(SortedDictionary<string, object> dict)
+        {
+        }
     }
 }
