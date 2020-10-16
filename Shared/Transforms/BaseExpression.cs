@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -18,6 +19,7 @@
     /// Represents expression object that can be used in user defined variables and conditional transformations.
     /// </summary>
     /// <typeparam name="T">Type of the expression.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleType", Justification = "Reviewed.")]
     public abstract class BaseExpression<T> : BaseExpression
         where T : BaseExpression<T>
     {
