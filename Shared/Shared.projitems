@@ -95,7 +95,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Folders\CreateFolderResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Folders\GetFoldersParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\ListResourcesByContextParams.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataFields\MetadataFieldParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataFields\MetadataFieldBaseParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\MetadataFields\MetadataUpdateParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\MultiAssetsParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\NestedTypes\DeletedDataStatistics.cs" />
@@ -128,7 +128,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\DelDerivedResParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\DelDerivedResResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Folders\DeleteFolderResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\DeleteUploadPreset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\DeleteUploadPresetResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\DeletionParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\DeletionResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\DelResParams.cs" />
@@ -142,7 +142,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\GetResourceResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Transformations\GetTransformParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Transformations\GetTransformResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\GetUploadPreset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\GetUploadPresetResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\ImageUploadParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\ImageUploadResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\ListResourcesParams.cs" />
@@ -152,7 +152,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\ListTagsResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Transformations\ListTransformsParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Transformations\ListTransformsResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\ListUploadPresets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\ListUploadPresetsParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\MultiParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\MultiResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\PublishResourceParams.cs" />
@@ -180,7 +180,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Transformations\UpdateTransformResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\MappingsUpload\UploadMappingParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\MappingsUpload\UploadMappingResults.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\UploadPreset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\UploadPresetParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\UsageResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\VideoUploadParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\VideoUploadResult.cs" />
@@ -198,6 +198,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Crc32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileDescription.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ISignProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Provisioning\Actions\ListUsersResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Provisioning\Actions\UpdateUserParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Provisioning\Actions\DelUserResult.cs" />
