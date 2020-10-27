@@ -313,5 +313,20 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             Assert.True(folderUrl.Contains("use_original_filename"));
         }
+
+        [Test]
+        public void TestCreateArchiveErrorMessage()
+        {
+            var parameters = new ArchiveParams()
+                .PublicIds(new List<string> { "sample", "not exist" })
+                .FlattenFolders(true)
+                .SkipTransformationName(true)
+                .UseOriginalFilename(true)
+                .AllowMissing(false);
+
+            var folderUrl = m_cloudinary.CreateArchive(parameters);
+
+            Assert.NotNull(folderUrl.Error);
+        }
     }
 }

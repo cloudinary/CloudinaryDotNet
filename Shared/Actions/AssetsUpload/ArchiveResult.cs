@@ -114,7 +114,12 @@
             Placeholder = source.Value<bool>("placeholder");
             AccessMode = source.Value<string>("access_mode");
             ResourceCount = source.Value<int>("resource_count");
-            Tags = source["tags"].ToObject<string[]>();
+
+            var tags = source["tags"];
+            if (tags != null)
+            {
+                Tags = tags.ToObject<string[]>();
+            }
         }
     }
 }
