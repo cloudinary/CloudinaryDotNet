@@ -267,7 +267,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(ModerationStatus.Pending, getResult.Moderation[0].Status);
         }
 
-        [Test, IgnoreAddon("aws_rek")]
+        [Test, IgnoreAddon("rekognition"), RetryWithDelay]
         public void TestModerationAwsRek()
         {
             var uploadParams = new ImageUploadParams()
@@ -284,7 +284,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(MODERATION_AWS_REK, uploadResult.Moderation[0].Kind);
         }
 
-        [Test, IgnoreAddon("webpurify")]
+        [Test, IgnoreAddon("webpurify"), RetryWithDelay]
         public void TestModerationWebpurify()
         {
             var uploadParams = new ImageUploadParams()
@@ -300,7 +300,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(MODERATION_WEBPURIFY, uploadResult.Moderation[0].Kind);
         }
 
-        [Test, IgnoreAddon("rekognition")]
+        [Test, IgnoreAddon("rekognition"), RetryWithDelay]
         public void TestRekognitionFace()
         {
             // should support rekognition face
