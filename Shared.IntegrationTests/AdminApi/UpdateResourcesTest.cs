@@ -43,7 +43,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
-        [Test, IgnoreAddon("adv_ocr")]
+        [Test, IgnoreAddon("ocr"), RetryWithDelay]
         public void TestOcrUpdateResult()
         {
             // should support requesting ocr info from adv_ocr addon
