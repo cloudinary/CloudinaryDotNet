@@ -171,5 +171,19 @@ namespace CloudinaryDotNet.Test.Transformations.Common
             Assert.Throws<InvalidOperationException>(() => textLayer.Format(testValue));
             Assert.Throws<InvalidOperationException>(() => textLayer.Type(testValue));
         }
+
+        [Test]
+        public void TestUserVariableNamesContainingPredefinedNamesAreNotAffected()
+        {
+            var transformation = new Transformation()
+                .Variable("$mywidth", "100")
+                .Variable("$aheight", 300)
+                .Chain()
+                .Width("3 + $mywidth * 3 + 4 / 2 * initialWidth * $mywidth")
+                .Height("3 * initialHeight + $aheight");
+
+            const string expected = "$aheight_300,$mywidth_100/h_3_mul_ih_add_$aheight,w_3_add_$mywidth_mul_3_add_4_div_2_mul_iw_mul_$mywidth";
+            Assert.AreEqual(expected, transformation.Generate());
+        }
     }
 }
