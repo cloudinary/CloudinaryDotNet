@@ -1,4 +1,12 @@
 
+1.13.2 / 2020-11-10
+===================
+
+  * Fix expression normalisation for advanced cases
+  * Improve integration tests that rely on add-ons
+  * Add support for list value in metadata
+  * Fix code style
+
 1.13.1 / 2020-09-21
 ===================
 
