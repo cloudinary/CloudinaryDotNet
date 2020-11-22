@@ -23,10 +23,6 @@
         <dependency id="System.Globalization" version="4.3.0" />
         <dependency id="System.Text.Encodings.Web" version="4.5.0" />
       </group>
-      <group targetFramework="netstandard1.3">
-      </group>
-      <group targetFramework="netstandard2.0">
-      </group>    
     </dependencies>
   </metadata>
   <files>
