@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     /// <summary>
@@ -20,6 +21,7 @@
     /// Base abstract generic class for creating Layers.
     /// </summary>
     /// <typeparam name="T">Type of the layer.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleType", Justification = "Reviewed.")]
     public abstract class BaseLayer<T> : BaseLayer
         where T : BaseLayer<T>
     {

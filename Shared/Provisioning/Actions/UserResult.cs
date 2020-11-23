@@ -63,6 +63,6 @@ namespace CloudinaryDotNet.Actions
         /// Gets or sets date when the user was created.
         /// </summary>
         [DataMember(Name = "created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
     }
 }
