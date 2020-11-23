@@ -10,8 +10,10 @@ namespace CloudinaryDotNet.Test
         private const string uploadPresetsRootUrl = "upload_presets";
         private const string folderName = "api_test_folder_name";
         private const string apiTestPreset = "api_test_upload_preset";
-        private const string evalStr = "if (resource_info['width'] > 450) { upload_options['tags'] = 'a,b' }; " +
-                                   "upload_options['context'] = 'width = ' + resource_info['width']";
+
+        private const string evalStr = "if (resource_info['width'] > 450) " +
+                                       "{ upload_options['quality_analysis'] = true }; " +
+                                       "upload_options['context'] = 'width = ' + resource_info['width']";
         private MockedCloudinary mockedCloudinary;
 
         [SetUp]

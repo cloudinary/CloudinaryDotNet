@@ -958,7 +958,8 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         [Test, RetryWithDelay]
         public void TestEvalUploadParameter()
         {
-            const string evalStr = "if (resource_info['width'] > 450) { upload_options['tags'] = 'a,b' }; " +
+            const string evalStr = "if (resource_info['width'] > 450) " +
+                                   "{ upload_options['quality_analysis'] = true }; " +
                                    "upload_options['context'] = 'width = ' + resource_info['width']";
 
             var uploadResult = UploadTestImageResource(uploadParams =>
@@ -966,8 +967,9 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
                 uploadParams.Eval = evalStr;
             });
 
-            Assert.AreEqual("1920", uploadResult.Context["custom"]["width"].ToString());
-            CollectionAssert.AreEqual(new List<string>{"a", "b"}, uploadResult.Tags);
+            Assert.AreEqual("1920", uploadResult.Context["custom"]?["width"]?.ToString());
+            Assert.NotNull(uploadResult.QualityAnalysis);
+            Assert.IsInstanceOf<double>(uploadResult.QualityAnalysis.Focus);
         }
 
         //[Test, RetryWithDelay]
