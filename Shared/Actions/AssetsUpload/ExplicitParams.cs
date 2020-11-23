@@ -208,7 +208,8 @@ namespace CloudinaryDotNet.Actions
         public string Moderation { get; set; }
 
         /// <summary>
-        /// Gets or sets accessibility analysis information. Default: false.
+        /// Gets or sets accessibility analysis information.
+        /// Optional (Boolean, default: false).
         /// </summary>
         public bool? AccessibilityAnalysis { get; set; }
 
