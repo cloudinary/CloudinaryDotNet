@@ -376,6 +376,11 @@
         public bool Live { get; set; }
 
         /// <summary>
+        /// Gets or sets JavaScript code expression to be evaluated.
+        /// </summary>
+        public string Eval { get; set; }
+
+        /// <summary>
         /// Gets or sets accessibility analysis information.
         /// Optional (Boolean, default: false).
         /// </summary>
@@ -431,6 +436,7 @@
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "unique_filename", UniqueFilename);
             AddParam(dict, "live", Live);
+            AddParam(dict, "eval", Eval);
             AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
 
             AddParam(dict, "transformation", GetTransformation(Transformation));

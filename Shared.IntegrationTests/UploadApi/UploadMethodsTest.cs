@@ -955,6 +955,23 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(uploadResult.MetadataFields);
         }
 
+        [Test, RetryWithDelay]
+        public void TestEvalUploadParameter()
+        {
+            const string evalStr = "if (resource_info['width'] > 450) " +
+                                   "{ upload_options['quality_analysis'] = true }; " +
+                                   "upload_options['context'] = 'width = ' + resource_info['width']";
+
+            var uploadResult = UploadTestImageResource(uploadParams =>
+            {
+                uploadParams.Eval = evalStr;
+            });
+
+            Assert.AreEqual("1920", uploadResult.Context["custom"]?["width"]?.ToString());
+            Assert.NotNull(uploadResult.QualityAnalysis);
+            Assert.IsInstanceOf<double>(uploadResult.QualityAnalysis.Focus);
+        }
+
         //[Test, RetryWithDelay]
         //public void TestTextAlign()
         //{

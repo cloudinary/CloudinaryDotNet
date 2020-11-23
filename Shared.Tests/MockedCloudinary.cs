@@ -13,7 +13,7 @@ namespace CloudinaryDotNet.Test
         public string HttpRequestContent;
         private const string cloudName = "test_cloud";
 
-        public MockedCloudinary() : base("cloudinary://a:b@test_cloud")
+        public MockedCloudinary(string responseStr = "{}") : base("cloudinary://a:b@test_cloud")
         {
             HandlerMock = new Mock<HttpMessageHandler>();
             HandlerMock.Protected()
@@ -32,7 +32,7 @@ namespace CloudinaryDotNet.Test
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{}")
+                    Content = new StringContent(responseStr)
                 });
             ApiShared.Client = new HttpClient(HandlerMock.Object);
         }

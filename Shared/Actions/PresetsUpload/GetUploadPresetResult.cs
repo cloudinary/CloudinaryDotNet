@@ -25,5 +25,11 @@
         /// </summary>
         [DataMember(Name = "settings")]
         public UploadSettings Settings { get; set; }
+
+        /// <summary>
+        /// Gets or sets JavaScript code expression to be evaluated.
+        /// </summary>
+        [DataMember(Name = "eval")]
+        public string Eval { get; set; }
     }
 }

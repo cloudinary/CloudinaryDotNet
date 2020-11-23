@@ -124,6 +124,11 @@
         public List<AccessControlRule> AccessControl { get; set; }
 
         /// <summary>
+        /// Gets or sets JavaScript code expression to be evaluated.
+        /// </summary>
+        public string Eval { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
         /// <returns>Sorted dictionary of parameters.</returns>
@@ -154,6 +159,7 @@
             AddParam(dict, "raw_convert", RawConvert);
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "async", Async);
+            AddParam(dict, "eval", Eval);
 
             if (Context != null && Context.Count > 0)
             {
