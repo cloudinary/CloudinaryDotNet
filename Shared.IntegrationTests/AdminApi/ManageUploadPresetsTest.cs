@@ -5,33 +5,33 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 {
     public class ManageUploadPresetsTest : IntegrationTestBase
     {
-        private const string presetFolder = "upload_folder";
-        [Test, RetryWithDelay]
+        private const string PresetFolder = "upload_folder";
 
+        [Test, RetryWithDelay]
         public void TestUnsignedUpload()
         {
             // should support unsigned uploading using presets
-            var uploadResult = PresetAndGetImageUploadResul();
+            var uploadResult = PresetAndGetImageUploadResult();
 
             Assert.NotNull(uploadResult.PublicId);
-            Assert.True(uploadResult.PublicId.StartsWith(presetFolder));
+            Assert.True(uploadResult.PublicId.StartsWith(PresetFolder));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUploadPresetAccessibilityAnalysis()
         {
             // should support unsigned uploading using presets
-            var uploadResult = PresetAndGetImageUploadResul(true);
+            var uploadResult = PresetAndGetImageUploadResult(true);
 
             CloudinaryAssert.AccessibilityAnalysisNotEmpty(uploadResult.AccessibilityAnalysis);
         }
 
-        private ImageUploadResult PresetAndGetImageUploadResul(bool accessibilityAnalysis = false)
+        private ImageUploadResult PresetAndGetImageUploadResult(bool accessibilityAnalysis = false)
         {
             var presetParams = new UploadPresetParams()
             {
                 Name = GetUniquePresetName(),
-                Folder = presetFolder,
+                Folder = PresetFolder,
                 Unsigned = true,
                 Tags = m_apiTag
             };
