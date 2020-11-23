@@ -6,12 +6,6 @@
     using Newtonsoft.Json.Linq;
 
     /// <summary>
-
-        /// <summary>
-        /// Gets or sets JavaScript code expression to be evaluated.
-        /// </summary>
-        [DataMember(Name = "eval")]
-        public string Eval { get; set; }
     /// Upload settings.
     /// </summary>
     [DataContract]
