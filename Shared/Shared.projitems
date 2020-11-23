@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Account.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\NestedTypes\AdvOcr.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\NestedTypes\AdvOcrData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\NestedTypes\AssetVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\NestedTypes\Block.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\NestedTypes\BoundingBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\NestedTypes\BoundingBox.cs" />

@@ -253,5 +253,17 @@
         /// </summary>
         [DataMember(Name = "accessibility_analysis")]
         public AccessibilityAnalysis AccessibilityAnalysis { get; set; }
+
+        /// <summary>
+        /// Gets or sets asset identifier.
+        /// </summary>
+        [DataMember(Name = "asset_id")]
+        public string AssetId { get; set; }
+
+        /// <summary>
+        /// Gets or sets list of asset versions.
+        /// </summary>
+        [DataMember(Name = "versions")]
+        public List<AssetVersion> Versions { get; set; }
     }
 }

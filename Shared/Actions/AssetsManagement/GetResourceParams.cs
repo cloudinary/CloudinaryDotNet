@@ -165,6 +165,11 @@ namespace CloudinaryDotNet.Actions
         public bool? AccessibilityAnalysis { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to include asset version information. Default: false.
+        /// </summary>
+        public bool? Versions { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -206,6 +211,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "start_at", StartAt);
             AddParam(dict, "direction", Direction);
             AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
+            AddParam(dict, "versions", Versions);
 
             return dict;
         }
