@@ -31,10 +31,11 @@
 
             var transformation = new Transformation();
             var transformationsResponse = JArray.Load(reader);
-            if (transformationsResponse != null && transformationsResponse.Count > 0)
+            if (transformationsResponse.Count > 0)
             {
-                foreach (JProperty jTransformProperty in transformationsResponse[0])
+                foreach (var jToken in transformationsResponse[0])
                 {
+                    var jTransformProperty = (JProperty)jToken;
                     transformation.Add(jTransformProperty.Name, jTransformProperty.Value);
                 }
             }
