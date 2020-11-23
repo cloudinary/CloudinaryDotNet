@@ -49,7 +49,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         {
             var newEmailAddress = $"updated-async+{m_timestampSuffix}@cloudinary.com";
             const string newName = "updated-async";
-            var updateUserParams = new UpdateUserParams(m_userId)
+            var updateUserParams = new UpdateUserParams(m_userId1)
             {
                 Email = newEmailAddress,
                 Name = newName
@@ -59,12 +59,12 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(newName, updateUserResult.Name);
             Assert.AreEqual(newEmailAddress, updateUserResult.Email);
 
-            var getUserResult = await AccountProvisioning.UserAsync(m_userId);
-            Assert.AreEqual(m_userId, getUserResult.Id);
+            var getUserResult = await AccountProvisioning.UserAsync(m_userId1);
+            Assert.AreEqual(m_userId1, getUserResult.Id);
             Assert.AreEqual(newEmailAddress, getUserResult.Email);
 
             var listUsersResult = await AccountProvisioning.UsersAsync(new ListUsersParams());
-            var foundUser = listUsersResult.Users.FirstOrDefault(user => user.Id == m_userId);
+            var foundUser = listUsersResult.Users.FirstOrDefault(user => user.Id == m_userId1);
             Assert.NotNull(foundUser);
             Assert.AreEqual(newEmailAddress, foundUser.Email);
         }
@@ -74,7 +74,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         {
             var listUsersParams = new ListUsersParams
             {
-                UserIds = new List<string> {m_userId}
+                UserIds = new List<string> {m_userId1}
             };
 
             var result = await AccountProvisioning.UsersAsync(listUsersParams);
@@ -99,13 +99,13 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         [Test]
         public async Task TestAddAndRemoveUserFromGroup()
         {
-            var addUserResult = await AccountProvisioning.AddUserToGroupAsync(m_groupId, m_userId);
+            var addUserResult = await AccountProvisioning.AddUserToGroupAsync(m_groupId, m_userId1);
             Assert.AreEqual(1, addUserResult.Users.Length);
 
             var listUsersResult = await AccountProvisioning.UsersGroupUsersAsync(m_groupId);
             Assert.AreEqual(1, listUsersResult.Users.Length);
 
-            var removeUserResult = await AccountProvisioning.RemoveUserFromGroupAsync(m_groupId, m_userId);
+            var removeUserResult = await AccountProvisioning.RemoveUserFromGroupAsync(m_groupId, m_userId1);
             Assert.AreEqual(0, removeUserResult.Users.Length);
         }
 

@@ -43,7 +43,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
-        [Test, IgnoreAddon("adv_ocr")]
+        [Test, IgnoreAddon("ocr"), RetryWithDelay]
         public void TestOcrUpdateResult()
         {
             // should support requesting ocr info from adv_ocr addon
@@ -275,7 +275,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             {
                 File = new FileDescription(m_testImagePath),
             });
-            var metadataFieldId = CreateMetadataField();
+            var metadataFieldId = CreateMetadataField("metadata_update");
 
             const string metadataValue = "test value";
             var metadata = new StringDictionary
@@ -300,7 +300,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             {
                 File = new FileDescription(m_testImagePath),
             });
-            var metadataExternalId = CreateMetadataField();
+            var metadataExternalId = CreateMetadataField("metadata_update");
 
             var updateParams = new MetadataUpdateParams
             {
@@ -313,21 +313,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.NotNull(updateResult);
             Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
             Assert.IsNotEmpty(updateResult.PublicIds);
-        }
-
-        private string CreateMetadataField()
-        {
-            var metadataLabel = GetUniqueMetadataFieldLabel("metadata_update");
-            var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
-            var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
-
-            Assert.NotNull(metadataResult);
-
-            var metadataFieldId = metadataResult.ExternalId;
-            if (!string.IsNullOrEmpty(metadataFieldId))
-                m_metadataFieldsToClear.Add(metadataFieldId);
-
-            return metadataFieldId;
         }
     }
 }

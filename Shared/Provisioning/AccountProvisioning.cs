@@ -446,6 +446,16 @@
             return CallAccountApiAsync<ListUsersResult>(HttpMethod.GET, url, cancellationToken);
         }
 
+        private static string UrlWithOptionalParameter(Url baseUrl, string urlParameter)
+        {
+            if (!string.IsNullOrEmpty(urlParameter))
+            {
+                baseUrl.Add(urlParameter);
+            }
+
+            return baseUrl.BuildUrl();
+        }
+
         private ListUsersResult ChangeUserGroup(string groupId, string userId, HttpMethod httpMethod)
         {
             Utils.ShouldNotBeEmpty(() => groupId);
@@ -515,16 +525,6 @@
         {
             var baseUrl = ProvisioningApi.AccountApiUrlV.Add(resourceName);
             return UrlWithOptionalParameter(baseUrl, urlParameter);
-        }
-
-        private static string UrlWithOptionalParameter(Url baseUrl, string urlParameter)
-        {
-            if (!string.IsNullOrEmpty(urlParameter))
-            {
-                baseUrl.Add(urlParameter);
-            }
-
-            return baseUrl.BuildUrl();
         }
     }
 }

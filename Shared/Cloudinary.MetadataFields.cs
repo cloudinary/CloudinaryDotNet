@@ -149,6 +149,19 @@
             return result;
         }
 
+        private static Dictionary<string, string> PrepareHeaders()
+        {
+            var extraHeaders = new Dictionary<string, string>
+            {
+                {
+                    Constants.HEADER_CONTENT_TYPE,
+                    Constants.CONTENT_TYPE_APPLICATION_JSON
+                },
+            };
+
+            return extraHeaders;
+        }
+
         private string PrepareUrlForDatasourceOperation(string fieldExternalId, List<string> entriesExternalIds, string actionName)
         {
             if (string.IsNullOrEmpty(fieldExternalId))
@@ -162,19 +175,6 @@
                 parameters.ToParamsDictionary());
             var url = urlBuilder.ToString();
             return url;
-        }
-
-        private static Dictionary<string, string> PrepareHeaders()
-        {
-            var extraHeaders = new Dictionary<string, string>
-            {
-                {
-                    Constants.HEADER_CONTENT_TYPE,
-                    Constants.CONTENT_TYPE_APPLICATION_JSON
-                },
-            };
-
-            return extraHeaders;
         }
     }
 }

@@ -9,10 +9,13 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
     public class ProvisioningIntegrationTestBase
     {
         protected long m_timestampSuffix;
-        protected string m_userName;
-        protected string m_userEmail;
+        protected string m_userName1;
+        protected string m_userName2;
+        protected string m_userEmail1;
+        protected string m_userEmail2;
         protected string m_cloudId;
-        protected string m_userId;
+        protected string m_userId1;
+        protected string m_userId2;
         protected string m_groupId;
         protected readonly Role m_userRole = Role.Billing;
 
@@ -42,15 +45,14 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
 
             m_cloudId = createSubAccountResult.Id;
 
-            // Create a user
-            m_userName = $"SDK TEST {m_timestampSuffix}";
-            m_userEmail = $"sdk-test+{m_timestampSuffix}@cloudinary.com";
-            var createUserParams = new CreateUserParams(m_userName, m_userEmail, m_userRole);
-            var createUserResult = AccountProvisioning.CreateUserAsync(createUserParams).GetAwaiter().GetResult();
+            // Create users
+            m_userName1 = $"SDK TEST {m_timestampSuffix}";
+            m_userEmail1 = $"sdk-test+{m_timestampSuffix}@cloudinary.com";
+            m_userId1 = CreateUser(m_userName1, m_userEmail1);
 
-            Assert.AreEqual(HttpStatusCode.OK, createUserResult.StatusCode);
-            
-            m_userId = createUserResult.Id;
+            m_userName2 = $"SDK TEST 2 {m_timestampSuffix}";
+            m_userEmail2 = $"sdk-test2+{m_timestampSuffix}@cloudinary.com";
+            m_userId2 = CreateUser(m_userName2, m_userEmail2);
 
             // Create a user group
             var userGroupName = $"test-group-{m_timestampSuffix}";
@@ -66,8 +68,18 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
         public void Cleanup()
         {
             AccountProvisioning.DeleteSubAccount(m_cloudId);
-            AccountProvisioning.DeleteUser(m_userId);
+            AccountProvisioning.DeleteUser(m_userId1);
+            AccountProvisioning.DeleteUser(m_userId2);
             AccountProvisioning.DeleteUserGroup(m_groupId);
+        }
+
+        private string CreateUser(string userName, string userEmail)
+        {
+            var createUserParams = new CreateUserParams(userName, userEmail, m_userRole);
+            var createUserResult = AccountProvisioning.CreateUserAsync(createUserParams).GetAwaiter().GetResult();
+            Assert.AreEqual(HttpStatusCode.OK, createUserResult.StatusCode);
+
+            return createUserResult.Id;
         }
     }
 }

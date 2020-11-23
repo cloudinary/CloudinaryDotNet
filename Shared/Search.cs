@@ -17,10 +17,6 @@
         private Dictionary<string, object> searchParams;
         private ApiShared m_api;
 
-        private Url SearchResourcesUrl => m_api?.ApiUrlV?
-                .Add("resources")
-                .Add("search");
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Search"/> class.
         /// </summary>
@@ -33,6 +29,10 @@
             aggregateParam = new List<string>();
             withFieldParam = new List<string>();
         }
+
+        private Url SearchResourcesUrl => m_api?.ApiUrlV?
+            .Add("resources")
+            .Add("search");
 
         /// <summary>
         /// The (Lucene-like) string expression specifying the search query. If this parameter is not provided then all
@@ -145,15 +145,6 @@
             return queryParams;
         }
 
-        private SortedDictionary<string, object> PrepareSearchParams()
-        {
-            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
-            sParams.Add("unsigned", string.Empty);
-            sParams.Add("removeUnsignedParam", string.Empty);
-
-            return sParams;
-        }
-
         /// <summary>
         /// Execute search request.
         /// </summary>
@@ -182,6 +173,15 @@
                 null,
                 Utils.PrepareJsonHeaders(),
                 cancellationToken);
+        }
+
+        private SortedDictionary<string, object> PrepareSearchParams()
+        {
+            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
+            sParams.Add("unsigned", string.Empty);
+            sParams.Add("removeUnsignedParam", string.Empty);
+
+            return sParams;
         }
     }
 }
