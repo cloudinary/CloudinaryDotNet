@@ -1,4 +1,20 @@
 
+1.14.0 / 2020-11-24
+===================
+
+New functionality
+-----------------
+
+  * Add `DownloadBackedUpAsset` helper
+  * Add `Eval` upload parameter support
+  * Add `AccessibilityAnalysis` support in `UploadPreset`
+
+Other Changes
+-------------
+
+  * Fix Newtonsoft.Json NuGet dependency
+  * Fix `SubAccountIds` in `UserResult`
+
 1.13.2 / 2020-11-10
 ===================
 
