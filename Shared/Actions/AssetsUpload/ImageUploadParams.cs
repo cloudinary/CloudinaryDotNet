@@ -199,7 +199,8 @@
         public bool? CinemagraphAnalysis { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to include accessibility analysis information. Default: false.
+        /// Gets or sets whether to include accessibility analysis information.
+        /// Optional (Boolean, default: false).
         /// </summary>
         public bool? AccessibilityAnalysis { get; set; }
 

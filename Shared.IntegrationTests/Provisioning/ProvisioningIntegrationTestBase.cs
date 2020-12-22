@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Provisioning;
 using NUnit.Framework;
@@ -13,7 +14,8 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
         protected string m_userName2;
         protected string m_userEmail1;
         protected string m_userEmail2;
-        protected string m_cloudId;
+        protected string m_cloudId1;
+        protected string m_cloudId2;
         protected string m_userId1;
         protected string m_userId2;
         protected string m_groupId;
@@ -33,17 +35,12 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
 
             // Create a sub account(sub cloud)
             m_timestampSuffix = Utils.UnixTimeNowSeconds();
-            var subAccountName = $"jutaname{m_timestampSuffix}";
-            var createSubAccountParams = new CreateSubAccountParams(subAccountName)
-            {
-                CloudName = subAccountName
-            };
-            var createSubAccountResult = AccountProvisioning.CreateSubAccountAsync(createSubAccountParams)
-                .GetAwaiter().GetResult();
 
-            Assert.AreEqual(HttpStatusCode.OK, createSubAccountResult.StatusCode);
+            var subAccount1Name = $"jutaname{m_timestampSuffix}";
+            var subAccount2Name = $"jutaname2{m_timestampSuffix}";
 
-            m_cloudId = createSubAccountResult.Id;
+            m_cloudId1 = CreateSubAccount(subAccount1Name);
+            m_cloudId2 = CreateSubAccount(subAccount2Name);
 
             // Create users
             m_userName1 = $"SDK TEST {m_timestampSuffix}";
@@ -58,16 +55,17 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
             var userGroupName = $"test-group-{m_timestampSuffix}";
             var createUserGroupParams = new CreateUserGroupParams(userGroupName);
             var createUserGroupResult = AccountProvisioning.CreateUserGroupAsync(createUserGroupParams).GetAwaiter().GetResult();
-            
+
             Assert.AreEqual(HttpStatusCode.OK, createUserGroupResult.StatusCode);
-            
+
             m_groupId = createUserGroupResult.GroupId;
         }
 
         [OneTimeTearDown]
         public void Cleanup()
         {
-            AccountProvisioning.DeleteSubAccount(m_cloudId);
+            AccountProvisioning.DeleteSubAccount(m_cloudId1);
+            AccountProvisioning.DeleteSubAccount(m_cloudId2);
             AccountProvisioning.DeleteUser(m_userId1);
             AccountProvisioning.DeleteUser(m_userId2);
             AccountProvisioning.DeleteUserGroup(m_groupId);
@@ -75,11 +73,30 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
 
         private string CreateUser(string userName, string userEmail)
         {
-            var createUserParams = new CreateUserParams(userName, userEmail, m_userRole);
+            var createUserParams = new CreateUserParams(userName, userEmail, m_userRole)
+            {
+                SubAccountIds = new List<string> {m_cloudId1}
+            };
             var createUserResult = AccountProvisioning.CreateUserAsync(createUserParams).GetAwaiter().GetResult();
             Assert.AreEqual(HttpStatusCode.OK, createUserResult.StatusCode);
+            Assert.AreEqual(1, createUserResult.SubAccountIds.Length);
+            Assert.AreEqual(m_cloudId1, createUserResult.SubAccountIds[0]);
 
             return createUserResult.Id;
+        }
+
+        private string CreateSubAccount(string subAccountName)
+        {
+            var createSubAccountParams = new CreateSubAccountParams(subAccountName)
+            {
+                CloudName = subAccountName
+            };
+            var createSubAccountResult = AccountProvisioning.CreateSubAccountAsync(createSubAccountParams)
+                .GetAwaiter().GetResult();
+
+            Assert.AreEqual(HttpStatusCode.OK, createSubAccountResult.StatusCode);
+
+            return createSubAccountResult.Id;
         }
     }
 }

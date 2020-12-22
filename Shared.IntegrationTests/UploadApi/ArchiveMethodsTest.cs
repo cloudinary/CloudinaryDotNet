@@ -328,5 +328,32 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             Assert.NotNull(folderUrl.Error);
         }
+
+        [Test]
+        public void TestDownloadBackedUpAsset()
+        {
+            var publicId = GetUniquePublicId();
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Backup = true,
+                Tags = m_apiTag
+            };
+
+            m_cloudinary.Upload(uploadParams);
+            m_cloudinary.DeleteResources(publicId);
+            m_cloudinary.Restore(publicId);
+            var getResourceParams = new GetResourceParams(publicId) { Versions = true };
+            var getResourceResult = m_cloudinary.GetResource(getResourceParams);
+            var assetId = getResourceResult.AssetId;
+            var versionId = getResourceResult.Versions[0].VersionId;
+
+            var assetBackedUpUrl = m_cloudinary.DownloadBackedUpAsset(assetId, versionId);
+            
+            Assert.True(assetBackedUpUrl.Contains(assetId));
+            Assert.True(assetBackedUpUrl.Contains(versionId));
+            Assert.True(UrlExists(assetBackedUpUrl));
+        }
     }
 }

@@ -12,13 +12,13 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         public async Task TestUpdateSubAccount()
         {
             const string newName = "new-test-name-async";
-            var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId)
+            var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId1)
             {
                 CloudName = newName
             };
             await AccountProvisioning.UpdateSubAccountAsync(updateSubAccountParams);
 
-            var result = await AccountProvisioning.SubAccountAsync(m_cloudId);
+            var result = await AccountProvisioning.SubAccountAsync(m_cloudId1);
 
             Assert.AreEqual(newName, result.CloudName);
         }
@@ -33,15 +33,15 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
 
             var result = await AccountProvisioning.SubAccountsAsync(listSubAccountsParams);
 
-            Assert.NotNull(result.SubAccounts.FirstOrDefault(subAccount => subAccount.Id == m_cloudId));
+            Assert.NotNull(result.SubAccounts.FirstOrDefault(subAccount => subAccount.Id == m_cloudId1));
         }
 
         [Test]
         public async Task TestGetSpecificSubAccount()
         {
-            var result = await  AccountProvisioning.SubAccountAsync(m_cloudId);
+            var result = await  AccountProvisioning.SubAccountAsync(m_cloudId1);
 
-            Assert.AreEqual(m_cloudId, result.Id);
+            Assert.AreEqual(m_cloudId1, result.Id);
         }
 
         [Test]
@@ -52,12 +52,15 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             var updateUserParams = new UpdateUserParams(m_userId1)
             {
                 Email = newEmailAddress,
-                Name = newName
+                Name = newName,
+                SubAccountIds = new List<string> {m_cloudId1, m_cloudId2}
             };
 
             var updateUserResult = await  AccountProvisioning.UpdateUserAsync(updateUserParams);
             Assert.AreEqual(newName, updateUserResult.Name);
             Assert.AreEqual(newEmailAddress, updateUserResult.Email);
+            Assert.AreEqual(2, updateUserResult.SubAccountIds.Length);
+            Assert.That( new[] {m_cloudId1, m_cloudId2}, Is.EquivalentTo( updateUserResult.SubAccountIds ) );
 
             var getUserResult = await AccountProvisioning.UserAsync(m_userId1);
             Assert.AreEqual(m_userId1, getUserResult.Id);

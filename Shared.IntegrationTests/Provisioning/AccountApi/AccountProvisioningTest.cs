@@ -12,14 +12,14 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         public void TestUpdateSubAccount()
         {
             const string newName = "new-test-name";
-            var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId)
+            var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId1)
             {
                 CloudName = newName
 
             };
             AccountProvisioning.UpdateSubAccount(updateSubAccountParams);
 
-            var result = AccountProvisioning.SubAccount(m_cloudId);
+            var result = AccountProvisioning.SubAccount(m_cloudId1);
 
             Assert.AreEqual(newName, result.CloudName);
         }
@@ -34,15 +34,15 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
 
             var result = AccountProvisioning.SubAccounts(listSubAccountsParams);
 
-            Assert.NotNull(result.SubAccounts.FirstOrDefault(subAccount => subAccount.Id == m_cloudId));
+            Assert.NotNull(result.SubAccounts.FirstOrDefault(subAccount => subAccount.Id == m_cloudId1));
         }
 
         [Test]
         public void TestGetSpecificSubAccount()
         {
-            var result = AccountProvisioning.SubAccount(m_cloudId);
+            var result = AccountProvisioning.SubAccount(m_cloudId1);
 
-            Assert.AreEqual(m_cloudId, result.Id);
+            Assert.AreEqual(m_cloudId1, result.Id);
         }
 
         [Test]
@@ -54,6 +54,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             {
                 Email = newEmailAddress,
                 Name = newName
+
             };
 
             var updateUserResult = AccountProvisioning.UpdateUser(updateUserParams);
@@ -152,7 +153,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             {
                 Pending = true,
                 Prefix = m_userName2,
-                SubAccountId = m_cloudId
+                SubAccountId = m_cloudId1
             };
 
             var result = AccountProvisioning.Users(listUsersParams);
