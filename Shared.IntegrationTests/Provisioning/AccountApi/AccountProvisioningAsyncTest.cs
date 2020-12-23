@@ -8,7 +8,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
 {
     public class AccountProvisioningAsyncTest : ProvisioningIntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestUpdateSubAccount()
         {
             const string newName = "new-test-name-async";
@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(newName, result.CloudName);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestGetAllSubAccounts()
         {
             var listSubAccountsParams = new ListSubAccountsParams
@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.NotNull(result.SubAccounts.FirstOrDefault(subAccount => subAccount.Id == m_cloudId1));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestGetSpecificSubAccount()
         {
             var result = await  AccountProvisioning.SubAccountAsync(m_cloudId1);
@@ -44,7 +44,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(m_cloudId1, result.Id);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestUpdateUser()
         {
             var newEmailAddress = $"updated-async+{m_timestampSuffix}@cloudinary.com";
@@ -72,7 +72,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(newEmailAddress, foundUser.Email);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestGetUsersInAListOfUserIds()
         {
             var listUsersParams = new ListUsersParams
@@ -85,7 +85,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(1, result.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestUpdateUserGroup()
         {
             var newName = $"new-test-name-async_{m_timestampSuffix}";
@@ -99,7 +99,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(newName, getGroupResult.Name);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestAddAndRemoveUserFromGroup()
         {
             var addUserResult = await AccountProvisioning.AddUserToGroupAsync(m_groupId, m_userId1);
@@ -112,7 +112,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(0, removeUserResult.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public async Task TestUserGroupsInAccount()
         {
             var result = await AccountProvisioning.UserGroupsAsync();

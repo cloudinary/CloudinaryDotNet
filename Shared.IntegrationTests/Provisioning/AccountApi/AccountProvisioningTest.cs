@@ -8,7 +8,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
 {
     public class AccountProvisioningTest : ProvisioningIntegrationTestBase
     {
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateSubAccount()
         {
             const string newName = "new-test-name";
@@ -24,7 +24,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(newName, result.CloudName);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetAllSubAccounts()
         {
             var listSubAccountsParams = new ListSubAccountsParams
@@ -37,7 +37,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.NotNull(result.SubAccounts.FirstOrDefault(subAccount => subAccount.Id == m_cloudId1));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetSpecificSubAccount()
         {
             var result = AccountProvisioning.SubAccount(m_cloudId1);
@@ -45,7 +45,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(m_cloudId1, result.Id);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateUser()
         {
             var newEmailAddress = $"updated+{m_timestampSuffix}@cloudinary.com";
@@ -71,7 +71,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(newEmailAddress, foundUser.Email);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetUsersInAListOfUserIds()
         {
             var listUsersParams = new ListUsersParams
@@ -84,7 +84,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(1, result.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetPendingUsers()
         {
             var listUsersParams = new ListUsersParams
@@ -98,7 +98,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(1, result.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetNonPendingUsers()
         {
             var listUsersParams = new ListUsersParams
@@ -112,7 +112,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(0, result.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetPendingAndNonPendingUsers()
         {
             var listUsersParams = new ListUsersParams
@@ -126,7 +126,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(1, result.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetUsersByPrefix()
         {
             var listUsersParams1 = new ListUsersParams
@@ -146,7 +146,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(0, result2.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetUsersBySubAccountId()
         {
             var listUsersParams = new ListUsersParams
@@ -161,7 +161,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(1, result.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestGetUsersByNonexistentSubAccountIdError()
         {
             var randomId = new Random().Next(100000).ToString();
@@ -176,7 +176,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.True(result.Error.Message.StartsWith("Cannot find sub account"));
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUpdateUserGroup()
         {
             var newName = $"new-test-name_{m_timestampSuffix}";
@@ -190,7 +190,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(newName, getGroupResult.Name);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestAddAndRemoveUserFromGroup()
         {
             var addUserResult = AccountProvisioning.AddUserToGroup(m_groupId, m_userId1);
@@ -203,7 +203,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             Assert.AreEqual(0, removeUserResult.Users.Length);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUserGroupsInAccount()
         {
             var result = AccountProvisioning.UserGroups();
