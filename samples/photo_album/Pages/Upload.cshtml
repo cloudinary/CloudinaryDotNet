@@ -1,0 +1,18 @@
+﻿@page
+@model photo_album.UploadModel
+
+@{
+    ViewData["Title"] = "PhotoAlbum - Upload page";
+}
+
+<!-- A standard form for sending the image data to your server -->
+<div id='backend_upload'>
+    <h1>Upload through your server</h1>
+    
+    <form method="Post" enctype="multipart/form-data">
+        <input id="fileupload" type="file" name="images" multiple accept="image/gif, image/jpeg, image/png">
+        <input type="submit" value="Upload">
+    </form>
+</div>
+
+<a asp-page="Index" class="back_link">Back to list...</a>

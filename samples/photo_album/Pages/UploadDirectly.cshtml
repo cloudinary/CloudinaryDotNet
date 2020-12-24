@@ -1,0 +1,90 @@
+﻿@page
+@model photo_album.Pages.UploadDirectlyModel
+
+@{
+    ViewData["Title"] = "PhotoAlbum - Direct Upload page";
+}
+
+<!-- A form for direct uploading using a jQuery plug-in.
+          The BuildUploadForm method generates the required HTML and JavaScript to
+          allow uploading directly from the browser to your Cloudinary account -->
+<div id='direct_upload'>
+    <h1>Direct upload from the browser</h1>
+    <form>
+        @Html.AntiForgeryToken()
+
+        @if (Model.DirectUploadtype == DirectUploadType.signed)
+        {
+            @Html.Raw(Cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object>() { { "tags", (object)Model.Tags } }, new Dictionary<string, string>() { { "multiple", "true" } }))
+        }
+        else
+        {
+            @Html.Raw(Cloudinary.Api.BuildUnsignedUploadForm("test-field", Model.Preset, "image", new SortedDictionary<string, object>() { { "tags", (object)Model.Tags } }, new Dictionary<string, string>() { { "multiple", "true" } }))
+        }
+    </form>
+
+    <!-- status box -->
+    <div class="status">
+        <h2>Status</h2>
+        <span class="status_value">Idle</span>
+    </div>
+
+    <div class="uploaded_info_holder">
+    </div>
+</div>
+
+<a asp-page="Index" class="back_link">Back to list...</a>
+
+@section Scripts{
+    @Html.Raw(Cloudinary.GetCloudinaryJsConfig(dir: "js"))
+
+<script>
+    $(function () {
+
+            function prettydump(obj) {
+                ret = ""
+                $.each(obj, function (key, value) {
+                    ret += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                });
+
+                return ret;
+            }
+
+            $('.cloudinary-fileupload').fileupload({
+                dropZone: '#direct_upload',
+                start: function () {
+                    $('.status_value').text('Starting direct upload...');
+                },
+                progress: function () {
+                    $('.status_value').text('Uploading...');
+                },
+            })
+            .bind('fileuploaddone', function (e, data) {
+                $('.status_value').text('Idle');
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Page("/UploadDirectly")',
+                    data: JSON.stringify(data.result),
+                    contentType: 'application/json; charset=utf-8',
+                    headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()}
+                });
+
+                var info = $('<div class="uploaded_info"/>');
+                $(info).append($('<div class="data"/>').append(prettydump(data.result)));
+                $(info).append($('<div class="image"/>').append(
+                  $.cloudinary.image(data.result.public_id, {
+                      format: data.result.format,
+                      width: 150,
+                      height: 150,
+                      crop: "fill"
+                  })
+                ));
+                $('.uploaded_info_holder').append(info);
+            })
+            .bind('fileuploadfail', function (e, data) {
+                $('.status_value').text('Upload error!');
+            });
+        });
+</script>
+}
