@@ -29,10 +29,5 @@
         /// Defines whether to generate 32 characters length signature for URIs.
         /// </summary>
         public static bool LongUrlSignature = false;
-
-        /// <summary>
-        /// Defines authentication signature algorithm.
-        /// </summary>
-        public static SignatureAlgorithm SignatureAlgorithm = SignatureAlgorithm.SHA1;
     }
 }

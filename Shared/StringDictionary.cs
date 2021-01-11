@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// This class is based on list so is very slow but allows not unique keys.
@@ -31,7 +32,7 @@
                 var firstEq = pair.IndexOf('=');
                 if (firstEq == -1)
                 {
-                    Add(pair, null);
+                    Add(pair, null as string);
                 }
                 else
                 {
@@ -158,6 +159,16 @@
         {
             var newItem = new KeyValuePair<string, string>(key, value);
             m_list.Add(newItem);
+        }
+
+        /// <summary>
+        /// Add a new pair of key and a list of strings that is json encoded to a string value.
+        /// </summary>
+        /// <param name="key">The key to add.</param>
+        /// <param name="value">The value to add.</param>
+        public void Add(string key, List<string> value)
+        {
+            Add(key, JsonConvert.SerializeObject(value));
         }
 
         /// <summary>

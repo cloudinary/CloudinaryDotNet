@@ -282,6 +282,25 @@ namespace CloudinaryDotNet.IntegrationTest
 
             return m_cloudinary.UploadAsync(uploadParams, type);
         }
+        /// <summary>
+        /// A convenient method for creating a structured metadata field before testing.
+        /// </summary>
+        /// <param name="fieldLabelSuffix">The distinguishable suffix.</param>
+        /// <returns>The ExternalId of the structured metadata field.</returns>
+        protected string CreateMetadataField(string fieldLabelSuffix)
+        {
+            var metadataLabel = GetUniqueMetadataFieldLabel(fieldLabelSuffix);
+            var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
+            var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
+
+            Assert.NotNull(metadataResult);
+
+            var metadataFieldId = metadataResult.ExternalId;
+            if (!string.IsNullOrEmpty(metadataFieldId))
+                m_metadataFieldsToClear.Add(metadataFieldId);
+
+            return metadataFieldId;
+        }
 
         private void PopulateMissingRawUploadParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
         {
@@ -467,7 +486,7 @@ namespace CloudinaryDotNet.IntegrationTest
 
         public IgnoreAddonAttribute(string name)
         {
-            _mAddonName = name;
+            _mAddonName = (name ?? string.Empty).ToLower();
         }
 
         public ActionTargets Targets { get; private set; }
@@ -476,10 +495,17 @@ namespace CloudinaryDotNet.IntegrationTest
 
         public void BeforeTest(ITest test)
         {
-            var addonsToRun = Environment.GetEnvironmentVariable("CLD_TEST_ADDONS");
-            if (string.IsNullOrEmpty(addonsToRun) ||
-                !addonsToRun.Contains(_mAddonName) &&
-                !addonsToRun.ToLower().Equals("all"))
+            var environmentVariable = Environment.GetEnvironmentVariable("CLD_TEST_ADDONS");
+            var addonsList = (environmentVariable ?? string.Empty).ToLower()
+                .Split(',')
+                .Select(addon => addon.Trim())
+                .ToList();
+
+            var allTestsShouldRun = addonsList.Count == 1 && addonsList[0] == "all";
+            var addonNotInList = !addonsList.Contains(_mAddonName);
+            var noAddonsDefined = !addonsList.Any();
+
+            if (noAddonsDefined || addonNotInList && !allTestsShouldRun)
             {
                 Assert.Ignore(
                     $"Please enable {_mAddonName} plugin in your account and set CLD_TEST_ADDONS environment variable");

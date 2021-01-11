@@ -309,5 +309,38 @@ namespace CloudinaryDotNet.Test.Transformations.Common
 
             Assert.AreEqual("$small_150,$big_$small_pow_1.5", transformation.Generate());
         }
+
+        [TestCase(null, null)]
+        [TestCase("", null)]
+        [TestCase(" ", "_")]
+        [TestCase("   ", "_")]
+        [TestCase("_", "_")]
+        [TestCase("___", "_")]
+        [TestCase(" _ __  _", "_")]
+        [TestCase("foobar", "foobar")]
+        [TestCase("foo && bar", "foo_and_bar")]
+        [TestCase("foo&&bar", "foo&&bar")]
+        [TestCase("width", "w")]
+        [TestCase("initial_aspect_ratio", "iar")]
+        [TestCase("$width", "$width")]
+        [TestCase("$initial_aspect_ratio", "$initial_ar")]
+        [TestCase("$mywidth", "$mywidth")]
+        [TestCase("$widthwidth", "$widthwidth")]
+        [TestCase("$_width", "$_width")]
+        [TestCase("$__width", "$_width")]
+        [TestCase("$$width", "$$width")]
+        [TestCase("$height_100", "$height_100")]
+        [TestCase("$heightt_100", "$heightt_100")]
+        [TestCase("$$height_100", "$$height_100")]
+        [TestCase("$heightmy_100", "$heightmy_100")]
+        [TestCase("$myheight_100", "$myheight_100")]
+        [TestCase("$heightheight_100", "$heightheight_100")]
+        [TestCase("$theheight_100", "$theheight_100")]
+        [TestCase("$__height_100", "$_height_100")]
+        public void TestNormalizeExpressionComplexCases(string expression, string expected)
+        {
+            var actual = Expression.Normalize(expression);
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

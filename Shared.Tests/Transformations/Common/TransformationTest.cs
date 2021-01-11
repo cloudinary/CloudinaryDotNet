@@ -54,6 +54,21 @@ namespace CloudinaryDotNet.Test.Transformations.Common
         }
 
         [Test]
+        public void TestContextMetadataToUserVariables()
+        {
+            var transformation = new Transformation()
+                .Variables(
+                    Expression.Variable("$xpos", "ctx:!x_pos!_to_f"),
+                    Expression.Variable("$ypos", "ctx:!y_pos!_to_f"))
+                .Crop("crop")
+                .X("$xpos * w")
+                .Y("$ypos * h");
+
+            const string expected = "$xpos_ctx:!x_pos!_to_f,$ypos_ctx:!y_pos!_to_f,c_crop,x_$xpos_mul_w,y_$ypos_mul_h";
+            Assert.AreEqual(expected, transformation.ToString());
+        }
+
+        [Test]
         public void TestShouldSupportTextVariableValues()
         {
             var t = new Transformation()
@@ -155,6 +170,20 @@ namespace CloudinaryDotNet.Test.Transformations.Common
             Assert.Throws<InvalidOperationException>(() => textLayer.ResourceType(testValue));
             Assert.Throws<InvalidOperationException>(() => textLayer.Format(testValue));
             Assert.Throws<InvalidOperationException>(() => textLayer.Type(testValue));
+        }
+
+        [Test]
+        public void TestUserVariableNamesContainingPredefinedNamesAreNotAffected()
+        {
+            var transformation = new Transformation()
+                .Variable("$mywidth", "100")
+                .Variable("$aheight", 300)
+                .Chain()
+                .Width("3 + $mywidth * 3 + 4 / 2 * initialWidth * $mywidth")
+                .Height("3 * initialHeight + $aheight");
+
+            const string expected = "$aheight_300,$mywidth_100/h_3_mul_ih_add_$aheight,w_3_add_$mywidth_mul_3_add_4_div_2_mul_iw_mul_$mywidth";
+            Assert.AreEqual(expected, transformation.Generate());
         }
     }
 }

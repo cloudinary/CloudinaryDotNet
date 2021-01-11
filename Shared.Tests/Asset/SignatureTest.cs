@@ -25,13 +25,13 @@ namespace CloudinaryDotNet.Test.Asset
         [SetUp]
         public void BeforeTest()
         {
-            CloudinaryConfiguration.SignatureAlgorithm = SignatureAlgorithm.SHA1;
+            m_api.SignatureAlgorithm = SignatureAlgorithm.SHA1;
         }
 
         [TearDown]
         public void AfterTest()
         {
-            CloudinaryConfiguration.SignatureAlgorithm = SignatureAlgorithm.SHA1;
+            m_api.SignatureAlgorithm = SignatureAlgorithm.SHA1;
         }
 
         [Test]
@@ -68,8 +68,8 @@ namespace CloudinaryDotNet.Test.Asset
                 { "timestamp", "1568810420"},
                 { "username", "user@cloudinary.com"}
             };
-            CloudinaryConfiguration.SignatureAlgorithm = SignatureAlgorithm.SHA256;
             var api = new Api("cloudinary://a:hdcixPpR2iKERPwqvH6sHdK9cyac@test123");
+            api.SignatureAlgorithm = SignatureAlgorithm.SHA256;
 
             Assert.AreEqual("45ddaa4fa01f0c2826f32f669d2e4514faf275fe6df053f1a150e7beae58a3bd", api.SignParameters(parameters));
         }
@@ -125,8 +125,8 @@ namespace CloudinaryDotNet.Test.Asset
         [Test]
         public void TestVerifyApiResponseSignatureSha256()
         {
-            CloudinaryConfiguration.SignatureAlgorithm = SignatureAlgorithm.SHA256;
             var api = new Api("cloudinary://a:X7qLTrsES31MzxxkxPPA-pAGGfU@test123");
+            api.SignatureAlgorithm = SignatureAlgorithm.SHA256;
             const string correctSignature = "cc69ae4ed73303fbf4a55f2ae5fc7e34ad3a5c387724bfcde447a2957cacdfea";
 
             var verificationResult = api.VerifyApiResponseSignature("tests/logo.png", "1", correctSignature);
@@ -169,7 +169,7 @@ namespace CloudinaryDotNet.Test.Asset
         [Test]
         public void TestVerifyNotificationSignatureSha256()
         {
-            CloudinaryConfiguration.SignatureAlgorithm = SignatureAlgorithm.SHA256;
+            m_api.SignatureAlgorithm = SignatureAlgorithm.SHA256;
             var currentTimestamp = Utils.UnixTimeNowSeconds();
             var validResponseTimestamp = currentTimestamp - 5000;
 
@@ -226,7 +226,7 @@ namespace CloudinaryDotNet.Test.Asset
         public void TestSignedUrlSha256()
         {
             var api = new Api("cloudinary://a:b@test123");
-            CloudinaryConfiguration.SignatureAlgorithm = SignatureAlgorithm.SHA256;
+            api.SignatureAlgorithm = SignatureAlgorithm.SHA256;
 
             var signedUrl = api.UrlImgUp.Signed(true).BuildUrl("sample.jpg");
 

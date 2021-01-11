@@ -16,6 +16,32 @@
     using Newtonsoft.Json;
 
     /// <summary>
+    /// HTTP method.
+    /// </summary>
+    public enum HttpMethod
+    {
+        /// <summary>
+        /// DELETE
+        /// </summary>
+        DELETE,
+
+        /// <summary>
+        /// GET
+        /// </summary>
+        GET,
+
+        /// <summary>
+        /// POST
+        /// </summary>
+        POST,
+
+        /// <summary>
+        /// PUT
+        /// </summary>
+        PUT,
+    }
+
+    /// <summary>
     /// Provider for the API calls.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
@@ -48,9 +74,9 @@
         public static string USER_AGENT = BuildUserAgent();
 
         /// <summary>
-        /// URL of the cloudinary API.
+        /// Sends HTTP requests and receives HTTP responses.
         /// </summary>
-        protected string m_apiAddr = "https://" + ADDR_API;
+        public static HttpClient Client = new HttpClient();
 
         /// <summary>
         /// Whether to use a sub domain.
@@ -117,17 +143,17 @@
         public int ChunkSize = 65000;
 
         /// <summary>
-        /// Sends HTTP requests and receives HTTP responses.
+        /// Defines authentication signature algorithm.
         /// </summary>
-        public static HttpClient Client = new HttpClient();
+        public SignatureAlgorithm SignatureAlgorithm = SignatureAlgorithm.SHA1;
+
+        /// <summary>
+        /// URL of the cloudinary API.
+        /// </summary>
+        protected string m_apiAddr = "https://" + ADDR_API;
 
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
-
-        private static string BuildUserAgent()
-        {
-            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiShared"/> class.
@@ -362,6 +388,55 @@
         }
 
         /// <summary>
+        /// Gets cloudinary parameter from enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
+        /// <param name="e">Field of enum.</param>
+        /// <returns>Cloudinary-compatible parameter.</returns>
+        public static string GetCloudinaryParam<T>(T e)
+        {
+            Type eType = typeof(T);
+            FieldInfo fi = eType.GetField(e.ToString());
+            EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
+                typeof(EnumMemberAttribute), false);
+
+            if (attrs.Length == 0)
+            {
+                throw new ArgumentException("Enum fields must be decorated with EnumMemberAttribute!");
+            }
+
+            return attrs[0].Value;
+        }
+
+        /// <summary>
+        /// Parse cloudinary-compatible parameter as enum field.
+        /// </summary>
+        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
+        /// <param name="s">Field of enum represented as string.</param>
+        /// <returns>Field of enum.</returns>
+        public static T ParseCloudinaryParam<T>(string s)
+        {
+            Type eType = typeof(T);
+            foreach (var fi in eType.GetFields())
+            {
+                EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
+                    typeof(EnumMemberAttribute), false);
+
+                if (attrs.Length == 0)
+                {
+                    continue;
+                }
+
+                if (s == attrs[0].Value)
+                {
+                    return (T)fi.GetValue(null);
+                }
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
         /// Call the Cloudinary API and parse HTTP response asynchronously.
         /// </summary>
         /// <typeparam name="T">Type of the response.</typeparam>
@@ -484,55 +559,6 @@
         }
 
         /// <summary>
-        /// Gets cloudinary parameter from enumeration.
-        /// </summary>
-        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
-        /// <param name="e">Field of enum.</param>
-        /// <returns>Cloudinary-compatible parameter.</returns>
-        public static string GetCloudinaryParam<T>(T e)
-        {
-            Type eType = typeof(T);
-            FieldInfo fi = eType.GetField(e.ToString());
-            EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
-                typeof(EnumMemberAttribute), false);
-
-            if (attrs.Length == 0)
-            {
-                throw new ArgumentException("Enum fields must be decorated with EnumMemberAttribute!");
-            }
-
-            return attrs[0].Value;
-        }
-
-        /// <summary>
-        /// Parse cloudinary-compatible parameter as enum field.
-        /// </summary>
-        /// <typeparam name="T">Enum which fields are decorated with DescriptionAttribute.</typeparam>
-        /// <param name="s">Field of enum represented as string.</param>
-        /// <returns>Field of enum.</returns>
-        public static T ParseCloudinaryParam<T>(string s)
-        {
-            Type eType = typeof(T);
-            foreach (var fi in eType.GetFields())
-            {
-                EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
-                    typeof(EnumMemberAttribute), false);
-
-                if (attrs.Length == 0)
-                {
-                    continue;
-                }
-
-                if (s == attrs[0].Value)
-                {
-                    return (T)fi.GetValue(null);
-                }
-            }
-
-            return default(T);
-        }
-
-        /// <summary>
         /// Gets the upload URL for resource.
         /// </summary>
         /// <param name="resourceType">Type of the resource.</param>
@@ -617,7 +643,7 @@
 
             signBase.Append(Account.ApiSecret);
 
-            var hash = Utils.ComputeHash(signBase.ToString(), CloudinaryConfiguration.SignatureAlgorithm);
+            var hash = Utils.ComputeHash(signBase.ToString(), SignatureAlgorithm);
             StringBuilder sign = new StringBuilder();
             foreach (byte b in hash)
             {
@@ -636,7 +662,7 @@
         public string SignUriPart(string uriPart, bool isLong = true)
         {
             var extendedUriPart = uriPart + Account.ApiSecret;
-            var signatureAlgorithm = isLong ? SignatureAlgorithm.SHA256 : CloudinaryConfiguration.SignatureAlgorithm;
+            var signatureAlgorithm = isLong ? SignatureAlgorithm.SHA256 : SignatureAlgorithm;
             var hash = Utils.ComputeHash(extendedUriPart, signatureAlgorithm);
             var signatureLength = isLong ? 32 : 8;
             return "s--" + Utils.EncodeUrlSafe(hash).Substring(0, signatureLength) + "--/";
@@ -678,7 +704,7 @@
                 return false;
             }
 
-            var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}", CloudinaryConfiguration.SignatureAlgorithm);
+            var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}", SignatureAlgorithm);
 
             return signature.Equals(payloadHash, StringComparison.Ordinal);
         }
@@ -777,68 +803,10 @@
 
             return builder.ToString();
         }
-    }
 
-    /// <summary>
-    /// Digital signature provider.
-    /// </summary>
-    public interface ISignProvider
-    {
-        /// <summary>
-        /// Generate digital signature for parameters.
-        /// </summary>
-        /// <param name="parameters">The parameters to sign.</param>
-        /// <returns>Generated signature.</returns>
-        string SignParameters(IDictionary<string, object> parameters);
-
-        /// <summary>
-        /// Generate digital signature for part of an URI.
-        /// </summary>
-        /// <param name="uriPart">The part of an URI to sign.</param>
-        /// <param name="isLong">Indicates whether to generate long signature.</param>
-        /// <returns>Generated signature.</returns>
-        string SignUriPart(string uriPart, bool isLong);
-    }
-
-    /// <summary>
-    /// HTTP method.
-    /// </summary>
-    public enum HttpMethod
-    {
-        /// <summary>
-        /// DELETE
-        /// </summary>
-        DELETE,
-
-        /// <summary>
-        /// GET
-        /// </summary>
-        GET,
-
-        /// <summary>
-        /// POST
-        /// </summary>
-        POST,
-
-        /// <summary>
-        /// PUT
-        /// </summary>
-        PUT,
-    }
-
-    /// <summary>
-    /// Defines supported algorithms for generating/verifying hashed message authentication codes (HMAC).
-    /// </summary>
-    public enum SignatureAlgorithm
-    {
-        /// <summary>
-        /// SHA1 algorithm
-        /// </summary>
-        SHA1,
-
-        /// <summary>
-        /// SHA256 algorithm
-        /// </summary>
-        SHA256,
+        private static string BuildUserAgent()
+        {
+            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
+        }
     }
 }

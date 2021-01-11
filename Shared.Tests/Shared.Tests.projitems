@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Asset\SignatureTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transformations\Common\TransformationTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Asset\UrlSuffixTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\StringDictionaryTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UtilsTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transformations\Video\VideoCodecTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tag\VideoTagTest.cs" />

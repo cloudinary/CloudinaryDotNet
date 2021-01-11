@@ -38,10 +38,10 @@
     <Rule Id="SA1131" Action="Warning" />
     <Rule Id="SA1137" Action="Warning" />
     <Rule Id="SA1200" Action="Warning" />
-    <Rule Id="SA1201" Action="Info" />
-    <Rule Id="SA1202" Action="Info" />
-    <Rule Id="SA1203" Action="Info" />
-    <Rule Id="SA1204" Action="Info" />
+    <Rule Id="SA1201" Action="Warning" />
+    <Rule Id="SA1202" Action="Warning" />
+    <Rule Id="SA1203" Action="Warning" />
+    <Rule Id="SA1204" Action="Warning" />
     <Rule Id="SA1208" Action="Warning" />
     <Rule Id="SA1210" Action="Warning" />
     <Rule Id="SA1304" Action="Warning" />
@@ -54,7 +54,7 @@
     <Rule Id="SA1314" Action="Warning" />
     <Rule Id="SA1400" Action="Warning" />
     <Rule Id="SA1401" Action="None" />
-    <Rule Id="SA1402" Action="Info" />
+    <Rule Id="SA1402" Action="Warning" />
     <Rule Id="SA1407" Action="Warning" />
     <Rule Id="SA1408" Action="Warning" />
     <Rule Id="SA1413" Action="Warning" />
@@ -90,7 +90,7 @@
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1642" Action="Warning" />
     <Rule Id="SA1648" Action="Warning" />
-    <Rule Id="SA1649" Action="Info" />
+    <Rule Id="SA1649" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1000" Action="None" />

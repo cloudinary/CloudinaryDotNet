@@ -512,7 +512,19 @@ namespace CloudinaryDotNet.Test.Asset
             var regVideo = Regex.IsMatch(decodedVideoUrl, @"https://api\.cloudinary\.com/v1_1/[^/]*/video/generate_archive\?api_key=a&mode=download&signature=\w{40}&tags\[]=some_tag&timestamp=\d{10}");
             Assert.True(regVideo);
         }
-        
+
+        [Test]
+        public void TestDownloadArchiveUrlShouldSupportTargetPublicId()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123");
+            var parameters = new ArchiveParams().Tags(new List<string> { "some_tag" }).TargetPublicId(TestImageId);
+
+            var urlArchiveImage = cloudinary.DownloadArchiveUrl(parameters);
+            var decodedImageUrl = Uri.UnescapeDataString(urlArchiveImage);
+            var rgImage = Regex.IsMatch(decodedImageUrl, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/generate_archive\?api_key=a&mode=download&signature=\w{40}&tags\[]=some_tag&target_public_id=" + TestImageId + @"&timestamp=\d{10}");
+            Assert.True(rgImage);
+        }
+
         [Test]
         public void TestDownloadPrivate()
         {
