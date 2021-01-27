@@ -50,6 +50,9 @@
         /// <summary> Parameter name for public IDs.</summary>
         public const string PUBLIC_IDS = "public_ids";
 
+        /// <summary> Parameter name for tag.</summary>
+        public const string TYPE_PARAM_NAME = "type";
+
         /// <summary> Parameter name for command.</summary>
         public const string COMMAND = "command";
 

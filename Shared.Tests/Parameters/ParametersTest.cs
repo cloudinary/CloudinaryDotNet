@@ -200,5 +200,13 @@ namespace CloudinaryDotNet.Test.Parameters
 
             Assert.AreEqual("true", dictionary["cinemagraph_analysis"]);
         }
+
+        [Test]
+        public void TestTypeInTagParams()
+        {
+            var parameters = new TagParams();
+            parameters.Type = "some_type";
+            Assert.AreEqual("some_type", parameters.ToParamsDictionary()["type"]);
+        }
     }
 }

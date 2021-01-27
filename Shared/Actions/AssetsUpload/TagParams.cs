@@ -105,6 +105,11 @@
             AddParam(dict, Constants.PUBLIC_IDS, PublicIds);
             AddParam(dict, Constants.COMMAND, Api.GetCloudinaryParam<TagCommand>(Command));
 
+            if (!string.IsNullOrEmpty(Type))
+            {
+                AddParam(dict, Constants.TYPE_PARAM_NAME, Type);
+            }
+
             return dict;
         }
     }
