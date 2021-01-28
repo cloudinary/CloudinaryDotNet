@@ -143,6 +143,11 @@
         public int ChunkSize = 65000;
 
         /// <summary>
+        /// Defines authentication signature algorithm.
+        /// </summary>
+        public SignatureAlgorithm SignatureAlgorithm = SignatureAlgorithm.SHA1;
+
+        /// <summary>
         /// URL of the cloudinary API.
         /// </summary>
         protected string m_apiAddr = "https://" + ADDR_API;
@@ -618,7 +623,7 @@
         }
 
         /// <summary>
-        /// Calculates signature of parameters.
+        /// Calculates signature of parameters, based on agreed signature algorithm.
         /// </summary>
         /// <param name="parameters">Parameters to sign.</param>
         /// <returns>Signature of parameters.</returns>
@@ -638,7 +643,7 @@
 
             signBase.Append(Account.ApiSecret);
 
-            var hash = Utils.ComputeHash(signBase.ToString());
+            var hash = Utils.ComputeHash(signBase.ToString(), SignatureAlgorithm);
             StringBuilder sign = new StringBuilder();
             foreach (byte b in hash)
             {
@@ -657,7 +662,8 @@
         public string SignUriPart(string uriPart, bool isLong = true)
         {
             var extendedUriPart = uriPart + Account.ApiSecret;
-            var hash = isLong ? Utils.ComputeSha256Hash(extendedUriPart) : Utils.ComputeHash(extendedUriPart);
+            var signatureAlgorithm = isLong ? SignatureAlgorithm.SHA256 : SignatureAlgorithm;
+            var hash = Utils.ComputeHash(extendedUriPart, signatureAlgorithm);
             var signatureLength = isLong ? 32 : 8;
             return "s--" + Utils.EncodeUrlSafe(hash).Substring(0, signatureLength) + "--/";
         }
@@ -698,7 +704,7 @@
                 return false;
             }
 
-            var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}");
+            var payloadHash = Utils.ComputeHexHash($"{body}{timestamp}{Account.ApiSecret}", SignatureAlgorithm);
 
             return signature.Equals(payloadHash, StringComparison.Ordinal);
         }

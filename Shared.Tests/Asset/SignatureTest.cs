@@ -22,15 +22,56 @@ namespace CloudinaryDotNet.Test.Asset
             m_api = new Api(account);
         }
 
+        [SetUp]
+        public void BeforeTest()
+        {
+            m_api.SignatureAlgorithm = SignatureAlgorithm.SHA1;
+        }
+
+        [TearDown]
+        public void AfterTest()
+        {
+            m_api.SignatureAlgorithm = SignatureAlgorithm.SHA1;
+        }
+
         [Test]
         public void TestSign()
         {
-            SortedDictionary<string, object> parameters = new SortedDictionary<string, object>();
+            var parameters = new SortedDictionary<string, object>();
 
             parameters.Add("public_id", "sample");
             parameters.Add("timestamp", "1315060510");
 
             Assert.AreEqual("c3470533147774275dd37996cc4d0e68fd03cd4f", m_api.SignParameters(parameters));
+        }
+
+        [Test]
+        public void TestSignSha1()
+        {
+            var parameters = new SortedDictionary<string, object>
+            {
+                { "cloud_name", "dn6ot3ged"},
+                { "timestamp", "1568810420"},
+                { "username", "user@cloudinary.com"}
+            };
+            var api = new Api("cloudinary://a:hdcixPpR2iKERPwqvH6sHdK9cyac@test123");
+
+            Assert.AreEqual("14c00ba6d0dfdedbc86b316847d95b9e6cd46d94", api.SignParameters(parameters));
+        }
+
+        [Test]
+        public void TestSignSha256()
+        {
+            var parameters = new SortedDictionary<string, object>
+            {
+                { "cloud_name", "dn6ot3ged"},
+                { "timestamp", "1568810420"},
+                { "username", "user@cloudinary.com"}
+            };
+            var api = new Api("cloudinary://a:hdcixPpR2iKERPwqvH6sHdK9cyac@test123");
+            api.SignatureAlgorithm = SignatureAlgorithm.SHA256;
+
+            Assert.AreEqual("45ddaa4fa01f0c2826f32f669d2e4514faf275fe6df053f1a150e7beae58a3bd", api.SignParameters(parameters));
         }
 
         [Test]
@@ -82,6 +123,18 @@ namespace CloudinaryDotNet.Test.Asset
         }
 
         [Test]
+        public void TestVerifyApiResponseSignatureSha256()
+        {
+            var api = new Api("cloudinary://a:X7qLTrsES31MzxxkxPPA-pAGGfU@test123");
+            api.SignatureAlgorithm = SignatureAlgorithm.SHA256;
+            const string correctSignature = "cc69ae4ed73303fbf4a55f2ae5fc7e34ad3a5c387724bfcde447a2957cacdfea";
+
+            var verificationResult = api.VerifyApiResponseSignature("tests/logo.png", "1", correctSignature);
+
+            Assert.IsTrue(verificationResult);
+        }
+
+        [Test]
         public void TestVerifyNotificationSignature()
         {
             var responseParameters = new SortedDictionary<string, object> {
@@ -111,6 +164,23 @@ namespace CloudinaryDotNet.Test.Asset
 
             Assert.IsFalse(m_api.VerifyNotificationSignature(responseJson, validResponseTimestamp,
                 responseSignature + "chars", 4000), $"{testMessagePart} invalid for non matching and expired signature");
+        }
+
+        [Test]
+        public void TestVerifyNotificationSignatureSha256()
+        {
+            m_api.SignatureAlgorithm = SignatureAlgorithm.SHA256;
+            var currentTimestamp = Utils.UnixTimeNowSeconds();
+            var validResponseTimestamp = currentTimestamp - 5000;
+
+            var responseParameters = new SortedDictionary<string, object>();
+            var responseJson = JsonConvert.SerializeObject(responseParameters);
+            var payload = $"{responseJson}{validResponseTimestamp}{m_api.Account.ApiSecret}";
+            var correctSignature = Utils.ComputeHexHash(payload, SignatureAlgorithm.SHA256);
+
+            var verificationResult = m_api.VerifyNotificationSignature(responseJson, validResponseTimestamp, correctSignature);
+
+            Assert.IsTrue(verificationResult);
         }
 
         [Test]
@@ -150,6 +220,18 @@ namespace CloudinaryDotNet.Test.Asset
                 .BuildUrl("image.jpg");
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestSignedUrlSha256()
+        {
+            var api = new Api("cloudinary://a:b@test123");
+            api.SignatureAlgorithm = SignatureAlgorithm.SHA256;
+
+            var signedUrl = api.UrlImgUp.Signed(true).BuildUrl("sample.jpg");
+
+            const string expectedUrl = "http://res.cloudinary.com/test123/image/upload/s--2hbrSMPO--/sample.jpg";
+            Assert.AreEqual(expectedUrl, signedUrl);
         }
 
         [Test]
