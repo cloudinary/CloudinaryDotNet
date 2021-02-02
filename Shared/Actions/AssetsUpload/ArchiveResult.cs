@@ -11,6 +11,7 @@
         /// <summary>
         /// The type of file. Possible values: image, raw, video.
         /// </summary>
+        [DataMember(Name = "resource_type")]
         protected string m_resourceType;
 
         /// <summary>
@@ -58,7 +59,6 @@
         /// <summary>
         /// Gets the type of resource. Possible values: image, raw, video.
         /// </summary>
-        [DataMember(Name = "resource_type")]
         public ResourceType ResourceType
         {
             get { return Api.ParseCloudinaryParam<ResourceType>(m_resourceType); }

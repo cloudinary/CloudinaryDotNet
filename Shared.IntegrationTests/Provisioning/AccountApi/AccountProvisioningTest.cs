@@ -10,8 +10,8 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
     {
         [Test, RetryWithDelay]
         public void TestUpdateSubAccount()
-        {
-            const string newName = "new-test-name";
+         {
+            const string newName = "new-test-name-1";
             var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId1)
             {
                 CloudName = newName
