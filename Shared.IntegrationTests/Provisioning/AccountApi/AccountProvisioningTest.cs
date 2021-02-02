@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
 
             var updateResult = AccountProvisioning.UpdateSubAccount(updateSubAccountParams);
 
-            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode, updateResult.Error?.Message);
 
             var result = AccountProvisioning.SubAccount(m_cloudId1);
 
