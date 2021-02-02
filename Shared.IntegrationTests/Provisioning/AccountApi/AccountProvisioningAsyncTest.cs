@@ -13,7 +13,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         [Test]
         public async Task TestUpdateSubAccount()
         {
-            var newName = $"some-name-{Guid.NewGuid().GetHashCode()}";
+            var newName = GetCloudName();
             var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId1)
             {
                 CloudName = newName

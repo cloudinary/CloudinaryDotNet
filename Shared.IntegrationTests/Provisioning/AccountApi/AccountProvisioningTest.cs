@@ -12,16 +12,16 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         [Test]
         public void TestUpdateSubAccount()
         {
-            var newName = $"some-name-{Guid.NewGuid().GetHashCode()}";
+            var newName = GetCloudName();
             var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId1)
             {
                 CloudName = newName
             };
 
             var updateResult = AccountProvisioning.UpdateSubAccount(updateSubAccountParams);
-            
+
             Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
-            
+
             var result = AccountProvisioning.SubAccount(m_cloudId1);
 
             Assert.AreEqual(newName, result.CloudName);

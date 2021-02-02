@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Provisioning;
@@ -97,6 +98,11 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
             Assert.AreEqual(HttpStatusCode.OK, createSubAccountResult.StatusCode);
 
             return createSubAccountResult.Id;
+        }
+
+        protected static string GetCloudName()
+        {
+            return $"dotnet-sdk-test-cloud-{Guid.NewGuid().GetHashCode()}";
         }
     }
 }
