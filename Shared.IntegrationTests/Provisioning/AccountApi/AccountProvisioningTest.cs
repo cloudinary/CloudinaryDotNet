@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -11,14 +12,16 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         [Test]
         public void TestUpdateSubAccount()
         {
-            const string newName = "new-test-name";
+            var newName = $"some-name-{Guid.NewGuid().GetHashCode()}";
             var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId1)
             {
                 CloudName = newName
-
             };
-            AccountProvisioning.UpdateSubAccount(updateSubAccountParams);
 
+            var updateResult = AccountProvisioning.UpdateSubAccount(updateSubAccountParams);
+            
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            
             var result = AccountProvisioning.SubAccount(m_cloudId1);
 
             Assert.AreEqual(newName, result.CloudName);
