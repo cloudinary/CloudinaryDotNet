@@ -186,7 +186,6 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsNotEmpty(foundResource.Etag);
             Assert.Contains(m_searchTag, foundResource.Tags);
             Assert.IsNotEmpty(foundResource.ImageMetadata);
-            Assert.IsNotEmpty(foundResource.MetadataFields);
             Assert.AreEqual(1, foundResource.Context.Count);
             Assert.AreEqual(0, foundResource.ImageAnalysis.FaceCount);
             Assert.IsNotNull(foundResource.ImageAnalysis);

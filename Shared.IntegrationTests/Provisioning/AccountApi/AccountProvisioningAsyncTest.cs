@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -11,13 +13,16 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
         [Test, RetryWithDelay]
         public async Task TestUpdateSubAccount()
         {
-            const string newName = "new-test-name-async";
+            var newName = GetCloudName();
             var updateSubAccountParams = new UpdateSubAccountParams(m_cloudId1)
             {
                 CloudName = newName
             };
-            await AccountProvisioning.UpdateSubAccountAsync(updateSubAccountParams);
 
+            var updateResult = await AccountProvisioning.UpdateSubAccountAsync(updateSubAccountParams);
+            
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode, updateResult.Error?.Message);
+            
             var result = await AccountProvisioning.SubAccountAsync(m_cloudId1);
 
             Assert.AreEqual(newName, result.CloudName);

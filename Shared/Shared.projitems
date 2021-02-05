@@ -187,6 +187,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\VideoUploadParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\VideoUploadResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsUpload\UploadResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SignatureAlgorithm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApiShared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApiShared.Internal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AuthToken.cs" />
