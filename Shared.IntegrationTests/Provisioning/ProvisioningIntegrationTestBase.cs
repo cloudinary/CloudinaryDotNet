@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Provisioning;
@@ -101,7 +102,8 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
 
         protected static string GetCloudName()
         {
-            return $"dotnet_sdk_{IntegrationTestBase.GetTaggedRandomValue()}";
+            return $"dotnetsdk{IntegrationTestBase.GetTaggedRandomValue()}"
+                .Replace("_","").ToLower(CultureInfo.InvariantCulture);
         }
     }
 }
