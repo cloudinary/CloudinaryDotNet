@@ -125,7 +125,7 @@ namespace CloudinaryDotNet.IntegrationTest
             FoldersToClear = new List<string>();
             m_metadataFieldsToClear = new List<string>();
 
-            InitializeUniqueNames(assembly.GetName().Name);
+            InitializeUniqueNames();
         }
 
         protected virtual string GetMethodTag([System.Runtime.CompilerServices.CallerMemberName]string memberName = "")
@@ -133,11 +133,9 @@ namespace CloudinaryDotNet.IntegrationTest
             return $"{m_apiTag}_{memberName}";
         }
 
-        protected void InitializeUniqueNames(string assemblyName)
+        protected void InitializeUniqueNames()
         {
-            string appveyorJobId = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
-            m_suffix = assemblyName.Replace('.', '_');
-            m_suffix += String.IsNullOrEmpty(appveyorJobId) ? new Random().Next(100000, 999999).ToString() : appveyorJobId;
+            m_suffix = GetTaggedRandomValue();
             m_apiTest = m_test_prefix + m_suffix;
             m_apiTest1 = m_apiTest + "_1";
             m_apiTest2 = m_apiTest + "_2";
@@ -151,6 +149,15 @@ namespace CloudinaryDotNet.IntegrationTest
 
             AddCreatedTransformation(m_simpleTransformation, m_resizeTransformation, m_updateTransformation, m_updateTransformationAsString,
                 m_explicitTransformation, m_explodeTransformation, m_simpleTransformationAngle);
+        }
+
+        public static string GetTaggedRandomValue()
+        {
+            var assembly = typeof(IntegrationTestBase).Assembly;
+            var result = assembly.GetName().Name.Replace('.', '_');
+            var appveyorJobId = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
+            result += String.IsNullOrEmpty(appveyorJobId) ? new Random().Next(100000, 999999).ToString() : appveyorJobId;
+            return result;
         }
 
         private void SaveTestResources(Assembly assembly)

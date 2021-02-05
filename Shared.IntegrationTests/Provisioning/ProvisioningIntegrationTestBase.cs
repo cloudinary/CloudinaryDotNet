@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Provisioning;
@@ -56,7 +57,7 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
             var createUserGroupParams = new CreateUserGroupParams(userGroupName);
             var createUserGroupResult = AccountProvisioning.CreateUserGroupAsync(createUserGroupParams).GetAwaiter().GetResult();
 
-            Assert.AreEqual(HttpStatusCode.OK, createUserGroupResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, createUserGroupResult.StatusCode, createUserGroupResult.Error?.Message);
 
             m_groupId = createUserGroupResult.GroupId;
         }
@@ -94,9 +95,15 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning
             var createSubAccountResult = AccountProvisioning.CreateSubAccountAsync(createSubAccountParams)
                 .GetAwaiter().GetResult();
 
-            Assert.AreEqual(HttpStatusCode.OK, createSubAccountResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, createSubAccountResult.StatusCode, createSubAccountResult?.Error?.Message);
 
             return createSubAccountResult.Id;
+        }
+
+        protected static string GetCloudName()
+        {
+            return $"dotnetsdk{IntegrationTestBase.GetTaggedRandomValue()}"
+                .Replace("_","").ToLower(CultureInfo.InvariantCulture);
         }
     }
 }
