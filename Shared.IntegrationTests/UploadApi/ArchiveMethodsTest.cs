@@ -315,6 +315,21 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         }
 
         [Test]
+        public void TestCreateArchiveErrorMessage()
+        {
+            var parameters = new ArchiveParams()
+                .PublicIds(new List<string> { "sample", "not exist" })
+                .FlattenFolders(true)
+                .SkipTransformationName(true)
+                .UseOriginalFilename(true)
+                .AllowMissing(false);
+
+            var folderUrl = m_cloudinary.CreateArchive(parameters);
+
+            Assert.NotNull(folderUrl.Error);
+        }
+
+        [Test]
         public void TestDownloadBackedUpAsset()
         {
             var publicId = GetUniquePublicId();
