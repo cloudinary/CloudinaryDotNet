@@ -34,7 +34,10 @@ namespace PhotoAlbum
 
             services.AddSingleton(new Cloudinary(new Account(cloudName, apiKey, apiSecret)));
 
-            services.AddDbContext<PhotosDbContext>(options => options.UseSqlite($"Data Source ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\Cloudinary samples\\PhotosCoreDb.sqlite"));
+
+            var dbFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\Cloudinary\\samples";
+            System.IO.Directory.CreateDirectory(dbFolder);
+            services.AddDbContext<PhotosDbContext>(options => options.UseSqlite($"Data Source ={dbFolder}\\PhotosCoreDb.sqlite"));
 
             services.AddRazorPages();
         }
