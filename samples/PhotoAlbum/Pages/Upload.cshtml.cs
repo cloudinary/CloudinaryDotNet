@@ -1,30 +1,33 @@
-namespace photo_album
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using CloudinaryDotNet;
-    using CloudinaryDotNet.Actions;
-    using Microsoft.AspNetCore.Mvc.RazorPages;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Http;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading.Tasks;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using PhotoAlbum.Data;
+using UploadResult = PhotoAlbum.Data.UploadResult;
 
+namespace PhotoAlbum.Pages
+{
     public class UploadModel : PageModel
     {
-        private const string Tags = "backend_photo_album";
+        private const string Tags = "backend_PhotoAlbum";
 
-        private readonly Cloudinary m_cloudinary;
-        private readonly PhotosDbContext m_context;
+        private readonly Cloudinary _cloudinary;
+        private readonly PhotosDbContext _context;
 
         public UploadModel(
             Cloudinary cloudinary,
             PhotosDbContext context
             )
         {
-            m_cloudinary = cloudinary;
-            m_context = context;
+            _cloudinary = cloudinary;
+            _context = context;
         }
 
         public void OnGet()
@@ -40,16 +43,17 @@ namespace photo_album
                 return RedirectToPage("Upload");
             }
 
-            foreach (IFormFile image in images)
+            IFormatProvider provider = CultureInfo.CreateSpecificCulture("en-US");
+            foreach (var image in images)
             {
                 if (image.Length == 0) return RedirectToPage("Upload");
 
-                var result = await m_cloudinary.UploadAsync(new ImageUploadParams()
+                var result = await _cloudinary.UploadAsync(new ImageUploadParams
                 {
                     File = new FileDescription(image.FileName,
-                    image.OpenReadStream()),
+                        image.OpenReadStream()),
                     Tags = Tags
-                });
+                }).ConfigureAwait(false);
 
                 var imageProperties = new Dictionary<string, string>();
                 foreach (var token in result.JsonObj.Children())
@@ -59,11 +63,12 @@ namespace photo_album
                         imageProperties.Add(prop.Name, prop.Value.ToString());
                     }
                 }
+
                 results.Add(imageProperties);
 
-                await m_context.Photos.AddAsync(new Photo()
+                await _context.Photos.AddAsync(new Photo
                 {
-                    Bytes = (int)result.Bytes,
+                    Bytes = (int) result.Bytes,
                     CreatedAt = DateTime.Now,
                     Format = result.Format,
                     Height = result.Height,
@@ -72,16 +77,16 @@ namespace photo_album
                     ResourceType = result.ResourceType,
                     SecureUrl = result.SecureUrl.AbsoluteUri,
                     Signature = result.Signature,
-                    Type = result.JsonObj["type"].ToString(),
+                    Type = result.JsonObj["type"]?.ToString(),
                     Url = result.Url.AbsoluteUri,
-                    Version = Int32.Parse(result.Version),
-                    Width = result.Width,
-                });
+                    Version = int.Parse(result.Version, provider),
+                    Width = result.Width
+                }).ConfigureAwait(false);
             }
 
-            await m_context.UploadResults.AddAsync(new UploadResult { UploadResultAsJson = JsonConvert.SerializeObject(results) });
+            await _context.UploadResults.AddAsync(new UploadResult { UploadResultAsJson = JsonConvert.SerializeObject(results) }).ConfigureAwait(false);
 
-            await m_context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return RedirectToPage("UploadSucceeded");
         }

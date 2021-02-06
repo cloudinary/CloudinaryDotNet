@@ -1,7 +1,7 @@
-﻿namespace photo_album
-{
-    using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
+namespace PhotoAlbum.Data
+{
     public class UploadResult
     {
         [Key]

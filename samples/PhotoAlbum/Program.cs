@@ -1,10 +1,12 @@
-namespace photo_album
-{
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using PhotoAlbum.Data;
 
+namespace PhotoAlbum
+{
     public class Program
     {
         public static async Task Main(string[] args)
@@ -15,10 +17,11 @@ namespace photo_album
             {
                 var context = scope.ServiceProvider.GetService<PhotosDbContext>();
 
-                await context.Database.EnsureCreatedAsync();
+                Debug.Assert(context != null, nameof(context) + " != null");
+                await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
             }
 
-            await host.RunAsync();
+            await host.RunAsync().ConfigureAwait(false);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

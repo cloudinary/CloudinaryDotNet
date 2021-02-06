@@ -1,0 +1,29 @@
+﻿@page
+@model PhotoAlbum.Pages.UploadSucceededModel
+
+@{
+    ViewBag.Title = "Upload succeeded!";
+}
+
+<br />
+<h1>Your photo has been uploaded successfully!</h1>
+<h2>Upload details:</h2>
+
+@foreach (var item in Model.Items)
+{
+    <table class='info'>
+        @foreach (var (key, value) in item)
+        {
+            <tr>
+                <td>@key</td>
+                <td>@value</td>
+            </tr>
+        }
+    </table>
+    <br />
+
+    @Html.Raw(Cloudinary.Api.UrlImgUp.Format("jpg").Transform(new Transformation().Height(150).Width(150).Crop("fill"))
+    .BuildImageTag(item["public_id"], new StringDictionary("class=thumbnail inline")))
+}
+
+<a asp-page="Index" class="back_link">Back to list...</a>

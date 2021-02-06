@@ -34,7 +34,7 @@
     }
     else
     {
-        foreach (var img in @Model.Photos)
+        foreach (var img in Model.Photos)
         {
             <div class="photo">
                 <a href="@Cloudinary.Api.UrlImgUp.Format(img.Format).BuildUrl(img.PublicId)"
@@ -42,7 +42,7 @@
                     <div class="public_id">
                         @img.PublicId
                     </div>
-                    @Html.Raw(Cloudinary.Api.UrlImgUp.Format("jpg").Transform(new CloudinaryDotNet.Transformation().Height(150).Width(150).Crop("fill")).BuildImageTag(img.PublicId, new CloudinaryDotNet.StringDictionary("class=thumbnail inline")))
+                    @Html.Raw(Cloudinary.Api.UrlImgUp.Format("jpg").Transform(new Transformation().Height(150).Width(150).Crop("fill")).BuildImageTag(img.PublicId, new StringDictionary("class=thumbnail inline")))
                 </a>
 
                 <div class="less_info">
@@ -54,9 +54,9 @@
                     <table class="thumbnails">
                         <tr>
                             @{
-                                CloudinaryDotNet.Transformation basicTransform = new CloudinaryDotNet.Transformation().Height(150).Width(150);
-                                CloudinaryDotNet.Url basicUrl = Cloudinary.Api.UrlImgUp.Format("jpg");
-                                List<CloudinaryDotNet.Url> urls = new List<CloudinaryDotNet.Url>()
+                                var basicTransform = new Transformation().Height(150).Width(150);
+                                var basicUrl = Cloudinary.Api.UrlImgUp.Format("jpg");
+                                var urls = new List<Url>
                                 {
                                     basicUrl.Clone().Transform(basicTransform.Clone().Crop("fill").Radius(10)),
                                     basicUrl.Clone().Transform(basicTransform.Clone().Crop("scale")),
@@ -70,7 +70,7 @@
                                     <td>
                                         <div class="thumbnail_holder">
                                             <a target="_blank" href="@url.BuildUrl(img.PublicId)">
-                                                @Html.Raw(url.BuildImageTag(img.PublicId, new CloudinaryDotNet.StringDictionary("class=thumbnail inline")))
+                                                @Html.Raw(url.BuildImageTag(img.PublicId, new StringDictionary("class=thumbnail inline")))
                                             </a>
                                         </div>
                                         <br />
@@ -79,11 +79,11 @@
                                                 <td>format</td>
                                                 <td>@url.FormatValue</td>
                                             </tr>
-                                            @foreach (var param in url.Transformation.Params)
+                                            @foreach (var (key, value) in url.Transformation.Params)
                                             {
                                                 <tr>
-                                                    <td>@param.Key</td>
-                                                    <td>@param.Value</td>
+                                                    <td>@key</td>
+                                                    <td>@value</td>
                                                 </tr>
 
                                             }
@@ -92,9 +92,10 @@
                                                 <tr>
                                                     <td>nested</td>
                                                     <td>
-                                                        @foreach (var param in nestedTransform.Params)
+                                                        @foreach (var (key, value) in nestedTransform.Params)
                                                         {
-                                                            @String.Format("{0}: {1}", param.Key, param.Value);<br />
+                                                            @($"{key}: {value}")
+                                                            <br />
                                                         }
                                                     </td>
                                                 </tr>
@@ -117,7 +118,7 @@
 
 @section scripts
 {
-    <script type='text/javascript'>
+    <script type="text/javascript">
         $(function () {
             $('.toggle_info').click(function () {
                 $(this).closest('.photo').toggleClass('show_more_info');

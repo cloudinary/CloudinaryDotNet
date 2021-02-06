@@ -1,15 +1,16 @@
-namespace photo_album
-{
-    using System;
-    using System.Linq;
-    using CloudinaryDotNet;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
+using System;
+using System.Linq;
+using CloudinaryDotNet;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using PhotoAlbum.Data;
 
+namespace PhotoAlbum
+{
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -26,7 +27,7 @@ namespace photo_album
             var apiKey = Configuration.GetValue<string>("AccountSettings:ApiKey");
             var apiSecret = Configuration.GetValue<string>("AccountSettings:ApiSecret");
 
-            if (new string[] { cloudName, apiKey, apiSecret }.Any(p => string.IsNullOrWhiteSpace(p)))
+            if (new[] { cloudName, apiKey, apiSecret }.Any(string.IsNullOrWhiteSpace))
             {
                 throw new ArgumentException("Please specify Cloudinary account details!");
             }
@@ -39,7 +40,7 @@ namespace photo_album
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

@@ -1,5 +1,5 @@
 ﻿@page
-@model photo_album.Pages.UploadDirectlyModel
+@model PhotoAlbum.Pages.UploadDirectlyModel
 
 @{
     ViewData["Title"] = "PhotoAlbum - Direct Upload page";
@@ -8,18 +8,18 @@
 <!-- A form for direct uploading using a jQuery plug-in.
           The BuildUploadForm method generates the required HTML and JavaScript to
           allow uploading directly from the browser to your Cloudinary account -->
-<div id='direct_upload'>
+<div id="direct_upload">
     <h1>Direct upload from the browser</h1>
     <form>
         @Html.AntiForgeryToken()
 
-        @if (Model.DirectUploadtype == DirectUploadType.signed)
+        @if (Model.DirectUploadType == DirectUploadType.Signed)
         {
-            @Html.Raw(Cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object>() { { "tags", (object)Model.Tags } }, new Dictionary<string, string>() { { "multiple", "true" } }))
+            @Html.Raw(Cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object> { { "tags", UploadDirectlyModel.Tags } }, new Dictionary<string, string> { { "multiple", "true" } }))
         }
         else
         {
-            @Html.Raw(Cloudinary.Api.BuildUnsignedUploadForm("test-field", Model.Preset, "image", new SortedDictionary<string, object>() { { "tags", (object)Model.Tags } }, new Dictionary<string, string>() { { "multiple", "true" } }))
+            @Html.Raw(Cloudinary.Api.BuildUnsignedUploadForm("test-field", Model.Preset, "image", new SortedDictionary<string, object> { { "tags", UploadDirectlyModel.Tags } }, new Dictionary<string, string> { { "multiple", "true" } }))
         }
     </form>
 

@@ -1,8 +1,8 @@
-namespace photo_album
-{
-    using System;
-    using System.ComponentModel.DataAnnotations;
+using System;
+using System.ComponentModel.DataAnnotations;
 
+namespace PhotoAlbum.Data
+{
     public class Photo
     {
         [Key]

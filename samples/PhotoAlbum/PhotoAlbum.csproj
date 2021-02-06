@@ -2,9 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>photo_album</RootNamespace>
+    <RootNamespace>PhotoAlbum</RootNamespace>
     <UseAppHost>false</UseAppHost>
     <UserSecretsId>3c750543-7d40-4020-b812-85dae9ab6962</UserSecretsId>
+    <WarningLevel>4</WarningLevel>
+    <WarningsAsErrors />
+    <CodeAnalysisRuleSet>..\..\Shared\Cloudinary.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <None Include="wwwroot\js\jquery.cloudinary.js" />

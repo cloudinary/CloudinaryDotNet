@@ -1,7 +1,7 @@
-﻿namespace photo_album
-{
-    using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace PhotoAlbum.Data
+{
     public class PhotosDbContext : DbContext
     {
         public PhotosDbContext(DbContextOptions<PhotosDbContext> options) : base (options)
