@@ -68,7 +68,8 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow getting transformation metadata
 
-            UploadTestImageResource((uploadParams) => {
+            UploadTestImageResource((uploadParams) =>
+            {
                 uploadParams.EagerTransforms = new List<Transformation>() { m_updateTransformation };
             });
 
@@ -82,7 +83,8 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         {
             // should allow getting transformation metadata
 
-            await UploadTestImageResourceAsync((uploadParams) => {
+            await UploadTestImageResourceAsync((uploadParams) =>
+            {
                 uploadParams.EagerTransforms = new List<Transformation>() { m_updateTransformation };
             });
 
@@ -271,12 +273,55 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var createParams = GetCreateTransformParams(m_simpleTransformation);
 
-            m_cloudinary.CreateTransform(createParams);
+            var createResult = m_cloudinary.CreateTransform(createParams);
+            Assert.IsNull(createResult.Error, createResult.Error?.Message);
 
             var getResult = m_cloudinary.GetTransform(
                 new GetTransformParams { Transformation = createParams.Name });
 
             AssertCreateTransform(getResult, m_simpleTransformation);
+        }
+
+        /// <summary>
+        /// Should create two kinds of transformations:
+        /// unnamed with extension(e.g., w_150, h_150/jpg),
+        /// and unnamed with empty extension(e.g., w_150, h_15).
+        /// The latter leads to transformation ending with "/", which means "No extension, use original format".
+        /// If format is not provided or set to None, only transformation is used(without the trailing "/")
+        /// </summary>
+        /// <param name="testExtention">Format key can be a string value(jpg, gif, etc) or can be set to "" (empty string)</param>
+        [Test, RetryWithDelay]
+        [TestCase("jpg")]
+        [TestCase("")]
+        public void TestUnnamedTransformationWithFormat(string testExtention)
+        {
+            var formatFieldName = string.IsNullOrEmpty(testExtention) ? "extension" : "format";
+            var transformationAsStr = m_simpleTransformation.ToString();
+
+            // delete if transformation with given definition and format already exists
+            m_cloudinary.DeleteTransform($"{transformationAsStr}/{testExtention}");
+
+            // should allow creating unnamed transformation with specifying format
+            var createResult = m_cloudinary.CreateTransform(new CreateTransformParams()
+            {
+                Name = $"{transformationAsStr}/{testExtention}",
+                Transform = m_simpleTransformation,
+                Format = testExtention
+            });
+            Assert.IsNull(createResult.Error, createResult.Error?.Message);
+
+            var getResult = m_cloudinary.GetTransform(new GetTransformParams
+            {
+                Transformation = transformationAsStr,
+                Format = testExtention
+            });
+            Assert.IsNull(getResult.Error, getResult.Error?.Message);
+            Assert.IsNotNull(getResult.Info);
+            Assert.IsTrue(getResult.Info.Any(dict => dict.ContainsKey(formatFieldName) && (string) dict[formatFieldName] == (string.IsNullOrEmpty(testExtention) ? "none" : testExtention)));
+            AssertCreateTransform(getResult, m_simpleTransformation);
+
+            var deleteResult = m_cloudinary.DeleteTransform($"{transformationAsStr}/{testExtention}");
+            Assert.IsNull(deleteResult.Error, deleteResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -304,8 +349,8 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             await m_cloudinary.CreateTransformAsync(createParams);
 
-            var getResult = await m_cloudinary.GetTransformAsync(new GetTransformParams 
-            { 
+            var getResult = await m_cloudinary.GetTransformAsync(new GetTransformParams
+            {
                 Transformation = createParams.Name,
                 MaxResults = 1,
                 NextCursor = "   "
@@ -326,6 +371,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         private void AssertCreateTransform(GetTransformResult result, Transformation testTransformation)
         {
             Assert.IsNotNull(result);
+            Assert.IsNull(result.Error, result.Error?.Message);
             Assert.AreEqual(true, result.AllowedForStrict);
             Assert.AreEqual(false, result.Used);
             Assert.AreEqual(1, result.Info.Length);

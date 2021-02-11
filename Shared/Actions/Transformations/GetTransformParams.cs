@@ -37,6 +37,11 @@
         public string NextCursor { get; set; }
 
         /// <summary>
+        /// Gets or sets transformation extension. Optional.
+        /// </summary>
+        public string Format { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -53,7 +58,7 @@
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             if (MaxResults > 0)
             {
@@ -61,6 +66,7 @@
             }
 
             AddParam(dict, "next_cursor", NextCursor);
+            AddParam(dict, "transformation", (Format != null) ? $"{Transformation}/{Format}" : Transformation);
 
             return dict;
         }

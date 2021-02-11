@@ -80,7 +80,7 @@
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             AddParam(dict, "allowed_for_strict", AllowedForStrict);
 
@@ -91,6 +91,11 @@
             if (UnsafeUpdate != null)
             {
                 AddParam(dict, "unsafe_update", UnsafeUpdate.Generate());
+            }
+
+            if (!string.IsNullOrEmpty(Transformation))
+            {
+                AddParam(dict, "transformation", Transformation);
             }
 
             return dict;
