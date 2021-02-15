@@ -142,6 +142,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Folders\GetFoldersResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\GetResourceParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\AssetsManagement\GetResourceResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\Transformations\DeleteTransformParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Transformations\GetTransformParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\Transformations\GetTransformResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Actions\PresetsUpload\GetUploadPresetResult.cs" />

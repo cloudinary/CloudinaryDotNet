@@ -2062,7 +2062,6 @@
             var urlBuilder = new UrlBuilder(
                 GetApiUrlV().
                 ResourceType("transformations").
-                Add(parameters.Transformation).
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
@@ -2082,10 +2081,9 @@
         /// <returns>Parsed details of a single transformation.</returns>
         public GetTransformResult GetTransform(GetTransformParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
+            var urlBuilder = new UrlBuilder(
                 GetApiUrlV().
                 ResourceType("transformations").
-                Add(parameters.Transformation).
                 BuildUrl(),
                 parameters.ToParamsDictionary());
 
@@ -2776,8 +2774,10 @@
         /// <returns>Parsed response after transformation manipulation.</returns>
         public Task<UpdateTransformResult> UpdateTransformAsync(UpdateTransformParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = GetTransformationUrl(parameters.Transformation);
-            return m_api.CallApiAsync<UpdateTransformResult>(HttpMethod.PUT, url, parameters, null, null, cancellationToken);
+            var httpMethod = HttpMethod.PUT;
+            var url = GetTransformationUrl(httpMethod, parameters);
+
+            return m_api.CallApiAsync<UpdateTransformResult>(httpMethod, url, parameters, null, null, cancellationToken);
         }
 
         /// <summary>
@@ -2787,8 +2787,10 @@
         /// <returns>Parsed response after transformation manipulation.</returns>
         public UpdateTransformResult UpdateTransform(UpdateTransformParams parameters)
         {
-            var url = GetTransformationUrl(parameters.Transformation);
-            return m_api.CallApi<UpdateTransformResult>(HttpMethod.PUT, url, parameters, null);
+            var httpMethod = HttpMethod.PUT;
+            var url = GetTransformationUrl(httpMethod, parameters);
+
+            return m_api.CallApi<UpdateTransformResult>(httpMethod, url, parameters, null);
         }
 
         /// <summary>
@@ -2799,8 +2801,10 @@
         /// <returns>Parsed response after transformation manipulation.</returns>
         public Task<TransformResult> CreateTransformAsync(CreateTransformParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = GetTransformationUrl(parameters.Name);
-            return m_api.CallApiAsync<TransformResult>(HttpMethod.POST, url, parameters, null, null, cancellationToken);
+            var httpMethod = HttpMethod.POST;
+            var url = GetTransformationUrl(httpMethod, parameters);
+
+            return m_api.CallApiAsync<TransformResult>(httpMethod, url, parameters, null, null, cancellationToken);
         }
 
         /// <summary>
@@ -2810,8 +2814,10 @@
         /// <returns>Parsed response after transformation manipulation.</returns>
         public TransformResult CreateTransform(CreateTransformParams parameters)
         {
-            var url = GetTransformationUrl(parameters.Name);
-            return m_api.CallApi<TransformResult>(HttpMethod.POST, url, parameters, null);
+            var httpMethod = HttpMethod.POST;
+            var url = GetTransformationUrl(httpMethod, parameters);
+
+            return m_api.CallApi<TransformResult>(httpMethod, url, parameters, null);
         }
 
         /// <summary>
@@ -2822,9 +2828,11 @@
         /// <returns>Parsed response after transformation manipulation.</returns>
         public Task<TransformResult> DeleteTransformAsync(string transformName, CancellationToken? cancellationToken = null)
         {
-            var url = GetTransformationUrl(transformName);
+            var httpMethod = HttpMethod.DELETE;
+            var url = GetTransformationUrl(httpMethod, new DeleteTransformParams() { Transformation = transformName });
+
             return m_api.CallApiAsync<TransformResult>(
-                HttpMethod.DELETE,
+                httpMethod,
                 url,
                 null,
                 null,
@@ -2839,8 +2847,10 @@
         /// <returns>Parsed response after transformation manipulation.</returns>
         public TransformResult DeleteTransform(string transformName)
         {
-            var url = GetTransformationUrl(transformName);
-            return m_api.CallApi<TransformResult>(HttpMethod.DELETE, url, null, null);
+            var httpMethod = HttpMethod.DELETE;
+            var url = GetTransformationUrl(httpMethod, new DeleteTransformParams() { Transformation = transformName });
+
+            return m_api.CallApi<TransformResult>(httpMethod, url, null, null);
         }
 
         /// <summary>
@@ -3414,11 +3424,19 @@
             return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
         }
 
-        private string GetTransformationUrl(string transformationName) =>
-            GetApiUrlV().
-                ResourceType("transformations").
-                Add(transformationName).
-                BuildUrl();
+        private string GetTransformationUrl(HttpMethod httpMethod, BaseParams parameters)
+        {
+            var url = GetApiUrlV().
+                        ResourceType("transformations").
+                        BuildUrl();
+
+            if (parameters != null && (httpMethod == HttpMethod.GET || httpMethod == HttpMethod.DELETE))
+            {
+                url = new UrlBuilder(url, parameters.ToParamsDictionary()).ToString();
+            }
+
+            return url;
+        }
 
         private string GetDownloadUrl(UrlBuilder builder, IDictionary<string, object> parameters)
         {

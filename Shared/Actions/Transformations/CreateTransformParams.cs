@@ -19,6 +19,11 @@
         public Transformation Transform { get; set; }
 
         /// <summary>
+        /// Gets or sets transformation extension. Optional.
+        /// </summary>
+        public string Format { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -40,8 +45,17 @@
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
-            dict.Add("transformation", Transform.Generate());
+            var dict = base.ToParamsDictionary();
+
+            string transformationStr = Transform.Generate();
+            if (Format != null)
+            {
+                transformationStr += $"/{Format}";
+            }
+
+            dict.Add("transformation", transformationStr);
+            dict.Add("name", Name);
+
             return dict;
         }
     }
