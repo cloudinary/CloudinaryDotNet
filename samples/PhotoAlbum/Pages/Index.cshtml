@@ -1,0 +1,129 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "PhotoAlbum - Main page";
+}
+
+<h1>Welcome!</h1>
+
+<p>
+    This is the main demo page of the PhotoAlbum sample .NET application of Cloudinary.<br />
+    Here you can see all images you have uploaded to this .NET application and find some information on how
+    to implement your own .NET application storing, manipulating and serving your photos using Cloudinary!
+</p>
+<p>
+    All of the images you see here are transformed and served by Cloudinary.
+    For instance, the logo and the poster frame.
+    They are both generated in the cloud using the Cloudinary shortcut functions: fetch_image_tag and facebook_profile_image_tag.
+    These two pictures weren't even have to be uploaded to Cloudinary, they are retrieved by the service, transformed, cached and distributed through a CDN.
+</p>
+
+<h1>Your Photos</h1>
+
+<div class="actions">
+    <a class="upload_link" asp-page="Upload">Add photo...</a>
+    <a class="upload_link" asp-page="UploadDirectly" asp-route-type="signed">Add photo (direct upload)...</a>
+    <a class="upload_link" asp-page="UploadDirectly" asp-route-type="unsigned">Add photo (direct unsigned upload)...</a>
+</div>
+
+<div class="photos">
+    @if (Model.Photos.Count == 0)
+    {
+        <p>No photos were uploaded yet.</p>
+    }
+    else
+    {
+        foreach (var img in Model.Photos)
+        {
+            <div class="photo">
+                <a href="@Cloudinary.Api.UrlImgUp.Format(img.Format).BuildUrl(img.PublicId)"
+                   target="_blank" class="public_id_link">
+                    <div class="public_id">
+                        @img.PublicId
+                    </div>
+                    @Html.Raw(Cloudinary.Api.UrlImgUp.Format("jpg").Transform(new Transformation().Height(150).Width(150).Crop("fill")).BuildImageTag(img.PublicId, new StringDictionary("class=thumbnail inline")))
+                </a>
+
+                <div class="less_info">
+                    <a href="#" class="toggle_info">More transformations...</a>
+                </div>
+
+                <div class="more_info">
+                    <a href="#" class="toggle_info">Hide transformations...</a>
+                    <table class="thumbnails">
+                        <tr>
+                            @{
+                                var basicTransform = new Transformation().Height(150).Width(150);
+                                var basicUrl = Cloudinary.Api.UrlImgUp.Format("jpg");
+                                var urls = new List<Url>
+                                {
+                                    basicUrl.Clone().Transform(basicTransform.Clone().Crop("fill").Radius(10)),
+                                    basicUrl.Clone().Transform(basicTransform.Clone().Crop("scale")),
+                                    basicUrl.Clone().Format("png").Transform(basicTransform.Clone().Crop("fit")),
+                                    basicUrl.Clone().Transform(basicTransform.Clone().Crop("thumb").Gravity("face")),
+                                    basicUrl.Clone().Format("png").Transform(basicTransform.Clone().Width(150).Height(150).Crop("fill").Gravity("north").Effect("sepia").Chain().Angle(20))
+                                };
+
+                                foreach (var url in urls)
+                                {
+                                    <td>
+                                        <div class="thumbnail_holder">
+                                            <a target="_blank" href="@url.BuildUrl(img.PublicId)">
+                                                @Html.Raw(url.BuildImageTag(img.PublicId, new StringDictionary("class=thumbnail inline")))
+                                            </a>
+                                        </div>
+                                        <br />
+                                        <table class='info'>
+                                            <tr>
+                                                <td>format</td>
+                                                <td>@url.FormatValue</td>
+                                            </tr>
+                                            @foreach (var (key, value) in url.Transformation.Params)
+                                            {
+                                                <tr>
+                                                    <td>@key</td>
+                                                    <td>@value</td>
+                                                </tr>
+
+                                            }
+                                            @foreach (var nestedTransform in url.Transformation.NestedTransforms)
+                                            {
+                                                <tr>
+                                                    <td>nested</td>
+                                                    <td>
+                                                        @foreach (var (key, value) in nestedTransform.Params)
+                                                        {
+                                                            @($"{key}: {value}")
+                                                            <br />
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    </table>
+
+                    <div class="note">
+                        Take a look at our documentation of <a href="http://cloudinary.com/documentation/image_transformations" target="_blank">Image Transformations</a> for a full list of supported transformations.
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('.toggle_info').click(function () {
+                $(this).closest('.photo').toggleClass('show_more_info');
+                return false;
+            });
+        });
+    </script>
+}

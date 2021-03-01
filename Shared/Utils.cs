@@ -20,16 +20,6 @@
         internal static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /// <summary>
-        /// Converts DateTime to Unix epoch time in seconds.
-        /// </summary>
-        /// <param name="date">The date to be converted.</param>
-        /// <returns>Epoch time in seconds.</returns>
-        internal static long ToUnixTimeSeconds(DateTime date)
-        {
-            return Convert.ToInt64((date.ToUniversalTime() - Epoch).TotalSeconds);
-        }
-
-        /// <summary>
         /// Converts Unix epoch time in seconds to DateTime.
         /// </summary>
         /// <param name="unixTime">The epoch time to be converted.</param>
@@ -37,6 +27,16 @@
         public static DateTime FromUnixTimeSeconds(long unixTime)
         {
             return Epoch.AddSeconds(unixTime);
+        }
+
+        /// <summary>
+        /// Converts DateTime to Unix epoch time in seconds.
+        /// </summary>
+        /// <param name="date">The date to be converted.</param>
+        /// <returns>Epoch time in seconds.</returns>
+        internal static long ToUnixTimeSeconds(DateTime date)
+        {
+            return Convert.ToInt64((date.ToUniversalTime() - Epoch).TotalSeconds);
         }
 
         /// <summary>
@@ -103,13 +103,22 @@
         }
 
         /// <summary>
-        /// Computes the hash value for the specified string, using SHA-1 algorithm.
+        /// Computes the hash value for the specified string, using default hashing algorithm.
         /// </summary>
         /// <param name="s"> The input to compute the hash code for.</param>
+        /// <param name="signatureAlgorithm">Type of hashing algorithm to use for the hash code computation.</param>
         /// <returns>The computed hash code.</returns>
         [SuppressMessage("Security", "CA5350:DoNotUseWeakCryptographicAlgorithms", Justification = "Reviewed.")]
-        internal static byte[] ComputeHash(string s)
+        internal static byte[] ComputeHash(string s, SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.SHA1)
         {
+            if (signatureAlgorithm == SignatureAlgorithm.SHA256)
+            {
+                using (var sha256 = SHA256.Create())
+                {
+                    return sha256.ComputeHash(Encoding.UTF8.GetBytes(s));
+                }
+            }
+
             using (var sha1 = SHA1.Create())
             {
                 return sha1.ComputeHash(Encoding.UTF8.GetBytes(s));
@@ -117,26 +126,14 @@
         }
 
         /// <summary>
-        /// Computes the hash value for the specified string, using SHA-256 algorithm.
-        /// </summary>
-        /// <param name="s"> The input to compute the hash code for.</param>
-        /// <returns>The computed hash code.</returns>
-        internal static byte[] ComputeSha256Hash(string s)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                return sha256.ComputeHash(Encoding.UTF8.GetBytes(s));
-            }
-        }
-
-        /// <summary>
         /// Compute hash and convert the result to HEX string.
         /// </summary>
         /// <param name="s"> String to calculate a hash for.</param>
+        /// <param name="signatureAlgorithm">Type of hashing algorithm to use for the hash code computation.</param>
         /// <returns>A HEX string that represents the result of hashing.</returns>
-        internal static string ComputeHexHash(string s)
+        internal static string ComputeHexHash(string s, SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.SHA1)
         {
-            var bytesHash = ComputeHash(s);
+            var bytesHash = ComputeHash(s, signatureAlgorithm);
             var signature = new StringBuilder();
             foreach (var b in bytesHash)
             {

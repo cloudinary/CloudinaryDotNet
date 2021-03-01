@@ -471,7 +471,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotZero(explicitResult.Predominant.Cloudinary.Length);
         }
 
-        [Test, IgnoreAddon("webpurify")]
+        [Test, IgnoreAddon("webpurify"), RetryWithDelay]
         public void TestWebPurifyForExplicitResult()
         {
             var explicitResult = ArrangeAndGetExplicitResult(true);

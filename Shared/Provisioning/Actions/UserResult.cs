@@ -2,6 +2,7 @@ namespace CloudinaryDotNet.Actions
 {
     using System;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Detailed information about user.
@@ -50,6 +51,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Gets or sets a list of sub-accounts to which the user has access.
         /// </summary>
+        [JsonConverter(typeof(SafeArrayConverter))]
         [DataMember(Name = "sub_account_ids")]
         public string[] SubAccountIds { get; set; }
 
@@ -63,6 +65,6 @@ namespace CloudinaryDotNet.Actions
         /// Gets or sets date when the user was created.
         /// </summary>
         [DataMember(Name = "created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
     }
 }

@@ -24,6 +24,40 @@
     public partial class ApiShared : ISignProvider
     {
         /// <summary>
+        /// Parses HTTP response and creates new instance of this class asynchronously.
+        /// </summary>
+        /// <param name="response">HTTP response.</param>
+        /// <returns>New instance of this class.</returns>
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
+        internal static async Task<T> ParseAsync<T>(HttpResponseMessage response)
+            where T : BaseResult
+        {
+            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+            using (var reader = new StreamReader(stream))
+            {
+                var s = await reader.ReadToEndAsync().ConfigureAwait(false);
+                return CreateResult<T>(response, s);
+            }
+        }
+
+        /// <summary>
+        /// Parses HTTP response and creates new instance of this class.
+        /// </summary>
+        /// <param name="response">HTTP response.</param>
+        /// <returns>New instance of this class.</returns>
+        /// <typeparam name="T">Type of the parsed response.</typeparam>
+        internal static T Parse<T>(HttpResponseMessage response)
+            where T : BaseResult
+        {
+            using (var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult())
+            using (var reader = new StreamReader(stream))
+            {
+                var s = reader.ReadToEnd();
+                return CreateResult<T>(response, s);
+            }
+        }
+
+        /// <summary>
         /// Call api asynchronous and return response of specified type asynchronously.
         /// </summary>
         /// <param name="method">HTTP method.</param>
@@ -73,40 +107,6 @@
                 (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
                 file,
                 extraHeaders);
-        }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class asynchronously.
-        /// </summary>
-        /// <param name="response">HTTP response.</param>
-        /// <returns>New instance of this class.</returns>
-        /// <typeparam name="T">Type of the parsed response.</typeparam>
-        internal static async Task<T> ParseAsync<T>(HttpResponseMessage response)
-            where T : BaseResult
-        {
-            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-            using (var reader = new StreamReader(stream))
-            {
-                var s = await reader.ReadToEndAsync().ConfigureAwait(false);
-                return CreateResult<T>(response, s);
-            }
-        }
-
-        /// <summary>
-        /// Parses HTTP response and creates new instance of this class.
-        /// </summary>
-        /// <param name="response">HTTP response.</param>
-        /// <returns>New instance of this class.</returns>
-        /// <typeparam name="T">Type of the parsed response.</typeparam>
-        internal static T Parse<T>(HttpResponseMessage response)
-            where T : BaseResult
-        {
-            using (var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult())
-            using (var reader = new StreamReader(stream))
-            {
-                var s = reader.ReadToEnd();
-                return CreateResult<T>(response, s);
-            }
         }
 
         /// <summary>
@@ -179,6 +179,83 @@
             parameters.Add("api_key", Account.ApiKey);
         }
 
+        /// <summary>
+        /// Virtual encode API URL method. This method should be overridden in child classes.
+        /// </summary>
+        /// <param name="value">URL to be encoded.</param>
+        /// <returns>Encoded URL.</returns>
+        protected static string EncodeApiUrl(string value)
+        {
+            return WebUtility.UrlEncode(value);
+        }
+
+        /// <summary>
+        /// Serialize the cloudinary parameters to JSON.
+        /// </summary>
+        /// <param name="parameters">Parameters to serialize.</param>
+        /// <returns>Serialized parameters as JSON string.</returns>
+        protected static string ParamsToJson(SortedDictionary<string, object> parameters)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+
+            using (var writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, parameters);
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Build unsigned upload params with defined preset.
+        /// </summary>
+        /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
+        /// <param name="parameters">Cloudinary upload parameters.</param>
+        /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
+        protected static SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
+        {
+            if (parameters == null)
+            {
+                parameters = new SortedDictionary<string, object>();
+            }
+
+            parameters.Add("upload_preset", preset);
+            parameters.Add("unsigned", true);
+
+            return parameters;
+        }
+
+        /// <summary>
+        /// Gets authentication credentials.
+        /// </summary>
+        /// <returns>Credentials string for authentication.</returns>
+        protected virtual string GetApiCredentials()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Account.ApiKey, Account.ApiSecret);
+        }
+
+        /// <summary>
+        /// Check 'unsigned' parameter value and add signature into parameters if unsigned=false or not specified.
+        /// </summary>
+        /// <param name="parameters">Parameters to check signature.</param>
+        protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
+        {
+            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
+            {
+                FinalizeUploadParameters(parameters);
+            }
+            else if (parameters.ContainsKey("removeUnsignedParam"))
+            {
+                parameters.Remove("unsigned");
+                parameters.Remove("removeUnsignedParam");
+            }
+        }
+
         private static T CreateResult<T>(HttpResponseMessage response, string s)
             where T : BaseResult
         {
@@ -236,13 +313,122 @@
             result.StatusCode = response.StatusCode;
         }
 
+        private static bool ShouldPrepareContent(HttpMethod method, object parameters) =>
+            (method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null;
+
+        private static bool IsContentRange(Dictionary<string, string> extraHeaders) =>
+            extraHeaders != null && extraHeaders.ContainsKey("Content-Range");
+
+        private static Stream GetFileStream(FileDescription file) =>
+            file.Stream ?? File.OpenRead(file.FilePath);
+
+        private static void SetStreamContent(FileDescription file, Stream stream, MultipartFormDataContent content)
+        {
+            var streamContent = new StreamContent(stream);
+
+            streamContent.Headers.Add("Content-Type", "application/octet-stream");
+            streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "file",
+                FileNameStar = file.FileName,
+            };
+            content.Add(streamContent, "file", file.FileName);
+        }
+
+        private static void SetContentForRemoteFile(FileDescription file, MultipartFormDataContent content)
+        {
+            var strContent = new StringContent(file.FilePath);
+            strContent.Headers.Add("Content-Disposition", string.Format(CultureInfo.InvariantCulture, "form-data; name=\"{0}\"", "file"));
+            content.Add(strContent);
+        }
+
+        private static MultipartFormDataContent CreateMultipartContent(SortedDictionary<string, object> parameters)
+        {
+            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
+            foreach (var param in parameters)
+            {
+                if (param.Value != null)
+                {
+                    if (param.Value is IEnumerable<string>)
+                    {
+                        foreach (var item in (IEnumerable<string>)param.Value)
+                        {
+                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
+                        }
+                    }
+                    else
+                    {
+                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
+                    }
+                }
+            }
+
+            return content;
+        }
+
+        private static StringContent CreateStringContent(SortedDictionary<string, object> parameters) =>
+            new StringContent(ParamsToJson(parameters), Encoding.UTF8, Constants.CONTENT_TYPE_APPLICATION_JSON);
+
+        private static bool IsStringContent(Dictionary<string, string> extraHeaders) =>
+            extraHeaders != null &&
+            extraHeaders.TryGetValue(Constants.HEADER_CONTENT_TYPE, out var value) &&
+            value == Constants.CONTENT_TYPE_APPLICATION_JSON;
+
+        private static Stream WriterStreamFromBegin(StreamWriter writer)
+        {
+            var stream = writer.BaseStream;
+            stream.Seek(0, SeekOrigin.Begin);
+            return stream;
+        }
+
+        private static StreamWriter SetStreamToStartAndCreateWriter(FileDescription file, Stream stream)
+        {
+            var memStream = new MemoryStream();
+            var writer = new StreamWriter(memStream) { AutoFlush = true };
+
+            stream.Seek(file.BytesSent, SeekOrigin.Begin);
+            return writer;
+        }
+
+        private static void SetHeadersAndContent(HttpRequestMessage request, Dictionary<string, string> extraHeaders, HttpContent content)
+        {
+            if (extraHeaders != null)
+            {
+                foreach (var header in extraHeaders)
+                {
+                    content.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
+
+            request.Content = content;
+        }
+
+        private static void SetHttpMethod(HttpMethod method, HttpRequestMessage req)
+        {
+            switch (method)
+            {
+                case HttpMethod.DELETE:
+                    req.Method = System.Net.Http.HttpMethod.Delete;
+                    break;
+                case HttpMethod.GET:
+                    req.Method = System.Net.Http.HttpMethod.Get;
+                    break;
+                case HttpMethod.POST:
+                    req.Method = System.Net.Http.HttpMethod.Post;
+                    break;
+                case HttpMethod.PUT:
+                    req.Method = System.Net.Http.HttpMethod.Put;
+                    break;
+                default:
+                    req.Method = System.Net.Http.HttpMethod.Get;
+                    break;
+            }
+        }
+
         private CancellationToken GetDefaultCancellationToken() =>
             Timeout > 0
                 ? new CancellationTokenSource(Timeout).Token
                 : CancellationToken.None;
-
-        private static bool ShouldPrepareContent(HttpMethod method, object parameters) =>
-           (method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null;
 
         private void SetChunkedEncoding(HttpRequestMessage request)
         {
@@ -250,15 +436,6 @@
             {
                 request.Headers.Add("Transfer-Encoding", "chunked");
             }
-        }
-
-        /// <summary>
-        /// Gets authentication credentials.
-        /// </summary>
-        /// <returns>Credentials string for authentication.</returns>
-        protected virtual string GetApiCredentials()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Account.ApiKey, Account.ApiSecret);
         }
 
         private void PrePrepareRequestBody(
@@ -324,27 +501,6 @@
             SetHeadersAndContent(request, extraHeaders, content);
         }
 
-        private static StringContent CreateStringContent(SortedDictionary<string, object> parameters) =>
-            new StringContent(ParamsToJson(parameters), Encoding.UTF8, Constants.CONTENT_TYPE_APPLICATION_JSON);
-
-        private static bool IsStringContent(Dictionary<string, string> extraHeaders) =>
-            extraHeaders != null &&
-            extraHeaders.TryGetValue(Constants.HEADER_CONTENT_TYPE, out var value) &&
-            value == Constants.CONTENT_TYPE_APPLICATION_JSON;
-
-        private static void SetHeadersAndContent(HttpRequestMessage request, Dictionary<string, string> extraHeaders, HttpContent content)
-        {
-            if (extraHeaders != null)
-            {
-                foreach (var header in extraHeaders)
-                {
-                    content.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                }
-            }
-
-            request.Content = content;
-        }
-
         private async Task<HttpContent> PrepareMultipartFormDataContentAsync(
             SortedDictionary<string, object> parameters,
             FileDescription file,
@@ -408,56 +564,6 @@
             return content;
         }
 
-        private static bool IsContentRange(Dictionary<string, string> extraHeaders) =>
-            extraHeaders != null && extraHeaders.ContainsKey("Content-Range");
-
-        private static Stream GetFileStream(FileDescription file) =>
-            file.Stream ?? File.OpenRead(file.FilePath);
-
-        private static void SetStreamContent(FileDescription file, Stream stream, MultipartFormDataContent content)
-        {
-            var streamContent = new StreamContent(stream);
-
-            streamContent.Headers.Add("Content-Type", "application/octet-stream");
-            streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
-            {
-                Name = "file",
-                FileNameStar = file.FileName,
-            };
-            content.Add(streamContent, "file", file.FileName);
-        }
-
-        private static void SetContentForRemoteFile(FileDescription file, MultipartFormDataContent content)
-        {
-            var strContent = new StringContent(file.FilePath);
-            strContent.Headers.Add("Content-Disposition", string.Format(CultureInfo.InvariantCulture, "form-data; name=\"{0}\"", "file"));
-            content.Add(strContent);
-        }
-
-        private static MultipartFormDataContent CreateMultipartContent(SortedDictionary<string, object> parameters)
-        {
-            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
-            foreach (var param in parameters)
-            {
-                if (param.Value != null)
-                {
-                    if (param.Value is IEnumerable<string>)
-                    {
-                        foreach (var item in (IEnumerable<string>)param.Value)
-                        {
-                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
-                        }
-                    }
-                    else
-                    {
-                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
-                    }
-                }
-            }
-
-            return content;
-        }
-
         private async Task<Stream> GetRangeFromFileAsync(FileDescription file, Stream stream, CancellationToken? cancellationToken = null)
         {
             var writer = SetStreamToStartAndCreateWriter(file, stream);
@@ -470,22 +576,6 @@
             var writer = SetStreamToStartAndCreateWriter(file, stream);
             file.BytesSent += ReadBytes(writer, stream, file.BufferLength);
             return WriterStreamFromBegin(writer);
-        }
-
-        private static Stream WriterStreamFromBegin(StreamWriter writer)
-        {
-            var stream = writer.BaseStream;
-            stream.Seek(0, SeekOrigin.Begin);
-            return stream;
-        }
-
-        private static StreamWriter SetStreamToStartAndCreateWriter(FileDescription file, Stream stream)
-        {
-            var memStream = new MemoryStream();
-            var writer = new StreamWriter(memStream) { AutoFlush = true };
-
-            stream.Seek(file.BytesSent, SeekOrigin.Begin);
-            return writer;
         }
 
         private async Task<int> ReadBytesAsync(StreamWriter writer, Stream stream, int length, CancellationToken? cancellationToken = null)
@@ -519,96 +609,6 @@
             }
 
             return bytesSent;
-        }
-
-        private static void SetHttpMethod(HttpMethod method, HttpRequestMessage req)
-        {
-            switch (method)
-            {
-                case HttpMethod.DELETE:
-                    req.Method = System.Net.Http.HttpMethod.Delete;
-                    break;
-                case HttpMethod.GET:
-                    req.Method = System.Net.Http.HttpMethod.Get;
-                    break;
-                case HttpMethod.POST:
-                    req.Method = System.Net.Http.HttpMethod.Post;
-                    break;
-                case HttpMethod.PUT:
-                    req.Method = System.Net.Http.HttpMethod.Put;
-                    break;
-                default:
-                    req.Method = System.Net.Http.HttpMethod.Get;
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Virtual encode API URL method. This method should be overridden in child classes.
-        /// </summary>
-        /// <param name="value">URL to be encoded.</param>
-        /// <returns>Encoded URL.</returns>
-        protected static string EncodeApiUrl(string value)
-        {
-            return WebUtility.UrlEncode(value);
-        }
-
-        /// <summary>
-        /// Check 'unsigned' parameter value and add signature into parameters if unsigned=false or not specified.
-        /// </summary>
-        /// <param name="parameters">Parameters to check signature.</param>
-        protected void HandleUnsignedParameters(IDictionary<string, object> parameters)
-        {
-            if (!parameters.ContainsKey("unsigned") || parameters["unsigned"].ToString() == "false")
-            {
-                FinalizeUploadParameters(parameters);
-            }
-            else if (parameters.ContainsKey("removeUnsignedParam"))
-            {
-                parameters.Remove("unsigned");
-                parameters.Remove("removeUnsignedParam");
-            }
-        }
-
-        /// <summary>
-        /// Serialize the cloudinary parameters to JSON.
-        /// </summary>
-        /// <param name="parameters">Parameters to serialize.</param>
-        /// <returns>Serialized parameters as JSON string.</returns>
-        protected static string ParamsToJson(SortedDictionary<string, object> parameters)
-        {
-            var serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            var sb = new StringBuilder();
-            var sw = new StringWriter(sb);
-
-            using (var writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, parameters);
-            }
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Build unsigned upload params with defined preset.
-        /// </summary>
-        /// <param name="preset">The name of an upload preset defined for your Cloudinary account.</param>
-        /// <param name="parameters">Cloudinary upload parameters.</param>
-        /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
-        protected static SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
-        {
-            if (parameters == null)
-            {
-                parameters = new SortedDictionary<string, object>();
-            }
-
-            parameters.Add("upload_preset", preset);
-            parameters.Add("unsigned", true);
-
-            return parameters;
         }
     }
 }

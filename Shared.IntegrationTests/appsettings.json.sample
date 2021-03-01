@@ -3,6 +3,9 @@
     "CloudName": "",
     "ApiKey": "",
     "ApiSecret": "",
-    "ApiBaseAddress": ""
+    "ApiBaseAddress": "",
+    "ProvisioningApiKey": "",
+    "ProvisioningApiSecret": "",
+    "ProvisioningAccountId": ""
   }
 }

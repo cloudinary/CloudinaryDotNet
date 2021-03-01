@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>PhotoAlbum</RootNamespace>
+    <UseAppHost>false</UseAppHost>
+    <UserSecretsId>3c750543-7d40-4020-b812-85dae9ab6962</UserSecretsId>
+    <WarningLevel>4</WarningLevel>
+    <WarningsAsErrors />
+    <CodeAnalysisRuleSet>..\..\Shared\Cloudinary.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="wwwroot\js\jquery.cloudinary.js" />
+    <None Include="wwwroot\js\jquery.fileupload.js" />
+    <None Include="wwwroot\js\jquery.iframe-transport.js" />
+    <None Include="wwwroot\js\jquery.ui.widget.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.14.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+</Project>

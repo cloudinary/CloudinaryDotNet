@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "cloudinary-jquery-file-upload": "^2.11.3"
+  }
+}
