@@ -328,7 +328,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(folderUrl.Error);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDownloadBackedUpAsset()
         {
             var publicId = GetUniquePublicId();
@@ -349,7 +349,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var versionId = getResourceResult.Versions[0].VersionId;
 
             var assetBackedUpUrl = m_cloudinary.DownloadBackedUpAsset(assetId, versionId);
-            
+
             Assert.True(assetBackedUpUrl.Contains(assetId));
             Assert.True(assetBackedUpUrl.Contains(versionId));
             Assert.True(UrlExists(assetBackedUpUrl));

@@ -80,8 +80,8 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var res = m_cloudinary.GetResource(uploaded.PublicId);
 
-            Assert.AreEqual("value", res.Context["custom"]["key"].ToString());
-            Assert.AreEqual("value2", res.Context["custom"]["key2"].ToString());
+            Assert.AreEqual("value", res?.Context["custom"]?["key"]?.ToString());
+            Assert.AreEqual("value2", res?.Context["custom"]?["key2"]?.ToString());
         }
     }
 }
