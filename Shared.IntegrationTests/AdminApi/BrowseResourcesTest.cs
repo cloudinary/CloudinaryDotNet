@@ -20,7 +20,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             ListResourcesResult resources = m_cloudinary.ListResources();
             Assert.NotNull(resources);
             Assert.NotZero(resources.Resources.Length);
-            Assert.NotNull(resources.Resources[0].AccessMode);
         }
 
         [Test, RetryWithDelay]
@@ -424,7 +423,6 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
             Assert.IsNotNull(getResult);
             Assert.AreEqual(publicId, getResult.PublicId);
             Assert.NotNull(getResult.ImageMetadata);
-            Assert.NotNull(getResult.AccessMode);
         }
 
         [Test, RetryWithDelay]

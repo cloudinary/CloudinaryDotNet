@@ -158,7 +158,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual("upload", result.Type);
             Assert.IsNotNull(result.Etag);
             Assert.AreEqual(false, result.Placeholder);
-            Assert.IsNotNull(result.AccessMode);
             Assert.NotZero(result.ResourceCount);
             Assert.NotZero(result.Tags.Length);
         }
@@ -329,7 +328,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(folderUrl.Error);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestDownloadBackedUpAsset()
         {
             var publicId = GetUniquePublicId();
@@ -350,7 +349,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             var versionId = getResourceResult.Versions[0].VersionId;
 
             var assetBackedUpUrl = m_cloudinary.DownloadBackedUpAsset(assetId, versionId);
-            
+
             Assert.True(assetBackedUpUrl.Contains(assetId));
             Assert.True(assetBackedUpUrl.Contains(versionId));
             Assert.True(UrlExists(assetBackedUpUrl));

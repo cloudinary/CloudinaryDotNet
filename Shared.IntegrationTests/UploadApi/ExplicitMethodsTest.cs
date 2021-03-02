@@ -264,7 +264,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         {
             //should allow sending custom coordinates
 
-            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
 
             var upResult = m_cloudinary.Upload(new ImageUploadParams()
             {
@@ -352,7 +352,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.AreEqual(900, expResult.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(100, expResult.ResponsiveBreakpoints[0].Breakpoints[3].Width);
         }
-        
+
         [Test, RetryWithDelay]
         public void TestMetadata()
         {
@@ -437,7 +437,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(explicitResult.Phash);
             Assert.NotZero(explicitResult.Faces.Length);
             Assert.Zero(explicitResult.CinemagraphAnalysis.CinemagraphScore);
-            Assert.NotNull(explicitResult.AccessMode);
             Assert.NotNull(explicitResult.Etag);
             Assert.NotNull(explicitResult.Placeholder);
             Assert.NotNull(explicitResult.OriginalFilename);

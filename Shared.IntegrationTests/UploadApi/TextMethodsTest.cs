@@ -52,7 +52,6 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(result.Placeholder);
             Assert.NotNull(result.Url);
             Assert.NotNull(result.SecureUrl);
-            Assert.NotNull(result.AccessMode);
         }
 
         [Test, RetryWithDelay]

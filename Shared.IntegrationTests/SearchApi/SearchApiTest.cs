@@ -111,7 +111,6 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.NotNull(result.Resources[0].Url);
             Assert.NotNull(result.Resources[0].SecureUrl);
             Assert.NotNull(result.Resources[0].Status);
-            Assert.NotNull(result.Resources[0].AccessMode);
             Assert.Null(result.Resources[0].AccessControl);
             Assert.NotNull(result.Resources[0].Etag);
             Assert.NotNull(result.Resources[0].UploadedBy);
@@ -123,6 +122,8 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
         {
             var result = m_cloudinary.Search()
                 .Expression(m_expressionTag).Aggregate(AGG_FIELD_VALUE).Execute();
+
+            AssertSupportsAggregation(result);
 
             Assert.NotNull(result.Resources);
             Assert.AreEqual(RESOURCES_COUNT, result.Resources.Count);
@@ -145,6 +146,8 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
         {
             var result = m_cloudinary.Search().MaxResults(FIRST_PAGE_SIZE)
                 .Expression(m_expressionTag).Aggregate(AGG_FIELD_VALUE).Execute();
+
+            AssertSupportsAggregation(result);
 
             Assert.Greater(result.TotalCount, 1);
             Assert.Greater(result.Time, 0);
@@ -181,7 +184,6 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.IsTrue(foundResource.Url.Contains("http://"));
             Assert.IsTrue(foundResource.SecureUrl.Contains("https://"));
             Assert.AreEqual("active", foundResource.Status);
-            Assert.AreEqual("public", foundResource.AccessMode);
             Assert.IsNull(foundResource.AccessControl);
             Assert.IsNotEmpty(foundResource.Etag);
             Assert.Contains(m_searchTag, foundResource.Tags);
@@ -189,6 +191,14 @@ namespace CloudinaryDotNet.IntegrationTest.SearchApi
             Assert.AreEqual(1, foundResource.Context.Count);
             Assert.AreEqual(0, foundResource.ImageAnalysis.FaceCount);
             Assert.IsNotNull(foundResource.ImageAnalysis);
+        }
+
+        private static void AssertSupportsAggregation(SearchResult result)
+        {
+            if (result.Error?.Message.Contains("does not support aggregations") == true)
+            {
+                Assert.Inconclusive(result.Error.Message);
+            }
         }
     }
 }

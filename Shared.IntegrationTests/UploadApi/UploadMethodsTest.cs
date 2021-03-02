@@ -868,7 +868,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
         {
             //should allow sending custom coordinates
 
-            var coordinates = new CloudinaryDotNet.Core.Rectangle(121, 31, 110, 151);
+            var coordinates = new Core.Rectangle(121, 31, 110, 151);
 
             var upResult = m_cloudinary.Upload(new ImageUploadParams()
             {
@@ -935,6 +935,9 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(metadataResult);
 
             var metadataFieldId = metadataResult.ExternalId;
+            
+            Assert.NotNull(metadataFieldId);
+            
             if (!string.IsNullOrEmpty(metadataFieldId))
                 m_metadataFieldsToClear.Add(metadataFieldId);
 
