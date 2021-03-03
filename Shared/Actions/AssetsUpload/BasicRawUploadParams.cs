@@ -38,6 +38,11 @@
         }
 
         /// <summary>
+        /// Gets or sets file name to override an original file name.
+        /// </summary>
+        public string FilenameOverride { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -64,10 +69,11 @@
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "type", Type);
+            AddParam(dict, "filename_override", FilenameOverride);
 
             if (Backup.HasValue)
             {
