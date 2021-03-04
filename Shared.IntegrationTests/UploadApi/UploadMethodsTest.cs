@@ -975,6 +975,24 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.IsInstanceOf<double>(uploadResult.QualityAnalysis.Focus);
         }
 
+        [Test, RetryWithDelay]
+        public void TestUploadFilenameOverride()
+        {
+            const string filenameOverride = "test_overridden";
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                Tags = m_apiTag,
+                FilenameOverride = filenameOverride
+            };
+
+            var uploadResult = m_cloudinary.Upload(uploadParams);
+
+            Assert.IsNotNull(uploadResult);
+            Assert.AreEqual(filenameOverride, uploadResult.OriginalFilename);
+        }
+
         //[Test, RetryWithDelay]
         //public void TestTextAlign()
         //{
