@@ -1,4 +1,23 @@
 
+1.15.0 / 2021-03-04
+===================
+
+New functionality
+-----------------
+
+  * Add support of `filename_override` upload parameter
+  * Add support of `SHA-256` in auth signatures
+
+Other Changes
+-------------
+
+  * Fix `ArchiveResult` empty tags issue
+  * Fix Transformations API call
+  * Fix `Type` in `TagParams`
+  * Upgrade the demo project
+  * Fix broken account provisioning tests
+  * Integrate with sub-account test service
+
 1.14.0 / 2020-11-24
 ===================
 
