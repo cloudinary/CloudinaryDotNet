@@ -66,6 +66,9 @@
         /// </summary>
         public long duration;
 
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1600:ElementsShouldBeDocumented", Justification = "Reviewed.")]
+        internal const string ERROR_ACL_AND_URL_MISSING = "Must provide either acl or url property";
+
         private bool isNullToken = false;
 
         /// <summary>
@@ -199,6 +202,11 @@
             }
 
             tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "exp={0}", expiration.ToString(CultureInfo.InvariantCulture)));
+
+            if (string.IsNullOrWhiteSpace(url) && string.IsNullOrWhiteSpace(acl))
+            {
+                throw new InvalidOperationException(ERROR_ACL_AND_URL_MISSING);
+            }
 
             if (!string.IsNullOrWhiteSpace(acl))
             {
