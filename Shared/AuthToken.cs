@@ -66,7 +66,9 @@
         /// </summary>
         public long duration;
 
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1600:ElementsShouldBeDocumented", Justification = "Reviewed.")]
+        /// <summary>
+        /// Error message for missing Acl or Url parameters when building auth token.
+        /// </summary>
         internal const string ERROR_ACL_AND_URL_MISSING = "Must provide either acl or url property";
 
         private bool isNullToken = false;
