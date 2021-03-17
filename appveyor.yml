@@ -22,7 +22,7 @@ max_jobs: 1
 #---------------------------------#
 
 # Build worker image (VM template)
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -49,8 +49,8 @@ cache:
 # scripts that run after cloning repository
 install:
   # by default, all script lines are interpreted as batch
-  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-
+   - dotnet restore
+ 
 # enable patching of AssemblyInfo.* files
 assembly_info:
   patch: true
@@ -69,7 +69,7 @@ nuget:
 
 #---------------------------------#
 #       build configuration       #
-#---------------------------------#
+#---- -----------------------------#
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: Any CPU
@@ -89,7 +89,7 @@ configuration: Release
 
 build:
   parallel: true                  # enable MSBuild parallel builds
-  project: Cloudinary.sln         # path to Visual Studio solution or project
+  project: CloudinaryDotNet.sln         # path to Visual Studio solution or project
   publish_nuget: false            # package projects with .nuspec files and push to artifacts
   publish_nuget_symbols: false    # generate and publish NuGet symbol packages
   include_nuget_references: false # add -IncludeReferencedProjects option while packaging NuGet artifacts
@@ -98,16 +98,13 @@ build:
 
 test:
   assemblies:
-    - Cloudinary.Test.dll
-    - Cloudinary.NetCoreTest.dll
-    - Cloudinary.IntegrationTest.dll
-    - Cloudinary.NetCoreIntegrationTest.dll
+    - 'CloudinaryDotNet.Tests.dll'
+    - 'CloudinaryDotNet.IntegrationTests.dll'
 
 # scripts to run before build
 before_build:
- - ps: .\before_build.ps1
- - cmd: appveyor-retry nuget restore Cloudinary.sln
-# scripts to run *after* solution is built and *before* automatic packaging occurs (web apps, NuGet packages, Azure Cloud Services)
+  - ps: ./before_build.ps1
+
 before_package:
 
 # scripts to run after build
