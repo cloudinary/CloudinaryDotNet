@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
@@ -211,6 +212,15 @@ namespace CloudinaryDotNet.Test.Asset
                 $"__cld_token__=st={START_TIME2}~exp={EXPIRATION2A}~acl=%2f*%2ft_{CUSTOM_USER}" +
                 "~hmac=8e39600cc18cec339b21fe2b05fcb64b98de373355f8ce732c35710d8b10259f",
                 cookieToken
+            );
+        }
+
+        [Test]
+        public void TestGenerateTokenWithNeitherUrlNorAclProvided()
+        {
+            Assert.Throws<InvalidOperationException>(
+                    () => new AuthToken(KEY).Duration(DURATION).StartTime(START_TIME2).Generate(), 
+                    AuthToken.ERROR_ACL_AND_URL_MISSING
             );
         }
     }
