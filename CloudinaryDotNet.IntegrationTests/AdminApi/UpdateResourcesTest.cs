@@ -39,7 +39,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Ocr = ILLEGAL_STRING
             });
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode, updateResult.Error?.Message);
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
@@ -59,7 +59,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Ocr = "adv_ocr"
             });
 
-            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode, updateResult.Error?.Message);
 
             // OCR sometimes replaces `_`,`-` with space or empty string and adds newline at the end, ignore those
             CloudinaryAssert.StringsAreEqualIgnoringCaseAndChars(
@@ -84,7 +84,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 RawConvert = ILLEGAL_STRING
             });
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode, updateResult.Error?.Message);
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
@@ -104,7 +104,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Categorization = ILLEGAL_STRING
             });
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode, updateResult.Error?.Message);
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
@@ -124,7 +124,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Detection = ILLEGAL_STRING
             });
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, updateResult.StatusCode, updateResult.Error?.Message);
             Assert.True(updateResult.Error.Message.StartsWith(ILLEGAL_MESSAGE));
         }
 
@@ -152,7 +152,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(1, uploadResult.AccessControl.Count);
+            Assert.AreEqual(1, uploadResult.AccessControl.Count, uploadResult.Error?.Message);
 
             Assert.AreEqual(AccessType.Anonymous, uploadResult.AccessControl[0].AccessType);
             Assert.AreEqual(start, uploadResult.AccessControl[0].Start);
@@ -168,7 +168,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 new UpdateParams(uploadResult.PublicId) { AccessControl = newAccessControl }
             );
 
-            Assert.AreEqual(1, updateResult.AccessControl.Count);
+            Assert.AreEqual(1, updateResult.AccessControl.Count, updateResult.Error?.Message);
 
             Assert.AreEqual(AccessType.Token, updateResult.AccessControl[0].AccessType);
             Assert.AreEqual(end, updateResult.AccessControl[0].Start);
@@ -182,7 +182,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             string publicId = GetUniquePublicId();
             var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId, Overwrite = true, Tags = m_apiTag });
             var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOverride = "auto:best" });
-            Assert.AreEqual(updResult.StatusCode, HttpStatusCode.OK);
+            Assert.AreEqual(updResult.StatusCode, HttpStatusCode.OK, updResult.Error?.Message);
             Assert.Null(updResult.Error);
             Assert.AreEqual(updResult.PublicId, publicId);
         }
@@ -236,7 +236,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private void AssertUpdatedCustomCoordinates(GetResourceResult result, Core.Rectangle coordinates)
         {
-            Assert.NotNull(result.Coordinates);
+            Assert.NotNull(result.Coordinates, result.Error?.Message);
             Assert.NotNull(result.Coordinates.Custom);
             Assert.AreEqual(1, result.Coordinates.Custom.Length);
             Assert.AreEqual(4, result.Coordinates.Custom[0].Length);
@@ -263,7 +263,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId) { ModerationStatus = ModerationStatus.Approved });
 
             Assert.NotNull(updateResult);
-            Assert.NotNull(updateResult.Moderation);
+            Assert.NotNull(updateResult.Moderation, updateResult.Error?.Message);
             Assert.AreEqual(1, updateResult.Moderation.Count);
             Assert.AreEqual(ModerationStatus.Approved, updateResult.Moderation[0].Status);
         }
@@ -289,7 +289,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             });
 
             Assert.NotNull(updateResult);
-            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode, updateResult.Error?.Message);
             Assert.NotNull(updateResult.MetadataFields);
         }
 
@@ -311,7 +311,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var updateResult = m_cloudinary.UpdateMetadata(updateParams);
 
             Assert.NotNull(updateResult);
-            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode, updateResult.Error?.Message);
             Assert.IsNotEmpty(updateResult.PublicIds);
         }
     }

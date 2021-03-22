@@ -38,7 +38,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         private void AssertDestroyed(DeletionResult result)
         {
-            Assert.AreEqual("ok", result.Result);
+            Assert.AreEqual("ok", result.Result, result.Error?.Message);
         }
     }
 }

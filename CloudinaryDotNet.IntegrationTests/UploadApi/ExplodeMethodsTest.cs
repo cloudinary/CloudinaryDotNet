@@ -67,7 +67,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         private void AssertExplodeStatus(ExplodeResult result)
         {
-            Assert.AreEqual("processing", result.Status);
+            Assert.AreEqual("processing", result.Status, result.Error?.Message);
         }
     }
 }

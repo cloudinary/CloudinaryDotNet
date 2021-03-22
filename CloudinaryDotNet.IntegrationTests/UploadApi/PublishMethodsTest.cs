@@ -22,7 +22,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Type = STORAGE_TYPE_AUTHENTICATED
             });
 
-            Assert.NotNull(publishResult.Published);
+            Assert.NotNull(publishResult.Published, publishResult.Error?.Message);
             Assert.AreEqual(1, publishResult.Published.Count);
         }
 
@@ -40,7 +40,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Type = STORAGE_TYPE_AUTHENTICATED
             }, null);
 
-            Assert.NotNull(publishResult.Published);
+            Assert.NotNull(publishResult.Published, publishResult.Error?.Message);
             Assert.AreEqual(1, publishResult.Published.Count);
         }
 
@@ -61,7 +61,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var publishResult = m_cloudinary.PublishResourceByPrefix(
                                         uploadParams.PublicId.Substring(0, uploadParams.PublicId.Length - 2), new PublishResourceParams());
 
-            Assert.NotNull(publishResult.Published);
+            Assert.NotNull(publishResult.Published, publishResult.Error?.Message);
             Assert.AreEqual(1, publishResult.Published.Count);
         }
 
@@ -86,7 +86,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 ResourceType = ResourceType.Image,
             });
 
-            Assert.NotNull(publishResult.Published);
+            Assert.NotNull(publishResult.Published, publishResult.Error?.Message);
             Assert.AreEqual(1, publishResult.Published.Count);
         }
 
@@ -112,7 +112,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Type = STORAGE_TYPE_PRIVATE
             });
 
-            Assert.NotNull(publishResult.Published);
+            Assert.NotNull(publishResult.Published, publishResult.Error?.Message);
             Assert.NotNull(publishResult.Failed);
             Assert.AreEqual(0, publishResult.Published.Count);
             Assert.AreEqual(1, publishResult.Failed.Count);
@@ -125,7 +125,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Type = STORAGE_TYPE_AUTHENTICATED
             });
 
-            Assert.NotNull(publishResult.Published);
+            Assert.NotNull(publishResult.Published, publishResult.Error?.Message);
             Assert.NotNull(publishResult.Failed);
             Assert.AreEqual(1, publishResult.Published.Count);
             Assert.AreEqual(0, publishResult.Failed.Count);

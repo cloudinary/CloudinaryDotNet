@@ -20,7 +20,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                                             .TargetPublicId(targetPublicId)
                                             .TargetTags(new List<string> { m_apiTag });
             var result = m_cloudinary.CreateArchive(parameters);
-            Assert.AreEqual($"{targetPublicId}.{FILE_FORMAT_ZIP}", result.PublicId);
+            Assert.AreEqual($"{targetPublicId}.{FILE_FORMAT_ZIP}", result.PublicId, result.Error?.Message);
             Assert.AreEqual(1, result.FileCount);
 
             var res2 = UploadResourceForTestArchive<ImageUploadParams>(archiveTag, false, 500);
@@ -35,7 +35,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                                             .TargetTags(new List<string> { m_apiTag })
                                             .AllowMissing(true);
             result = m_cloudinary.CreateArchive(parameters);
-            Assert.AreEqual(2, result.FileCount);
+            Assert.AreEqual(2, result.FileCount, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -63,7 +63,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                                             .UseOriginalFilename(true)
                                             .TargetTags(new List<string> { m_apiTag });
             var result = m_cloudinary.CreateArchive(parameters);
-            Assert.AreEqual(2, result.FileCount);
+            Assert.AreEqual(2, result.FileCount, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -73,7 +73,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var parameters = UploadImageForArchiveAndPrepareParameters(GetMethodTag());
             var result = m_cloudinary.CreateArchive(parameters);
 
-            Assert.AreEqual($"{parameters.TargetPublicId()}.{FILE_FORMAT_ZIP}", result.PublicId);
+            Assert.AreEqual($"{parameters.TargetPublicId()}.{FILE_FORMAT_ZIP}", result.PublicId, result.Error?.Message);
             Assert.AreEqual(1, result.FileCount);
         }
 
@@ -118,7 +118,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var result = m_cloudinary.CreateArchive(parameters);
 
-            Assert.AreEqual(3, result.FileCount);
+            Assert.AreEqual(3, result.FileCount, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -127,7 +127,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var parameters = UploadImageForArchiveAndPrepareParameters(GetMethodTag());
             var result = m_cloudinary.CreateZip(parameters);
 
-            Assert.AreEqual($"{parameters.TargetPublicId()}.{FILE_FORMAT_ZIP}", result.PublicId);
+            Assert.AreEqual($"{parameters.TargetPublicId()}.{FILE_FORMAT_ZIP}", result.PublicId, result.Error?.Message);
             Assert.AreEqual(1, result.FileCount);
         }
 
@@ -151,7 +151,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var result = m_cloudinary.CreateZip(parameters);
 
-            Assert.IsNotNull(result.Version);
+            Assert.IsNotNull(result.Version, result.Error?.Message);
             Assert.IsNotNull(result.Signature);
             Assert.AreEqual(ResourceType.Raw, result.ResourceType);
             Assert.Greater(result.CreatedAt, new DateTime(1970, 01, 01));
@@ -172,7 +172,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var archiveParams = new ArchiveParams().PublicIds(publicIds);
             var archiveUrl = m_cloudinary.DownloadArchiveUrl(archiveParams);
 
-            Assert.True(UrlExists(archiveUrl));
+            Assert.True(UrlExists(archiveUrl), uploadResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -186,7 +186,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var archiveParams = new ArchiveParams().ResourceType(resourceType).PublicIds(publicIds);
             var archiveUrl = m_cloudinary.DownloadArchiveUrl(archiveParams);
 
-            Assert.True(UrlExists(archiveUrl));
+            Assert.True(UrlExists(archiveUrl), uploadResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]

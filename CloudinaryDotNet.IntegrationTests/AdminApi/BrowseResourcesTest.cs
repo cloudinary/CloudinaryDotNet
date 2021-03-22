@@ -19,7 +19,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             ListResourcesResult resources = m_cloudinary.ListResources();
             Assert.NotNull(resources);
-            Assert.NotZero(resources.Resources.Length);
+            Assert.NotZero(resources.Resources.Length, resources.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -57,17 +57,17 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             requestParams.ModerationStatus = ModerationStatus.Pending;
             var pending = m_cloudinary.ListResources(requestParams);
 
-            Assert.True(approved.Resources.Where(r => r.PublicId == uploadResults[0].PublicId).Count() > 0);
-            Assert.True(approved.Resources.Where(r => r.PublicId == uploadResults[1].PublicId).Count() == 0);
-            Assert.True(approved.Resources.Where(r => r.PublicId == uploadResults[2].PublicId).Count() == 0);
+            Assert.True(approved.Resources.Count(r => r.PublicId == uploadResults[0].PublicId) > 0, approved.Error?.Message);
+            Assert.True(approved.Resources.Count(r => r.PublicId == uploadResults[1].PublicId) == 0, approved.Error?.Message);
+            Assert.True(approved.Resources.Count(r => r.PublicId == uploadResults[2].PublicId) == 0, approved.Error?.Message);
 
-            Assert.True(rejected.Resources.Where(r => r.PublicId == uploadResults[0].PublicId).Count() == 0);
-            Assert.True(rejected.Resources.Where(r => r.PublicId == uploadResults[1].PublicId).Count() > 0);
-            Assert.True(rejected.Resources.Where(r => r.PublicId == uploadResults[2].PublicId).Count() == 0);
+            Assert.True(rejected.Resources.Count(r => r.PublicId == uploadResults[0].PublicId) == 0, rejected.Error?.Message);
+            Assert.True(rejected.Resources.Count(r => r.PublicId == uploadResults[1].PublicId) > 0, rejected.Error?.Message);
+            Assert.True(rejected.Resources.Count(r => r.PublicId == uploadResults[2].PublicId) == 0, rejected.Error?.Message);
 
-            Assert.True(pending.Resources.Where(r => r.PublicId == uploadResults[0].PublicId).Count() == 0);
-            Assert.True(pending.Resources.Where(r => r.PublicId == uploadResults[1].PublicId).Count() == 0);
-            Assert.True(pending.Resources.Where(r => r.PublicId == uploadResults[2].PublicId).Count() > 0);
+            Assert.True(pending.Resources.Count(r => r.PublicId == uploadResults[0].PublicId) == 0, pending.Error?.Message);
+            Assert.True(pending.Resources.Count(r => r.PublicId == uploadResults[1].PublicId) == 0, pending.Error?.Message);
+            Assert.True(pending.Resources.Count(r => r.PublicId == uploadResults[2].PublicId) > 0, pending.Error?.Message);
         }
 
         [Test, Ignore("test needs to be re-written with mocking - it fails when there are many resources")]
@@ -131,7 +131,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var result1 = m_cloudinary.ListResources(listParams);
 
-            Assert.IsNotNull(result1.Resources);
+            Assert.IsNotNull(result1.Resources, result1.Error?.Message);
             Assert.AreEqual(1, result1.Resources.Length);
             Assert.IsFalse(String.IsNullOrEmpty(result1.NextCursor));
 
@@ -139,7 +139,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var result2 = m_cloudinary.ListResources(listParams);
 
             Assert.IsNotNull(result2.Resources);
-            Assert.AreEqual(1, result2.Resources.Length);
+            Assert.AreEqual(1, result2.Resources.Length, result2.Error?.Message);
             Assert.AreNotEqual(result1.Resources[0].PublicId, result2.Resources[0].PublicId);
         }
 
@@ -165,7 +165,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var result = m_cloudinary.ListResources(listParams);
 
-            Assert.IsNotNull(result.Resources);
+            Assert.IsNotNull(result.Resources, result.Error?.Message);
             Assert.AreEqual(1, result.Resources.Length);
 
             var res = result.Resources[0];
@@ -197,7 +197,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var resources = m_cloudinary.ListResources(
                 new ListResourcesParams() { Type = STORAGE_TYPE_UPLOAD, StartAt = result.CreatedAt.AddMilliseconds(-10), Direction = "asc" });
 
-            Assert.NotNull(resources.Resources, "response should include resources");
+            Assert.NotNull(resources.Resources, resources.Error?.Message);
             Assert.IsTrue(resources.Resources.Length > 0, "response should include at least one resources");
             Assert.IsNotNull(resources.Resources.FirstOrDefault(res => res.PublicId == result.PublicId));
         }
@@ -225,7 +225,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 result
                     .Resources
                     .Where(res => (res.Context == null ? false : res.Context["custom"]["context"].ToString() == "abc"))
-                    .Count() > 0);
+                    .Count() > 0, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -307,7 +307,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private void AssertListResourcesByTagResult(ListResourcesResult result)
         {
-            Assert.AreEqual(2, result.Resources.Count());
+            Assert.AreEqual(2, result.Resources.Count(), result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -334,7 +334,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private void AssertListTagNotEmpty(ListTagsResult result)
         {
-            Assert.Greater(result.Tags.Length, 0);
+            Assert.Greater(result.Tags.Length, 0, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -363,11 +363,11 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             ListTagsResult result = m_cloudinary.ListTagsByPrefix(m_apiTag);
 
-            Assert.Contains(tag2, result.Tags);
+            Assert.Contains(tag2, result.Tags, result.Error?.Message);
 
             result = m_cloudinary.ListTagsByPrefix(tag3);
 
-            Assert.IsTrue(result.Tags.Length == 0);
+            Assert.IsTrue(result.Tags.Length == 0, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -389,7 +389,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 new GetResourceParams(publicId) { Phash = true });
 
             Assert.IsNotNull(getResult);
-            Assert.AreEqual(publicId, getResult.PublicId);
+            Assert.AreEqual(publicId, getResult.PublicId, getResult.Error?.Message);
             Assert.AreEqual(1920, getResult.Width);
             Assert.AreEqual(1200, getResult.Height);
             Assert.AreEqual(FILE_FORMAT_JPG, getResult.Format);
@@ -421,7 +421,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 });
 
             Assert.IsNotNull(getResult);
-            Assert.AreEqual(publicId, getResult.PublicId);
+            Assert.AreEqual(publicId, getResult.PublicId, getResult.Error?.Message);
             Assert.NotNull(getResult.ImageMetadata);
         }
 
@@ -436,7 +436,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(FILE_FORMAT_PDF, uploadResult.Format);
+            Assert.AreEqual(FILE_FORMAT_PDF, uploadResult.Format, uploadResult.Error?.Message);
             Assert.AreEqual(TEST_PDF_PAGES_COUNT, uploadResult.Pages);
 
             GetResourceResult getResult = m_cloudinary.GetResource(
@@ -448,7 +448,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             Assert.IsNotNull(getResult);
             Assert.AreEqual(uploadResult.PublicId, getResult.PublicId);
-            Assert.NotNull(getResult.ImageMetadata);
+            Assert.NotNull(getResult.ImageMetadata, getResult.Error?.Message);
             Assert.AreEqual(uploadResult.Pages, getResult.Pages);
             Assert.AreEqual(getResult.Pages, TEST_PDF_PAGES_COUNT);
         }
@@ -458,7 +458,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             // should allow listing resource_types
             ListResourceTypesResult result = m_cloudinary.ListResourceTypes();
-            Assert.Contains(ResourceType.Image, result.ResourceTypes);
+            Assert.Contains(ResourceType.Image, result.ResourceTypes, result.Error?.Message);
         }
 
         [Test, Ignore("test needs to be re-written with mocking - it fails when there are many resources")]
@@ -492,7 +492,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var getResult = m_cloudinary.GetResource(getResourceParams);
 
-            Assert.GreaterOrEqual(getResult.CinemagraphAnalysis.CinemagraphScore, 0);
+            Assert.GreaterOrEqual(getResult.CinemagraphAnalysis.CinemagraphScore, 0, getResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -525,12 +525,12 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Versions = true
             });
 
-            Assert.IsNotNull(resultWithVersion.Versions);
+            Assert.IsNotNull(resultWithVersion.Versions, resultWithVersion.Error?.Message);
             Assert.NotZero(resultWithVersion.Versions.Count);
 
             var result = m_cloudinary.GetResource(new GetResourceParams(uploadResult.PublicId));
 
-            Assert.IsNull(result.Versions);
+            Assert.IsNull(result.Versions, result.Error?.Message);
         }
     }
 }

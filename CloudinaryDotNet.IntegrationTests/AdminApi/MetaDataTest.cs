@@ -205,7 +205,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var result = m_cloudinary.DeleteMetadataDataSourceEntries(m_externalIdSet2, entriesExternalIds);
 
             AssertMetadataFieldDataSource(result);
-            Assert.AreEqual(m_datasourceMultiple.Values.Count - 1, result.Values.Count);
+            Assert.AreEqual(m_datasourceMultiple.Values.Count - 1, result.Values.Count, result.Error?.Message);
             var values = result.Values.Select(entry => entry.Value).ToList();
             Assert.Contains(m_datasourceMultiple.Values[1].Value, values);
             Assert.Contains(m_datasourceMultiple.Values[2].Value, values);
@@ -244,7 +244,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var validMetadataFieldResult = m_cloudinary.AddMetadataField(validMetadataField);
 
             Assert.AreEqual(validMetadataField.DefaultValue.Value.ToString("yyyy-MM-dd"),
-                validMetadataFieldResult.DefaultValue);
+                validMetadataFieldResult.DefaultValue, validMetadataFieldResult.Error?.Message);
             Assert.NotNull(validMetadataFieldResult.Validation);
             Assert.AreEqual(validationRules.Count, validMetadataFieldResult.Validation.Rules.Count);
 
@@ -317,11 +317,11 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var removalResult = m_cloudinary.DeleteMetadataDataSourceEntries(m_externalIdSet3, entriesExternalIds);
             AssertMetadataFieldDataSource(removalResult);
-            Assert.AreEqual(2, removalResult.Values.Count);
+            Assert.AreEqual(2, removalResult.Values.Count, removalResult.Error?.Message);
 
             var restoreResult = m_cloudinary.RestoreMetadataDataSourceEntries(m_externalIdSet3, entriesExternalIds);
             AssertMetadataFieldDataSource(restoreResult);
-            Assert.AreEqual(3, restoreResult.Values.Count);
+            Assert.AreEqual(3, restoreResult.Values.Count, restoreResult.Error?.Message);
         }
 
         /// <summary>
@@ -340,8 +340,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         private void AssertMetadataField(MetadataFieldResult metadataField, MetadataFieldType type, string label,
             string externalId = null, bool mandatory = false, object defaultValue = null)
         {
-            Assert.IsNull(metadataField.Error, metadataField.Error?.Message);
-            Assert.AreEqual(ApiShared.GetCloudinaryParam(type), metadataField.Type);
+            Assert.AreEqual(ApiShared.GetCloudinaryParam(type), metadataField.Type, metadataField.Error?.Message);
 
             if (metadataField.Type == ApiShared.GetCloudinaryParam(MetadataFieldType.Enum) ||
                 metadataField.Type == ApiShared.GetCloudinaryParam(MetadataFieldType.Set))
