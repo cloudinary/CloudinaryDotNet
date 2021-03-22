@@ -51,7 +51,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 .Version(result.Version)
                 .BuildUrl(_cloudinaryPublicId);
 
-            Assert.AreEqual(url, result.Eager[0].Url.AbsoluteUri);
+            Assert.AreEqual(url, result.Eager[0].Url.AbsoluteUri, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -74,7 +74,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var getResult = m_cloudinary.GetResource(new GetResourceParams(expResult.PublicId) { Type = facebook });
 
             Assert.IsNotNull(getResult);
-            Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString());
+            Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString(), getResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -92,7 +92,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var expAsyncResult = m_cloudinary.Explicit(exp);
 
-            Assert.AreEqual("pending", expAsyncResult.Status);
+            Assert.AreEqual("pending", expAsyncResult.Status, expAsyncResult.Error?.Message);
             Assert.AreEqual(Api.GetCloudinaryParam(ResourceType.Image), expAsyncResult.ResourceType);
             Assert.AreEqual(facebook, expAsyncResult.Type);
             Assert.AreEqual(publicId, expAsyncResult.PublicId);
@@ -123,7 +123,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var getResult = m_cloudinary.GetResource(new GetResourceParams(expResult.PublicId) { ResourceType = ResourceType.Video });
 
             Assert.IsNotNull(getResult);
-            Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString());
+            Assert.AreEqual("254", getResult.Context["custom"]["context1"].ToString(), getResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -148,7 +148,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var uploadRes = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(uploadRes.Faces);
-            Assert.AreEqual(2, uploadRes.Faces.Length);
+            Assert.AreEqual(2, uploadRes.Faces.Length, uploadRes.Error?.Message);
             Assert.AreEqual(4, uploadRes.Faces[0].Length);
             for (int i = 0; i < 2; i++)
             {
@@ -170,7 +170,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var res = m_cloudinary.GetResource(
                 new GetResourceParams(uploadRes.PublicId) { Faces = true });
 
-            Assert.NotNull(res.Faces);
+            Assert.NotNull(res.Faces, res.Error?.Message);
             Assert.AreEqual(1, res.Faces.Length);
             Assert.AreEqual(4, res.Faces[0].Length);
             Assert.AreEqual(122, res.Faces[0][0]);
@@ -192,7 +192,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadRes = m_cloudinary.Upload(uploadParams);
 
-            Assert.NotNull(uploadRes.QualityAnalysis);
+            Assert.NotNull(uploadRes.QualityAnalysis, uploadRes.Error?.Message);
             Assert.IsInstanceOf<double>(uploadRes.QualityAnalysis.Focus);
 
             var explicitParams = new ExplicitParams(uploadRes.PublicId)
@@ -204,12 +204,12 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var explicitResult = m_cloudinary.Explicit(explicitParams);
 
-            Assert.NotNull(explicitResult.QualityAnalysis);
+            Assert.NotNull(explicitResult.QualityAnalysis, explicitResult.Error?.Message);
             Assert.IsInstanceOf<double>(explicitResult.QualityAnalysis.Focus);
 
             var res = m_cloudinary.GetResource(new GetResourceParams(uploadRes.PublicId) { QualityAnalysis = true });
 
-            Assert.NotNull(res.QualityAnalysis);
+            Assert.NotNull(res.QualityAnalysis, res.Error?.Message);
             Assert.IsInstanceOf<double>(res.QualityAnalysis.Focus);
         }
 
@@ -226,7 +226,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var result = m_cloudinary.Explicit(exp);
             AddCreatedPublicId(StorageType.facebook, result.PublicId);
 
-            Assert.NotNull(result.JsonObj);
+            Assert.NotNull(result.JsonObj, result.Error?.Message);
             Assert.AreEqual(result.PublicId, result.JsonObj["public_id"].ToString());
         }
 
@@ -247,13 +247,13 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { MaxResults = 1 });
 
-            Assert.NotNull(result.DerivedNextCursor);
+            Assert.NotNull(result.DerivedNextCursor, result.Error?.Message);
             CollectionAssert.Contains(eagerTransformStrings, result.Derived[0].Transformation);
 
             var derivedResult = m_cloudinary.GetResource(
             new GetResourceParams(upResult.PublicId) { DerivedNextCursor = result.DerivedNextCursor });
 
-            Assert.IsNull(derivedResult.DerivedNextCursor);
+            Assert.IsNull(derivedResult.DerivedNextCursor, derivedResult.Error?.Message);
             CollectionAssert.Contains(eagerTransformStrings, derivedResult.Derived[0].Transformation);
 
             Assert.AreNotEqual(result.Derived[0].Transformation, derivedResult.Derived[0].Transformation);
@@ -275,7 +275,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
 
-            Assert.NotNull(result.Coordinates);
+            Assert.NotNull(result.Coordinates, result.Error?.Message);
             Assert.NotNull(result.Coordinates.Custom);
             Assert.AreEqual(1, result.Coordinates.Custom.Length);
             Assert.AreEqual(4, result.Coordinates.Custom[0].Length);
@@ -295,7 +295,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId) { Coordinates = true });
 
-            Assert.NotNull(result.Coordinates);
+            Assert.NotNull(result.Coordinates, result.Error?.Message);
             Assert.NotNull(result.Coordinates.Custom);
             Assert.AreEqual(1, result.Coordinates.Custom.Length);
             Assert.AreEqual(4, result.Coordinates.Custom[0].Length);
@@ -325,7 +325,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             };
             var result = m_cloudinary.Upload(uploadParams);
             Assert.Null(result.Error);
-            Assert.NotNull(result.ResponsiveBreakpoints, "result should include 'ResponsiveBreakpoints'");
+            Assert.NotNull(result.ResponsiveBreakpoints, result.Error?.Message);
             Assert.AreEqual(2, result.ResponsiveBreakpoints.Count);
 
             Assert.AreEqual(5, result.ResponsiveBreakpoints[0].Breakpoints.Count);
@@ -347,7 +347,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             ExplicitResult expResult = m_cloudinary.Explicit(exp);
 
-            Assert.AreEqual(1, expResult.ResponsiveBreakpoints.Count);
+            Assert.AreEqual(1, expResult.ResponsiveBreakpoints.Count, expResult.Error?.Message);
             Assert.AreEqual(4, expResult.ResponsiveBreakpoints[0].Breakpoints.Count);
             Assert.AreEqual(900, expResult.ResponsiveBreakpoints[0].Breakpoints[0].Width);
             Assert.AreEqual(100, expResult.ResponsiveBreakpoints[0].Breakpoints[3].Width);
@@ -384,12 +384,12 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             });
 
             Assert.NotNull(explicitResult);
-            Assert.AreEqual(HttpStatusCode.OK, explicitResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, explicitResult.StatusCode, explicitResult.Error?.Message);
 
             var getResult = m_cloudinary.GetResource(new GetResourceParams(uploadResult.PublicId));
 
             Assert.IsNotNull(getResult);
-            Assert.NotNull(getResult.MetadataFields);
+            Assert.NotNull(getResult.MetadataFields, getResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -416,7 +416,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             ExplicitResult expResult = m_cloudinary.Explicit(exp);
 
-            Assert.NotZero(expResult.Eager.Length);
+            Assert.NotZero(expResult.Eager.Length, expResult.Error?.Message);
             Assert.NotNull(expResult.Eager[0]);
             Assert.AreEqual(expResult.Eager[0].SecureUrl, expResult.Eager[0].SecureUrl);
             Assert.AreEqual(expResult.Eager[0].Url, expResult.Eager[0].Url);
@@ -432,7 +432,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         {
             var explicitResult = ArrangeAndGetExplicitResult();
 
-            Assert.NotZero(explicitResult.Colors.Length);
+            Assert.NotZero(explicitResult.Colors.Length, explicitResult.Error?.Message);
             Assert.NotZero(explicitResult.ImageMetadata.Count);
             Assert.NotNull(explicitResult.Phash);
             Assert.NotZero(explicitResult.Faces.Length);
@@ -455,7 +455,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         {
             var explicitResult = ArrangeAndGetExplicitResult();
 
-            Assert.NotNull(explicitResult.ProfilingData);
+            Assert.NotNull(explicitResult.ProfilingData, explicitResult.Error?.Message);
             Assert.NotZero(explicitResult.ProfilingData.Length);
             Assert.NotZero(explicitResult.ProfilingData[0].Action.Postsize.Length);
             Assert.NotZero(explicitResult.ProfilingData[0].Action.Presize.Length);
@@ -466,7 +466,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         {
             var explicitResult = ArrangeAndGetExplicitResult();
 
-            Assert.IsNotNull(explicitResult.Predominant);
+            Assert.IsNotNull(explicitResult.Predominant, explicitResult.Error?.Message);
             Assert.NotZero(explicitResult.Predominant.Google.Length);
             Assert.NotZero(explicitResult.Predominant.Cloudinary.Length);
         }
@@ -476,7 +476,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         {
             var explicitResult = ArrangeAndGetExplicitResult(true);
 
-            Assert.NotNull(explicitResult.Moderation);
+            Assert.NotNull(explicitResult.Moderation, explicitResult.Error?.Message);
             Assert.NotZero(explicitResult.Moderation.Count);
         }
 
@@ -531,7 +531,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var explicitResult = m_cloudinary.Explicit(explicitParams);
 
-            Assert.GreaterOrEqual(explicitResult.CinemagraphAnalysis.CinemagraphScore, 0);
+            Assert.GreaterOrEqual(explicitResult.CinemagraphAnalysis.CinemagraphScore, 0, explicitResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]

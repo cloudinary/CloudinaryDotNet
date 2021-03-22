@@ -13,7 +13,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             // should support unsigned uploading using presets
             var uploadResult = PresetAndGetImageUploadResult();
 
-            Assert.NotNull(uploadResult.PublicId);
+            Assert.NotNull(uploadResult.PublicId, uploadResult.Error?.Message);
             Assert.True(uploadResult.PublicId.StartsWith(PresetFolder));
         }
 

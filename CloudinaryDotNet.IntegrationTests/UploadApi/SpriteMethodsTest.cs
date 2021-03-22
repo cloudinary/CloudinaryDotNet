@@ -32,7 +32,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var result = m_cloudinary.MakeSprite(spriteParams);
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
             AssertSprite(result, FILE_FORMAT_JPG);
-            CollectionAssert.AreEqual(addedPublicIds, result.ImageInfos.Keys);
+            CollectionAssert.AreEqual(addedPublicIds, result.ImageInfos.Keys, result.Error?.Message);
 
             var urls = uploadResults.Select(uploadResult => uploadResult.Url.ToString()).ToList();
             spriteParams = new SpriteParams(urls)
@@ -42,7 +42,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             result = m_cloudinary.MakeSprite(spriteParams);
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
             AssertSprite(result, FILE_FORMAT_JPG);
-            Assert.AreEqual(addedPublicIds.Count, result.ImageInfos.Keys.Count);
+            Assert.AreEqual(addedPublicIds.Count, result.ImageInfos.Keys.Count, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -70,7 +70,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var result = await m_cloudinary.MakeSpriteAsync(spriteParams);
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
             AssertSprite(result, FILE_FORMAT_JPG);
-            CollectionAssert.AreEqual(addedPublicIds, result.ImageInfos.Keys);
+            CollectionAssert.AreEqual(addedPublicIds, result.ImageInfos.Keys, result.Error?.Message);
 
             var urls = uploadResults.Select(uploadResult => uploadResult.Url.ToString()).ToList();
             spriteParams = new SpriteParams(urls)
@@ -80,12 +80,12 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             result = await m_cloudinary.MakeSpriteAsync(spriteParams);
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
             AssertSprite(result, FILE_FORMAT_JPG);
-            Assert.AreEqual(addedPublicIds.Count, result.ImageInfos.Keys.Count);
+            Assert.AreEqual(addedPublicIds.Count, result.ImageInfos.Keys.Count, result.Error?.Message);
         }
 
         private void AssertSprite(SpriteResult result, string fileFormat)
         {
-            Assert.NotNull(result?.ImageInfos);
+            Assert.NotNull(result?.ImageInfos, result?.Error?.Message);
             Assert.NotNull(result.ImageUrl);
             StringAssert.EndsWith(fileFormat, result.ImageUrl.ToString());
             Assert.AreEqual(result.ImageUrl, result.ImageUrl);
@@ -134,7 +134,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             AddCreatedPublicId(StorageType.sprite, result.PublicId);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.ImageInfos);
+            Assert.NotNull(result.ImageInfos, result.Error?.Message);
             foreach (var item in result.ImageInfos)
             {
                 Assert.AreEqual(m_resizeTransformationWidth, item.Value.Width);

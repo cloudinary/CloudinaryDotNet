@@ -22,19 +22,19 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var uploadResult2 = m_cloudinary.Upload(uploadParams);
 
             var renameResult = m_cloudinary.Rename(uploadResult1.PublicId, toPublicId);
-            Assert.AreEqual(HttpStatusCode.OK, renameResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, renameResult.StatusCode, renameResult.Error?.Message);
 
             var getResult = m_cloudinary.GetResource(toPublicId);
             Assert.NotNull(getResult);
 
             renameResult = m_cloudinary.Rename(uploadResult2.PublicId, toPublicId);
-            Assert.True(renameResult.StatusCode == HttpStatusCode.BadRequest);
+            Assert.True(renameResult.StatusCode == HttpStatusCode.BadRequest, renameResult.Error?.Message);
 
             m_cloudinary.Rename(uploadResult2.PublicId, toPublicId, true);
 
             getResult = m_cloudinary.GetResource(toPublicId);
             Assert.NotNull(getResult);
-            Assert.AreEqual(FILE_FORMAT_ICO, getResult.Format);
+            Assert.AreEqual(FILE_FORMAT_ICO, getResult.Format, getResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -52,7 +52,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
-            Assert.AreEqual(uploadResult.StatusCode, HttpStatusCode.OK);
+            Assert.AreEqual(uploadResult.StatusCode, HttpStatusCode.OK, uploadResult.Error?.Message);
 
             RenameParams renameParams = new RenameParams(publicId, newPublicId)
             {
@@ -60,7 +60,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             };
 
             var renameResult = m_cloudinary.Rename(renameParams);
-            Assert.AreEqual(renameResult.StatusCode, HttpStatusCode.OK);
+            Assert.AreEqual(renameResult.StatusCode, HttpStatusCode.OK, renameResult.Error?.Message);
             Assert.AreEqual(renameResult.Type, STORAGE_TYPE_UPLOAD);
             Assert.AreEqual(renameResult.PublicId, newPublicId);
         }
