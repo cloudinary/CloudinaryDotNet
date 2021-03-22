@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.1;net452</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -16,7 +16,9 @@
   <ItemGroup>
     <ProjectReference Include="..\CloudinaryDotNet\CloudinaryDotNet.csproj" />
   </ItemGroup>
-    
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
   <ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">
     <Compile Remove="UrlBuilderTest.cs" />
     <Compile Remove="Asset/AuthTokenTest.cs" />
