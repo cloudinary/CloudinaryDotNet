@@ -340,6 +340,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         private void AssertMetadataField(MetadataFieldResult metadataField, MetadataFieldType type, string label,
             string externalId = null, bool mandatory = false, object defaultValue = null)
         {
+            Assert.IsNull(metadataField.Error, metadataField.Error?.Message);
             Assert.AreEqual(ApiShared.GetCloudinaryParam(type), metadataField.Type);
 
             if (metadataField.Type == ApiShared.GetCloudinaryParam(MetadataFieldType.Enum) ||

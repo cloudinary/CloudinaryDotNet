@@ -156,7 +156,7 @@ namespace CloudinaryDotNet.IntegrationTest
             var assembly = typeof(IntegrationTestBase).Assembly;
             var result = assembly.GetName().Name.Replace('.', '_');
             var appveyorJobId = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
-            result += String.IsNullOrEmpty(appveyorJobId) ? new Random().Next(100000, 999999).ToString() : appveyorJobId;
+            result += $"{appveyorJobId}_{new Random().Next(100000, 999999).ToString()}";
             return result;
         }
 
