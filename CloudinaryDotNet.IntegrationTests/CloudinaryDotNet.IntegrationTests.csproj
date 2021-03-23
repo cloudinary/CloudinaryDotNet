@@ -6,6 +6,11 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Sign)' == 'true' ">
+      <SignAssembly>true</SignAssembly>
+      <AssemblyOriginatorKeyFile>..\CloudinaryDotNet.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
@@ -18,7 +23,7 @@
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\**" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
-    
+
   <ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">
     <Compile Remove="UrlBuilderTest.cs" />
     <Compile Remove="Asset/AuthTokenTest.cs" />

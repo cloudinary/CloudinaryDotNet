@@ -1,9 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleToAttribute("CloudinaryDotNet.Tests")]
-[assembly: InternalsVisibleToAttribute("CloudinaryDotNet.IntegrationTests")]
-
-namespace CloudinaryDotNet
+﻿namespace CloudinaryDotNet
 {
     using System;
     using System.Collections.Generic;
