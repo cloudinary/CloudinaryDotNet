@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Web;
 
-namespace CloudinaryDotNet.Test.Asset
+namespace CloudinaryDotNet.Tests.Asset
 {
     [TestFixture]
     public partial class UrlBuilderTest

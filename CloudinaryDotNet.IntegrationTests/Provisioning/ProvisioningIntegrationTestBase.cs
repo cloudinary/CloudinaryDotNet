@@ -5,7 +5,7 @@ using CloudinaryDotNet.Actions;
 using CloudinaryDotNet.Provisioning;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.Provisioning
+namespace CloudinaryDotNet.IntegrationTests.Provisioning
 {
     [TestFixture]
     public class ProvisioningIntegrationTestBase

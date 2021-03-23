@@ -5,7 +5,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 
-namespace CloudinaryDotNet.IntegrationTest
+namespace CloudinaryDotNet.IntegrationTests
 {
     /// <summary>
     /// <see cref="RetryWithDelayAttribute" /> is used on a test method to specify that it should

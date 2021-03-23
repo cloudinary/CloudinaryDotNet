@@ -4,7 +4,7 @@ using CloudinaryDotNet.Actions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test
+namespace CloudinaryDotNet.Tests
 {
     public class MetaDataTest
     {

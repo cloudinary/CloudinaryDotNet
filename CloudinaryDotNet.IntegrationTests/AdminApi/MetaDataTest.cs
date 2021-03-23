@@ -4,7 +4,7 @@ using System.Linq;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.AdminApi
+namespace CloudinaryDotNet.IntegrationTests.AdminApi
 {
     public class MetaDataTest : IntegrationTestBase
     {
@@ -64,7 +64,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
                 new EntryParams("v4")
             };
             m_datasourceMultiple = new MetadataDataSourceParams(multipleEntries);
-            
+
             CreateMetadataFieldForTest<StringMetadataFieldCreateParams, string>(m_externalIdGeneral);
             CreateMetadataFieldForTest<EnumMetadataFieldCreateParams, string>(m_externalIdEnum2, m_datasourceMultiple);
             CreateMetadataFieldForTest<SetMetadataFieldCreateParams, List<string>>(m_externalIdSet2, m_datasourceMultiple);
@@ -106,7 +106,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         public void TestCreateDateMetadataField()
         {
             var result = CreateMetadataFieldForTest<DateMetadataFieldCreateParams, DateTime?>(m_externalIdDate);
-            
+
             AssertMetadataField(result, MetadataFieldType.Date, m_externalIdDate, m_externalIdDate);
         }
 
@@ -121,7 +121,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
         public void TestCreateSetMetadataField()
         {
             var result = CreateMetadataFieldForTest<SetMetadataFieldCreateParams, List<string>>(m_externalIdSet, m_datasourceMultiple);
-            
+
             AssertMetadataField(result, MetadataFieldType.Set, m_externalIdSet, m_externalIdSet);
         }
 
@@ -243,7 +243,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var validMetadataFieldResult = m_cloudinary.AddMetadataField(validMetadataField);
 
-            Assert.AreEqual(validMetadataField.DefaultValue.Value.ToString("yyyy-MM-dd"), 
+            Assert.AreEqual(validMetadataField.DefaultValue.Value.ToString("yyyy-MM-dd"),
                 validMetadataFieldResult.DefaultValue);
             Assert.NotNull(validMetadataFieldResult.Validation);
             Assert.AreEqual(validationRules.Count, validMetadataFieldResult.Validation.Rules.Count);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Parameters
+namespace CloudinaryDotNet.Tests.Parameters
 {
     public class MetadataFieldUpdateParamsTest
     {
@@ -24,7 +24,7 @@ namespace CloudinaryDotNet.Test.Parameters
             };
             parameters.Metadata.Add("metadata_color", "red");
             parameters.Metadata.Add("metadata_shape", "");
-            
+
             Assert.DoesNotThrow(parameters.Check);
             var dictionary = parameters.ToParamsDictionary();
 

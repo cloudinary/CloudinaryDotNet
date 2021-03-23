@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Transformations.Video
+namespace CloudinaryDotNet.Tests.Transformations.Video
 {
     [TestFixture]
     public class VideoTransformationTest

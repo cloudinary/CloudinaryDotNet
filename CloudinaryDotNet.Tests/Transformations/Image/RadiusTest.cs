@@ -3,7 +3,7 @@ using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 
-namespace CloudinaryDotNet.Test.Transformations.Image
+namespace CloudinaryDotNet.Tests.Transformations.Image
 {
     [TestFixture]
     public class RadiusTest
@@ -17,18 +17,18 @@ namespace CloudinaryDotNet.Test.Transformations.Image
                 {new Radius("10"), "10"},
                 {new Radius("$v"), "$v"},
                 {new Radius("10:20"), "10:20"},
-                
+
                 {new Radius(10, 20), "10:20"},
                 {new Radius(10, 20, 30), "10:20:30"},
                 {new Radius("10:20:$v:40"), "10:20:$v:40"},
                 {new Radius(10, 20, "$v", 40), "10:20:$v:40"},
-                
+
                 {new Radius(new[] {10, 20, 30}), "10:20:30"},
                 {new Radius(new List<object> {10, 20, "$v"}), "10:20:$v"},
                 {new Radius(new object[] {10, 20, "$v", 40}), "10:20:$v:40"},
                 {new Radius(new string[] {"10:20"}), "10:20"},
                 {new Radius(new List<string> {"10:20:$v:40"}), "10:20:$v:40"},
-                
+
             };
 
             foreach (var test in radiusTestValues)

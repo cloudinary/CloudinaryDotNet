@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.UploadApi
+namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     public class PublishMethodsTest : IntegrationTestBase
     {

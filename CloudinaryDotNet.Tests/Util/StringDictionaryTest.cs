@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CloudinaryDotNet.Test.Util
+namespace CloudinaryDotNet.Tests.Util
 {
     [TestFixture]
     public class StringDictionaryTest
@@ -11,7 +11,7 @@ namespace CloudinaryDotNet.Test.Util
         public void TestStringDictionaryAddListValue()
         {
             var sd = new StringDictionary();
-            
+
             sd.Add("k1", new List<string>{"v11", "v12"});
             sd.Add("k2", new List<string>{"v21", "v22"});
 
@@ -22,7 +22,7 @@ namespace CloudinaryDotNet.Test.Util
         public void TestStringDictionaryAddListValueSpecialCharacters()
         {
             var sd = new StringDictionary();
-            
+
             sd.Add("k1", new List<string>{"v11|=\"'!@#$%^*({}[]"});
 
             Assert.AreEqual(@"k1=[""v11\|\=\""'!@#$%^*({}[]""]", Utils.SafeJoin("|", sd.SafePairs));

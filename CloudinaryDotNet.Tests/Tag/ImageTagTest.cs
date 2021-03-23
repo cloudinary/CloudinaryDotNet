@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Tag
+namespace CloudinaryDotNet.Tests.Tag
 {
     [TestFixture]
     public class ImageTagTest
@@ -11,7 +11,7 @@ namespace CloudinaryDotNet.Test.Tag
         [OneTimeSetUp]
         public void Init()
         {
-            Account account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey, 
+            Account account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey,
                 TestConstants.DefaultApiSecret);
             m_api = new Api(account);
         }

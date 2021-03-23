@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
+namespace CloudinaryDotNet.IntegrationTests.Provisioning.AccountApi
 {
     public class AccountProvisioningAsyncTest : ProvisioningIntegrationTestBase
     {
@@ -20,9 +20,9 @@ namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
             };
 
             var updateResult = await AccountProvisioning.UpdateSubAccountAsync(updateSubAccountParams);
-            
+
             Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode, updateResult.Error?.Message);
-            
+
             var result = await AccountProvisioning.SubAccountAsync(m_cloudId1);
 
             Assert.AreEqual(newName, result.CloudName);

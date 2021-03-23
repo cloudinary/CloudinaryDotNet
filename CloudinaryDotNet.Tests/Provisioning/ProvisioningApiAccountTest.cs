@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet.Provisioning;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Provisioning
+namespace CloudinaryDotNet.Tests.Provisioning
 {
     public class ProvisioningApiAccountTest
     {

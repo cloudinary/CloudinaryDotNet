@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Transformations.Video
+namespace CloudinaryDotNet.Tests.Transformations.Video
 {
     [TestFixture]
     public class VideoCodecTest

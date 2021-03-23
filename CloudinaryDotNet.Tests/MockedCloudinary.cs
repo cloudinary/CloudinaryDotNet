@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Moq;
 using Moq.Protected;
 
-namespace CloudinaryDotNet.Test
+namespace CloudinaryDotNet.Tests
 {
     public class MockedCloudinary : Cloudinary
     {

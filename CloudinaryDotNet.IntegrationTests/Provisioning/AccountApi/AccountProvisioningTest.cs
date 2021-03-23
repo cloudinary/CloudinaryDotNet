@@ -5,7 +5,7 @@ using System.Net;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.Provisioning.AccountApi
+namespace CloudinaryDotNet.IntegrationTests.Provisioning.AccountApi
 {
     public class AccountProvisioningTest : ProvisioningIntegrationTestBase
     {

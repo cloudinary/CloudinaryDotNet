@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Configuration
+namespace CloudinaryDotNet.Tests.Configuration
 {
     public class ConfigurationTest
     {

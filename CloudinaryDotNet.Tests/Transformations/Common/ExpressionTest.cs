@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Transformations.Common
+namespace CloudinaryDotNet.Tests.Transformations.Common
 {
     [TestFixture]
     public class ExpressionTest

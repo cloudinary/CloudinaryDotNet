@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace CloudinaryDotNet.IntegrationTest.UploadApi
+namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     public class TextMethodsTest : IntegrationTestBase
     {

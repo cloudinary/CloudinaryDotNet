@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Provisioning.Parameters
+namespace CloudinaryDotNet.Tests.Provisioning.Parameters
 {
     public class AccountProvisioningParamsTest
     {

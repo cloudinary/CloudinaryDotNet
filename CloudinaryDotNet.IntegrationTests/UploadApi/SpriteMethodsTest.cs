@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Web;
 
-namespace CloudinaryDotNet.IntegrationTest.UploadApi
+namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     public class SpriteMethodsTest : IntegrationTestBase
     {

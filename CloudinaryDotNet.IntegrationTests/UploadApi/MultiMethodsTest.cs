@@ -5,7 +5,7 @@ using NUnit.Framework;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace CloudinaryDotNet.IntegrationTest.UploadApi
+namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     public class MultiMethodsTest : IntegrationTestBase
     {

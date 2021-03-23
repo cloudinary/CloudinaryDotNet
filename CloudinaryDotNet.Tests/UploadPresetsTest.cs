@@ -3,7 +3,7 @@ using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using SystemHttp = System.Net.Http;
 
-namespace CloudinaryDotNet.Test
+namespace CloudinaryDotNet.Tests
 {
     public class UploadPresetsTest
     {

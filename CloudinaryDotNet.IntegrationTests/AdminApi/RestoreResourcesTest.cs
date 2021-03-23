@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CloudinaryDotNet.IntegrationTest.AdminApi
+namespace CloudinaryDotNet.IntegrationTests.AdminApi
 {
     public class RestoreResourcesTest: IntegrationTestBase
     {
@@ -135,7 +135,7 @@ namespace CloudinaryDotNet.IntegrationTest.AdminApi
 
             var rResult_backup = m_cloudinary.Restore(new RestoreParams
             {
-                PublicIds = new List<string> 
+                PublicIds = new List<string>
                 {
                     publicIdBackup1,
                     publicIdBackup2

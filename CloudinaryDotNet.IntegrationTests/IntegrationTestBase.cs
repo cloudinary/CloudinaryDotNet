@@ -9,7 +9,7 @@ using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace CloudinaryDotNet.IntegrationTest
+namespace CloudinaryDotNet.IntegrationTests
 {
     [TestFixture]
     public partial class IntegrationTestBase

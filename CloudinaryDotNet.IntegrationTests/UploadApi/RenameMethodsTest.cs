@@ -2,7 +2,7 @@
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.UploadApi
+namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     public class RenameMethodsTest : IntegrationTestBase
     {
@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
 
             var renameResult = m_cloudinary.Rename(uploadResult1.PublicId, toPublicId);
             Assert.AreEqual(HttpStatusCode.OK, renameResult.StatusCode);
-            
+
             var getResult = m_cloudinary.GetResource(toPublicId);
             Assert.NotNull(getResult);
 

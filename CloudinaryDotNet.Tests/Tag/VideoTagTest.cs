@@ -1,18 +1,18 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Tag
+namespace CloudinaryDotNet.Tests.Tag
 {
     [TestFixture]
     public class VideoTagTest
     {
         protected Api m_api;
         private const string SOURCE_MOVIE = "movie";
-        
+
         [OneTimeSetUp]
         public void Init()
         {
-            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey, 
+            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey,
                 TestConstants.DefaultApiSecret);
             m_api = new Api(account);
         }

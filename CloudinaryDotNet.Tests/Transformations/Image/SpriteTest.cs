@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Transformations.Image
+namespace CloudinaryDotNet.Tests.Transformations.Image
 {
     [TestFixture]
     public class SpriteTest
@@ -10,7 +10,7 @@ namespace CloudinaryDotNet.Test.Transformations.Image
         [OneTimeSetUp]
         public void Init()
         {
-            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey, 
+            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey,
                 TestConstants.DefaultApiSecret);
             m_api = new Api(account);
         }

@@ -6,7 +6,7 @@ using CloudinaryDotNet.Actions;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Parameters
+namespace CloudinaryDotNet.Tests.Parameters
 {
     public class DeserializationTests
     {
@@ -33,7 +33,7 @@ namespace CloudinaryDotNet.Test.Parameters
                             || type.GetProperties().Any(propInfo => propInfo.CustomAttributes.Any(ca => ca.AttributeType == typeof(JsonPropertyAttribute)))
                        ))
                 .ToList()
-                .ForEach (type => 
+                .ForEach (type =>
                 {
                     type.GetProperties()
                     .Where(

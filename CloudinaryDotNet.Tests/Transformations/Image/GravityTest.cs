@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Transformations.Image
+namespace CloudinaryDotNet.Tests.Transformations.Image
 {
     [TestFixture]
     public class GravityTest

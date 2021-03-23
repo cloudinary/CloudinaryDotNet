@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CloudinaryDotNet.IntegrationTest.AdminApi
+namespace CloudinaryDotNet.IntegrationTests.AdminApi
 {
     public class DeleteResourcesTest: IntegrationTestBase
     {

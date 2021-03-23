@@ -4,7 +4,7 @@ using System.Linq;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Parameters
+namespace CloudinaryDotNet.Tests.Parameters
 {
     public class MetadataFieldParamsTest
     {
@@ -556,7 +556,7 @@ namespace CloudinaryDotNet.Test.Parameters
             const string externalId2 = "id 2";
             var externalIds = new List<string> {externalId1, externalId2};
             var parameters = new DataSourceEntriesParams(externalIds);
-            
+
             Assert.DoesNotThrow(() => parameters.Check());
 
             var dictionary = parameters.ToParamsDictionary();

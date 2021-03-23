@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json.Linq;
 
-namespace CloudinaryDotNet.IntegrationTest
+namespace CloudinaryDotNet.IntegrationTests
 {
     public class Settings
     {
@@ -11,7 +11,7 @@ namespace CloudinaryDotNet.IntegrationTest
         {
             string configPath = Path.Combine(basePath, "appsettings.json");
             Config = JObject.Parse(File.ReadAllText(configPath))["AccountSettings"];
-        } 
+        }
 
         public string CloudName => Config["CloudName"].Value<string>();
         public string ApiKey => Config["ApiKey"].Value<string>();

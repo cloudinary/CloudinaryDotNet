@@ -4,7 +4,7 @@ using System.IO;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Parameters
+namespace CloudinaryDotNet.Tests.Parameters
 {
     [TestFixture]
     public class ParametersTest

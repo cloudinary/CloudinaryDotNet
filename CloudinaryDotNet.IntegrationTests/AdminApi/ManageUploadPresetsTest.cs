@@ -1,7 +1,7 @@
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.AdminApi
+namespace CloudinaryDotNet.IntegrationTests.AdminApi
 {
     public class ManageUploadPresetsTest : IntegrationTestBase
     {

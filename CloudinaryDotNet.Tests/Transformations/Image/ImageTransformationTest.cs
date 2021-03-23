@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Transformations.Image
+namespace CloudinaryDotNet.Tests.Transformations.Image
 {
     [TestFixture]
     public class ImageTransformationTest

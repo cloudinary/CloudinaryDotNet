@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.UploadApi
+namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class UploadMethodsTest : IntegrationTestBase
@@ -935,9 +935,9 @@ namespace CloudinaryDotNet.IntegrationTest.UploadApi
             Assert.NotNull(metadataResult);
 
             var metadataFieldId = metadataResult.ExternalId;
-            
+
             Assert.NotNull(metadataFieldId);
-            
+
             if (!string.IsNullOrEmpty(metadataFieldId))
                 m_metadataFieldsToClear.Add(metadataFieldId);
 

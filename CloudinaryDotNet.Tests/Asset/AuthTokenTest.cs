@@ -3,7 +3,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Asset
+namespace CloudinaryDotNet.Tests.Asset
 {
     [TestFixture]
     public class AuthTokenTest
@@ -39,11 +39,11 @@ namespace CloudinaryDotNet.Test.Asset
         protected const string TOKEN_KEY = "00112233FF99";
         protected const string authTokenTestTransformationAsString = "c_scale,w_300";
         protected readonly Transformation authTokenTestTransformation = new Transformation().Crop("scale").Width(300);
-        
+
         private string m_cloudUrl;
         private string m_ImageUrl;
         private string m_AuthenticatedImageUrl;
-        
+
         private Api _api;
         private Account m_account;
 
@@ -219,7 +219,7 @@ namespace CloudinaryDotNet.Test.Asset
         public void TestGenerateTokenWithNeitherUrlNorAclProvided()
         {
             Assert.Throws<InvalidOperationException>(
-                    () => new AuthToken(KEY).Duration(DURATION).StartTime(START_TIME2).Generate(), 
+                    () => new AuthToken(KEY).Duration(DURATION).StartTime(START_TIME2).Generate(),
                     AuthToken.ERROR_ACL_AND_URL_MISSING
             );
         }

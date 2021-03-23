@@ -1,4 +1,4 @@
-﻿namespace CloudinaryDotNet.Test
+﻿namespace CloudinaryDotNet.Tests
 {
     public class TestConstants
     {

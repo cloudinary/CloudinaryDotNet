@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.AdminApi
+namespace CloudinaryDotNet.IntegrationTests.AdminApi
 {
     public class BrowseResourcesTest: IntegrationTestBase
     {

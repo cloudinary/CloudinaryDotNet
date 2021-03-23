@@ -4,7 +4,7 @@ using System.Threading;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.IntegrationTest.SearchApi
+namespace CloudinaryDotNet.IntegrationTests.SearchApi
 {
     class SearchApiTest : IntegrationTestBase
     {

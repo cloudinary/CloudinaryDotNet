@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace CloudinaryDotNet.Test.Transformations.Common
+namespace CloudinaryDotNet.Tests.Transformations.Common
 {
     [TestFixture]
     public class TransformationTest
@@ -89,7 +89,7 @@ namespace CloudinaryDotNet.Test.Transformations.Common
 
             StringAssert.AreEqualIgnoringCase("c_scale,l_text:Arial_18:$(start)Hello%20$(name)$(ext)%252C%20%24%28no%20%29%20%24%28%20no%29$(end)", t.ToString());
         }
-        
+
         [Test]
         public void TestCloneWithNested()
         {
@@ -101,12 +101,12 @@ namespace CloudinaryDotNet.Test.Transformations.Common
             transformation.NestedTransforms[0].Width(300);
             transformation = transformation.Angle("22", "23").Chain().Crop("fill");
 
-            Assert.AreEqual(transformation.Generate(), 
+            Assert.AreEqual(transformation.Generate(),
                 "c_fill,w_300,x_100,y_100/r_10/a_22.23,c_crop,w_100/c_fill");
-            Assert.AreEqual(clone.Generate(), 
+            Assert.AreEqual(clone.Generate(),
                 "c_fill,w_200,x_100,y_100/r_10/a_12.13.14,c_crop,w_100");
         }
-        
+
         [Test]
         public void TestDictionaryParamsDeepClone()
         {
@@ -116,10 +116,10 @@ namespace CloudinaryDotNet.Test.Transformations.Common
                 {"codec", VideoCodec.H264}, {"profile", "basic"}, {"level", "3.1"}
             };
             var transform = new Transformation().VideoCodec(codecParams);
-            
+
             var clone = transform.Clone();
             codecParams["codec"] = VideoCodec.H265;
-            
+
             Assert.AreEqual(transform.Generate(), "vc_h265:basic:3.1");
             Assert.AreEqual(clone.Generate(), "vc_h264:basic:3.1");
         }
@@ -130,10 +130,10 @@ namespace CloudinaryDotNet.Test.Transformations.Common
             // layers should be cloned
             var layer = new TextLayer("Hello").FontSize(10).FontFamily("Arial");
             var transformation = new Transformation().Overlay(layer);
-            
+
             var clone = transformation.Clone();
             layer.FontSize(20);
-            
+
             Assert.AreEqual(transformation.Generate(), "l_text:Arial_20:Hello");
             Assert.AreEqual(clone.Generate(), "l_text:Arial_10:Hello");
         }
@@ -149,7 +149,7 @@ namespace CloudinaryDotNet.Test.Transformations.Common
 
             Assert.DoesNotThrow(testDelegate);
         }
- 
+
         [Test]
         public void TestTextLayersUnmodifiableFields()
         {

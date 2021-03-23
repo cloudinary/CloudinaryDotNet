@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 
-namespace CloudinaryDotNet.Test.Util
+namespace CloudinaryDotNet.Tests.Util
 {
     [TestFixture]
     public class UtilsTest
@@ -85,15 +85,15 @@ namespace CloudinaryDotNet.Test.Util
         [Test]
         public void TestComputeHexHash()
         {
-            Assert.AreEqual("4de279c82056603e91aab3930a593b8b887d9e48", 
+            Assert.AreEqual("4de279c82056603e91aab3930a593b8b887d9e48",
                 Utils.ComputeHexHash("https://cloudinary.com/images/old_logo.png"));
 
             var originalValue = Guid.NewGuid().ToString();
 
-            Assert.AreEqual(Utils.ComputeHexHash(originalValue), Utils.ComputeHexHash(originalValue), 
+            Assert.AreEqual(Utils.ComputeHexHash(originalValue), Utils.ComputeHexHash(originalValue),
                 "Equal inputs should be hashed the same way");
 
-            Assert.AreNotEqual(Utils.ComputeHexHash(originalValue), Utils.ComputeHexHash("some string"), 
+            Assert.AreNotEqual(Utils.ComputeHexHash(originalValue), Utils.ComputeHexHash("some string"),
                 "Unequal inputs hashes should not match");
         }
     }

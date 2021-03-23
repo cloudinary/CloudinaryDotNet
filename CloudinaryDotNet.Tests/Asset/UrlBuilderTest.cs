@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Asset
+namespace CloudinaryDotNet.Tests.Asset
 {
     [TestFixture]
     public partial class UrlBuilderTest
@@ -493,7 +493,7 @@ namespace CloudinaryDotNet.Test.Asset
             StringAssert.IsMatch(@"Test\/1\.0 CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\)",
                 request.Headers.UserAgent.ToString());
         }
-        
+
         [Test]
         public void TestDownloadArchiveUrl()
         {
@@ -565,15 +565,15 @@ namespace CloudinaryDotNet.Test.Asset
 
             Assert.IsTrue(url.EndsWith("/folders/sub%5Efolder%20test"));
         }
-        
+
         [Test]
         public void TestApiUrlWithPrivateCdn()
         {
             var cloudinary = new Cloudinary("cloudinary://a:b@test123/test123-res.cloudinary.com?cname=mycname.com");
-            
+
             const string testTag = "api_test_custom1";
             var urlZipImage = cloudinary.DownloadZip(testTag, null);
-            
+
             StringAssert.StartsWith("https://api.cloudinary.com", urlZipImage);
         }
     }

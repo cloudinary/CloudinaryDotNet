@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Test.Asset
+namespace CloudinaryDotNet.Tests.Asset
 {
     [TestFixture]
     public partial class SignatureTest
@@ -17,7 +17,7 @@ namespace CloudinaryDotNet.Test.Asset
         [OneTimeSetUp]
         public void Init()
         {
-            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey, 
+            var account = new Account(TestConstants.CloudName, TestConstants.DefaultApiKey,
                 TestConstants.DefaultApiSecret);
             m_api = new Api(account);
         }
