@@ -33,10 +33,8 @@
             where T : BaseResult
         {
             using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-            using (var reader = new StreamReader(stream))
             {
-                var s = await reader.ReadToEndAsync().ConfigureAwait(false);
-                return CreateResult<T>(response, s);
+                return CreateResult<T>(response, stream);
             }
         }
 
@@ -50,10 +48,8 @@
             where T : BaseResult
         {
             using (var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult())
-            using (var reader = new StreamReader(stream))
             {
-                var s = reader.ReadToEnd();
-                return CreateResult<T>(response, s);
+                return CreateResult<T>(response, stream);
             }
         }
 
@@ -256,22 +252,30 @@
             }
         }
 
-        private static T CreateResult<T>(HttpResponseMessage response, string s)
+        private static T CreateResult<T>(HttpResponseMessage response, Stream s)
             where T : BaseResult
         {
-            var result = CreateResultFromString<T>(s, response.StatusCode);
+            var result = CreateResultFromStream<T>(s, response.StatusCode);
             UpdateResultFromResponse(response, result);
             return result;
         }
 
-        private static T CreateResultFromString<T>(string s, HttpStatusCode statusCode)
+        private static T CreateResultFromStream<T>(Stream s, HttpStatusCode statusCode)
             where T : BaseResult
         {
             try
             {
-                var result = JsonConvert.DeserializeObject<T>(s);
-                result.JsonObj = JToken.Parse(s);
-                return result;
+                using (var streamReader = new StreamReader(s))
+                {
+                    using (var jsonReader = new JsonTextReader(streamReader))
+                    {
+                        var jsonObj = JToken.Load(jsonReader);
+                        var result = jsonObj.ToObject<T>();
+                        result.JsonObj = jsonObj;
+
+                        return result;
+                    }
+                }
             }
             catch (JsonException jex)
             {
