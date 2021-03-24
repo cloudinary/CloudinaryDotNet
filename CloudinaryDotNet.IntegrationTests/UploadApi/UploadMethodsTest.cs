@@ -69,7 +69,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         private void AssertDefaultTestImageUploadAndSignature(ImageUploadResult result)
         {
-            Assert.AreEqual(1920, result.Width);
+            Assert.AreEqual(1920, result.Width, result.Error?.Message);
             Assert.AreEqual(1200, result.Height);
             Assert.AreEqual(FILE_FORMAT_JPG, result.Format);
 
@@ -98,7 +98,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResultImage = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(imageFileName, uploadResultImage.PublicId);
+            Assert.AreEqual(imageFileName, uploadResultImage.PublicId, uploadResultImage.Error?.Message);
 
             var pdfFileName = GetUniquePublicId(StorageType.upload, FILE_FORMAT_PDF);
             var filePdf = new FileDescription(m_testPdfPath) {FileName = pdfFileName };
@@ -107,7 +107,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResultPdf = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(pdfFileName, uploadResultPdf.PublicId);
+            Assert.AreEqual(pdfFileName, uploadResultPdf.PublicId, uploadResultPdf.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -121,7 +121,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResultImage = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(TEST_UNICODE_IMAGE_NAME, uploadResultImage.OriginalFilename);
+            Assert.AreEqual(TEST_UNICODE_IMAGE_NAME, uploadResultImage.OriginalFilename, uploadResultImage.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -139,7 +139,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResultImage = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(imageFileName, uploadResultImage.PublicId);
+            Assert.AreEqual(imageFileName, uploadResultImage.PublicId, uploadResultImage.Error?.Message);
             Assert.Zero(uploadResultImage.CinemagraphAnalysis.CinemagraphScore);
         }
 
@@ -154,7 +154,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(FILE_FORMAT_PDF, uploadResult.Format);
+            Assert.AreEqual(FILE_FORMAT_PDF, uploadResult.Format, uploadResult.Error?.Message);
             Assert.AreEqual(TEST_PDF_PAGES_COUNT, uploadResult.Pages);
         }
 
@@ -210,7 +210,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(640, uploadResult.Width);
+            Assert.AreEqual(640, uploadResult.Width, uploadResult.Error?.Message);
             Assert.AreEqual(320, uploadResult.Height);
             Assert.AreEqual(FILE_FORMAT_MP4, uploadResult.Format);
             Assert.NotNull(uploadResult.Audio);
@@ -225,7 +225,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var getResource = new GetResourceParams(uploadResult.PublicId) { ResourceType = ResourceType.Video };
             var info = m_cloudinary.GetResource(getResource);
 
-            Assert.AreEqual(FILE_FORMAT_MP4, info.Format);
+            Assert.AreEqual(FILE_FORMAT_MP4, info.Format, info.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -237,7 +237,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 new FileDescription(m_testVideoPath));
 
             Assert.NotNull(uploadResult);
-            Assert.AreEqual(video, uploadResult.ResourceType);
+            Assert.AreEqual(video, uploadResult.ResourceType, uploadResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -253,7 +253,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(uploadResult);
-            Assert.NotNull(uploadResult.Moderation);
+            Assert.NotNull(uploadResult.Moderation, uploadResult.Error?.Message);
             Assert.AreEqual(1, uploadResult.Moderation.Count);
             Assert.AreEqual(MODERATION_MANUAL, uploadResult.Moderation[0].Kind);
             Assert.AreEqual(ModerationStatus.Pending, uploadResult.Moderation[0].Status);
@@ -261,7 +261,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var getResult = m_cloudinary.GetResource(uploadResult.PublicId);
 
             Assert.NotNull(getResult);
-            Assert.NotNull(getResult.Moderation);
+            Assert.NotNull(getResult.Moderation, getResult.Error?.Message);
             Assert.AreEqual(1, getResult.Moderation.Count);
             Assert.AreEqual(MODERATION_MANUAL, getResult.Moderation[0].Kind);
             Assert.AreEqual(ModerationStatus.Pending, getResult.Moderation[0].Status);
@@ -278,7 +278,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
-            Assert.IsNotNull(uploadResult.Moderation);
+            Assert.IsNotNull(uploadResult.Moderation, uploadResult.Error?.Message);
             Assert.AreEqual(1, uploadResult.Moderation.Count);
             Assert.AreEqual(ModerationStatus.Approved, uploadResult.Moderation[0].Status);
             Assert.AreEqual(MODERATION_AWS_REK, uploadResult.Moderation[0].Kind);
@@ -295,7 +295,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
-            Assert.IsNotNull(uploadResult.Moderation);
+            Assert.IsNotNull(uploadResult.Moderation, uploadResult.Error?.Message);
             Assert.AreEqual(1, uploadResult.Moderation.Count);
             Assert.AreEqual(MODERATION_WEBPURIFY, uploadResult.Moderation[0].Kind);
         }
@@ -314,7 +314,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Tags = m_apiTag
             });
 
-            Assert.IsNull(uploadResult.Info);
+            Assert.IsNull(uploadResult.Info, uploadResult.Error?.Message);
 
             var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
             {
@@ -326,7 +326,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Assert.Ignore(updateResult.Error.Message);
             }
 
-            Assert.NotNull(updateResult.Info);
+            Assert.NotNull(updateResult.Info, uploadResult.Error?.Message);
             Assert.NotNull(updateResult.Info.Detection);
             Assert.NotNull(updateResult.Info.Detection.RekognitionFace);
             Assert.AreEqual(complete, updateResult.Info.Detection.RekognitionFace.Status);
@@ -338,7 +338,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Tags = m_apiTag
             });
 
-            Assert.NotNull(uploadResult.Info);
+            Assert.NotNull(uploadResult.Info, uploadResult.Error?.Message);
             Assert.NotNull(uploadResult.Info.Detection);
             Assert.NotNull(uploadResult.Info.Detection.RekognitionFace);
             Assert.AreEqual(complete, uploadResult.Info.Detection.RekognitionFace.Status);
@@ -364,14 +364,14 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var img2 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img2);
-            Assert.AreEqual(img1.Bytes, img2.Bytes);
+            Assert.AreEqual(img1.Bytes, img2.Bytes, img1.Error?.Message ?? img2.Error?.Message);
 
             uploadParams.Overwrite = true;
 
             img2 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(img2);
-            Assert.AreNotEqual(img1.Bytes, img2.Bytes);
+            Assert.AreNotEqual(img1.Bytes, img2.Bytes, img1.Error?.Message ?? img2.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -395,7 +395,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
 
-            Assert.NotNull(result.ImageMetadata);
+            Assert.NotNull(result.ImageMetadata, result.Error?.Message);
             Assert.NotNull(result.Exif);
             Assert.NotNull(result.Colors);
             Assert.Zero(result.IllustrationScore);
@@ -419,7 +419,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
 
-            Assert.True(result.PublicId.StartsWith(TEST_IMAGE_PREFIX));
+            Assert.True(result.PublicId.StartsWith(TEST_IMAGE_PREFIX), result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -437,7 +437,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var result = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(TEST_IMAGE_PREFIX, result.PublicId);
+            Assert.AreEqual(TEST_IMAGE_PREFIX, result.PublicId, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -452,7 +452,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(m_resizeTransformationWidth, uploadResult.Width);
+            Assert.AreEqual(m_resizeTransformationWidth, uploadResult.Width, uploadResult.Error?.Message);
             Assert.AreEqual(m_resizeTransformationHeight, uploadResult.Height);
             Assert.AreEqual(FILE_FORMAT_JPG, uploadResult.Format);
         }
@@ -472,7 +472,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(3381, uploadResult.Bytes);
+            Assert.AreEqual(3381, uploadResult.Bytes, uploadResult.Error?.Message);
             Assert.AreEqual(241, uploadResult.Width);
             Assert.AreEqual(51, uploadResult.Height);
             Assert.AreEqual(FILE_FORMAT_PNG, uploadResult.Format);
@@ -491,7 +491,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var result = m_cloudinary.Upload(upload);
 
-            Assert.AreEqual(16, result.Width);
+            Assert.AreEqual(16, result.Width, result.Error?.Message);
             Assert.AreEqual(16, result.Height);
         }
 
@@ -511,7 +511,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
                 ImageUploadResult uploadResult = m_cloudinary.Upload(uploadParams);
 
-                Assert.AreEqual(1920, uploadResult.Width);
+                Assert.AreEqual(1920, uploadResult.Width, uploadResult.Error?.Message);
                 Assert.AreEqual(1200, uploadResult.Height);
                 Assert.AreEqual(FILE_FORMAT_JPG, uploadResult.Format);
             }
@@ -556,7 +556,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         private void AssertUploadLarge(RawUploadResult result, int fileLength)
         {
-            Assert.AreEqual(fileLength, result.Bytes);
+            Assert.AreEqual(fileLength, result.Bytes, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -572,7 +572,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Tags = m_apiTag
             }, 5 * 1024 * 1024);
 
-            Assert.AreEqual(fileLength, result.Bytes);
+            Assert.AreEqual(fileLength, result.Bytes, result.Error?.Message);
         }
 
         /// <summary>
@@ -602,7 +602,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(1, uploadResult.AccessControl.Count);
+            Assert.AreEqual(1, uploadResult.AccessControl.Count, uploadResult.Error?.Message);
 
             Assert.AreEqual(AccessType.Anonymous, uploadResult.AccessControl[0].AccessType);
             Assert.AreEqual(start, uploadResult.AccessControl[0].Start);
@@ -612,7 +612,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             uploadResult = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(2, uploadResult.AccessControl.Count);
+            Assert.AreEqual(2, uploadResult.AccessControl.Count, uploadResult.Error?.Message);
 
             Assert.AreEqual(AccessType.Anonymous, uploadResult.AccessControl[0].AccessType);
             Assert.AreEqual(start, uploadResult.AccessControl[0].Start);
@@ -633,7 +633,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Tags = m_apiTag
             }, 5 * 1024 * 1024);
 
-            Assert.AreEqual(result.StatusCode, HttpStatusCode.OK);
+            Assert.AreEqual(result.StatusCode, HttpStatusCode.OK, result.Error?.Message);
             Assert.AreEqual(result.Format, FILE_FORMAT_MP4);
         }
 
@@ -648,7 +648,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResult = m_cloudinary.UploadLarge(uploadParams);
 
-            Assert.AreEqual(uploadResult.StatusCode, HttpStatusCode.OK);
+            Assert.AreEqual(uploadResult.StatusCode, HttpStatusCode.OK, uploadResult.Error?.Message);
             Assert.AreEqual(FILE_FORMAT_PNG, uploadResult.Format);
         }
 
@@ -680,7 +680,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var res = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(FILE_FORMAT_JPG, res.Format);
+            Assert.AreEqual(FILE_FORMAT_JPG, res.Format, res.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -697,7 +697,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var res = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, res.StatusCode, res.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -715,7 +715,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var res = m_cloudinary.Upload(uploadParams);
 
-            Assert.AreEqual(FILE_FORMAT_PNG, res.Format);
+            Assert.AreEqual(FILE_FORMAT_PNG, res.Format, res.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -751,7 +751,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             ImageUploadResult iuResult25 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(iuResult25);
-            Assert.AreEqual(100, iuResult25.Width);
+            Assert.AreEqual(100, iuResult25.Width, iuResult25.Error?.Message);
             Assert.AreEqual(40, iuResult25.Height);
 
             uploadParams.PublicId = GetUniquePublicId();
@@ -759,7 +759,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             ImageUploadResult iuResult69 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(iuResult69);
-            Assert.AreEqual(100, iuResult69.Width);
+            Assert.AreEqual(100, iuResult69.Width, iuResult69.Error?.Message);
             Assert.AreEqual(150, iuResult69.Height);
 
             uploadParams.PublicId = GetUniquePublicId();
@@ -767,7 +767,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             ImageUploadResult iuResult30 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(iuResult30);
-            Assert.AreEqual(150, iuResult30.Width);
+            Assert.AreEqual(150, iuResult30.Width, iuResult30.Error?.Message);
             Assert.AreEqual(50, iuResult30.Height);
 
             uploadParams.PublicId = GetUniquePublicId();
@@ -775,7 +775,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             ImageUploadResult iuResult12 = m_cloudinary.Upload(uploadParams);
 
             Assert.NotNull(iuResult12);
-            Assert.AreEqual(100, iuResult12.Width);
+            Assert.AreEqual(100, iuResult12.Width, iuResult12.Error?.Message);
             Assert.AreEqual(200, iuResult12.Height);
         }
 
@@ -824,7 +824,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
 
-            Assert.Null(result.Error);
+            Assert.Null(result.Error, result.Error?.Message);
             Assert.NotNull(result.ResponsiveBreakpoints, "result should include 'ResponsiveBreakpoints'");
             Assert.AreEqual(1, result.ResponsiveBreakpoints.Count);
 
@@ -855,7 +855,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.IsFalse(paramsDict.ContainsKey("IgnoredNullParameter"));
 
             ImageUploadResult result = m_cloudinary.Upload(uploadParams);
-            Assert.NotNull(result.ResponsiveBreakpoints); //todo: check it in netCore
+            Assert.NotNull(result.ResponsiveBreakpoints, result.Error?.Message); //todo: check it in netCore
             Assert.AreEqual(1, result.ResponsiveBreakpoints.Count);
 
             Assert.AreEqual(5, result.ResponsiveBreakpoints[0].Breakpoints.Count);
@@ -888,7 +888,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Moderation = true
             });
 
-            Assert.NotNull(result.NextCursor);
+            Assert.NotNull(result.NextCursor, result.Error?.Message);
             Assert.NotZero(result.Tags.Length);
         }
 
@@ -900,7 +900,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 uploadParams.CinemagraphAnalysis = true;
             });
 
-            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
+            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0, uploadResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -911,7 +911,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 uploadParams.CinemagraphAnalysis = true;
             });
 
-            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0);
+            Assert.GreaterOrEqual(uploadResult.CinemagraphAnalysis.CinemagraphScore, 0, uploadResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -936,7 +936,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var metadataFieldId = metadataResult.ExternalId;
 
-            Assert.NotNull(metadataFieldId);
+            Assert.NotNull(metadataFieldId, metadataResult.Error?.Message);
 
             if (!string.IsNullOrEmpty(metadataFieldId))
                 m_metadataFieldsToClear.Add(metadataFieldId);
@@ -954,7 +954,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             });
 
             Assert.NotNull(uploadResult);
-            Assert.AreEqual(HttpStatusCode.OK, uploadResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, uploadResult.StatusCode, uploadResult.Error?.Message);
             Assert.NotNull(uploadResult.MetadataFields);
         }
 
@@ -971,7 +971,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             });
 
             Assert.AreEqual("1920", uploadResult.Context["custom"]?["width"]?.ToString());
-            Assert.NotNull(uploadResult.QualityAnalysis);
+            Assert.NotNull(uploadResult.QualityAnalysis, uploadResult.Error?.Message);
             Assert.IsInstanceOf<double>(uploadResult.QualityAnalysis.Focus);
         }
 
@@ -990,7 +990,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
             Assert.IsNotNull(uploadResult);
-            Assert.AreEqual(filenameOverride, uploadResult.OriginalFilename);
+            Assert.AreEqual(filenameOverride, uploadResult.OriginalFilename, uploadResult.Error?.Message);
         }
 
         //[Test, RetryWithDelay]

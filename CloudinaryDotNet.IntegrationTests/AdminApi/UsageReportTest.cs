@@ -45,7 +45,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private static void AssertUsageResult(UsageResult result)
         {
-            Assert.NotNull(result.LastUpdated);
+            Assert.NotNull(result.LastUpdated, result.Error?.Message);
             Assert.IsNull(result.Error?.Message);
         }
 

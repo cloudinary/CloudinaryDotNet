@@ -33,7 +33,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 ResourceType = ResourceType.Image
             });
 
-            Assert.True(contextResult.PublicIds.Length > 0);
+            Assert.True(contextResult.PublicIds.Length > 0, contextResult.Error?.Message);
 
             m_cloudinary.GetResource(new GetResourceParams(pIds[0])
             {
@@ -80,7 +80,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var res = m_cloudinary.GetResource(uploaded.PublicId);
 
-            Assert.AreEqual("value", res?.Context["custom"]?["key"]?.ToString());
+            Assert.AreEqual("value", res?.Context["custom"]?["key"]?.ToString(), res.Error?.Message);
             Assert.AreEqual("value2", res?.Context["custom"]?["key2"]?.ToString());
         }
     }

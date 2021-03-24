@@ -53,7 +53,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         private void AssertNotEmptyListAndContainsTransformation(ListTransformsResult result, string transformation)
         {
             Assert.IsNotNull(result);
-            Assert.IsNotNull(result.Transformations);
+            Assert.IsNotNull(result.Transformations, result.Error?.Message);
 
             var td = result.Transformations
                 .Where(t => t.Name == transformation)
@@ -96,7 +96,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         private void AssertGetTransform(GetTransformResult result, Transformation transformation)
         {
             Assert.IsNotNull(result);
-            Assert.AreEqual(transformation.ToString(), new Transformation(result.Info[0]).ToString());
+            Assert.AreEqual(transformation.ToString(), new Transformation(result.Info[0]).ToString(), result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -121,14 +121,14 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             TransformResult createResult = m_cloudinary.CreateTransform(create);
 
-            Assert.AreEqual("created", createResult.Message);
+            Assert.AreEqual("created", createResult.Message, createResult.Error?.Message);
 
             m_cloudinary.DeleteTransform(transformationName);
 
             GetTransformResult getResult = m_cloudinary.GetTransform(
                 new GetTransformParams() { Transformation = transformationName });
 
-            Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode, getResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -151,13 +151,13 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             GetTransformResult getResult = m_cloudinary.GetTransform(getParams);
 
-            Assert.AreEqual(HttpStatusCode.OK, getResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, getResult.StatusCode, getResult.Error?.Message);
 
             m_cloudinary.DeleteTransform(m_implicitTransformation.ToString());
 
             getResult = m_cloudinary.GetTransform(getParams);
 
-            Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode, getResult.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -223,7 +223,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private void AssertGetTransformResultIsStrict(GetTransformResult result, string transformName, bool isStrict)
         {
-            StringAssert.AreEqualIgnoringCase(transformName, result?.Name);
+            StringAssert.AreEqualIgnoringCase(transformName, result?.Name, result?.Error?.Message);
             Assert.AreEqual(isStrict, result.AllowedForStrict);
         }
 
@@ -249,7 +249,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var getResult = m_cloudinary.GetTransform(transformationName);
 
-            Assert.IsNotNull(getResult.Info);
+            Assert.IsNotNull(getResult.Info, getResult.Error?.Message);
             Assert.IsTrue(getResult.Named);
             Assert.AreEqual(updateParams.UnsafeUpdate.Generate(), new Transformation(getResult.Info).Generate());
         }
@@ -400,7 +400,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var getResult = m_cloudinary.GetTransform(transformationName);
 
-            Assert.IsNotNull(getResult.Info);
+            Assert.IsNotNull(getResult.Info, getResult.Error?.Message);
             Assert.IsTrue(getResult.Named);
             Assert.AreEqual(updateParams.UnsafeUpdate.Generate(), new Transformation(getResult.Info).Generate());
         }

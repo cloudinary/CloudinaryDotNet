@@ -38,7 +38,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         private void AssertEnglishText(TextResult result)
         {
-            Assert.Greater(result.Width, 0);
+            Assert.Greater(result.Width, 0, result.Error?.Message);
             Assert.Greater(result.Height, 0);
 
             Assert.NotNull(result.PublicId);
@@ -64,7 +64,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             TextResult textResult = m_cloudinary.Text(tParams);
 
-            Assert.AreEqual(100, textResult.Width);
+            Assert.AreEqual(100, textResult.Width, textResult.Error?.Message);
             Assert.AreEqual(13, textResult.Height);
         }
     }

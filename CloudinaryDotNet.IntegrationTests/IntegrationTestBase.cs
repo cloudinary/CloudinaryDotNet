@@ -300,7 +300,7 @@ namespace CloudinaryDotNet.IntegrationTests
             var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
             var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
 
-            Assert.NotNull(metadataResult);
+            Assert.NotNull(metadataResult, metadataResult.Error?.Message);
 
             var metadataFieldId = metadataResult.ExternalId;
             if (!string.IsNullOrEmpty(metadataFieldId))

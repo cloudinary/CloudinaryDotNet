@@ -34,7 +34,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         private void AssertTagParamsAdd(TagResult result, string publicId)
         {
-            Assert.AreEqual(1, result.PublicIds.Length);
+            Assert.AreEqual(1, result.PublicIds.Length, result.Error?.Message);
             Assert.AreEqual(publicId, result.PublicIds[0]);
         }
 
@@ -74,7 +74,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var tagResult = m_cloudinary.Tag(tagParams);
 
-            Assert.AreEqual(1, tagResult.PublicIds.Length);
+            Assert.AreEqual(1, tagResult.PublicIds.Length, tagResult.Error?.Message);
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
         }
 
@@ -114,12 +114,12 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             m_cloudinary.Tag(tagParams);
 
             var r = m_cloudinary.GetResource(uploadResult1.PublicId);
-            Assert.NotNull(r.Tags);
+            Assert.NotNull(r.Tags, r.Error?.Message);
             Assert.Contains(testTag1, r.Tags);
             Assert.Contains(testTag2, r.Tags);
 
             r = m_cloudinary.GetResource(uploadResult2.PublicId);
-            Assert.NotNull(r.Tags);
+            Assert.NotNull(r.Tags, r.Error?.Message);
             Assert.Contains(testTag1, r.Tags);
 
             tagParams.Command = TagCommand.Remove;
@@ -129,7 +129,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             m_cloudinary.Tag(tagParams);
 
             r = m_cloudinary.GetResource(uploadResult1.PublicId);
-            Assert.NotNull(r.Tags);
+            Assert.NotNull(r.Tags, r.Error?.Message);
             Assert.Contains(testTag2, r.Tags);
 
             tagParams.Command = TagCommand.Replace;
@@ -138,7 +138,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             m_cloudinary.Tag(tagParams);
 
             r = m_cloudinary.GetResource(uploadResult1.PublicId);
-            Assert.NotNull(r.Tags);
+            Assert.NotNull(r.Tags, r.Error?.Message);
             Assert.True(r.Tags.SequenceEqual(new string[] { m_apiTag, testTag3 }));
         }
 
@@ -164,7 +164,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             TagResult tagResult = m_cloudinary.Tag(tagParams);
 
-            Assert.AreEqual(1, tagResult.PublicIds.Length);
+            Assert.AreEqual(1, tagResult.PublicIds.Length, tagResult.Error?.Message);
             Assert.AreEqual(uploadResult.PublicId, tagResult.PublicIds[0]);
         }
 
@@ -202,7 +202,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 ResourceType = ResourceType.Image
             });
 
-            Assert.Null(getResResult.Tags);
+            Assert.Null(getResResult.Tags, getResResult.Error?.Message);
         }
     }
 }

@@ -62,12 +62,12 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private void AssertGetResourceResultAfterDeletionNoBackup(GetResourceResult resource)
         {
-            Assert.IsTrue(string.IsNullOrEmpty(resource.PublicId));
+            Assert.IsTrue(string.IsNullOrEmpty(resource.PublicId), resource.Error?.Message);
         }
 
         private void AssertRestoreResultNoBackup(RestoreResult rResult, string publicId)
         {
-            Assert.IsNotNull(rResult.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId));
+            Assert.IsNotNull(rResult.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId), rResult.Error?.Message);
             Assert.AreEqual("no_backup", rResult.JsonObj[publicId]["error"].ToString());
         }
 
@@ -147,7 +147,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 }
             });
 
-            Assert.NotZero(rResult_backup.RestoredResources.Count);
+            Assert.NotZero(rResult_backup.RestoredResources.Count, rResult_backup.Error?.Message);
 
             resource_backup1 = m_cloudinary.GetResource(publicIdBackup1);
             resource_backup2 = m_cloudinary.GetResource(publicIdBackup2);
@@ -188,23 +188,23 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private void AssertGetResourceResultBeforeDeletion(GetResourceResult resource_backup, string publicId)
         {
-            Assert.IsNotNull(resource_backup);
+            Assert.IsNotNull(resource_backup, resource_backup.Error?.Message);
             Assert.AreEqual(publicId, resource_backup.PublicId);
         }
 
         private void AssertResourceDeletionResult(DelResResult delResult_backup, string publicId)
         {
-            Assert.AreEqual("deleted", delResult_backup.Deleted[publicId]);
+            Assert.AreEqual("deleted", delResult_backup.Deleted[publicId], delResult_backup.Error?.Message);
         }
 
         private void AssertGetResourceResultAfterDeletion(GetResourceResult resource_backup)
         {
-            Assert.AreEqual(0, resource_backup.Bytes);
+            Assert.AreEqual(0, resource_backup.Bytes, resource_backup.Error?.Message);
         }
 
         private void AssertRestoreResult(RestoreResult rResult_backup, string publicId)
         {
-            Assert.IsNotNull(rResult_backup.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId));
+            Assert.IsNotNull(rResult_backup.JsonObj[publicId], string.Format("Should contain key \"{0}\". ", publicId), rResult_backup.Error?.Message);
             Assert.AreEqual(publicId, rResult_backup.JsonObj[publicId]["public_id"].ToString());
             Assert.NotNull(rResult_backup.RestoredResources);
             Assert.IsTrue(rResult_backup.RestoredResources.Count > 0);
@@ -212,7 +212,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private void AssertGetResourceResultAfterRestore(GetResourceResult resource_backup)
         {
-            Assert.IsFalse(string.IsNullOrEmpty(resource_backup.PublicId));
+            Assert.IsFalse(string.IsNullOrEmpty(resource_backup.PublicId), resource_backup.Error?.Message);
         }
     }
 }

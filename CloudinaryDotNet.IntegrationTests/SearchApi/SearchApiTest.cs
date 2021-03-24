@@ -67,7 +67,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
         {
             var result = m_cloudinary.Search().Expression(m_expressionTag).Execute();
 
-            Assert.NotNull(result.Resources);
+            Assert.NotNull(result.Resources, result.Error?.Message);
             Assert.AreEqual(RESOURCES_COUNT, result.Resources.Count);
         }
 
@@ -75,7 +75,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
         public void TestSearchResourceByPublicId()
         {
             var result = m_cloudinary.Search().Expression(m_expressionPublicId).Execute();
-            Assert.Greater(result.TotalCount, 0);
+            Assert.Greater(result.TotalCount, 0, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
@@ -84,7 +84,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
             var result = m_cloudinary.Search().MaxResults(FIRST_PAGE_SIZE)
                 .Expression(m_expressionTag).SortBy(SORT_FIELD, SORT_DIRECTION_ASC).Execute();
 
-            Assert.NotNull(result.Resources);
+            Assert.NotNull(result.Resources, result.Error?.Message);
             Assert.AreEqual(FIRST_PAGE_SIZE, result.Resources.Count);
             Assert.AreEqual(RESOURCES_COUNT, result.TotalCount);
             Assert.AreEqual(m_publicIdsSorted.First(), result.Resources.First().PublicId);
@@ -93,7 +93,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
                 .Expression(m_expressionTag).SortBy(SORT_FIELD, SORT_DIRECTION_ASC)
                 .NextCursor(result.NextCursor).Execute();
 
-            Assert.NotNull(result.Resources);
+            Assert.NotNull(result.Resources, result.Error?.Message);
             Assert.AreEqual(SECOND_PAGE_SIZE, result.Resources.Count);
             Assert.AreEqual(RESOURCES_COUNT, result.TotalCount);
             Assert.AreEqual(m_publicIdsSorted.Last(), result.Resources.Last().PublicId);
@@ -125,7 +125,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
 
             AssertSupportsAggregation(result);
 
-            Assert.NotNull(result.Resources);
+            Assert.NotNull(result.Resources, result.Error?.Message);
             Assert.AreEqual(RESOURCES_COUNT, result.Resources.Count);
             Assert.IsNotEmpty(result.Aggregations);
         }
@@ -136,7 +136,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
             var result = m_cloudinary.Search().MaxResults(FIRST_PAGE_SIZE)
                 .Expression(m_expressionTag).WithField(METADATA_FIELD_NAME).Execute();
 
-            Assert.NotNull(result.Resources);
+            Assert.NotNull(result.Resources, result.Error?.Message);
             Assert.AreEqual(FIRST_PAGE_SIZE, result.Resources.Count);
             Assert.IsNotEmpty(result.Resources.First().ImageMetadata);
         }
@@ -149,7 +149,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
 
             AssertSupportsAggregation(result);
 
-            Assert.Greater(result.TotalCount, 1);
+            Assert.Greater(result.TotalCount, 1, result.Error?.Message);
             Assert.Greater(result.Time, 0);
             Assert.IsNotEmpty(result.Resources);
             Assert.IsNotNull(result.NextCursor);
@@ -165,7 +165,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
                 .Execute();
             var foundResource = result.Resources.First();
 
-            Assert.AreEqual(m_singleResourcePublicId, foundResource.PublicId);
+            Assert.AreEqual(m_singleResourcePublicId, foundResource.PublicId, result.Error?.Message);
             Assert.AreEqual(string.Empty, foundResource.Folder);
             Assert.AreEqual(m_singleResourcePublicId, foundResource.FileName);
             Assert.AreEqual(FILE_FORMAT_JPG, foundResource.Format);
