@@ -41,7 +41,7 @@ clone_depth: 5                      # clone entire repository history if not def
 hosts:
   queue-server: 127.0.0.1
   db.server.com: 127.0.0.2
-  
+
 # build cache to preserve files/folders between builds
 cache:
   - '%LocalAppData%\NuGet\Cache'
@@ -50,7 +50,7 @@ cache:
 install:
   # by default, all script lines are interpreted as batch
    - dotnet restore
- 
+
 # enable patching of AssemblyInfo.* files
 assembly_info:
   patch: true
@@ -69,7 +69,7 @@ nuget:
 
 #---------------------------------#
 #       build configuration       #
-#---- -----------------------------#
+#---------------------------------#
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: Any CPU
@@ -96,10 +96,9 @@ build:
   # MSBuild verbosity level
   verbosity: minimal
 
-test:
-  assemblies:
-    - 'CloudinaryDotNet.Tests.dll'
-    - 'CloudinaryDotNet.IntegrationTests.dll'
+test_script:
+  - dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" --configuration Release --no-build /property:Platform=AnyCPU
+  - dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" --configuration Release --no-build /property:Platform=AnyCPU
 
 # scripts to run before build
 before_build:
