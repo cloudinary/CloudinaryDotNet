@@ -5,36 +5,22 @@ param(
 # Some basic validation
 $Version = [System.Version]::Parse($VersionStr)
 
-$NuspecPath = "$PSScriptRoot/CloudinaryDotNet.nuspec"
-$CodeVersionPath = "$PSScriptRoot/Shared/CloudinaryVersion.cs"
+$CodeVersionPath = "$PSScriptRoot/CloudinaryDotNet/CloudinaryVersion.cs"
 
-$CsProjPaths = @(
-    "$PSScriptRoot/Cloudinary/Cloudinary.csproj",
-    "$PSScriptRoot/Core/CloudinaryDotNet.Core.csproj"
-)
+$CsProjPath = "$PSScriptRoot/CloudinaryDotNet/CloudinaryDotNet.csproj"
 
 function Set-Version-In-Code($CodeVersionPath, $Version) {
     $Text = [IO.File]::ReadAllText($CodeVersionPath) -replace "Full => `"\d+\.\d+\.?\d*`"", "Full => `"$Version`""
     [IO.File]::WriteAllText($CodeVersionPath, $Text)
 }
 
-function Set-Nuspec-Version($NuspecPath, $Version) {
-    $Text = [IO.File]::ReadAllText($NuspecPath) -replace "<version>\d+\.\d+\.?\d*</version>", "<version>$Version</version>"
-    [IO.File]::WriteAllText($NuspecPath, $Text)
-}
-
 function Set-CsProj-Version($CsProjPath, $Version) {
-    $Text = [IO.File]::ReadAllText($CsProjPath) `
-        -replace "<Version>\d+\.\d+\.?\d*</Version>", "<Version>$Version</Version>" `
-        -replace "<FileVersion>\d+\.\d+\.?\d*</FileVersion>", "<FileVersion>$Version</FileVersion>"
+    $Text = [IO.File]::ReadAllText($CsProjPath)
+    $r = [regex]'<Version>\d+\.\d+\.?\d*</Version>'
+    $Text = $r.Replace($Text, "<Version>$Version</Version>", 1) # Replaces only the first occurrence
     [IO.File]::WriteAllText($CsProjPath, $Text)
 }
 
 Set-Version-In-Code $CodeVersionPath $Version
+Set-CsProj-Version $CsProjPath $Version
 
-Set-Nuspec-Version $NuspecPath $Version
-
-
-foreach ($CsProjPath in $CsProjPaths) {
-	Set-CsProj-Version $CsProjPath $Version
-}
