@@ -1,5 +1,7 @@
 Write-Host "Setting up appsettings.json for tests"
 
+$strConfigSource = "$env:APPVEYOR_BUILD_FOLDER\CloudinaryDotNet.IntegrationTests\appsettings.json.sample"
+$strConfigDest = "$env:APPVEYOR_BUILD_FOLDER\CloudinaryDotNet.IntegrationTests\appsettings.json"      
 $apiEndpoint = "https://sub-account-testing.cloudinary.com/create_sub_account"
 
 $postParams = @{
@@ -9,9 +11,6 @@ $postParams = @{
 $res = Invoke-WebRequest -Uri $apiEndpoint -ContentType "application/json" -Method POST -Body $postParams | ConvertFrom-Json
 
 $cloud = $res.payload
-
-$strConfigSource = "$env:APPVEYOR_BUILD_FOLDER\Shared.IntegrationTests\appsettings.json.sample"
-$strConfigDest = "$env:APPVEYOR_BUILD_FOLDER\Shared.IntegrationTests\appsettings.json"      
 
 Copy-Item $strConfigSource -Destination $strConfigDest
 

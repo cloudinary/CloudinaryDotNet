@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<configuration>  
-  <configSections>
-      <section name="CloudinarySettings" type="Cloudinary.Test.Configuration.CloudinarySettings, Cloudinary.Test"  />
-  </configSections>
-  <CloudinarySettings ApiBaseAddress="" CloudName="" ApiKey="" ApiSecret="" />
-</configuration>
