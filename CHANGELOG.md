@@ -1,4 +1,13 @@
 
+1.15.1 / 2021-03-26
+===================
+
+  * Speedup JSON parsing
+  * Enhance integration tests
+  * Fix `set_version.ps1` script
+  * Restructure solution
+  * Fix validation for `AuthToken` generation
+
 1.15.0 / 2021-03-04
 ===================
 
