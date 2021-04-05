@@ -41,7 +41,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 presetParams.AccessibilityAnalysis = true;
             }
 
-            var preset = m_cloudinary.CreateUploadPreset(presetParams);
+            var preset = m_adminApi.CreateUploadPreset(presetParams);
 
             var acc = new Account(m_cloudName);
             var cloudinary = new Cloudinary(acc);
@@ -53,6 +53,14 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Unsigned = true,
                 Tags = m_apiTag
             });
+        }
+
+        class ManageUploadPresetsTestViaCloudinary : ManageUploadPresetsTest
+        {
+            public ManageUploadPresetsTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

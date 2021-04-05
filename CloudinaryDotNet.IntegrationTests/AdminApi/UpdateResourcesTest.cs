@@ -34,7 +34,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Tags = m_apiTag
             });
 
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            var updateResult = m_adminApi.UpdateResource(new UpdateParams(uploadResult.PublicId)
             {
                 Ocr = ILLEGAL_STRING
             });
@@ -54,7 +54,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Transformation = m_implicitTransformation
             });
 
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            var updateResult = m_adminApi.UpdateResource(new UpdateParams(uploadResult.PublicId)
             {
                 Ocr = "adv_ocr"
             });
@@ -79,7 +79,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Tags = m_apiTag
             });
 
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            var updateResult = m_adminApi.UpdateResource(new UpdateParams(uploadResult.PublicId)
             {
                 RawConvert = ILLEGAL_STRING
             });
@@ -99,7 +99,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Tags = m_apiTag
             });
 
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            var updateResult = m_adminApi.UpdateResource(new UpdateParams(uploadResult.PublicId)
             {
                 Categorization = ILLEGAL_STRING
             });
@@ -119,7 +119,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Tags = m_apiTag
             });
 
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            var updateResult = m_adminApi.UpdateResource(new UpdateParams(uploadResult.PublicId)
             {
                 Detection = ILLEGAL_STRING
             });
@@ -164,7 +164,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 End = start
             }};
 
-            var updateResult = m_cloudinary.UpdateResource(
+            var updateResult = m_adminApi.UpdateResource(
                 new UpdateParams(uploadResult.PublicId) { AccessControl = newAccessControl }
             );
 
@@ -181,7 +181,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             //should update quality
             string publicId = GetUniquePublicId();
             var upResult = m_cloudinary.Upload(new ImageUploadParams() { File = new FileDescription(m_testImagePath), PublicId = publicId, Overwrite = true, Tags = m_apiTag });
-            var updResult = m_cloudinary.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOverride = "auto:best" });
+            var updResult = m_adminApi.UpdateResource(new UpdateParams(upResult.PublicId) { QualityOverride = "auto:best" });
             Assert.AreEqual(updResult.StatusCode, HttpStatusCode.OK, updResult.Error?.Message);
             Assert.Null(updResult.Error);
             Assert.AreEqual(updResult.PublicId, publicId);
@@ -196,13 +196,13 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var upResult = UploadTestImageResource();
 
-            m_cloudinary.UpdateResource(
+            m_adminApi.UpdateResource(
                 new UpdateParams(upResult.PublicId)
                 {
                     CustomCoordinates = coordinates
                 });
 
-            var result = m_cloudinary.GetResource(
+            var result = m_adminApi.GetResource(
                 new GetResourceParams(upResult.PublicId)
                 {
                     Coordinates = true
@@ -219,13 +219,13 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var coordinates = new Core.Rectangle(121, 31, 110, 151);
 
-            await m_cloudinary.UpdateResourceAsync(
+            await m_adminApi.UpdateResourceAsync(
                 new UpdateParams(upResult.PublicId)
                 {
                     CustomCoordinates = coordinates
                 });
 
-            var result = await m_cloudinary.GetResourceAsync(
+            var result = await m_adminApi.GetResourceAsync(
                 new GetResourceParams(upResult.PublicId)
                 {
                     Coordinates = true
@@ -260,7 +260,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             Assert.NotNull(uploadResult);
 
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId) { ModerationStatus = ModerationStatus.Approved });
+            var updateResult = m_adminApi.UpdateResource(new UpdateParams(uploadResult.PublicId) { ModerationStatus = ModerationStatus.Approved });
 
             Assert.NotNull(updateResult);
             Assert.NotNull(updateResult.Moderation, updateResult.Error?.Message);
@@ -283,7 +283,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 {metadataFieldId, metadataValue}
             };
 
-            var updateResult = m_cloudinary.UpdateResource(new UpdateParams(uploadResult.PublicId)
+            var updateResult = m_adminApi.UpdateResource(new UpdateParams(uploadResult.PublicId)
             {
                 Metadata = metadata
             });
@@ -308,11 +308,19 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
             updateParams.Metadata.Add(metadataExternalId, "new value");
 
-            var updateResult = m_cloudinary.UpdateMetadata(updateParams);
+            var updateResult = m_adminApi.UpdateMetadata(updateParams);
 
             Assert.NotNull(updateResult);
             Assert.AreEqual(HttpStatusCode.OK, updateResult.StatusCode, updateResult.Error?.Message);
             Assert.IsNotEmpty(updateResult.PublicIds);
+        }
+
+        class UpdateResourcesTestViaCloudinary : UpdateResourcesTest
+        {
+            public UpdateResourcesTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

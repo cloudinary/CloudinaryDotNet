@@ -16,9 +16,9 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             try
             {
-                m_cloudinary.DeleteUploadMapping(FOLDERS[0]);
-                m_cloudinary.DeleteUploadMapping(FOLDERS[1]);
-                m_cloudinary.DeleteUploadMapping(FOLDERS[2]);
+                m_adminApi.DeleteUploadMapping(FOLDERS[0]);
+                m_adminApi.DeleteUploadMapping(FOLDERS[1]);
+                m_adminApi.DeleteUploadMapping(FOLDERS[2]);
             }
             catch (Exception) { }
         }
@@ -27,25 +27,25 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         public void TestUploadMapping()
         {
             UploadMappingResults result;
-            result = m_cloudinary.CreateUploadMapping(FOLDERS[0], TEMPLATE);
+            result = m_adminApi.CreateUploadMapping(FOLDERS[0], TEMPLATE);
             StringAssert.AreEqualIgnoringCase("created", result.Message, result.Error?.Message);
 
-            result = m_cloudinary.UploadMapping(FOLDERS[0]);
+            result = m_adminApi.UploadMapping(FOLDERS[0]);
             Assert.AreEqual(1, result.Mappings.Count, result.Error?.Message);
             Assert.AreEqual(TEMPLATE, result.Mappings[FOLDERS[0]]);
 
-            result = m_cloudinary.UpdateUploadMapping(FOLDERS[0], NEW_TEMPLATE);
+            result = m_adminApi.UpdateUploadMapping(FOLDERS[0], NEW_TEMPLATE);
             StringAssert.AreEqualIgnoringCase("updated", result.Message, result.Error?.Message);
 
-            result = m_cloudinary.UploadMapping(FOLDERS[0]);
+            result = m_adminApi.UploadMapping(FOLDERS[0]);
             Assert.AreEqual(1, result.Mappings.Count);
             Assert.AreEqual(NEW_TEMPLATE, result.Mappings[FOLDERS[0]], result.Error?.Message);
 
-            result = m_cloudinary.UploadMappings(new UploadMappingParams());
+            result = m_adminApi.UploadMappings(new UploadMappingParams());
             Assert.IsTrue(result.Mappings.ContainsKey(FOLDERS[0]), result.Error?.Message);
             Assert.IsTrue(result.Mappings.ContainsValue(NEW_TEMPLATE));
 
-            result = m_cloudinary.DeleteUploadMapping(FOLDERS[0]);
+            result = m_adminApi.DeleteUploadMapping(FOLDERS[0]);
             StringAssert.AreEqualIgnoringCase("deleted", result.Message, result.Error?.Message);
         }
 
@@ -55,9 +55,9 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             UploadMappingResults result;
             string templateSuffix = "_test";
 
-            result = m_cloudinary.CreateUploadMapping(FOLDERS[1], TEMPLATE + templateSuffix);
+            result = m_adminApi.CreateUploadMapping(FOLDERS[1], TEMPLATE + templateSuffix);
             StringAssert.AreEqualIgnoringCase("created", result.Message, result.Error?.Message);
-            result = m_cloudinary.CreateUploadMapping(FOLDERS[2], TEMPLATE + templateSuffix);
+            result = m_adminApi.CreateUploadMapping(FOLDERS[2], TEMPLATE + templateSuffix);
             StringAssert.AreEqualIgnoringCase("created", result.Message, result.Error?.Message);
 
             var uploadMappingParams = new UploadMappingParams()
@@ -67,16 +67,24 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
 
             //get the first upload mapping of two created with given template
-            UploadMappingResults results1 = m_cloudinary.UploadMappings(uploadMappingParams);
+            UploadMappingResults results1 = m_adminApi.UploadMappings(uploadMappingParams);
             Assert.IsNotNull(results1.NextCursor, results1.Error?.Message);
             Assert.IsNull(results1.Error);
             Assert.AreEqual(1, results1.Mappings.Count);
 
             //get the second upload mapping of two created with given template
             uploadMappingParams.NextCursor = results1.NextCursor;
-            UploadMappingResults results2 = m_cloudinary.UploadMappings(uploadMappingParams);
+            UploadMappingResults results2 = m_adminApi.UploadMappings(uploadMappingParams);
             Assert.IsNull(results2.Error, results2.Error?.Message);
             Assert.AreEqual(1, results2.Mappings.Count);
+        }
+
+        class ManageUploadMappingsTestViaCloudinary : ManageUploadMappingsTest
+        {
+            public ManageUploadMappingsTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

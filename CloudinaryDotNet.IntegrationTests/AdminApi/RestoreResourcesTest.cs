@@ -21,16 +21,16 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
 
             m_cloudinary.Upload(uploadParams_nobackup);
-            var resource = m_cloudinary.GetResource(publicId);
+            var resource = m_adminApi.GetResource(publicId);
             AssertGetResourceResultBeforeDeletion(resource, publicId);
 
-            var delResult = m_cloudinary.DeleteResources(publicId);
+            var delResult = m_adminApi.DeleteResources(publicId);
             AssertResourceDeletionResult(delResult, publicId);
 
-            resource = m_cloudinary.GetResource(publicId);
+            resource = m_adminApi.GetResource(publicId);
             AssertGetResourceResultAfterDeletionNoBackup(resource);
 
-            var rResult = m_cloudinary.Restore(publicId);
+            var rResult = m_adminApi.Restore(publicId);
             AssertRestoreResultNoBackup(rResult, publicId);
         }
 
@@ -47,16 +47,16 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
 
             m_cloudinary.Upload(uploadParams_nobackup);
-            var resource = await m_cloudinary.GetResourceAsync(publicId);
+            var resource = await m_adminApi.GetResourceAsync(publicId);
             AssertGetResourceResultBeforeDeletion(resource, publicId);
 
-            var delResult = await m_cloudinary.DeleteResourcesAsync(publicId);
+            var delResult = await m_adminApi.DeleteResourcesAsync(publicId);
             AssertResourceDeletionResult(delResult, publicId);
 
-            resource = await m_cloudinary.GetResourceAsync(publicId);
+            resource = await m_adminApi.GetResourceAsync(publicId);
             AssertGetResourceResultAfterDeletionNoBackup(resource);
 
-            var rResult = await m_cloudinary.RestoreAsync(publicId);
+            var rResult = await m_adminApi.RestoreAsync(publicId);
             AssertRestoreResultNoBackup(rResult, publicId);
         }
 
@@ -85,19 +85,19 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
 
             m_cloudinary.Upload(uploadParams_backup);
-            var resource_backup = m_cloudinary.GetResource(publicId);
+            var resource_backup = m_adminApi.GetResource(publicId);
             AssertGetResourceResultBeforeDeletion(resource_backup, publicId);
 
-            var delResult_backup = m_cloudinary.DeleteResources(publicId);
+            var delResult_backup = m_adminApi.DeleteResources(publicId);
             AssertResourceDeletionResult(delResult_backup, publicId);
 
-            resource_backup = m_cloudinary.GetResource(publicId);
+            resource_backup = m_adminApi.GetResource(publicId);
             AssertGetResourceResultAfterDeletion(resource_backup);
 
-            var rResult_backup = m_cloudinary.Restore(publicId);
+            var rResult_backup = m_adminApi.Restore(publicId);
             AssertRestoreResult(rResult_backup, publicId);
 
-            resource_backup = m_cloudinary.GetResource(publicId);
+            resource_backup = m_adminApi.GetResource(publicId);
             AssertGetResourceResultAfterRestore(resource_backup);
         }
 
@@ -127,13 +127,13 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams_backup2);
 
-            var resource_backup1 = m_cloudinary.GetResource(new GetResourceParams(publicIdBackup1) { Versions = true });
-            var resource_backup2 = m_cloudinary.GetResource(new GetResourceParams(publicIdBackup2) { Versions = true });
+            var resource_backup1 = m_adminApi.GetResource(new GetResourceParams(publicIdBackup1) { Versions = true });
+            var resource_backup2 = m_adminApi.GetResource(new GetResourceParams(publicIdBackup2) { Versions = true });
 
-            m_cloudinary.DeleteResources(publicIdBackup1);
-            m_cloudinary.DeleteResources(publicIdBackup2);
+            m_adminApi.DeleteResources(publicIdBackup1);
+            m_adminApi.DeleteResources(publicIdBackup2);
 
-            var rResult_backup = m_cloudinary.Restore(new RestoreParams
+            var rResult_backup = m_adminApi.Restore(new RestoreParams
             {
                 PublicIds = new List<string>
                 {
@@ -149,8 +149,8 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             Assert.NotZero(rResult_backup.RestoredResources.Count, rResult_backup.Error?.Message);
 
-            resource_backup1 = m_cloudinary.GetResource(publicIdBackup1);
-            resource_backup2 = m_cloudinary.GetResource(publicIdBackup2);
+            resource_backup1 = m_adminApi.GetResource(publicIdBackup1);
+            resource_backup2 = m_adminApi.GetResource(publicIdBackup2);
 
             AssertGetResourceResultAfterRestore(resource_backup1);
             AssertGetResourceResultAfterRestore(resource_backup2);
@@ -170,19 +170,19 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
 
             await m_cloudinary.UploadAsync(uploadParams_backup);
-            var resource_backup = await m_cloudinary.GetResourceAsync(publicId);
+            var resource_backup = await m_adminApi.GetResourceAsync(publicId);
             AssertGetResourceResultBeforeDeletion(resource_backup, publicId);
 
-            var delResult_backup = await m_cloudinary.DeleteResourcesAsync(publicId);
+            var delResult_backup = await m_adminApi.DeleteResourcesAsync(publicId);
             AssertResourceDeletionResult(delResult_backup, publicId);
 
-            resource_backup = await m_cloudinary.GetResourceAsync(publicId);
+            resource_backup = await m_adminApi.GetResourceAsync(publicId);
             AssertGetResourceResultAfterDeletion(resource_backup);
 
-            var rResult_backup = await m_cloudinary.RestoreAsync(publicId);
+            var rResult_backup = await m_adminApi.RestoreAsync(publicId);
             AssertRestoreResult(rResult_backup, publicId);
 
-            resource_backup = await m_cloudinary.GetResourceAsync(publicId);
+            resource_backup = await m_adminApi.GetResourceAsync(publicId);
             AssertGetResourceResultAfterRestore(resource_backup);
         }
 
@@ -213,6 +213,14 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         private void AssertGetResourceResultAfterRestore(GetResourceResult resource_backup)
         {
             Assert.IsFalse(string.IsNullOrEmpty(resource_backup.PublicId), resource_backup.Error?.Message);
+        }
+
+        class RestoreResourcesTestViaCloudinary : RestoreResourcesTest
+        {
+            public RestoreResourcesTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
+#pragma warning disable 0618
 namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -1051,3 +1052,4 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         //}
     }
 }
+#pragma warning restore 0618

@@ -76,7 +76,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         public override void Cleanup()
         {
             base.Cleanup();
-            m_metaDataFields.ForEach(p => m_cloudinary.DeleteMetadataField(p));
+            m_metaDataFields.ForEach(p => m_adminApi.DeleteMetadataField(p));
         }
 
 
@@ -90,7 +90,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         [Test, RetryWithDelay]
         public void TestGetMetadataField()
         {
-            var result = m_cloudinary.GetMetadataField(m_externalIdGeneral);
+            var result = m_adminApi.GetMetadataField(m_externalIdGeneral);
 
             AssertMetadataField(result, MetadataFieldType.String, m_externalIdGeneral);
         }
@@ -148,7 +148,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 DefaultValue = newDefaultValue
             };
 
-            var result = m_cloudinary.UpdateMetadataField(m_externalIdGeneral, updateParams);
+            var result = m_adminApi.UpdateMetadataField(m_externalIdGeneral, updateParams);
 
             AssertMetadataField(result, MetadataFieldType.String, newLabel, m_externalIdGeneral, true, newDefaultValue);
         }
@@ -163,7 +163,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         [Test, RetryWithDelay]
         public void TestUpdateMetadataFieldDatasource()
         {
-            var result = m_cloudinary.UpdateMetadataDataSourceEntries(m_externalIdEnum2, m_datasourceSingle);
+            var result = m_adminApi.UpdateMetadataDataSourceEntries(m_externalIdEnum2, m_datasourceSingle);
 
             AssertMetadataFieldDataSource(result);
             var originalEntry = m_datasourceSingle.Values[0];
@@ -183,7 +183,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         [Test, RetryWithDelay]
         public void TestDeleteMetadataFieldDoesNotReleaseExternalId()
         {
-            m_cloudinary.DeleteMetadataField(m_externalIdDelete2);
+            m_adminApi.DeleteMetadataField(m_externalIdDelete2);
 
             var result = CreateMetadataFieldForTest<IntMetadataFieldCreateParams, int?>(m_externalIdDelete2);
 
@@ -202,7 +202,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             var entriesExternalIds = new List<string> {m_datasourceEntryExternalId};
 
-            var result = m_cloudinary.DeleteMetadataDataSourceEntries(m_externalIdSet2, entriesExternalIds);
+            var result = m_adminApi.DeleteMetadataDataSourceEntries(m_externalIdSet2, entriesExternalIds);
 
             AssertMetadataFieldDataSource(result);
             Assert.AreEqual(m_datasourceMultiple.Values.Count - 1, result.Values.Count, result.Error?.Message);
@@ -241,7 +241,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Validation = lastThreeDaysValidation
             };
 
-            var validMetadataFieldResult = m_cloudinary.AddMetadataField(validMetadataField);
+            var validMetadataFieldResult = m_adminApi.AddMetadataField(validMetadataField);
 
             Assert.AreEqual(validMetadataField.DefaultValue.Value.ToString("yyyy-MM-dd"),
                 validMetadataFieldResult.DefaultValue, validMetadataFieldResult.Error?.Message);
@@ -256,7 +256,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Validation = lastThreeDaysValidation
             };
 
-            var invalidMetadataFieldResult = m_cloudinary.AddMetadataField(invalidMetadataField);
+            var invalidMetadataFieldResult = m_adminApi.AddMetadataField(invalidMetadataField);
 
             Assert.NotNull(invalidMetadataFieldResult.Error);
         }
@@ -284,7 +284,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Validation = validation
             };
 
-            var validMetadataFieldResult = m_cloudinary.AddMetadataField(validMetadataField);
+            var validMetadataFieldResult = m_adminApi.AddMetadataField(validMetadataField);
 
             Assert.AreEqual(validMetadataField.DefaultValue.Value,validMetadataFieldResult.DefaultValue);
             Assert.NotNull(validMetadataFieldResult.Validation);
@@ -297,7 +297,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Validation = validation
             };
 
-            var invalidMetadataFieldResult = m_cloudinary.AddMetadataField(invalidMetadataField);
+            var invalidMetadataFieldResult = m_adminApi.AddMetadataField(invalidMetadataField);
 
             Assert.NotNull(invalidMetadataFieldResult.Error);
         }
@@ -315,11 +315,11 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             var entriesExternalIds = new List<string> {m_datasourceEntryExternalId};
 
-            var removalResult = m_cloudinary.DeleteMetadataDataSourceEntries(m_externalIdSet3, entriesExternalIds);
+            var removalResult = m_adminApi.DeleteMetadataDataSourceEntries(m_externalIdSet3, entriesExternalIds);
             AssertMetadataFieldDataSource(removalResult);
             Assert.AreEqual(2, removalResult.Values.Count, removalResult.Error?.Message);
 
-            var restoreResult = m_cloudinary.RestoreMetadataDataSourceEntries(m_externalIdSet3, entriesExternalIds);
+            var restoreResult = m_adminApi.RestoreMetadataDataSourceEntries(m_externalIdSet3, entriesExternalIds);
             AssertMetadataFieldDataSource(restoreResult);
             Assert.AreEqual(3, restoreResult.Values.Count, restoreResult.Error?.Message);
         }
@@ -391,7 +391,15 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             if (dataSource != null)
                 parameters.DataSource = dataSource;
 
-            return m_cloudinary.AddMetadataField(parameters);
+            return m_adminApi.AddMetadataField(parameters);
+        }
+
+        class MetaDataTestViaCloudinary : MetaDataTest
+        {
+            public MetaDataTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             UploadTestImageResource(); // making sure at least one resource exists
 
-            var result = m_cloudinary.GetUsage();
+            var result = m_adminApi.GetUsage();
 
             AssertUsageResult(result);
         }
@@ -22,7 +22,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             await UploadTestImageResourceAsync(); // making sure at least one resource exists
 
-            var result = await m_cloudinary.GetUsageAsync();
+            var result = await m_adminApi.GetUsageAsync();
 
             AssertUsageResult(result);
         }
@@ -30,7 +30,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         [Test, RetryWithDelay]
         public void TestUsageByDate()
         {
-            var result = m_cloudinary.GetUsage(GetYesterdayDate());
+            var result = m_adminApi.GetUsage(GetYesterdayDate());
 
             AssertUsageResult(result);
         }
@@ -38,7 +38,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         [Test, RetryWithDelay]
         public async Task TestUsageByDateAsync()
         {
-            var result = await m_cloudinary.GetUsageAsync(GetYesterdayDate());
+            var result = await m_adminApi.GetUsageAsync(GetYesterdayDate());
 
             AssertUsageResult(result);
         }
@@ -52,6 +52,14 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         private static DateTime GetYesterdayDate()
         {
             return DateTime.Today.AddDays(-1);
+        }
+
+        class UsageReportTestViaCloudinary : UsageReportTest
+        {
+            public UsageReportTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

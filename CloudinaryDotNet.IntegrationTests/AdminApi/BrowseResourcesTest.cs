@@ -17,7 +17,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             // should allow listing resources
 
-            ListResourcesResult resources = m_cloudinary.ListResources();
+            ListResourcesResult resources = m_adminApi.ListResources();
             Assert.NotNull(resources);
             Assert.NotZero(resources.Resources.Length, resources.Error?.Message);
         }
@@ -39,8 +39,8 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 }));
             }
 
-            m_cloudinary.UpdateResource(uploadResults[0].PublicId, ModerationStatus.Approved);
-            m_cloudinary.UpdateResource(uploadResults[1].PublicId, ModerationStatus.Rejected);
+            m_adminApi.UpdateResource(uploadResults[0].PublicId, ModerationStatus.Approved);
+            m_adminApi.UpdateResource(uploadResults[1].PublicId, ModerationStatus.Rejected);
 
             var requestParams = new ListResourcesByModerationParams()
             {
@@ -49,13 +49,13 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
 
             requestParams.ModerationStatus = ModerationStatus.Approved;
-            var approved = m_cloudinary.ListResources(requestParams);
+            var approved = m_adminApi.ListResources(requestParams);
 
             requestParams.ModerationStatus = ModerationStatus.Rejected;
-            var rejected = m_cloudinary.ListResources(requestParams);
+            var rejected = m_adminApi.ListResources(requestParams);
 
             requestParams.ModerationStatus = ModerationStatus.Pending;
-            var pending = m_cloudinary.ListResources(requestParams);
+            var pending = m_adminApi.ListResources(requestParams);
 
             Assert.True(approved.Resources.Count(r => r.PublicId == uploadResults[0].PublicId) > 0, approved.Error?.Message);
             Assert.True(approved.Resources.Count(r => r.PublicId == uploadResults[1].PublicId) == 0, approved.Error?.Message);
@@ -75,7 +75,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             // should allow listing resources in both directions
 
-            var result = m_cloudinary.ListResources(new ListResourcesByPrefixParams()
+            var result = m_adminApi.ListResources(new ListResourcesByPrefixParams()
             {
                 Type = STORAGE_TYPE_UPLOAD,
                 MaxResults = MAX_RESULTS,
@@ -84,7 +84,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var list1 = result.Resources.Select(r => r.PublicId).ToArray();
 
-            result = m_cloudinary.ListResources(new ListResourcesByPrefixParams()
+            result = m_adminApi.ListResources(new ListResourcesByPrefixParams()
             {
                 Type = STORAGE_TYPE_UPLOAD,
                 MaxResults = MAX_RESULTS,
@@ -129,14 +129,14 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 MaxResults = 1
             };
 
-            var result1 = m_cloudinary.ListResources(listParams);
+            var result1 = m_adminApi.ListResources(listParams);
 
             Assert.IsNotNull(result1.Resources, result1.Error?.Message);
             Assert.AreEqual(1, result1.Resources.Length);
             Assert.IsFalse(String.IsNullOrEmpty(result1.NextCursor));
 
             listParams.NextCursor = result1.NextCursor;
-            var result2 = m_cloudinary.ListResources(listParams);
+            var result2 = m_adminApi.ListResources(listParams);
 
             Assert.IsNotNull(result2.Resources);
             Assert.AreEqual(1, result2.Resources.Length, result2.Error?.Message);
@@ -163,7 +163,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 MaxResults = 1
             };
 
-            var result = m_cloudinary.ListResources(listParams);
+            var result = m_adminApi.ListResources(listParams);
 
             Assert.IsNotNull(result.Resources, result.Error?.Message);
             Assert.AreEqual(1, result.Resources.Length);
@@ -194,7 +194,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             Thread.Sleep(2000);
 
-            var resources = m_cloudinary.ListResources(
+            var resources = m_adminApi.ListResources(
                 new ListResourcesParams() { Type = STORAGE_TYPE_UPLOAD, StartAt = result.CreatedAt.AddMilliseconds(-10), Direction = "asc" });
 
             Assert.NotNull(resources.Resources, resources.Error?.Message);
@@ -218,7 +218,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            var result = m_cloudinary.ListResourcesByPrefix(publicId, true, true, true);
+            var result = m_adminApi.ListResourcesByPrefix(publicId, true, true, true);
 
             //Assert.IsTrue(result.Resources.Where(res => res.PublicId.StartsWith("testlist")).Count() == result.Resources.Count());
             Assert.IsTrue(
@@ -259,7 +259,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 publicId1,
                 publicId2
             };
-            var result = m_cloudinary.ListResourceByPublicIds(publicIds, true, true, true);
+            var result = m_adminApi.ListResourceByPublicIds(publicIds, true, true, true);
 
             Assert.NotNull(result);
             Assert.AreEqual(2, result.Resources.Length, "expected to find {0} but got {1}", new Object[] { publicIds.Aggregate((current, next) => current + ", " + next), result.Resources.Select(r => r.PublicId).Aggregate((current, next) => current + ", " + next) });
@@ -272,12 +272,12 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             // should allow listing resources by tag
             var localTag = GetMethodTag();
             var file = new FileDescription(m_testImagePath);
-            m_cloudinary.DeleteResourcesByTag(localTag);
+            m_adminApi.DeleteResourcesByTag(localTag);
 
             m_cloudinary.Upload(PrepareImageUploadParamsWithTag(localTag, file));
             m_cloudinary.Upload(PrepareImageUploadParamsWithTag(localTag, file));
 
-            var result = m_cloudinary.ListResourcesByTag(localTag);
+            var result = m_adminApi.ListResourcesByTag(localTag);
             AssertListResourcesByTagResult(result);
         }
 
@@ -287,12 +287,12 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             // should allow listing resources by tag
             var localTag = GetMethodTag();
             var file = new FileDescription(m_testImagePath);
-            await m_cloudinary.DeleteResourcesByTagAsync(localTag);
+            await m_adminApi.DeleteResourcesByTagAsync(localTag);
 
             await m_cloudinary.UploadAsync(PrepareImageUploadParamsWithTag(localTag, file));
             await m_cloudinary.UploadAsync(PrepareImageUploadParamsWithTag(localTag, file));
 
-            var result = await m_cloudinary.ListResourcesByTagAsync(localTag);
+            var result = await m_adminApi.ListResourcesByTagAsync(localTag);
             AssertListResourcesByTagResult(result);
         }
 
@@ -316,7 +316,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             // should allow listing tags
             UploadTestImageResource();
 
-            var result = m_cloudinary.ListTags(new ListTagsParams());
+            var result = m_adminApi.ListTags(new ListTagsParams());
 
             AssertListTagNotEmpty(result);
         }
@@ -327,7 +327,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             // should allow listing tags
             await UploadTestImageResourceAsync();
 
-            var result = await m_cloudinary.ListTagsAsync(new ListTagsParams());
+            var result = await m_adminApi.ListTagsAsync(new ListTagsParams());
 
             AssertListTagNotEmpty(result);
         }
@@ -361,11 +361,11 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            ListTagsResult result = m_cloudinary.ListTagsByPrefix(m_apiTag);
+            ListTagsResult result = m_adminApi.ListTagsByPrefix(m_apiTag);
 
             Assert.Contains(tag2, result.Tags, result.Error?.Message);
 
-            result = m_cloudinary.ListTagsByPrefix(tag3);
+            result = m_adminApi.ListTagsByPrefix(tag3);
 
             Assert.IsTrue(result.Tags.Length == 0, result.Error?.Message);
         }
@@ -385,7 +385,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult getResult = m_cloudinary.GetResource(
+            GetResourceResult getResult = m_adminApi.GetResource(
                 new GetResourceParams(publicId) { Phash = true });
 
             Assert.IsNotNull(getResult);
@@ -414,7 +414,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult getResult = m_cloudinary.GetResource(
+            GetResourceResult getResult = m_adminApi.GetResource(
                 new GetResourceParams(publicId)
                 {
                     ImageMetadata = true
@@ -439,7 +439,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.AreEqual(FILE_FORMAT_PDF, uploadResult.Format, uploadResult.Error?.Message);
             Assert.AreEqual(TEST_PDF_PAGES_COUNT, uploadResult.Pages);
 
-            GetResourceResult getResult = m_cloudinary.GetResource(
+            GetResourceResult getResult = m_adminApi.GetResource(
                 new GetResourceParams(uploadResult.PublicId)
                 {
                     ImageMetadata = true,
@@ -457,7 +457,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         public void TestListResourceTypes()
         {
             // should allow listing resource_types
-            ListResourceTypesResult result = m_cloudinary.ListResourceTypes();
+            ListResourceTypesResult result = m_adminApi.ListResourceTypes();
             Assert.Contains(ResourceType.Image, result.ResourceTypes, result.Error?.Message);
         }
 
@@ -475,7 +475,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            IEnumerable<Resource> result = GetAllResults((cursor) => m_cloudinary.ListResourcesByType(STORAGE_TYPE_UPLOAD, cursor));
+            IEnumerable<Resource> result = GetAllResults((cursor) => m_adminApi.ListResourcesByType(STORAGE_TYPE_UPLOAD, cursor));
 
             Assert.IsNotEmpty(result.Where(res => res.Type == STORAGE_TYPE_UPLOAD));
             Assert.IsEmpty(result.Where(res => res.Type != STORAGE_TYPE_UPLOAD));
@@ -490,7 +490,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 CinemagraphAnalysis = true
             };
 
-            var getResult = m_cloudinary.GetResource(getResourceParams);
+            var getResult = m_adminApi.GetResource(getResourceParams);
 
             Assert.GreaterOrEqual(getResult.CinemagraphAnalysis.CinemagraphScore, 0, getResult.Error?.Message);
         }
@@ -504,7 +504,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 AccessibilityAnalysis = true
             };
 
-            var getResult = m_cloudinary.GetResource(getResourceParams);
+            var getResult = m_adminApi.GetResource(getResourceParams);
 
             CloudinaryAssert.AccessibilityAnalysisNotEmpty(getResult.AccessibilityAnalysis);
         }
@@ -520,7 +520,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            var resultWithVersion = m_cloudinary.GetResource(new GetResourceParams(uploadResult.PublicId)
+            var resultWithVersion = m_adminApi.GetResource(new GetResourceParams(uploadResult.PublicId)
             {
                 Versions = true
             });
@@ -528,9 +528,23 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.IsNotNull(resultWithVersion.Versions, resultWithVersion.Error?.Message);
             Assert.NotZero(resultWithVersion.Versions.Count);
 
-            var result = m_cloudinary.GetResource(new GetResourceParams(uploadResult.PublicId));
+            var result = m_adminApi.GetResource(new GetResourceParams(uploadResult.PublicId));
 
             Assert.IsNull(result.Versions, result.Error?.Message);
+        }
+
+        [OneTimeSetUp]
+        public void InitializeAdminApi()
+        {
+            m_adminApi = GetAdminApiInstance(AdminApiFactory(m_account));
+        }
+
+        class BrowseResourcesTestViaCloudinary : BrowseResourcesTest
+        {
+            public BrowseResourcesTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a); 
+            }
         }
     }
 }

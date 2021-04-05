@@ -23,7 +23,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private Task<StreamingProfileResult> CreateStreamingProfileWith2TransformsAsync(string name)
         {
-            return m_cloudinary.CreateStreamingProfileAsync(
+            return m_adminApi.CreateStreamingProfileAsync(
                 new StreamingProfileCreateParams()
                 {
                     Name = name,
@@ -35,7 +35,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private StreamingProfileResult CreateStreamingProfileWith2Transforms(string name)
         {
-            return m_cloudinary.CreateStreamingProfile(
+            return m_adminApi.CreateStreamingProfile(
                 new StreamingProfileCreateParams()
                 {
                     Name = name,
@@ -58,7 +58,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         public override void Cleanup()
         {
             base.Cleanup();
-            m_streamingProfilesToClear.ForEach(p => m_cloudinary.DeleteStreamingProfile(p));
+            m_streamingProfilesToClear.ForEach(p => m_adminApi.DeleteStreamingProfile(p));
         }
 
         private string GetUniqueStreamingProfileName(string suffix = "")
@@ -104,9 +104,9 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         [Test, RetryWithDelay]
         public void TestGetStreamingProfile()
         {
-            Assert.Throws<ArgumentException>(() => m_cloudinary.GetStreamingProfile(null));
+            Assert.Throws<ArgumentException>(() => m_adminApi.GetStreamingProfile(null));
 
-            StreamingProfileResult result = m_cloudinary.GetStreamingProfile(PREDEFINED_PROFILES[0]);
+            StreamingProfileResult result = m_adminApi.GetStreamingProfile(PREDEFINED_PROFILES[0]);
             Assert.NotNull(result);
             Assert.NotNull(result.Data, result.Error?.Message);
             Assert.IsTrue(result.Data.Predefined);
@@ -116,7 +116,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         [Test, RetryWithDelay]
         public void TestListStreamingProfile()
         {
-            StreamingProfileListResult profiles = m_cloudinary.ListStreamingProfiles();
+            StreamingProfileListResult profiles = m_adminApi.ListStreamingProfiles();
             Assert.That(PREDEFINED_PROFILES, Is.SubsetOf(profiles.Data.Select(i => i.Name)), profiles.Error?.Message);
         }
 
@@ -129,9 +129,9 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.NotNull(result);
             Assert.NotNull(result.Data, result.Error?.Message);
             Assert.AreEqual(name, result.Data.Name);
-            Assert.Throws<ArgumentException>(() => m_cloudinary.DeleteStreamingProfile(null));
+            Assert.Throws<ArgumentException>(() => m_adminApi.DeleteStreamingProfile(null));
 
-            result = m_cloudinary.DeleteStreamingProfile(name);
+            result = m_adminApi.DeleteStreamingProfile(name);
             Assert.NotNull(result);
             Assert.AreEqual("deleted", result.Message, result.Error?.Message);
         }
@@ -149,7 +149,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.AreEqual(name, result.Data.Name);
             Assert.AreEqual(2, result.Data.Representations.Count);
 
-            result = m_cloudinary.GetStreamingProfile(result.Data.Name);
+            result = m_adminApi.GetStreamingProfile(result.Data.Name);
 
             var representations = result.Data.Representations;
             Assert.AreEqual(2, representations.Count, result.Error?.Message);
@@ -158,16 +158,16 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             representations[0].Transformation.Crop("limit").Width(800).Height(800).BitRate("5m");
 
             Assert.Throws<ArgumentException>(() =>
-                m_cloudinary.UpdateStreamingProfile(null,
+                m_adminApi.UpdateStreamingProfile(null,
                     new StreamingProfileUpdateParams()
                     {
                         DisplayName = displayName,
                         Representations = representations
                     }));
 
-            Assert.Throws<ArgumentNullException>(() => m_cloudinary.UpdateStreamingProfile(name, null));
+            Assert.Throws<ArgumentNullException>(() => m_adminApi.UpdateStreamingProfile(name, null));
 
-            result = m_cloudinary.UpdateStreamingProfile(name,
+            result = m_adminApi.UpdateStreamingProfile(name,
                          new StreamingProfileUpdateParams()
                          {
                              DisplayName = displayName,
@@ -182,6 +182,14 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.AreEqual(
                 representations[0].Transformation.ToString(),
                 result.Data.Representations[0].Transformation.ToString());
+        }
+
+        class ManageStreamingProfilesTestViaCloudinary : ManageStreamingProfilesTest
+        {
+            public ManageStreamingProfilesTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

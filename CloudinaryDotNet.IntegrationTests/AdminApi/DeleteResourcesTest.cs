@@ -17,15 +17,15 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var uploadedPublicId = uploadResult.PublicId;
             var nonExistingPublicId = GetUniquePublicId();
 
-            var resource = m_cloudinary.GetResource(uploadedPublicId);
+            var resource = m_adminApi.GetResource(uploadedPublicId);
 
             AssertResourceExists(resource, uploadedPublicId);
 
-            var delResult = m_cloudinary.DeleteResources(nonExistingPublicId, uploadedPublicId);
+            var delResult = m_adminApi.DeleteResources(nonExistingPublicId, uploadedPublicId);
 
             AssertResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
 
-            resource = m_cloudinary.GetResource(uploadedPublicId);
+            resource = m_adminApi.GetResource(uploadedPublicId);
 
             AssertResourceDoesNotExist(resource);
         }
@@ -39,15 +39,15 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var uploadedPublicId = uploadResult.PublicId;
             var nonExistingPublicId = GetUniquePublicId();
 
-            var resource = await m_cloudinary.GetResourceAsync(uploadedPublicId);
+            var resource = await m_adminApi.GetResourceAsync(uploadedPublicId);
 
             AssertResourceExists(resource, uploadedPublicId);
 
-            var delResult = await m_cloudinary.DeleteResourcesAsync(nonExistingPublicId, uploadedPublicId);
+            var delResult = await m_adminApi.DeleteResourcesAsync(nonExistingPublicId, uploadedPublicId);
 
             AssertResourceDeleted(delResult, uploadedPublicId, nonExistingPublicId);
 
-            resource = await m_cloudinary.GetResourceAsync(uploadedPublicId);
+            resource = await m_adminApi.GetResourceAsync(uploadedPublicId);
 
             AssertResourceDoesNotExist(resource);
         }
@@ -94,7 +94,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            var resource = m_cloudinary.GetResource(publicId);
+            var resource = m_adminApi.GetResource(publicId);
 
             Assert.IsNotNull(resource);
             Assert.AreEqual(3, resource.Derived.Length, resource.Error?.Message);
@@ -102,11 +102,11 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var delParams = new DelResParams { Transformations = transformations };
             delParams.PublicIds.Add(publicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResources(delParams);
+            DelResResult delResult = m_adminApi.DeleteResources(delParams);
             Assert.IsNotNull(delResult.Deleted, delResult.Error?.Message);
             Assert.AreEqual(1, delResult.Deleted.Count);
 
-            resource = m_cloudinary.GetResource(publicId);
+            resource = m_adminApi.GetResource(publicId);
             Assert.IsNotNull(resource);
             Assert.AreEqual(resource.Derived.Length, 0, resource.Error?.Message);
         }
@@ -126,12 +126,12 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            GetResourceResult resource = m_adminApi.GetResource(publicId);
             Assert.IsNotNull(resource);
             Assert.AreEqual(publicId, resource.PublicId, resource.Error?.Message);
 
-            m_cloudinary.DeleteResourcesByPrefix(prefix);
-            resource = m_cloudinary.GetResource(publicId);
+            m_adminApi.DeleteResourcesByPrefix(prefix);
+            resource = m_adminApi.GetResource(publicId);
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId), resource.Error?.Message);
         }
 
@@ -157,11 +157,11 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             };
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            GetResourceResult resource = m_adminApi.GetResource(publicId);
             Assert.IsNotNull(resource);
             Assert.AreEqual(3, resource.Derived.Length, resource.Error?.Message);
 
-            var delResult = m_cloudinary.DeleteResources(new DelResParams
+            var delResult = m_adminApi.DeleteResources(new DelResParams
             {
                 Prefix = prefix,
                 Transformations = transformations
@@ -169,7 +169,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.NotNull(delResult.Deleted);
             Assert.AreEqual(delResult.Deleted.Count, 1, delResult.Error?.Message);
 
-            resource = m_cloudinary.GetResource(publicId);
+            resource = m_adminApi.GetResource(publicId);
             Assert.IsNotNull(resource);
             Assert.AreEqual(resource.Derived.Length, 0, resource.Error?.Message);
         }
@@ -190,14 +190,14 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            GetResourceResult resource = m_adminApi.GetResource(publicId);
 
             Assert.IsNotNull(resource);
             Assert.AreEqual(publicId, resource.PublicId, resource.Error?.Message);
 
-            DelResResult delResult = m_cloudinary.DeleteResourcesByTag(tag);
+            DelResResult delResult = m_adminApi.DeleteResourcesByTag(tag);
 
-            resource = m_cloudinary.GetResource(publicId);
+            resource = m_adminApi.GetResource(publicId);
             Assert.IsTrue(String.IsNullOrEmpty(resource.PublicId), resource.Error?.Message);
         }
 
@@ -223,7 +223,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            DelResResult delResult = m_cloudinary.DeleteResources(new DelResParams
+            DelResResult delResult = m_adminApi.DeleteResources(new DelResParams
             {
                 Tag = tag,
                 Transformations = new List<Transformation> { m_simpleTransformation }
@@ -232,7 +232,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.NotNull(delResult.Deleted, delResult.Error?.Message);
             Assert.AreEqual(delResult.Deleted.Count, 1, delResult.Error?.Message);
 
-            delResult = m_cloudinary.DeleteResources(new DelResParams
+            delResult = m_adminApi.DeleteResources(new DelResParams
             {
                 Tag = tag,
                 Transformations = new List<Transformation>() { m_simpleTransformationAngle, m_explicitTransformation }
@@ -240,7 +240,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             Assert.NotNull(delResult.Deleted, delResult.Error?.Message);
 
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            GetResourceResult resource = m_adminApi.GetResource(publicId);
             Assert.IsNotNull(resource);
             Assert.AreEqual(resource.Derived.Length, 0, resource.Error?.Message);
         }
@@ -261,15 +261,15 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             m_cloudinary.Upload(uploadParams);
 
-            GetResourceResult resource = m_cloudinary.GetResource(publicId);
+            GetResourceResult resource = m_adminApi.GetResource(publicId);
 
             Assert.IsNotNull(resource);
             Assert.AreEqual(1, resource.Derived.Length, resource.Error?.Message);
 
-            DelDerivedResResult delDerivedResult = m_cloudinary.DeleteDerivedResources(resource.Derived[0].Id);
+            DelDerivedResResult delDerivedResult = m_adminApi.DeleteDerivedResources(resource.Derived[0].Id);
             Assert.AreEqual(1, delDerivedResult.Deleted.Values.Count, delDerivedResult.Error?.Message);
 
-            resource = m_cloudinary.GetResource(publicId);
+            resource = m_adminApi.GetResource(publicId);
             Assert.IsFalse(String.IsNullOrEmpty(resource.PublicId), resource.Error?.Message);
         }
 
@@ -299,9 +299,17 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var delParams = new DelResParams { Transformations = transformations };
             delParams.PublicIds.Add(publicId);
 
-            DelResResult delResult = m_cloudinary.DeleteResources(delParams);
+            DelResResult delResult = m_adminApi.DeleteResources(delParams);
             Assert.IsNotNull(delResult.Deleted, delResult.Error?.Message);
             Assert.AreEqual(1, delResult.DeletedCounts.Count);
+        }
+
+        class DeleteResourcesTestViaCloudinary : DeleteResourcesTest
+        {
+            public DeleteResourcesTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

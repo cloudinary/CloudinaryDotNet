@@ -30,7 +30,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 uploadParams.EagerTransforms = new List<Transformation>() { m_simpleTransformation };
             });
 
-            var result = m_cloudinary.ListTransformations();
+            var result = m_adminApi.ListTransformations();
 
             AssertNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
         }
@@ -45,7 +45,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 uploadParams.EagerTransforms = new List<Transformation>() { m_simpleTransformation };
             });
 
-            var result = await m_cloudinary.ListTransformationsAsync();
+            var result = await m_adminApi.ListTransformationsAsync();
 
             AssertNotEmptyListAndContainsTransformation(result, m_simpleTransformationAsString);
         }
@@ -73,7 +73,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 uploadParams.EagerTransforms = new List<Transformation>() { m_updateTransformation };
             });
 
-            var result = m_cloudinary.GetTransform(m_updateTransformationAsString);
+            var result = m_adminApi.GetTransform(m_updateTransformationAsString);
 
             AssertGetTransform(result, m_updateTransformation);
         }
@@ -88,7 +88,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 uploadParams.EagerTransforms = new List<Transformation>() { m_updateTransformation };
             });
 
-            var result = await m_cloudinary.GetTransformAsync(m_updateTransformationAsString);
+            var result = await m_adminApi.GetTransformAsync(m_updateTransformationAsString);
 
             AssertGetTransform(result, m_updateTransformation);
         }
@@ -111,7 +111,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             // should allow deleting named transformation
             string transformationName = GetUniqueTransformationName();
 
-            m_cloudinary.DeleteTransform(transformationName);
+            m_adminApi.DeleteTransform(transformationName);
 
             CreateTransformParams create = new CreateTransformParams()
             {
@@ -119,13 +119,13 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Transform = m_simpleTransformation
             };
 
-            TransformResult createResult = m_cloudinary.CreateTransform(create);
+            TransformResult createResult = m_adminApi.CreateTransform(create);
 
             Assert.AreEqual("created", createResult.Message, createResult.Error?.Message);
 
-            m_cloudinary.DeleteTransform(transformationName);
+            m_adminApi.DeleteTransform(transformationName);
 
-            GetTransformResult getResult = m_cloudinary.GetTransform(
+            GetTransformResult getResult = m_adminApi.GetTransform(
                 new GetTransformParams() { Transformation = transformationName });
 
             Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode, getResult.Error?.Message);
@@ -149,13 +149,13 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 Transformation = m_implicitTransformation.ToString()
             };
 
-            GetTransformResult getResult = m_cloudinary.GetTransform(getParams);
+            GetTransformResult getResult = m_adminApi.GetTransform(getParams);
 
             Assert.AreEqual(HttpStatusCode.OK, getResult.StatusCode, getResult.Error?.Message);
 
-            m_cloudinary.DeleteTransform(m_implicitTransformation.ToString());
+            m_adminApi.DeleteTransform(m_implicitTransformation.ToString());
 
-            getResult = m_cloudinary.GetTransform(getParams);
+            getResult = m_adminApi.GetTransform(getParams);
 
             Assert.AreEqual(HttpStatusCode.NotFound, getResult.StatusCode, getResult.Error?.Message);
         }
@@ -172,16 +172,16 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var updateParams = GetUpdateTransformParamsStrict(m_simpleTransformationAsString);
 
-            m_cloudinary.UpdateTransform(updateParams);
+            m_adminApi.UpdateTransform(updateParams);
 
-            var getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
+            var getResult = m_adminApi.GetTransform(m_simpleTransformationAsString);
 
             AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
 
             updateParams.AllowedForStrict = false;
-            m_cloudinary.UpdateTransform(updateParams);
+            m_adminApi.UpdateTransform(updateParams);
 
-            getResult = m_cloudinary.GetTransform(m_simpleTransformationAsString);
+            getResult = m_adminApi.GetTransform(m_simpleTransformationAsString);
 
             AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
         }
@@ -198,16 +198,16 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var updateParams = GetUpdateTransformParamsStrict(m_simpleTransformationAsString);
 
-            await m_cloudinary.UpdateTransformAsync(updateParams);
+            await m_adminApi.UpdateTransformAsync(updateParams);
 
-            var getResult = await m_cloudinary.GetTransformAsync(m_simpleTransformationAsString);
+            var getResult = await m_adminApi.GetTransformAsync(m_simpleTransformationAsString);
 
             AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, true);
 
             updateParams.AllowedForStrict = false;
-            await m_cloudinary.UpdateTransformAsync(updateParams);
+            await m_adminApi.UpdateTransformAsync(updateParams);
 
-            getResult = await m_cloudinary.GetTransformAsync(m_simpleTransformationAsString);
+            getResult = await m_adminApi.GetTransformAsync(m_simpleTransformationAsString);
 
             AssertGetTransformResultIsStrict(getResult, m_simpleTransformationAsString, false);
         }
@@ -232,7 +232,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             string transformationName = GetUniqueTransformationName();
             // should allow unsafe update of named transformation
-            m_cloudinary.CreateTransform(
+            m_adminApi.CreateTransform(
                 new CreateTransformParams()
                 {
                     Name = transformationName,
@@ -245,9 +245,9 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 UnsafeUpdate = m_updateTransformation
             };
 
-            m_cloudinary.UpdateTransform(updateParams);
+            m_adminApi.UpdateTransform(updateParams);
 
-            var getResult = m_cloudinary.GetTransform(transformationName);
+            var getResult = m_adminApi.GetTransform(transformationName);
 
             Assert.IsNotNull(getResult.Info, getResult.Error?.Message);
             Assert.IsTrue(getResult.Named);
@@ -273,10 +273,10 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var createParams = GetCreateTransformParams(m_simpleTransformation);
 
-            var createResult = m_cloudinary.CreateTransform(createParams);
+            var createResult = m_adminApi.CreateTransform(createParams);
             Assert.IsNull(createResult.Error, createResult.Error?.Message);
 
-            var getResult = m_cloudinary.GetTransform(
+            var getResult = m_adminApi.GetTransform(
                 new GetTransformParams { Transformation = createParams.Name });
 
             AssertCreateTransform(getResult, m_simpleTransformation);
@@ -299,10 +299,10 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var transformationAsStr = m_simpleTransformation.ToString();
 
             // delete if transformation with given definition and format already exists
-            m_cloudinary.DeleteTransform($"{transformationAsStr}/{testExtention}");
+            m_adminApi.DeleteTransform($"{transformationAsStr}/{testExtention}");
 
             // should allow creating unnamed transformation with specifying format
-            var createResult = m_cloudinary.CreateTransform(new CreateTransformParams()
+            var createResult = m_adminApi.CreateTransform(new CreateTransformParams()
             {
                 Name = $"{transformationAsStr}/{testExtention}",
                 Transform = m_simpleTransformation,
@@ -310,7 +310,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             });
             Assert.IsNull(createResult.Error, createResult.Error?.Message);
 
-            var getResult = m_cloudinary.GetTransform(new GetTransformParams
+            var getResult = m_adminApi.GetTransform(new GetTransformParams
             {
                 Transformation = transformationAsStr,
                 Format = testExtention
@@ -320,7 +320,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.IsTrue(getResult.Info.Any(dict => dict.ContainsKey(formatFieldName) && (string) dict[formatFieldName] == (string.IsNullOrEmpty(testExtention) ? "none" : testExtention)));
             AssertCreateTransform(getResult, m_simpleTransformation);
 
-            var deleteResult = m_cloudinary.DeleteTransform($"{transformationAsStr}/{testExtention}");
+            var deleteResult = m_adminApi.DeleteTransform($"{transformationAsStr}/{testExtention}");
             Assert.IsNull(deleteResult.Error, deleteResult.Error?.Message);
         }
 
@@ -331,9 +331,9 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var createParams = GetCreateTransformParams(m_simpleTransformation);
 
-            await m_cloudinary.CreateTransformAsync(createParams);
+            await m_adminApi.CreateTransformAsync(createParams);
 
-            var getResult = await m_cloudinary.GetTransformAsync(
+            var getResult = await m_adminApi.GetTransformAsync(
                 new GetTransformParams { Transformation = createParams.Name });
 
             AssertCreateTransform(getResult, m_simpleTransformation);
@@ -347,9 +347,9 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var createParams = GetCreateTransformParams(m_simpleTransformation);
 
-            await m_cloudinary.CreateTransformAsync(createParams);
+            await m_adminApi.CreateTransformAsync(createParams);
 
-            var getResult = await m_cloudinary.GetTransformAsync(new GetTransformParams
+            var getResult = await m_adminApi.GetTransformAsync(new GetTransformParams
             {
                 Transformation = createParams.Name,
                 MaxResults = 1,
@@ -382,7 +382,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         {
             string transformationName = GetUniqueTransformationName();
             // should allow unsafe update of named transformation
-            m_cloudinary.CreateTransform(
+            m_adminApi.CreateTransform(
                 new CreateTransformParams()
                 {
                     Name = transformationName,
@@ -396,13 +396,21 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 AllowedForStrict = allowedForstrict
             };
 
-            m_cloudinary.UpdateTransform(updateParams);
+            m_adminApi.UpdateTransform(updateParams);
 
-            var getResult = m_cloudinary.GetTransform(transformationName);
+            var getResult = m_adminApi.GetTransform(transformationName);
 
             Assert.IsNotNull(getResult.Info, getResult.Error?.Message);
             Assert.IsTrue(getResult.Named);
             Assert.AreEqual(updateParams.UnsafeUpdate.Generate(), new Transformation(getResult.Info).Generate());
+        }
+
+        class ManageTransformationsTestViaCloudinary : ManageTransformationsTest
+        {
+            public ManageTransformationsTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

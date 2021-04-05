@@ -1,4 +1,4 @@
-﻿namespace CloudinaryDotNet
+namespace CloudinaryDotNet
 {
     using System;
     using System.Collections.Generic;
@@ -16,7 +16,7 @@
     /// Main class of Cloudinary .NET API.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
-    public partial class Cloudinary
+    public partial class Cloudinary : IAdminApi
     {
         /// <summary>
         /// Resource type 'image'.
@@ -38,10 +38,9 @@
         /// </summary>
         protected static Random m_random = new Random();
 
-        /// <summary>
-        /// Cloudinary <see cref="Api"/> object.
-        /// </summary>
-        protected Api m_api;
+        private Api m_api;
+
+        private Lazy<AdminApi> m_adminApiFactory = new Lazy<AdminApi>(() => new AdminApi());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cloudinary"/> class.
@@ -59,6 +58,7 @@
         public Cloudinary(string cloudinaryUrl)
         {
             m_api = new Api(cloudinaryUrl);
+            m_adminApiFactory = new Lazy<AdminApi>(() => new AdminApi(cloudinaryUrl));
         }
 
         /// <summary>
@@ -68,14 +68,23 @@
         public Cloudinary(Account account)
         {
             m_api = new Api(account);
+            m_adminApiFactory = new Lazy<AdminApi>(() => new AdminApi(account));
         }
+
+        /// <summary>
+        /// Gets Cloudinary <see cref="IAdminApi"/> object.
+        /// </summary>
+        public IAdminApi AdminApi => m_adminApiFactory.Value;
 
         /// <summary>
         /// Gets API object that used by this instance.
         /// </summary>
-        public Api Api
+        internal Api Api => m_api;
+
+        /// <inheritdoc/>
+        public void SetApiBaseAddress(string value)
         {
-            get { return m_api; }
+            AdminApi.SetApiBaseAddress(value);
         }
 
         /// <summary>
@@ -315,86 +324,46 @@
             return PublishResource(string.Empty, string.Empty, parameters);
         }
 
-        /// <summary>
-        /// Updates access mode for the resources selected by tag asynchronously.
-        /// </summary>
-        /// <param name="tag">Update all resources with the given tag (up to a maximum
-        /// of 100 matching original resources).</param>
-        /// <param name="parameters">Parameters for updating of resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Structure with the results of update.</returns>
-        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByTagAsync(
-            string tag,
-            UpdateResourceAccessModeParams parameters,
-            CancellationToken? cancellationToken = null)
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResourceAccessModeByTagAsync method instead.")]
+        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByTagAsync(string tag, UpdateResourceAccessModeParams parameters, CancellationToken? cancellationToken = null)
         {
-            return UpdateResourceAccessModeAsync(Constants.TAG_PARAM_NAME, tag, parameters, cancellationToken);
+            return AdminApi.UpdateResourceAccessModeByTagAsync(tag, parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Updates access mode for the resources selected by tag.
-        /// </summary>
-        /// <param name="tag">Update all resources with the given tag (up to a maximum
-        /// of 100 matching original resources).</param>
-        /// <param name="parameters">Parameters for updating of resources.</param>
-        /// <returns>Structure with the results of update.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResourceAccessModeByTag method instead.")]
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams parameters)
         {
-            return UpdateResourceAccessMode(Constants.TAG_PARAM_NAME, tag, parameters);
+            return AdminApi.UpdateResourceAccessModeByTag(tag, parameters);
         }
 
-        /// <summary>
-        /// Updates access mode for the resources selected by prefix asynchronously.
-        /// </summary>
-        /// <param name="prefix">Update all resources where the public ID starts with the given prefix (up to a maximum
-        /// of 100 matching original resources).</param>
-        /// <param name="parameters">Parameters for updating of resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Structure with the results of update.</returns>
-        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByPrefixAsync(
-            string prefix,
-            UpdateResourceAccessModeParams parameters,
-            CancellationToken? cancellationToken = null)
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResourceAccessModeByPrefixAsync method instead.")]
+        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByPrefixAsync(string prefix, UpdateResourceAccessModeParams parameters, CancellationToken? cancellationToken = null)
         {
-            return UpdateResourceAccessModeAsync(Constants.PREFIX_PARAM_NAME, prefix, parameters, cancellationToken);
+            return AdminApi.UpdateResourceAccessModeByPrefixAsync(prefix, parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Updates access mode for the resources selected by prefix.
-        /// </summary>
-        /// <param name="prefix">Update all resources where the public ID starts with the given prefix (up to a maximum
-        /// of 100 matching original resources).</param>
-        /// <param name="parameters">Parameters for updating of resources.</param>
-        /// <returns>Structure with the results of update.</returns>
-        public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(
-            string prefix,
-            UpdateResourceAccessModeParams parameters)
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResourceAccessModeByPrefix method instead.")]
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(string prefix, UpdateResourceAccessModeParams parameters)
         {
-            return UpdateResourceAccessMode(Constants.PREFIX_PARAM_NAME, prefix, parameters);
+            return AdminApi.UpdateResourceAccessModeByPrefix(prefix, parameters);
         }
 
-        /// <summary>
-        /// Updates access mode for the resources selected by public ids asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters for updating of resources. Update all resources with the given
-        /// public IDs (array of up to 100 public_ids).</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Structure with the results of update.</returns>
-        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByIdsAsync(
-            UpdateResourceAccessModeParams parameters, CancellationToken? cancellationToken = null)
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResourceAccessModeByIdsAsync method instead.")]
+        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByIdsAsync(UpdateResourceAccessModeParams parameters, CancellationToken? cancellationToken = null)
         {
-            return UpdateResourceAccessModeAsync(string.Empty, string.Empty, parameters, cancellationToken);
+            return AdminApi.UpdateResourceAccessModeByIdsAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Updates access mode for the resources selected by public ids.
-        /// </summary>
-        /// <param name="parameters">Parameters for updating of resources. Update all resources with the given
-        /// public IDs (array of up to 100 public_ids).</param>
-        /// <returns>Structure with the results of update.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResourceAccessModeByIds method instead.")]
         public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams parameters)
         {
-            return UpdateResourceAccessMode(string.Empty, string.Empty, parameters);
+            return AdminApi.UpdateResourceAccessModeByIds(parameters);
         }
 
         /// <summary>
@@ -602,198 +571,88 @@
             return m_api.CallApi<ExplicitResult>(HttpMethod.POST, uri, parameters, null);
         }
 
-        /// <summary>
-        /// Creates the upload preset.
-        /// Upload presets allow you to define the default behavior for your uploads, instead of
-        /// receiving these as parameters during the upload request itself. Upload presets have
-        /// precedence over client-side upload parameters asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters of the upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after manipulation of upload presets.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.CreateUploadPresetAsync method instead.")]
         public Task<UploadPresetResult> CreateUploadPresetAsync(UploadPresetParams parameters, CancellationToken? cancellationToken = null)
         {
-            string url = GetApiUrlV().
-                Add("upload_presets").
-                BuildUrl();
-
-            return m_api.CallApiAsync<UploadPresetResult>(
-                HttpMethod.POST,
-                url,
-                parameters,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.CreateUploadPresetAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Creates the upload preset.
-        /// Upload presets allow you to define the default behavior for your uploads, instead of receiving these as parameters during the upload request itself. Upload presets have precedence over client-side upload parameters.
-        /// </summary>
-        /// <param name="parameters">Parameters of the upload preset.</param>
-        /// <returns>Parsed response after manipulation of upload presets.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.CreateUploadPreset method instead.")]
         public UploadPresetResult CreateUploadPreset(UploadPresetParams parameters)
         {
-            var url = GetApiUrlV().
-                Add("upload_presets").
-                BuildUrl();
-
-            return m_api.CallApi<UploadPresetResult>(HttpMethod.POST, url, parameters, null);
+            return AdminApi.CreateUploadPreset(parameters);
         }
 
-        /// <summary>
-        /// Updates the upload preset.
-        /// Every update overwrites all the preset settings asynchronously.
-        /// File specified as null because it's non-uploading action.
-        /// </summary>
-        /// <param name="parameters">New parameters for upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after manipulation of upload presets.</returns>
-        public Task<UploadPresetResult> UpdateUploadPresetAsync(UploadPresetParams parameters, CancellationToken? cancellationToken = null) =>
-            CallApiAsync<UploadPresetResult>(PrepareUploadPresetApiParams(parameters), cancellationToken);
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateUploadPresetAsync method instead.")]
+        public Task<UploadPresetResult> UpdateUploadPresetAsync(UploadPresetParams parameters, CancellationToken? cancellationToken = null)
+        {
+            return AdminApi.UpdateUploadPresetAsync(parameters, cancellationToken);
+        }
 
-        /// <summary>
-        /// Updates the upload preset.
-        /// Every update overwrites all the preset settings.
-        /// File specified as null because it's non-uploading action.
-        /// </summary>
-        /// <param name="parameters">New parameters for upload preset.</param>
-        /// <returns>Parsed response after manipulation of upload presets.</returns>
-        public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters) =>
-            CallApi<UploadPresetResult>(PrepareUploadPresetApiParams(parameters));
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateUploadPreset method instead.")]
+        public UploadPresetResult UpdateUploadPreset(UploadPresetParams parameters)
+        {
+            return AdminApi.UpdateUploadPreset(parameters);
+        }
 
-        /// <summary>
-        /// Gets the upload preset asynchronously.
-        /// </summary>
-        /// <param name="name">Name of the upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Upload preset details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetUploadPresetAsync method instead.")]
         public Task<GetUploadPresetResult> GetUploadPresetAsync(string name, CancellationToken? cancellationToken = null)
         {
-            var url = GetApiUrlV()
-                .Add("upload_presets")
-                .Add(name)
-                .BuildUrl();
-
-            return m_api.CallApiAsync<GetUploadPresetResult>(
-                HttpMethod.GET,
-                url,
-                null,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.GetUploadPresetAsync(name, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets the upload preset.
-        /// </summary>
-        /// <param name="name">Name of the upload preset.</param>
-        /// <returns>Upload preset details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetUploadPreset method instead.")]
         public GetUploadPresetResult GetUploadPreset(string name)
         {
-            var url = GetApiUrlV()
-                .Add("upload_presets")
-                .Add(name)
-                .BuildUrl();
-
-            return m_api.CallApi<GetUploadPresetResult>(HttpMethod.GET, url, null, null);
+            return AdminApi.GetUploadPreset(name);
         }
 
-        /// <summary>
-        /// Lists upload presets asynchronously.
-        /// </summary>
-        /// <param name="nextCursor">Next cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of upload presets listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListUploadPresetsAsync method instead.")]
         public Task<ListUploadPresetsResult> ListUploadPresetsAsync(string nextCursor = null, CancellationToken? cancellationToken = null)
         {
-            return ListUploadPresetsAsync(new ListUploadPresetsParams() { NextCursor = nextCursor }, cancellationToken);
+            return AdminApi.ListUploadPresetsAsync(nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Lists upload presets.
-        /// </summary>
-        /// <param name="nextCursor">(Optional) Starting position.</param>
-        /// <returns>Parsed result of upload presets listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListUploadPresets method instead.")]
         public ListUploadPresetsResult ListUploadPresets(string nextCursor = null)
         {
-            return ListUploadPresets(new ListUploadPresetsParams() { NextCursor = nextCursor });
+            return AdminApi.ListUploadPresets(nextCursor);
         }
 
-        /// <summary>
-        /// Lists upload presets asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters to list upload presets.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of upload presets listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListUploadPresetsAsync method instead.")]
         public Task<ListUploadPresetsResult> ListUploadPresetsAsync(ListUploadPresetsParams parameters, CancellationToken? cancellationToken = null)
         {
-            var urlBuilder = new UrlBuilder(
-                GetApiUrlV()
-                .Add("upload_presets")
-                .BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApiAsync<ListUploadPresetsResult>(
-                HttpMethod.GET,
-                urlBuilder.ToString(),
-                parameters,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.ListUploadPresetsAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Lists upload presets.
-        /// </summary>
-        /// <param name="parameters">Parameters to list upload presets.</param>
-        /// <returns>Parsed result of upload presets listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListUploadPresets method instead.")]
         public ListUploadPresetsResult ListUploadPresets(ListUploadPresetsParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                GetApiUrlV()
-                .Add("upload_presets")
-                .BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApi<ListUploadPresetsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return AdminApi.ListUploadPresets(parameters);
         }
 
-        /// <summary>
-        /// Deletes the upload preset asynchronously.
-        /// </summary>
-        /// <param name="name">Name of the upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Result of upload preset deletion.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteUploadPresetAsync method instead.")]
         public Task<DeleteUploadPresetResult> DeleteUploadPresetAsync(string name, CancellationToken? cancellationToken = null)
         {
-            var url = GetApiUrlV()
-                .Add("upload_presets")
-                .Add(name)
-                .BuildUrl();
-
-            return m_api.CallApiAsync<DeleteUploadPresetResult>(
-                HttpMethod.DELETE,
-                url,
-                null,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.DeleteUploadPresetAsync(name, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes the upload preset.
-        /// </summary>
-        /// <param name="name">Name of the upload preset.</param>
-        /// <returns>Result of upload preset deletion.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteUploadPreset method instead.")]
         public DeleteUploadPresetResult DeleteUploadPreset(string name)
         {
-            var url = GetApiUrlV()
-                .Add("upload_presets")
-                .Add(name)
-                .BuildUrl();
-
-            return m_api.CallApi<DeleteUploadPresetResult>(HttpMethod.DELETE, url, null, null);
+            return AdminApi.DeleteUploadPreset(name);
         }
 
         /// <summary>
@@ -889,194 +748,88 @@
                 fileDescription);
         }
 
-        /// <summary>
-        /// Async call to get a list of folders in the root asynchronously.
-        /// </summary>
-        /// <param name="parameters">(optional) Parameters for managing folders list.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of folders listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.RootFoldersAsync method instead.")]
         public Task<GetFoldersResult> RootFoldersAsync(GetFoldersParams parameters = null, CancellationToken? cancellationToken = null)
         {
-            return m_api.CallApiAsync<GetFoldersResult>(
-                HttpMethod.GET,
-                GetFolderUrl(parameters: parameters),
-                null,
-                null,
-                cancellationToken: cancellationToken);
+            return AdminApi.RootFoldersAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a list of folders in the root.
-        /// </summary>
-        /// <param name="parameters">(optional) Parameters for managing folders list.</param>
-        /// <returns>Parsed result of folders listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.RootFolders method instead.")]
         public GetFoldersResult RootFolders(GetFoldersParams parameters = null)
         {
-            return m_api.CallApi<GetFoldersResult>(
-                HttpMethod.GET,
-                GetFolderUrl(parameters: parameters),
-                null,
-                null);
+            return AdminApi.RootFolders(parameters);
         }
 
-        /// <summary>
-        /// Gets a list of subfolders in a specified folder asynchronously.
-        /// </summary>
-        /// <param name="folder">The folder name.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of folders listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.SubFoldersAsync method instead.")]
         public Task<GetFoldersResult> SubFoldersAsync(string folder, CancellationToken? cancellationToken = null)
         {
-            return SubFoldersAsync(folder, null, cancellationToken);
+            return AdminApi.SubFoldersAsync(folder, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a list of subfolders in a specified folder asynchronously.
-        /// </summary>
-        /// <param name="folder">The folder name.</param>
-        /// <param name="parameters">(Optional) Parameters for managing folders list.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of folders listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.SubFoldersAsync method instead.")]
         public Task<GetFoldersResult> SubFoldersAsync(string folder, GetFoldersParams parameters, CancellationToken? cancellationToken = null)
         {
-            CheckFolderParameter(folder);
-
-            return m_api.CallApiAsync<GetFoldersResult>(
-                HttpMethod.GET,
-                GetFolderUrl(folder, parameters),
-                null,
-                null,
-                cancellationToken: cancellationToken);
+            return AdminApi.SubFoldersAsync(folder, parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a list of subfolders in a specified folder.
-        /// </summary>
-        /// <param name="folder">The folder name.</param>
-        /// <param name="parameters">(Optional) Parameters for managing folders list.</param>
-        /// <returns>Parsed result of folders listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.SubFolders method instead.")]
         public GetFoldersResult SubFolders(string folder, GetFoldersParams parameters = null)
         {
-            CheckFolderParameter(folder);
-
-            return m_api.CallApi<GetFoldersResult>(
-                HttpMethod.GET,
-                GetFolderUrl(folder, parameters),
-                null,
-                null);
+            return AdminApi.SubFolders(folder, parameters);
         }
 
-        /// <summary>
-        /// Deletes folder asynchronously.
-        /// </summary>
-        /// <param name="folder">Folder name.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of folder deletion.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteFolderAsync method instead.")]
         public Task<DeleteFolderResult> DeleteFolderAsync(string folder, CancellationToken? cancellationToken = null)
         {
-            var uri = GetFolderUrl(folder);
-            return m_api.CallApiAsync<DeleteFolderResult>(
-                HttpMethod.DELETE,
-                uri,
-                null,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.DeleteFolderAsync(folder, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes folder.
-        /// </summary>
-        /// <param name="folder">Folder name.</param>
-        /// <returns>Parsed result of folder deletion.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteFolder method instead.")]
         public DeleteFolderResult DeleteFolder(string folder)
         {
-            var uri = GetFolderUrl(folder);
-            return m_api.CallApi<DeleteFolderResult>(HttpMethod.DELETE, uri, null, null);
+            return AdminApi.DeleteFolder(folder);
         }
 
-        /// <summary>
-        /// Create a new empty folder.
-        /// </summary>
-        /// <param name="folder">The full path of the new folder to create.</param>
-        /// <returns>Parsed result of folder creation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.CreateFolder method instead.")]
         public CreateFolderResult CreateFolder(string folder)
         {
-            CheckIfNotEmpty(folder);
-
-            return m_api.CallApi<CreateFolderResult>(
-                HttpMethod.POST,
-                GetFolderUrl(folder),
-                null,
-                null);
+            return AdminApi.CreateFolder(folder);
         }
 
-        /// <summary>
-        /// Create a new empty folder.
-        /// </summary>
-        /// <param name="folder">The full path of the new folder to create.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of folder creation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.CreateFolderAsync method instead.")]
         public Task<CreateFolderResult> CreateFolderAsync(string folder, CancellationToken? cancellationToken = null)
         {
-            CheckIfNotEmpty(folder);
-
-            return m_api.CallApiAsync<CreateFolderResult>(
-                HttpMethod.POST,
-                GetFolderUrl(folder),
-                null,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.CreateFolderAsync(folder, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets the Cloudinary account usage details asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>The report on the status of your Cloudinary account usage details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetUsageAsync method instead.")]
         public Task<UsageResult> GetUsageAsync(CancellationToken? cancellationToken = null)
         {
-            string uri = GetUsageUrl(null);
-
-            return m_api.CallApiAsync<UsageResult>(
-                HttpMethod.GET,
-                uri,
-                null,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.GetUsageAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Gets the Cloudinary account usage details asynchronously.
-        /// </summary>
-        /// <param name="date">(Optional) The date for the usage report. Must be within the last 3 months.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>The report on the status of your Cloudinary account usage details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetUsageAsync method instead.")]
         public Task<UsageResult> GetUsageAsync(DateTime? date, CancellationToken? cancellationToken = null)
         {
-            string uri = GetUsageUrl(date);
-
-            return m_api.CallApiAsync<UsageResult>(
-                HttpMethod.GET,
-                uri,
-                null,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.GetUsageAsync(date, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets the Cloudinary account usage details.
-        /// </summary>
-        /// <param name="date">(Optional) The date for the usage report. Must be within the last 3 months.</param>
-        /// <returns>The report on the status of your Cloudinary account usage details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetUsage method instead.")]
         public UsageResult GetUsage(DateTime? date = null)
         {
-            string uri = GetUsageUrl(date);
-
-            return m_api.CallApi<UsageResult>(HttpMethod.GET, uri, null, null);
+            return AdminApi.GetUsage(date);
         }
 
         /// <summary>
@@ -1464,40 +1217,22 @@
             return m_api.CallApi<TextResult>(HttpMethod.POST, uri, parameters, null);
         }
 
-        /// <summary>
-        /// Lists resource types asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed list of resource types.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourceTypesAsync method instead.")]
         public Task<ListResourceTypesResult> ListResourceTypesAsync(CancellationToken? cancellationToken = null)
         {
-            return m_api.CallApiAsync<ListResourceTypesResult>(
-                HttpMethod.GET,
-                GetApiUrlV().Add("resources").BuildUrl(),
-                null,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.ListResourceTypesAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Lists resource types.
-        /// </summary>
-        /// <returns>Parsed list of resource types.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourceTypes method instead.")]
         public ListResourceTypesResult ListResourceTypes()
         {
-            return m_api.CallApi<ListResourceTypesResult>(HttpMethod.GET, GetApiUrlV().Add("resources").BuildUrl(), null, null);
+            return AdminApi.ListResourceTypes();
         }
 
-        /// <summary>
-        /// Lists resources asynchronously asynchronously.
-        /// </summary>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <param name="tags">Whether to include tags in result.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="moderations">Whether to include moderation status in result.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesAsync(
             string nextCursor = null,
             bool tags = true,
@@ -1505,113 +1240,54 @@
             bool moderations = true,
             CancellationToken? cancellationToken = null)
         {
-            var listResourcesParams = new ListResourcesParams()
-            {
-                NextCursor = nextCursor,
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-            };
-            return ListResourcesAsync(listResourcesParams, cancellationToken);
+            return AdminApi.ListResourcesAsync(nextCursor, tags, context, moderations, cancellationToken);
         }
 
-        /// <summary>
-        /// Lists resources.
-        /// </summary>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <param name="tags">Whether to include tags in result.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="moderations">Whether to include moderation status in result.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResources method instead.")]
         public ListResourcesResult ListResources(
             string nextCursor = null,
             bool tags = true,
             bool context = true,
             bool moderations = true)
         {
-            return ListResources(new ListResourcesParams()
-            {
-                NextCursor = nextCursor,
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-            });
+            return AdminApi.ListResources(nextCursor, tags, context, moderations);
         }
 
-        /// <summary>
-        /// Lists resources of specified type asynchronously.
-        /// </summary>
-        /// <param name="type">Resource type.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByTypeAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesByTypeAsync(string type, string nextCursor = null, CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesParams() { Type = type, NextCursor = nextCursor }, cancellationToken);
+            return AdminApi.ListResourcesByTypeAsync(type, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Lists resources of specified type.
-        /// </summary>
-        /// <param name="type">Resource type.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByType method instead.")]
         public ListResourcesResult ListResourcesByType(string type, string nextCursor = null)
         {
-            return ListResources(new ListResourcesParams() { Type = type, NextCursor = nextCursor });
+            return AdminApi.ListResourcesByType(type, nextCursor);
         }
 
-        /// <summary>
-        /// Lists resources by prefix asynchronously.
-        /// </summary>
-        /// <param name="prefix">Public identifier prefix.</param>
-        /// <param name="type">Resource type.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByPrefixAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesByPrefixAsync(
             string prefix,
             string type = "upload",
             string nextCursor = null,
             CancellationToken? cancellationToken = null)
         {
-            var listResourcesByPrefixParams = new ListResourcesByPrefixParams()
-            {
-                Type = type,
-                Prefix = prefix,
-                NextCursor = nextCursor,
-            };
-            return ListResourcesAsync(listResourcesByPrefixParams, cancellationToken);
+            return AdminApi.ListResourcesByPrefixAsync(prefix, type, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Lists resources by prefix.
-        /// </summary>
-        /// <param name="prefix">Public identifier prefix.</param>
-        /// <param name="type">Resource type.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByPrefix method instead.")]
         public ListResourcesResult ListResourcesByPrefix(string prefix, string type = "upload", string nextCursor = null)
         {
-            return ListResources(new ListResourcesByPrefixParams()
-            {
-                Type = type,
-                Prefix = prefix,
-                NextCursor = nextCursor,
-            });
+            return AdminApi.ListResourcesByPrefix(prefix, type, nextCursor);
         }
 
-        /// <summary>
-        /// Lists resources by prefix asynchronously.
-        /// </summary>
-        /// <param name="prefix">Public identifier prefix.</param>
-        /// <param name="tags">Whether to include tags in result.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="moderations">If true, include moderation status for each resource.</param>
-        /// <param name="type">Resource type.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByPrefixAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesByPrefixAsync(
             string prefix,
             bool tags,
@@ -1621,110 +1297,46 @@
             string nextCursor = null,
             CancellationToken? cancellationToken = null)
         {
-            var listResourcesByPrefixParams = new ListResourcesByPrefixParams()
-            {
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-                Type = type,
-                Prefix = prefix,
-                NextCursor = nextCursor,
-            };
-            return ListResourcesAsync(listResourcesByPrefixParams, cancellationToken);
+            return AdminApi.ListResourcesByPrefixAsync(prefix, tags, context, moderations, type, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Lists resources by prefix.
-        /// </summary>
-        /// <param name="prefix">Public identifier prefix.</param>
-        /// <param name="tags">Whether to include tags in result.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="moderations">If true, include moderation status for each resource.</param>
-        /// <param name="type">Resource type.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByPrefix method instead.")]
         public ListResourcesResult ListResourcesByPrefix(string prefix, bool tags, bool context, bool moderations, string type = "upload", string nextCursor = null)
         {
-            return ListResources(new ListResourcesByPrefixParams()
-            {
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-                Type = type,
-                Prefix = prefix,
-                NextCursor = nextCursor,
-            });
+            return AdminApi.ListResourcesByPrefix(prefix, tags, context, moderations, type, nextCursor);
         }
 
-        /// <summary>
-        /// Lists resources by tag asynchronously.
-        /// </summary>
-        /// <param name="tag">The tag.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByTagAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesByTagAsync(string tag, string nextCursor = null, CancellationToken? cancellationToken = null)
         {
-            var listResourcesByTagParams = new ListResourcesByTagParams()
-            {
-                Tag = tag,
-                NextCursor = nextCursor,
-            };
-            return ListResourcesAsync(listResourcesByTagParams, cancellationToken);
+            return AdminApi.ListResourcesByTagAsync(tag, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Lists resources by tag.
-        /// </summary>
-        /// <param name="tag">The tag.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByTag method instead.")]
         public ListResourcesResult ListResourcesByTag(string tag, string nextCursor = null)
         {
-            return ListResources(new ListResourcesByTagParams()
-            {
-                Tag = tag,
-                NextCursor = nextCursor,
-            });
+            return AdminApi.ListResourcesByTag(tag, nextCursor);
         }
 
-        /// <summary>
-        /// Returns resources with specified public identifiers asynchronously.
-        /// </summary>
-        /// <param name="publicIds">Public identifiers.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByPublicIdsAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesByPublicIdsAsync(IEnumerable<string> publicIds, CancellationToken? cancellationToken = null)
         {
-            var listSpecificResourcesParams = new ListSpecificResourcesParams()
-            {
-                PublicIds = new List<string>(publicIds),
-            };
-            return ListResourcesAsync(listSpecificResourcesParams, cancellationToken);
+            return AdminApi.ListResourcesByPublicIdsAsync(publicIds, cancellationToken);
         }
 
-        /// <summary>
-        /// Returns resources with specified public identifiers.
-        /// </summary>
-        /// <param name="publicIds">Public identifiers.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByPublicIds method instead.")]
         public ListResourcesResult ListResourcesByPublicIds(IEnumerable<string> publicIds)
         {
-            return ListResources(new ListSpecificResourcesParams()
-            {
-                PublicIds = new List<string>(publicIds),
-            });
+            return AdminApi.ListResourcesByPublicIds(publicIds);
         }
 
-        /// <summary>
-        /// Returns resources with specified public identifiers asynchronously.
-        /// </summary>
-        /// <param name="publicIds">Public identifiers.</param>
-        /// <param name="tags">Whether to include tags in result.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="moderations">Whether to include moderation status in result.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourceByPublicIdsAsync method instead.")]
         public Task<ListResourcesResult> ListResourceByPublicIdsAsync(
             IEnumerable<string> publicIds,
             bool tags,
@@ -1732,46 +1344,18 @@
             bool moderations,
             CancellationToken? cancellationToken = null)
         {
-            var listSpecificResourcesParams = new ListSpecificResourcesParams()
-            {
-                PublicIds = new List<string>(publicIds),
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-            };
-            return ListResourcesAsync(listSpecificResourcesParams, cancellationToken);
+            return AdminApi.ListResourceByPublicIdsAsync(publicIds, tags, context, moderations, cancellationToken);
         }
 
-        /// <summary>
-        /// Returns resources with specified public identifiers.
-        /// </summary>
-        /// <param name="publicIds">Public identifiers.</param>
-        /// <param name="tags">Whether to include tags in result.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="moderations">Whether to include moderation status in result.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourceByPublicIds method instead.")]
         public ListResourcesResult ListResourceByPublicIds(IEnumerable<string> publicIds, bool tags, bool context, bool moderations)
         {
-            return ListResources(new ListSpecificResourcesParams()
-            {
-                PublicIds = new List<string>(publicIds),
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-            });
+            return AdminApi.ListResourceByPublicIds(publicIds, tags, context, moderations);
         }
 
-        /// <summary>
-        /// Lists resources by moderation status asynchronously.
-        /// </summary>
-        /// <param name="kind">The moderation kind.</param>
-        /// <param name="status">The moderation status.</param>
-        /// <param name="tags">Whether to include tags in result.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="moderations">Whether to include moderation status in result.</param>
-        /// <param name="nextCursor">The next cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByModerationStatusAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesByModerationStatusAsync(
             string kind,
             ModerationStatus status,
@@ -1781,28 +1365,11 @@
             string nextCursor = null,
             CancellationToken? cancellationToken = null)
         {
-            var listResourcesByModerationParams = new ListResourcesByModerationParams()
-            {
-                ModerationKind = kind,
-                ModerationStatus = status,
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-                NextCursor = nextCursor,
-            };
-            return ListResourcesAsync(listResourcesByModerationParams, cancellationToken);
+            return AdminApi.ListResourcesByModerationStatusAsync(kind, status, tags, context, moderations, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Lists resources by moderation status.
-        /// </summary>
-        /// <param name="kind">The moderation kind.</param>
-        /// <param name="status">The moderation status.</param>
-        /// <param name="tags">Whether to include tags in result.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="moderations">Whether to include moderation status in result.</param>
-        /// <param name="nextCursor">The next cursor.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByModerationStatus method instead.")]
         public ListResourcesResult ListResourcesByModerationStatus(
             string kind,
             ModerationStatus status,
@@ -1811,28 +1378,11 @@
             bool moderations = true,
             string nextCursor = null)
         {
-            return ListResources(new ListResourcesByModerationParams()
-            {
-                ModerationKind = kind,
-                ModerationStatus = status,
-                Tags = tags,
-                Context = context,
-                Moderations = moderations,
-                NextCursor = nextCursor,
-            });
+            return AdminApi.ListResourcesByModerationStatus(kind, status, tags, context, moderations, nextCursor);
         }
 
-        /// <summary>
-        /// List resources by context metadata keys and values asynchronously.
-        /// </summary>
-        /// <param name="key">Only resources with the given key should be returned.</param>
-        /// <param name="value">When provided should only return resources with this given value for the context key.
-        /// When not provided, return all resources for which the context key exists.</param>
-        /// <param name="tags">If true, include list of tag names assigned for each resource.</param>
-        /// <param name="context">If true, include context assigned to each resource.</param>
-        /// <param name="nextCursor">The next cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByContextAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesByContextAsync(
             string key,
             string value = "",
@@ -1841,1016 +1391,490 @@
             string nextCursor = null,
             CancellationToken? cancellationToken = null)
         {
-            var listResourcesByContextParams = new ListResourcesByContextParams()
-            {
-                Key = key,
-                Value = value,
-                Tags = tags,
-                Context = context,
-                NextCursor = nextCursor,
-            };
-            return ListResourcesAsync(listResourcesByContextParams, cancellationToken);
+            return AdminApi.ListResourcesByContextAsync(key, value, tags, context, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// List resources by context metadata keys and values.
-        /// </summary>
-        /// <param name="key">Only resources with the given key should be returned.</param>
-        /// <param name="value">When provided should only return resources with this given value for the context key.
-        /// When not provided, return all resources for which the context key exists.</param>
-        /// <param name="tags">If true, include list of tag names assigned for each resource.</param>
-        /// <param name="context">If true, include context assigned to each resource.</param>
-        /// <param name="nextCursor">The next cursor.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesByContext method instead.")]
         public ListResourcesResult ListResourcesByContext(string key, string value = "", bool tags = false, bool context = false, string nextCursor = null)
         {
-            return ListResources(new ListResourcesByContextParams()
-            {
-                Key = key,
-                Value = value,
-                Tags = tags,
-                Context = context,
-                NextCursor = nextCursor,
-            });
+            return AdminApi.ListResourcesByContext(key, value, tags, context, nextCursor);
         }
 
-        /// <summary>
-        /// Gets a list of resources asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters to list resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResourcesAsync method instead.")]
         public Task<ListResourcesResult> ListResourcesAsync(ListResourcesParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = GetListResourcesUrl(parameters);
-            return m_api.CallApiAsync<ListResourcesResult>(HttpMethod.GET, url, parameters, null, null, cancellationToken);
+            return AdminApi.ListResourcesAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a list of resources.
-        /// </summary>
-        /// <param name="parameters">Parameters to list resources.</param>
-        /// <returns>Parsed result of the resources listing.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListResources method instead.")]
         public ListResourcesResult ListResources(ListResourcesParams parameters)
         {
-            var url = GetListResourcesUrl(parameters);
-            return m_api.CallApi<ListResourcesResult>(HttpMethod.GET, url, parameters, null);
+            return AdminApi.ListResources(parameters);
         }
 
-        /// <summary>
-        /// Gets a list of tags asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed list of tags.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTagsAsync method instead.")]
         public Task<ListTagsResult> ListTagsAsync(CancellationToken? cancellationToken = null)
         {
-            return ListTagsAsync(new ListTagsParams(), cancellationToken);
+            return AdminApi.ListTagsAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a list of all tags.
-        /// </summary>
-        /// <returns>Parsed list of tags.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTags method instead.")]
         public ListTagsResult ListTags()
         {
-            return ListTags(new ListTagsParams());
+            return AdminApi.ListTags();
         }
 
-        /// <summary>
-        /// Finds all tags that start with the given prefix asynchronously.
-        /// </summary>
-        /// <param name="prefix">The tag prefix.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed list of tags.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTagsByPrefixAsync method instead.")]
         public Task<ListTagsResult> ListTagsByPrefixAsync(string prefix, CancellationToken? cancellationToken = null)
         {
-            return ListTagsAsync(new ListTagsParams() { Prefix = prefix }, cancellationToken);
+            return AdminApi.ListTagsByPrefixAsync(prefix, cancellationToken);
         }
 
-        /// <summary>
-        /// Finds all tags that start with the given prefix.
-        /// </summary>
-        /// <param name="prefix">The tag prefix.</param>
-        /// <returns>Parsed list of tags.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTagsByPrefix method instead.")]
         public ListTagsResult ListTagsByPrefix(string prefix)
         {
-            return ListTags(new ListTagsParams() { Prefix = prefix });
+            return AdminApi.ListTagsByPrefix(prefix);
         }
 
-        /// <summary>
-        /// Gets a list of tags asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters of the request.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed list of tags.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTagsAsync method instead.")]
         public Task<ListTagsResult> ListTagsAsync(ListTagsParams parameters, CancellationToken? cancellationToken = null)
         {
-            var urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("tags").
-                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApiAsync<ListTagsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null, null, cancellationToken);
+            return AdminApi.ListTagsAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a list of tags.
-        /// </summary>
-        /// <param name="parameters">Parameters of the request.</param>
-        /// <returns>Parsed list of tags.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTags method instead.")]
         public ListTagsResult ListTags(ListTagsParams parameters)
         {
-            var urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("tags").
-                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApi<ListTagsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return AdminApi.ListTags(parameters);
         }
 
-        /// <summary>
-        /// Gets a list of transformations asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed list of transformations details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTransformationsAsync method instead.")]
         public Task<ListTransformsResult> ListTransformationsAsync(CancellationToken? cancellationToken = null)
         {
-            return ListTransformationsAsync(new ListTransformsParams(), cancellationToken);
+            return AdminApi.ListTransformationsAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a list of transformations.
-        /// </summary>
-        /// <returns>Parsed list of transformations details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTransformations method instead.")]
         public ListTransformsResult ListTransformations()
         {
-            return ListTransformations(new ListTransformsParams());
+            return AdminApi.ListTransformations();
         }
 
-        /// <summary>
-        /// Gets a list of transformations asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters of the request for a list of transformation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed list of transformations details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTransformationsAsync method instead.")]
         public Task<ListTransformsResult> ListTransformationsAsync(ListTransformsParams parameters, CancellationToken? cancellationToken = null)
         {
-            var urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("transformations").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApiAsync<ListTransformsResult>(
-                HttpMethod.GET,
-                urlBuilder.ToString(),
-                parameters,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.ListTransformationsAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a list of transformations.
-        /// </summary>
-        /// <param name="parameters">Parameters of the request for a list of transformation.</param>
-        /// <returns>Parsed list of transformations details.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.ListTransformations method instead.")]
         public ListTransformsResult ListTransformations(ListTransformsParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("transformations").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApi<ListTransformsResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return AdminApi.ListTransformations(parameters);
         }
 
-        /// <summary>
-        /// Gets details of a single transformation asynchronously.
-        /// </summary>
-        /// <param name="transform">Name of the transformation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed details of a single transformation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetTransformAsync method instead.")]
         public Task<GetTransformResult> GetTransformAsync(string transform, CancellationToken? cancellationToken = null)
         {
-            return GetTransformAsync(new GetTransformParams() { Transformation = transform }, cancellationToken);
+            return AdminApi.GetTransformAsync(transform, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets details of a single transformation by name.
-        /// </summary>
-        /// <param name="transform">Name of the transformation.</param>
-        /// <returns>Parsed details of a single transformation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetTransform method instead.")]
         public GetTransformResult GetTransform(string transform)
         {
-            return GetTransform(new GetTransformParams() { Transformation = transform });
+            return AdminApi.GetTransform(transform);
         }
 
-        /// <summary>
-        /// Gets details of a single transformation asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters of the request of transformation details.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed details of a single transformation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetTransformAsync method instead.")]
         public Task<GetTransformResult> GetTransformAsync(GetTransformParams parameters, CancellationToken? cancellationToken = null)
         {
-            var urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("transformations").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApiAsync<GetTransformResult>(
-                HttpMethod.GET,
-                urlBuilder.ToString(),
-                parameters,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.GetTransformAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets details of a single transformation.
-        /// </summary>
-        /// <param name="parameters">Parameters of the request of transformation details.</param>
-        /// <returns>Parsed details of a single transformation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetTransform method instead.")]
         public GetTransformResult GetTransform(GetTransformParams parameters)
         {
-            var urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("transformations").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApi<GetTransformResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return AdminApi.GetTransform(parameters);
         }
 
-        /// <summary>
-        /// Updates details of an existing resource asynchronously.
-        /// </summary>
-        /// <param name="publicId">The public ID of the resource to update.</param>
-        /// <param name="moderationStatus">The image moderation status.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response of the detailed resource information.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResourceAsync method instead.")]
         public Task<GetResourceResult> UpdateResourceAsync(string publicId, ModerationStatus moderationStatus, CancellationToken? cancellationToken = null)
         {
-            return UpdateResourceAsync(new UpdateParams(publicId) { ModerationStatus = moderationStatus }, cancellationToken);
+            return AdminApi.UpdateResourceAsync(publicId, moderationStatus, cancellationToken);
         }
 
-        /// <summary>
-        /// Updates details of an existing resource.
-        /// </summary>
-        /// <param name="publicId">The public ID of the resource to update.</param>
-        /// <param name="moderationStatus">The image moderation status.</param>
-        /// <returns>Parsed response of the detailed resource information.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResource method instead.")]
         public GetResourceResult UpdateResource(string publicId, ModerationStatus moderationStatus)
         {
-            return UpdateResource(new UpdateParams(publicId) { ModerationStatus = moderationStatus });
+            return AdminApi.UpdateResource(publicId, moderationStatus);
         }
 
-        /// <summary>
-        /// Updates details of an existing resource asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters to update details of an existing resource.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response of the detailed resource information.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResourceAsync method instead.")]
         public Task<GetResourceResult> UpdateResourceAsync(UpdateParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = GetApiUrlV().
-                ResourceType("resources").
-                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
-                Add(parameters.Type).Add(parameters.PublicId).
-                BuildUrl();
-
-            return m_api.CallApiAsync<GetResourceResult>(HttpMethod.POST, url, parameters, null, null, cancellationToken);
+            return AdminApi.UpdateResourceAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Updates details of an existing resource.
-        /// </summary>
-        /// <param name="parameters">Parameters to update details of an existing resource.</param>
-        /// <returns>Parsed response of the detailed resource information.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateResource method instead.")]
         public GetResourceResult UpdateResource(UpdateParams parameters)
         {
-            var url = GetApiUrlV().
-                ResourceType("resources").
-                Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType)).
-                Add(parameters.Type).Add(parameters.PublicId).
-                BuildUrl();
-
-            return m_api.CallApi<GetResourceResult>(HttpMethod.POST, url, parameters, null);
+            return AdminApi.UpdateResource(parameters);
         }
 
-        /// <summary>
-        /// Gets details of a single resource as well as all its derived resources by its public ID asynchronously.
-        /// </summary>
-        /// <param name="publicId">The public ID of the resource.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response with the detailed resource information.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetResourceAsync method instead.")]
         public Task<GetResourceResult> GetResourceAsync(string publicId, CancellationToken? cancellationToken = null)
         {
-            return GetResourceAsync(new GetResourceParams(publicId), cancellationToken);
+            return AdminApi.GetResourceAsync(publicId, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets details of a single resource as well as all its derived resources by its public ID.
-        /// </summary>
-        /// <param name="publicId">The public ID of the resource.</param>
-        /// <returns>Parsed response with the detailed resource information.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetResource method instead.")]
         public GetResourceResult GetResource(string publicId)
         {
-            return GetResource(new GetResourceParams(publicId));
+            return AdminApi.GetResource(publicId);
         }
 
-        /// <summary>
-        /// Gets details of the requested resource as well as all its derived resources asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters of the request of resource.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response with the detailed resource information.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetResourceAsync method instead.")]
         public Task<GetResourceResult> GetResourceAsync(GetResourceParams parameters, CancellationToken? cancellationToken = null)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("resources").
-                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
-                Add(parameters.Type).
-                Add(parameters.PublicId).
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApiAsync<GetResourceResult>(
-                HttpMethod.GET,
-                urlBuilder.ToString(),
-                parameters,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.GetResourceAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets details of the requested resource as well as all its derived resources.
-        /// </summary>
-        /// <param name="parameters">Parameters of the request of resource.</param>
-        /// <returns>Parsed response with the detailed resource information.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.GetResource method instead.")]
         public GetResourceResult GetResource(GetResourceParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("resources").
-                Add(Api.GetCloudinaryParam(parameters.ResourceType)).
-                Add(parameters.Type).
-                Add(parameters.PublicId).
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApi<GetResourceResult>(HttpMethod.GET, urlBuilder.ToString(), parameters, null);
+            return AdminApi.GetResource(parameters);
         }
 
-        /// <summary>
-        /// Deletes all derived resources with the given IDs asynchronously.
-        /// </summary>
-        /// <param name="ids">An array of up to 100 derived_resource_ids.</param>
-        /// <returns>Parsed result of deletion derived resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteDerivedResourcesAsync method instead.")]
         public Task<DelDerivedResResult> DeleteDerivedResourcesAsync(params string[] ids)
         {
-            var p = new DelDerivedResParams();
-            p.DerivedResources.AddRange(ids);
-            return DeleteDerivedResourcesAsync(p);
+            return AdminApi.DeleteDerivedResourcesAsync(ids);
         }
 
-        /// <summary>
-        /// Deletes all derived resources with the given IDs.
-        /// </summary>
-        /// <param name="ids">An array of up to 100 derived_resource_ids.</param>
-        /// <returns>Parsed result of deletion derived resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteDerivedResources method instead.")]
         public DelDerivedResResult DeleteDerivedResources(params string[] ids)
         {
-            DelDerivedResParams p = new DelDerivedResParams();
-            p.DerivedResources.AddRange(ids);
-            return DeleteDerivedResources(p);
+            return AdminApi.DeleteDerivedResources(ids);
         }
 
-        /// <summary>
-        /// Deletes all derived resources with the given parameters asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters to delete derived resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of deletion derived resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteDerivedResourcesAsync method instead.")]
         public Task<DelDerivedResResult> DeleteDerivedResourcesAsync(DelDerivedResParams parameters, CancellationToken? cancellationToken = null)
         {
-            var urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                Add("derived_resources").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApiAsync<DelDerivedResResult>(
-                HttpMethod.DELETE,
-                urlBuilder.ToString(),
-                parameters,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.DeleteDerivedResourcesAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes all derived resources with the given parameters.
-        /// </summary>
-        /// <param name="parameters">Parameters to delete derived resources.</param>
-        /// <returns>Parsed result of deletion derived resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteDerivedResources method instead.")]
         public DelDerivedResResult DeleteDerivedResources(DelDerivedResParams parameters)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                Add("derived_resources").
-                BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            return m_api.CallApi<DelDerivedResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
+            return AdminApi.DeleteDerivedResources(parameters);
         }
 
-        /// <summary>
-        /// Deletes all resources of the given resource type and with the given public IDs asynchronously.
-        /// </summary>
-        /// <param name="type">The type of file to delete. Default: image.</param>
-        /// <param name="publicIds">Array of up to 100 public_ids.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesAsync method instead.")]
         public Task<DelResResult> DeleteResourcesAsync(ResourceType type, params string[] publicIds)
         {
-            var p = new DelResParams() { ResourceType = type };
-            p.PublicIds.AddRange(publicIds);
-            return DeleteResourcesAsync(p);
+            return AdminApi.DeleteResourcesAsync(type, publicIds);
         }
 
-        /// <summary>
-        /// Deletes all resources of the given resource type and with the given public IDs.
-        /// </summary>
-        /// <param name="type">The type of file to delete. Default: image.</param>
-        /// <param name="publicIds">Array of up to 100 public_ids.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResources method instead.")]
         public DelResResult DeleteResources(ResourceType type, params string[] publicIds)
         {
-            DelResParams p = new DelResParams() { ResourceType = type };
-            p.PublicIds.AddRange(publicIds);
-            return DeleteResources(p);
+            return AdminApi.DeleteResources(type, publicIds);
         }
 
-        /// <summary>
-        /// Deletes all resources with the given public IDs asynchronously.
-        /// </summary>
-        /// <param name="publicIds">Array of up to 100 public_ids.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesAsync method instead.")]
         public Task<DelResResult> DeleteResourcesAsync(params string[] publicIds)
         {
-            var p = new DelResParams();
-            p.PublicIds.AddRange(publicIds);
-            return DeleteResourcesAsync(p);
+            return AdminApi.DeleteResourcesAsync(publicIds);
         }
 
-        /// <summary>
-        /// Deletes all resources with the given public IDs.
-        /// </summary>
-        /// <param name="publicIds">Array of up to 100 public_ids.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResources method instead.")]
         public DelResResult DeleteResources(params string[] publicIds)
         {
-            DelResParams p = new DelResParams();
-            p.PublicIds.AddRange(publicIds);
-            return DeleteResources(p);
+            return AdminApi.DeleteResources(publicIds);
         }
 
-        /// <summary>
-        /// Deletes all resources, including derived resources, where the public ID starts with the given prefix (up to
-        /// a maximum of 1000 original resources) asynchronously.
-        /// </summary>
-        /// <param name="prefix">Delete all resources where the public ID starts with the given prefix. </param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesByPrefixAsync method instead.")]
         public Task<DelResResult> DeleteResourcesByPrefixAsync(string prefix, CancellationToken? cancellationToken = null)
         {
-            var p = new DelResParams() { Prefix = prefix };
-            return DeleteResourcesAsync(p, cancellationToken);
+            return AdminApi.DeleteResourcesByPrefixAsync(prefix, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes all resources, including derived resources, where the public ID starts with the given prefix (up to
-        /// a maximum of 1000 original resources).
-        /// </summary>
-        /// <param name="prefix">Delete all resources where the public ID starts with the given prefix. </param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesByPrefix method instead.")]
         public DelResResult DeleteResourcesByPrefix(string prefix)
         {
-            DelResParams p = new DelResParams() { Prefix = prefix };
-            return DeleteResources(p);
+            return AdminApi.DeleteResourcesByPrefix(prefix);
         }
 
-        /// <summary>
-        /// Deletes all resources, including derived resources, where the public ID starts with the given prefix (up to
-        /// a maximum of 1000 original resources) asynchronously.
-        /// </summary>
-        /// <param name="prefix">Delete all resources where the public ID starts with the given prefix. </param>
-        /// <param name="keepOriginal">If true, delete only the derived images of the matching resources.</param>
-        /// <param name="nextCursor">Continue deletion from the given cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesByPrefixAsync method instead.")]
         public Task<DelResResult> DeleteResourcesByPrefixAsync(string prefix, bool keepOriginal, string nextCursor, CancellationToken? cancellationToken = null)
         {
-            var p = new DelResParams()
-            {
-                Prefix = prefix,
-                KeepOriginal = keepOriginal,
-                NextCursor = nextCursor,
-            };
-            return DeleteResourcesAsync(p, cancellationToken);
+            return AdminApi.DeleteResourcesByPrefixAsync(prefix, keepOriginal, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes all resources, including derived resources, where the public ID starts with the given prefix (up to
-        /// a maximum of 1000 original resources).
-        /// </summary>
-        /// <param name="prefix">Delete all resources where the public ID starts with the given prefix. </param>
-        /// <param name="keepOriginal">If true, delete only the derived images of the matching resources.</param>
-        /// <param name="nextCursor">Continue deletion from the given cursor.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesByPrefix method instead.")]
         public DelResResult DeleteResourcesByPrefix(string prefix, bool keepOriginal, string nextCursor)
         {
-            DelResParams p = new DelResParams() { Prefix = prefix, KeepOriginal = keepOriginal, NextCursor = nextCursor };
-            return DeleteResources(p);
+            return AdminApi.DeleteResourcesByPrefix(prefix, keepOriginal, nextCursor);
         }
 
-        /// <summary>
-        /// Deletes resources by the given tag name asynchronously.
-        /// </summary>
-        /// <param name="tag">
-        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
-        /// 1000 original resources).
-        /// </param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesByTagAsync method instead.")]
         public Task<DelResResult> DeleteResourcesByTagAsync(string tag, CancellationToken? cancellationToken = null)
         {
-            var p = new DelResParams() { Tag = tag };
-            return DeleteResourcesAsync(p, cancellationToken);
+            return AdminApi.DeleteResourcesByTagAsync(tag, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes resources by the given tag name.
-        /// </summary>
-        /// <param name="tag">
-        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
-        /// 1000 original resources).
-        /// </param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesByTag method instead.")]
         public DelResResult DeleteResourcesByTag(string tag)
         {
-            DelResParams p = new DelResParams() { Tag = tag };
-            return DeleteResources(p);
+            return AdminApi.DeleteResourcesByTag(tag);
         }
 
-        /// <summary>
-        /// Deletes resources by the given tag name asynchronously.
-        /// </summary>
-        /// <param name="tag">
-        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
-        /// 1000 original resources).
-        /// </param>
-        /// <param name="keepOriginal">If true, delete only the derived images of the matching resources.</param>
-        /// <param name="nextCursor">Continue deletion from the given cursor.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesByTagAsync method instead.")]
         public Task<DelResResult> DeleteResourcesByTagAsync(string tag, bool keepOriginal, string nextCursor, CancellationToken? cancellationToken = null)
         {
-            var p = new DelResParams()
-            {
-                Tag = tag,
-                KeepOriginal = keepOriginal,
-                NextCursor = nextCursor,
-            };
-            return DeleteResourcesAsync(p, cancellationToken);
+            return AdminApi.DeleteResourcesByTagAsync(tag, keepOriginal, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes resources by the given tag name.
-        /// </summary>
-        /// <param name="tag">
-        /// Delete all resources (and their derivatives) with the given tag name (up to a maximum of
-        /// 1000 original resources).
-        /// </param>
-        /// <param name="keepOriginal">If true, delete only the derived images of the matching resources.</param>
-        /// <param name="nextCursor">Continue deletion from the given cursor.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesByTag method instead.")]
         public DelResResult DeleteResourcesByTag(string tag, bool keepOriginal, string nextCursor)
         {
-            DelResParams p = new DelResParams() { Tag = tag, KeepOriginal = keepOriginal, NextCursor = nextCursor };
-            return DeleteResources(p);
+            return AdminApi.DeleteResourcesByTag(tag, keepOriginal, nextCursor);
         }
 
-        /// <summary>
-        /// Deletes all resources asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteAllResourcesAsync method instead.")]
         public Task<DelResResult> DeleteAllResourcesAsync(CancellationToken? cancellationToken = null)
         {
-            var p = new DelResParams() { All = true };
-            return DeleteResourcesAsync(p, cancellationToken);
+            return AdminApi.DeleteAllResourcesAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes all resources.
-        /// </summary>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteAllResources method instead.")]
         public DelResResult DeleteAllResources()
         {
-            DelResParams p = new DelResParams() { All = true };
-            return DeleteResources(p);
+            return AdminApi.DeleteAllResources();
         }
 
-        /// <summary>
-        /// Deletes all resources with conditions asynchronously.
-        /// </summary>
-        /// <param name="keepOriginal">If true, delete only the derived resources.</param>
-        /// <param name="nextCursor">
-        /// Value of the <see cref="DelResResult.NextCursor"/> to continue delete from.
-        /// </param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteAllResourcesAsync method instead.")]
         public Task<DelResResult> DeleteAllResourcesAsync(bool keepOriginal, string nextCursor, CancellationToken? cancellationToken = null)
         {
-            var p = new DelResParams()
-            {
-                All = true,
-                KeepOriginal = keepOriginal,
-                NextCursor = nextCursor,
-            };
-            return DeleteResourcesAsync(p, cancellationToken);
+            return AdminApi.DeleteAllResourcesAsync(keepOriginal, nextCursor, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes all resources with conditions.
-        /// </summary>
-        /// <param name="keepOriginal">If true, delete only the derived resources.</param>
-        /// <param name="nextCursor">
-        /// Value of the <see cref="DelResResult.NextCursor"/> to continue delete from.
-        /// </param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteAllResources method instead.")]
         public DelResResult DeleteAllResources(bool keepOriginal, string nextCursor)
         {
-            DelResParams p = new DelResParams() { All = true, KeepOriginal = keepOriginal, NextCursor = nextCursor };
-            return DeleteResources(p);
+            return AdminApi.DeleteAllResources(keepOriginal, nextCursor);
         }
 
-        /// <summary>
-        /// Deletes all resources with parameters asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters for deletion resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResourcesAsync method instead.")]
         public Task<DelResResult> DeleteResourcesAsync(DelResParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = GetApiUrlV().
-                Add("resources").
-                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
-
-            url = string.IsNullOrEmpty(parameters.Tag)
-                ? url.Add(parameters.Type)
-                : url.Add("tags").Add(parameters.Tag);
-
-            var urlBuilder = new UrlBuilder(url.BuildUrl(), parameters.ToParamsDictionary());
-
-            return m_api.CallApiAsync<DelResResult>(
-                HttpMethod.DELETE,
-                urlBuilder.ToString(),
-                parameters,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.DeleteResourcesAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes all resources with parameters.
-        /// </summary>
-        /// <param name="parameters">Parameters for deletion resources.</param>
-        /// <returns>Parsed result of deletion resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteResources method instead.")]
         public DelResResult DeleteResources(DelResParams parameters)
         {
-            Url url = GetApiUrlV().
-                Add("resources").
-                Add(Api.GetCloudinaryParam<ResourceType>(parameters.ResourceType));
-
-            url = string.IsNullOrEmpty(parameters.Tag)
-                ? url.Add(parameters.Type)
-                : url.Add("tags").Add(parameters.Tag);
-
-            UrlBuilder urlBuilder = new UrlBuilder(url.BuildUrl(), parameters.ToParamsDictionary());
-
-            return m_api.CallApi<DelResResult>(HttpMethod.DELETE, urlBuilder.ToString(), parameters, null);
+            return AdminApi.DeleteResources(parameters);
         }
 
-        /// <summary>
-        /// Restores a deleted resources by array of public ids asynchronously.
-        /// </summary>
-        /// <param name="publicIds">The public IDs of (deleted or existing) backed up resources to restore.</param>
-        /// <returns>Parsed result of restoring resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.RestoreAsync method instead.")]
         public Task<RestoreResult> RestoreAsync(params string[] publicIds)
         {
-            var restoreParams = new RestoreParams();
-            restoreParams.PublicIds.AddRange(publicIds);
-
-            return RestoreAsync(restoreParams);
+            return AdminApi.RestoreAsync(publicIds);
         }
 
-        /// <summary>
-        /// Restores a deleted resources by array of public ids.
-        /// </summary>
-        /// <param name="publicIds">The public IDs of (deleted or existing) backed up resources to restore.</param>
-        /// <returns>Parsed result of restoring resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.Restore method instead.")]
         public RestoreResult Restore(params string[] publicIds)
         {
-            RestoreParams restoreParams = new RestoreParams();
-            restoreParams.PublicIds.AddRange(publicIds);
-
-            return Restore(restoreParams);
+            return AdminApi.Restore(publicIds);
         }
 
-        /// <summary>
-        /// Restores a deleted resources asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters to restore a deleted resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of restoring resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.RestoreAsync method instead.")]
         public Task<RestoreResult> RestoreAsync(RestoreParams parameters, CancellationToken? cancellationToken = null)
         {
-            var url = GetApiUrlV().
-                ResourceType("resources").
-                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
-                Add("upload").
-                Add("restore").BuildUrl();
-
-            return m_api.CallApiAsync<RestoreResult>(HttpMethod.POST, url, parameters, null, null, cancellationToken);
+            return AdminApi.RestoreAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Restores a deleted resources.
-        /// </summary>
-        /// <param name="parameters">Parameters to restore a deleted resources.</param>
-        /// <returns>Parsed result of restoring resources.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.Restore method instead.")]
         public RestoreResult Restore(RestoreParams parameters)
         {
-            var url = GetApiUrlV().
-                ResourceType("resources").
-                Add(Api.GetCloudinaryParam(parameters.ResourceType)).
-                Add("upload").
-                Add("restore").BuildUrl();
-
-            return m_api.CallApi<RestoreResult>(HttpMethod.POST, url, parameters, null);
+            return AdminApi.Restore(parameters);
         }
 
-        /// <summary>
-        /// Returns list of all upload mappings asynchronously.
-        /// </summary>
-        /// <param name="parameters">
-        /// Uses only <see cref="UploadMappingParams.MaxResults"/> and <see cref="UploadMappingParams.NextCursor"/>
-        /// properties. Can be null.
-        /// </param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UploadMappingsAsync method instead.")]
         public Task<UploadMappingResults> UploadMappingsAsync(UploadMappingParams parameters, CancellationToken? cancellationToken = null)
         {
-            return CallUploadMappingsApiAsync(HttpMethod.GET, parameters, cancellationToken);
+            return AdminApi.UploadMappingsAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Returns list of all upload mappings.
-        /// </summary>
-        /// <param name="parameters">
-        /// Uses only <see cref="UploadMappingParams.MaxResults"/> and <see cref="UploadMappingParams.NextCursor"/>
-        /// properties. Can be null.
-        /// </param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UploadMappings method instead.")]
         public UploadMappingResults UploadMappings(UploadMappingParams parameters)
         {
-            return CallUploadMappingsAPI(HttpMethod.GET, parameters);
+            return AdminApi.UploadMappings(parameters);
         }
 
-        /// <summary>
-        /// Returns single upload mapping by <see cref="Folder"/> name asynchronously.
-        /// </summary>
-        /// <param name="folder">Folder name.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UploadMappingAsync method instead.")]
         public Task<UploadMappingResults> UploadMappingAsync(string folder, CancellationToken? cancellationToken = null)
         {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException("Folder name is required.", nameof(folder));
-            }
-
-            var parameters = new UploadMappingParams() { Folder = folder };
-
-            return CallUploadMappingsApiAsync(HttpMethod.GET, parameters, cancellationToken);
+            return AdminApi.UploadMappingAsync(folder, cancellationToken);
         }
 
-        /// <summary>
-        /// Returns single upload mapping by <see cref="Folder"/> name.
-        /// </summary>
-        /// <param name="folder">Folder name.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UploadMapping method instead.")]
         public UploadMappingResults UploadMapping(string folder)
         {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException("Folder must be specified.");
-            }
-
-            var parameters = new UploadMappingParams() { Folder = folder };
-
-            return CallUploadMappingsAPI(HttpMethod.GET, parameters);
+            return AdminApi.UploadMapping(folder);
         }
 
-        /// <summary>
-        /// Creates a new upload mapping folder and its template (URL) asynchronously.
-        /// </summary>
-        /// <param name="folder">Folder name to create.</param>
-        /// <param name="template">URL template for mapping to the <paramref name="folder"/>.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.CreateUploadMappingAsync method instead.")]
         public Task<UploadMappingResults> CreateUploadMappingAsync(string folder, string template, CancellationToken? cancellationToken = null)
         {
-            var parameters = CreateUploadMappingParams(folder, template);
-            return CallUploadMappingsApiAsync(HttpMethod.POST, parameters, cancellationToken);
+            return AdminApi.CreateUploadMappingAsync(folder, template, cancellationToken);
         }
 
-        /// <summary>
-        /// Creates a new upload mapping folder and its template (URL).
-        /// </summary>
-        /// <param name="folder">Folder name to create.</param>
-        /// <param name="template">URL template for mapping to the <paramref name="folder"/>.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.CreateUploadMapping method instead.")]
         public UploadMappingResults CreateUploadMapping(string folder, string template)
         {
-            var parameters = CreateUploadMappingParams(folder, template);
-            return CallUploadMappingsAPI(HttpMethod.POST, parameters);
+            return AdminApi.CreateUploadMapping(folder, template);
         }
 
-        /// <summary>
-        /// Updates existing upload mapping asynchronously.
-        /// </summary>
-        /// <param name="folder">Existing Folder to be updated.</param>
-        /// <param name="newTemplate">New value of Template URL.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after Upload mappings update.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateUploadMappingAsync method instead.")]
         public Task<UploadMappingResults> UpdateUploadMappingAsync(string folder, string newTemplate, CancellationToken? cancellationToken = null)
         {
-            var parameters = CreateUploadMappingParams(folder, newTemplate);
-            return CallUploadMappingsApiAsync(HttpMethod.PUT, parameters, cancellationToken);
+            return AdminApi.UpdateUploadMappingAsync(folder, newTemplate, cancellationToken);
         }
 
-        /// <summary>
-        /// Updates existing upload mapping.
-        /// </summary>
-        /// <param name="folder">Existing Folder to be updated.</param>
-        /// <param name="newTemplate">New value of Template URL.</param>
-        /// <returns>Parsed response after Upload mappings update.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateUploadMapping method instead.")]
         public UploadMappingResults UpdateUploadMapping(string folder, string newTemplate)
         {
-            var parameters = CreateUploadMappingParams(folder, newTemplate);
-            return CallUploadMappingsAPI(HttpMethod.PUT, parameters);
+            return AdminApi.UpdateUploadMapping(folder, newTemplate);
         }
 
-        /// <summary>
-        /// Deletes all upload mappings asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after Upload mappings delete.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteUploadMappingAsync method instead.")]
         public Task<UploadMappingResults> DeleteUploadMappingAsync(CancellationToken? cancellationToken = null)
         {
-            return DeleteUploadMappingAsync(string.Empty, cancellationToken);
+            return AdminApi.DeleteUploadMappingAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes all upload mappings.
-        /// </summary>
-        /// <returns>Parsed response after Upload mappings delete.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteUploadMapping method instead.")]
         public UploadMappingResults DeleteUploadMapping()
         {
-            return DeleteUploadMapping(string.Empty);
+            return AdminApi.DeleteUploadMapping();
         }
 
-        /// <summary>
-        /// Deletes upload mapping by <paramref name="folder"/> name asynchronously.
-        /// </summary>
-        /// <param name="folder">Folder name.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteUploadMappingAsync method instead.")]
         public Task<UploadMappingResults> DeleteUploadMappingAsync(string folder, CancellationToken? cancellationToken = null)
         {
-            var parameters = new UploadMappingParams { Folder = folder };
-            return CallUploadMappingsApiAsync(HttpMethod.DELETE, parameters, cancellationToken);
+            return AdminApi.DeleteUploadMappingAsync(folder, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes upload mapping by <paramref name="folder"/> name.
-        /// </summary>
-        /// <param name="folder">Folder name.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteUploadMapping method instead.")]
         public UploadMappingResults DeleteUploadMapping(string folder)
         {
-            var parameters = new UploadMappingParams { Folder = folder };
-            return CallUploadMappingsAPI(HttpMethod.DELETE, parameters);
+            return AdminApi.DeleteUploadMapping(folder);
         }
 
-        /// <summary>
-        /// Updates Cloudinary transformation resource asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters for transformation update.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after transformation manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateTransformAsync method instead.")]
         public Task<UpdateTransformResult> UpdateTransformAsync(UpdateTransformParams parameters, CancellationToken? cancellationToken = null)
         {
-            var httpMethod = HttpMethod.PUT;
-            var url = GetTransformationUrl(httpMethod, parameters);
-
-            return m_api.CallApiAsync<UpdateTransformResult>(httpMethod, url, parameters, null, null, cancellationToken);
+            return AdminApi.UpdateTransformAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Updates Cloudinary transformation resource.
-        /// </summary>
-        /// <param name="parameters">Parameters for transformation update.</param>
-        /// <returns>Parsed response after transformation manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.UpdateTransform method instead.")]
         public UpdateTransformResult UpdateTransform(UpdateTransformParams parameters)
         {
-            var httpMethod = HttpMethod.PUT;
-            var url = GetTransformationUrl(httpMethod, parameters);
-
-            return m_api.CallApi<UpdateTransformResult>(httpMethod, url, parameters, null);
+            return AdminApi.UpdateTransform(parameters);
         }
 
-        /// <summary>
-        /// Creates Cloudinary transformation resource asynchronously.
-        /// </summary>
-        /// <param name="parameters">Parameters of the new transformation.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after transformation manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.CreateTransformAsync method instead.")]
         public Task<TransformResult> CreateTransformAsync(CreateTransformParams parameters, CancellationToken? cancellationToken = null)
         {
-            var httpMethod = HttpMethod.POST;
-            var url = GetTransformationUrl(httpMethod, parameters);
-
-            return m_api.CallApiAsync<TransformResult>(httpMethod, url, parameters, null, null, cancellationToken);
+            return AdminApi.CreateTransformAsync(parameters, cancellationToken);
         }
 
-        /// <summary>
-        /// Creates Cloudinary transformation resource.
-        /// </summary>
-        /// <param name="parameters">Parameters of the new transformation.</param>
-        /// <returns>Parsed response after transformation manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.CreateTransform method instead.")]
         public TransformResult CreateTransform(CreateTransformParams parameters)
         {
-            var httpMethod = HttpMethod.POST;
-            var url = GetTransformationUrl(httpMethod, parameters);
-
-            return m_api.CallApi<TransformResult>(httpMethod, url, parameters, null);
+            return AdminApi.CreateTransform(parameters);
         }
 
-        /// <summary>
-        /// Deletes transformation by name asynchronously.
-        /// </summary>
-        /// <param name="transformName">The name of transformation to delete.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after transformation manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteTransformAsync method instead.")]
         public Task<TransformResult> DeleteTransformAsync(string transformName, CancellationToken? cancellationToken = null)
         {
-            var httpMethod = HttpMethod.DELETE;
-            var url = GetTransformationUrl(httpMethod, new DeleteTransformParams() { Transformation = transformName });
-
-            return m_api.CallApiAsync<TransformResult>(
-                httpMethod,
-                url,
-                null,
-                null,
-                null,
-                cancellationToken);
+            return AdminApi.DeleteTransformAsync(transformName, cancellationToken);
         }
 
-        /// <summary>
-        /// Deletes transformation by name.
-        /// </summary>
-        /// <param name="transformName">The name of transformation to delete.</param>
-        /// <returns>Parsed response after transformation manipulation.</returns>
+        /// <inheritdoc/>
+        [Obsolete("This method is deprecated and will be removed in future versions of the SDK. Use Cloudinary.AdminApi.DeleteTransform method instead.")]
         public TransformResult DeleteTransform(string transformName)
         {
-            var httpMethod = HttpMethod.DELETE;
-            var url = GetTransformationUrl(httpMethod, new DeleteTransformParams() { Transformation = transformName });
-
-            return m_api.CallApi<TransformResult>(httpMethod, url, null, null);
+            return AdminApi.DeleteTransform(transformName);
         }
 
         /// <summary>
@@ -3052,23 +2076,6 @@
             return parameters as SortedDictionary<string, object> ?? new SortedDictionary<string, object>(parameters);
         }
 
-        private static void CheckIfNotEmpty(string folder)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException("Folder must be set.");
-            }
-        }
-
-        private static void CheckFolderParameter(string folder)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException(
-                    "folder must be set. Please use RootFolders() to get list of folders in root.");
-            }
-        }
-
         private static void UpdateContentRange(UploadLargeParams internalParams)
         {
             var fileDescription = internalParams.Parameters.File;
@@ -3103,26 +2110,6 @@
             }
         }
 
-        private static UploadMappingParams CreateUploadMappingParams(string folder, string template)
-        {
-            if (string.IsNullOrEmpty(folder))
-            {
-                throw new ArgumentException("Folder property must be specified.");
-            }
-
-            if (string.IsNullOrEmpty(template))
-            {
-                throw new ArgumentException("Template must be specified.");
-            }
-
-            var parameters = new UploadMappingParams()
-            {
-                Folder = folder,
-                Template = template,
-            };
-            return parameters;
-        }
-
         private static void AppendScriptLine(StringBuilder sb, string dir, string script)
         {
             sb.Append("<script src=\"");
@@ -3146,49 +2133,6 @@
         {
             return m_api.ApiUrlV;
         }
-
-        private string GetUploadMappingUrl()
-        {
-            return GetApiUrlV().
-                ResourceType("upload_mappings").
-                BuildUrl();
-        }
-
-        private string GetUploadMappingUrl(UploadMappingParams parameters)
-        {
-            var uri = GetUploadMappingUrl();
-            return (parameters == null) ? uri : new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
-        }
-
-        private UploadPresetApiParams PrepareUploadPresetApiParams(UploadPresetParams parameters)
-        {
-            var paramsCopy = (UploadPresetParams)parameters.Copy();
-            paramsCopy.Name = null;
-
-            var url = GetApiUrlV()
-                .Add("upload_presets")
-                .Add(parameters.Name)
-                .BuildUrl();
-
-            return new UploadPresetApiParams(HttpMethod.PUT, url, paramsCopy);
-        }
-
-        /// <summary>
-        /// Call api with specified parameters.
-        /// </summary>
-        /// <param name="apiParams">New parameters for upload preset.</param>
-        private T CallApi<T>(UploadPresetApiParams apiParams)
-            where T : BaseResult, new() =>
-            m_api.CallApi<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null);
-
-        /// <summary>
-        /// Call api with specified parameters asynchronously.
-        /// </summary>
-        /// <param name="apiParams">New parameters for upload preset.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null)
-            where T : BaseResult, new() =>
-            m_api.CallApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, null, null, cancellationToken);
 
         private Task<PublishResourceResult> PublishResourceAsync(
             string byKey,
@@ -3222,48 +2166,6 @@
                 .Add("publish_resources");
 
             return m_api.CallApi<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
-        }
-
-        private Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeAsync(
-            string byKey,
-            string value,
-            UpdateResourceAccessModeParams parameters,
-            CancellationToken? cancellationToken = null)
-        {
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                parameters.AddCustomParam(byKey, value);
-            }
-
-            var url = GetApiUrlV()
-                 .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
-                 .Add(parameters.Type)
-                 .Add(Constants.UPDATE_ACESS_MODE);
-
-            return m_api.CallApiAsync<UpdateResourceAccessModeResult>(
-                HttpMethod.POST,
-                url.BuildUrl(),
-                parameters,
-                null,
-                null,
-                cancellationToken);
-        }
-
-        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
-        {
-            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
-            {
-                parameters.AddCustomParam(byKey, value);
-            }
-
-            Url url = GetApiUrlV()
-                 .Add(Constants.RESOURCES_API_URL)
-                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
-                 .Add(parameters.Type)
-                 .Add(Constants.UPDATE_ACESS_MODE);
-
-            return m_api.CallApi<UpdateResourceAccessModeResult>(HttpMethod.POST, url.BuildUrl(), parameters, null);
         }
 
         /// <summary>
@@ -3321,122 +2223,12 @@
             return GetApiUrlV().Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
         }
 
-        private string GetFolderUrl(string folder = null, GetFoldersParams parameters = null)
-        {
-            var urlWithoutParams = GetApiUrlV().Add("folders").Add(folder).BuildUrl();
-
-            return (parameters != null) ? new UrlBuilder(urlWithoutParams, parameters.ToParamsDictionary()).ToString() : urlWithoutParams;
-        }
-
-        private string GetUsageUrl(DateTime? date)
-        {
-            var url = GetApiUrlV().Action("usage");
-
-            if (date.HasValue)
-            {
-                url.Add(date.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture));
-            }
-
-            return url.BuildUrl();
-        }
-
         private string GetRenameUrl(RenameParams parameters) =>
             m_api
                 .ApiUrlImgUpV
                 .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
                 .Action("rename")
                 .BuildUrl();
-
-        private string GetListResourcesUrl(ListResourcesParams parameters)
-        {
-            var url = GetApiUrlV().ResourceType("resources").Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
-
-            switch (parameters)
-            {
-                case ListResourcesByTagParams tagParams:
-                    if (!string.IsNullOrEmpty(tagParams.Tag))
-                    {
-                        url.Add("tags").Add(tagParams.Tag);
-                    }
-
-                    break;
-                case ListResourcesByModerationParams modParams:
-                    if (!string.IsNullOrEmpty(modParams.ModerationKind))
-                    {
-                        url.Add("moderations")
-                            .Add(modParams.ModerationKind)
-                            .Add(Api.GetCloudinaryParam(modParams.ModerationStatus));
-                    }
-
-                    break;
-                case ListResourcesByContextParams _:
-                    {
-                        url.Add("context");
-                    }
-
-                    break;
-            }
-
-            var urlBuilder = new UrlBuilder(
-                url.BuildUrl(),
-                parameters.ToParamsDictionary());
-
-            var s = urlBuilder.ToString();
-            return s;
-        }
-
-        /// <summary>
-        /// Calls an upload mappings API asynchronously.
-        /// </summary>
-        /// <param name="httpMethod">HTTP method.</param>
-        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
-        /// existing online locations.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
-        private Task<UploadMappingResults> CallUploadMappingsApiAsync(HttpMethod httpMethod, UploadMappingParams parameters, CancellationToken? cancellationToken = null)
-        {
-            var url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-                ? GetUploadMappingUrl()
-                : GetUploadMappingUrl(parameters);
-
-            return m_api.CallApiAsync<UploadMappingResults>(
-                httpMethod,
-                url,
-                parameters,
-                null,
-                null,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// Calls an upload mappings API.
-        /// </summary>
-        /// <param name="httpMethod">HTTP method.</param>
-        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
-        /// existing online locations.</param>
-        /// <returns>Parsed response after Upload mappings manipulation.</returns>
-        private UploadMappingResults CallUploadMappingsAPI(HttpMethod httpMethod, UploadMappingParams parameters)
-        {
-            string url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-                ? GetUploadMappingUrl()
-                : GetUploadMappingUrl(parameters);
-
-            return m_api.CallApi<UploadMappingResults>(httpMethod, url, parameters, null);
-        }
-
-        private string GetTransformationUrl(HttpMethod httpMethod, BaseParams parameters)
-        {
-            var url = GetApiUrlV().
-                        ResourceType("transformations").
-                        BuildUrl();
-
-            if (parameters != null && (httpMethod == HttpMethod.GET || httpMethod == HttpMethod.DELETE))
-            {
-                url = new UrlBuilder(url, parameters.ToParamsDictionary()).ToString();
-            }
-
-            return url;
-        }
 
         private string GetDownloadUrl(UrlBuilder builder, IDictionary<string, object> parameters)
         {
@@ -3515,43 +2307,6 @@
 
                 return url.BuildUrl();
             }
-        }
-
-        /// <summary>
-        /// Private helper class for specifying parameters for upload preset api call.
-        /// </summary>
-        private class UploadPresetApiParams
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="UploadPresetApiParams"/> class.
-            /// </summary>
-            /// <param name="httpMethod">Http request method.</param>
-            /// <param name="url">Url for api call.</param>
-            /// <param name="paramsCopy">Parameters of the upload preset.</param>
-            public UploadPresetApiParams(
-                HttpMethod httpMethod,
-                string url,
-                UploadPresetParams paramsCopy)
-            {
-                Url = url;
-                ParamsCopy = paramsCopy;
-                HttpMethod = httpMethod;
-            }
-
-            /// <summary>
-            /// Gets url for api call.
-            /// </summary>
-            public string Url { get; private set; }
-
-            /// <summary>
-            /// Gets parameters of the upload preset.
-            /// </summary>
-            public UploadPresetParams ParamsCopy { get; private set; }
-
-            /// <summary>
-            /// Gets http request method.
-            /// </summary>
-            public HttpMethod HttpMethod { get; private set; }
         }
     }
 }

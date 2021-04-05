@@ -24,7 +24,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
 
-            var update_result = m_cloudinary.UpdateResourceAccessModeByTag(updateTag,
+            var update_result = m_adminApi.UpdateResourceAccessModeByTag(updateTag,
                 new UpdateResourceAccessModeParams()
                 {
                     ResourceType = ResourceType.Image,
@@ -58,7 +58,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                 publicId
             };
 
-            var update_result = m_cloudinary.UpdateResourceAccessModeByIds(new UpdateResourceAccessModeParams()
+            var update_result = m_adminApi.UpdateResourceAccessModeByIds(new UpdateResourceAccessModeParams()
             {
                 ResourceType = ResourceType.Image,
                 Type = STORAGE_TYPE_UPLOAD,
@@ -69,6 +69,14 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             //TODO: fix this test, make assertions working
 
             //Assert.AreEqual(publish_result.Published.Count, 1);
+        }
+
+        class UpdateAccessModeTestViaCloudinary : UpdateAccessModeTest
+        {
+            public UpdateAccessModeTestViaCloudinary()
+            {
+                AdminApiFactory = a => new Cloudinary(a);
+            }
         }
     }
 }

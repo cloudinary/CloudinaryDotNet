@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
+#pragma warning disable 0618
 namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     public class ExplicitMethodsTest : IntegrationTestBase
@@ -555,3 +556,4 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         }
     }
 }
+#pragma warning restore 0618

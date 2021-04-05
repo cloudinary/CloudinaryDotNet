@@ -9,6 +9,7 @@ using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
+#pragma warning disable 0618
 namespace CloudinaryDotNet.IntegrationTests
 {
     [TestFixture]
@@ -85,6 +86,7 @@ namespace CloudinaryDotNet.IntegrationTests
 
         protected Account m_account;
         protected Cloudinary m_cloudinary;
+        internal IAdminApi m_adminApi;
 
         protected Dictionary<StorageType, List<string>> m_publicIdsToClear;
         protected List<object> m_transformationsToClear;
@@ -108,6 +110,7 @@ namespace CloudinaryDotNet.IntegrationTests
 
             m_account = GetAccountInstance();
             m_cloudinary = GetCloudinaryInstance(m_account);
+            m_adminApi = GetAdminApiInstance(m_account);
 
             SaveTestResources(assembly);
 
@@ -132,6 +135,8 @@ namespace CloudinaryDotNet.IntegrationTests
         {
             return $"{m_apiTag}_{memberName}";
         }
+
+        internal Func<Account, IAdminApi> AdminApiFactory = (account) => new CloudinaryDotNet.AdminApi(account);
 
         protected void InitializeUniqueNames()
         {
@@ -350,9 +355,36 @@ namespace CloudinaryDotNet.IntegrationTests
         {
             Cloudinary cloudinary = new Cloudinary(account);
             if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
-                cloudinary.Api.ApiBaseAddress = m_apiBaseAddress;
+                cloudinary.SetApiBaseAddress(m_apiBaseAddress);
 
             return cloudinary;
+        }
+
+        /// <summary>
+        /// A convenient method for initialization of new Cloudinary instance with necessary checks
+        /// </summary>
+        /// <param name="account">Instance of Account</param>
+        /// <returns>New Cloudinary instance</returns>
+        protected IAdminApi GetAdminApiInstance(Account account)
+        {
+            var adminApi = new CloudinaryDotNet.AdminApi(account);
+            if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
+                adminApi.SetApiBaseAddress(m_apiBaseAddress);
+
+            return adminApi;
+        }
+
+        /// <summary>
+        /// A convenient method for initialization of new Cloudinary instance with necessary checks
+        /// </summary>
+        /// <param name="adminApi">Instance of IAdminApi</param>
+        /// <returns>New Cloudinary instance</returns>
+        internal IAdminApi GetAdminApiInstance(IAdminApi adminApi)
+        {
+            if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
+                adminApi.SetApiBaseAddress(m_apiBaseAddress);
+
+            return adminApi;
         }
 
         protected IEnumerable<Resource> GetAllResults(Func<String, ListResourcesResult> list)
@@ -574,3 +606,4 @@ namespace CloudinaryDotNet.IntegrationTests
     }
 
 }
+#pragma warning restore 0618

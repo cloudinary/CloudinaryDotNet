@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
+#pragma warning disable 0618
 namespace CloudinaryDotNet.IntegrationTests.UploadApi
 {
     public class ArchiveMethodsTest : IntegrationTestBase
@@ -356,3 +357,4 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         }
     }
 }
+#pragma warning restore 0618
