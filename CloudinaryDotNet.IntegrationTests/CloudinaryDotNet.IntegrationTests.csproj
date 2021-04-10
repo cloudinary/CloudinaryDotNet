@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="NUnit" Version="3.13.1" />
@@ -21,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CloudinaryDotNet\CloudinaryDotNet.csproj" />
     <None Include="appsettings.json" CopyToOutputDirectory="Always" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\**" CopyToOutputDirectory="Always"/>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\**" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">

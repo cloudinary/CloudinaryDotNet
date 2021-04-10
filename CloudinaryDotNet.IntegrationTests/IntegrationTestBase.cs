@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ using NUnit.Framework.Interfaces;
 namespace CloudinaryDotNet.IntegrationTests
 {
     [TestFixture]
+    [ParallelizableAttribute(ParallelScope.Fixtures)]
     public partial class IntegrationTestBase
     {
         protected const string CONFIG_PLACE = "appsettings.json";
@@ -185,14 +187,21 @@ namespace CloudinaryDotNet.IntegrationTests
 
         private void SaveEmbeddedToDisk(Assembly assembly, string sourcePath, string destPath)
         {
-            var resName = assembly.GetManifestResourceNames().FirstOrDefault(s => s.EndsWith(sourcePath));
-            if (File.Exists(destPath) || string.IsNullOrEmpty(resName))
-                return;
-
-            Stream stream = assembly.GetManifestResourceStream(resName);
-            using (FileStream fileStream = new FileStream(destPath, FileMode.CreateNew))
+            try
             {
-                stream.CopyTo(fileStream);
+                var resName = assembly.GetManifestResourceNames().FirstOrDefault(s => s.EndsWith(sourcePath));
+                if (File.Exists(destPath) || string.IsNullOrEmpty(resName))
+                    return;
+
+                Stream stream = assembly.GetManifestResourceStream(resName);
+                using (FileStream fileStream = new FileStream(destPath, FileMode.Create))
+                {
+                    stream.CopyTo(fileStream);
+                }
+            }
+            catch (IOException e)
+            {
+                Debug.WriteLine(e.ToString());
             }
         }
 

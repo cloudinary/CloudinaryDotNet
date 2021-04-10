@@ -97,8 +97,8 @@ build:
   verbosity: minimal
 
 test_script:
-  - dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" --configuration Release --no-build /property:Platform=AnyCPU
-  - dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" --configuration Release --no-build /property:Platform=AnyCPU
+  - dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" --configuration Release --no-build /property:Platform=AnyCPU -v=m --test-adapter-path:. --logger:Appveyor
+  - dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" --configuration Release --no-build /property:Platform=AnyCPU -v=m --test-adapter-path:. --logger:Appveyor
 
 # scripts to run before build
 before_build:
