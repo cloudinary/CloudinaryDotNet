@@ -73,11 +73,7 @@
             CancellationToken? cancellationToken = null)
             where T : BaseResult, new()
         {
-            parameters?.Check();
-
-            var callParams = (method == HttpMethod.PUT || method == HttpMethod.POST)
-                ? parameters?.ToParamsDictionary()
-                : null;
+            var callParams = GetCallParams(method, parameters);
 
             return CallAndParseAsync<T>(method, url, callParams, file, extraHeaders, cancellationToken);
         }
@@ -95,12 +91,12 @@
         internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
         {
-            parameters?.Check();
+            var callParams = GetCallParams(method, parameters);
 
             return CallAndParse<T>(
                 method,
                 url,
-                (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                callParams,
                 file,
                 extraHeaders);
         }
@@ -250,6 +246,14 @@
                 parameters.Remove("unsigned");
                 parameters.Remove("removeUnsignedParam");
             }
+        }
+
+        private static SortedDictionary<string, object> GetCallParams(HttpMethod method, BaseParams parameters)
+        {
+            parameters?.Check();
+            return (method == HttpMethod.PUT || method == HttpMethod.POST)
+                            ? parameters?.ToParamsDictionary()
+                            : null;
         }
 
         private static T CreateResult<T>(HttpResponseMessage response, Stream s)
