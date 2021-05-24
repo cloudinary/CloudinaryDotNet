@@ -18,7 +18,7 @@
         public MetadataFieldResult AddMetadataField<T>(MetadataFieldCreateParams<T> parameters)
         {
             var url = m_api.ApiUrlMetadataFieldV.BuildUrl();
-            var result = m_api.CallApi<MetadataFieldResult>(HttpMethod.POST, url, parameters, null, PrepareHeaders());
+            var result = CallAdminApiAsync<MetadataFieldResult>(HttpMethod.POST, url, parameters, null, PrepareHeaders()).GetAwaiter().GetResult();
             return result;
         }
 
@@ -28,8 +28,8 @@
         /// <returns>Parsed list of metadata field definitions.</returns>
         public MetadataFieldListResult ListMetadataFields()
         {
-            var result = m_api.CallApi<MetadataFieldListResult>(
-                HttpMethod.GET, m_api.ApiUrlMetadataFieldV.BuildUrl(), null, null);
+            var result = CallAdminApiAsync<MetadataFieldListResult>(
+                HttpMethod.GET, m_api.ApiUrlMetadataFieldV.BuildUrl(), null, null).GetAwaiter().GetResult();
             return result;
         }
 
@@ -41,7 +41,7 @@
         public MetadataFieldResult GetMetadataField(string fieldExternalId)
         {
             var url = m_api.ApiUrlMetadataFieldV.Add(fieldExternalId).BuildUrl();
-            var result = m_api.CallApi<MetadataFieldResult>(HttpMethod.GET, url, null, null);
+            var result = CallAdminApiAsync<MetadataFieldResult>(HttpMethod.GET, url, null, null).GetAwaiter().GetResult();
             return result;
         }
 
@@ -61,7 +61,7 @@
             }
 
             var url = m_api.ApiUrlMetadataFieldV.Add(fieldExternalId).BuildUrl();
-            var result = m_api.CallApi<MetadataFieldResult>(HttpMethod.PUT, url, parameters, null, PrepareHeaders());
+            var result = CallAdminApiAsync<MetadataFieldResult>(HttpMethod.PUT, url, parameters, null, PrepareHeaders()).GetAwaiter().GetResult();
             return result;
         }
 
@@ -81,7 +81,7 @@
             }
 
             var url = m_api.ApiUrlMetadataFieldV.Add(fieldExternalId).Add(Constants.DATASOURCE_MANAGMENT).BuildUrl();
-            var result = m_api.CallApi<MetadataDataSourceResult>(HttpMethod.PUT, url, parameters, null, PrepareHeaders());
+            var result = CallAdminApiAsync<MetadataDataSourceResult>(HttpMethod.PUT, url, parameters, null, PrepareHeaders()).GetAwaiter().GetResult();
             return result;
         }
 
@@ -99,7 +99,7 @@
             }
 
             var url = m_api.ApiUrlMetadataFieldV.Add(fieldExternalId).BuildUrl();
-            var result = m_api.CallApi<DelMetadataFieldResult>(HttpMethod.DELETE, url, null, null);
+            var result = CallAdminApiAsync<DelMetadataFieldResult>(HttpMethod.DELETE, url, null, null).GetAwaiter().GetResult();
             return result;
         }
 
@@ -113,7 +113,7 @@
         public MetadataDataSourceResult DeleteMetadataDataSourceEntries(string fieldExternalId, List<string> entriesExternalIds)
         {
             var url = PrepareUrlForDatasourceOperation(fieldExternalId, entriesExternalIds, Constants.DATASOURCE_MANAGMENT);
-            var result = m_api.CallApi<MetadataDataSourceResult>(HttpMethod.DELETE, url, null, null);
+            var result = CallAdminApiAsync<MetadataDataSourceResult>(HttpMethod.DELETE, url, null, null).GetAwaiter().GetResult();
             return result;
         }
 
@@ -127,7 +127,7 @@
         public MetadataDataSourceResult RestoreMetadataDataSourceEntries(string fieldExternalId, List<string> entriesExternalIds)
         {
             var url = PrepareUrlForDatasourceOperation(fieldExternalId, entriesExternalIds, $"{Constants.DATASOURCE_MANAGMENT}_restore");
-            var result = m_api.CallApi<MetadataDataSourceResult>(HttpMethod.POST, url, null, null);
+            var result = CallAdminApiAsync<MetadataDataSourceResult>(HttpMethod.POST, url, null, null).GetAwaiter().GetResult();
             return result;
         }
 
@@ -145,7 +145,7 @@
                 Add(Api.GetCloudinaryParam(parameters.ResourceType)).
                 Add(Constants.METADATA).
                 BuildUrl();
-            var result = m_api.CallApi<MetadataUpdateResult>(HttpMethod.POST, url, parameters, null);
+            var result = CallAdminApiAsync<MetadataUpdateResult>(HttpMethod.POST, url, parameters, null).GetAwaiter().GetResult();
             return result;
         }
 
