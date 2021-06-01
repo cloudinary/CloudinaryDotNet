@@ -696,24 +696,6 @@
         }
 
         /// <summary>
-        /// Gets the Cloudinary account usage details asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>The report on the status of your Cloudinary account usage details.</returns>
-        public Task<UsageResult> GetUsageAsync(CancellationToken? cancellationToken = null)
-        {
-            string uri = GetUsageUrl(null);
-
-            return m_api.CallApiAsync<UsageResult>(
-                HttpMethod.GET,
-                uri,
-                null,
-                null,
-                null,
-                cancellationToken);
-        }
-
-        /// <summary>
         /// Uploads a file to Cloudinary asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>

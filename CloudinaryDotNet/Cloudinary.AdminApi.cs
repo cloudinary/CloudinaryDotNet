@@ -711,7 +711,23 @@ namespace CloudinaryDotNet
             return GetUsageAsync(date, null).GetAwaiter().GetResult();
         }
 
-      /// <summary>
+        /// <summary>
+        /// Gets the Cloudinary account usage details asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The report on the status of your Cloudinary account usage details.</returns>
+        public Task<UsageResult> GetUsageAsync(CancellationToken? cancellationToken = null)
+        {
+            string uri = GetUsageUrl(null);
+
+            return CallAdminApiAsync<UsageResult>(
+                HttpMethod.GET,
+                uri,
+                null,
+                cancellationToken);
+        }
+
+        /// <summary>
         /// Gets a list of tags asynchronously.
         /// </summary>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
