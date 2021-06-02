@@ -115,11 +115,9 @@
         /// <returns>Detailed information about streaming profiles.</returns>
         public Task<StreamingProfileListResult> ListStreamingProfilesAsync(CancellationToken? cancellationToken = null)
         {
-            return m_api.CallApiAsync<StreamingProfileListResult>(
+            return CallAdminApiAsync<StreamingProfileListResult>(
                 HttpMethod.GET,
                 m_api.ApiUrlStreamingProfileV.BuildUrl(),
-                null,
-                null,
                 null,
                 cancellationToken);
         }
@@ -130,8 +128,7 @@
         /// <returns>Detailed information about streaming profiles.</returns>
         public StreamingProfileListResult ListStreamingProfiles()
         {
-            return m_api.CallApi<StreamingProfileListResult>(
-                HttpMethod.GET, m_api.ApiUrlStreamingProfileV.BuildUrl(), null, null);
+            return ListStreamingProfilesAsync().GetAwaiter().GetResult();
         }
 
         private static void ValidateCallStreamingProfileApiParameters(string name, StreamingProfileUpdateParams parameters)
@@ -162,22 +159,20 @@
             CancellationToken? cancellationToken,
             string name = null)
         {
-            return m_api.CallApiAsync<StreamingProfileResult>(
+            return CallAdminApiAsync<StreamingProfileResult>(
                 httpMethod,
                 m_api.ApiUrlStreamingProfileV.Add(name).BuildUrl(),
                 parameters,
-                null,
-                null,
                 cancellationToken);
         }
 
         private StreamingProfileResult CallStreamingProfileApi(HttpMethod httpMethod, BaseParams parameters, string name = null)
         {
-            return m_api.CallApi<StreamingProfileResult>(
+            return CallStreamingProfileApiAsync(
                 httpMethod,
-                m_api.ApiUrlStreamingProfileV.Add(name).BuildUrl(),
                 parameters,
-                null);
+                null,
+                name).GetAwaiter().GetResult();
         }
     }
 }
