@@ -638,6 +638,98 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Gets URL to download tag cloud as ZIP package.
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <param name="transform">The transformation.</param>
+        /// <returns>Download URL.</returns>
+        /// <exception cref="System.ArgumentException">Tag should be specified.</exception>
+        /// <param name="resourceType">Resource type (image, video or raw) of files to include in the archive (optional).</param>
+        public string DownloadZip(string tag, Transformation transform, string resourceType = RESOURCE_TYPE_IMAGE)
+        {
+            if (string.IsNullOrEmpty(tag))
+            {
+                throw new ArgumentException("Tag should be specified!");
+            }
+
+            var urlBuilder = new UrlBuilder(
+                GetApiUrlV()
+                    .ResourceType(resourceType)
+                    .Action("download_tag.zip")
+                    .BuildUrl());
+
+            var parameters = new SortedDictionary<string, object>
+            {
+                { "tag", tag },
+            };
+
+            if (transform != null)
+            {
+                parameters.Add("transformation", transform.Generate());
+            }
+
+            return GetDownloadUrl(urlBuilder, parameters);
+        }
+
+        /// <summary>
+        /// Gets URL to download private image.
+        /// </summary>
+        /// <param name="publicId">The image public ID.</param>
+        /// <param name="attachment">Whether to download image as attachment (optional).</param>
+        /// <param name="format">Format to download (optional).</param>
+        /// <param name="type">The type (optional).</param>
+        /// <param name="expiresAt">The date (UNIX time in seconds) for the URL expiration. (optional).</param>
+        /// <param name="resourceType">Resource type (image, video or raw) of files to include in the archive (optional).</param>
+        /// <returns>Download URL.</returns>
+        /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
+        public string DownloadPrivate(
+            string publicId,
+            bool? attachment = null,
+            string format = "",
+            string type = "",
+            long? expiresAt = null,
+            string resourceType = RESOURCE_TYPE_IMAGE)
+        {
+            if (string.IsNullOrEmpty(publicId))
+            {
+                throw new ArgumentException("The image public ID is missing.");
+            }
+
+            var urlBuilder = new UrlBuilder(
+                GetApiUrlV()
+                    .ResourceType(resourceType)
+                    .Action("download")
+                    .BuildUrl());
+
+            var parameters = new SortedDictionary<string, object>
+            {
+                { "public_id", publicId },
+            };
+
+            if (!string.IsNullOrEmpty(format))
+            {
+                parameters.Add("format", format);
+            }
+
+            if (attachment != null)
+            {
+                parameters.Add("attachment", (bool)attachment ? "true" : "false");
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                parameters.Add("type", type);
+            }
+
+            if (expiresAt != null)
+            {
+                parameters.Add("expires_at", expiresAt);
+            }
+
+            return GetDownloadUrl(urlBuilder, parameters);
+        }
+
+        /// <summary>
         /// Eagerly generate sprites asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters for sprite generation.</param>
@@ -910,6 +1002,13 @@ namespace CloudinaryDotNet
                 cancellationToken,
                 parameters.File,
                 null);
+        }
+
+        private string GetDownloadUrl(UrlBuilder builder, IDictionary<string, object> parameters)
+        {
+            m_api.FinalizeUploadParameters(parameters);
+            builder.SetParameters(parameters);
+            return builder.ToString();
         }
 
         /// <summary>
