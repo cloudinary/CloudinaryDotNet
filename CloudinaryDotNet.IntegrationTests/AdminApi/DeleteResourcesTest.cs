@@ -72,6 +72,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         }
 
         [Test, RetryWithDelay]
+        [Parallelizable(ParallelScope.None)]
         public void TestDeleteByTransformation()
         {
             // should allow deleting resources by transformations

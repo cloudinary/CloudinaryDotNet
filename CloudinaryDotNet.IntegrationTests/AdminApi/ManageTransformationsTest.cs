@@ -36,6 +36,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         }
 
         [Test, RetryWithDelay]
+        [Parallelizable(ParallelScope.None)]
         public async Task TestListTransformationsAsync()
         {
             // should allow listing transformations
