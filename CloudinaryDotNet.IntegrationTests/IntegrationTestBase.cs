@@ -11,7 +11,7 @@ using NUnit.Framework.Interfaces;
 
 namespace CloudinaryDotNet.IntegrationTests
 {
-    [TestFixture]
+    [TestFixture, Parallelizable(ParallelScope.Fixtures)]
     public partial class IntegrationTestBase
     {
         protected const string CONFIG_PLACE = "appsettings.json";
@@ -163,12 +163,14 @@ namespace CloudinaryDotNet.IntegrationTests
         private void SaveTestResources(Assembly assembly)
         {
             string filePrefix = Path.GetDirectoryName(assembly.Location);
-            m_testVideoPath = Path.Combine(filePrefix, TEST_MOVIE);
-            m_testImagePath = Path.Combine(filePrefix, TEST_IMAGE);
-            m_testUnicodeImagePath = Path.Combine(filePrefix, TEST_UNICODE_IMAGE);
-            m_testLargeImagePath = Path.Combine(filePrefix, TEST_LARGEIMAGE);
-            m_testPdfPath = Path.Combine(filePrefix, TEST_PDF);
-            m_testIconPath = Path.Combine(filePrefix, TEST_FAVICON);
+            string testName = GetType().Name;
+
+            m_testVideoPath = Path.Combine(filePrefix, testName, TEST_MOVIE);
+            m_testImagePath = Path.Combine(filePrefix, testName, TEST_IMAGE);
+            m_testUnicodeImagePath = Path.Combine(filePrefix, testName, TEST_UNICODE_IMAGE);
+            m_testLargeImagePath = Path.Combine(filePrefix, testName, TEST_LARGEIMAGE);
+            m_testPdfPath = Path.Combine(filePrefix, testName, TEST_PDF);
+            m_testIconPath = Path.Combine(filePrefix, testName, TEST_FAVICON);
 
             SaveEmbeddedToDisk(assembly, TEST_IMAGE, m_testImagePath);
             SaveEmbeddedToDisk(assembly, TEST_IMAGE, m_testUnicodeImagePath);
@@ -180,14 +182,27 @@ namespace CloudinaryDotNet.IntegrationTests
 
         private void SaveEmbeddedToDisk(Assembly assembly, string sourcePath, string destPath)
         {
-            var resName = assembly.GetManifestResourceNames().FirstOrDefault(s => s.EndsWith(sourcePath));
-            if (File.Exists(destPath) || string.IsNullOrEmpty(resName))
-                return;
-
-            Stream stream = assembly.GetManifestResourceStream(resName);
-            using (FileStream fileStream = new FileStream(destPath, FileMode.CreateNew))
+            try
             {
-                stream.CopyTo(fileStream);
+                var resName = assembly.GetManifestResourceNames().FirstOrDefault(s => s.EndsWith(sourcePath));
+                if (File.Exists(destPath) || string.IsNullOrEmpty(resName))
+                    return;
+
+                var directoryName = Path.GetDirectoryName(destPath);
+                if (!Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+
+                Stream stream = assembly.GetManifestResourceStream(resName);
+                using (FileStream fileStream = new FileStream(destPath, FileMode.CreateNew))
+                {
+                    stream.CopyTo(fileStream);
+                }
+            }
+            catch (IOException e)
+            {
+                
             }
         }
 
