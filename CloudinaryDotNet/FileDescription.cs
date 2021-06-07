@@ -15,7 +15,7 @@
         /// <summary>
         /// Byte sent.
         /// </summary>
-        internal int BytesSent;
+        internal long BytesSent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileDescription"/> class.
