@@ -1,4 +1,12 @@
 
+1.15.2 / 2021-06-08
+===================
+
+  * Fix upload of files larger than 2GB
+  * Refactor Admin and Upload APIs
+  * Update GitHub templates
+  * Fix appveyor test reporting
+
 1.15.1 / 2021-03-26
 ===================
 
