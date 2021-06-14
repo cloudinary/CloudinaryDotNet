@@ -83,5 +83,35 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.AreEqual("value", res?.Context["custom"]?["key"]?.ToString(), res.Error?.Message);
             Assert.AreEqual("value2", res?.Context["custom"]?["key2"]?.ToString());
         }
+
+        [Test, RetryWithDelay]
+        public void TestAddVideoContext()
+        {
+            var publicId = GetUniquePublicId();
+
+            var uploadParams = new VideoUploadParams
+            {
+                File = new FileDescription(m_testVideoPath),
+                PublicId = publicId,
+                Overwrite = true,
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            List<string> pIds = new List<string> { publicId };
+
+            ContextResult contextResult = m_cloudinary.Context(new ContextParams()
+            {
+                Command = ContextCommand.Add,
+                PublicIds = pIds,
+                Type = STORAGE_TYPE_UPLOAD,
+                Context = "TestContext",
+                ResourceType = ResourceType.Video
+            });
+
+            Assert.True(contextResult.PublicIds.Length > 0, contextResult.Error?.Message);
+        }
     }
 }
