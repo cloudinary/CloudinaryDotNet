@@ -1,12 +1,8 @@
 ﻿namespace CloudinaryDotNet
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using CloudinaryDotNet.Actions;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -15,11 +11,6 @@
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
     public partial class Cloudinary
     {
-        /// <summary>
-        /// Resource type 'image'.
-        /// </summary>
-        protected const string RESOURCE_TYPE_IMAGE = "image";
-
         /// <summary>
         /// Cloudinary <see cref="Api"/> object.
         /// </summary>
@@ -58,86 +49,6 @@
         public Api Api
         {
             get { return m_api; }
-        }
-
-        /// <summary>
-        /// Publishes resources by prefix asynchronously.
-        /// </summary>
-        /// <param name="prefix">The prefix for publishing resources.</param>
-        /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>Parsed result of publishing.</returns>
-        public Task<PublishResourceResult> PublishResourceByPrefixAsync(
-            string prefix,
-            PublishResourceParams parameters,
-            CancellationToken? cancellationToken)
-        {
-            return PublishResourceAsync("prefix", prefix, parameters, cancellationToken);
-        }
-
-        /// <summary>
-        /// Publishes resources by prefix.
-        /// </summary>
-        /// <param name="prefix">The prefix for publishing resources.</param>
-        /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <returns>Parsed result of publishing.</returns>
-        public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams parameters)
-        {
-            return PublishResource("prefix", prefix, parameters);
-        }
-
-        /// <summary>
-        /// Publishes resources by tag asynchronously.
-        /// </summary>
-        /// <param name="tag">All resources with the given tag will be published.</param>
-        /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Parsed result of publishing.</returns>
-        public Task<PublishResourceResult> PublishResourceByTagAsync(
-            string tag,
-            PublishResourceParams parameters,
-            CancellationToken? cancellationToken = null)
-        {
-            return PublishResourceAsync("tag", tag, parameters, cancellationToken);
-        }
-
-        /// <summary>
-        /// Publishes resources by tag.
-        /// </summary>
-        /// <param name="tag">All resources with the given tag will be published.</param>
-        /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <returns>Parsed result of publishing.</returns>
-        public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams parameters)
-        {
-            return PublishResource("tag", tag, parameters);
-        }
-
-        /// <summary>
-        /// Publishes resource by Id asynchronously.
-        /// </summary>
-        /// <param name="tag">Not used.</param>
-        /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>Structure with the results of publishing.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
-        public Task<PublishResourceResult> PublishResourceByIdsAsync(
-            string tag,
-            PublishResourceParams parameters,
-            CancellationToken? cancellationToken)
-        {
-            return PublishResourceAsync(string.Empty, string.Empty, parameters, cancellationToken);
-        }
-
-        /// <summary>
-        /// Publishes resource by Id.
-        /// </summary>
-        /// <param name="tag">Not used.</param>
-        /// <param name="parameters">Parameters for publishing of resources.</param>
-        /// <returns>Structure with the results of publishing.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
-        public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams parameters)
-        {
-            return PublishResource(string.Empty, string.Empty, parameters);
         }
 
         /// <summary>

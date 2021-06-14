@@ -409,6 +409,86 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Publishes resources by prefix asynchronously.
+        /// </summary>
+        /// <param name="prefix">The prefix for publishing resources.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public Task<PublishResourceResult> PublishResourceByPrefixAsync(
+            string prefix,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken)
+        {
+            return PublishResourceAsync("prefix", prefix, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes resources by prefix.
+        /// </summary>
+        /// <param name="prefix">The prefix for publishing resources.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams parameters)
+        {
+            return PublishResource("prefix", prefix, parameters);
+        }
+
+        /// <summary>
+        /// Publishes resources by tag asynchronously.
+        /// </summary>
+        /// <param name="tag">All resources with the given tag will be published.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public Task<PublishResourceResult> PublishResourceByTagAsync(
+            string tag,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            return PublishResourceAsync("tag", tag, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes resources by tag.
+        /// </summary>
+        /// <param name="tag">All resources with the given tag will be published.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams parameters)
+        {
+            return PublishResource("tag", tag, parameters);
+        }
+
+        /// <summary>
+        /// Publishes resource by Id asynchronously.
+        /// </summary>
+        /// <param name="tag">Not used.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Structure with the results of publishing.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
+        public Task<PublishResourceResult> PublishResourceByIdsAsync(
+            string tag,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken)
+        {
+            return PublishResourceAsync(string.Empty, string.Empty, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes resource by Id.
+        /// </summary>
+        /// <param name="tag">Not used.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <returns>Structure with the results of publishing.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
+        public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams parameters)
+        {
+            return PublishResource(string.Empty, string.Empty, parameters);
+        }
+
+        /// <summary>
         /// Updates access mode for the resources selected by tag asynchronously.
         /// </summary>
         /// <param name="tag">Update all resources with the given tag (up to a maximum

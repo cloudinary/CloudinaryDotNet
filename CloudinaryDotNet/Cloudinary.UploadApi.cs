@@ -17,6 +17,11 @@ namespace CloudinaryDotNet
     public partial class Cloudinary
     {
         /// <summary>
+        /// Resource type 'image'.
+        /// </summary>
+        protected const string RESOURCE_TYPE_IMAGE = "image";
+
+        /// <summary>
         /// Action 'generate_archive'.
         /// </summary>
         protected const string ACTION_GENERATE_ARCHIVE = "generate_archive";
