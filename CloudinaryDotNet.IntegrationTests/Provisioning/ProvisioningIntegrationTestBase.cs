@@ -76,10 +76,10 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning
         {
             var createUserParams = new CreateUserParams(userName, userEmail, m_userRole)
             {
-                SubAccountIds = new List<string> {m_cloudId1}
+                SubAccountIds = new List<string> { m_cloudId1 }
             };
             var createUserResult = AccountProvisioning.CreateUserAsync(createUserParams).GetAwaiter().GetResult();
-            Assert.AreEqual(HttpStatusCode.OK, createUserResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, createUserResult.StatusCode, createUserResult?.Error?.Message);
             Assert.AreEqual(1, createUserResult.SubAccountIds.Length);
             Assert.AreEqual(m_cloudId1, createUserResult.SubAccountIds[0]);
 
