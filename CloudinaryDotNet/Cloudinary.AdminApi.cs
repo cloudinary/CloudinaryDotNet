@@ -15,6 +15,15 @@ namespace CloudinaryDotNet
     public partial class Cloudinary
     {
         /// <summary>
+        /// Gets the advanced search provider used by the Cloudinary instance.
+        /// </summary>
+        /// <returns>Instance of the <see cref="Search"/> class.</returns>
+        public Search Search()
+        {
+            return new Search(m_api);
+        }
+
+        /// <summary>
         /// Lists resource types asynchronously.
         /// </summary>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
@@ -397,6 +406,199 @@ namespace CloudinaryDotNet
         public ListResourcesResult ListResources(ListResourcesParams parameters)
         {
             return ListResourcesAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Publishes resources by prefix asynchronously.
+        /// </summary>
+        /// <param name="prefix">The prefix for publishing resources.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public Task<PublishResourceResult> PublishResourceByPrefixAsync(
+            string prefix,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken)
+        {
+            return PublishResourceAsync("prefix", prefix, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes resources by prefix.
+        /// </summary>
+        /// <param name="prefix">The prefix for publishing resources.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public PublishResourceResult PublishResourceByPrefix(string prefix, PublishResourceParams parameters)
+        {
+            return PublishResource("prefix", prefix, parameters);
+        }
+
+        /// <summary>
+        /// Publishes resources by tag asynchronously.
+        /// </summary>
+        /// <param name="tag">All resources with the given tag will be published.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public Task<PublishResourceResult> PublishResourceByTagAsync(
+            string tag,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            return PublishResourceAsync("tag", tag, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes resources by tag.
+        /// </summary>
+        /// <param name="tag">All resources with the given tag will be published.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <returns>Parsed result of publishing.</returns>
+        public PublishResourceResult PublishResourceByTag(string tag, PublishResourceParams parameters)
+        {
+            return PublishResource("tag", tag, parameters);
+        }
+
+        /// <summary>
+        /// Publishes resource by Id asynchronously.
+        /// </summary>
+        /// <param name="tag">Not used.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Structure with the results of publishing.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
+        public Task<PublishResourceResult> PublishResourceByIdsAsync(
+            string tag,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken)
+        {
+            return PublishResourceAsync(string.Empty, string.Empty, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publishes resource by Id.
+        /// </summary>
+        /// <param name="tag">Not used.</param>
+        /// <param name="parameters">Parameters for publishing of resources.</param>
+        /// <returns>Structure with the results of publishing.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801: Review unused parameters", Justification = "Reviewed.")]
+        public PublishResourceResult PublishResourceByIds(string tag, PublishResourceParams parameters)
+        {
+            return PublishResource(string.Empty, string.Empty, parameters);
+        }
+
+        /// <summary>
+        /// Updates access mode for the resources selected by tag asynchronously.
+        /// </summary>
+        /// <param name="tag">Update all resources with the given tag (up to a maximum
+        /// of 100 matching original resources).</param>
+        /// <param name="parameters">Parameters for updating of resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Structure with the results of update.</returns>
+        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByTagAsync(
+            string tag,
+            UpdateResourceAccessModeParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            return UpdateResourceAccessModeAsync(Constants.TAG_PARAM_NAME, tag, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates access mode for the resources selected by tag.
+        /// </summary>
+        /// <param name="tag">Update all resources with the given tag (up to a maximum
+        /// of 100 matching original resources).</param>
+        /// <param name="parameters">Parameters for updating of resources.</param>
+        /// <returns>Structure with the results of update.</returns>
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByTag(string tag, UpdateResourceAccessModeParams parameters)
+        {
+            return UpdateResourceAccessMode(Constants.TAG_PARAM_NAME, tag, parameters);
+        }
+
+        /// <summary>
+        /// Updates access mode for the resources selected by prefix asynchronously.
+        /// </summary>
+        /// <param name="prefix">Update all resources where the public ID starts with the given prefix (up to a maximum
+        /// of 100 matching original resources).</param>
+        /// <param name="parameters">Parameters for updating of resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Structure with the results of update.</returns>
+        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByPrefixAsync(
+            string prefix,
+            UpdateResourceAccessModeParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            return UpdateResourceAccessModeAsync(Constants.PREFIX_PARAM_NAME, prefix, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates access mode for the resources selected by prefix.
+        /// </summary>
+        /// <param name="prefix">Update all resources where the public ID starts with the given prefix (up to a maximum
+        /// of 100 matching original resources).</param>
+        /// <param name="parameters">Parameters for updating of resources.</param>
+        /// <returns>Structure with the results of update.</returns>
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByPrefix(
+            string prefix,
+            UpdateResourceAccessModeParams parameters)
+        {
+            return UpdateResourceAccessMode(Constants.PREFIX_PARAM_NAME, prefix, parameters);
+        }
+
+        /// <summary>
+        /// Updates access mode for the resources selected by public ids asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters for updating of resources. Update all resources with the given
+        /// public IDs (array of up to 100 public_ids).</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Structure with the results of update.</returns>
+        public Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeByIdsAsync(
+            UpdateResourceAccessModeParams parameters, CancellationToken? cancellationToken = null)
+        {
+            return UpdateResourceAccessModeAsync(string.Empty, string.Empty, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates access mode for the resources selected by public ids.
+        /// </summary>
+        /// <param name="parameters">Parameters for updating of resources. Update all resources with the given
+        /// public IDs (array of up to 100 public_ids).</param>
+        /// <returns>Structure with the results of update.</returns>
+        public UpdateResourceAccessModeResult UpdateResourceAccessModeByIds(UpdateResourceAccessModeParams parameters)
+        {
+            return UpdateResourceAccessMode(string.Empty, string.Empty, parameters);
+        }
+
+        /// <summary>
+        /// Deletes derived resources by the given transformation (should be specified in parameters) asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to delete derived resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of deletion derived resources.</returns>
+        public Task<DelDerivedResResult> DeleteDerivedResourcesByTransformAsync(DelDerivedResParams parameters, CancellationToken? cancellationToken = null)
+        {
+            UrlBuilder urlBuilder = new UrlBuilder(
+                GetApiUrlV().
+                Add("derived_resources").
+                BuildUrl(),
+                parameters.ToParamsDictionary());
+
+            return CallAdminApiAsync<DelDerivedResResult>(
+                HttpMethod.DELETE,
+                urlBuilder.ToString(),
+                parameters,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Deletes derived resources by the given transformation (should be specified in parameters).
+        /// </summary>
+        /// <param name="parameters">Parameters to delete derived resources.</param>
+        /// <returns>Parsed result of deletion derived resources.</returns>
+        public DelDerivedResResult DeleteDerivedResourcesByTransform(DelDerivedResParams parameters)
+        {
+            return DeleteDerivedResourcesByTransformAsync(parameters).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -1400,7 +1602,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response after Upload mappings manipulation.</returns>
         public UploadMappingResults UploadMappings(UploadMappingParams parameters)
         {
-            return CallUploadMappingsAPI(HttpMethod.GET, parameters);
+            return CallUploadMappingsApi(HttpMethod.GET, parameters);
         }
 
         /// <summary>
@@ -1435,7 +1637,7 @@ namespace CloudinaryDotNet
 
             var parameters = new UploadMappingParams() { Folder = folder };
 
-            return CallUploadMappingsAPI(HttpMethod.GET, parameters);
+            return CallUploadMappingsApi(HttpMethod.GET, parameters);
         }
 
         /// <summary>
@@ -1460,7 +1662,7 @@ namespace CloudinaryDotNet
         public UploadMappingResults CreateUploadMapping(string folder, string template)
         {
             var parameters = CreateUploadMappingParams(folder, template);
-            return CallUploadMappingsAPI(HttpMethod.POST, parameters);
+            return CallUploadMappingsApi(HttpMethod.POST, parameters);
         }
 
         /// <summary>
@@ -1485,7 +1687,7 @@ namespace CloudinaryDotNet
         public UploadMappingResults UpdateUploadMapping(string folder, string newTemplate)
         {
             var parameters = CreateUploadMappingParams(folder, newTemplate);
-            return CallUploadMappingsAPI(HttpMethod.PUT, parameters);
+            return CallUploadMappingsApi(HttpMethod.PUT, parameters);
         }
 
         /// <summary>
@@ -1527,7 +1729,7 @@ namespace CloudinaryDotNet
         public UploadMappingResults DeleteUploadMapping(string folder)
         {
             var parameters = new UploadMappingParams { Folder = folder };
-            return CallUploadMappingsAPI(HttpMethod.DELETE, parameters);
+            return CallUploadMappingsApi(HttpMethod.DELETE, parameters);
         }
 
         /// <summary>
@@ -1708,6 +1910,59 @@ namespace CloudinaryDotNet
             return s;
         }
 
+        private Task<PublishResourceResult> PublishResourceAsync(
+            string byKey,
+            string value,
+            PublishResourceParams parameters,
+            CancellationToken? cancellationToken)
+        {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
+                parameters.AddCustomParam(byKey, value);
+            }
+
+            Url url = GetApiUrlV()
+                .Add("resources")
+                .Add(parameters.ResourceType.ToString().ToLowerInvariant())
+                .Add("publish_resources");
+
+            return CallAdminApiAsync<PublishResourceResult>(HttpMethod.POST, url.BuildUrl(), parameters, cancellationToken);
+        }
+
+        private PublishResourceResult PublishResource(string byKey, string value, PublishResourceParams parameters)
+        {
+            return PublishResourceAsync(byKey, value, parameters, null).GetAwaiter().GetResult();
+        }
+
+        private Task<UpdateResourceAccessModeResult> UpdateResourceAccessModeAsync(
+            string byKey,
+            string value,
+            UpdateResourceAccessModeParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            if (!string.IsNullOrWhiteSpace(byKey) && !string.IsNullOrWhiteSpace(value))
+            {
+                parameters.AddCustomParam(byKey, value);
+            }
+
+            var url = GetApiUrlV()
+                 .Add(Constants.RESOURCES_API_URL)
+                 .Add(parameters.ResourceType.ToString().ToLowerInvariant())
+                 .Add(parameters.Type)
+                 .Add(Constants.UPDATE_ACESS_MODE);
+
+            return CallAdminApiAsync<UpdateResourceAccessModeResult>(
+                HttpMethod.POST,
+                url.BuildUrl(),
+                parameters,
+                cancellationToken);
+        }
+
+        private UpdateResourceAccessModeResult UpdateResourceAccessMode(string byKey, string value, UpdateResourceAccessModeParams parameters)
+        {
+            return UpdateResourceAccessModeAsync(byKey, value, parameters).GetAwaiter().GetResult();
+        }
+
         private Url GetResourcesUrl() => GetApiUrlV().ResourceType("resources");
 
         private Task<T> CallAdminApiAsync<T>(
@@ -1725,6 +1980,120 @@ namespace CloudinaryDotNet
                             null,
                             extraHeaders,
                             cancellationToken);
+        }
+
+        private string GetTransformationUrl(HttpMethod httpMethod, BaseParams parameters)
+        {
+            var url = GetApiUrlV().
+                ResourceType("transformations").
+                BuildUrl();
+
+            if (parameters != null && (httpMethod == HttpMethod.GET || httpMethod == HttpMethod.DELETE))
+            {
+                url = new UrlBuilder(url, parameters.ToParamsDictionary()).ToString();
+            }
+
+            return url;
+        }
+
+        /// <summary>
+        /// Calls an upload mappings API.
+        /// </summary>
+        /// <param name="httpMethod">HTTP method.</param>
+        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
+        /// existing online locations.</param>
+        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        private UploadMappingResults CallUploadMappingsApi(HttpMethod httpMethod, UploadMappingParams parameters)
+        {
+            return CallUploadMappingsApiAsync(httpMethod, parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Calls an upload mappings API asynchronously.
+        /// </summary>
+        /// <param name="httpMethod">HTTP method.</param>
+        /// <param name="parameters">Parameters for Mapping of folders to URL prefixes for dynamic image fetching from
+        /// existing online locations.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed response after Upload mappings manipulation.</returns>
+        private Task<UploadMappingResults> CallUploadMappingsApiAsync(HttpMethod httpMethod, UploadMappingParams parameters, CancellationToken? cancellationToken = null)
+        {
+            var url = (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
+                ? GetUploadMappingUrl()
+                : GetUploadMappingUrl(parameters);
+
+            return CallAdminApiAsync<UploadMappingResults>(
+                httpMethod,
+                url,
+                parameters,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Call api with specified parameters asynchronously.
+        /// </summary>
+        /// <param name="apiParams">New parameters for upload preset.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null)
+            where T : BaseResult, new() =>
+            CallAdminApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy,  cancellationToken);
+
+        /// <summary>
+        /// Call api with specified parameters.
+        /// </summary>
+        /// <param name="apiParams">New parameters for upload preset.</param>
+        private T CallApi<T>(UploadPresetApiParams apiParams)
+            where T : BaseResult, new() =>
+            CallApiAsync<T>(apiParams).GetAwaiter().GetResult();
+
+        private string GetUploadMappingUrl(UploadMappingParams parameters)
+        {
+            var uri = GetUploadMappingUrl();
+            return (parameters == null) ? uri : new UrlBuilder(uri, parameters.ToParamsDictionary()).ToString();
+        }
+
+        private string GetUploadMappingUrl()
+        {
+            return GetApiUrlV().
+                ResourceType("upload_mappings").
+                BuildUrl();
+        }
+
+        /// <summary>
+        /// Private helper class for specifying parameters for upload preset api call.
+        /// </summary>
+        private class UploadPresetApiParams
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CloudinaryDotNet.Cloudinary.UploadPresetApiParams"/> class.
+            /// </summary>
+            /// <param name="httpMethod">Http request method.</param>
+            /// <param name="url">Url for api call.</param>
+            /// <param name="paramsCopy">Parameters of the upload preset.</param>
+            public UploadPresetApiParams(
+                HttpMethod httpMethod,
+                string url,
+                UploadPresetParams paramsCopy)
+            {
+                Url = url;
+                ParamsCopy = paramsCopy;
+                HttpMethod = httpMethod;
+            }
+
+            /// <summary>
+            /// Gets url for api call.
+            /// </summary>
+            public string Url { get; private set; }
+
+            /// <summary>
+            /// Gets parameters of the upload preset.
+            /// </summary>
+            public UploadPresetParams ParamsCopy { get; private set; }
+
+            /// <summary>
+            /// Gets http request method.
+            /// </summary>
+            public HttpMethod HttpMethod { get; private set; }
         }
     }
 }
