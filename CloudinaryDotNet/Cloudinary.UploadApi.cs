@@ -468,7 +468,7 @@ namespace CloudinaryDotNet
         /// <returns>Results of contexts management.</returns>
         public Task<ContextResult> ContextAsync(ContextParams parameters, CancellationToken? cancellationToken = null)
         {
-            string uri = m_api.ApiUrlImgUpV.Action(Constants.CONTEXT_MANAGMENT).BuildUrl();
+            string uri = m_api.ApiUrlImgUpV.ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType)).Action(Constants.CONTEXT_MANAGMENT).BuildUrl();
 
             return CallUploadApiAsync<ContextResult>(
                 HttpMethod.POST,
