@@ -71,6 +71,16 @@
         public bool Invalidate { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether if true, include context assigned to the resource.
+        /// </summary>
+        public bool Context { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether if true, include metadata assigned to the resource.
+        /// </summary>
+        public bool Metadata { get; set; }
+
+        /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
         /// </summary>
         /// <returns>Sorted dictionary of parameters.</returns>
@@ -84,6 +94,17 @@
             AddParam(dict, "type", Type);
             AddParam(dict, "to_type", ToType);
             AddParam(dict, "invalidate", Invalidate);
+
+            if (Context)
+            {
+                AddParam(dict, "context", Context);
+            }
+
+            if (Metadata)
+            {
+                AddParam(dict, "metadata", Metadata);
+            }
+
             return dict;
         }
 
