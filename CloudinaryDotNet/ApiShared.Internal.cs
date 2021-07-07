@@ -446,6 +446,16 @@
             }
         }
 
+        private AuthenticationHeaderValue GetAuthorizationHeaderValue()
+        {
+            AuthenticationHeaderValue header =
+                Account.OAuthToken != null
+                ? new ("Bearer", Account.OAuthToken)
+                : new ("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(GetApiCredentials())));
+
+            return header;
+        }
+
         private void PrePrepareRequestBody(
             HttpRequestMessage request,
             HttpMethod method,
@@ -459,9 +469,7 @@
                 ? USER_AGENT
                 : string.Format(CultureInfo.InvariantCulture, "{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
-
-            byte[] authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
-            request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
+            request.Headers.Authorization = GetAuthorizationHeaderValue();
 
             if (extraHeaders != null)
             {
