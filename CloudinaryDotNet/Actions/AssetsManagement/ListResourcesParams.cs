@@ -40,6 +40,11 @@
         public bool Context { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether if true, include metadata assigned to each resource.
+        /// </summary>
+        public bool Metadata { get; set; }
+
+        /// <summary>
         /// Gets or sets when a listing request has more results to return than <see cref="ListResourcesParams.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="NextCursor"/> parameter of the following listing request.
@@ -84,6 +89,7 @@
             AddParam(dict, "context", Context);
             AddParam(dict, "direction", Direction);
             AddParam(dict, "type", Type);
+            AddParam(dict, "metadata", Metadata);
 
             return dict;
         }

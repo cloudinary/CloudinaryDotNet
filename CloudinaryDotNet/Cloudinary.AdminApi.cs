@@ -49,6 +49,7 @@ namespace CloudinaryDotNet
         /// <param name="tags">Whether to include tags in result.</param>
         /// <param name="context">Whether to include context in result.</param>
         /// <param name="moderations">Whether to include moderation status in result.</param>
+        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesAsync(
@@ -56,6 +57,7 @@ namespace CloudinaryDotNet
             bool tags = true,
             bool context = true,
             bool moderations = true,
+            bool metadata = false,
             CancellationToken? cancellationToken = null)
         {
             var listResourcesParams = new ListResourcesParams()
@@ -64,6 +66,7 @@ namespace CloudinaryDotNet
                 Tags = tags,
                 Context = context,
                 Moderations = moderations,
+                Metadata = metadata,
             };
             return ListResourcesAsync(listResourcesParams, cancellationToken);
         }
@@ -75,14 +78,16 @@ namespace CloudinaryDotNet
         /// <param name="tags">Whether to include tags in result.</param>
         /// <param name="context">Whether to include context in result.</param>
         /// <param name="moderations">Whether to include moderation status in result.</param>
+        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public ListResourcesResult ListResources(
             string nextCursor = null,
             bool tags = true,
             bool context = true,
-            bool moderations = true)
+            bool moderations = true,
+            bool metadata = false)
         {
-            return ListResourcesAsync(nextCursor, tags, context, moderations)
+            return ListResourcesAsync(nextCursor, tags, context, moderations, metadata)
                 .GetAwaiter().GetResult();
         }
 
@@ -91,11 +96,19 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
+        /// <param name="metadata">If true, include metadata for each resource.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public Task<ListResourcesResult> ListResourcesByTypeAsync(string type, string nextCursor = null, CancellationToken? cancellationToken = null)
+        public Task<ListResourcesResult> ListResourcesByTypeAsync(string type, string nextCursor = null, bool metadata = false, CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesParams() { Type = type, NextCursor = nextCursor }, cancellationToken);
+            var listResourcesParams = new ListResourcesParams()
+            {
+                Type = type,
+                NextCursor = nextCursor,
+                Metadata = metadata,
+            };
+
+            return ListResourcesAsync(listResourcesParams, cancellationToken);
         }
 
         /// <summary>
@@ -103,10 +116,11 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
+        /// <param name="metadata">If true, include metadata for each resource.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByType(string type, string nextCursor = null)
+        public ListResourcesResult ListResourcesByType(string type, string nextCursor = null, bool metadata = false)
         {
-            return ListResourcesByTypeAsync(type, nextCursor).GetAwaiter().GetResult();
+            return ListResourcesByTypeAsync(type, nextCursor, metadata).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -115,12 +129,14 @@ namespace CloudinaryDotNet
         /// <param name="prefix">Public identifier prefix.</param>
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
+        /// <param name="metadata">If true, include metadata for each resource.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByPrefixAsync(
             string prefix,
             string type = "upload",
             string nextCursor = null,
+            bool metadata = false,
             CancellationToken? cancellationToken = null)
         {
             var listResourcesByPrefixParams = new ListResourcesByPrefixParams()
@@ -128,6 +144,7 @@ namespace CloudinaryDotNet
                 Type = type,
                 Prefix = prefix,
                 NextCursor = nextCursor,
+                Metadata = metadata,
             };
             return ListResourcesAsync(listResourcesByPrefixParams, cancellationToken);
         }
@@ -138,10 +155,11 @@ namespace CloudinaryDotNet
         /// <param name="prefix">Public identifier prefix.</param>
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
+        /// <param name="metadata">If true, include metadata for each resource.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByPrefix(string prefix, string type = "upload", string nextCursor = null)
+        public ListResourcesResult ListResourcesByPrefix(string prefix, string type = "upload", string nextCursor = null, bool metadata = false)
         {
-            return ListResourcesByPrefixAsync(prefix, type, nextCursor)
+            return ListResourcesByPrefixAsync(prefix, type, nextCursor, metadata)
                 .GetAwaiter().GetResult();
         }
 
@@ -154,6 +172,7 @@ namespace CloudinaryDotNet
         /// <param name="moderations">If true, include moderation status for each resource.</param>
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
+        /// <param name="metadata">If true, include metadata for each resource.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByPrefixAsync(
@@ -163,6 +182,7 @@ namespace CloudinaryDotNet
             bool moderations,
             string type = "upload",
             string nextCursor = null,
+            bool metadata = false,
             CancellationToken? cancellationToken = null)
         {
             var listResourcesByPrefixParams = new ListResourcesByPrefixParams()
@@ -173,6 +193,7 @@ namespace CloudinaryDotNet
                 Type = type,
                 Prefix = prefix,
                 NextCursor = nextCursor,
+                Metadata = metadata,
             };
             return ListResourcesAsync(listResourcesByPrefixParams, cancellationToken);
         }
@@ -198,14 +219,16 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="tag">The tag.</param>
         /// <param name="nextCursor">Starting position.</param>
+        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public Task<ListResourcesResult> ListResourcesByTagAsync(string tag, string nextCursor = null, CancellationToken? cancellationToken = null)
+        public Task<ListResourcesResult> ListResourcesByTagAsync(string tag, string nextCursor = null, bool metadata = false, CancellationToken? cancellationToken = null)
         {
             var listResourcesByTagParams = new ListResourcesByTagParams()
             {
                 Tag = tag,
                 NextCursor = nextCursor,
+                Metadata = metadata,
             };
             return ListResourcesAsync(listResourcesByTagParams, cancellationToken);
         }
@@ -215,23 +238,26 @@ namespace CloudinaryDotNet
         /// </summary>
         /// <param name="tag">The tag.</param>
         /// <param name="nextCursor">Starting position.</param>
+        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByTag(string tag, string nextCursor = null)
+        public ListResourcesResult ListResourcesByTag(string tag, string nextCursor = null, bool metadata = false)
         {
-            return ListResourcesByTagAsync(tag, nextCursor).GetAwaiter().GetResult();
+            return ListResourcesByTagAsync(tag, nextCursor, metadata).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Returns resources with specified public identifiers asynchronously.
         /// </summary>
         /// <param name="publicIds">Public identifiers.</param>
+        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public Task<ListResourcesResult> ListResourcesByPublicIdsAsync(IEnumerable<string> publicIds, CancellationToken? cancellationToken = null)
+        public Task<ListResourcesResult> ListResourcesByPublicIdsAsync(IEnumerable<string> publicIds, bool metadata = false, CancellationToken? cancellationToken = null)
         {
             var listSpecificResourcesParams = new ListSpecificResourcesParams()
             {
                 PublicIds = new List<string>(publicIds),
+                Metadata = metadata,
             };
             return ListResourcesAsync(listSpecificResourcesParams, cancellationToken);
         }
@@ -240,10 +266,11 @@ namespace CloudinaryDotNet
         /// Returns resources with specified public identifiers.
         /// </summary>
         /// <param name="publicIds">Public identifiers.</param>
+        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByPublicIds(IEnumerable<string> publicIds)
+        public ListResourcesResult ListResourcesByPublicIds(IEnumerable<string> publicIds, bool metadata = false)
         {
-            return ListResourcesByPublicIdsAsync(publicIds)
+            return ListResourcesByPublicIdsAsync(publicIds, metadata)
                 .GetAwaiter().GetResult();
         }
 
@@ -296,6 +323,7 @@ namespace CloudinaryDotNet
         /// <param name="context">Whether to include context in result.</param>
         /// <param name="moderations">Whether to include moderation status in result.</param>
         /// <param name="nextCursor">The next cursor.</param>
+        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByModerationStatusAsync(
@@ -305,6 +333,7 @@ namespace CloudinaryDotNet
             bool context = true,
             bool moderations = true,
             string nextCursor = null,
+            bool metadata = false,
             CancellationToken? cancellationToken = null)
         {
             var listResourcesByModerationParams = new ListResourcesByModerationParams()
@@ -315,6 +344,7 @@ namespace CloudinaryDotNet
                 Context = context,
                 Moderations = moderations,
                 NextCursor = nextCursor,
+                Metadata = metadata,
             };
             return ListResourcesAsync(listResourcesByModerationParams, cancellationToken);
         }
@@ -328,6 +358,7 @@ namespace CloudinaryDotNet
         /// <param name="context">Whether to include context in result.</param>
         /// <param name="moderations">Whether to include moderation status in result.</param>
         /// <param name="nextCursor">The next cursor.</param>
+        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public ListResourcesResult ListResourcesByModerationStatus(
             string kind,
@@ -335,9 +366,10 @@ namespace CloudinaryDotNet
             bool tags = true,
             bool context = true,
             bool moderations = true,
-            string nextCursor = null)
+            string nextCursor = null,
+            bool metadata = false)
         {
-            return ListResourcesByModerationStatusAsync(kind, status, tags, context, moderations, nextCursor)
+            return ListResourcesByModerationStatusAsync(kind, status, tags, context, moderations, nextCursor, metadata)
                 .GetAwaiter().GetResult();
         }
 
@@ -350,6 +382,7 @@ namespace CloudinaryDotNet
         /// <param name="tags">If true, include list of tag names assigned for each resource.</param>
         /// <param name="context">If true, include context assigned to each resource.</param>
         /// <param name="nextCursor">The next cursor.</param>
+        /// <param name="metadata">If true, include metadata assigned to each resource.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
         public Task<ListResourcesResult> ListResourcesByContextAsync(
@@ -358,6 +391,7 @@ namespace CloudinaryDotNet
             bool tags = false,
             bool context = false,
             string nextCursor = null,
+            bool metadata = false,
             CancellationToken? cancellationToken = null)
         {
             var listResourcesByContextParams = new ListResourcesByContextParams()
@@ -367,6 +401,7 @@ namespace CloudinaryDotNet
                 Tags = tags,
                 Context = context,
                 NextCursor = nextCursor,
+                Metadata = metadata,
             };
             return ListResourcesAsync(listResourcesByContextParams, cancellationToken);
         }
@@ -380,10 +415,11 @@ namespace CloudinaryDotNet
         /// <param name="tags">If true, include list of tag names assigned for each resource.</param>
         /// <param name="context">If true, include context assigned to each resource.</param>
         /// <param name="nextCursor">The next cursor.</param>
+        /// <param name="metadata">If true, include metadata assigned to each resource.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByContext(string key, string value = "", bool tags = false, bool context = false, string nextCursor = null)
+        public ListResourcesResult ListResourcesByContext(string key, string value = "", bool tags = false, bool context = false, string nextCursor = null, bool metadata = false)
         {
-            return ListResourcesByContextAsync(key, value, tags, context, nextCursor).GetAwaiter().GetResult();
+            return ListResourcesByContextAsync(key, value, tags, context, nextCursor, metadata).GetAwaiter().GetResult();
         }
 
         /// <summary>
