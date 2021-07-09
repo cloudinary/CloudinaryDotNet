@@ -71,7 +71,7 @@
         /// <summary>
         /// User agent for cloudinary API requests.
         /// </summary>
-        public static string USER_AGENT = BuildUserAgent();
+        public static string USER_AGENT = RuntimeInformation.FrameworkDescription;
 
         /// <summary>
         /// Sends HTTP requests and receives HTTP responses.
@@ -802,11 +802,6 @@
             builder.Append("'/>");
 
             return builder.ToString();
-        }
-
-        private static string BuildUserAgent()
-        {
-            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
         }
     }
 }

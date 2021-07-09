@@ -475,23 +475,43 @@ namespace CloudinaryDotNet.Tests.Asset
             Assert.AreEqual(TestConstants.DefaultImageUpPath + "c_fill,x_100,y_100/test", uri);
         }
 
-        [Test]
-        public void TestAgentPlatformHeaders()
+        private HttpRequestMessage CreateRequest(string userPlatform)
         {
             var request = new HttpRequestMessage { RequestUri = new Uri("http://dummy.com") };
-            m_api.UserPlatform = "Test/1.0";
+            m_api.UserPlatform = userPlatform;
 
             m_api.PrepareRequestBody(
                 request,
                 HttpMethod.GET,
                 new SortedDictionary<string, object>(),
                 new FileDescription(""));
+            return request;
+        }
+
+        [Test]
+        public void TestAgentPlatformHeaders()
+        {
+            var httpRequestMessage = CreateRequest("UserPlatform");
 
             //Can't test the result, so we just verify the UserAgent parameter is sent to the server
-            StringAssert.AreEqualIgnoringCase($"{m_api.UserPlatform} {ApiShared.USER_AGENT}",
-                request.Headers.UserAgent.ToString());
-            StringAssert.IsMatch(@"Test\/1\.0 CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\)",
-                request.Headers.UserAgent.ToString());
+            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(" + ApiShared.USER_AGENT.Replace("(", "").Replace(")", "") + @"\) \(UserPlatform\)",
+                httpRequestMessage.Headers.UserAgent.ToString());
+        }
+
+        [Test]
+        public void UnityUserAgentShouldNotThrow()
+        {
+            var userAgent = "Mono 5.11.0 ((HEAD/768f1b247c6)";
+            var prevAgent = ApiShared.USER_AGENT;
+            ApiShared.USER_AGENT = userAgent;
+            try
+            {
+                var httpRequestMessage = CreateRequest("UserPlatform");
+            }
+            finally
+            {
+                ApiShared.USER_AGENT = prevAgent;
+            }
         }
 
         [Test]
