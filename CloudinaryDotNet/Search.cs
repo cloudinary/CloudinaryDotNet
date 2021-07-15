@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
@@ -11,9 +12,9 @@
     /// </summary>
     public class Search
     {
-        private List<Dictionary<string, object>> sortByParam;
-        private List<string> aggregateParam;
-        private List<string> withFieldParam;
+        private Dictionary<string, Dictionary<string, string>> sortByParam = new Dictionary<string, Dictionary<string, string>>();
+        private HashSet<string> aggregateParam = new HashSet<string>();
+        private HashSet<string> withFieldParam = new HashSet<string>();
         private Dictionary<string, object> searchParams;
         private ApiShared m_api;
 
@@ -25,9 +26,6 @@
         {
             m_api = api;
             searchParams = new Dictionary<string, object>();
-            sortByParam = new List<Dictionary<string, object>>();
-            aggregateParam = new List<string>();
-            withFieldParam = new List<string>();
         }
 
         private Url SearchResourcesUrl => m_api?.ApiUrlV?
@@ -112,9 +110,7 @@
         /// <returns>The search provider with sort parameter defined.</returns>
         public Search SortBy(string field, string dir)
         {
-            Dictionary<string, object> sortBucket = new Dictionary<string, object>();
-            sortBucket.Add(field, dir);
-            sortByParam.Add(sortBucket);
+            sortByParam[field] = new Dictionary<string, string> { [field] = dir };
 
             return this;
         }
@@ -134,7 +130,7 @@
 
             if (sortByParam.Count > 0)
             {
-                queryParams.Add("sort_by", sortByParam);
+                queryParams.Add("sort_by", sortByParam.Values.ToList());
             }
 
             if (aggregateParam.Count > 0)
