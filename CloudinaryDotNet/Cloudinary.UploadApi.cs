@@ -334,24 +334,18 @@ namespace CloudinaryDotNet
         /// <param name="fromPublicId">Old identifier.</param>
         /// <param name="toPublicId">New identifier.</param>
         /// <param name="overwrite">Overwrite a file with the same identifier as new if such file exists.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Result of resource renaming.</returns>
         public Task<RenameResult> RenameAsync(
             string fromPublicId,
             string toPublicId,
             bool overwrite = false,
-            bool context = false,
-            bool metadata = false,
             CancellationToken? cancellationToken = null)
         {
             return RenameAsync(
                 new RenameParams(fromPublicId, toPublicId)
                 {
                     Overwrite = overwrite,
-                    Context = context,
-                    Metadata = metadata,
                 },
                 cancellationToken);
         }
@@ -362,16 +356,12 @@ namespace CloudinaryDotNet
         /// <param name="fromPublicId">Old identifier.</param>
         /// <param name="toPublicId">New identifier.</param>
         /// <param name="overwrite">Overwrite a file with the same identifier as new if such file exists.</param>
-        /// <param name="context">Whether to include context in result.</param>
-        /// <param name="metadata">Whether to include metadata in result.</param>
         /// <returns>Result of resource renaming.</returns>
-        public RenameResult Rename(string fromPublicId, string toPublicId, bool overwrite = false, bool context = false, bool metadata = false)
+        public RenameResult Rename(string fromPublicId, string toPublicId, bool overwrite = false)
         {
             var renameParams = new RenameParams(fromPublicId, toPublicId)
             {
                 Overwrite = overwrite,
-                Context = context,
-                Metadata = metadata,
             };
 
             return RenameAsync(renameParams).GetAwaiter().GetResult();

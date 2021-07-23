@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -85,10 +86,15 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             await UploadImage(publicId);
 
-            var renameResult = await m_cloudinary.RenameAsync(publicId, newPublicId, context: true);
+            var @params = new RenameParams(publicId, newPublicId)
+            {
+                Context = true
+            };
+            var renameResult = await m_cloudinary.RenameAsync(@params);
             Assert.IsTrue(renameResult.Context.HasValues);
 
-            renameResult = await m_cloudinary.RenameAsync(newPublicId, publicId);
+            @params.Context = false;
+            renameResult = await m_cloudinary.RenameAsync(@params);
             Assert.IsNull(renameResult.Context);
         }
 
@@ -100,10 +106,15 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             await UploadImage(publicId, true);
 
-            var renameResult = await m_cloudinary.RenameAsync(publicId, newPublicId, metadata: true);
+            var @params = new RenameParams(publicId, newPublicId)
+            {
+                Metadata = true
+            };
+            var renameResult = await m_cloudinary.RenameAsync(@params);
             Assert.IsTrue(renameResult.MetadataFields.HasValues);
 
-            renameResult = await m_cloudinary.RenameAsync(newPublicId, publicId);
+            @params.Metadata = false;
+            renameResult = await m_cloudinary.RenameAsync(@params);
             Assert.IsNull(renameResult.MetadataFields);
         }
 
