@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace CloudinaryDotNet.IntegrationTests.AdminApi
 {
-    public class BrowseResourcesWithStructuredMetadataTest: IntegrationTestBase
+    public class BrowseResourcesWithStructuredMetadataTest : IntegrationTestBase
     {
         private const string MODERATION_MANUAL = "manual";
         private static string m_contextKey;
@@ -36,57 +36,52 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         [Test, RetryWithDelay]
         public async Task TestListResources()
         {
-            AssertHaveMetadata(await m_cloudinary.ListResourcesAsync(metadata: true));
-            AssertHaveNoMetadata(await m_cloudinary.ListResourcesAsync(metadata: false));
+            var @params = new ListResourcesParams
+            {
+            };
+            await AssertMetadataFlagBehavior(@params);
         }
 
         [Test, RetryWithDelay]
         public async Task TestListResourcesByTag()
         {
-            AssertHaveMetadata(await m_cloudinary.ListResourcesByTagAsync(m_apiTag, metadata: true));
-            AssertHaveNoMetadata(await m_cloudinary.ListResourcesByTagAsync(m_apiTag, metadata: false));
-        }
-
-        [Test, RetryWithDelay]
-        public async Task TestListResourcesByContext()
-        {
-            AssertHaveMetadata(await m_cloudinary.ListResourcesByContextAsync(m_contextKey, m_contextValue, metadata: true));
-            AssertHaveNoMetadata(await m_cloudinary.ListResourcesByContextAsync(m_contextKey, m_contextValue, metadata: false));
+            var @params = new ListResourcesByTagParams
+            {
+                Tag = m_apiTag,
+            };
+            await AssertMetadataFlagBehavior(@params);
         }
 
         [Test, RetryWithDelay]
         public async Task TestListResourcesByModerationStatus()
         {
-            AssertHaveMetadata(await m_cloudinary.ListResourcesByModerationStatusAsync(MODERATION_MANUAL, ModerationStatus.Pending, metadata: true));
-            AssertHaveNoMetadata(await m_cloudinary.ListResourcesByModerationStatusAsync(MODERATION_MANUAL, ModerationStatus.Pending, metadata: false));
+            var @params = new ListResourcesByModerationParams
+            {
+                ModerationStatus = ModerationStatus.Pending,
+                ModerationKind = MODERATION_MANUAL,
+            };
+            await AssertMetadataFlagBehavior(@params);
         }
 
         [Test, RetryWithDelay]
         public async Task TestListResourcesByPrefix()
         {
-            AssertHaveMetadata(await m_cloudinary.ListResourcesByPrefixAsync(m_publicId, metadata: true));
-            AssertHaveNoMetadata(await m_cloudinary.ListResourcesByPrefixAsync(m_publicId, metadata: false));
+            var @params = new ListResourcesByPrefixParams
+            {
+                Type = "upload",
+                Prefix = m_test_prefix,
+            };
+            await AssertMetadataFlagBehavior(@params);
         }
 
-        [Test, RetryWithDelay]
-        public async Task TestListResourcesByType()
+        private async Task AssertMetadataFlagBehavior(ListResourcesParams @params)
         {
-            AssertHaveMetadata(await m_cloudinary.ListResourcesByTypeAsync("upload", metadata: true));
-            AssertHaveNoMetadata(await m_cloudinary.ListResourcesByTypeAsync("upload", metadata: false));
+            @params.Metadata = true;
+            CommonAssertions(await m_cloudinary.ListResourcesAsync(@params), true);
+
+            @params.Metadata = false;
+            CommonAssertions(await m_cloudinary.ListResourcesAsync(@params), false);
         }
-
-        [Test, RetryWithDelay]
-        public async Task TestListResourcesByPublicIds()
-        {
-            AssertHaveMetadata(await m_cloudinary.ListResourcesByPublicIdsAsync(new[] { m_publicId }, metadata: true));
-            AssertHaveNoMetadata(await m_cloudinary.ListResourcesByPublicIdsAsync(new[] { m_publicId }, metadata: false));
-        }
-
-        private void AssertHaveMetadata(ListResourcesResult result) =>
-            CommonAssertions(result, true);
-
-        private void AssertHaveNoMetadata(ListResourcesResult result) =>
-            CommonAssertions(result, false);
 
         private void CommonAssertions(ListResourcesResult result, bool shouldHaveMetadata)
         {
