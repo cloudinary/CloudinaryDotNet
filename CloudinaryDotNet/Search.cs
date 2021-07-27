@@ -12,9 +12,9 @@
     /// </summary>
     public class Search
     {
-        private Dictionary<string, Dictionary<string, string>> sortByParam = new Dictionary<string, Dictionary<string, string>>();
-        private HashSet<string> aggregateParam = new HashSet<string>();
-        private HashSet<string> withFieldParam = new HashSet<string>();
+        private List<Dictionary<string, object>> sortByParam;
+        private List<string> aggregateParam;
+        private List<string> withFieldParam;
         private Dictionary<string, object> searchParams;
         private ApiShared m_api;
 
@@ -26,6 +26,9 @@
         {
             m_api = api;
             searchParams = new Dictionary<string, object>();
+            sortByParam = new List<Dictionary<string, object>>();
+            aggregateParam = new List<string>();
+            withFieldParam = new List<string>();
         }
 
         private Url SearchResourcesUrl => m_api?.ApiUrlV?
@@ -110,7 +113,9 @@
         /// <returns>The search provider with sort parameter defined.</returns>
         public Search SortBy(string field, string dir)
         {
-            sortByParam[field] = new Dictionary<string, string> { [field] = dir };
+            Dictionary<string, object> sortBucket = new Dictionary<string, object>();
+            sortBucket.Add(field, dir);
+            sortByParam.Add(sortBucket);
 
             return this;
         }
@@ -125,17 +130,17 @@
 
             if (withFieldParam.Count > 0)
             {
-                queryParams.Add("with_field", withFieldParam);
+                queryParams.Add("with_field", withFieldParam.Distinct());
             }
 
             if (sortByParam.Count > 0)
             {
-                queryParams.Add("sort_by", sortByParam.Values.ToList());
+                queryParams.Add("sort_by", sortByParam.GroupBy(d => d.Keys.First()).Select(l => l.Last()));
             }
 
             if (aggregateParam.Count > 0)
             {
-                queryParams.Add("aggregate", aggregateParam);
+                queryParams.Add("aggregate", aggregateParam.Distinct());
             }
 
             return queryParams;
