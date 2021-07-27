@@ -69,6 +69,8 @@
             { "tags", "tags" },
             { "pageX", "px" },
             { "pageY", "py" },
+            { "preview:duration", "preview:duration" },
+            { "duration", "du" },
         };
 
         /// <summary>
