@@ -576,5 +576,25 @@ namespace CloudinaryDotNet.Tests.Asset
 
             StringAssert.StartsWith("https://api.cloudinary.com", urlZipImage);
         }
+
+        [Test]
+        public void TestTextLayerStyleIdentifierVariables()
+        {
+            string buildUrl(Func<TextLayer, TextLayer> setTextStyleAction) =>
+                m_api.UrlImgUp.Transform(
+                    new Transformation()
+                        .Variable("$style", "!Arial_12!")
+                        .Chain()
+                        .Overlay(
+                            setTextStyleAction(new TextLayer().Text("hello-world"))
+                        )
+                ).BuildUrl("sample");
+
+            var expected =
+                "http://res.cloudinary.com/testcloud/image/upload/$style_!Arial_12!/l_text:$style:hello-world/sample";
+
+            Assert.AreEqual(expected, buildUrl(l => l.TextStyle("$style")));
+            Assert.AreEqual(expected, buildUrl(l => l.TextStyle(new Expression("$style"))));
+        }
     }
 }
