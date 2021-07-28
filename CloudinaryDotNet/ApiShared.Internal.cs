@@ -257,10 +257,15 @@
                 return;
             }
 
-            var normalizedComment = comment
-                           .Replace(")", string.Empty)
-                           .Replace("(", string.Empty);
+            var normalizedComment = RemoveBracketsFrom(comment);
             userAgentHeader.Add(new ProductInfoHeaderValue($"({normalizedComment})"));
+        }
+
+        private static string RemoveBracketsFrom(string comment)
+        {
+            return comment
+                       .Replace(")", string.Empty)
+                       .Replace("(", string.Empty);
         }
 
         private static SortedDictionary<string, object> GetCallParams(HttpMethod method, BaseParams parameters)
@@ -474,7 +479,7 @@
             userAgentHeader.Add(new ProductInfoHeaderValue("CloudinaryDotNet", CloudinaryVersion.Full));
 
             AddCommentToUserAgent(userAgentHeader, USER_AGENT);
-            AddCommentToUserAgent(userAgentHeader, UserPlatform);
+            SetUserPlatform(userAgentHeader);
 
             byte[] authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
             request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
@@ -491,6 +496,36 @@
                 {
                     request.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
+            }
+        }
+
+        private void SetUserPlatform(HttpHeaderValueCollection<ProductInfoHeaderValue> userAgentHeader)
+        {
+            Console.WriteLine($"UserPlatform: [{UserPlatform}] ======");
+            var up = UserPlatform?.Trim();
+            if (string.IsNullOrEmpty(up))
+            {
+                return;
+            }
+
+            var upp = up.Split('/');
+            var productName = GetElement(0);
+            if (string.IsNullOrEmpty(productName))
+            {
+                return;
+            }
+
+            var productVersion = GetElement(1);
+            if (string.IsNullOrEmpty(productVersion))
+            {
+                productVersion = "0.1";
+            }
+
+            userAgentHeader.Add(new ProductInfoHeaderValue(productName, productVersion));
+
+            string GetElement(int index)
+            {
+                return upp.ElementAtOrDefault(index)?.Trim();
             }
         }
 

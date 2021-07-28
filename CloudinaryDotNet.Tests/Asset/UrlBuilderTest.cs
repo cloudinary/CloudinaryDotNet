@@ -491,22 +491,36 @@ namespace CloudinaryDotNet.Tests.Asset
         [Test]
         public void TestAgentPlatformHeaders()
         {
-            var httpRequestMessage = CreateRequest("UserPlatform");
+            var httpRequestMessage = CreateRequest("UserPlatform/2.3");
 
             //Can't test the result, so we just verify the UserAgent parameter is sent to the server
-            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(" + ApiShared.USER_AGENT.Replace("(", "").Replace(")", "") + @"\) \(UserPlatform\)",
+            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(" + ApiShared.USER_AGENT.Replace("(", "").Replace(")", "") + @"\) UserPlatform/2\.3",
                 httpRequestMessage.Headers.UserAgent.ToString());
         }
 
         [Test]
-        public void UnityUserAgentShouldNotThrow()
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("UserPlatform/")]
+        [TestCase("UserPlatform/ ")]
+        [TestCase("UserPlatform / 1.2")]
+        public void UnexpectedUserPlatformShouldNotThrow(string userPlatorm)
         {
-            var userAgent = "Mono 5.11.0 ((HEAD/768f1b247c6)";
+            Assert.DoesNotThrow(() => CreateRequest(userPlatorm));
+        }
+
+        [Test]
+        [TestCase("Mono 5.11.0 ((HEAD/768f1b247c6)")]
+        [TestCase("(")]
+        [TestCase(")")]
+        public void MalformedUserAgentShouldNotThrow(string userAgent)
+        {
             var prevAgent = ApiShared.USER_AGENT;
             ApiShared.USER_AGENT = userAgent;
             try
             {
-                var httpRequestMessage = CreateRequest("UserPlatform");
+                Assert.DoesNotThrow(() => CreateRequest("UserPlatform"));
             }
             finally
             {
