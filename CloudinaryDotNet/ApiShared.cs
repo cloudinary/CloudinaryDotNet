@@ -74,11 +74,6 @@
         public static string USER_AGENT = BuildUserAgent();
 
         /// <summary>
-        /// Sends HTTP requests and receives HTTP responses.
-        /// </summary>
-        public static HttpClient Client = new HttpClient();
-
-        /// <summary>
         /// Whether to use a sub domain.
         /// </summary>
         public bool CSubDomain;

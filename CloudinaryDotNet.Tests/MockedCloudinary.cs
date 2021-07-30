@@ -34,7 +34,7 @@ namespace CloudinaryDotNet.Tests
                     StatusCode = HttpStatusCode.OK,
                     Content = new StringContent(responseStr)
                 });
-            ApiShared.Client = new HttpClient(HandlerMock.Object);
+            Api.Client = new HttpClient(HandlerMock.Object);
         }
 
         /// <summary>
