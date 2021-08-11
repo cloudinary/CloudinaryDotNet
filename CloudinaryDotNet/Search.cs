@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
@@ -129,17 +130,17 @@
 
             if (withFieldParam.Count > 0)
             {
-                queryParams.Add("with_field", withFieldParam);
+                queryParams.Add("with_field", withFieldParam.Distinct());
             }
 
             if (sortByParam.Count > 0)
             {
-                queryParams.Add("sort_by", sortByParam);
+                queryParams.Add("sort_by", sortByParam.GroupBy(d => d.Keys.First()).Select(l => l.Last()));
             }
 
             if (aggregateParam.Count > 0)
             {
-                queryParams.Add("aggregate", aggregateParam);
+                queryParams.Add("aggregate", aggregateParam.Distinct());
             }
 
             return queryParams;
