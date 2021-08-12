@@ -322,6 +322,8 @@ namespace CloudinaryDotNet.Tests.Transformations.Common
         [TestCase("foo&&bar", "foo&&bar")]
         [TestCase("width", "w")]
         [TestCase("initial_aspect_ratio", "iar")]
+        [TestCase("duration", "du")]
+        [TestCase("preview:duration", "preview:duration")]
         [TestCase("$width", "$width")]
         [TestCase("$initial_aspect_ratio", "$initial_ar")]
         [TestCase("$mywidth", "$mywidth")]

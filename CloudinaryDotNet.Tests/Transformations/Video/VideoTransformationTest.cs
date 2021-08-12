@@ -181,15 +181,5 @@ namespace CloudinaryDotNet.Tests.Transformations.Video
                 Assert.AreEqual(pair.Value, actual);
             }
         }
-
-        [Test]
-        public void TestVideoPreview()
-        {
-            var actual = new Transformation().Effect("preview:duration_2").ToString();
-            Assert.AreEqual("e_preview:duration_2", actual);
-
-            actual = new Transformation().Effect("preview", "duration_2").ToString();
-            Assert.AreEqual("e_preview:duration_2", actual);
-        }
     }
 }
