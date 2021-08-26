@@ -7,11 +7,11 @@ namespace CloudinaryDotNet.Tests.UploadApi
 {
     public class CreateSlideshowMethodsTest
     {
-        private readonly MockedCloudinary _cloudinary = new MockedCloudinary();
-
         [Test]
         public void TestCreateSlideshowFromManifestTransformation()
         {
+            var cloudinary = new MockedCloudinary();
+
             const string slideshowManifest = "w_352;h_240;du_5;fps_30;vars_(slides_((media_s64:aHR0cHM6Ly9y" +
                                               "ZXMuY2xvdWRpbmFyeS5jb20vZGVtby9pbWFnZS91cGxvYWQvY291cGxl);(media_s64:aH" +
                                               "R0cHM6Ly9yZXMuY2xvdWRpbmFyeS5jb20vZGVtby9pbWFnZS91cGxvYWQvc2FtcGxl)))";
@@ -23,9 +23,9 @@ namespace CloudinaryDotNet.Tests.UploadApi
                 Transformation = new Transformation().FetchFormat("auto").Quality("auto")
             };
 
-            _cloudinary.CreateSlideshow(csParams);
+            cloudinary.CreateSlideshow(csParams);
 
-            _cloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "video/create_slideshow");
+            cloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "video/create_slideshow");
 
             foreach (var expected in new List<string>
             {
@@ -36,12 +36,14 @@ namespace CloudinaryDotNet.Tests.UploadApi
                 "f_auto,q_auto"
             })
             {
-                StringAssert.Contains(expected, _cloudinary.HttpRequestContent);
+                StringAssert.Contains(expected, cloudinary.HttpRequestContent);
             }
         }
         [Test]
         public void TestCreateSlideshowFromManifestJson()
         {
+            var cloudinary = new MockedCloudinary();
+
             const string expectedManifestJson =
                 @"{""w"":848,""h"":480,""du"":6,""fps"":30,""vars"":{""sdur"":500,""tdur"":500,""slides"":"+
                 @"[{""media"":""i:protests9""},{""media"":""i:protests8""},{""media"":""i:protests7""},"+
@@ -77,7 +79,7 @@ namespace CloudinaryDotNet.Tests.UploadApi
                 Overwrite = true
             };
 
-            _cloudinary.CreateSlideshow(csParams);
+            cloudinary.CreateSlideshow(csParams);
 
             foreach (var expected in new List<string>
             {
@@ -88,7 +90,7 @@ namespace CloudinaryDotNet.Tests.UploadApi
                 "1" // Overwrite
             })
             {
-                StringAssert.Contains(expected, _cloudinary.HttpRequestContent);
+                StringAssert.Contains(expected, cloudinary.HttpRequestContent);
             }
         }
     }
