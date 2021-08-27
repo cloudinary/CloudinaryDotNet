@@ -868,6 +868,33 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Creates auto-generated video slideshow.
+        /// </summary>
+        /// <param name="parameters">Parameters for generating the slideshow.</param>
+        /// <returns>The public id of the generated slideshow.</returns>
+        public CreateSlideshowResult CreateSlideshow(CreateSlideshowParams parameters)
+        {
+            return CreateSlideshowAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        ///  Creates auto-generated video slideshow asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters for generating the slideshow.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The public id of the generated slideshow.</returns>
+        public Task<CreateSlideshowResult> CreateSlideshowAsync(CreateSlideshowParams parameters, CancellationToken? cancellationToken = null)
+        {
+            string uri = m_api.ApiUrlVideoUpV.Action("create_slideshow").BuildUrl();
+
+            return CallUploadApiAsync<CreateSlideshowResult>(
+                HttpMethod.POST,
+                uri,
+                parameters,
+                cancellationToken);
+        }
+
+        /// <summary>
         /// Generates an image of a given textual string.
         /// </summary>
         /// <param name="parameters">Parameters of generating an image of a given textual string.</param>

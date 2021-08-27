@@ -200,9 +200,9 @@ namespace CloudinaryDotNet.IntegrationTests
                     stream.CopyTo(fileStream);
                 }
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                
+
             }
         }
 

@@ -23,6 +23,16 @@
         }
 
         /// <summary>
+        /// Generates a render custom function param to send to CustomFunction(customFunction) transformation.
+        /// </summary>
+        /// <param name="manifest">The manifest transformation.</param>
+        /// <returns>A new instance of custom function param.</returns>
+        public static CustomFunction Render(string manifest)
+        {
+            return new CustomFunction("render", manifest);
+        }
+
+        /// <summary>
         /// Generate a remote lambda custom action function to send to CustomFunction(customFunction) transformation.
         /// </summary>
         /// <param name="url">The public URL of the aws lambda function.</param>
