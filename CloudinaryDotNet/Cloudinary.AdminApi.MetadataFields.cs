@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
 
     /// <summary>
@@ -147,6 +148,35 @@
                 BuildUrl();
             var result = CallAdminApiAsync<MetadataUpdateResult>(HttpMethod.POST, url, parameters, null).GetAwaiter().GetResult();
             return result;
+        }
+
+        /// <summary>
+        /// Sorts metadata field datasource
+        ///
+        /// Currently supports only value.
+        /// </summary>
+        /// <param name="fieldExternalId">The ID of the metadata field.</param>
+        /// <param name="orderBy">Criteria for the sort. Currently supports only value.</param>
+        /// <param name="direction">Either asc (default) or desc.</param>
+        /// <returns>Parsed result of the operation.</returns>
+        public Task<MetadataDataSourceResult> ReorderMetadataFieldDatasourceAsync(
+            string fieldExternalId,
+            string orderBy,
+            string direction = null)
+        {
+            var url = m_api.ApiUrlMetadataFieldV
+                .Add(fieldExternalId)
+                .Add(Constants.DATASOURCE_MANAGMENT)
+                .Add("order")
+                .BuildUrl();
+
+            var parameters = new ReorderMetadataFieldsParams()
+            {
+                OrderBy = orderBy,
+                Direction = direction,
+            };
+
+            return CallAdminApiAsync<MetadataDataSourceResult>(HttpMethod.POST, url, parameters, null);
         }
 
         private static Dictionary<string, string> PrepareHeaders()
