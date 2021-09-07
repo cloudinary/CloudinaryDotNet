@@ -35,6 +35,18 @@
         /// Parameterized constructor.
         /// </summary>
         /// <param name="cloud">Cloud name.</param>
+        /// <param name="oauthToken">OAuth token.</param>
+        public Account(string cloud, string oauthToken)
+            : this(cloud)
+        {
+            OAuthToken = oauthToken;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Account"/> class.
+        /// Parameterized constructor.
+        /// </summary>
+        /// <param name="cloud">Cloud name.</param>
         public Account(string cloud)
         {
             Cloud = cloud;
@@ -54,5 +66,10 @@
         /// Gets or sets API secret.
         /// </summary>
         public string ApiSecret { get; set; }
+
+        /// <summary>
+        /// Gets or sets oauth token.
+        /// </summary>
+        public string OAuthToken { get; set; }
     }
 }

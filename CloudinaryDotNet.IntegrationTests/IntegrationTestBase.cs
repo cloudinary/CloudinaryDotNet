@@ -200,7 +200,7 @@ namespace CloudinaryDotNet.IntegrationTests
                     stream.CopyTo(fileStream);
                 }
             }
-            catch (IOException)
+            catch
             {
 
             }
@@ -349,7 +349,7 @@ namespace CloudinaryDotNet.IntegrationTests
         /// A convenient method for initialization of new Account instance with necessary checks
         /// </summary>
         /// <returns>New Account instance</returns>
-        private Account GetAccountInstance()
+        protected virtual Account GetAccountInstance()
         {
             Account account = new Account(m_cloudName, m_apiKey, m_apiSecret);
 

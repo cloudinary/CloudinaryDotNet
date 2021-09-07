@@ -15,6 +15,25 @@ namespace CloudinaryDotNet
     public partial class Cloudinary
     {
         /// <summary>
+        /// Tests the reachability of the Cloudinary API asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Ping result.</returns>
+        public Task<PingResult> PingAsync(CancellationToken? cancellationToken = null)
+        {
+            return CallAdminApiAsync<PingResult>(HttpMethod.GET, GetApiUrlV().BuildUrl("ping"), null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Tests the reachability of the Cloudinary API.
+        /// </summary>
+        /// <returns>Ping result.</returns>
+        public PingResult Ping()
+        {
+            return PingAsync().GetAwaiter().GetResult();
+        }
+
+        /// <summary>
         /// Gets the advanced search provider used by the Cloudinary instance.
         /// </summary>
         /// <returns>Instance of the <see cref="Search"/> class.</returns>

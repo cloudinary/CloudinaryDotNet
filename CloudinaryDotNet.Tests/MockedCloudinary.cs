@@ -1,4 +1,5 @@
-﻿using System.Net;
+using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -14,8 +15,10 @@ namespace CloudinaryDotNet.Tests
         public Mock<HttpMessageHandler> HandlerMock;
         public string HttpRequestContent;
         private const string CloudName = "test123";
+        public HttpRequestHeaders HttpRequestHeaders;
 
-        public MockedCloudinary(string responseStr = "{}", HttpResponseHeaders httpResponseHeaders = null) : base("cloudinary://key:secret@test123")
+        public MockedCloudinary(string responseStr = "{}", HttpResponseHeaders httpResponseHeaders = null, Account account = null)
+            : base(account ?? new Account(CloudName, "key", "secret"))
         {
             HandlerMock = new Mock<HttpMessageHandler>();
 
@@ -45,6 +48,7 @@ namespace CloudinaryDotNet.Tests
                             .ReadAsStringAsync()
                             .GetAwaiter()
                             .GetResult();
+                        HttpRequestHeaders = httpRequestMessage.Headers;
                     })
                 .ReturnsAsync(httpResponseMessage);
             Api.Client = new HttpClient(HandlerMock.Object);
@@ -69,7 +73,6 @@ namespace CloudinaryDotNet.Tests
                 ItExpr.IsAny<CancellationToken>()
             );
         }
-
 
         public JToken RequestJson()
         {

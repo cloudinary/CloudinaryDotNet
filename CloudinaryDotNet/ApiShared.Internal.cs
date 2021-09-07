@@ -187,7 +187,7 @@
                 parameters.Add("timestamp", Utils.UnixTimeNowSeconds());
             }
 
-            if (!parameters.ContainsKey("signature"))
+            if (!parameters.ContainsKey("signature") && string.IsNullOrEmpty(Account.OAuthToken))
             {
                 parameters.Add("signature", SignParameters(parameters));
             }
@@ -548,6 +548,13 @@
             }
         }
 
+        private AuthenticationHeaderValue GetAuthorizationHeaderValue()
+        {
+            return !string.IsNullOrEmpty(Account.OAuthToken)
+                ? new AuthenticationHeaderValue("Bearer", Account.OAuthToken)
+                : new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(GetApiCredentials())));
+        }
+
         private void PrePrepareRequestBody(
             HttpRequestMessage request,
             HttpMethod method,
@@ -562,8 +569,7 @@
                 : string.Format(CultureInfo.InvariantCulture, "{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
-            request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
+            request.Headers.Authorization = GetAuthorizationHeaderValue();
 
             if (extraHeaders != null)
             {
