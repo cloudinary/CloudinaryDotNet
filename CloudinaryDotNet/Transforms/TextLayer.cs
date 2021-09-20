@@ -93,6 +93,11 @@
         protected string m_text;
 
         /// <summary>
+        /// The text style to generate an image for.
+        /// </summary>
+        protected object m_textStyle;
+
+        /// <summary>
         /// Required name of the font family. e.g. "arial".
         /// </summary>
         protected string m_fontFamily;
@@ -206,6 +211,30 @@
         public TextLayer Text(string text)
         {
             this.m_text = OverlayTextEncode(text);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets a text style identifier.
+        /// Note: If this is used, all other style attributes are ignored in favor of this identifier.
+        /// </summary>
+        /// <param name="textStyleIdentifier">A variable string or an explicit style (e.g. "Arial_17_bold_antialias_best").</param>
+        /// <returns>The layer with text style applied.</returns>
+        public TextLayer TextStyle(string textStyleIdentifier)
+        {
+            this.m_textStyle = textStyleIdentifier;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets a text style identifier.
+        /// Note: If this is used, all other style attributes are ignored in favor of this identifier.
+        /// </summary>
+        /// <param name="textStyleIdentifier">An expression instance referencing the style..</param>
+        /// <returns>The layer with text style applied.</returns>
+        public TextLayer TextStyle(Expression textStyleIdentifier)
+        {
+            this.m_textStyle = textStyleIdentifier;
             return this;
         }
 
@@ -396,6 +425,12 @@
 
         private string TextStyleIdentifier()
         {
+            var ts = m_textStyle?.ToString();
+            if (!string.IsNullOrEmpty(ts))
+            {
+                return ts;
+            }
+
             List<string> components = new List<string>();
 
             if (!string.IsNullOrEmpty(m_fontWeight) && !m_fontWeight.Equals("normal", StringComparison.Ordinal))

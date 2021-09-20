@@ -200,9 +200,9 @@ namespace CloudinaryDotNet.IntegrationTests
                     stream.CopyTo(fileStream);
                 }
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                
+
             }
         }
 
@@ -308,11 +308,13 @@ namespace CloudinaryDotNet.IntegrationTests
         /// A convenient method for creating a structured metadata field before testing.
         /// </summary>
         /// <param name="fieldLabelSuffix">The distinguishable suffix.</param>
+        /// <param name="setParamsAction">Action to set custom metadata field parameters.</param>
         /// <returns>The ExternalId of the structured metadata field.</returns>
-        protected string CreateMetadataField(string fieldLabelSuffix)
+        protected string CreateMetadataField(string fieldLabelSuffix, Action<StringMetadataFieldCreateParams> setParamsAction = null)
         {
             var metadataLabel = GetUniqueMetadataFieldLabel(fieldLabelSuffix);
             var metadataParameters = new StringMetadataFieldCreateParams(metadataLabel);
+            setParamsAction?.Invoke(metadataParameters);
             var metadataResult = m_cloudinary.AddMetadataField(metadataParameters);
 
             Assert.NotNull(metadataResult, metadataResult.Error?.Message);

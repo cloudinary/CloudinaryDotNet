@@ -93,9 +93,18 @@ namespace CloudinaryDotNet
         /// <param name="nextCursor">Starting position.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public Task<ListResourcesResult> ListResourcesByTypeAsync(string type, string nextCursor = null, CancellationToken? cancellationToken = null)
+        public Task<ListResourcesResult> ListResourcesByTypeAsync(
+            string type,
+            string nextCursor = null,
+            CancellationToken? cancellationToken = null)
         {
-            return ListResourcesAsync(new ListResourcesParams() { Type = type, NextCursor = nextCursor }, cancellationToken);
+            var listResourcesParams = new ListResourcesParams()
+            {
+                Type = type,
+                NextCursor = nextCursor,
+            };
+
+            return ListResourcesAsync(listResourcesParams, cancellationToken);
         }
 
         /// <summary>
@@ -139,7 +148,10 @@ namespace CloudinaryDotNet
         /// <param name="type">Resource type.</param>
         /// <param name="nextCursor">Starting position.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByPrefix(string prefix, string type = "upload", string nextCursor = null)
+        public ListResourcesResult ListResourcesByPrefix(
+            string prefix,
+            string type = "upload",
+            string nextCursor = null)
         {
             return ListResourcesByPrefixAsync(prefix, type, nextCursor)
                 .GetAwaiter().GetResult();
@@ -200,7 +212,10 @@ namespace CloudinaryDotNet
         /// <param name="nextCursor">Starting position.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public Task<ListResourcesResult> ListResourcesByTagAsync(string tag, string nextCursor = null, CancellationToken? cancellationToken = null)
+        public Task<ListResourcesResult> ListResourcesByTagAsync(
+            string tag,
+            string nextCursor = null,
+            CancellationToken? cancellationToken = null)
         {
             var listResourcesByTagParams = new ListResourcesByTagParams()
             {
@@ -227,7 +242,9 @@ namespace CloudinaryDotNet
         /// <param name="publicIds">Public identifiers.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public Task<ListResourcesResult> ListResourcesByPublicIdsAsync(IEnumerable<string> publicIds, CancellationToken? cancellationToken = null)
+        public Task<ListResourcesResult> ListResourcesByPublicIdsAsync(
+            IEnumerable<string> publicIds,
+            CancellationToken? cancellationToken = null)
         {
             var listSpecificResourcesParams = new ListSpecificResourcesParams()
             {
@@ -381,9 +398,15 @@ namespace CloudinaryDotNet
         /// <param name="context">If true, include context assigned to each resource.</param>
         /// <param name="nextCursor">The next cursor.</param>
         /// <returns>Parsed result of the resources listing.</returns>
-        public ListResourcesResult ListResourcesByContext(string key, string value = "", bool tags = false, bool context = false, string nextCursor = null)
+        public ListResourcesResult ListResourcesByContext(
+            string key,
+            string value = "",
+            bool tags = false,
+            bool context = false,
+            string nextCursor = null)
         {
-            return ListResourcesByContextAsync(key, value, tags, context, nextCursor).GetAwaiter().GetResult();
+            return ListResourcesByContextAsync(key, value, tags, context, nextCursor)
+                .GetAwaiter().GetResult();
         }
 
         /// <summary>

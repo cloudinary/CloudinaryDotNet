@@ -336,7 +336,11 @@ namespace CloudinaryDotNet
         /// <param name="overwrite">Overwrite a file with the same identifier as new if such file exists.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Result of resource renaming.</returns>
-        public Task<RenameResult> RenameAsync(string fromPublicId, string toPublicId, bool overwrite = false, CancellationToken? cancellationToken = null)
+        public Task<RenameResult> RenameAsync(
+            string fromPublicId,
+            string toPublicId,
+            bool overwrite = false,
+            CancellationToken? cancellationToken = null)
         {
             return RenameAsync(
                 new RenameParams(fromPublicId, toPublicId)
@@ -355,11 +359,12 @@ namespace CloudinaryDotNet
         /// <returns>Result of resource renaming.</returns>
         public RenameResult Rename(string fromPublicId, string toPublicId, bool overwrite = false)
         {
-            return Rename(
-                new RenameParams(fromPublicId, toPublicId)
-                {
-                    Overwrite = overwrite,
-                });
+            var renameParams = new RenameParams(fromPublicId, toPublicId)
+            {
+                Overwrite = overwrite,
+            };
+
+            return RenameAsync(renameParams).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -856,6 +861,33 @@ namespace CloudinaryDotNet
             string uri = m_api.ApiUrlImgUpV.Action("text").BuildUrl();
 
             return CallUploadApiAsync<TextResult>(
+                HttpMethod.POST,
+                uri,
+                parameters,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates auto-generated video slideshow.
+        /// </summary>
+        /// <param name="parameters">Parameters for generating the slideshow.</param>
+        /// <returns>The public id of the generated slideshow.</returns>
+        public CreateSlideshowResult CreateSlideshow(CreateSlideshowParams parameters)
+        {
+            return CreateSlideshowAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        ///  Creates auto-generated video slideshow asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters for generating the slideshow.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The public id of the generated slideshow.</returns>
+        public Task<CreateSlideshowResult> CreateSlideshowAsync(CreateSlideshowParams parameters, CancellationToken? cancellationToken = null)
+        {
+            string uri = m_api.ApiUrlVideoUpV.Action("create_slideshow").BuildUrl();
+
+            return CallUploadApiAsync<CreateSlideshowResult>(
                 HttpMethod.POST,
                 uri,
                 parameters,
