@@ -257,7 +257,9 @@
                 return;
             }
 
+            // User-Agent's comment section is sensitive to brackets
             var normalizedComment = RemoveBracketsFrom(comment);
+
             userAgentHeader.Add(new ProductInfoHeaderValue($"({normalizedComment})"));
         }
 
@@ -478,7 +480,7 @@
             var userAgentHeader = request.Headers.UserAgent;
             userAgentHeader.Add(new ProductInfoHeaderValue("CloudinaryDotNet", CloudinaryVersion.Full));
 
-            AddCommentToUserAgent(userAgentHeader, USER_AGENT);
+            AddCommentToUserAgent(userAgentHeader, RUNTIME_INFORMATION);
             SetUserPlatform(userAgentHeader);
 
             byte[] authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
@@ -501,7 +503,6 @@
 
         private void SetUserPlatform(HttpHeaderValueCollection<ProductInfoHeaderValue> userAgentHeader)
         {
-            Console.WriteLine($"UserPlatform: [{UserPlatform}] ======");
             var up = UserPlatform?.Trim();
             if (string.IsNullOrEmpty(up))
             {

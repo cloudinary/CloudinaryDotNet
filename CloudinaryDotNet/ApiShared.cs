@@ -69,9 +69,9 @@
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
 
         /// <summary>
-        /// User agent for cloudinary API requests.
+        /// Runtime information for cloudinary API requests.
         /// </summary>
-        public static string USER_AGENT = RuntimeInformation.FrameworkDescription;
+        public static string RUNTIME_INFORMATION = RuntimeInformation.FrameworkDescription;
 
         /// <summary>
         /// Whether to use a sub domain.

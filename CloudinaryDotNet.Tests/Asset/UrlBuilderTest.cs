@@ -494,7 +494,7 @@ namespace CloudinaryDotNet.Tests.Asset
             var httpRequestMessage = CreateRequest("UserPlatform/2.3");
 
             //Can't test the result, so we just verify the UserAgent parameter is sent to the server
-            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(" + ApiShared.USER_AGENT.Replace("(", "").Replace(")", "") + @"\) UserPlatform/2\.3",
+            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(" + ApiShared.RUNTIME_INFORMATION.Replace("(", "").Replace(")", "") + @"\) UserPlatform/2\.3",
                 httpRequestMessage.Headers.UserAgent.ToString());
         }
 
@@ -514,17 +514,17 @@ namespace CloudinaryDotNet.Tests.Asset
         [TestCase("Mono 5.11.0 ((HEAD/768f1b247c6)")]
         [TestCase("(")]
         [TestCase(")")]
-        public void MalformedUserAgentShouldNotThrow(string userAgent)
+        public void MalformedRuntimeInformationShouldNotThrow(string runtimeInformation)
         {
-            var prevAgent = ApiShared.USER_AGENT;
-            ApiShared.USER_AGENT = userAgent;
+            var prevAgent = ApiShared.RUNTIME_INFORMATION;
+            ApiShared.RUNTIME_INFORMATION = runtimeInformation;
             try
             {
                 Assert.DoesNotThrow(() => CreateRequest("UserPlatform"));
             }
             finally
             {
-                ApiShared.USER_AGENT = prevAgent;
+                ApiShared.RUNTIME_INFORMATION = prevAgent;
             }
         }
 
