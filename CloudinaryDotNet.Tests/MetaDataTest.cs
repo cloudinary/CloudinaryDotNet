@@ -13,12 +13,12 @@ namespace CloudinaryDotNet.Tests
         private const string externalIdEnum = "metadata_external_id_enum";
         private const string externalIdDelete = "metadata_deletion";
         private const string datasourceEntryExternalId = "metadata_datasource_entry_external_id";
-        private MockedCloudinary mockedCloudinary;
+        private MockedCloudinaryAdmin mockedCloudinary;
 
         [SetUp]
         public void SetUp()
         {
-            mockedCloudinary = new MockedCloudinary();
+            mockedCloudinary = new MockedCloudinaryAdmin();
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace CloudinaryDotNet.Tests
         /// <param name="type"> The type of value that can be assigned to the metadata field.</param>
         /// <param name="externalId">A unique identification string for the metadata field.</param>
         /// <param name="dataSourceEntry">(Optional) Data source for a given field.</param>
-        private static void AssertEncodedRequestFields(MockedCloudinary mockedCloudinary, string type, string externalId,
+        private static void AssertEncodedRequestFields(MockedCloudinaryAdmin mockedCloudinary, string type, string externalId,
             EntryParams dataSourceEntry = null)
         {
             var requestJson = JToken.Parse(mockedCloudinary.HttpRequestContent);

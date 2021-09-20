@@ -85,6 +85,8 @@ namespace CloudinaryDotNet.IntegrationTests
 
         protected Account m_account;
         protected Cloudinary m_cloudinary;
+        protected CloudinaryUpload m_cloudinaryUpload;
+        protected CloudinaryAdmin m_cloudinaryAdmin;
 
         protected Dictionary<StorageType, List<string>> m_publicIdsToClear;
         protected List<object> m_transformationsToClear;
@@ -108,6 +110,8 @@ namespace CloudinaryDotNet.IntegrationTests
 
             m_account = GetAccountInstance();
             m_cloudinary = GetCloudinaryInstance(m_account);
+            m_cloudinaryAdmin = GetCloudinaryAdminInstance(m_account);
+            m_cloudinaryUpload = GetCloudinaryUploadInstance(m_account);
 
             SaveTestResources(assembly);
 
@@ -359,16 +363,41 @@ namespace CloudinaryDotNet.IntegrationTests
         }
 
         /// <summary>
+        /// A convenient method for initialization of new Cloudinary Admin instance with necessary checks
+        /// </summary>
+        /// <param name="account">Instance of Account</param>
+        /// <returns>New Cloudinary Admin instance</returns>
+        protected CloudinaryAdmin GetCloudinaryAdminInstance(Account account)
+        {
+            var cloudinaryAdmin = new CloudinaryAdmin(account);
+            if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
+                cloudinaryAdmin.Api.ApiBaseAddress = m_apiBaseAddress;
+
+            return cloudinaryAdmin;
+        }
+
+        /// <summary>
+        /// A convenient method for initialization of new Cloudinary Upload instance with necessary checks
+        /// </summary>
+        /// <param name="account">Instance of Account</param>
+        /// <returns>New Cloudinary Upload instance</returns>
+        protected CloudinaryUpload GetCloudinaryUploadInstance(Account account)
+        {
+            var cloudinaryUpload = new CloudinaryUpload(account);
+            if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
+                cloudinaryUpload.Api.ApiBaseAddress = m_apiBaseAddress;
+
+            return cloudinaryUpload;
+        }
+
+        /// <summary>
         /// A convenient method for initialization of new Cloudinary instance with necessary checks
         /// </summary>
         /// <param name="account">Instance of Account</param>
         /// <returns>New Cloudinary instance</returns>
         protected Cloudinary GetCloudinaryInstance(Account account)
         {
-            Cloudinary cloudinary = new Cloudinary(account);
-            if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
-                cloudinary.Api.ApiBaseAddress = m_apiBaseAddress;
-
+            var cloudinary = new Cloudinary(account);
             return cloudinary;
         }
 

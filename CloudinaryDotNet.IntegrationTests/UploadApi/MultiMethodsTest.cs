@@ -99,7 +99,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var paramsFromUrl = new MultiParams(new List<string> {url1, url2});
             var urlFromUrls = m_cloudinary.DownloadMulti(paramsFromUrl);
 
-            var expectedUrl = "https://api.cloudinary.com/v1_1/" + m_cloudinary.Api.Account.Cloud + "/image/multi";
+            var expectedUrl = "https://api.cloudinary.com/v1_1/" + m_cloudinaryUpload.Api.Account.Cloud + "/image/multi";
             var uriFromTag = new Uri(urlFromTag);
             var uriFromUrls = new Uri(urlFromUrls);
             Assert.True(uriFromTag.ToString().StartsWith(expectedUrl));

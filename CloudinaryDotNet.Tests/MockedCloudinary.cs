@@ -7,16 +7,13 @@ using Moq.Protected;
 
 namespace CloudinaryDotNet.Tests
 {
-    public class MockedCloudinary : Cloudinary
+    public static class MockHelpers 
     {
-        public Mock<HttpMessageHandler> HandlerMock;
-        public string HttpRequestContent;
-        private const string cloudName = "test_cloud";
-
-        public MockedCloudinary(string responseStr = "{}") : base("cloudinary://a:b@test_cloud")
+        public static Mock<HttpMessageHandler> SetupMock(this IMockedApi mockedApi, string responseStr)
         {
-            HandlerMock = new Mock<HttpMessageHandler>();
-            HandlerMock.Protected()
+            var mock = new Mock<HttpMessageHandler>();
+            mock
+                .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.IsAny<HttpRequestMessage>(),
@@ -24,7 +21,7 @@ namespace CloudinaryDotNet.Tests
                 .Callback<HttpRequestMessage, CancellationToken>(
                     (httpRequestMessage, cancellationToken) =>
                     {
-                        HttpRequestContent = httpRequestMessage.Content?
+                        mockedApi.HttpRequestContent = httpRequestMessage.Content?
                             .ReadAsStringAsync()
                             .GetAwaiter()
                             .GetResult();
@@ -34,26 +31,56 @@ namespace CloudinaryDotNet.Tests
                     StatusCode = HttpStatusCode.OK,
                     Content = new StringContent(responseStr)
                 });
-            Api.Client = new HttpClient(HandlerMock.Object);
+                return mock;
         }
 
-        /// <summary>
-        /// <para>Asserts that a given HTTP call was sent with expected parameters.</para>
-        /// </summary>
-        /// <param name="httpMethod">Expected HTTP method type.</param>
-        /// <param name="localPath">Expected local part of the called Uri.</param>
-        public void AssertHttpCall(System.Net.Http.HttpMethod httpMethod, string localPath)
+        public static void AssertHttpCall(
+               this IMockedApi mockedApi, 
+               System.Net.Http.HttpMethod httpMethod, 
+               string localPath
+        )
         {
-            HandlerMock.Protected().Verify(
+            mockedApi.HandlerMock.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == httpMethod &&
-                    req.RequestUri.LocalPath == $"/v1_1/{cloudName}/{localPath}" &&
+                    req.RequestUri.LocalPath == $"/v1_1/{CloudName}/{localPath}" &&
                     req.Properties.Count == 0
                 ),
                 ItExpr.IsAny<CancellationToken>()
             );
+        }
+        public const string CloudName = "test_cloud";
+    }
+
+    public interface IMockedApi
+    {
+        Mock<HttpMessageHandler> HandlerMock { get; set; }
+        string HttpRequestContent { set; }
+    }
+
+    public class MockedCloudinaryAdmin : CloudinaryAdmin, IMockedApi
+    {
+        public Mock<HttpMessageHandler> HandlerMock { get; set; }
+        public string HttpRequestContent { get; set; }
+
+        public MockedCloudinaryAdmin(string responseStr = "{}") : base($"cloudinary://a:b@{MockHelpers.CloudName}")
+        {
+            HandlerMock = this.SetupMock(responseStr); 
+            Api.Client = new HttpClient(HandlerMock.Object);
+        }
+    }
+
+    public class MockedCloudinaryUpload : CloudinaryUpload, IMockedApi
+    {
+        public Mock<HttpMessageHandler> HandlerMock { get; set; }
+        public string HttpRequestContent { get; set; }
+
+        public MockedCloudinaryUpload(string responseStr = "{}") : base($"cloudinary://a:b@{MockHelpers.CloudName}")
+        {
+            HandlerMock = this.SetupMock(responseStr); 
+            Api.Client = new HttpClient(HandlerMock.Object);
         }
     }
 }

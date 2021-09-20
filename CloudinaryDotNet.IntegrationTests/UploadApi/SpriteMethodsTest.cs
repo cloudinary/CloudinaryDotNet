@@ -154,7 +154,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var paramsFromUrl = new SpriteParams(new List<string> { url1, url2 });
             var urlFromUrls = m_cloudinary.DownloadSprite(paramsFromUrl);
 
-            var expectedUrl = "https://api.cloudinary.com/v1_1/" + m_cloudinary.Api.Account.Cloud + "/image/sprite";
+            var expectedUrl = "https://api.cloudinary.com/v1_1/" + m_cloudinaryUpload.Api.Account.Cloud + "/image/sprite";
             var uriFromTag = new Uri(urlFromTag);
             var uriFromUrls = new Uri(urlFromUrls);
             Assert.True(uriFromTag.ToString().StartsWith(expectedUrl));

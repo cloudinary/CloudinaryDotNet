@@ -14,18 +14,18 @@ namespace CloudinaryDotNet.Tests
         private const string evalStr = "if (resource_info['width'] > 450) " +
                                        "{ upload_options['quality_analysis'] = true }; " +
                                        "upload_options['context'] = 'width = ' + resource_info['width']";
-        private MockedCloudinary mockedCloudinary;
+        private MockedCloudinaryAdmin mockedCloudinary;
 
         [SetUp]
         public void SetUp()
         {
-            mockedCloudinary = new MockedCloudinary();
+            mockedCloudinary = new MockedCloudinaryAdmin();
         }
 
         [Test]
         public void TestListUploadPresets()
         {
-            var localCloudinaryMock = new MockedCloudinary("{presets: [{eval: 'some value'}]}");
+            var localCloudinaryMock = new MockedCloudinaryAdmin("{presets: [{eval: 'some value'}]}");
 
             var result = localCloudinaryMock.ListUploadPresets();
 
@@ -36,7 +36,7 @@ namespace CloudinaryDotNet.Tests
         [Test]
         public void TestGetUploadPreset()
         {
-            var localCloudinaryMock = new MockedCloudinary("{eval: 'some value'}");
+            var localCloudinaryMock = new MockedCloudinaryAdmin("{eval: 'some value'}");
 
             var result = localCloudinaryMock.GetUploadPreset(apiTestPreset);
 

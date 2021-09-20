@@ -329,7 +329,7 @@ namespace CloudinaryDotNet.Tests.Asset
         {
             // should take secure distribution from url if secure=TRUE
 
-            var cloudinary = new CloudinaryDotNet.Cloudinary("cloudinary://a:b@test123/config.secure.distribution.com");
+            var cloudinary = new CloudinaryDotNet.CloudinaryUpload("cloudinary://a:b@test123/config.secure.distribution.com");
             string url = cloudinary.Api.UrlImgUp.BuildUrl("test");
 
             Assert.AreEqual("https://config.secure.distribution.com/image/upload/test", url);

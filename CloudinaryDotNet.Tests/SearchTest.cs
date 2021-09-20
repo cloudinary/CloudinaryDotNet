@@ -7,7 +7,7 @@ namespace CloudinaryDotNet.Tests
 {
     public class SearchTest
     {
-        private MockedCloudinary m_cloudinary = new MockedCloudinary();
+        private MockedCloudinaryAdmin m_cloudinary = new MockedCloudinaryAdmin();
 
         [Test]
         public void TestShouldNotDuplicateValues()
