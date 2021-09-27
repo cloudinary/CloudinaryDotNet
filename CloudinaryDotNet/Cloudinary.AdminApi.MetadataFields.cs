@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
 
@@ -151,18 +152,18 @@
         }
 
         /// <summary>
-        /// Sorts metadata field datasource
-        ///
-        /// Currently supports only value.
+        /// Reorders metadata field datasource. Currently, supports only value.
         /// </summary>
         /// <param name="fieldExternalId">The ID of the metadata field.</param>
         /// <param name="orderBy">Criteria for the sort. Currently supports only value.</param>
         /// <param name="direction">Either asc (default) or desc.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the operation.</returns>
         public Task<MetadataDataSourceResult> ReorderMetadataFieldDatasourceAsync(
             string fieldExternalId,
             string orderBy,
-            string direction = null)
+            string direction = null,
+            CancellationToken? cancellationToken = null)
         {
             var url = m_api.ApiUrlMetadataFieldV
                 .Add(fieldExternalId)
@@ -176,8 +177,21 @@
                 Direction = direction,
             };
 
-            return CallAdminApiAsync<MetadataDataSourceResult>(HttpMethod.POST, url, parameters, null);
+            return CallAdminApiAsync<MetadataDataSourceResult>(HttpMethod.POST, url, parameters, cancellationToken);
         }
+
+        /// <summary>
+        /// Reorders metadata field datasource. Currently, supports only value.
+        /// </summary>
+        /// <param name="fieldExternalId">The ID of the metadata field.</param>
+        /// <param name="orderBy">Criteria for the sort. Currently supports only value.</param>
+        /// <param name="direction">Either asc (default) or desc.</param>
+        /// <returns>Parsed result of the operation.</returns>
+        public MetadataDataSourceResult ReorderMetadataFieldDatasource(
+            string fieldExternalId,
+            string orderBy,
+            string direction = null) =>
+            ReorderMetadataFieldDatasourceAsync(fieldExternalId, orderBy, direction).GetAwaiter().GetResult();
 
         private static Dictionary<string, string> PrepareHeaders()
         {
