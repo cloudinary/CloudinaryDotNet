@@ -248,28 +248,6 @@
             }
         }
 
-        private static void AddCommentToUserAgent(
-                HttpHeaderValueCollection<ProductInfoHeaderValue> userAgentHeader,
-                string comment)
-        {
-            if (string.IsNullOrEmpty(comment))
-            {
-                return;
-            }
-
-            // User-Agent's comment section is sensitive to brackets
-            var normalizedComment = RemoveBracketsFrom(comment);
-
-            userAgentHeader.Add(new ProductInfoHeaderValue($"({normalizedComment})"));
-        }
-
-        private static string RemoveBracketsFrom(string comment)
-        {
-            return comment
-                       .Replace(")", string.Empty)
-                       .Replace("(", string.Empty);
-        }
-
         private static SortedDictionary<string, object> GetCallParams(HttpMethod method, BaseParams parameters)
         {
             parameters?.Check();
@@ -480,10 +458,12 @@
             var userAgentHeader = request.Headers.UserAgent;
             userAgentHeader.Add(new ProductInfoHeaderValue("CloudinaryDotNet", CloudinaryVersion.Full));
 
-            AddCommentToUserAgent(userAgentHeader, RUNTIME_INFORMATION);
-            SetUserPlatform(userAgentHeader);
+            if (UserPlatform != null)
+            {
+                userAgentHeader.Add(new ProductInfoHeaderValue(UserPlatform));
+            }
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
+            var authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
             request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
@@ -498,35 +478,6 @@
                 {
                     request.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
-            }
-        }
-
-        private void SetUserPlatform(HttpHeaderValueCollection<ProductInfoHeaderValue> userAgentHeader)
-        {
-            var up = UserPlatform?.Trim();
-            if (string.IsNullOrEmpty(up))
-            {
-                return;
-            }
-
-            var upp = up.Split('/');
-            var productName = GetElement(0);
-            if (string.IsNullOrEmpty(productName))
-            {
-                return;
-            }
-
-            var productVersion = GetElement(1);
-            if (string.IsNullOrEmpty(productVersion))
-            {
-                productVersion = "0.1";
-            }
-
-            userAgentHeader.Add(new ProductInfoHeaderValue(productName, productVersion));
-
-            string GetElement(int index)
-            {
-                return upp.ElementAtOrDefault(index)?.Trim();
             }
         }
 

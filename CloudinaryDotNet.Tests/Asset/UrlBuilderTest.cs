@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Linq;
 using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -475,10 +474,10 @@ namespace CloudinaryDotNet.Tests.Asset
             Assert.AreEqual(TestConstants.DefaultImageUpPath + "c_fill,x_100,y_100/test", uri);
         }
 
-        private HttpRequestMessage CreateRequest(string userPlatform)
+        private HttpRequestMessage CreateRequest(string userPlatformProduct, string userPlatformVersion)
         {
             var request = new HttpRequestMessage { RequestUri = new Uri("http://dummy.com") };
-            m_api.UserPlatform = userPlatform;
+            m_api.UserPlatform = new System.Net.Http.Headers.ProductHeaderValue(userPlatformProduct, userPlatformVersion);
 
             m_api.PrepareRequestBody(
                 request,
@@ -491,41 +490,19 @@ namespace CloudinaryDotNet.Tests.Asset
         [Test]
         public void TestAgentPlatformHeaders()
         {
-            var httpRequestMessage = CreateRequest("UserPlatform/2.3");
+            var httpRequestMessage = CreateRequest("UserPlatform", "2.3");
 
             //Can't test the result, so we just verify the UserAgent parameter is sent to the server
-            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(" + ApiShared.RUNTIME_INFORMATION.Replace("(", "").Replace(")", "") + @"\) UserPlatform/2\.3",
+            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) UserPlatform/2\.3",
                 httpRequestMessage.Headers.UserAgent.ToString());
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        [TestCase("UserPlatform/")]
-        [TestCase("UserPlatform/ ")]
-        [TestCase("UserPlatform / 1.2")]
-        public void UnexpectedUserPlatformShouldNotThrow(string userPlatorm)
+        [TestCase("UserPlatform", null)]
+        [TestCase("UserPlatform", "1.2")]
+        public void UnexpectedUserPlatformShouldNotThrow(string userPlatformProduct, string userPlatformVersion)
         {
-            Assert.DoesNotThrow(() => CreateRequest(userPlatorm));
-        }
-
-        [Test]
-        [TestCase("Mono 5.11.0 ((HEAD/768f1b247c6)")]
-        [TestCase("(")]
-        [TestCase(")")]
-        public void MalformedRuntimeInformationShouldNotThrow(string runtimeInformation)
-        {
-            var prevAgent = ApiShared.RUNTIME_INFORMATION;
-            ApiShared.RUNTIME_INFORMATION = runtimeInformation;
-            try
-            {
-                Assert.DoesNotThrow(() => CreateRequest("UserPlatform"));
-            }
-            finally
-            {
-                ApiShared.RUNTIME_INFORMATION = prevAgent;
-            }
+            Assert.DoesNotThrow(() => CreateRequest(userPlatformProduct, userPlatformVersion));
         }
 
         [Test]

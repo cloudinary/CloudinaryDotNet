@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
@@ -69,11 +70,6 @@
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
 
         /// <summary>
-        /// Runtime information for cloudinary API requests.
-        /// </summary>
-        public static string RUNTIME_INFORMATION = RuntimeInformation.FrameworkDescription;
-
-        /// <summary>
         /// Whether to use a sub domain.
         /// </summary>
         public bool CSubDomain;
@@ -111,7 +107,7 @@
         /// <summary>
         /// User platform information.
         /// </summary>
-        public string UserPlatform;
+        public ProductHeaderValue UserPlatform;
 
         /// <summary>
         /// Timeout for the API requests, milliseconds.
