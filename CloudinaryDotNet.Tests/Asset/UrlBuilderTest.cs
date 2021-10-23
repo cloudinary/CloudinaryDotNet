@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -474,10 +475,10 @@ namespace CloudinaryDotNet.Tests.Asset
             Assert.AreEqual(TestConstants.DefaultImageUpPath + "c_fill,x_100,y_100/test", uri);
         }
 
-        private HttpRequestMessage CreateRequest(string userPlatformProduct, string userPlatformVersion)
+        private HttpRequestMessage CreateRequest(string userPlatformProduct, string userPlatformVersion = null)
         {
             var request = new HttpRequestMessage { RequestUri = new Uri("http://dummy.com") };
-            m_api.UserPlatform = new System.Net.Http.Headers.ProductHeaderValue(userPlatformProduct, userPlatformVersion);
+            m_api.UserPlatform = new ProductHeaderValue(userPlatformProduct, userPlatformVersion);
 
             m_api.PrepareRequestBody(
                 request,
@@ -493,14 +494,30 @@ namespace CloudinaryDotNet.Tests.Asset
             var httpRequestMessage = CreateRequest("UserPlatform", "2.3");
 
             //Can't test the result, so we just verify the UserAgent parameter is sent to the server
-            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) UserPlatform/2\.3",
+            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\) UserPlatform/2\.3",
                 httpRequestMessage.Headers.UserAgent.ToString());
         }
 
         [Test]
+        [TestCase("Mono 5.11.0 ((HEAD/768f1b247c6)")]
+        public void TestMalformedFrameworkVersion(string dotnetVersion)
+        {
+            var previousFramework = m_api.DotnetVersion;
+            try
+            {
+                m_api.DotnetVersion = dotnetVersion;
+                Assert.DoesNotThrow(() => CreateRequest("p"));
+            }
+            finally
+            {
+                m_api.DotnetVersion = previousFramework;
+            }
+        }
+        
+        [Test]
         [TestCase("UserPlatform", null)]
         [TestCase("UserPlatform", "1.2")]
-        public void UnexpectedUserPlatformShouldNotThrow(string userPlatformProduct, string userPlatformVersion)
+        public void TestUserPlatformCombinations(string userPlatformProduct, string userPlatformVersion)
         {
             Assert.DoesNotThrow(() => CreateRequest(userPlatformProduct, userPlatformVersion));
         }

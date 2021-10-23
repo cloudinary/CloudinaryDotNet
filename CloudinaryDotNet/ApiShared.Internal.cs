@@ -457,6 +457,7 @@
             // This is intended for platform information and not individual applications!
             var userAgentHeader = request.Headers.UserAgent;
             userAgentHeader.Add(new ProductInfoHeaderValue("CloudinaryDotNet", CloudinaryVersion.Full));
+            userAgentHeader.Add(new ProductInfoHeaderValue($"({DotnetVersion})"));
 
             if (UserPlatform != null)
             {
