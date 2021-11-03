@@ -211,22 +211,22 @@ namespace MyNamespace
         public CropAction Gravity(GravityValue v) => AddQualifier(new Gravity(v));
     }
 
-    internal class X : TransformationQualifier
+    public class X : TransformationQualifier
     {
         public X(NumberOrStringOrExpression v) : base("x", v) { }
     }
 
-    internal class Y : TransformationQualifier
+    public class Y : TransformationQualifier
     {
         public Y(NumberOrStringOrExpression v) : base("y", v) { }
     }
 
-    internal class Width : TransformationQualifier
+    public class Width : TransformationQualifier
     {
         public Width(NumberOrStringOrExpression v) : base("w", v) { }
     }
 
-    internal class Height : TransformationQualifier
+    public class Height : TransformationQualifier
     {
         public Height(NumberOrStringOrExpression v) : base("h", v) { }
     }
