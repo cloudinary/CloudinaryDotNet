@@ -1,146 +1,258 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Tests.NewTransformationApi
+namespace MyNamespace
 {
-    public class Resize
+    public struct Variable
     {
-        private readonly List<string> content = new List<string>();
-
-        private Resize Append(string Value)
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public Variable(string name, NumberOrStringOrExpression value)
         {
-            content.Add(Value);
-            return this;
+            Name = name;
+            Value = value.ToString();
         }
 
-        public static Resize Scale() => new Resize().Append("c_scale");
-        public static Resize Crop() => new Resize().Append("c_crop");
-        public static Resize Fill() => new Resize().Append("c_fill");
-        public static Resize Thumbnail() => new Resize().Append("c_thumb");
-        
-
-        public Resize Height(IntOrDoubleOrString v) => Append($"h_{v}");
-        public Resize Width(IntOrDoubleOrString v) => Append($"w_{v}");
-        public Resize X(IntOrDoubleOrString v) => Append($"x_{v}");
-        public Resize Y(IntOrDoubleOrString v) => Append($"y_{v}");
-        public Resize Gravity(Gravity v) => Append($"g_{v}");
-        public Resize AspectRatio(AspectRatio v) => Append($"ar_{v}");
-
-        public override string ToString() => string.Join(",", content.OrderBy(_ => _));
-    }
-
-    public class RoundCorners : StringWrapper
-    {
-        protected RoundCorners(string v) : base(v) { }
-
-        public static RoundCorners Max = new RoundCorners("max");
-    }
-
-    public class StringWrapper
-    {
-        protected string v;
-        protected StringWrapper(string v) => this.v = v;
-        public override string ToString() => v;
-    }
-
-    public class FocusOn : StringWrapper
-    {
-        public FocusOn(string v) : base(v) { }
-        public static FocusOn Face => new FocusOn("face");
-    }
-
-    public class AutoFocus
-    {
-        public static FocusOn FocusOn(string value) => new FocusOn($"auto:{value.ToLowerInvariant()}");
-    }
-
-    public class AspectRatio : StringWrapper
-    {
-        protected AspectRatio(string v) : base(v) { }
-
-        public static AspectRatio _1X1 => new AspectRatio("1:1");
-
-        public static implicit operator AspectRatio(string i) => new AspectRatio(i);
-    }
-
-    public class Gravity : StringWrapper
-    {
-        protected Gravity(string v) : base(v) {}
-
-        public static Gravity Auto => new Gravity("auto");
-
-        public Gravity AutoFocus(FocusOn focusOn)
-        {
-            v = focusOn.ToString();
-            return this;
-        }
-
-        public static Gravity FocusOn(FocusOn focusOn) => new Gravity(focusOn.ToString());
-        
-        public static Gravity Compass(Compass compass) => new Gravity(compass.ToString());
-        
-    }
-
-    public class Compass : StringWrapper
-    {
-        public static readonly Compass North = new Compass("north");
-
-        protected Compass(string v) : base(v) { }
-    }
-
-    public class IntOrDoubleOrString : StringWrapper
-    {
-        protected IntOrDoubleOrString(string v) : base(v) {}
-
-        public static implicit operator IntOrDoubleOrString(string s) => new IntOrDoubleOrString(s);
-
-        public static implicit operator IntOrDoubleOrString(int i) => new IntOrDoubleOrString(i.ToString());
-
-        public static implicit operator IntOrDoubleOrString(double d) => new IntOrDoubleOrString(d.ToString());
-    }
-
-    public class Source : StringWrapper
-    {
-        protected Source(string v) : base(v) { }
-
-        public static Source Image(string image) => new Source(image);
-    }
-
-
-    public class Overlay
-    {
-        private readonly List<string> content = new List<string>();
-
-        private Overlay Append(string Value)
-        {
-            content.Add(Value);
-            return this;
-        }
-
-        public static Overlay Source(Source source) => new Overlay().Append(source.ToString());
-        public override string ToString() => string.Join("/", content);
+        public override string ToString() => $"${Name}_{Value}";
     }
 
     public class Transformation
     {
-        private readonly List<string> content = new List<string>();
+        private ImmutableList<object> actionGroups = ImmutableList<object>.Empty;
 
-        public Transformation Resize(Resize spec) => Append(spec.ToString());
+        public Transformation Resize(ScaleAction action) => AddActionGroup(action);
+        public Transformation Resize(CropAction action) => AddActionGroup(action);
+        public Transformation Resize(FillAction action) => AddActionGroup(action);
+        public Transformation Resize(PadAction action) => AddActionGroup(action);
+        public Transformation Resize(ThumbnailAction action) => AddActionGroup(action);
+        public Transformation RoundCorners(RoundCornersValue value) => AddActionGroup(new RoundCorners(value));
+        public Transformation Overlay(OverlayValue value) => AddActionGroup(new Overlay(value));
 
-        public Transformation RoundCorners(RoundCorners v) => Append($"r_{v}");
+        public Transformation AddVariable(string name, NumberOrStringOrExpression value) =>
+            AddActionGroup(new Variable(name, value));
 
-        public Transformation Overlay(Overlay v) => Append($"l_{v}");
+        private Transformation AddActionGroup(object o) => new Transformation() { actionGroups = actionGroups.Add(o) };
 
-        public Transformation AddVariable(string varName, IntOrDoubleOrString varValue) => Append($"${varName}_{varValue}");
+        public override string ToString() => string.Join("/", actionGroups);
+    }
 
-        public override string ToString() => string.Join("/", content);
+    public class Overlay : TransformationQualifier
+    {
+        public Overlay(OverlayValue value) : base("l", value.ToString()) { }
 
-        private Transformation Append(string Value)
+        public static OverlayValue Source(Source source) => new OverlayValue(source);
+    }
+
+    public class OverlayValue : ValueKeeper<Source>
+    {
+        public OverlayValue(Source v) : base(v) { }
+    }
+
+    public class Source : ValueKeeper<string>
+    {
+        public Source(string v) : base(v) { }
+        public static Source Image(string value) => new Source(value);
+    }
+
+    public class RoundCorners : TransformationQualifier
+    {
+        public RoundCorners(RoundCornersValue value) : base("r", value.ToString()) { }
+
+        public static readonly RoundCornersValue Max = new RoundCornersValue("max");
+    }
+
+    public class RoundCornersValue : ValueKeeper<string>
+    {
+        public RoundCornersValue(string v) : base(v) { }
+    }
+
+    public class Resize
+    {
+        public static ScaleAction Scale() => new ScaleAction();
+        public static CropAction Crop() => new CropAction();
+        public static PadAction Pad() => new PadAction();
+        public static FillAction Fill() => new FillAction();
+        public static ThumbnailAction Thumbnail() => new ThumbnailAction();
+    }
+
+    public class ActionBase<T> where T : ActionBase<T>, new()
+    {
+        public ActionBase(string name) => qualifiers = qualifiers.Add(name);
+        public IEnumerable<object> Qualifiers => qualifiers;
+
+        private ImmutableList<object> qualifiers = ImmutableList<object>.Empty;
+
+        public override string ToString() => string.Join(",", qualifiers.Select(_ => _.ToString()).OrderBy(_ => _));
+
+        public T Height(NumberOrStringOrExpression v) => AddQualifier(new Height(v));
+
+        public T Width(NumberOrStringOrExpression v) => AddQualifier(new Width(v));
+
+        protected T AddQualifier(TransformationQualifier item) => new T { qualifiers = qualifiers.Add(item) };
+
+    }
+
+    public class ScaleAction : ActionBase<ScaleAction>
+    {
+        public ScaleAction() : base("c_scale") { }
+    }
+
+    public class ThumbnailAction : ActionBase<ThumbnailAction>
+    {
+        public ThumbnailAction() : base("c_thumb") { }
+
+        public ThumbnailAction Gravity(GravityValue v) => AddQualifier(new Gravity(v));
+    }
+
+    public class PadAction : ActionBase<PadAction>
+    {
+        public PadAction() : base("c_pad") { }
+
+        public PadAction Background(BackgroundValue v) => AddQualifier(new Background(v));
+    }
+
+    public class FillAction : ActionBase<FillAction>
+    {
+        public FillAction() : base("c_fill") { }
+
+        public FillAction AspectRatio(AspectRatioValue v) => AddQualifier(v);
+        public FillAction Gravity(GravityValue v) => AddQualifier(new Gravity(v));
+    }
+
+    public class AspectRatio
+    {
+        public static AspectRatioValue _1X1 => new AspectRatioValue("1:1");
+    }
+
+    public class AspectRatioValue : TransformationQualifier
+    {
+        public static implicit operator AspectRatioValue(string v) => new AspectRatioValue(v);
+        public AspectRatioValue(string v) : base("ar", v) { }
+    }
+
+    public class ValueKeeper<T>
+    {
+        public ValueKeeper(T v) { this.v = v; }
+
+        private readonly T v;
+
+        public override string ToString() => v.ToString();
+    }
+
+    public class GravityValue : ValueKeeper<string>
+    {
+        public GravityValue(string v) : base(v) { }
+    }
+
+    public class AutoGravityValue : GravityValue
+    {
+        public AutoGravityValue(string v = null) : base("auto" + (!string.IsNullOrWhiteSpace(v) ? $":{v}" : "")) { }
+        public AutoGravityValue AutoFocus(AutoFocusValue v) => new AutoGravityValue(v.ToString());
+    }
+
+    public class BackgroundValue : ValueKeeper<string>
+    {
+        public BackgroundValue(string v) : base(v) { }
+    }
+
+    public class Background : TransformationQualifier
+    {
+        public Background(BackgroundValue value) : base("b", value.ToString()) { }
+
+        public static BackgroundValue Color(Color v) => new BackgroundValue(v.ToString());
+    }
+
+    public class Color : ValueKeeper<string>
+    {
+        public Color(string v) : base(v) { }
+        public static readonly Color Black = new Color("black");
+    }
+
+    public class AutoFocusValue : ValueKeeper<string>
+    {
+        public AutoFocusValue(string v) : base(v) { }
+    }
+
+    public class AutoFocus
+    {
+        public static AutoFocusValue FocusOn(string v) => new AutoFocusValue(v.ToLower());
+    }
+
+    public class Gravity : TransformationQualifier
+    {
+        public static readonly AutoGravityValue Auto = new AutoGravityValue();
+        public static GravityValue FocusOn(FocusOn value) => value;
+        public static GravityValue Compass(Compass value) => value;
+        public Gravity(GravityValue v) : base("g", v.ToString()) { }
+    }
+
+    public class Compass : GravityValue
+    {
+        public static readonly Compass North = new Compass("north");
+
+        private Compass(string v) : base(v) { }
+    }
+
+    public class FocusOn : GravityValue
+    {
+        public static readonly FocusOn Face = new FocusOn("face");
+
+        private FocusOn(string v) : base(v) { }
+    }
+
+    public class CropAction : ActionBase<CropAction>
+    {
+        public CropAction() : base("c_crop") { }
+
+        public CropAction X(NumberOrStringOrExpression v) => AddQualifier(new X(v));
+        public CropAction Y(NumberOrStringOrExpression v) => AddQualifier(new Y(v));
+        public CropAction Gravity(GravityValue v) => AddQualifier(new Gravity(v));
+    }
+
+    internal class X : TransformationQualifier
+    {
+        public X(NumberOrStringOrExpression v) : base("x", v) { }
+    }
+
+    internal class Y : TransformationQualifier
+    {
+        public Y(NumberOrStringOrExpression v) : base("y", v) { }
+    }
+
+    internal class Width : TransformationQualifier
+    {
+        public Width(NumberOrStringOrExpression v) : base("w", v) { }
+    }
+
+    internal class Height : TransformationQualifier
+    {
+        public Height(NumberOrStringOrExpression v) : base("h", v) { }
+    }
+
+    public struct NumberOrStringOrExpression
+    {
+        private readonly string v;
+        public NumberOrStringOrExpression(string v) => this.v = v;
+        public static implicit operator NumberOrStringOrExpression(int v) => new NumberOrStringOrExpression(v.ToString());
+        public static implicit operator NumberOrStringOrExpression(string v) => new NumberOrStringOrExpression(v);
+        public static implicit operator NumberOrStringOrExpression(double v) => new NumberOrStringOrExpression(v.ToString());
+        public override string ToString() => v;
+    }
+
+    public class TransformationQualifier
+    {
+        private readonly string name;
+        private readonly NumberOrStringOrExpression @value;
+
+        public TransformationQualifier(string name, NumberOrStringOrExpression value)
         {
-            content.Add(Value);
-            return this;
+            this.name = name;
+            this.value = value;
         }
+
+        public override string ToString() => $"{name}_{value}";
     }
 
     public class NewTransformationTests
@@ -233,6 +345,50 @@ namespace CloudinaryDotNet.Tests.NewTransformationApi
                         .Overlay(Overlay.Source(Source.Image("cloudinary_icon_white")))
                         .ToString());
         }
+
+        [Test]
+        public void TestActionsReuse()
+        {
+            var action = new CropAction()
+                .Height("500")
+                .Width(100);
+
+            Assert.AreEqual(
+                    "c_crop,h_500,w_100",
+                    new Transformation()
+                        .Resize(action)
+                        .ToString());
+        }
+
+        [Test]
+        public void TestImmutabilityOfAction()
+        {
+            var action = new CropAction().Height(100);
+            _ = action.Width(100); // this statemenet should not modify action
+
+            Assert.AreEqual("c_crop,h_100", action.ToString());
+        }
+
+        [Test]
+        public void TestImmutabilityOfTransformation()
+        {
+            var transformation = new Transformation().Resize(Resize.Crop().Height(100));
+            _ = transformation.RoundCorners(RoundCorners.Max); // this statemenet should not modify transformation
+
+            Assert.AreEqual("c_crop,h_100", transformation.ToString());
+        }
+
+        [Test]
+        public void TestPadTransformations()
+        {
+            Assert.AreEqual(
+                    "b_black,c_pad,h_150,w_150",
+                    new Transformation()
+                        .Resize(Resize.Pad()
+                            .Height(150)
+                            .Width(150)
+                            .Background(Background.Color(Color.Black)))
+                        .ToString());
+        }
     }
 }
-

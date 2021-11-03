@@ -19,6 +19,10 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\CloudinaryDotNet\CloudinaryDotNet.csproj" />
   </ItemGroup>
