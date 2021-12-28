@@ -54,6 +54,18 @@
         public bool? UniqueFilename { get; set; }
 
         /// <summary>
+        /// Gets or sets the name that is displayed for the asset in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to automatically assign the filename of the uploaded asset as the asset’s display name in the Media Library.
+        /// Relevant only if <see cref="DisplayName"/> is not passed.
+        /// </summary>
+        public bool? UseFilenameAsDisplayName { get; set; }
+
+        /// <summary>
         /// Gets or sets whether to discard the name of the original uploaded file. Relevant when delivering images as attachments
         /// (setting the 'flags' transformation parameter to 'attachment'). Default: false.
         /// </summary>
@@ -78,8 +90,18 @@
 
         /// <summary>
         /// Gets or sets base Folder to use when building the Cloudinary public_id.
+        /// Deprecated. Supported for backward compatibility only.
+        /// The value defined here is applied as a prefix to the public ID and is also used as the Media Library asset folder.
+        /// Note: If <see cref="AssetFolder"/> and/or <see cref="DisplayName"/> are also passed, then those take priority and the <see cref="Folder"/> value
+        /// is ignored for the corresponding element(s).
         /// </summary>
         public string Folder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the folder where the asset is stored in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        public string AssetFolder { get; set; }
 
         /// <summary>
         /// Gets or sets whether to overwrite existing resources with the same public ID.
@@ -145,6 +167,9 @@
                 AddParam(dict, "unique_filename", UniqueFilename);
             }
 
+            AddParam(dict, "display_name", DisplayName);
+            AddParam(dict, "use_filename_as_display_name", UseFilenameAsDisplayName);
+
             if (AllowedFormats != null)
             {
                 AddParam(dict, "allowed_formats", string.Join(",", AllowedFormats));
@@ -156,6 +181,7 @@
             AddParam(dict, "access_mode", AccessMode);
             AddParam(dict, "proxy", Proxy);
             AddParam(dict, "folder", Folder);
+            AddParam(dict, "asset_folder", AssetFolder);
             AddParam(dict, "raw_convert", RawConvert);
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "async", Async);
