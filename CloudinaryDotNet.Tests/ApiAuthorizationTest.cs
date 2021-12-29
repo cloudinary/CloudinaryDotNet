@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -41,7 +43,7 @@ namespace CloudinaryDotNet.Tests
 
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(Path.GetTempFileName())
+                File = GetFileDescription()
             };
 
             await m_mockedCloudinary.UploadAsync(uploadParams);
@@ -57,12 +59,31 @@ namespace CloudinaryDotNet.Tests
 
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(Path.GetTempFileName())
+                File = GetFileDescription()
             };
             await m_mockedCloudinary.UploadAsync(uploadParams);
 
-            Assert.IsTrue(m_mockedCloudinary.HttpRequestContent.Contains("signature"));
-            Assert.IsTrue(m_mockedCloudinary.HttpRequestContent.Contains("api_key"));
+            AssertUploadSignature();
+        }
+
+        [TestCaseSource(typeof(UploadApiProvider), nameof(UploadApiProvider.UploadApis))]
+        public async Task TestUploadAuthorization(Func<MockedCloudinary, Task> func)
+        {
+            InitCloudinaryApi(m_apiKey, m_apiSecret);
+
+            await func(m_mockedCloudinary);
+
+            AssertUploadSignature();
+        }
+
+        private static FileDescription GetFileDescription()
+            => new FileDescription("foo", new MemoryStream(new byte[5]));
+
+        private void AssertUploadSignature()
+        {
+            var httpRequestContent = m_mockedCloudinary.HttpRequestContent;
+            Assert.IsTrue(httpRequestContent.Contains("signature"));
+            Assert.IsTrue(httpRequestContent.Contains("api_key"));
         }
 
         [Test]
@@ -100,5 +121,57 @@ namespace CloudinaryDotNet.Tests
 
         private void AssertHasBasicAuthorization(MockedCloudinary cloudinary, string value) =>
             AssertHasAuthorization(cloudinary, "Basic", value);
+
+        private static class UploadApiProvider
+        {
+            public static IEnumerable<object> UploadApis()
+            {
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.UploadAsync(new VideoUploadParams { File = GetFileDescription() }) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.UploadAsync(new ImageUploadParams { File = GetFileDescription() }) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.UploadAsync(new RawUploadParams { File = GetFileDescription() }) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.UploadLargeAsync(new RawUploadParams { File = GetFileDescription() }) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.UploadLargeRawAsync(new RawUploadParams { File = GetFileDescription() }) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.TagAsync(new TagParams()) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.ContextAsync(new ContextParams()) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.ExplicitAsync(new ExplicitParams("id")) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.ExplodeAsync(new ExplodeParams("id", new Transformation())) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.CreateZipAsync(new ArchiveParams().PublicIds(new List<string> { "id" })) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.CreateArchiveAsync(new ArchiveParams().PublicIds(new List<string> { "id" })) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.MakeSpriteAsync(new SpriteParams("tag")) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.MultiAsync(new MultiParams("tag")) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.TextAsync(new TextParams("text")) };
+
+                yield return new Func<MockedCloudinary, Task>[] 
+                    { m => m.CreateSlideshowAsync(
+                            new CreateSlideshowParams { ManifestTransformation = new Transformation() }) };
+            }
+        }
     }
 }
