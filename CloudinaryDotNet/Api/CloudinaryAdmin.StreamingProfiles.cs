@@ -8,7 +8,7 @@
     /// <summary>
     /// Part of Cloudinary .NET API main class, responsible for streaming profiles management.
     /// </summary>
-    public partial class CloudinaryAdmin
+    internal partial class CloudinaryAdmin
     {
         /// <inheritdoc />
         public Task<StreamingProfileResult> CreateStreamingProfileAsync(StreamingProfileCreateParams parameters, CancellationToken? cancellationToken = null) =>

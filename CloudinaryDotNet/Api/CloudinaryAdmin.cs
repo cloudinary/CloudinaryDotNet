@@ -10,7 +10,7 @@ namespace CloudinaryDotNet
 
     /// <inheritdoc />
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
-    public partial class CloudinaryAdmin : ICloudinaryAdmin
+    internal partial class CloudinaryAdmin : ICloudinaryAdmin
     {
         /// <summary>
         /// Cloudinary <see cref="CloudinaryDotNet.Api"/> object.

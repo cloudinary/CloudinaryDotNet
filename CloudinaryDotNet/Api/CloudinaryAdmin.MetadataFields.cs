@@ -7,7 +7,7 @@
     /// <summary>
     /// Part of Cloudinary .NET API main class, responsible for metadata fields management.
     /// </summary>
-    public partial class CloudinaryAdmin
+    internal partial class CloudinaryAdmin
     {
         /// <inheritdoc />
         public MetadataFieldResult AddMetadataField<T>(MetadataFieldCreateParams<T> parameters)

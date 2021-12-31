@@ -60,7 +60,7 @@ namespace CloudinaryDotNet.Tests
         string HttpRequestContent { set; }
     }
 
-    public class MockedCloudinaryAdmin : CloudinaryAdmin, IMockedApi
+    internal class MockedCloudinaryAdmin : CloudinaryAdmin, IMockedApi
     {
         public Mock<HttpMessageHandler> HandlerMock { get; set; }
         public string HttpRequestContent { get; set; }
@@ -72,7 +72,7 @@ namespace CloudinaryDotNet.Tests
         }
     }
 
-    public class MockedCloudinaryUpload : CloudinaryUpload, IMockedApi
+    internal class MockedCloudinaryUpload : CloudinaryUpload, IMockedApi
     {
         public Mock<HttpMessageHandler> HandlerMock { get; set; }
         public string HttpRequestContent { get; set; }

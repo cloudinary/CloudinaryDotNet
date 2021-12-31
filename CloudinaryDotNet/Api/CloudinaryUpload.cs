@@ -14,7 +14,7 @@ namespace CloudinaryDotNet
 
     /// <inheritdoc />
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
-    public class CloudinaryUpload : ICloudinaryUpload
+    internal class CloudinaryUpload : ICloudinaryUpload
     {
         /// <summary>
         /// Resource type 'image'.

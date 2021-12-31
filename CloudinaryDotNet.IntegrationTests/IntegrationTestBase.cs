@@ -85,8 +85,8 @@ namespace CloudinaryDotNet.IntegrationTests
 
         protected Account m_account;
         protected Cloudinary m_cloudinary;
-        protected CloudinaryUpload m_cloudinaryUpload;
-        protected CloudinaryAdmin m_cloudinaryAdmin;
+        internal CloudinaryUpload m_cloudinaryUpload;
+        internal CloudinaryAdmin m_cloudinaryAdmin;
 
         protected Dictionary<StorageType, List<string>> m_publicIdsToClear;
         protected List<object> m_transformationsToClear;
@@ -367,7 +367,7 @@ namespace CloudinaryDotNet.IntegrationTests
         /// </summary>
         /// <param name="account">Instance of Account</param>
         /// <returns>New Cloudinary Admin instance</returns>
-        protected CloudinaryAdmin GetCloudinaryAdminInstance(Account account)
+        internal CloudinaryAdmin GetCloudinaryAdminInstance(Account account)
         {
             var cloudinaryAdmin = new CloudinaryAdmin(account);
             if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
@@ -381,7 +381,7 @@ namespace CloudinaryDotNet.IntegrationTests
         /// </summary>
         /// <param name="account">Instance of Account</param>
         /// <returns>New Cloudinary Upload instance</returns>
-        protected CloudinaryUpload GetCloudinaryUploadInstance(Account account)
+        internal CloudinaryUpload GetCloudinaryUploadInstance(Account account)
         {
             var cloudinaryUpload = new CloudinaryUpload(account);
             if(!string.IsNullOrWhiteSpace(m_apiBaseAddress))
