@@ -175,6 +175,29 @@ namespace CloudinaryDotNet.Tests.Parameters
         }
 
         [Test]
+        public void TestUploadFolderDecouplingParamsCheck()
+        {
+            var parameters = new ImageUploadParams
+            {
+                Tags = TestConstants.TestTag,
+                PublicIdPrefix = "fd_public_id_prefix",
+                DisplayName = "test",
+                UseFilenameAsDisplayName = true,
+                AssetFolder = "asset_folder",
+                Folder = "folder"
+            };
+
+            var dictionary = parameters.ToParamsDictionary();
+
+            Assert.AreEqual(TestConstants.TestTag, dictionary["tags"]);
+            Assert.AreEqual("fd_public_id_prefix", dictionary["public_id_prefix"]);
+            Assert.AreEqual("test", dictionary["display_name"]);
+            Assert.AreEqual("true", dictionary["use_filename_as_display_name"]);
+            Assert.AreEqual("asset_folder", dictionary["asset_folder"]);
+            Assert.AreEqual("folder", dictionary["folder"]);
+        }
+
+        [Test]
         public void TestExplicitParamsDictionary()
         {
             var parameters = new ExplicitParams(TestConstants.TestPublicId)
