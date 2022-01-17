@@ -57,6 +57,12 @@
         /// </summary>
         [EnumMember(Value = "video")]
         Video,
+
+        /// <summary>
+        /// Auto upload format
+        /// </summary>
+        [EnumMember(Value = "auto")]
+        Auto,
     }
 
     /// <summary>
