@@ -1,4 +1,12 @@
 
+1.17.0 / 2022-01-17
+===================
+
+New functionality
+-----------------
+
+  * Add support for `AutoUploadParams` in `UploadLarge`
+
 1.16.0 / 2022-01-05
 ===================
 
