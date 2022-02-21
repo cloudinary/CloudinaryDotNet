@@ -156,7 +156,7 @@
         /// </summary>
         /// <param name="fieldExternalId">The ID of the metadata field.</param>
         /// <param name="orderBy">Criteria for the sort. Currently supports only value.</param>
-        /// <param name="direction">Either asc (default) or desc.</param>
+        /// <param name="direction">Optional (gets either asc or desc).</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed result of the operation.</returns>
         public Task<MetadataDataSourceResult> ReorderMetadataFieldDatasourceAsync(
@@ -185,7 +185,7 @@
         /// </summary>
         /// <param name="fieldExternalId">The ID of the metadata field.</param>
         /// <param name="orderBy">Criteria for the sort. Currently supports only value.</param>
-        /// <param name="direction">Either asc (default) or desc.</param>
+        /// <param name="direction">Optional (gets either asc or desc).</param>
         /// <returns>Parsed result of the operation.</returns>
         public MetadataDataSourceResult ReorderMetadataFieldDatasource(
             string fieldExternalId,

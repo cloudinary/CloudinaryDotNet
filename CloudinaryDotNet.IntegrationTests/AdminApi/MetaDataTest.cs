@@ -326,9 +326,8 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         }
 
         [Test, RetryWithDelay]
-        public async Task TestOrderByAscByDefaultInAMetadataFieldDataSource()
+        public async Task TestReorderMetadataFieldDatasoureDefault()
         {
-            // datasource is set with values in the order v2, v3, v4
             var result = await m_cloudinary.ReorderMetadataFieldDatasourceAsync(m_externalIdSet3, "value");
 
             AssertMetadataFieldDataSource(result);
@@ -336,10 +335,9 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.AreEqual(m_datasourceMultiple.Values[0].Value, result.Values.First().Value);
         }
 
-        [Test]
-        public async Task TestSortByAscInAMetadataFieldDataSource()
+        [Test, RetryWithDelay]
+        public async Task TestReorderMetadataFieldDatasoureAsc()
         {
-            // datasource is set with values in the order v2, v3, v4
             var result = await m_cloudinary.ReorderMetadataFieldDatasourceAsync(m_externalIdSet3, "value", "asc");
 
             AssertMetadataFieldDataSource(result);
@@ -347,11 +345,20 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.AreEqual(m_datasourceMultiple.Values[0].Value, result.Values.First().Value);
         }
 
-        [Test]
-        public async Task TestSortByDescInAMetadataFieldDataSource()
+        [Test, RetryWithDelay]
+        public async Task TestReorderMetadataFieldDatasoureDesc()
         {
-            // datasource is set with values in the order v2, v3, v4
             var result = await m_cloudinary.ReorderMetadataFieldDatasourceAsync(m_externalIdSet3, "value", "desc");
+
+            AssertMetadataFieldDataSource(result);
+
+            Assert.AreEqual(m_datasourceMultiple.Values[0].Value, result.Values.Last().Value);
+        }
+
+        [Test, RetryWithDelay]
+        public void TestReorderMetadataFieldDatasoureDescSync()
+        {
+            var result = m_cloudinary.ReorderMetadataFieldDatasource(m_externalIdSet3, "value", "desc");
 
             AssertMetadataFieldDataSource(result);
 
