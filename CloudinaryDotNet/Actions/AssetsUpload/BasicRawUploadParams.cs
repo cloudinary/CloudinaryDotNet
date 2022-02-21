@@ -20,6 +20,12 @@
         public string PublicId { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier that is used to provide context and to improve the SEO of an assets filename in the delivery URL.
+        /// It does not impact the location where the asset is stored.
+        /// </summary>
+        public string PublicIdPrefix { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to backup the uploaded file. Overrides the default backup settings of your account.
         /// </summary>
         public bool? Backup { get; set; }
@@ -72,6 +78,7 @@
             var dict = base.ToParamsDictionary();
 
             AddParam(dict, "public_id", PublicId);
+            AddParam(dict, "public_id_prefix", PublicIdPrefix);
             AddParam(dict, "type", Type);
             AddParam(dict, "filename_override", FilenameOverride);
 

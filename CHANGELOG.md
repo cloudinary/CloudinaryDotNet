@@ -1,4 +1,34 @@
 
+1.17.0 / 2022-01-17
+===================
+
+New functionality
+-----------------
+
+  * Add support for `AutoUploadParams` in `UploadLarge`
+
+1.16.0 / 2022-01-05
+===================
+
+New functionality
+-----------------
+
+  * Add support for folder decoupling
+  * Add support for `CreateSlideshow` Upload API
+  * Add support for variables in text style
+  * Add support for `context` and structured `metadata` in `Rename` Admin API
+  * Add support for structured metadata in `GetResources` Admin API
+  * Add support for `ResourceType` from `Context` Upload API
+  * Add proxy support
+
+Other Changes
+-------------
+
+  * Remove duplicates in Search API fields
+  * Fix named parameters normalization issue
+  * Fix `appveyor.yml` config
+  * Speedup integration tests
+
 1.15.2 / 2021-06-08
 ===================
 

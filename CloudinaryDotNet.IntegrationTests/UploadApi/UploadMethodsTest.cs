@@ -575,6 +575,25 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.AreEqual(fileLength, result.Bytes, result.Error?.Message);
         }
 
+        [Test, RetryWithDelay]
+        public async Task TestUploadLargeAutoFilesAsync()
+        {
+            // support asynchronous uploading large raw files
+            var largeFilePath = m_testLargeImagePath;
+            int largeFileLength = (int)new FileInfo(largeFilePath).Length;
+
+            var uploadParams =  new AutoUploadParams()
+            {
+                File = new FileDescription(largeFilePath),
+                Tags = m_apiTag
+            };
+
+            var result = await m_cloudinary.UploadLargeAsync(uploadParams, 5 * 1024 * 1024);
+
+            AssertUploadLarge(result, largeFileLength);
+
+            Assert.AreEqual("image", result.ResourceType);
+        }
         /// <summary>
         /// Test access control rules
         /// </summary>

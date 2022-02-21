@@ -256,6 +256,32 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Uploads large file to Cloudinary by dividing it to chunks asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public Task<RawUploadResult> UploadLargeAsync(
+            AutoUploadParams parameters,
+            int bufferSize = DEFAULT_CHUNK_SIZE,
+            CancellationToken? cancellationToken = null)
+        {
+            return UploadLargeAsync<RawUploadResult>(parameters, bufferSize, cancellationToken);
+        }
+
+        /// <summary>
+        /// Uploads large file to Cloudinary by dividing it to chunks.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public RawUploadResult UploadLarge(AutoUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
+        {
+            return UploadLarge<RawUploadResult>(parameters, bufferSize);
+        }
+
+        /// <summary>
         /// Uploads large resources to Cloudinary by dividing it to chunks.
         /// </summary>
         /// <param name="parameters">Parameters of file uploading.</param>
