@@ -8,18 +8,15 @@
     public class ListSpecificResourcesParams : ListResourcesParams
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ListSpecificResourcesParams"/> class.
-        /// </summary>
-        public ListSpecificResourcesParams()
-        {
-            PublicIds = new List<string>();
-        }
-
-        /// <summary>
         /// Gets or sets the public identifiers to list.
         /// When set it overrides usage of <see cref="ListResourcesParams.Direction"/>.
         /// </summary>
-        public List<string> PublicIds { get; set; }
+        public List<string> PublicIds { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Gets or sets the asset identifiers to list.
+        /// </summary>
+        public List<string> AssetIds { get; set; } = new List<string>();
 
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.
@@ -27,9 +24,9 @@
         /// <returns>Sorted dictionary of parameters.</returns>
         public override SortedDictionary<string, object> ToParamsDictionary()
         {
-            SortedDictionary<string, object> dict = base.ToParamsDictionary();
+            var dict = base.ToParamsDictionary();
 
-            if (PublicIds != null && PublicIds.Count > 0)
+            if (PublicIds?.Count > 0)
             {
                 AddParam(dict, "public_ids", PublicIds);
 
@@ -37,6 +34,11 @@
                 {
                     dict.Remove("direction");
                 }
+            }
+
+            if (AssetIds?.Count > 0)
+            {
+                AddParam(dict, "asset_ids", AssetIds);
             }
 
             return dict;
