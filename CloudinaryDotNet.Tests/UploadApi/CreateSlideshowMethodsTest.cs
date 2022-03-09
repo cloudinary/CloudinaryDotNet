@@ -10,7 +10,7 @@ namespace CloudinaryDotNet.Tests.UploadApi
         [Test]
         public void TestCreateSlideshowFromManifestTransformation()
         {
-            var cloudinary = new MockedCloudinary();
+            var cloudinary = new MockedCloudinaryUpload();
 
             const string slideshowManifest = "w_352;h_240;du_5;fps_30;vars_(slides_((media_s64:aHR0cHM6Ly9y" +
                                               "ZXMuY2xvdWRpbmFyeS5jb20vZGVtby9pbWFnZS91cGxvYWQvY291cGxl);(media_s64:aH" +
@@ -42,7 +42,7 @@ namespace CloudinaryDotNet.Tests.UploadApi
         [Test]
         public void TestCreateSlideshowFromManifestJson()
         {
-            var cloudinary = new MockedCloudinary();
+            var cloudinary = new MockedCloudinaryUpload();
 
             const string expectedManifestJson =
                 @"{""w"":848,""h"":480,""du"":6,""fps"":30,""vars"":{""sdur"":500,""tdur"":500,""slides"":"+

@@ -169,18 +169,18 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             };
 
             // Save original values
-            var origAddr = m_cloudinary.Api.ApiBaseAddress;
-            var origTimeout = m_cloudinary.Api.Timeout;
+            var origAddr = m_cloudinaryUpload.Api.ApiBaseAddress;
+            var origTimeout = m_cloudinaryUpload.Api.Timeout;
 
             var stopWatch = new Stopwatch();
 
             try
             {
-                m_cloudinary.Api.ApiBaseAddress = "https://10.255.255.1";
-                m_cloudinary.Api.Timeout = TIMEOUT;
+                m_cloudinaryUpload.Api.ApiBaseAddress = "https://10.255.255.1";
+                m_cloudinaryUpload.Api.Timeout = TIMEOUT;
 
                 stopWatch.Start();
-                m_cloudinary.Upload(uploadParams);
+                m_cloudinaryUpload.Upload(uploadParams);
             }
             catch (Exception)
             {
@@ -188,8 +188,8 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             }
             finally
             {
-                m_cloudinary.Api.ApiBaseAddress = origAddr;
-                m_cloudinary.Api.Timeout = origTimeout;
+                m_cloudinaryUpload.Api.ApiBaseAddress = origAddr;
+                m_cloudinaryUpload.Api.Timeout = origTimeout;
                 stopWatch.Stop();
             }
 
