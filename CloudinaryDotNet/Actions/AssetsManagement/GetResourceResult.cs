@@ -107,7 +107,7 @@
         public string SecureUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets when a listing request has more results to return than <see cref="GetResourceParams.MaxResults"/>,
+        /// Gets or sets when a listing request has more results to return than <see cref="GetResourceParamsBase.MaxResults"/>,
         /// the <see cref="NextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="NextCursor"/> parameter of the following listing request.
         /// </summary>
@@ -115,7 +115,7 @@
         public string NextCursor { get; set; }
 
         /// <summary>
-        /// Gets or sets if there are more derived images than <see cref="GetResourceParams.MaxResults"/>,
+        /// Gets or sets if there are more derived images than <see cref="GetResourceParamsBase.MaxResults"/>,
         /// the <see cref="DerivedNextCursor"/> value is returned as part of the response. You can then specify this value as
         /// the <see cref="DerivedNextCursor"/> parameter of the following listing request.
         /// </summary>
