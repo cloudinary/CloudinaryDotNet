@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
@@ -13,9 +14,24 @@ namespace CloudinaryDotNet.Tests
         public string HttpRequestContent;
         private const string cloudName = "test_cloud";
 
-        public MockedCloudinary(string responseStr = "{}") : base("cloudinary://a:b@test_cloud")
+        public MockedCloudinary(string responseStr = "{}", HttpResponseHeaders httpResponseHeaders = null) : base("cloudinary://a:b@test_cloud")
         {
             HandlerMock = new Mock<HttpMessageHandler>();
+
+            var httpResponseMessage = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(responseStr)
+            };
+
+            if (httpResponseHeaders != null)
+            {
+                foreach (var httpResponseHeader in httpResponseHeaders)
+                {
+                    httpResponseMessage.Headers.Add(httpResponseHeader.Key, httpResponseHeader.Value);
+                }
+            }
+
             HandlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
@@ -29,11 +45,7 @@ namespace CloudinaryDotNet.Tests
                             .GetAwaiter()
                             .GetResult();
                     })
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(responseStr)
-                });
+                .ReturnsAsync(httpResponseMessage);
             Api.Client = new HttpClient(HandlerMock.Object);
         }
 
