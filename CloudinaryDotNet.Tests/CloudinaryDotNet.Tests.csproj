@@ -25,9 +25,5 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-  <ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">
-    <Compile Remove="UrlBuilderTest.cs" />
-    <Compile Remove="Asset/AuthTokenTest.cs" />
-  </ItemGroup>
 
 </Project>
