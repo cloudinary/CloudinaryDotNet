@@ -584,7 +584,7 @@
             var match = RangeValueRe.Match(value);
             if (!match.Success)
             {
-                return null;
+                return Expression.Normalize(value);
             }
 
             string modifier = string.Empty;
