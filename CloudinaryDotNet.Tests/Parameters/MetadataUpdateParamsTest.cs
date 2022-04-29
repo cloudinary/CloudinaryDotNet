@@ -24,6 +24,7 @@ namespace CloudinaryDotNet.Tests.Parameters
             };
             parameters.Metadata.Add("metadata_color", "red");
             parameters.Metadata.Add("metadata_shape", "");
+            parameters.ClearInvalid = true;
 
             Assert.DoesNotThrow(parameters.Check);
             var dictionary = parameters.ToParamsDictionary();
@@ -31,6 +32,7 @@ namespace CloudinaryDotNet.Tests.Parameters
             Assert.AreEqual(parameters.Type, dictionary["type"]);
             Assert.AreEqual(parameters.PublicIds, dictionary["public_ids"]);
             Assert.AreEqual("metadata_color=red|metadata_shape", dictionary["metadata"]);
+            Assert.AreEqual("true", dictionary["clear_invalid"]);
         }
     }
 }
