@@ -44,6 +44,9 @@
         /// <summary> Parameter name for metadata.</summary>
         public const string METADATA_PARAM_NAME = "metadata";
 
+        /// <summary> Parameter name for clear invalid metadata.</summary>
+        public const string CLEAR_INVALID_METADATA_PARAM_NAME = "clear_invalid";
+
         /// <summary> Parameter name for prefix.</summary>
         public const string PREFIX_PARAM_NAME = "prefix";
 

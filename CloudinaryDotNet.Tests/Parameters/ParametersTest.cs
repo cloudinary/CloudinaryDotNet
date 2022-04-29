@@ -225,6 +225,24 @@ namespace CloudinaryDotNet.Tests.Parameters
         }
 
         [Test]
+        public void TestUpdateResourceParamsDictionary()
+        {
+            var parameters = new UpdateParams(TestConstants.TestPublicId)
+            {
+                Metadata = new StringDictionary
+                {
+                    {"metadataFieldId", "metadataValue"}
+                },
+                ClearInvalid = true
+            };
+
+            var dictionary = parameters.ToParamsDictionary();
+
+            Assert.AreEqual("metadataFieldId=metadataValue", dictionary["metadata"]);
+            Assert.AreEqual("true", dictionary["clear_invalid"]);
+        }
+
+        [Test]
         public void TestTypeInTagParams()
         {
             var parameters = new TagParams();
