@@ -63,6 +63,12 @@
         public StringDictionary Metadata { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether when updating a resource with partial metadata payload
+        /// which makes other fields values outdated, will cause it to be silently cleaned.
+        /// </summary>
+        public bool ClearInvalid { get; set; }
+
+        /// <summary>
         /// Gets or sets a possibility to use "aspose" to automatically convert Office documents to PDF files and other image formats using the
         /// Aspose Document Conversion add-on.
         /// </summary>
@@ -200,6 +206,8 @@
             {
                 AddParam(dict, Constants.METADATA_PARAM_NAME, Utils.SafeJoin("|", Metadata.SafePairs));
             }
+
+            AddParam(dict, Constants.CLEAR_INVALID_METADATA_PARAM_NAME, ClearInvalid);
 
             AddCoordinates(dict, "face_coordinates", FaceCoordinates);
             AddCoordinates(dict, "custom_coordinates", CustomCoordinates);

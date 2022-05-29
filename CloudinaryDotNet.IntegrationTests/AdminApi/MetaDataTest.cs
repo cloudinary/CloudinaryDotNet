@@ -411,28 +411,5 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             dataSource.Values.Where(entry => !string.IsNullOrEmpty(entry.State)).ToList()
                 .ForEach(entry => Assert.Contains(entry.State, new List<string> {"active", "inactive"}));
         }
-
-        /// <summary>
-        /// <para>Private helper method to create metadata fields for this test.</para>
-        ///
-        /// <para>Creates metadata field of specified type.
-        /// See <a href="https://cloudinary.com/documentation/admin_api#create_a_metadata_field">
-        /// Create a metadata field.</a></para>
-        /// </summary>
-        /// <param name="externalId">The ID of the metadata field.</param>
-        /// <param name="dataSource">Optional. Data source for a field to be created.</param>
-        /// <typeparam name="T">Type of the metadata field.</typeparam>
-        /// <typeparam name="TP">Type that can describe the field type.</typeparam>
-        /// <returns>Parsed result of the metadata field creating.</returns>
-        private MetadataFieldResult CreateMetadataFieldForTest<T, TP>(string externalId, MetadataDataSourceParams dataSource = null)
-            where T : MetadataFieldCreateParams<TP>
-        {
-            var parameters = (T)Activator.CreateInstance(typeof(T), externalId);
-            parameters.ExternalId = externalId;
-            if (dataSource != null)
-                parameters.DataSource = dataSource;
-
-            return m_cloudinary.AddMetadataField(parameters);
-        }
     }
 }

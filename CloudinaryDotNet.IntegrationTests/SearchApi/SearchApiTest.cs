@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using CloudinaryDotNet.Actions;
@@ -13,7 +14,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
         private string m_expressionPublicId;
         private string m_singleResourcePublicId;
         private string[] m_publicIdsSorted;
-
+        private Dictionary<string, string> m_assetIds = new Dictionary<string, string>();
         private const int INDEXING_WAIT_TIME = 5000;
 
         private const string SORT_FIELD = "public_id";
@@ -54,12 +55,23 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
                     uploadParams.Context = new StringDictionary { { "some key", "some value" } };
                 }
                 m_publicIdsSorted[i] = publicId;
-                m_cloudinary.Upload(uploadParams);
+                var r = m_cloudinary.Upload(uploadParams);
+                m_assetIds.Add(publicId, r.AssetId);
             }
 
             Array.Sort(m_publicIdsSorted);
             m_expressionPublicId = $"public_id: {m_publicIdsSorted[0]}";
             Thread.Sleep(INDEXING_WAIT_TIME);
+        }
+
+        [TestCase("asset_id=")]
+        [TestCase("asset_id:")]
+        [RetryWithDelay]
+        public void TestSearchByAssetId(string key)
+        {
+            var result = m_cloudinary.Search().Expression($"{key}{m_assetIds[m_singleResourcePublicId]}").Execute();
+            Assert.AreEqual(1, result.Resources.Count());
+            Assert.AreEqual(m_singleResourcePublicId, result.Resources.First().PublicId);
         }
 
         [Test, RetryWithDelay]

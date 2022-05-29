@@ -223,5 +223,22 @@ namespace CloudinaryDotNet.Tests.Asset
                     AuthToken.ERROR_ACL_AND_URL_MISSING
             );
         }
+
+        [Test]
+        public void TestMultiplePatternsInAcl()
+        {
+            var token = new AuthToken(TOKEN_KEY)
+                .Duration(DURATION)
+                .Acl("/image/authenticated/*", "/image2/authenticated/*", "/image3/authenticated/*")
+                .StartTime(START_TIME2);
+            var cookieToken = token.Generate();
+
+            Assert.AreEqual(
+                $"__cld_token__=st={START_TIME2}~exp={EXPIRATION2A}~acl=%2fimage%2fauthenticated%2f*" + 
+                "!%2fimage2%2fauthenticated%2f*!%2fimage3%2fauthenticated%2f*" +
+                "~hmac=208a4e066b8cc5ed66dacdb19c7a0288a1993a910e0e795c64cd134fbbfa0b9c",
+                cookieToken
+            );
+        }
     }
 }

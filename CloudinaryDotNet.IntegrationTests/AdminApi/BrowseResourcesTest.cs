@@ -228,6 +228,43 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                     .Count() > 0, result.Error?.Message);
         }
 
+        private async Task<string> UploadTestResource(string publicId)
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Context = new StringDictionary("key=value", "key2=value2"),
+                Tags = m_apiTag
+            };
+
+            return (await m_cloudinary.UploadAsync(uploadParams)).AssetId;
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestGetResourceByAssetIdAsync()
+        {
+            var publicId = GetUniquePublicId();
+            var assetId = await UploadTestResource(publicId);
+
+            var result = await m_cloudinary.GetResourceByAssetIdAsync(assetId);
+
+            Assert.NotNull(result, result.Error?.Message);
+            Assert.AreEqual(publicId, result.PublicId);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestGetResourceByAssetId()
+        {
+            var publicId = GetUniquePublicId();
+            var assetId = await UploadTestResource(publicId);
+
+            var result = m_cloudinary.GetResourceByAssetId(assetId);
+
+            Assert.NotNull(result, result.Error?.Message);
+            Assert.AreEqual(publicId, result.PublicId);
+        }
+
         [Test, RetryWithDelay]
         public void TestListResourcesByPublicIds()
         {
@@ -264,6 +301,42 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.NotNull(result);
             Assert.AreEqual(2, result.Resources.Length, "expected to find {0} but got {1}", new Object[] { publicIds.Aggregate((current, next) => current + ", " + next), result.Resources.Select(r => r.PublicId).Aggregate((current, next) => current + ", " + next) });
             Assert.True(result.Resources.Where(r => r.Context != null).Count() == 2);
+        }
+
+        [Test, RetryWithDelay]
+        public void TestListResourcesByAssetIds()
+        {
+            var publicId1 = GetUniquePublicId();
+            var publicId2 = GetUniquePublicId();
+            var context = new StringDictionary("key=value", "key2=value2");
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId1,
+                Context = context,
+                Tags = m_apiTag
+            };
+            var uploadResult1 = m_cloudinary.Upload(uploadParams);
+
+            uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId2,
+                Context = context,
+                Tags = m_apiTag
+            };
+            var uploadResult2 = m_cloudinary.Upload(uploadParams);
+
+            var assetIds = new List<string>()
+            {
+                uploadResult1.AssetId,
+                uploadResult2.AssetId
+            };
+            var result = m_cloudinary.ListResourcesByAssetIDs(assetIds, true, true, true);
+
+            Assert.AreEqual(publicId1, result.Resources[0].PublicId);
+            Assert.AreEqual(publicId2, result.Resources[1].PublicId);
         }
 
         [Test, RetryWithDelay]

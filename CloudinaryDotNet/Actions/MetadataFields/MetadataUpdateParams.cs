@@ -41,6 +41,12 @@
         public string Type { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether when updating a resource with partial metadata payload
+        /// which makes other fields values outdated, will cause it to be silently cleaned.
+        /// </summary>
+        public bool ClearInvalid { get; set; }
+
+        /// <summary>
         /// Validates object model.
         /// </summary>
         public override void Check()
@@ -56,6 +62,7 @@
         {
             AddParam(dict, "public_ids", PublicIds);
             AddParam(dict, Constants.METADATA_PARAM_NAME, Utils.SafeJoin("|", Metadata.SafePairs));
+            AddParam(dict, Constants.CLEAR_INVALID_METADATA_PARAM_NAME, ClearInvalid);
             AddParam(dict, "type", Type);
         }
     }
