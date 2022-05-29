@@ -17,7 +17,7 @@
         /// <summary>
         /// The video codec (with video profile and level if relevant).
         /// </summary>
-        /// <param name="codecParams">Parameters of the video codec. Use the syntax: {codec}[:{profile}:[{level}]].</param>
+        /// <param name="codecParams">Parameters of the video codec. Use the syntax: {codec}[:{profile}:[{level}[:b_frames]]].</param>
         /// <returns>The transformation with video codec applied.</returns>
         public Transformation VideoCodec(params string[] codecParams)
         {
@@ -554,6 +554,13 @@
                     if (@params.TryGetValue("level", out s))
                     {
                         sb.Append(':').Append(s);
+                        if (@params.TryGetValue("b_frames", out s))
+                        {
+                            if (bool.TryParse(s, out bool r) && !r)
+                            {
+                                sb.Append(':').Append("bframes_no");
+                            }
+                        }
                     }
                 }
             }

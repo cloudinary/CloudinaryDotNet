@@ -30,5 +30,14 @@ namespace CloudinaryDotNet.Tests.Transformations.Video
             actual = new Transformation().VideoCodec("codec", "h264", "profile", "basic", "level", "3.1").ToString();
             Assert.AreEqual("vc_h264:basic:3.1", actual);
         }
+
+        [TestCase("false", "vc_h265:auto:auto:bframes_no")]
+        [TestCase("true", "vc_h265:auto:auto")]
+        public void TestVideoCodecBFrames(string bFrame, string expected)
+        {
+            var actual = new Transformation()
+                .VideoCodec("codec", "h265", "profile", "auto", "level", "auto", "b_frames", bFrame).ToString();
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
