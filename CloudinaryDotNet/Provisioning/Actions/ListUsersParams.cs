@@ -1,6 +1,8 @@
 namespace CloudinaryDotNet.Actions
 {
+    using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
     /// <summary>
@@ -29,6 +31,22 @@ namespace CloudinaryDotNet.Actions
         ///  Gets or sets users who have access to the specified account.
         /// </summary>
         public string SubAccountId { get; set; }
+
+        /// <summary>
+        ///  Gets or sets users that last logged in the specified range of dates (true),
+        ///  users that did not last logged in that range (false), or all users (null).
+        /// </summary>
+        public bool? LastLogin { get; set; }
+
+        /// <summary>
+        ///  Gets or sets last login start date.
+        /// </summary>
+        public DateTime? From { get; set; }
+
+        /// <summary>
+        ///  Gets or sets last login end date.
+        /// </summary>
+        public DateTime? To { get; set; }
 
         /// <summary>
         /// Validate object model.
@@ -63,6 +81,23 @@ namespace CloudinaryDotNet.Actions
             {
                 AddParam(dict, "sub_account_id", SubAccountId);
             }
+
+            if (LastLogin.HasValue)
+            {
+                AddParam(dict, "last_login", LastLogin);
+            }
+
+            if (From.HasValue)
+            {
+                AddParam(dict, "from", GetIso8601DatetimeFormat(From.Value));
+            }
+
+            if (To.HasValue)
+            {
+                AddParam(dict, "to", GetIso8601DatetimeFormat(To.Value));
+            }
         }
+
+        private static string GetIso8601DatetimeFormat(DateTime dateTime) => dateTime.ToString("s", CultureInfo.InvariantCulture);
     }
 }

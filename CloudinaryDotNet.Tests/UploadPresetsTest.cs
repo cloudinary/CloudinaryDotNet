@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using SystemHttp = System.Net.Http;
@@ -31,6 +32,54 @@ namespace CloudinaryDotNet.Tests
 
             localCloudinaryMock.AssertHttpCall(SystemHttp.HttpMethod.Get, uploadPresetsRootUrl);
             Assert.AreEqual("some value", result.Presets.First().Eval);
+        }
+
+        [TestCase("x-featureratelimit-limit", 123)]
+        [TestCase("X-FeatureRateLimit-Limit", 123)]
+        public void TestFeatureRateLimitLimitHeader(string headerName, long headerValue)
+        {
+            var message = new SystemHttp.HttpResponseMessage();
+            var headers = message.Headers;
+
+            headers.Add(headerName, headerValue.ToString());
+            
+            var localCloudinaryMock = new MockedCloudinary(httpResponseHeaders: headers);
+
+            var result = localCloudinaryMock.ListUploadPresets();
+
+            Assert.AreEqual(headerValue, result.Limit);
+        }
+
+        [TestCase("x-featureratelimit-reset", "10/22/2021 12:10:15 PM")]
+        [TestCase("X-FeatureRateLimit-Reset", "10/22/2021 12:10:15 PM")]
+        public void TestFeatureRateLimitLimitReset(string headerName, string headerValue)
+        {
+            var message = new SystemHttp.HttpResponseMessage();
+            var headers = message.Headers;
+
+            headers.Add(headerName, headerValue);
+
+            var localCloudinaryMock = new MockedCloudinary(httpResponseHeaders: headers);
+
+            var result = localCloudinaryMock.ListUploadPresets();
+
+            Assert.AreEqual(DateTime.Parse(headerValue), result.Reset);
+        }
+
+        [TestCase("x-featureratelimit-remaining", 456)]
+        [TestCase("X-FeatureRateLimit-Remaining", 465)]
+        public void TestFeatureRateLimitLimitRemaining(string headerName, long headerValue)
+        {
+            var message = new SystemHttp.HttpResponseMessage();
+            var headers = message.Headers;
+
+            headers.Add(headerName, headerValue.ToString());
+
+            var localCloudinaryMock = new MockedCloudinary(httpResponseHeaders: headers);
+
+            var result = localCloudinaryMock.ListUploadPresets();
+
+            Assert.AreEqual(headerValue, result.Remaining);
         }
 
         [Test]

@@ -59,7 +59,7 @@
         /// <summary>
         /// An Access Control List for limiting the allowed URL path (e.g., /image/authenticated/*).
         /// </summary>
-        public string acl;
+        public string[] acl;
 
         /// <summary>
         /// Duration that the cookie is valid in seconds.
@@ -144,7 +144,7 @@
         /// </summary>
         /// <param name="acl">The pattern (e.g., /image/authenticated/*).</param>
         /// <returns>The instance of token with set parameter.</returns>
-        public AuthToken Acl(string acl)
+        public AuthToken Acl(params string[] acl)
         {
             this.acl = acl;
             return this;
@@ -205,20 +205,22 @@
 
             tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "exp={0}", expiration.ToString(CultureInfo.InvariantCulture)));
 
-            if (string.IsNullOrWhiteSpace(url) && string.IsNullOrWhiteSpace(acl))
+            var aclIsEmpty = acl?.Any() != true;
+            bool urlIsEmpty = string.IsNullOrWhiteSpace(url);
+            if (urlIsEmpty && aclIsEmpty)
             {
                 throw new InvalidOperationException(ERROR_ACL_AND_URL_MISSING);
             }
 
-            if (!string.IsNullOrWhiteSpace(acl))
+            if (!aclIsEmpty)
             {
-                tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "acl={0}", EscapeUrlToLower(acl)));
+                tokenParts.Add(string.Format(CultureInfo.InvariantCulture, "acl={0}", NormalizeAclField(acl)));
             }
 
             List<string> toSign = new List<string>(tokenParts);
 
             // Add URL only if ACL is not provided
-            if (!string.IsNullOrWhiteSpace(url) && string.IsNullOrWhiteSpace(acl))
+            if (!urlIsEmpty && aclIsEmpty)
             {
                 toSign.Add(string.Format(CultureInfo.InvariantCulture, "url={0}", EscapeUrlToLower(url)));
             }
@@ -290,7 +292,8 @@
                 hashComponents.Add(expiration.ToString(CultureInfo.InvariantCulture));
                 hashComponents.Add(duration.ToString(CultureInfo.InvariantCulture));
                 hashComponents.Add(ip);
-                hashComponents.Add(acl);
+                var normalizedAcl = NormalizeAclField(acl);
+                hashComponents.Add(normalizedAcl);
 
                 return hashComponents.GetHashCode();
             }
@@ -311,6 +314,12 @@
                     m.Value.Select(c => "%" + Convert.ToByte(c).ToString("x2", CultureInfo.InvariantCulture)));
                 return encodedItem.ToLowerInvariant();
             });
+        }
+
+        private static string NormalizeAclField(params string[] acl)
+        {
+            var joinedAclField = string.Join("!", acl);
+            return EscapeUrlToLower(joinedAclField);
         }
 
         private string Digest(string message)
