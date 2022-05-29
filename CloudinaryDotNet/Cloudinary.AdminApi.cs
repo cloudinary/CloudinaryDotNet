@@ -1215,6 +1215,27 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets details of a single resource as well as all its derived resources by its public ID asynchronously.
         /// </summary>
+        /// <param name="assetId">The asset ID of the resource.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed response with the detailed resource information.</returns>
+        public Task<GetResourceResult> GetResourceByAssetIdAsync(string assetId, CancellationToken? cancellationToken = null)
+        {
+            return GetResourceAsync(new GetResourceParamsAssetId(assetId), cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets details of a single resource as well as all its derived resources by its public ID.
+        /// </summary>
+        /// <param name="assetId">The asset ID of the resource.</param>
+        /// <returns>Parsed response with the detailed resource information.</returns>
+        public GetResourceResult GetResourceByAssetId(string assetId)
+        {
+            return GetResourceByAssetIdAsync(assetId).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Gets details of a single resource as well as all its derived resources by its public ID asynchronously.
+        /// </summary>
         /// <param name="publicId">The public ID of the resource.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response with the detailed resource information.</returns>
@@ -1230,7 +1251,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed response with the detailed resource information.</returns>
         public GetResourceResult GetResource(string publicId)
         {
-            return GetResource(new GetResourceParams(publicId));
+            return GetResourceAsync(publicId).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -1239,15 +1260,26 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Parameters of the request of resource.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed response with the detailed resource information.</returns>
-        public Task<GetResourceResult> GetResourceAsync(GetResourceParams parameters, CancellationToken? cancellationToken = null)
+        public Task<GetResourceResult> GetResourceAsync(GetResourceParamsBase parameters, CancellationToken? cancellationToken = null)
         {
-            UrlBuilder urlBuilder = new UrlBuilder(
-                GetApiUrlV().
-                ResourceType("resources").
-                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
-                Add(parameters.Type).
-                Add(parameters.PublicId).
-                BuildUrl(),
+            parameters.Check();
+
+            var url = GetApiUrlV().ResourceType("resources");
+
+            var publicId = (parameters as GetResourceParams)?.PublicId;
+            if (publicId != null)
+            {
+                url = url.Add(ApiShared.GetCloudinaryParam(parameters.ResourceType))
+                     .Add(parameters.Type)
+                     .Add(publicId);
+            }
+            else
+            {
+                url = url.Add((parameters as GetResourceParamsAssetId)?.AssetId);
+            }
+
+            var urlBuilder = new UrlBuilder(
+                url.BuildUrl(),
                 parameters.ToParamsDictionary());
 
             return CallAdminApiAsync<GetResourceResult>(

@@ -228,6 +228,43 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
                     .Count() > 0, result.Error?.Message);
         }
 
+        private async Task<string> UploadTestResource(string publicId)
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId,
+                Context = new StringDictionary("key=value", "key2=value2"),
+                Tags = m_apiTag
+            };
+
+            return (await m_cloudinary.UploadAsync(uploadParams)).AssetId;
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestGetResourceByAssetIdAsync()
+        {
+            var publicId = GetUniquePublicId();
+            var assetId = await UploadTestResource(publicId);
+
+            var result = await m_cloudinary.GetResourceByAssetIdAsync(assetId);
+
+            Assert.NotNull(result, result.Error?.Message);
+            Assert.AreEqual(publicId, result.PublicId);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestGetResourceByAssetId()
+        {
+            var publicId = GetUniquePublicId();
+            var assetId = await UploadTestResource(publicId);
+
+            var result = m_cloudinary.GetResourceByAssetId(assetId);
+
+            Assert.NotNull(result, result.Error?.Message);
+            Assert.AreEqual(publicId, result.PublicId);
+        }
+
         [Test, RetryWithDelay]
         public void TestListResourcesByPublicIds()
         {
