@@ -463,7 +463,7 @@
             parameters.Add("fl", flags);
             var fnValue = GetString(m_transformParams, "custom_function") ??
                         GetString(m_transformParams, "custom_pre_function");
-            parameters.Add("fn", fnValue);
+            parameters.Add("fn", Expression.Normalize(fnValue));
             parameters.Add("h", Expression.Normalize(height));
             parameters.Add("o", Expression.Normalize(GetString(m_transformParams, "opacity")));
             parameters.Add("q", Expression.Normalize(GetString(m_transformParams, "quality")));

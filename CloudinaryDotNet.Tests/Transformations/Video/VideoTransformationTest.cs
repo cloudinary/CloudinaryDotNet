@@ -103,6 +103,10 @@ namespace CloudinaryDotNet.Tests.Transformations.Video
             Assert.AreEqual("so_auto", actual);
             actual = new Transformation().StartOffsetAuto().ToString();
             Assert.AreEqual("so_auto", actual);
+            actual = new Transformation().Width(100).StartOffset("idu - 5").ToString();
+            Assert.That(actual.Contains("so_idu_sub_5"));
+            actual = new Transformation().Width(100).StartOffset("$logotime").ToString();
+            Assert.That(actual.Contains("so_$logotime"));
         }
 
         [Test]
@@ -150,6 +154,15 @@ namespace CloudinaryDotNet.Tests.Transformations.Video
             Assert.AreEqual("eo_71p,so_36p", actual);
             actual = new Transformation().StartOffset("35.5p").EndOffset("70.5p").ToString();
             Assert.AreEqual("eo_70.5p,so_35.5p", actual);
+        }
+
+        [Test]
+        public void TestEndOffset()
+        {
+            var actual = new Transformation().Width(100).EndOffset("idu - 5").ToString();
+            Assert.That(actual.Contains("eo_idu_sub_5"));
+            actual = new Transformation().Width(100).EndOffset("$logotime").ToString();
+            Assert.That(actual.Contains("eo_$logotime"));
         }
 
         [Test]

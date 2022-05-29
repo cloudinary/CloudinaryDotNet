@@ -354,7 +354,7 @@ namespace CloudinaryDotNet.Tests.Transformations.Common
                 .Where((s, i) => i % 2 == 1);
 
         public static IEnumerable<string> VerbsToNormalize =>
-            "angle aspect_ratio dpr effect height opacity quality radius width x y zoom"
+            "angle aspect_ratio dpr effect height opacity quality radius width x y zoom end_offset start_offset"
             .Split(' ');
 
         [TestCaseSource(typeof(ExpressionTest), nameof(VerbsToNormalize))]
