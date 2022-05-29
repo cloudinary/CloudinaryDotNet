@@ -310,7 +310,7 @@
                 .Add("order")
                 .BuildUrl();
 
-            var parameters = new ReorderMetadataFieldsParams()
+            var parameters = new ReorderMetadataFieldDataSourceParams()
             {
                 OrderBy = orderBy,
                 Direction = direction,

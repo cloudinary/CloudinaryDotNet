@@ -3,9 +3,9 @@ namespace CloudinaryDotNet.Actions
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents the values to be applied to reorder metadata fields.
+    /// Represents the values to be applied to reorder metadata data source.
     /// </summary>
-    public class ReorderMetadataFieldsParams : BaseParams
+    public class ReorderMetadataFieldDataSourceParams : BaseParams
     {
         /// <summary>
         /// Gets or sets criteria for the order. Currently supports only value.
