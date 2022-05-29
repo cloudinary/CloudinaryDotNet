@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -322,6 +323,46 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var restoreResult = m_cloudinary.RestoreMetadataDataSourceEntries(m_externalIdSet3, entriesExternalIds);
             AssertMetadataFieldDataSource(restoreResult);
             Assert.AreEqual(3, restoreResult.Values.Count, restoreResult.Error?.Message);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestReorderMetadataFieldDatasoureDefault()
+        {
+            var result = await m_cloudinary.ReorderMetadataFieldDatasourceAsync(m_externalIdSet3, "value");
+
+            AssertMetadataFieldDataSource(result);
+
+            Assert.AreEqual(m_datasourceMultiple.Values[0].Value, result.Values.First().Value);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestReorderMetadataFieldDatasoureAsc()
+        {
+            var result = await m_cloudinary.ReorderMetadataFieldDatasourceAsync(m_externalIdSet3, "value", "asc");
+
+            AssertMetadataFieldDataSource(result);
+
+            Assert.AreEqual(m_datasourceMultiple.Values[0].Value, result.Values.First().Value);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestReorderMetadataFieldDatasoureDesc()
+        {
+            var result = await m_cloudinary.ReorderMetadataFieldDatasourceAsync(m_externalIdSet3, "value", "desc");
+
+            AssertMetadataFieldDataSource(result);
+
+            Assert.AreEqual(m_datasourceMultiple.Values[0].Value, result.Values.Last().Value);
+        }
+
+        [Test, RetryWithDelay]
+        public void TestReorderMetadataFieldDatasoureDescSync()
+        {
+            var result = m_cloudinary.ReorderMetadataFieldDatasource(m_externalIdSet3, "value", "desc");
+
+            AssertMetadataFieldDataSource(result);
+
+            Assert.AreEqual(m_datasourceMultiple.Values[0].Value, result.Values.Last().Value);
         }
 
         /// <summary>
