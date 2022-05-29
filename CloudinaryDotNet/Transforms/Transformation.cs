@@ -456,7 +456,7 @@
             parameters.Add("b", background);
             parameters.Add("c", crop);
             parameters.Add("co", color);
-            parameters.Add("dpr", dprStr);
+            parameters.Add("dpr", Expression.Normalize(dprStr));
             parameters.Add("du", duration);
             parameters.Add("e", Expression.Normalize(GetString(m_transformParams, "effect")));
             parameters.Add("eo", endOffset);

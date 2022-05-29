@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace CloudinaryDotNet.Tests.Transformations.Common
@@ -343,6 +345,30 @@ namespace CloudinaryDotNet.Tests.Transformations.Common
         {
             var actual = Expression.Normalize(expression);
             Assert.AreEqual(expected, actual);
+        }
+
+        public static IEnumerable<string> VerbsNotToNormalize =>
+            (typeof(Transformation)
+                .GetField("SimpleParams", BindingFlags.NonPublic | BindingFlags.Static)
+                .GetValue(null) as string[])
+                .Where((s, i) => i % 2 == 1);
+
+        public static IEnumerable<string> VerbsToNormalize =>
+            "angle aspect_ratio dpr effect height opacity quality radius width x y zoom"
+            .Split(' ');
+
+        [TestCaseSource(typeof(ExpressionTest), nameof(VerbsToNormalize))]
+        public void TestExpressionsShouldBeNormalized(string name)
+        {
+            var t = new Transformation().Add(name, "width * 2").GenerateThis();
+            StringAssert.Contains("w_mul_2", t);
+        }
+
+        [TestCaseSource(typeof(ExpressionTest), nameof(VerbsNotToNormalize))]
+        public void TestExpressionsShouldNotBeNormalized(string name)
+        {
+            var t = new Transformation().Add(name, "width * 2").GenerateThis();
+            StringAssert.Contains("width * 2", t);
         }
     }
 }
