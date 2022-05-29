@@ -326,6 +326,17 @@ namespace CloudinaryDotNet.IntegrationTests
             return metadataFieldId;
         }
 
+        protected MetadataFieldResult CreateMetadataFieldForTest<T, TP>(string externalId, MetadataDataSourceParams dataSource = null)
+            where T : MetadataFieldCreateParams<TP>
+        {
+            var parameters = (T)Activator.CreateInstance(typeof(T), externalId);
+            parameters.ExternalId = externalId;
+            if (dataSource != null)
+                parameters.DataSource = dataSource;
+
+            return m_cloudinary.AddMetadataField(parameters);
+        }
+
         private void PopulateMissingRawUploadParams(RawUploadParams uploadParams, bool isAsync, StorageType storageType = StorageType.upload)
         {
             uploadParams.File = uploadParams.File ?? new FileDescription(m_testImagePath);
