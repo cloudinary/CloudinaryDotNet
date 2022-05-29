@@ -11,6 +11,12 @@
     public abstract class UploadResult : BaseResult
     {
         /// <summary>
+        /// Gets or sets the ID of uploaded asset.
+        /// </summary>
+        [DataMember(Name = "asset_id")]
+        public string AssetId { get; set; }
+
+        /// <summary>
         /// Gets or sets public ID of uploaded asset.
         /// </summary>
         [DataMember(Name = "public_id")]

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
@@ -259,6 +260,34 @@
                 Add(Constants.METADATA).
                 BuildUrl();
             return CallAdminApiAsync<MetadataUpdateResult>(HttpMethod.POST, url, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Reorders metadata fields.
+        /// </summary>
+        /// <param name="orderBy">Criteria for the order.</param>
+        /// <param name="direction">(Optional) Direction.</param>
+        /// <returns>Some result.</returns>
+        public Task<MetadataFieldListResult> ReorderMetadataFieldsAsync(
+                MetadataReorderBy orderBy,
+                MetadataReorderDirection? direction = null)
+        {
+            var url = m_api.ApiUrlMetadataFieldV.Add("order").BuildUrl();
+            var parameters = new MetadataReorderParams { OrderBy = orderBy, Direction = direction };
+            return CallAdminApiAsync<MetadataFieldListResult>(HttpMethod.PUT, url, parameters, null);
+        }
+
+        /// <summary>
+        /// Reorders metadata fields.
+        /// </summary>
+        /// <param name="orderBy">Criteria for the order.</param>
+        /// <param name="direction">(Optional) Direction.</param>
+        /// <returns>Some result.</returns>
+        public MetadataFieldListResult ReorderMetadataFields(
+                MetadataReorderBy orderBy,
+                MetadataReorderDirection? direction = null)
+        {
+            return ReorderMetadataFieldsAsync(orderBy, direction).GetAwaiter().GetResult();
         }
 
         private static Dictionary<string, string> PrepareHeaders()
