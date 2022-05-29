@@ -267,6 +267,42 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         }
 
         [Test, RetryWithDelay]
+        public void TestListResourcesByAssetIds()
+        {
+            var publicId1 = GetUniquePublicId();
+            var publicId2 = GetUniquePublicId();
+            var context = new StringDictionary("key=value", "key2=value2");
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId1,
+                Context = context,
+                Tags = m_apiTag
+            };
+            var uploadResult1 = m_cloudinary.Upload(uploadParams);
+
+            uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId2,
+                Context = context,
+                Tags = m_apiTag
+            };
+            var uploadResult2 = m_cloudinary.Upload(uploadParams);
+
+            var assetIds = new List<string>()
+            {
+                uploadResult1.AssetId,
+                uploadResult2.AssetId
+            };
+            var result = m_cloudinary.ListResourcesByAssetIDs(assetIds, true, true, true);
+
+            Assert.AreEqual(publicId1, result.Resources[0].PublicId);
+            Assert.AreEqual(publicId2, result.Resources[1].PublicId);
+        }
+
+        [Test, RetryWithDelay]
         public void TestListResourcesByTag()
         {
             // should allow listing resources by tag

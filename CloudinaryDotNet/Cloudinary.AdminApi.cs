@@ -305,6 +305,46 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Returns resources with specified asset identifiers asynchronously.
+        /// </summary>
+        /// <param name="assetIds">Asset identifiers.</param>
+        /// <param name="tags">Whether to include tags in result.</param>
+        /// <param name="context">Whether to include context in result.</param>
+        /// <param name="moderations">Whether to include moderation status in result.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of the resources listing.</returns>
+        public Task<ListResourcesResult> ListResourceByAssetIdsAsync(
+            IEnumerable<string> assetIds,
+            bool tags,
+            bool context,
+            bool moderations,
+            CancellationToken? cancellationToken = null)
+        {
+            var listSpecificResourcesParams = new ListSpecificResourcesParams()
+            {
+                AssetIds = new List<string>(assetIds),
+                Tags = tags,
+                Context = context,
+                Moderations = moderations,
+            };
+            return ListResourcesAsync(listSpecificResourcesParams, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets a list of resources with specified asset identifiers.
+        /// </summary>
+        /// <param name="assetIds">Asset identifiers.</param>
+        /// <param name="tags">Whether to include tags in result.</param>
+        /// <param name="context">Whether to include context in result.</param>
+        /// <param name="moderations">Whether to include moderation status in result.</param>
+        /// <returns>Parsed result of the resources listing.</returns>
+        public ListResourcesResult ListResourcesByAssetIDs(IEnumerable<string> assetIds, bool tags, bool context, bool moderations)
+        {
+            return ListResourceByAssetIdsAsync(assetIds, tags, context, moderations, null)
+                .GetAwaiter().GetResult();
+        }
+
+        /// <summary>
         /// Lists resources by moderation status asynchronously.
         /// </summary>
         /// <param name="kind">The moderation kind.</param>
@@ -743,7 +783,7 @@ namespace CloudinaryDotNet
                 cancellationToken);
         }
 
-                /// <summary>
+        /// <summary>
         /// Creates the upload preset.
         /// Upload presets allow you to define the default behavior for your uploads, instead of
         /// receiving these as parameters during the upload request itself. Upload presets have
@@ -1122,7 +1162,7 @@ namespace CloudinaryDotNet
             return GetTransformAsync(parameters, null).GetAwaiter().GetResult();
         }
 
-       /// <summary>
+        /// <summary>
         /// Updates details of an existing resource asynchronously.
         /// </summary>
         /// <param name="publicId">The public ID of the resource to update.</param>
@@ -1902,7 +1942,12 @@ namespace CloudinaryDotNet
 
         private string GetListResourcesUrl(ListResourcesParams parameters)
         {
-            var url = GetResourcesUrl().Add(ApiShared.GetCloudinaryParam(parameters.ResourceType));
+            var url = GetResourcesUrl();
+
+            var prefix = ((parameters as ListSpecificResourcesParams)?.AssetIds.Count > 0) ?
+                "by_asset_ids"
+                : ApiShared.GetCloudinaryParam(parameters.ResourceType);
+            url.Add(prefix);
 
             switch (parameters)
             {
@@ -1929,8 +1974,7 @@ namespace CloudinaryDotNet
                 url.BuildUrl(),
                 parameters.ToParamsDictionary());
 
-            var s = urlBuilder.ToString();
-            return s;
+            return urlBuilder.ToString();
         }
 
         private Task<PublishResourceResult> PublishResourceAsync(
@@ -2059,7 +2103,7 @@ namespace CloudinaryDotNet
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         private Task<T> CallApiAsync<T>(UploadPresetApiParams apiParams, CancellationToken? cancellationToken = null)
             where T : BaseResult, new() =>
-            CallAdminApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy,  cancellationToken);
+            CallAdminApiAsync<T>(apiParams.HttpMethod, apiParams.Url, apiParams.ParamsCopy, cancellationToken);
 
         /// <summary>
         /// Call api with specified parameters.
