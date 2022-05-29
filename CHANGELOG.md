@@ -1,4 +1,27 @@
 
+1.18.0 / 2022-05-29
+===================
+
+New functionality
+-----------------
+
+  * Add support for `ListResourcesByAssetIDs` Admin API
+  * Add support for `GetResourceByAssetId` Admin API
+  * Add support for `ReorderMetadataFields` Admin API
+  * Add support for `ReorderMetadataFieldDatasource` Admin API
+  * Add support for `ClearInvalid` metadata parameter
+  * Add support for disabling b-frames in `VideoCodec` transformation parameter
+  * Add support for `LastLogin` parameter in `ListUsers` Provisioning API
+  * Add support for multiple ACLs in `AuthToken`
+  * Add async versions of the `Metadata` Admin APIs
+
+Other Changes
+-------------
+
+  * Bump dependencies to fix security vulnerabilities
+  * Fix normalization of `StartOffset` and `EndOffset` transformation parameters
+  * Add support for lowercase headers in API responses
+
 1.17.0 / 2022-01-17
 ===================
 
