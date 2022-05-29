@@ -141,7 +141,10 @@ namespace CloudinaryDotNet.Tests.Provisioning.Parameters
                 Pending = true,
                 Prefix = Prefix,
                 UserIds = idList,
-                SubAccountId = TestId
+                SubAccountId = TestId,
+                LastLogin = true,
+                From = new DateTime(2022, 01, 10),
+                To = new DateTime(2022, 02, 13),
             };
             Assert.DoesNotThrow(() => parameters.Check());
 
@@ -150,6 +153,9 @@ namespace CloudinaryDotNet.Tests.Provisioning.Parameters
             Assert.AreEqual(Prefix, dictionary["prefix"]);
             Assert.AreEqual(idList, dictionary["ids"]);
             Assert.AreEqual(TestId, dictionary["sub_account_id"]);
+            Assert.AreEqual("true", dictionary["last_login"]);
+            Assert.AreEqual("2022-01-10T00:00:00", dictionary["from"]);
+            Assert.AreEqual("2022-02-13T00:00:00", dictionary["to"]);
         }
 
         [Test]
