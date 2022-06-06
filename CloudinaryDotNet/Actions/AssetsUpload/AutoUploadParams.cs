@@ -1,9 +1,9 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     /// <summary>
-    /// Parameters of video file uploading.
+    /// Parameters of auto file uploading.
     /// </summary>
-    public class AutoUploadParams : RawUploadParams
+    public class AutoUploadParams : ImageUploadParams
     {
         /// <summary>
         /// Gets get the type of auto asset for upload.
