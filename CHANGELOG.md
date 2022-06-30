@@ -1,4 +1,12 @@
 
+1.19.0 / 2022-06-30
+===================
+
+New functionality
+-----------------
+
+  * Add support for Dynamic Folders parameters in `Explicit` Upload API
+
 1.18.1 / 2022-06-08
 ===================
 
