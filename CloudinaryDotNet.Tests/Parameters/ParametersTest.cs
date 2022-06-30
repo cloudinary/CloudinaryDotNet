@@ -175,7 +175,7 @@ namespace CloudinaryDotNet.Tests.Parameters
         }
 
         [Test]
-        public void TestUploadFolderDecouplingParamsCheck()
+        public void TestUploadDynamicFoldersParamsCheck()
         {
             var parameters = new ImageUploadParams
             {
@@ -195,6 +195,25 @@ namespace CloudinaryDotNet.Tests.Parameters
             Assert.AreEqual("true", dictionary["use_filename_as_display_name"]);
             Assert.AreEqual("asset_folder", dictionary["asset_folder"]);
             Assert.AreEqual("folder", dictionary["folder"]);
+        }
+
+        [Test]
+        public void TestExplicitDynamicFoldersParamsCheck()
+        {
+            var parameters = new ExplicitParams("test_id")
+            {
+                PublicIdPrefix = "fd_public_id_prefix",
+                DisplayName = "test",
+                UseFilenameAsDisplayName = true,
+                AssetFolder = "asset_folder"
+            };
+
+            var dictionary = parameters.ToParamsDictionary();
+
+            Assert.AreEqual("fd_public_id_prefix", dictionary["public_id_prefix"]);
+            Assert.AreEqual("test", dictionary["display_name"]);
+            Assert.AreEqual("true", dictionary["use_filename_as_display_name"]);
+            Assert.AreEqual("asset_folder", dictionary["asset_folder"]);
         }
 
         [Test]

@@ -69,6 +69,12 @@ namespace CloudinaryDotNet.Actions
         public string PublicId { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier that is used to provide context and to improve the SEO of an assets filename in the delivery URL.
+        /// It does not impact the location where the asset is stored.
+        /// </summary>
+        public string PublicIdPrefix { get; set; }
+
+        /// <summary>
         /// Gets or sets an HTTP header or a list of headers lines for returning as response HTTP headers when delivering the
         /// uploaded image to your users. Supported headers: 'Link', 'X-Robots-Tag'.
         /// For example 'X-Robots-Tag: noindex'.
@@ -80,6 +86,24 @@ namespace CloudinaryDotNet.Actions
         /// the asset (if any).
         /// </summary>
         public string Tags { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name that is displayed for the asset in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to automatically assign the filename of the uploaded asset as the asset’s display name in the Media Library.
+        /// Relevant only if <see cref="DisplayName"/> is not passed.
+        /// </summary>
+        public bool? UseFilenameAsDisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the folder where the asset is stored in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        public string AssetFolder { get; set; }
 
         /// <summary>
         /// Gets or sets the coordinates of faces contained in an uploaded image and overrides the automatically detected
@@ -233,6 +257,7 @@ namespace CloudinaryDotNet.Actions
             var dict = base.ToParamsDictionary();
 
             AddParam(dict, "public_id", PublicId);
+            AddParam(dict, "public_id_prefix", PublicIdPrefix);
             AddParam(dict, "tags", Tags);
             AddParam(dict, "type", Type);
             AddParam(dict, "ocr", Ocr);
@@ -248,6 +273,9 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "quality_override", QualityOverride);
             AddParam(dict, "moderation", Moderation);
             AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
+            AddParam(dict, "display_name", DisplayName);
+            AddParam(dict, "use_filename_as_display_name", UseFilenameAsDisplayName);
+            AddParam(dict, "asset_folder", AssetFolder);
 
             if (ResourceType == ResourceType.Image)
             {
