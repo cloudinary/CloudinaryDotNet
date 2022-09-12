@@ -104,6 +104,13 @@
         public string AssetFolder { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether gets or sets whether to automatically apply the path specified
+        /// in the asset_folder parameter (or the folder that's in focus when an asset is uploaded directly
+        /// to a folder in the Media Library) as a prefix to the public_id value.
+        /// </summary>
+        public bool UseAssetFolderAsPublicIdPrefix { get; set; }
+
+        /// <summary>
         /// Gets or sets whether to overwrite existing resources with the same public ID.
         /// </summary>
         public bool? Overwrite { get; set; }
@@ -182,6 +189,7 @@
             AddParam(dict, "proxy", Proxy);
             AddParam(dict, "folder", Folder);
             AddParam(dict, "asset_folder", AssetFolder);
+            AddParam(dict, "use_asset_folder_as_public_id_prefix", UseAssetFolderAsPublicIdPrefix);
             AddParam(dict, "raw_convert", RawConvert);
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "async", Async);

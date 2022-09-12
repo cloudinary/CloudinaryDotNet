@@ -58,6 +58,7 @@
             NotificationUrl = preset.Settings.NotificationUrl;
             Proxy = preset.Settings.Proxy;
             Folder = preset.Settings.Folder;
+            UseAssetFolderAsPublicIdPrefix = preset.Settings.UseAssetFolderAsPublicIdPrefix;
             Overwrite = preset.Settings.Overwrite;
             RawConvert = preset.Settings.RawConvert;
 
@@ -237,6 +238,25 @@
         /// Gets or sets base Folder to use when building the Cloudinary public_id.
         /// </summary>
         public string Folder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the folder where the asset is stored in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        public string AssetFolder { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to automatically assign the filename of the uploaded asset as the asset’s display name in the Media Library.
+        /// Relevant only if DisplayName is not passed.
+        /// </summary>
+        public bool? UseFilenameAsDisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets whether to automatically apply the path specified
+        /// in the asset_folder parameter (or the folder that's in focus when an asset is uploaded directly
+        /// to a folder in the Media Library) as a prefix to the public_id value.
+        /// </summary>
+        public bool UseAssetFolderAsPublicIdPrefix { get; set; }
 
         /// <summary>
         /// Gets or sets whether to overwrite existing resources with the same public ID.
@@ -431,6 +451,9 @@
             AddParam(dict, "notification_url", NotificationUrl);
             AddParam(dict, "proxy", Proxy);
             AddParam(dict, "folder", Folder);
+            AddParam(dict, "use_filename_as_display_name", UseFilenameAsDisplayName);
+            AddParam(dict, "asset_folder", AssetFolder);
+            AddParam(dict, "use_asset_folder_as_public_id_prefix", UseAssetFolderAsPublicIdPrefix);
             AddParam(dict, "raw_convert", RawConvert);
             AddParam(dict, "backup", Backup);
             AddParam(dict, "overwrite", Overwrite);

@@ -106,6 +106,13 @@ namespace CloudinaryDotNet.Actions
         public string AssetFolder { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether gets or sets whether to automatically apply the path specified
+        /// in the asset_folder parameter (or the folder that's in focus when an asset is uploaded directly
+        /// to a folder in the Media Library) as a prefix to the public_id value.
+        /// </summary>
+        public bool UseAssetFolderAsPublicIdPrefix { get; set; }
+
+        /// <summary>
         /// Gets or sets the coordinates of faces contained in an uploaded image and overrides the automatically detected
         /// faces.
         /// Use plain string (x,y,w,h|x,y,w,h) or <see cref="Core.Rectangle"/>.
@@ -276,6 +283,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "display_name", DisplayName);
             AddParam(dict, "use_filename_as_display_name", UseFilenameAsDisplayName);
             AddParam(dict, "asset_folder", AssetFolder);
+            AddParam(dict, "use_asset_folder_as_public_id_prefix", UseAssetFolderAsPublicIdPrefix);
 
             if (ResourceType == ResourceType.Image)
             {

@@ -345,6 +345,46 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Returns resources in the specified asset folder asynchronously.
+        /// </summary>
+        /// <param name="assetFolder">Asset Folder.</param>
+        /// <param name="tags">Whether to include tags in result.</param>
+        /// <param name="context">Whether to include context in result.</param>
+        /// <param name="moderations">Whether to include moderation status in result.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of the resources listing.</returns>
+        public Task<ListResourcesResult> ListResourceByAssetFolderAsync(
+            string assetFolder,
+            bool tags,
+            bool context,
+            bool moderations,
+            CancellationToken? cancellationToken = null)
+        {
+            var listResourcesByAssetFolderParamsParams = new ListResourcesByAssetFolderParams()
+            {
+                AssetFolder = assetFolder,
+                Tags = tags,
+                Context = context,
+                Moderations = moderations,
+            };
+            return ListResourcesAsync(listResourcesByAssetFolderParamsParams, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets a list of resources in the specified asset folder.
+        /// </summary>
+        /// <param name="assetFolder">Asset folder.</param>
+        /// <param name="tags">Whether to include tags in result.</param>
+        /// <param name="context">Whether to include context in result.</param>
+        /// <param name="moderations">Whether to include moderation status in result.</param>
+        /// <returns>Parsed result of the resources listing.</returns>
+        public ListResourcesResult ListResourcesByAssetFolder(string assetFolder, bool tags = false, bool context = false, bool moderations = false)
+        {
+            return ListResourceByAssetFolderAsync(assetFolder, tags, context, moderations, null)
+                .GetAwaiter().GetResult();
+        }
+
+        /// <summary>
         /// Lists resources by moderation status asynchronously.
         /// </summary>
         /// <param name="kind">The moderation kind.</param>
@@ -1976,9 +2016,18 @@ namespace CloudinaryDotNet
         {
             var url = GetResourcesUrl();
 
-            var prefix = ((parameters as ListSpecificResourcesParams)?.AssetIds.Count > 0) ?
-                "by_asset_ids"
-                : ApiShared.GetCloudinaryParam(parameters.ResourceType);
+            // FIXME: refactor this
+            var prefix = ApiShared.GetCloudinaryParam(parameters.ResourceType);
+
+            if ((parameters as ListSpecificResourcesParams)?.AssetIds.Count > 0)
+            {
+                prefix = "by_asset_ids";
+            }
+            else if (!string.IsNullOrEmpty((parameters as ListResourcesByAssetFolderParams)?.AssetFolder))
+            {
+                prefix = "by_asset_folder";
+            }
+
             url.Add(prefix);
 
             switch (parameters)
