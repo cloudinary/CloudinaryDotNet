@@ -268,7 +268,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.AreEqual(ModerationStatus.Approved, updateResult.Moderation[0].Status);
         }
 
-        [Test, RetryWithDelay]
+        [Test, IgnoreFeature("dynamic_folders"), RetryWithDelay]
         public void TestUpdateDynamicFolderAttributes()
         {
             //should update quality

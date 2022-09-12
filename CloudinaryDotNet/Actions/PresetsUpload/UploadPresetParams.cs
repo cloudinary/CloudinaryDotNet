@@ -256,7 +256,7 @@
         /// in the asset_folder parameter (or the folder that's in focus when an asset is uploaded directly
         /// to a folder in the Media Library) as a prefix to the public_id value.
         /// </summary>
-        public bool UseAssetFolderAsPublicIdPrefix { get; set; }
+        public bool? UseAssetFolderAsPublicIdPrefix { get; set; }
 
         /// <summary>
         /// Gets or sets whether to overwrite existing resources with the same public ID.

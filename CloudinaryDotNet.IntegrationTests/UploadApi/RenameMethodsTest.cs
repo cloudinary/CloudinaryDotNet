@@ -118,7 +118,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.IsNull(renameResult.MetadataFields);
         }
 
-        [Test]
+        [Test, IgnoreFeature("dynamic_folders")]
         public async Task TestRenameWithDynamicFolderAttributesInResult()
         {
             var publicId = GetUniquePublicId();

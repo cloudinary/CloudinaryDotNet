@@ -110,7 +110,7 @@ namespace CloudinaryDotNet.Actions
         /// in the asset_folder parameter (or the folder that's in focus when an asset is uploaded directly
         /// to a folder in the Media Library) as a prefix to the public_id value.
         /// </summary>
-        public bool UseAssetFolderAsPublicIdPrefix { get; set; }
+        public bool? UseAssetFolderAsPublicIdPrefix { get; set; }
 
         /// <summary>
         /// Gets or sets the coordinates of faces contained in an uploaded image and overrides the automatically detected

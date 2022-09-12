@@ -339,7 +339,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.AreEqual(publicId2, result.Resources[1].PublicId);
         }
 
-        [Test, RetryWithDelay]
+        [Test, IgnoreFeature("dynamic_folders"), RetryWithDelay]
         public void TestListResourcesByAssetFolder()
         {
             var publicId1 = GetUniquePublicId();
