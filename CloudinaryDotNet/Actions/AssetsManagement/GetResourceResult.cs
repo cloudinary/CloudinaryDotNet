@@ -261,6 +261,18 @@
         public string AssetId { get; set; }
 
         /// <summary>
+        /// Gets or sets asset folder.
+        /// </summary>
+        [DataMember(Name = "asset_folder")]
+        public string AssetFolder { get; set; }
+
+        /// <summary>
+        /// Gets or sets asset display name.
+        /// </summary>
+        [DataMember(Name = "display_name")]
+        public string DisplayName { get; set; }
+
+        /// <summary>
         /// Gets or sets list of asset versions.
         /// </summary>
         [DataMember(Name = "versions")]

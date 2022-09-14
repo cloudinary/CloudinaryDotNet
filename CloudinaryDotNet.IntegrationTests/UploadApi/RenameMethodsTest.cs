@@ -118,6 +118,21 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.IsNull(renameResult.MetadataFields);
         }
 
+        [Test, IgnoreFeature("dynamic_folders")]
+        public async Task TestRenameWithDynamicFolderAttributesInResult()
+        {
+            var publicId = GetUniquePublicId();
+            var newPublicId = GetUniquePublicId();
+
+            await UploadImage(publicId);
+
+            var @params = new RenameParams(publicId, newPublicId);
+            var renameResult =  m_cloudinary.Rename(@params);
+
+            Assert.NotNull(renameResult.AssetFolder);
+            Assert.NotNull(renameResult.DisplayName);
+        }
+
         private async Task UploadImage(string publicId, bool withMetadata = false)
         {
             if (withMetadata)

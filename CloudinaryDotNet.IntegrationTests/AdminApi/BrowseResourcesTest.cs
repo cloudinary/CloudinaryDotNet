@@ -339,6 +339,42 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.AreEqual(publicId2, result.Resources[1].PublicId);
         }
 
+        [Test, IgnoreFeature("dynamic_folders"), RetryWithDelay]
+        public void TestListResourcesByAssetFolder()
+        {
+            var publicId1 = GetUniquePublicId();
+            var publicId2 = GetUniquePublicId();
+
+            var assetFolder = GetUniqueFolder();
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId1,
+                AssetFolder = assetFolder,
+                Tags = m_apiTag
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                PublicId = publicId2,
+                AssetFolder = assetFolder,
+                Tags = m_apiTag
+            };
+
+            m_cloudinary.Upload(uploadParams);
+
+            var result = m_cloudinary.ListResourcesByAssetFolder(assetFolder);
+
+            Assert.AreEqual(2, result.Resources.Length);
+
+            Assert.AreEqual(publicId1, result.Resources[1].PublicId);
+            Assert.AreEqual(publicId2, result.Resources[0].PublicId);
+        }
+
         [Test, RetryWithDelay]
         public void TestListResourcesByTag()
         {

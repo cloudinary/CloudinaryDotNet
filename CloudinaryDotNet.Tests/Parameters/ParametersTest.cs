@@ -184,6 +184,7 @@ namespace CloudinaryDotNet.Tests.Parameters
                 DisplayName = "test",
                 UseFilenameAsDisplayName = true,
                 AssetFolder = "asset_folder",
+                UseAssetFolderAsPublicIdPrefix = true,
                 Folder = "folder"
             };
 
@@ -194,6 +195,7 @@ namespace CloudinaryDotNet.Tests.Parameters
             Assert.AreEqual("test", dictionary["display_name"]);
             Assert.AreEqual("true", dictionary["use_filename_as_display_name"]);
             Assert.AreEqual("asset_folder", dictionary["asset_folder"]);
+            Assert.AreEqual("true", dictionary["use_asset_folder_as_public_id_prefix"]);
             Assert.AreEqual("folder", dictionary["folder"]);
         }
 
@@ -205,7 +207,8 @@ namespace CloudinaryDotNet.Tests.Parameters
                 PublicIdPrefix = "fd_public_id_prefix",
                 DisplayName = "test",
                 UseFilenameAsDisplayName = true,
-                AssetFolder = "asset_folder"
+                AssetFolder = "asset_folder",
+                UseAssetFolderAsPublicIdPrefix = true,
             };
 
             var dictionary = parameters.ToParamsDictionary();
@@ -214,6 +217,7 @@ namespace CloudinaryDotNet.Tests.Parameters
             Assert.AreEqual("test", dictionary["display_name"]);
             Assert.AreEqual("true", dictionary["use_filename_as_display_name"]);
             Assert.AreEqual("asset_folder", dictionary["asset_folder"]);
+            Assert.AreEqual("true", dictionary["use_asset_folder_as_public_id_prefix"]);
         }
 
         [Test]

@@ -18,6 +18,12 @@
         protected string m_resourceType;
 
         /// <summary>
+        /// Gets or sets the ID of uploaded asset.
+        /// </summary>
+        [DataMember(Name = "asset_id")]
+        public string AssetId { get; set; }
+
+        /// <summary>
         /// Gets or sets the public id of the asset.
         /// </summary>
         [DataMember(Name = "public_id")]
@@ -28,6 +34,20 @@
         /// </summary>
         [DataMember(Name = "folder")]
         public string Folder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the folder where the asset is stored in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        [DataMember(Name = "asset_folder")]
+        public string AssetFolder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name that is displayed for the asset in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        [DataMember(Name = "display_name")]
+        public string DisplayName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the resource file.

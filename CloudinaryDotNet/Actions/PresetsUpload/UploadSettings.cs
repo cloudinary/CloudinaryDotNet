@@ -67,6 +67,21 @@
         public bool DiscardOriginalFilename { get; set; }
 
         /// <summary>
+        /// Gets or sets the folder where the asset is stored in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        [DataMember(Name = "asset_folder")]
+        public string AssetFolder { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets whether to automatically apply the path specified
+        /// in the asset_folder parameter (or the folder that's in focus when an asset is uploaded directly
+        /// to a folder in the Media Library) as a prefix to the public_id value.
+        /// </summary>
+        [DataMember(Name = "use_asset_folder_as_public_id_prefix", EmitDefaultValue = false)]
+        public bool? UseAssetFolderAsPublicIdPrefix { get; set; }
+
+        /// <summary>
         /// Gets or sets an HTTP URL to send notification to (a webhook) when the upload is completed.
         /// </summary>
         [DataMember(Name = "notification_url")]

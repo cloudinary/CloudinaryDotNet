@@ -893,8 +893,11 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             {
                 File = new FileDescription(m_testImagePath),
                 CustomCoordinates = coordinates,
-                Tags = m_apiTag
+                Tags = m_apiTag,
+                DisplayName = GetUniquePublicId()
             });
+
+            Assert.IsNotEmpty(upResult.DisplayName);
 
             var result = m_cloudinary.GetResource(new GetResourceParams(upResult.PublicId)
             {
@@ -909,6 +912,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             Assert.NotNull(result.NextCursor, result.Error?.Message);
             Assert.NotZero(result.Tags.Length);
+            Assert.IsNotEmpty(result.DisplayName);
         }
 
         [Test, RetryWithDelay]

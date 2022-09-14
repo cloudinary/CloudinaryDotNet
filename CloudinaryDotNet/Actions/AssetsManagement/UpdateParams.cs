@@ -28,6 +28,25 @@
         public string PublicId { get; set; }
 
         /// <summary>
+        /// Gets or sets the folder where the asset is stored in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        public string AssetFolder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name that is displayed for the asset in the Media Library.
+        /// This value does not impact the asset’s Public ID.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to make sure that display name is unique.
+        /// When set to false, should not add random characters at the end of the display name to guarantee its uniqueness.
+        /// Only relevant if <see cref="DisplayName"/> or <see cref="AssetFolder"/> are provided.
+        /// </summary>
+        public bool UniqueDisplayName { get; set; }
+
+        /// <summary>
         /// Gets or sets the type of file. Possible values: image, raw, video. Default: image.
         /// </summary>
         public ResourceType ResourceType { get; set; }
@@ -172,6 +191,9 @@
             SortedDictionary<string, object> dict = base.ToParamsDictionary();
 
             AddParam(dict, "public_id", PublicId);
+            AddParam(dict, "asset_folder", AssetFolder);
+            AddParam(dict, "display_name", DisplayName);
+            AddParam(dict, "unique_display_name", UniqueDisplayName);
             AddParam(dict, "tags", Tags);
             AddParam(dict, "type", Type);
             AddParam(dict, "categorization", Categorization);
