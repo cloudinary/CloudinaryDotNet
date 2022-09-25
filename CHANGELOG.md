@@ -1,4 +1,12 @@
 
+1.20.0 / 2022-09-25
+===================
+
+New functionality
+-----------------
+
+  * Add support for `ListResourcesByAssetFolder` Admin API
+
 1.19.0 / 2022-06-30
 ===================
 
