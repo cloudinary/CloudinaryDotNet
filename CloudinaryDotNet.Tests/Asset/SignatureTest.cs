@@ -223,6 +223,73 @@ namespace CloudinaryDotNet.Tests.Asset
         }
 
         [Test]
+        public void TestSignedAnsiAndUnicodeUrl()
+        {
+            var expected = "https://res.cloudinary.com/testcloud/image/authenticated/s--MIMNFCL4--/c_scale,h_200,w_300/v1/testFolder/%2520Test%20Image_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg";
+            var source = "testFolder/%20Test Image_僅測試.jpg";
+            var actual = m_api.UrlImgUp.Action("authenticated")
+                .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                .Secure(true)
+                .Signed(true)
+                .BuildUrl(source);
+            Assert.AreEqual(expected, actual);
+
+            expected = "https://res.cloudinary.com/testcloud/image/authenticated/s--FvJh0bXb--/c_scale,h_200,w_300/v1/testFolder/TestImage_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg";
+            source = "testFolder/TestImage_僅測試.jpg";
+            actual = m_api.UrlImgUp.Action("authenticated")
+                .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                .Secure(true)
+                .Signed(true)
+                .BuildUrl(source);
+            Assert.AreEqual(expected, actual);
+
+            expected = "https://res.cloudinary.com/testcloud/image/authenticated/s--_jfm-XyC--/c_scale,h_200,w_300/v1/testFolder/Test%20Image_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg";
+            source = "testFolder/Test Image_僅測試.jpg";
+            actual = m_api.UrlImgUp.Action("authenticated")
+                .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                .Secure(true)
+                .Signed(true)
+                .BuildUrl(source);
+            Assert.AreEqual(expected, actual);
+
+            expected = "https://res.cloudinary.com/testcloud/image/authenticated/s--rmmMhYpj--/c_scale,h_200,w_300/v1/testFolder/Test%20Image.jpg";
+            source = "testFolder/Test Image.jpg";
+            actual = m_api.UrlImgUp.Action("authenticated")
+                .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                .Secure(true)
+                .Signed(true)
+                .BuildUrl(source);
+            Assert.AreEqual(expected, actual);
+
+            expected = "https://res.cloudinary.com/testcloud/image/authenticated/s--lzoFcAJk--/c_scale,h_200,w_300/v1/testFolder/TestImage.jpg";
+            source = "testFolder/TestImage.jpg";
+            actual = m_api.UrlImgUp.Action("authenticated")
+                .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                .Secure(true)
+                .Signed(true)
+                .BuildUrl(source);
+            Assert.AreEqual(expected, actual);
+
+            expected = "https://res.cloudinary.com/testcloud/image/authenticated/s--AlS6-LgU--/c_scale,h_200,w_300/v1/testFolder/%2520Test%20Image.jpg";
+            source = "testFolder/%20Test Image.jpg";
+            actual = m_api.UrlImgUp.Action("authenticated")
+                .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                .Secure(true)
+                .Signed(true)
+                .BuildUrl(source);
+            Assert.AreEqual(expected, actual);
+
+            expected = "https://res.cloudinary.com/testcloud/image/authenticated/s--8xAbqJri--/c_scale,h_200,w_300/v1/testFolder/%2520TestImage.jpg";
+            source = "testFolder/%20TestImage.jpg";
+            actual = m_api.UrlImgUp.Action("authenticated")
+                .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                .Secure(true)
+                .Signed(true)
+                .BuildUrl(source);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void TestSignedUrlSha256()
         {
             var api = new Api("cloudinary://a:b@test123");

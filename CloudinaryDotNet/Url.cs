@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Text;
+    using System.Text.Encodings.Web;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -851,7 +852,21 @@
 
             string transformationStr = Transformation.Generate();
 
-            var src = UpdateSource(source);
+            var sourceEncodedUrl = source;
+            var src = UpdateSource(sourceEncodedUrl);
+
+            if (m_signed)
+            {
+                // Signature calculation to be in line with backend logic for mixed Ansii and Unicode publicID + authenticated
+                var tmpSource = Regex.Replace(source, @"[^\u0000-\u007F]+", string.Empty);
+
+                if ((tmpSource != source) || tmpSource.Contains("%"))
+                {
+                    sourceEncodedUrl = UrlEncoder.Default.Encode(source);
+                    src = UpdateSource(sourceEncodedUrl);
+                    src.SourceToSign = System.Uri.UnescapeDataString(source);
+                }
+            }
 
             bool sharedDomain;
             var prefix = GetPrefix(src.Source, out sharedDomain);
