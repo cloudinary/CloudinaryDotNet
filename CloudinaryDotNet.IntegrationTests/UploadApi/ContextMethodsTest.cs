@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 
@@ -112,6 +113,30 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             });
 
             Assert.True(contextResult.PublicIds.Length > 0, contextResult.Error?.Message);
+        }
+
+        [Test, RetryWithDelay]
+        public void TestVideoContextOnUpload()
+        {
+            var publicId = GetUniquePublicId();
+
+            var uploadParams = new VideoUploadParams
+            {
+                File = new FileDescription(m_testVideoPath),
+                PublicId = publicId,
+                Overwrite = true,
+                Type = STORAGE_TYPE_UPLOAD,
+                Tags = m_apiTag,
+                Context = new StringDictionary("key=value", "key2=value2"),
+            };
+
+            var res = m_cloudinary.Upload(uploadParams);
+
+            Assert.IsNotNull(res);
+
+            Assert.AreEqual("value", res.Context["custom"]?["key"]?.ToString(), res.Error?.Message);
+            Assert.AreEqual("value2", res.Context["custom"]?["key2"]?.ToString(), res.Error?.Message);
+
         }
     }
 }

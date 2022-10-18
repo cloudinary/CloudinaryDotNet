@@ -1,7 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Parsed response after upload of the video resource.
@@ -67,7 +67,7 @@
         /// Gets or sets a key-value pairs of context associated with the resource.
         /// </summary>
         [DataMember(Name = "context")]
-        public Dictionary<string, string> Context { get; set; }
+        public JToken Context { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether source video has audio.
