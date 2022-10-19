@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Text;
+    using System.Text.Encodings.Web;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -1197,13 +1198,19 @@
         {
             CSource src = null;
 
+            var tmpSource = Regex.Replace(source, @"[^\u0000-\u007F]+", string.Empty);
+
+            bool isSignedAndUnicode = (m_signed && ((tmpSource != source) || tmpSource.Contains("%"))) ? true : false;
+
             if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*"))
             {
                 src = new CSource(Encode(source));
             }
             else
             {
-                src = new CSource(Encode(Decode(source)));
+                var targetSource = isSignedAndUnicode ? UrlEncoder.Default.Encode(source) : source;
+
+                src = new CSource(Encode(Decode(targetSource)));
 
                 if (!string.IsNullOrEmpty(m_suffix))
                 {
@@ -1218,6 +1225,12 @@
                 if (!string.IsNullOrEmpty(FormatValue))
                 {
                     src += "." + FormatValue;
+                }
+
+                if (isSignedAndUnicode)
+                {
+                    // Signature calculation to be in line with backend logic for mixed Ansii and Unicode publicID + authenticated
+                    src.SourceToSign = System.Uri.UnescapeDataString(source);
                 }
             }
 
