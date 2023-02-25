@@ -241,5 +241,11 @@
         /// </summary>
         [DataMember(Name = "uploaded_by")]
         public IdentityInfo UploadedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the details of the asset last updated time.
+        /// </summary>
+        [DataMember(Name = "last_updated")]
+        public LastUpdated LastUpdated { get; set; }
     }
 }
