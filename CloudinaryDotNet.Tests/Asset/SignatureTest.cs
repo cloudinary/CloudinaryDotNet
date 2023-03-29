@@ -223,6 +223,42 @@ namespace CloudinaryDotNet.Tests.Asset
         }
 
         [Test]
+        public void TestSignedAnsiAndUnicodeUrl()
+        {
+
+            string[] sourcePublicIds = {
+                "testFolder/%20Test Image_僅測試.jpg",
+                "testFolder/TestImage_僅測試.jpg",
+                "testFolder/Test Image_僅測試.jpg",
+                "testFolder/Test Image.jpg",
+                "testFolder/TestImage.jpg",
+                "testFolder/%20Test Image.jpg",
+                "testFolder/%20TestImage.jpg"
+            };
+
+            string[] expectedSignedUrls = {
+                "https://res.cloudinary.com/testcloud/image/authenticated/s--MIMNFCL4--/c_scale,h_200,w_300/v1/testFolder/%2520Test%20Image_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg",
+                "https://res.cloudinary.com/testcloud/image/authenticated/s--FvJh0bXb--/c_scale,h_200,w_300/v1/testFolder/TestImage_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg",
+                "https://res.cloudinary.com/testcloud/image/authenticated/s--_jfm-XyC--/c_scale,h_200,w_300/v1/testFolder/Test%20Image_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg",
+                "https://res.cloudinary.com/testcloud/image/authenticated/s--rmmMhYpj--/c_scale,h_200,w_300/v1/testFolder/Test%20Image.jpg",
+                "https://res.cloudinary.com/testcloud/image/authenticated/s--lzoFcAJk--/c_scale,h_200,w_300/v1/testFolder/TestImage.jpg",
+                "https://res.cloudinary.com/testcloud/image/authenticated/s--AlS6-LgU--/c_scale,h_200,w_300/v1/testFolder/%2520Test%20Image.jpg",
+                "https://res.cloudinary.com/testcloud/image/authenticated/s--8xAbqJri--/c_scale,h_200,w_300/v1/testFolder/%2520TestImage.jpg"
+            };
+
+            for (int x = 0; x < sourcePublicIds.Length; x++)
+            {
+                var actual = m_api.UrlImgUp.Action("authenticated")
+                    .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                    .Secure(true)
+                    .Signed(true)
+                    .BuildUrl(sourcePublicIds[x]);
+
+                Assert.AreEqual(expectedSignedUrls[x], actual);
+            }
+        }
+
+        [Test]
         public void TestSignedUrlSha256()
         {
             var api = new Api("cloudinary://a:b@test123");

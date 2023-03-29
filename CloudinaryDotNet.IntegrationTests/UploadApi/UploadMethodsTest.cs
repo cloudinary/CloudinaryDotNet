@@ -496,6 +496,34 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         }
 
         [Test, RetryWithDelay]
+        public void TestUploadAnsiAndUnicode()
+        {
+            // should allow get resource details
+            var publicId = "%20Test Image_僅測試";
+            ImageUploadParams uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(m_testImagePath),
+                EagerTransforms = new List<Transformation>() { m_simpleTransformation },
+                PublicId = publicId,
+                Type = "authenticated",
+                Overwrite = true,
+                UseFilename = true,
+                UniqueFilename = false,
+                Format = "jpg",
+                Tags = m_apiTag
+            };
+
+            var uploadresponse = m_cloudinary.Upload(uploadParams);
+
+            var expectedUrl = uploadresponse.SecureUrl.OriginalString;
+
+            var computedUrl = m_cloudinary.Api.UrlImgUp.Action("authenticated").Version(uploadresponse.Version).Secure(true).Signed(true).BuildUrl(publicId + ".jpg");
+
+            Assert.AreEqual(expectedUrl, computedUrl);
+
+        }
+
+        [Test, RetryWithDelay]
         public void TestUploadStream()
         {
             byte[] bytes = File.ReadAllBytes(m_testImagePath);
