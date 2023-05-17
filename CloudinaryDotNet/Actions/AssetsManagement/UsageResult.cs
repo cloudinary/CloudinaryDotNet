@@ -129,5 +129,11 @@
         /// </summary>
         [DataMember(Name = "media_limits")]
         public Dictionary<string, long> MediaLimits { get; set; }
+
+        /// <summary>
+        /// Gets or sets information about the background removal usage in your account.
+        /// </summary>
+        [DataMember(Name = "background_removal")]
+        public Usage BackgroundRemoval { get; set; }
     }
 }
