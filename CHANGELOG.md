@@ -1,4 +1,19 @@
 
+1.21.0 / 2023-05-30
+=============
+
+New functionality
+-----------------
+
+  * Add support for `BackgroundRemoval` in `GetUsage` Admin API
+  * Add support for `LastUpdated` field in `GetResourceResult`
+
+Other Changes
+-------------
+
+  * Fix support for unicode public_ids in URLs
+  * Fix `Context` in `VideoUploadResult`
+
 1.20.0 / 2022-09-25
 ===================
 
