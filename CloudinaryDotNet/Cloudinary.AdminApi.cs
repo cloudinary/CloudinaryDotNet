@@ -1253,6 +1253,122 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Relates a resource to other resources by public IDs asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to relate resource to other resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public Task<AddRelatedResourcesResult> AddRelatedResourcesAsync(
+            AddRelatedResourcesParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            var url = GetApiUrlV().
+                ResourceType("resources").
+                Add("related_assets").
+                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
+                Add(parameters.Type).Add(parameters.PublicId).
+                BuildUrl();
+
+            return CallAdminApiJsonAsync<AddRelatedResourcesResult>(HttpMethod.POST, url, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Relates a resource to other resources by public IDs.
+        /// </summary>
+        /// <param name="parameters">Parameters to relate resource to other resources.</param>
+        /// <returns>Parsed response of the detailed resource information.</returns>
+        public AddRelatedResourcesResult AddRelatedResources(AddRelatedResourcesParams parameters)
+        {
+            return AddRelatedResourcesAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Relates a resource to other resources by asset IDs asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to relate resource to other resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public Task<AddRelatedResourcesResult> AddRelatedResourcesByAssetIdsAsync(
+            AddRelatedResourcesByAssetIdsParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            var url = GetApiUrlV().
+                ResourceType("resources").
+                Add("related_assets").Add(parameters.AssetId).
+                BuildUrl();
+
+            return CallAdminApiJsonAsync<AddRelatedResourcesResult>(HttpMethod.POST, url, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Relates a resource to other resources by asset IDs.
+        /// </summary>
+        /// <param name="parameters">Parameters to relate resource to other resources.</param>
+        /// <returns>Parsed response of the detailed resource information.</returns>
+        public AddRelatedResourcesResult AddRelatedResourcesByAssetIds(AddRelatedResourcesByAssetIdsParams parameters)
+        {
+            return AddRelatedResourcesByAssetIdsAsync(parameters).GetAwaiter().GetResult();
+        }
+
+         /// <summary>
+        /// Unrelates a resource from other resources by public IDs asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to unrelate resource from other resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public Task<DeleteRelatedResourcesResult> DeleteRelatedResourcesAsync(
+            DeleteRelatedResourcesParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            var url = GetApiUrlV().
+                ResourceType("resources").
+                Add("related_assets").
+                Add(ApiShared.GetCloudinaryParam(parameters.ResourceType)).
+                Add(parameters.Type).Add(parameters.PublicId).
+                BuildUrl();
+
+            return CallAdminApiJsonAsync<DeleteRelatedResourcesResult>(HttpMethod.DELETE, url, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Unrelates a resource from other resources by public IDs.
+        /// </summary>
+        /// <param name="parameters">Parameters to unrelate resource from other resources.</param>
+        /// <returns>Parsed response of the detailed resource information.</returns>
+        public DeleteRelatedResourcesResult DeleteRelatedResources(DeleteRelatedResourcesParams parameters)
+        {
+            return DeleteRelatedResourcesAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Unrelates a resource from other resources by asset IDs asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to relate resource to other resources.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        public Task<DeleteRelatedResourcesResult> DeleteRelatedResourcesByAssetIdsAsync(
+            DeleteRelatedResourcesByAssetIdsParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            var url = GetApiUrlV().
+                ResourceType("resources").
+                Add("related_assets").Add(parameters.AssetId).
+                BuildUrl();
+
+            return CallAdminApiJsonAsync<DeleteRelatedResourcesResult>(HttpMethod.DELETE, url, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Unrelates a resource from other resources by asset IDs.
+        /// </summary>
+        /// <param name="parameters">Parameters to relate resource to other resources.</param>
+        /// <returns>Parsed response of the detailed resource information.</returns>
+        public DeleteRelatedResourcesResult DeleteRelatedResourcesByAssetIds(DeleteRelatedResourcesByAssetIdsParams parameters)
+        {
+            return DeleteRelatedResourcesByAssetIdsAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
         /// Gets details of a single resource as well as all its derived resources by its public ID asynchronously.
         /// </summary>
         /// <param name="assetId">The asset ID of the resource.</param>
@@ -2128,6 +2244,29 @@ namespace CloudinaryDotNet
                             null,
                             extraHeaders,
                             cancellationToken);
+        }
+
+        private Task<T> CallAdminApiJsonAsync<T>(
+            HttpMethod httpMethod,
+            string url,
+            BaseParams parameters,
+            CancellationToken? cancellationToken,
+            Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
+        {
+            if (extraHeaders == null)
+            {
+                extraHeaders = new Dictionary<string, string>();
+            }
+
+            extraHeaders[Constants.HEADER_CONTENT_TYPE] = Constants.CONTENT_TYPE_APPLICATION_JSON;
+
+            return CallAdminApiAsync<T>(
+                httpMethod,
+                url,
+                parameters,
+                cancellationToken,
+                extraHeaders);
         }
 
         private string GetTransformationUrl(HttpMethod httpMethod, BaseParams parameters)

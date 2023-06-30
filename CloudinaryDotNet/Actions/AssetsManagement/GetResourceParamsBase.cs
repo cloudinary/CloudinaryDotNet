@@ -109,7 +109,7 @@ namespace CloudinaryDotNet.Actions
         public string Prefix { get; set; }
 
         /// <summary>
-        ///  Gets or sets when a request has more results to return than max_results,
+        /// Gets or sets when a request has more results to return than max_results,
         /// the next_cursor value is returned as part of the response.
         /// You can then specify this value as the next_cursor parameter of a following request.
         /// </summary>
@@ -161,6 +161,18 @@ namespace CloudinaryDotNet.Actions
         /// Gets or sets a value indicating whether to include asset version information. Default: false.
         /// </summary>
         public bool? Versions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to include related assets information. Default: false.
+        /// </summary>
+        public bool? Related { get; set; }
+
+        /// <summary>
+        /// Gets or sets when a request has more related assets to return,
+        /// the related_next_cursor value is returned as part of the response.
+        /// You can then specify this value as the related_next_cursor parameter of a following request.
+        /// </summary>
+        public string RelatedNextCursor { get; set; }
 
         /// <summary>
         /// Maps object model to dictionary of parameters in cloudinary notation.

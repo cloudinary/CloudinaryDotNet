@@ -73,7 +73,7 @@
             CancellationToken? cancellationToken = null)
             where T : BaseResult, new()
         {
-            var callParams = GetCallParams(method, parameters);
+            var callParams = GetCallParams(parameters);
 
             return CallAndParseAsync<T>(method, url, callParams, file, extraHeaders, cancellationToken);
         }
@@ -91,7 +91,7 @@
         internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
         {
-            var callParams = GetCallParams(method, parameters);
+            var callParams = GetCallParams(parameters);
 
             return CallAndParse<T>(
                 method,
@@ -248,12 +248,25 @@
             }
         }
 
-        private static SortedDictionary<string, object> GetCallParams(HttpMethod method, BaseParams parameters)
+        /// <summary>
+        /// Prepares request Url to be sent on custom call to Cloudinary API.
+        /// </summary>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="url">The existing URL.</param>
+        /// <param name="parameters">Dictionary of call parameters.</param>
+        /// <returns>Prepared HTTP request.</returns>
+        private static string PrepareRequestUrl(
+            HttpMethod method,
+            string url,
+            IDictionary<string, object> parameters)
+        {
+            return ShouldPrepareContent(method, parameters) ? url : new UrlBuilder(url, parameters).ToString();
+        }
+
+        private static SortedDictionary<string, object> GetCallParams(BaseParams parameters)
         {
             parameters?.Check();
-            return (method == HttpMethod.PUT || method == HttpMethod.POST)
-                            ? parameters?.ToParamsDictionary()
-                            : null;
+            return parameters?.ToParamsDictionary();
         }
 
         private static T CreateResult<T>(HttpResponseMessage response, Stream s)
