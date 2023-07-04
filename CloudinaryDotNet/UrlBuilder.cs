@@ -141,6 +141,11 @@
         /// <param name="params">Cloudinary parameters.</param>
         public void SetParameters(IDictionary<string, object> @params)
         {
+            if (@params == null)
+            {
+                return;
+            }
+
             foreach (var param in @params)
             {
                 if (param.Value is IEnumerable<string>)
