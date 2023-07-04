@@ -50,8 +50,8 @@ namespace CloudinaryDotNet.Tests
             Assert.AreEqual(headerValue, result.Limit);
         }
 
-        [TestCase("x-featureratelimit-reset", "10/22/2021 12:10:15 PM")]
-        [TestCase("X-FeatureRateLimit-Reset", "10/22/2021 12:10:15 PM")]
+        [TestCase("x-featureratelimit-reset", "Tue, 04 Jul 2023 19:00:00 GMT")]
+        [TestCase("X-FeatureRateLimit-Reset", "Tue, 04 Jul 2023 19:00:00 GMT")]
         public void TestFeatureRateLimitLimitReset(string headerName, string headerValue)
         {
             var message = new SystemHttp.HttpResponseMessage();
