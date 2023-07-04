@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Moq.Protected;
+using Newtonsoft.Json.Linq;
 
 namespace CloudinaryDotNet.Tests
 {
@@ -54,7 +55,8 @@ namespace CloudinaryDotNet.Tests
         /// </summary>
         /// <param name="httpMethod">Expected HTTP method type.</param>
         /// <param name="localPath">Expected local part of the called Uri.</param>
-        public void AssertHttpCall(System.Net.Http.HttpMethod httpMethod, string localPath)
+        /// <param name="query">Query parameters</param>
+        public void AssertHttpCall(System.Net.Http.HttpMethod httpMethod, string localPath, string query = "")
         {
             HandlerMock.Protected().Verify(
                 "SendAsync",
@@ -62,10 +64,17 @@ namespace CloudinaryDotNet.Tests
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == httpMethod &&
                     req.RequestUri.LocalPath == $"/v1_1/{cloudName}/{localPath}" &&
+                    req.RequestUri.Query == query &&
                     req.Properties.Count == 0
                 ),
                 ItExpr.IsAny<CancellationToken>()
             );
+        }
+
+
+        public JToken RequestJson()
+        {
+            return JToken.Parse(HttpRequestContent);
         }
     }
 }

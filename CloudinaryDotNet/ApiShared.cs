@@ -512,7 +512,7 @@
         {
             using (var request =
                 await PrepareRequestBodyAsync(
-                    requestBuilder(url),
+                    requestBuilder(PrepareRequestUrl(method, url, parameters)),
                     method,
                     parameters,
                     file,
@@ -540,7 +540,7 @@
             FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
-            using (var request = requestBuilder(url))
+            using (var request = requestBuilder(PrepareRequestUrl(method, url, parameters)))
             {
                 PrepareRequestBody(request, method, parameters, file, extraHeaders);
 
