@@ -512,6 +512,31 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Find images based on their visual content asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters for visual search.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of the resources listing.</returns>
+        public Task<VisualSearchResult> VisualSearchAsync(VisualSearchParams parameters, CancellationToken? cancellationToken = null)
+        {
+            var url = GetApiUrlV()
+                .Add("resources")
+                .Add("visual_search")
+                .BuildUrl();
+            return CallAdminApiAsync<VisualSearchResult>(HttpMethod.GET, url, parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Find images based on their visual content.
+        /// </summary>
+        /// <param name="parameters">Parameters for visual search.</param>
+        /// <returns>Parsed result of the resources listing.</returns>
+        public VisualSearchResult VisualSearch(VisualSearchParams parameters)
+        {
+            return VisualSearchAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
         /// Publishes resources by prefix asynchronously.
         /// </summary>
         /// <param name="prefix">The prefix for publishing resources.</param>

@@ -31,7 +31,4 @@
   <ItemGroup>
     <None Remove="AdminApi\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AdminApi\" />
-  </ItemGroup>
 </Project>
