@@ -1,6 +1,6 @@
 ﻿namespace CloudinaryDotNet.Tests
 {
-    public class TestConstants
+    public abstract class TestConstants
     {
         public const string CloudName = "testcloud";
         public const string DefaultApiKey = "1234";
@@ -16,5 +16,6 @@
         public const string TestAssetId2 = "4af5a0d1d4047808528b5425d166c102";
         public const string TestAssetId3 = "4af5a0d1d4047808528b5425d166c103";
         public const string TestTag = "test_tag";
+        public const string TestRemoteImg = "http://cloudinary.com/images/old_logo.png";
     }
 }
