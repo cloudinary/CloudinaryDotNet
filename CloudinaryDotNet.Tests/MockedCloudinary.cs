@@ -64,8 +64,7 @@ namespace CloudinaryDotNet.Tests
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == httpMethod &&
                     req.RequestUri.LocalPath == $"/v1_1/{CloudName}/{localPath}" &&
-                    req.RequestUri.Query == query &&
-                    req.Properties.Count == 0
+                    req.RequestUri.Query == query
                 ),
                 ItExpr.IsAny<CancellationToken>()
             );

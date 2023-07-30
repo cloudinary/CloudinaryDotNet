@@ -24,6 +24,8 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning
 
         protected AccountProvisioning AccountProvisioning;
 
+        protected bool Skipped;
+
         [OneTimeSetUp]
         public void Initialize()
         {
@@ -32,6 +34,7 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning
             if (AccountProvisioning.ProvisioningApi.ProvisioningApiAccount.AccountId == null)
             {
                 Assert.Ignore( "Provisioning API is not configured, skipping tests." );
+                Skipped = true;
             }
 
             // Create a sub account(sub cloud)
@@ -65,6 +68,10 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning
         [OneTimeTearDown]
         public void Cleanup()
         {
+            if (Skipped)
+            {
+                return;
+            }
             AccountProvisioning.DeleteSubAccount(m_cloudId1);
             AccountProvisioning.DeleteSubAccount(m_cloudId2);
             AccountProvisioning.DeleteUser(m_userId1);
