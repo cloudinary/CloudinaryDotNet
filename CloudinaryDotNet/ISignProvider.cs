@@ -21,5 +21,13 @@
         /// <param name="isLong">Indicates whether to generate long signature.</param>
         /// <returns>Generated signature.</returns>
         string SignUriPart(string uriPart, bool isLong);
+
+        /// <summary>
+        /// Generate digital signature for a string.
+        /// </summary>
+        /// <param name="toSign">String to sign.</param>
+        /// <param name="signatureAlgorithm">Signature algorithm.</param>
+        /// <returns>Generated signature.</returns>
+        string SignString(string toSign, SignatureAlgorithm signatureAlgorithm);
     }
 }

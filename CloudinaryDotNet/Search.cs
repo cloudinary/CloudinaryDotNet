@@ -16,6 +16,7 @@
         private List<string> aggregateParam;
         private List<string> withFieldParam;
         private Dictionary<string, object> searchParams;
+        private int urlTtl = 300;
         private ApiShared m_api;
 
         /// <summary>
@@ -121,6 +122,18 @@
         }
 
         /// <summary>
+        /// Sets the time to live of the search URL.
+        /// </summary>
+        /// <param name="ttl">The time to live in seconds.</param>
+        /// <returns>The search provider with TTL defined.</returns>
+        public Search Ttl(int ttl)
+        {
+            this.urlTtl = ttl;
+
+            return this;
+        }
+
+        /// <summary>
         /// Collect all search parameters to a dictionary.
         /// </summary>
         /// <returns>Search parameters as dictionary.</returns>
@@ -174,6 +187,22 @@
                 null,
                 Utils.PrepareJsonHeaders(),
                 cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates a signed Search URL that can be used on the client side.
+        /// </summary>
+        /// <param name="ttl">The time to live in seconds.</param>
+        /// <param name="nextCursor">Starting position.</param>
+        /// <returns>The resulting search URL.</returns>
+        public string ToUrl(int? ttl = null, string nextCursor = null)
+        {
+            if (ttl == null)
+            {
+                ttl = urlTtl;
+            }
+
+            return m_api.Url.BuildSearchUrl(ToQuery(), (int)ttl, nextCursor);
         }
 
         private SortedDictionary<string, object> PrepareSearchParams()

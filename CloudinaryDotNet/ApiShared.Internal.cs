@@ -54,6 +54,28 @@
         }
 
         /// <summary>
+        /// Serialize the cloudinary parameters to JSON.
+        /// </summary>
+        /// <param name="parameters">Parameters to serialize.</param>
+        /// <returns>Serialized parameters as JSON string.</returns>
+        internal static string ParamsToJson(SortedDictionary<string, object> parameters)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            var sb = new StringBuilder();
+            var sw = new StringWriter(sb);
+
+            using (var writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, parameters);
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// Call api asynchronous and return response of specified type asynchronously.
         /// </summary>
         /// <param name="method">HTTP method.</param>
@@ -179,28 +201,6 @@
         protected static string EncodeApiUrl(string value)
         {
             return WebUtility.UrlEncode(value);
-        }
-
-        /// <summary>
-        /// Serialize the cloudinary parameters to JSON.
-        /// </summary>
-        /// <param name="parameters">Parameters to serialize.</param>
-        /// <returns>Serialized parameters as JSON string.</returns>
-        protected static string ParamsToJson(SortedDictionary<string, object> parameters)
-        {
-            var serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            var sb = new StringBuilder();
-            var sw = new StringWriter(sb);
-
-            using (var writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, parameters);
-            }
-
-            return sb.ToString();
         }
 
         /// <summary>
