@@ -13,9 +13,9 @@ namespace CloudinaryDotNet.Tests
     {
         public Mock<HttpMessageHandler> HandlerMock;
         public string HttpRequestContent;
-        private const string cloudName = "test_cloud";
+        private const string CloudName = "test123";
 
-        public MockedCloudinary(string responseStr = "{}", HttpResponseHeaders httpResponseHeaders = null) : base("cloudinary://a:b@test_cloud")
+        public MockedCloudinary(string responseStr = "{}", HttpResponseHeaders httpResponseHeaders = null) : base("cloudinary://key:secret@test123")
         {
             HandlerMock = new Mock<HttpMessageHandler>();
 
@@ -63,7 +63,7 @@ namespace CloudinaryDotNet.Tests
                 Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == httpMethod &&
-                    req.RequestUri.LocalPath == $"/v1_1/{cloudName}/{localPath}" &&
+                    req.RequestUri.LocalPath == $"/v1_1/{CloudName}/{localPath}" &&
                     req.RequestUri.Query == query &&
                     req.Properties.Count == 0
                 ),

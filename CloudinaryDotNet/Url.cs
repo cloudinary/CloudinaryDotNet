@@ -979,6 +979,45 @@
         }
 
         /// <summary>
+        /// Creates a signed Search URL that can be used on the client side.
+        /// </summary>
+        /// <param name="query">The search query.</param>
+        /// <param name="ttl">The time to live in seconds.</param>
+        /// <param name="nextCursor">Starting position.</param>
+        /// <returns>The resulting search URL.</returns>
+        internal string BuildSearchUrl(Dictionary<string, object> query, int ttl, string nextCursor)
+        {
+            var sortedQuery = new SortedDictionary<string, object>(query);
+
+            sortedQuery.TryGetValue("next_cursor", out var queryNextCursor);
+            sortedQuery.Remove("next_cursor");
+            if (nextCursor == null)
+            {
+                nextCursor = queryNextCursor?.ToString();
+            }
+
+            var b64Query = Utils.EncodeUrlSafe(ApiShared.ParamsToJson(sortedQuery));
+
+            var prefix = GetPrefix(string.Empty, out var sharedDomain);
+
+            var urlParts = new List<string>(new[] { prefix });
+            if (sharedDomain)
+            {
+                urlParts.Add(m_cloudName);
+            }
+
+            urlParts.Add("search");
+            urlParts.Add(m_signProvider.SignString($"{ttl}{b64Query}", SignatureAlgorithm.SHA256));
+            urlParts.Add($"{ttl}");
+            urlParts.Add(b64Query);
+            urlParts.Add(nextCursor);
+
+            urlParts.RemoveAll(string.IsNullOrEmpty);
+
+            return string.Join("/", urlParts.ToArray());
+        }
+
+        /// <summary>
         /// Helper method for BuildVideoTag, generates video mime type from sourceType and codecs.
         /// </summary>
         /// <param name="sourceType">The type of the source.</param>

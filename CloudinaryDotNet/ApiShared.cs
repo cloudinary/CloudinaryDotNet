@@ -664,6 +664,18 @@
         }
 
         /// <summary>
+        /// Signs a string.
+        /// </summary>
+        /// <param name="toSign">String to sign.</param>
+        /// <param name="signatureAlgorithm">Signature algorithm.</param>
+        /// <returns>Signature of the string.</returns>
+        public string SignString(string toSign, SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.SHA256)
+        {
+            var extendedToSign = toSign + Account.ApiSecret;
+            return Utils.ComputeHexHash(extendedToSign, signatureAlgorithm);
+        }
+
+        /// <summary>
         /// Validates API response signature against Cloudinary configuration.
         /// </summary>
         /// <param name="publicId">Public ID of resource.</param>
