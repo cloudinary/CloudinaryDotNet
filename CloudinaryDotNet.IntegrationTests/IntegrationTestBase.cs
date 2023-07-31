@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
@@ -397,12 +397,11 @@ namespace CloudinaryDotNet.IntegrationTests
 
         protected bool UrlExists(string url)
         {
-            var request = WebRequest.Create(new Uri(url));
-            request.Method = "HEAD";
-            using (var response = (HttpWebResponse)request.GetResponseAsync().Result)
-            {
-                return response.StatusCode == HttpStatusCode.OK;
-            }
+            var client = new HttpClient();
+
+            var result = client.SendAsync(new HttpRequestMessage(System.Net.Http.HttpMethod.Head, url)).GetAwaiter().GetResult();
+
+            return result.IsSuccessStatusCode;
         }
 
         #region Unique PublicId's
