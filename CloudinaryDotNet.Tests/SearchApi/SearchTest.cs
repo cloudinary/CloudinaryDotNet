@@ -3,15 +3,15 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace CloudinaryDotNet.Tests
+namespace CloudinaryDotNet.Tests.SearchApi
 {
     public class SearchTest
     {
-        private MockedCloudinary cloudinary = new MockedCloudinary();
+        private MockedCloudinary _cloudinary = new MockedCloudinary();
 
-        private Search search;
+        private Search _search;
 
-        private string searchExpression = "resource_type:image AND tags=kitten AND uploaded_at>1d AND bytes>1m";
+        private const string SearchExpression = "resource_type:image AND tags=kitten AND uploaded_at>1d AND bytes>1m";
 
         private const string B64Query = "eyJleHByZXNzaW9uIjoicmVzb3VyY2VfdHlwZTppbWFnZSBBTkQgdGFncz1raXR0ZW4gQU5EIHV" +
                                         "wbG9hZGVkX2F0PjFkIEFORCBieXRlcz4xbSIsIm1heF9yZXN1bHRzIjozMCwic29ydF9ieSI6W3" +
@@ -26,7 +26,7 @@ namespace CloudinaryDotNet.Tests
         [SetUp]
         public void SetUp()
         {
-            cloudinary = new MockedCloudinary
+            _cloudinary = new MockedCloudinary
             {
                 Api =
                 {
@@ -34,8 +34,8 @@ namespace CloudinaryDotNet.Tests
                 }
             };
 
-            search = cloudinary.Search()
-                .Expression(searchExpression)
+            _search = _cloudinary.Search()
+                .Expression(SearchExpression)
                 .SortBy("public_id", "desc")
                 .MaxResults(30);
         }
@@ -44,7 +44,7 @@ namespace CloudinaryDotNet.Tests
         [Test]
         public void TestSearchUrl()
         {
-            Assert.AreEqual($"{SearchUrlPrefix}/{Ttl300Sig}/300/{B64Query}", search.ToUrl());
+            Assert.AreEqual($"{SearchUrlPrefix}/{Ttl300Sig}/300/{B64Query}", _search.ToUrl());
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace CloudinaryDotNet.Tests
         {
             Assert.AreEqual(
             $"{SearchUrlPrefix}/{Ttl300Sig}/300/{B64Query}/{NextCursor}",
-             search.ToUrl(null, NextCursor)
+             _search.ToUrl(null, NextCursor)
              );
         }
 
@@ -61,7 +61,7 @@ namespace CloudinaryDotNet.Tests
         {
             Assert.AreEqual(
                 $"{SearchUrlPrefix}/{Ttl1000Sig}/1000/{B64Query}/{NextCursor}",
-                search.ToUrl(1000, NextCursor)
+                _search.ToUrl(1000, NextCursor)
             );
         }
 
@@ -70,27 +70,26 @@ namespace CloudinaryDotNet.Tests
         {
             Assert.AreEqual(
                 $"{SearchUrlPrefix}/{Ttl1000Sig}/1000/{B64Query}/{NextCursor}",
-                search.Ttl(1000).NextCursor(NextCursor).ToUrl()
+                _search.Ttl(1000).NextCursor(NextCursor).ToUrl()
             );
         }
 
         [Test]
         public void TestSearchUrlPrivateCdn()
         {
-            cloudinary.Api.UsePrivateCdn = true;
+            _cloudinary.Api.UsePrivateCdn = true;
 
             Assert.AreEqual(
                 $"https://test123-res.cloudinary.com/search/{Ttl300Sig}/300/{B64Query}",
-                cloudinary.Search().Expression(searchExpression).SortBy("public_id", "desc")
+                _cloudinary.Search().Expression(SearchExpression).SortBy("public_id", "desc")
                     .MaxResults(30).ToUrl()
             );
         }
 
-
         [Test]
         public void TestShouldNotDuplicateValues()
         {
-            cloudinary
+            _cloudinary
                 .Search()
                 .SortBy("created_at", "asc")
                 .SortBy("created_at", "desc")
@@ -103,7 +102,7 @@ namespace CloudinaryDotNet.Tests
                 .WithField("tags")
                 .Execute();
 
-            AssertCorrectRequest(cloudinary.HttpRequestContent);
+            AssertCorrectRequest(_cloudinary.HttpRequestContent);
         }
 
         private static void AssertCorrectRequest(string request)

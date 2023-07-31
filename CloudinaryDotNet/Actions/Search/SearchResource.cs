@@ -84,8 +84,8 @@
         [Obsolete("Property Created is deprecated, please use CreatedAt instead")]
         public string Created
         {
-            get { return CreatedAt; }
-            set { CreatedAt = value; }
+            get => CreatedAt;
+            set => CreatedAt = value;
         }
 
         /// <summary>
@@ -100,8 +100,8 @@
         [Obsolete("Property Uploaded is deprecated, please use UploadedAt instead")]
         public string Uploaded
         {
-            get { return UploadedAt; }
-            set { UploadedAt = value; }
+            get => UploadedAt;
+            set => UploadedAt = value;
         }
 
         /// <summary>
@@ -116,8 +116,8 @@
         [Obsolete("Property Length is deprecated, please use Bytes instead")]
         public long Length
         {
-            get { return Bytes; }
-            set { Bytes = value; }
+            get => Bytes;
+            set => Bytes = value;
         }
 
         /// <summary>

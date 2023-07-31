@@ -2,39 +2,37 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using CloudinaryDotNet.Actions;
 
     /// <summary>
     /// Advanced search provider. Allows you to retrieve information on all the assets in your account with the help of
     /// query expressions in a Lucene-like query language.
     /// </summary>
-    public class Search
+    /// <typeparam name="T">The type.</typeparam>
+    public abstract class SearchBaseFluent<T>
+        where T : SearchBaseFluent<T>
     {
+        /// <summary>
+        /// The API provider.
+        /// </summary>
+        protected ApiShared api;
+
         private List<Dictionary<string, object>> sortByParam;
         private List<string> aggregateParam;
         private List<string> withFieldParam;
         private Dictionary<string, object> searchParams;
-        private int urlTtl = 300;
-        private ApiShared m_api;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Search"/> class.
+        /// Initializes a new instance of the <see cref="SearchBaseFluent{T}"/> class.
         /// </summary>
         /// <param name="api">Provider of the API calls.</param>
-        public Search(ApiShared api)
+        public SearchBaseFluent(ApiShared api)
         {
-            m_api = api;
+            this.api = api;
             searchParams = new Dictionary<string, object>();
             sortByParam = new List<Dictionary<string, object>>();
             aggregateParam = new List<string>();
             withFieldParam = new List<string>();
         }
-
-        private Url SearchResourcesUrl => m_api?.ApiUrlV?
-            .Add("resources")
-            .Add("search");
 
         /// <summary>
         /// The (Lucene-like) string expression specifying the search query. If this parameter is not provided then all
@@ -42,10 +40,10 @@
         /// </summary>
         /// <param name="value">Search query expression.</param>
         /// <returns>The search provider with search query defined.</returns>
-        public Search Expression(string value)
+        public T Expression(string value)
         {
             searchParams.Add("expression", value);
-            return this;
+            return (T)this;
         }
 
         /// <summary>
@@ -53,10 +51,10 @@
         /// </summary>
         /// <param name="value">Number of results to return.</param>
         /// <returns>The search provider with maximum number of results defined.</returns>
-        public Search MaxResults(int value)
+        public T MaxResults(int value)
         {
             searchParams.Add("max_results", value);
-            return this;
+            return (T)this;
         }
 
         /// <summary>
@@ -64,10 +62,10 @@
         /// </summary>
         /// <param name="value">The value of NextCursor.</param>
         /// <returns>The search provider with next cursor defined.</returns>
-        public Search NextCursor(string value)
+        public T NextCursor(string value)
         {
             searchParams.Add("next_cursor", value);
-            return this;
+            return (T)this;
         }
 
         /// <summary>
@@ -75,10 +73,10 @@
         /// </summary>
         /// <param name="value">The value of Direction.</param>
         /// <returns>The search provider with direction defined.</returns>
-        public Search Direction(string value)
+        public T Direction(string value)
         {
             searchParams.Add("direction", value);
-            return this;
+            return (T)this;
         }
 
         /// <summary>
@@ -87,10 +85,10 @@
         /// </summary>
         /// <param name="field">The name of field.</param>
         /// <returns>The search provider with aggregation field defined.</returns>
-        public Search Aggregate(string field)
+        public T Aggregate(string field)
         {
             aggregateParam.Add(field);
-            return this;
+            return (T)this;
         }
 
         /// <summary>
@@ -99,10 +97,10 @@
         /// </summary>
         /// <param name="field">The name of field.</param>
         /// <returns>The search provider with additional asset attribute defined.</returns>
-        public Search WithField(string field)
+        public T WithField(string field)
         {
             withFieldParam.Add(field);
-            return this;
+            return (T)this;
         }
 
         /// <summary>
@@ -112,25 +110,12 @@
         /// <param name="field">The field to sort by.</param>
         /// <param name="dir">The direction.</param>
         /// <returns>The search provider with sort parameter defined.</returns>
-        public Search SortBy(string field, string dir)
+        public T SortBy(string field, string dir)
         {
-            Dictionary<string, object> sortBucket = new Dictionary<string, object>();
-            sortBucket.Add(field, dir);
+            var sortBucket = new Dictionary<string, object> { { field, dir } };
             sortByParam.Add(sortBucket);
 
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the time to live of the search URL.
-        /// </summary>
-        /// <param name="ttl">The time to live in seconds.</param>
-        /// <returns>The search provider with TTL defined.</returns>
-        public Search Ttl(int ttl)
-        {
-            this.urlTtl = ttl;
-
-            return this;
+            return (T)this;
         }
 
         /// <summary>
@@ -160,56 +145,16 @@
         }
 
         /// <summary>
-        /// Execute search request.
+        /// Prepares search params.
         /// </summary>
-        /// <returns>Search response with information about the assets matching the search criteria.</returns>
-        public SearchResult Execute()
+        /// <returns>Updated search params.</returns>
+        protected SortedDictionary<string, object> PrepareSearchParams()
         {
-            return m_api.CallAndParse<SearchResult>(
-                HttpMethod.POST,
-                SearchResourcesUrl.BuildUrl(),
-                PrepareSearchParams(),
-                null,
-                Utils.PrepareJsonHeaders());
-        }
-
-        /// <summary>
-        /// Execute search request asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
-        /// <returns>Search response with information about the assets matching the search criteria.</returns>
-        public Task<SearchResult> ExecuteAsync(CancellationToken? cancellationToken = null)
-        {
-            return m_api.CallAndParseAsync<SearchResult>(
-                HttpMethod.POST,
-                SearchResourcesUrl.BuildUrl(),
-                PrepareSearchParams(),
-                null,
-                Utils.PrepareJsonHeaders(),
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// Creates a signed Search URL that can be used on the client side.
-        /// </summary>
-        /// <param name="ttl">The time to live in seconds.</param>
-        /// <param name="nextCursor">Starting position.</param>
-        /// <returns>The resulting search URL.</returns>
-        public string ToUrl(int? ttl = null, string nextCursor = null)
-        {
-            if (ttl == null)
+            var sParams = new SortedDictionary<string, object>(ToQuery())
             {
-                ttl = urlTtl;
-            }
-
-            return m_api.Url.BuildSearchUrl(ToQuery(), (int)ttl, nextCursor);
-        }
-
-        private SortedDictionary<string, object> PrepareSearchParams()
-        {
-            SortedDictionary<string, object> sParams = new SortedDictionary<string, object>(ToQuery());
-            sParams.Add("unsigned", string.Empty);
-            sParams.Add("removeUnsignedParam", string.Empty);
+                { "unsigned", string.Empty },
+                { "removeUnsignedParam", string.Empty },
+            };
 
             return sParams;
         }
