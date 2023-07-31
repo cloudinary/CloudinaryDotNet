@@ -24,7 +24,7 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning
 
         protected AccountProvisioning AccountProvisioning;
 
-        protected bool Skipped;
+        protected static bool Skipped;
 
         [OneTimeSetUp]
         public void Initialize()
@@ -33,8 +33,8 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning
 
             if (AccountProvisioning.ProvisioningApi.ProvisioningApiAccount.AccountId == null)
             {
-                Assert.Ignore( "Provisioning API is not configured, skipping tests." );
                 Skipped = true;
+                Assert.Ignore( "Provisioning API is not configured, skipping tests." );
             }
 
             // Create a sub account(sub cloud)
