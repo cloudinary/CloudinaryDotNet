@@ -24,6 +24,15 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Gets the advanced search folders provider used by the Cloudinary instance.
+        /// </summary>
+        /// <returns>Instance of the <see cref="SearchFolders"/> class.</returns>
+        public SearchFolders SearchFolders()
+        {
+            return new SearchFolders(m_api);
+        }
+
+        /// <summary>
         /// Lists resource types asynchronously.
         /// </summary>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
