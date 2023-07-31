@@ -1,6 +1,22 @@
 
+1.22.0 / 2023-07-31
+===================
+
+New functionality
+-----------------
+
+  * Add support for `SearchFolders` API
+  * Add support for Search URL
+  * Add support for `VisualSearch` Admin API
+  * Add support for related assets APIs
+
+Other Changes
+-------------
+
+  * Bump vulnerable dependencies
+
 1.21.0 / 2023-05-30
-=============
+===================
 
 New functionality
 -----------------
