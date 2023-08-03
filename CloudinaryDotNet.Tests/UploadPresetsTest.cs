@@ -15,6 +15,9 @@ namespace CloudinaryDotNet.Tests
         private const string evalStr = "if (resource_info['width'] > 450) " +
                                        "{ upload_options['quality_analysis'] = true }; " +
                                        "upload_options['context'] = 'width = ' + resource_info['width']";
+
+        private const string OnSuccessStr = "current_asset.update({tags: [\"autocaption\"]});";
+
         private MockedCloudinary mockedCloudinary;
 
         [SetUp]
@@ -26,12 +29,14 @@ namespace CloudinaryDotNet.Tests
         [Test]
         public void TestListUploadPresets()
         {
-            var localCloudinaryMock = new MockedCloudinary("{presets: [{eval: 'some value'}]}");
+            var localCloudinaryMock = new MockedCloudinary("{presets: [{eval: 'some value', on_success: '" +
+                                                           OnSuccessStr + "'}]}");
 
             var result = localCloudinaryMock.ListUploadPresets();
 
             localCloudinaryMock.AssertHttpCall(SystemHttp.HttpMethod.Get, uploadPresetsRootUrl);
             Assert.AreEqual("some value", result.Presets.First().Eval);
+            Assert.AreEqual(OnSuccessStr, result.Presets.First().OnSuccess);
         }
 
         [TestCase("x-featureratelimit-limit", 123)]
@@ -85,12 +90,14 @@ namespace CloudinaryDotNet.Tests
         [Test]
         public void TestGetUploadPreset()
         {
-            var localCloudinaryMock = new MockedCloudinary("{eval: 'some value'}");
+            var localCloudinaryMock = new MockedCloudinary("{eval: 'some value', on_success: '" +
+                                                           OnSuccessStr + "'}");
 
             var result = localCloudinaryMock.GetUploadPreset(apiTestPreset);
 
             localCloudinaryMock.AssertHttpCall(SystemHttp.HttpMethod.Get, $"{uploadPresetsRootUrl}/{apiTestPreset}");
             Assert.AreEqual("some value", result.Eval);
+            Assert.AreEqual(OnSuccessStr, result.OnSuccess);
         }
 
         [Test]
@@ -108,7 +115,8 @@ namespace CloudinaryDotNet.Tests
             {
                 Name = apiTestPreset,
                 Folder = folderName,
-                Eval = evalStr
+                Eval = evalStr,
+                OnSuccess = OnSuccessStr
             };
 
             mockedCloudinary.UpdateUploadPreset(parameters);
@@ -116,6 +124,7 @@ namespace CloudinaryDotNet.Tests
             mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Put, $"{uploadPresetsRootUrl}/{apiTestPreset}");
             Assert.True(mockedCloudinary.HttpRequestContent.Contains(folderName));
             Assert.True(mockedCloudinary.HttpRequestContent.Contains(evalStr));
+            Assert.True(mockedCloudinary.HttpRequestContent.Contains(OnSuccessStr));
         }
 
         [Test]
@@ -125,7 +134,8 @@ namespace CloudinaryDotNet.Tests
             {
                 Name = apiTestPreset,
                 Folder = folderName,
-                Eval = evalStr
+                Eval = evalStr,
+                OnSuccess = OnSuccessStr
             };
 
             mockedCloudinary.CreateUploadPreset(parameters);
@@ -133,6 +143,7 @@ namespace CloudinaryDotNet.Tests
             mockedCloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, uploadPresetsRootUrl);
             Assert.True(mockedCloudinary.HttpRequestContent.Contains(folderName));
             Assert.True(mockedCloudinary.HttpRequestContent.Contains(evalStr));
+            Assert.True(mockedCloudinary.HttpRequestContent.Contains(OnSuccessStr));
         }
     }
 }

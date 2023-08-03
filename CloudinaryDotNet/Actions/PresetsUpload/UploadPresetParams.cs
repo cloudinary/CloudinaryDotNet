@@ -401,6 +401,11 @@
         public string Eval { get; set; }
 
         /// <summary>
+        /// Gets or sets JavaScript code expression to be evaluated on upload success.
+        /// </summary>
+        public string OnSuccess { get; set; }
+
+        /// <summary>
         /// Gets or sets accessibility analysis information.
         /// Optional (Boolean, default: false).
         /// </summary>
@@ -460,6 +465,7 @@
             AddParam(dict, "unique_filename", UniqueFilename);
             AddParam(dict, "live", Live);
             AddParam(dict, "eval", Eval);
+            AddParam(dict, "on_success", OnSuccess);
             AddParam(dict, "accessibility_analysis", AccessibilityAnalysis);
 
             AddParam(dict, "transformation", GetTransformation(Transformation));

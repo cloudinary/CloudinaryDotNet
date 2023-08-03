@@ -101,5 +101,11 @@
         /// </summary>
         [DataMember(Name = "metadata")]
         public JToken MetadataFields { get; set; }
+
+        /// <summary>
+        /// Gets or sets upload hook execution status.
+        /// </summary>
+        [DataMember(Name = "hook_execution")]
+        public JToken HookExecution { get; set; }
     }
 }

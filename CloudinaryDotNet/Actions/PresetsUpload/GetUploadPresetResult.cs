@@ -31,5 +31,11 @@
         /// </summary>
         [DataMember(Name = "eval")]
         public string Eval { get; set; }
+
+        /// <summary>
+        /// Gets or sets JavaScript code expression to be evaluated on upload success.
+        /// </summary>
+        [DataMember(Name = "on_success")]
+        public string OnSuccess { get; set; }
     }
 }
