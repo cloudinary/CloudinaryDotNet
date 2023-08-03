@@ -15,6 +15,7 @@
     <PackageTags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>http://cloudinary.com</PackageProjectUrl>
+    <PackageReadmeFile>.\README.md</PackageReadmeFile>
     <PackageIcon>.\CloudinaryIcon.png</PackageIcon>
     <RepositoryUrl>https://github.com/cloudinary/CloudinaryDotNet/</RepositoryUrl>
     <CodeAnalysisRuleSet>.\Cloudinary.ruleset</CodeAnalysisRuleSet>
@@ -62,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".\CloudinaryIcon.png" Pack="true" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2">
