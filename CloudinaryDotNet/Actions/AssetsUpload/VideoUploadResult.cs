@@ -86,5 +86,11 @@
         /// </summary>
         [DataMember(Name = "nb_frames")]
         public int NbFrames { get; set; }
+
+        /// <summary>
+        /// Gets or sets the playback URL of the video.
+        /// </summary>
+        [DataMember(Name = "playback_url")]
+        public string PlaybackUrl { get; set; }
     }
 }
