@@ -221,6 +221,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.Zero(uploadResult.Pages);
             Assert.Zero(uploadResult.Rotation);
             Assert.NotZero(uploadResult.NbFrames);
+            Assert.IsFalse(string.IsNullOrEmpty(updateResult.PlaybackUrl));
 
             var getResource = new GetResourceParams(uploadResult.PublicId) { ResourceType = ResourceType.Video };
             var info = m_cloudinary.GetResource(getResource);
