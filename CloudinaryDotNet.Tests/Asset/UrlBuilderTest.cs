@@ -19,6 +19,9 @@ namespace CloudinaryDotNet.Tests.Asset
         private const string TestFolder = "folder/test";
         private const string TestImageId = "image.jpg";
 
+        private const string FetchVideoUrl = "https://demo-res.cloudinary.com/videos/dog.mp4";
+        private const string FetchVideoUrlBase64Enc = "aHR0cHM6Ly9kZW1vLXJlcy5jbG91ZGluYXJ5LmNvbS92aWRlb3MvZG9nLm1wNA==";
+
         [OneTimeSetUp]
         public void Init()
         {
@@ -465,6 +468,14 @@ namespace CloudinaryDotNet.Tests.Asset
             var transformation = new Transformation().Overlay(new FetchLayer().Url("http://image.com/img/seatrade_supplier_logo.jpg"));
             var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
             Assert.AreEqual(TestConstants.DefaultImageFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
+        }
+
+        [Test]
+        public void TestFetchLayerVideoUrl()
+        {
+            var transformation = new Transformation().Overlay(new FetchLayer().Url(FetchVideoUrl).ResourceType(Constants.RESOURCE_TYPE_VIDEO));
+            var uri = m_api.UrlVideoUp.Transform(transformation).BuildUrl("test");
+            Assert.AreEqual(TestConstants.DefaultVideoUpPath + "l_video:fetch:" + FetchVideoUrlBase64Enc + "/test", uri);
         }
 
         [Test]

@@ -20,7 +20,9 @@
         /// </summary>
         public FetchLayer()
         {
-            m_resourceType = Constants.RESOURCE_TYPE_FETCH;
+            m_resourceType = Constants.RESOURCE_TYPE_IMAGE;
+
+            m_type = Constants.RESOURCE_TYPE_FETCH;
         }
 
         /// <summary>
@@ -30,7 +32,7 @@
         /// <returns>The layer with set parameter.</returns>
         public FetchLayer Url(string url)
         {
-            this.m_url = UrlEncode(url);
+            this.m_url = url;
             return this;
         }
 
@@ -45,22 +47,7 @@
                 throw new ArgumentException("Must supply url.");
             }
 
-            List<string> components = new List<string>();
-            if (!string.IsNullOrEmpty(m_url))
-            {
-                components.Add(string.Format(CultureInfo.InvariantCulture, "fetch:{0}", m_url));
-            }
-
-            return string.Join(":", components.ToArray());
-        }
-
-        /// <summary>
-        /// Get this layer represented as string.
-        /// </summary>
-        /// <returns>A string that represents the layer.</returns>
-        public override string ToString()
-        {
-            return AdditionalParams();
+            return UrlEncode(m_url);
         }
 
         /// <summary>
