@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Linq;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -486,23 +486,51 @@ namespace CloudinaryDotNet.Tests.Asset
             Assert.AreEqual(TestConstants.DefaultImageUpPath + "c_fill,x_100,y_100/test", uri);
         }
 
-        [Test]
-        public void TestAgentPlatformHeaders()
+        private HttpRequestMessage CreateRequest(string userPlatformProduct, string userPlatformVersion = null)
         {
             var request = new HttpRequestMessage { RequestUri = new Uri("http://dummy.com") };
-            m_api.UserPlatform = "Test/1.0";
+            m_api.UserPlatform = new ProductHeaderValue(userPlatformProduct, userPlatformVersion);
 
             m_api.PrepareRequestBody(
                 request,
                 HttpMethod.GET,
                 new SortedDictionary<string, object>(),
                 new FileDescription(""));
+            return request;
+        }
+
+        [Test]
+        public void TestAgentPlatformHeaders()
+        {
+            var httpRequestMessage = CreateRequest("UserPlatform", "2.3");
 
             //Can't test the result, so we just verify the UserAgent parameter is sent to the server
-            StringAssert.AreEqualIgnoringCase($"{m_api.UserPlatform} {ApiShared.USER_AGENT}",
-                request.Headers.UserAgent.ToString());
-            StringAssert.IsMatch(@"Test\/1\.0 CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\)",
-                request.Headers.UserAgent.ToString());
+            StringAssert.IsMatch(@"CloudinaryDotNet\/(\d+)\.(\d+)\.(\d+) \(.*\) UserPlatform/2\.3",
+                httpRequestMessage.Headers.UserAgent.ToString());
+        }
+
+        [Test]
+        [TestCase("Mono 5.11.0 ((HEAD/768f1b247c6)")]
+        public void TestMalformedFrameworkVersion(string dotnetVersion)
+        {
+            var previousFramework = m_api.DotnetVersion;
+            try
+            {
+                m_api.DotnetVersion = dotnetVersion;
+                Assert.DoesNotThrow(() => CreateRequest("p"));
+            }
+            finally
+            {
+                m_api.DotnetVersion = previousFramework;
+            }
+        }
+        
+        [Test]
+        [TestCase("UserPlatform", null)]
+        [TestCase("UserPlatform", "1.2")]
+        public void TestUserPlatformCombinations(string userPlatformProduct, string userPlatformVersion)
+        {
+            Assert.DoesNotThrow(() => CreateRequest(userPlatformProduct, userPlatformVersion));
         }
 
         [Test]

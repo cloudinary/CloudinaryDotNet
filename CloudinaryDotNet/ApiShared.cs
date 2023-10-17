@@ -6,10 +6,12 @@
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
@@ -69,11 +71,6 @@
         public const string HTTP_BOUNDARY = "notrandomsequencetouseasboundary";
 
         /// <summary>
-        /// User agent for cloudinary API requests.
-        /// </summary>
-        public static string USER_AGENT = BuildUserAgent();
-
-        /// <summary>
         /// Whether to use a sub domain.
         /// </summary>
         public bool CSubDomain;
@@ -111,7 +108,7 @@
         /// <summary>
         /// User platform information.
         /// </summary>
-        public string UserPlatform;
+        public ProductHeaderValue UserPlatform;
 
         /// <summary>
         /// Timeout for the API requests, milliseconds.
@@ -149,6 +146,8 @@
 
         private readonly Func<string, HttpRequestMessage> requestBuilder =
             (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
+
+        private string dotnetVersion;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiShared"/> class.
@@ -380,6 +379,24 @@
                     Action(Constants.ACTION_NAME_UPLOAD).
                     ResourceType(Constants.RESOURCE_TYPE_VIDEO);
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the .NET version compatible with Http headers comment specification.
+        /// </summary>
+        internal string DotnetVersion
+        {
+            get
+            {
+                if (dotnetVersion == null)
+                {
+                    DotnetVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+                }
+
+                return dotnetVersion;
+            }
+
+            set => dotnetVersion = GetUserAgentCommentFriendlyValue(value);
         }
 
         /// <summary>
@@ -628,12 +645,12 @@
             StringBuilder signBase = new StringBuilder(string.Join("&", parameters.
                                                                    Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s, StringComparison.Ordinal)))
                 .Select(pair =>
-                       {
-                           var value = pair.Value is IEnumerable<string>
-                               ? string.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
-                               : pair.Value.ToString();
-                           return string.Format(CultureInfo.InvariantCulture, "{0}={1}", pair.Key, value);
-                       })
+                {
+                    var value = pair.Value is IEnumerable<string>
+                        ? string.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
+                        : pair.Value.ToString();
+                    return string.Format(CultureInfo.InvariantCulture, "{0}={1}", pair.Key, value);
+                })
                 .ToArray()));
 
             signBase.Append(Account.ApiSecret);
@@ -811,9 +828,10 @@
             return builder.ToString();
         }
 
-        private static string BuildUserAgent()
-        {
-            return $"CloudinaryDotNet/{CloudinaryVersion.Full} ({RuntimeInformation.FrameworkDescription})";
-        }
+        // Nonmatching braces are not accepted, so we just remove them all.
+        // See https://github.com/aspnet/HttpAbstractions/blob/master/src/Microsoft.Net.Http.Headers/HttpRuleParser.cs#L250
+        // for details.
+        private static string GetUserAgentCommentFriendlyValue(string value)
+            => Regex.Replace(value, "\\(|\\)", string.Empty);
     }
 }

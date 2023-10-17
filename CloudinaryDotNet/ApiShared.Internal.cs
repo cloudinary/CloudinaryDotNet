@@ -468,12 +468,16 @@
 
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
-            var userPlatform = string.IsNullOrEmpty(UserPlatform)
-                ? USER_AGENT
-                : string.Format(CultureInfo.InvariantCulture, "{0} {1}", UserPlatform, USER_AGENT);
-            request.Headers.Add("User-Agent", userPlatform);
+            var userAgentHeader = request.Headers.UserAgent;
+            userAgentHeader.Add(new ProductInfoHeaderValue("CloudinaryDotNet", CloudinaryVersion.Full));
+            userAgentHeader.Add(new ProductInfoHeaderValue($"({DotnetVersion})"));
 
-            byte[] authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
+            if (UserPlatform != null)
+            {
+                userAgentHeader.Add(new ProductInfoHeaderValue(UserPlatform));
+            }
+
+            var authBytes = Encoding.ASCII.GetBytes(GetApiCredentials());
             request.Headers.Add("Authorization", string.Format(CultureInfo.InvariantCulture, "Basic {0}", Convert.ToBase64String(authBytes)));
 
             if (extraHeaders != null)
