@@ -49,7 +49,6 @@
                 HttpMethod.POST,
                 SearchResourcesUrl.BuildUrl(),
                 PrepareSearchParams(),
-                null,
                 Utils.PrepareJsonHeaders());
         }
 
@@ -64,7 +63,6 @@
                 HttpMethod.POST,
                 SearchResourcesUrl.BuildUrl(),
                 PrepareSearchParams(),
-                null,
                 Utils.PrepareJsonHeaders(),
                 cancellationToken);
         }

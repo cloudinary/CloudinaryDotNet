@@ -532,7 +532,7 @@ namespace CloudinaryDotNet
                 .Add("resources")
                 .Add("visual_search")
                 .BuildUrl();
-            return CallAdminApiAsync<VisualSearchResult>(HttpMethod.GET, url, parameters, cancellationToken);
+            return CallAdminApiAsync<VisualSearchResult>(HttpMethod.POST, url, parameters, cancellationToken);
         }
 
         /// <summary>
@@ -2275,7 +2275,6 @@ namespace CloudinaryDotNet
                             httpMethod,
                             url,
                             parameters,
-                            null,
                             extraHeaders,
                             cancellationToken);
         }

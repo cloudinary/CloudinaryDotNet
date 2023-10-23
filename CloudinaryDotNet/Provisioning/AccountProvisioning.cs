@@ -479,7 +479,7 @@
         {
             if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
             {
-                return ProvisioningApi.CallAccountApi<T>(httpMethod, url, parameters, null, Utils.PrepareJsonHeaders());
+                return ProvisioningApi.CallAccountApi<T>(httpMethod, url, parameters, Utils.PrepareJsonHeaders());
             }
 
             return ProvisioningApi.CallAccountApi<T>(httpMethod, url, parameters, null);
@@ -494,10 +494,10 @@
         {
             if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
             {
-                return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, null, Utils.PrepareJsonHeaders(), cancellationToken);
+                return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, Utils.PrepareJsonHeaders(), cancellationToken);
             }
 
-            return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, null, null, cancellationToken);
+            return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, null, cancellationToken);
         }
 
         private string GetSubAccountsUrl(string subAccountId = null)

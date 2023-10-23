@@ -35,7 +35,6 @@
                 HttpMethod.POST,
                 SearchFoldersUrl.BuildUrl(),
                 PrepareSearchParams(),
-                null,
                 Utils.PrepareJsonHeaders());
         }
 
@@ -50,7 +49,6 @@
                 HttpMethod.POST,
                 SearchFoldersUrl.BuildUrl(),
                 PrepareSearchParams(),
-                null,
                 Utils.PrepareJsonHeaders(),
                 cancellationToken);
         }

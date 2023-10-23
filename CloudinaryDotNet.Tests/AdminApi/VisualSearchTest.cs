@@ -1,4 +1,7 @@
-﻿using CloudinaryDotNet.Actions;
+﻿using System;
+using System.IO;
+using System.Linq;
+using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using SystemHttp = System.Net.Http;
 
@@ -35,22 +38,31 @@ namespace CloudinaryDotNet.Tests.AdminApi
         [Test]
         public void TestVisualSearch()
         {
+            var stream = new MemoryStream(
+                Convert.FromBase64String(
+                    "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")
+                );
+
             var localCloudinaryMock = new MockedCloudinary(_responseData);
 
             var result = localCloudinaryMock.VisualSearch(new VisualSearchParams
             {
                 ImageAssetId = TestConstants.TestAssetId,
                 ImageUrl = TestConstants.TestRemoteImg,
-                Text = "sample image"
+                ImageFile = new FileDescription("sample.gif", stream),
+                Text = "sample image",
             });
 
             localCloudinaryMock.AssertHttpCall(
-                SystemHttp.HttpMethod.Get,
-                "resources/visual_search",
-                "?image_asset_id=" + TestConstants.TestAssetId +
-                "&image_url=" + TestConstants.TestRemoteImg +
-                "&text=sample%20image"
+                SystemHttp.HttpMethod.Post,
+                "resources/visual_search"
             );
+
+            var requestContent = localCloudinaryMock.HttpRequestContent;
+
+            Assert.True(requestContent.Contains("image_file"));
+            Assert.True(requestContent.Contains("sample.gif"));
+            Assert.True(requestContent.Contains("GIF89"));
 
             Assert.NotNull(result);
 

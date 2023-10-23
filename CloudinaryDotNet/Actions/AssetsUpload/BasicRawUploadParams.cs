@@ -77,6 +77,7 @@
         {
             var dict = base.ToParamsDictionary();
 
+            AddParam(dict, "file", File);
             AddParam(dict, "public_id", PublicId);
             AddParam(dict, "public_id_prefix", PublicIdPrefix);
             AddParam(dict, "type", Type);

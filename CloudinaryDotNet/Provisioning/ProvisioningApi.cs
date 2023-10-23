@@ -38,7 +38,6 @@ namespace CloudinaryDotNet.Provisioning
         /// <param name="method">HTTP method.</param>
         /// <param name="url">Url for api call.</param>
         /// <param name="parameters">Parameters for api call.</param>
-        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Extra headers.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Return response of specified type.</returns>
@@ -47,7 +46,6 @@ namespace CloudinaryDotNet.Provisioning
             HttpMethod method,
             string url,
             BaseParams parameters,
-            FileDescription file,
             Dictionary<string, string> extraHeaders = null,
             CancellationToken? cancellationToken = null)
             where T : BaseResult, new()
@@ -63,7 +61,6 @@ namespace CloudinaryDotNet.Provisioning
                 method,
                 url,
                 callParams,
-                file,
                 extraHeaders,
                 cancellationToken);
         }
@@ -74,11 +71,10 @@ namespace CloudinaryDotNet.Provisioning
         /// <param name="method">HTTP method.</param>
         /// <param name="url">Url for api call.</param>
         /// <param name="parameters">Parameters for api call.</param>
-        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Extra headers.</param>
         /// <returns>Return response of specified type.</returns>
         /// <typeparam name="T">Type of the parsed response.</typeparam>
-        internal T CallAccountApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        internal T CallAccountApi<T>(HttpMethod method, string url, BaseParams parameters, Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
         {
             ValidateAccountApiCredentials();
@@ -88,7 +84,6 @@ namespace CloudinaryDotNet.Provisioning
                 method,
                 url,
                 (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
-                file,
                 extraHeaders);
         }
 
