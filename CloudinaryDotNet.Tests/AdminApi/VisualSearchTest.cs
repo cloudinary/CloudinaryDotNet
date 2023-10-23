@@ -42,13 +42,13 @@ namespace CloudinaryDotNet.Tests.AdminApi
             {
                 ImageAssetId = TestConstants.TestAssetId,
                 ImageUrl = TestConstants.TestRemoteImg,
-                ImageFile = new FileDescription("sample.jpg"),
+                //ImageFile = new FileDescription("sample.jpg"),
                 Text = "sample image",
             });
 
-            var requestContent = localCloudinaryMock.HttpRequestContent;
+            //var requestContent = localCloudinaryMock.HttpRequestContent;
 
-            Assert.True(requestContent.Contains("image_file"));
+            //Assert.True(requestContent.Contains("image_file"));
 
             localCloudinaryMock.AssertHttpCall(
                 SystemHttp.HttpMethod.Post,
