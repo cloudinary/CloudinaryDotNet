@@ -1,4 +1,5 @@
-﻿using CloudinaryDotNet.Actions;
+﻿using System.Linq;
+using CloudinaryDotNet.Actions;
 using NUnit.Framework;
 using SystemHttp = System.Net.Http;
 
@@ -41,15 +42,17 @@ namespace CloudinaryDotNet.Tests.AdminApi
             {
                 ImageAssetId = TestConstants.TestAssetId,
                 ImageUrl = TestConstants.TestRemoteImg,
-                Text = "sample image"
+                ImageFile = new FileDescription("sample.jpg"),
+                Text = "sample image",
             });
 
+            var requestContent = localCloudinaryMock.HttpRequestContent;
+
+            Assert.True(requestContent.Contains("image_file"));
+
             localCloudinaryMock.AssertHttpCall(
-                SystemHttp.HttpMethod.Get,
-                "resources/visual_search",
-                "?image_asset_id=" + TestConstants.TestAssetId +
-                "&image_url=" + TestConstants.TestRemoteImg +
-                "&text=sample%20image"
+                SystemHttp.HttpMethod.Post,
+                "resources/visual_search"
             );
 
             Assert.NotNull(result);

@@ -93,7 +93,9 @@ namespace CloudinaryDotNet
 
             var dict = NormalizeParameters(parameters);
 
-            return CallUploadApiAsync(uri, dict, cancellationToken, fileDescription);
+            parameters.Add("file", fileDescription);
+
+            return CallUploadApiAsync(uri, dict, cancellationToken);
         }
 
         /// <summary>
@@ -125,8 +127,7 @@ namespace CloudinaryDotNet
                 HttpMethod.POST,
                 uri,
                 parameters,
-                cancellationToken,
-                parameters.File);
+                cancellationToken);
         }
 
         /// <summary>
@@ -333,7 +334,6 @@ namespace CloudinaryDotNet
                     internalParams.Url,
                     parameters,
                     cancellationToken,
-                    parameters.File,
                     internalParams.Headers).ConfigureAwait(false);
                 CheckUploadResult(result);
             }
@@ -979,7 +979,6 @@ namespace CloudinaryDotNet
             string url,
             BaseParams parameters,
             CancellationToken? cancellationToken,
-            FileDescription fileDescription = null,
             Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
         {
@@ -987,7 +986,6 @@ namespace CloudinaryDotNet
                             httpMethod,
                             url,
                             parameters,
-                            fileDescription,
                             extraHeaders,
                             cancellationToken);
         }
@@ -995,14 +993,12 @@ namespace CloudinaryDotNet
         private Task<RawUploadResult> CallUploadApiAsync(
             string url,
             SortedDictionary<string, object> parameters,
-            CancellationToken? cancellationToken,
-            FileDescription fileDescription = null)
+            CancellationToken? cancellationToken)
         {
             return m_api.CallAndParseAsync<RawUploadResult>(
                 HttpMethod.POST,
                 url,
                 parameters,
-                fileDescription,
                 null,
                 cancellationToken);
         }
@@ -1063,7 +1059,6 @@ namespace CloudinaryDotNet
                 uri,
                 parameters,
                 cancellationToken,
-                parameters.File,
                 null);
         }
 

@@ -81,7 +81,6 @@
         /// <param name="method">HTTP method.</param>
         /// <param name="url">Url for api call.</param>
         /// <param name="parameters">Parameters for api call.</param>
-        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Extra headers.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Return response of specified type.</returns>
@@ -90,14 +89,13 @@
             HttpMethod method,
             string url,
             BaseParams parameters,
-            FileDescription file,
             Dictionary<string, string> extraHeaders = null,
             CancellationToken? cancellationToken = null)
             where T : BaseResult, new()
         {
             var callParams = GetCallParams(parameters);
 
-            return CallAndParseAsync<T>(method, url, callParams, file, extraHeaders, cancellationToken);
+            return CallAndParseAsync<T>(method, url, callParams, extraHeaders, cancellationToken);
         }
 
         /// <summary>
@@ -106,11 +104,10 @@
         /// <param name="method">HTTP method.</param>
         /// <param name="url">Url for api call.</param>
         /// <param name="parameters">Parameters for api call.</param>
-        /// <param name="file">File to upload (must be null for non-uploading actions).</param>
         /// <param name="extraHeaders">Extra headers.</param>
         /// <returns>Return response of specified type.</returns>
         /// <typeparam name="T">Type of the parsed response.</typeparam>
-        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, FileDescription file, Dictionary<string, string> extraHeaders = null)
+        internal virtual T CallApi<T>(HttpMethod method, string url, BaseParams parameters, Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
         {
             var callParams = GetCallParams(parameters);
@@ -119,7 +116,6 @@
                 method,
                 url,
                 callParams,
-                file,
                 extraHeaders);
         }
 
@@ -129,7 +125,6 @@
         /// <param name="request">HTTP request to alter.</param>
         /// <param name="method">HTTP method of call.</param>
         /// <param name="parameters">Dictionary of call parameters.</param>
-        /// <param name="file">File to upload.</param>
         /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Prepared HTTP request.</returns>
@@ -137,19 +132,20 @@
             HttpRequestMessage request,
             HttpMethod method,
             SortedDictionary<string, object> parameters,
-            FileDescription file,
             Dictionary<string, string> extraHeaders = null,
             CancellationToken? cancellationToken = null)
         {
             PrePrepareRequestBody(request, method, extraHeaders);
 
-            if (ShouldPrepareContent(method, parameters))
+            if (!ShouldPrepareContent(method, parameters))
             {
-                SetChunkedEncoding(request);
-
-                await PrepareRequestContentAsync(request, parameters, file, extraHeaders, cancellationToken)
-                    .ConfigureAwait(false);
+                return request;
             }
+
+            SetChunkedEncoding(request);
+
+            await PrepareRequestContentAsync(request, parameters, extraHeaders, cancellationToken)
+                .ConfigureAwait(false);
 
             return request;
         }
@@ -160,14 +156,12 @@
         /// <param name="request">HTTP request to alter.</param>
         /// <param name="method">HTTP method of call.</param>
         /// <param name="parameters">Dictionary of call parameters.</param>
-        /// <param name="file">File to upload.</param>
         /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
         /// <returns>Prepared HTTP request.</returns>
         internal HttpRequestMessage PrepareRequestBody(
             HttpRequestMessage request,
             HttpMethod method,
             SortedDictionary<string, object> parameters,
-            FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
             PrePrepareRequestBody(request, method, extraHeaders);
@@ -176,7 +170,7 @@
             {
                 SetChunkedEncoding(request);
 
-                PrepareRequestContent(request, parameters, file, extraHeaders);
+                PrepareRequestContent(request, parameters, extraHeaders);
             }
 
             return request;
@@ -343,48 +337,24 @@
         private static Stream GetFileStream(FileDescription file) =>
             file.Stream ?? File.OpenRead(file.FilePath);
 
-        private static void SetStreamContent(FileDescription file, Stream stream, MultipartFormDataContent content)
+        private static void SetStreamContent(string fieldName, FileDescription file, Stream stream, MultipartFormDataContent content)
         {
             var streamContent = new StreamContent(stream);
 
             streamContent.Headers.Add("Content-Type", "application/octet-stream");
             streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
-                Name = "file",
+                Name = fieldName,
                 FileNameStar = file.FileName,
             };
-            content.Add(streamContent, "file", file.FileName);
+            content.Add(streamContent, fieldName, file.FileName);
         }
 
-        private static void SetContentForRemoteFile(FileDescription file, MultipartFormDataContent content)
+        private static void SetContentForRemoteFile(string fieldName, FileDescription file, MultipartFormDataContent content)
         {
             var strContent = new StringContent(file.FilePath);
-            strContent.Headers.Add("Content-Disposition", string.Format(CultureInfo.InvariantCulture, "form-data; name=\"{0}\"", "file"));
+            strContent.Headers.Add("Content-Disposition", string.Format(CultureInfo.InvariantCulture, "form-data; name=\"{0}\"", fieldName));
             content.Add(strContent);
-        }
-
-        private static MultipartFormDataContent CreateMultipartContent(SortedDictionary<string, object> parameters)
-        {
-            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
-            foreach (var param in parameters)
-            {
-                if (param.Value != null)
-                {
-                    if (param.Value is IEnumerable<string>)
-                    {
-                        foreach (var item in (IEnumerable<string>)param.Value)
-                        {
-                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
-                        }
-                    }
-                    else
-                    {
-                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
-                    }
-                }
-            }
-
-            return content;
         }
 
         private static StringContent CreateStringContent(SortedDictionary<string, object> parameters) =>
@@ -446,6 +416,99 @@
             }
         }
 
+        private async Task<HttpContent> CreateMultipartContentAsync(
+            SortedDictionary<string, object> parameters,
+            Dictionary<string, string> extraHeaders = null,
+            CancellationToken? cancellationToken = null)
+        {
+            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
+            foreach (var param in parameters.Where(param => param.Value != null))
+            {
+                switch (param.Value)
+                {
+                    case FileDescription file when file.IsRemote:
+                        SetContentForRemoteFile(param.Key, file, content);
+                        break;
+                    case FileDescription file:
+                    {
+                        var stream = GetFileStream(file);
+
+                        if (IsContentRange(extraHeaders))
+                        {
+                            // Unfortunately we don't have ByteRangeStreamContent here,
+                            // let's create another stream from the original one
+                            stream = await GetRangeFromFileAsync(file, stream, cancellationToken).ConfigureAwait(false);
+                        }
+
+                        SetStreamContent(param.Key, file, stream, content);
+                        break;
+                    }
+
+                    case IEnumerable<string> value:
+                    {
+                        foreach (var item in value)
+                        {
+                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
+                        }
+
+                        break;
+                    }
+
+                    default:
+                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
+                        break;
+                }
+            }
+
+            return content;
+        }
+
+        private HttpContent CreateMultipartContent(
+            SortedDictionary<string, object> parameters,
+            Dictionary<string, string> extraHeaders = null)
+        {
+            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
+            foreach (var param in parameters.Where(param => param.Value != null))
+            {
+                switch (param.Value)
+                {
+                    case FileDescription file when file.IsRemote:
+                        SetContentForRemoteFile(param.Key, file, content);
+                        break;
+                    case FileDescription file:
+                    {
+                        var stream = GetFileStream(file);
+
+                        if (IsContentRange(extraHeaders))
+                        {
+                            // Unfortunately we don't have ByteRangeStreamContent here,
+                            // let's create another stream from the original one
+                            stream = GetRangeFromFile(file, stream);
+                        }
+
+                        SetStreamContent(param.Key, file, stream, content);
+                        break;
+                    }
+
+                    case IEnumerable<string> value:
+                    {
+                        foreach (var item in value)
+                        {
+                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
+                        }
+
+                        break;
+                    }
+
+                    default:
+                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
+                        break;
+                }
+            }
+
+            return content;
+        }
+
         private CancellationToken GetDefaultCancellationToken() =>
             Timeout > 0
                 ? new CancellationTokenSource(Timeout).Token
@@ -494,7 +557,6 @@
         private async Task PrepareRequestContentAsync(
             HttpRequestMessage request,
             SortedDictionary<string, object> parameters,
-            FileDescription file,
             Dictionary<string, string> extraHeaders = null,
             CancellationToken? cancellationToken = null)
         {
@@ -502,7 +564,7 @@
 
             var content = IsStringContent(extraHeaders)
                 ? CreateStringContent(parameters)
-                : await PrepareMultipartFormDataContentAsync(parameters, file, extraHeaders, cancellationToken).ConfigureAwait(false);
+                : await CreateMultipartContentAsync(parameters, extraHeaders, cancellationToken).ConfigureAwait(false);
 
             SetHeadersAndContent(request, extraHeaders, content);
         }
@@ -510,79 +572,15 @@
         private void PrepareRequestContent(
             HttpRequestMessage request,
             SortedDictionary<string, object> parameters,
-            FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
             HandleUnsignedParameters(parameters);
 
             var content = IsStringContent(extraHeaders)
                 ? CreateStringContent(parameters)
-                : PrepareMultipartFormDataContent(parameters, file, extraHeaders);
+                : CreateMultipartContent(parameters, extraHeaders);
 
             SetHeadersAndContent(request, extraHeaders, content);
-        }
-
-        private async Task<HttpContent> PrepareMultipartFormDataContentAsync(
-            SortedDictionary<string, object> parameters,
-            FileDescription file,
-            Dictionary<string, string> extraHeaders = null,
-            CancellationToken? cancellationToken = null)
-        {
-            var content = CreateMultipartContent(parameters);
-
-            if (file != null)
-            {
-                if (file.IsRemote)
-                {
-                    SetContentForRemoteFile(file, content);
-                }
-                else
-                {
-                    var stream = GetFileStream(file);
-
-                    if (IsContentRange(extraHeaders))
-                    {
-                        // Unfortunately we don't have ByteRangeStreamContent here,
-                        // let's create another stream from the original one
-                        stream = await GetRangeFromFileAsync(file, stream, cancellationToken).ConfigureAwait(false);
-                    }
-
-                    SetStreamContent(file, stream, content);
-                }
-            }
-
-            return content;
-        }
-
-        private HttpContent PrepareMultipartFormDataContent(
-            SortedDictionary<string, object> parameters,
-            FileDescription file,
-            Dictionary<string, string> extraHeaders = null)
-        {
-            var content = CreateMultipartContent(parameters);
-
-            if (file != null)
-            {
-                if (file.IsRemote)
-                {
-                    SetContentForRemoteFile(file, content);
-                }
-                else
-                {
-                    var stream = GetFileStream(file);
-
-                    if (IsContentRange(extraHeaders))
-                    {
-                        // Unfortunately we don't have ByteRangeStreamContent here,
-                        // let's create another stream from the original one
-                        stream = GetRangeFromFile(file, stream);
-                    }
-
-                    SetStreamContent(file, stream, content);
-                }
-            }
-
-            return content;
         }
 
         private async Task<Stream> GetRangeFromFileAsync(FileDescription file, Stream stream, CancellationToken? cancellationToken = null)

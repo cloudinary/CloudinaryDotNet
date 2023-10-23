@@ -464,6 +464,35 @@
         }
 
         /// <summary>
+        /// Call the Cloudinary API and parse HTTP response asynchronously.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">A generated URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Instance of the parsed response from the cloudinary API.</returns>
+        public async Task<T> CallAndParseAsync<T>(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            Dictionary<string, string> extraHeaders = null,
+            CancellationToken? cancellationToken = null)
+            where T : BaseResult, new()
+        {
+            using (var response = await CallAsync(
+                       method,
+                       url,
+                       parameters,
+                       extraHeaders,
+                       cancellationToken).ConfigureAwait(false))
+            {
+                return await ParseAsync<T>(response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Call the Cloudinary API and parse HTTP response.
         /// </summary>
         /// <typeparam name="T">Type of the response.</typeparam>
@@ -481,12 +510,32 @@
             Dictionary<string, string> extraHeaders = null)
             where T : BaseResult, new()
         {
+            parameters["file"] = file;
+
+            return CallAndParse<T>(method, url, parameters, extraHeaders);
+        }
+
+        /// <summary>
+        /// Call the Cloudinary API and parse HTTP response.
+        /// </summary>
+        /// <typeparam name="T">Type of the response.</typeparam>
+        /// <param name="method">HTTP method.</param>
+        /// <param name="url">A generated URL.</param>
+        /// <param name="parameters">Cloudinary parameters to add to the API call.</param>
+        /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
+        /// <returns>Instance of the parsed response from the cloudinary API.</returns>
+        public T CallAndParse<T>(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            Dictionary<string, string> extraHeaders = null)
+            where T : BaseResult, new()
+        {
             using (var response = Call(
-                method,
-                url,
-                parameters,
-                file,
-                extraHeaders))
+                       method,
+                       url,
+                       parameters,
+                       extraHeaders))
             {
                 return Parse<T>(response);
             }
@@ -510,14 +559,34 @@
             Dictionary<string, string> extraHeaders = null,
             CancellationToken? cancellationToken = null)
         {
+            parameters["file"] = file;
+
+            return await CallAsync(method, url, parameters, extraHeaders, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Makes custom call to Cloudinary API asynchronously.
+        /// </summary>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="url">URL to call.</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null).</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>HTTP response on call.</returns>
+        public async Task<HttpResponseMessage> CallAsync(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            Dictionary<string, string> extraHeaders = null,
+            CancellationToken? cancellationToken = null)
+        {
             using (var request =
-                await PrepareRequestBodyAsync(
-                    requestBuilder(PrepareRequestUrl(method, url, parameters)),
-                    method,
-                    parameters,
-                    file,
-                    extraHeaders,
-                    cancellationToken).ConfigureAwait(false))
+                   await PrepareRequestBodyAsync(
+                       requestBuilder(PrepareRequestUrl(method, url, parameters)),
+                       method,
+                       parameters,
+                       extraHeaders,
+                       cancellationToken).ConfigureAwait(false))
             {
                 var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
                 return await Client.SendAsync(request, httpCancellationToken).ConfigureAwait(false);
@@ -540,9 +609,28 @@
             FileDescription file,
             Dictionary<string, string> extraHeaders = null)
         {
+            parameters["file"] = file;
+
+            return Call(method, url, parameters, extraHeaders);
+        }
+
+        /// <summary>
+        /// Makes custom call to Cloudinary API.
+        /// </summary>
+        /// <param name="method">HTTP method of call.</param>
+        /// <param name="url">URL to call.</param>
+        /// <param name="parameters">Dictionary of call parameters (can be null).</param>
+        /// <param name="extraHeaders">Headers to add to the request.</param>
+        /// <returns>HTTP response on call.</returns>
+        public HttpResponseMessage Call(
+            HttpMethod method,
+            string url,
+            SortedDictionary<string, object> parameters,
+            Dictionary<string, string> extraHeaders = null)
+        {
             using (var request = requestBuilder(PrepareRequestUrl(method, url, parameters)))
             {
-                PrepareRequestBody(request, method, parameters, file, extraHeaders);
+                PrepareRequestBody(request, method, parameters, extraHeaders);
 
                 var cancellationToken = GetDefaultCancellationToken();
 

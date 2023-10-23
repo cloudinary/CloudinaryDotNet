@@ -495,8 +495,7 @@ namespace CloudinaryDotNet.Tests.Asset
             m_api.PrepareRequestBody(
                 request,
                 HttpMethod.GET,
-                new SortedDictionary<string, object>(),
-                new FileDescription(""));
+                new SortedDictionary<string, object>());
 
             //Can't test the result, so we just verify the UserAgent parameter is sent to the server
             StringAssert.AreEqualIgnoringCase($"{m_api.UserPlatform} {ApiShared.USER_AGENT}",

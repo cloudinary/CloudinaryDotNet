@@ -172,6 +172,22 @@
         }
 
         /// <summary>
+        /// Add parameter to the dictionary.
+        /// </summary>
+        /// <param name="dict">The dictionary.</param>
+        /// <param name="fileKey">The key name of the file parameter.</param>
+        /// <param name="file">The file content to add.</param>
+        protected static void AddParam(SortedDictionary<string, object> dict, string fileKey, FileDescription file)
+        {
+            if (file == null)
+            {
+                return;
+            }
+
+            dict.Add(fileKey, file);
+        }
+
+        /// <summary>
         /// Add a coordinate object (plain string or Rectangle or List of Rectangles or FaceCoordinates)
         /// to the dictionary.
         /// </summary>

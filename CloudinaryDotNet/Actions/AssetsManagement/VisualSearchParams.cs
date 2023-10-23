@@ -19,6 +19,11 @@
         public string ImageAssetId { get; set; }
 
         /// <summary>
+        /// Gets or sets the image file to search by.
+        /// </summary>
+        public FileDescription ImageFile { get; set; }
+
+        /// <summary>
         /// Gets or sets the text.
         /// </summary>
         public string Text { get; set; }
@@ -44,6 +49,7 @@
 
             AddParam(dict, "image_url", ImageUrl);
             AddParam(dict, "image_asset_id", ImageAssetId);
+            AddParam(dict, "image_file", ImageFile);
             AddParam(dict, "text", Text);
 
             return dict;
