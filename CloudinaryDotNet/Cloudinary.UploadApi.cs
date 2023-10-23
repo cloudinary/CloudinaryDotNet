@@ -93,7 +93,7 @@ namespace CloudinaryDotNet
 
             var dict = NormalizeParameters(parameters);
 
-            parameters.Add("file", fileDescription);
+            dict.Add("file", fileDescription);
 
             return CallUploadApiAsync(uri, dict, cancellationToken);
         }
