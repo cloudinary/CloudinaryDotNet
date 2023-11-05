@@ -7,7 +7,7 @@
     /// <summary>
     /// Account provisioning.
     /// </summary>
-    public class AccountProvisioning
+    public class AccountProvisioning : IAccountProvisioning
     {
         /// <summary>
         /// Gets Provisioning API object that used by this instance.
