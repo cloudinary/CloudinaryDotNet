@@ -9,7 +9,7 @@
     /// Main class of Cloudinary .NET API.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed.")]
-    public partial class Cloudinary
+    public partial class Cloudinary : ICloudinary
     {
         /// <summary>
         /// Cloudinary <see cref="Api"/> object.

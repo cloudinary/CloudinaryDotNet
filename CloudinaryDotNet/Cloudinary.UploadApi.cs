@@ -1083,9 +1083,9 @@ namespace CloudinaryDotNet
             public UploadLargeParams(BasicRawUploadParams parameters, int bufferSize, Api api)
             {
                 parameters.File.Reset(bufferSize);
-                this.Parameters = parameters;
-                this.Url = GetUploadUrl(parameters, api);
-                this.BufferSize = bufferSize;
+                Parameters = parameters;
+                Url = GetUploadUrl(parameters, api);
+                BufferSize = bufferSize != 0 ? bufferSize : DEFAULT_CHUNK_SIZE;
             }
 
             /// <summary>
