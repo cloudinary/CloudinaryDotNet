@@ -1,4 +1,16 @@
 
+1.23.0 / 2023-11-06
+=============
+
+New functionality
+-----------------
+
+  * Add `ICloudinary` interface for `Cloudinary` class
+  * Add support for `ImageFile` in `VisualSearch`
+  * Add support for fetch video layer
+  * Add support for `PlaybackUrl` in `VideoUploadResult`
+  * Add support for `OnSuccess` upload parameter
+
 1.22.0 / 2023-07-31
 ===================
 
