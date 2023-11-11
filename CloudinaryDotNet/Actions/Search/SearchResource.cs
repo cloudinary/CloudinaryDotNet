@@ -213,6 +213,12 @@
         public Dictionary<string, object> ImageMetadata { get; set; }
 
         /// <summary>
+        /// Gets or sets IPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
+        /// </summary>
+        [DataMember(Name = "media_metadata")]
+        public Dictionary<string, object> MediaMetadata { get; set; }
+
+        /// <summary>
         /// Gets or sets a key-value pairs of custom metadata fields associated with the resource.
         /// </summary>
         [DataMember(Name = "metadata")]

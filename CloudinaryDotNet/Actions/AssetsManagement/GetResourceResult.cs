@@ -151,6 +151,12 @@
         public Dictionary<string, string> ImageMetadata { get; set; }
 
         /// <summary>
+        /// Gets or sets iPTC, XMP, and detailed Exif metadata. Supported for images, video, and audio.
+        /// </summary>
+        [DataMember(Name = "media_metadata")]
+        public Dictionary<string, string> MediaMetadata { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of coordinates of detected faces.
         /// </summary>
         [DataMember(Name = "faces")]

@@ -107,6 +107,11 @@
         public bool? ImageMetadata { get; set; }
 
         /// <summary>
+        /// Gets or sets whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// </summary>
+        public bool? MediaMetadata { get; set; }
+
+        /// <summary>
         /// Gets or sets whether to generate the eager transformations asynchronously in the background after the upload request is
         /// completed rather than online as part of the upload call. Default: false.
         /// </summary>
@@ -218,6 +223,7 @@
             AddParam(dict, "quality_analysis", QualityAnalysis);
             AddParam(dict, "colors", Colors);
             AddParam(dict, "image_metadata", ImageMetadata);
+            AddParam(dict, "media_metadata", MediaMetadata);
             AddParam(dict, "eager_async", EagerAsync);
             AddParam(dict, "eager_notification_url", EagerNotificationUrl);
             AddParam(dict, "categorization", Categorization);

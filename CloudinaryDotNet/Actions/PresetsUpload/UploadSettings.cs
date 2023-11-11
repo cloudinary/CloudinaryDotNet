@@ -199,6 +199,12 @@
         public bool ImageMetadata { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to retrieve IPTC and detailed Exif metadata of the uploaded photo. Default: false.
+        /// </summary>
+        [DataMember(Name = "media_metadata")]
+        public bool MediaMetadata { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to generate the eager transformations asynchronously in the background after the upload request is
         /// completed, rather than online as part of the upload call. Default: false.
         /// </summary>

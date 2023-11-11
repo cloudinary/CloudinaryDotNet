@@ -35,8 +35,8 @@
         [Obsolete("Property Metadata is deprecated, please use ImageMetadata instead")]
         public Dictionary<string, string> Metadata
         {
-            get { return ImageMetadata; }
-            set { ImageMetadata = value; }
+            get { return MediaMetadata; }
+            set { MediaMetadata = value; }
         }
 
         /// <summary>
@@ -45,6 +45,13 @@
         /// </summary>
         [DataMember(Name = "image_metadata")]
         public Dictionary<string, string> ImageMetadata { get; set; }
+
+        /// <summary>
+        /// Gets or sets the returned metadata for the image.
+        /// Includes: PixelsPerUnitX, PixelsPerUnitY, PixelUnits, Colorspace, and DPI.
+        /// </summary>
+        [DataMember(Name = "media_metadata")]
+        public Dictionary<string, string> MediaMetadata { get; set; }
 
         /// <summary>
         /// Gets or sets the coordinates of faces contained in an uploaded image.

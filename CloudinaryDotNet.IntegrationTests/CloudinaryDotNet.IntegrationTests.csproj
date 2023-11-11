@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CloudinaryDotNet\CloudinaryDotNet.csproj" />
-    <None Include="appsettings.json" CopyToOutputDirectory="Always" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\**" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
@@ -36,4 +35,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="appsettings %28copy%29.json.sample" />
+  </ItemGroup>
 </Project>

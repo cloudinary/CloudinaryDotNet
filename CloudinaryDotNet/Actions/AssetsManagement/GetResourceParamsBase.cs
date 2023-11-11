@@ -75,6 +75,12 @@ namespace CloudinaryDotNet.Actions
         public bool? ImageMetadata { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to include IPTC, XMP, and detailed Exif metadata.
+        /// Supported for images, video, and audio.
+        /// </summary>
+        public bool? MediaMetadata { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to include previously specified custom cropping coordinates and
         /// faces coordinates. Optional (Boolean, default: false).
         /// </summary>
@@ -192,6 +198,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "faces", Faces);
             AddParam(dict, "quality_analysis", QualityAnalysis);
             AddParam(dict, "image_metadata", ImageMetadata);
+            AddParam(dict, "media_metadata", MediaMetadata);
             AddParam(dict, "phash", Phash);
             AddParam(dict, "coordinates", Coordinates);
             AddParam(dict, "pages", Pages);

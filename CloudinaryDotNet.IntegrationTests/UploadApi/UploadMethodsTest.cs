@@ -205,7 +205,8 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var uploadParams = new VideoUploadParams()
             {
                 File = new FileDescription(m_testVideoPath),
-                Tags = m_apiTag
+                Tags = m_apiTag,
+                MediaMetadata=true
             };
 
             var uploadResult = m_cloudinary.Upload(uploadParams);
@@ -384,6 +385,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 EagerTransforms = new List<Transformation>() { m_simpleTransformation },
                 PublicId = GetUniquePublicId(),
                 ImageMetadata = true,
+                MediaMetadata = true,
                 Exif = true,
                 Colors = true,
                 Tags = m_apiTag,

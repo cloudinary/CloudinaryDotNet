@@ -22,6 +22,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
 
         private const string AGG_FIELD_VALUE = "resource_type";
         private const string METADATA_FIELD_NAME = "image_metadata";
+        private const string MEDIA_METADATA_FIELD_NAME = "media_metadata";
         private const string STRUCTURED_METADATA_FIELD_NAME = "metadata";
         private const string TAGS_FIELD_NAME = "tags";
         private const string CONTEXT_FIELD_NAME = "context";
@@ -146,7 +147,8 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
         public void TestSearchWithField()
         {
             var result = m_cloudinary.Search().MaxResults(FIRST_PAGE_SIZE)
-                .Expression(m_expressionTag).WithField(METADATA_FIELD_NAME).Execute();
+                //.Expression(m_expressionTag).WithField(METADATA_FIELD_NAME).Execute();
+                .Expression(m_expressionTag).WithField(MEDIA_METADATA_FIELD_NAME).Execute();
 
             Assert.NotNull(result.Resources, result.Error?.Message);
             Assert.AreEqual(FIRST_PAGE_SIZE, result.Resources.Count);

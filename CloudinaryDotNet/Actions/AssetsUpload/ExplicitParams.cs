@@ -194,6 +194,12 @@ namespace CloudinaryDotNet.Actions
         public bool? ImageMetadata { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to include IPTC, XMP, and detailed Exif metadata.
+        /// Supported for images, video, and audio.
+        /// </summary>
+        public bool? MediaMetadata { get; set; }
+
+        /// <summary>
         /// Gets or sets an HTTP URL to send notification to (a webhook) when the operation or any additional
         /// requested asynchronous action is completed. If not specified,
         /// the response is sent to the global Notification URL (if defined)
@@ -276,6 +282,7 @@ namespace CloudinaryDotNet.Actions
             AddParam(dict, "cinemagraph_analysis", CinemagraphAnalysis);
             AddParam(dict, "overwrite", Overwrite);
             AddParam(dict, "image_metadata", ImageMetadata);
+            AddParam(dict, "media_metadata", MediaMetadata);
             AddParam(dict, "notification_url", NotificationUrl);
             AddParam(dict, "quality_override", QualityOverride);
             AddParam(dict, "moderation", Moderation);
