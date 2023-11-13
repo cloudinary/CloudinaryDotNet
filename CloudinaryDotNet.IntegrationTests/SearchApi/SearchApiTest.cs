@@ -48,6 +48,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
                     PublicId = publicId,
                     Tags = $"{m_searchTag},{m_apiTag}",
                     File = new FileDescription(m_testImagePath),
+                    ImageMetadata = true,
                 };
                 if (i == 0)
                 {
@@ -178,7 +179,7 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
             var foundResource = result.Resources.First();
 
             Assert.AreEqual(m_singleResourcePublicId, foundResource.PublicId, result.Error?.Message);
-            Assert.AreEqual(string.Empty, foundResource.Folder);
+            Assert.True(string.IsNullOrEmpty(foundResource.Folder));
             Assert.AreEqual(m_singleResourcePublicId, foundResource.FileName);
             Assert.AreEqual(FILE_FORMAT_JPG, foundResource.Format);
             Assert.IsNotEmpty(foundResource.Version);
