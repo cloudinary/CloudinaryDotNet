@@ -446,11 +446,85 @@
             return CallAccountApiAsync<ListUsersResult>(HttpMethod.GET, url, cancellationToken);
         }
 
-        private static string UrlWithOptionalParameter(Url baseUrl, string urlParameter)
+        /// <summary>
+        /// Lists access keys.
+        /// </summary>
+        /// <param name="parameters">Parameters to list access keys.</param>
+        /// <returns>Parsed information about access keys.</returns>
+        public ListAccessKeysResult ListAccessKeys(ListAccessKeysParams parameters)
         {
-            if (!string.IsNullOrEmpty(urlParameter))
+            var url = GetAccessKeysUrl(parameters.SubAccountId);
+            var urlBuilder = new UrlBuilder(url, parameters.ToParamsDictionary());
+            return CallAccountApi<ListAccessKeysResult>(HttpMethod.GET, urlBuilder.ToString());
+        }
+
+        /// <summary>
+        /// Lists access keys asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to list access keys.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed information about access keys.</returns>
+        public Task<ListAccessKeysResult> ListAccessKeysAsync(ListAccessKeysParams parameters, CancellationToken? cancellationToken = null)
+        {
+            var url = GetAccessKeysUrl(parameters.SubAccountId);
+            var urlBuilder = new UrlBuilder(url, parameters.ToParamsDictionary());
+            return CallAccountApiAsync<ListAccessKeysResult>(HttpMethod.GET, urlBuilder.ToString(), cancellationToken);
+        }
+
+        /// <summary>
+        /// Generates access key.
+        /// </summary>
+        /// <param name="parameters">Parameters to generate access key.</param>
+        /// <returns>Parsed information about generated access key.</returns>
+        public AccessKeyResult GenerateAccessKey(GenerateAccessKeyParams parameters)
+        {
+            var url = GetAccessKeysUrl(parameters.SubAccountId);
+            return CallAccountApi<AccessKeyResult>(HttpMethod.POST, url, parameters);
+        }
+
+        /// <summary>
+        /// Generates access key asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to generate access key.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed information about generated access key.</returns>
+        public Task<AccessKeyResult> GenerateAccessKeyAsync(GenerateAccessKeyParams parameters, CancellationToken? cancellationToken = null)
+        {
+            var url = GetAccessKeysUrl(parameters.SubAccountId);
+            return CallAccountApiAsync<AccessKeyResult>(HttpMethod.POST, url, cancellationToken, parameters);
+        }
+
+        /// <summary>
+        /// Updates access key.
+        /// </summary>
+        /// <param name="parameters">Parameters to update access key.</param>
+        /// <returns>Parsed information about updated access key.</returns>
+        public AccessKeyResult UpdateAccessKey(UpdateAccessKeyParams parameters)
+        {
+            var url = GetAccessKeysUrl(parameters.SubAccountId, parameters.ApiKey);
+            return CallAccountApi<AccessKeyResult>(HttpMethod.PUT, url, parameters);
+        }
+
+        /// <summary>
+        /// Updates access key asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to update access key.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed information about updated access key.</returns>
+        public Task<AccessKeyResult> UpdateAccessKeyAsync(UpdateAccessKeyParams parameters, CancellationToken? cancellationToken = null)
+        {
+            var url = GetAccessKeysUrl(parameters.SubAccountId, parameters.ApiKey);
+            return CallAccountApiAsync<AccessKeyResult>(HttpMethod.PUT, url, cancellationToken, parameters);
+        }
+
+        private static string UrlWithOptionalParameters(Url baseUrl, params string[] urlParameters)
+        {
+            foreach (var urlParameter in urlParameters)
             {
-                baseUrl.Add(urlParameter);
+                if (!string.IsNullOrEmpty(urlParameter))
+                {
+                    baseUrl.Add(urlParameter);
+                }
             }
 
             return baseUrl.BuildUrl();
@@ -515,16 +589,21 @@
             return BuildAccountApiUrl(Constants.USER_GROUPS, groupId);
         }
 
+        private string GetAccessKeysUrl(string subAccountId = null, string apiKey = null)
+        {
+            return BuildAccountApiUrl(Constants.SUB_ACCOUNTS, subAccountId, Constants.ACCESS_KEYS, apiKey);
+        }
+
         private string GetUserGroupsUrlForUsers(string groupId, string userId = null)
         {
             var baseUrl = ProvisioningApi.AccountApiUrlV.Add(Constants.USER_GROUPS).Add(groupId).Add(Constants.USERS);
-            return UrlWithOptionalParameter(baseUrl, userId);
+            return UrlWithOptionalParameters(baseUrl, userId);
         }
 
-        private string BuildAccountApiUrl(string resourceName, string urlParameter)
+        private string BuildAccountApiUrl(string resourceName, params string[] urlParameters)
         {
             var baseUrl = ProvisioningApi.AccountApiUrlV.Add(resourceName);
-            return UrlWithOptionalParameter(baseUrl, urlParameter);
+            return UrlWithOptionalParameters(baseUrl, urlParameters);
         }
     }
 }

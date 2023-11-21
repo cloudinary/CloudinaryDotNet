@@ -282,5 +282,50 @@ namespace CloudinaryDotNet.Provisioning
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed information about users.</returns>
         Task<ListUsersResult> UsersGroupUsersAsync(string groupId, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Lists access keys.
+        /// </summary>
+        /// <param name="parameters">Parameters to list access keys.</param>
+        /// <returns>Parsed information about access keys.</returns>
+        ListAccessKeysResult ListAccessKeys(ListAccessKeysParams parameters);
+
+        /// <summary>
+        /// Lists access keys asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to list access keys.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed information about access keys.</returns>
+        Task<ListAccessKeysResult> ListAccessKeysAsync(ListAccessKeysParams parameters, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Generates access key.
+        /// </summary>
+        /// <param name="parameters">Parameters to generate access key.</param>
+        /// <returns>Parsed information about generated access key.</returns>
+        AccessKeyResult GenerateAccessKey(GenerateAccessKeyParams parameters);
+
+        /// <summary>
+        /// Generates access key asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to generate access key.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed information about generated access key.</returns>
+        Task<AccessKeyResult> GenerateAccessKeyAsync(GenerateAccessKeyParams parameters, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Updates access key.
+        /// </summary>
+        /// <param name="parameters">Parameters to update access key.</param>
+        /// <returns>Parsed information about updated access key.</returns>
+        AccessKeyResult UpdateAccessKey(UpdateAccessKeyParams parameters);
+
+        /// <summary>
+        /// Updates access key asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to update access key.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed information about updated access key.</returns>
+        Task<AccessKeyResult> UpdateAccessKeyAsync(UpdateAccessKeyParams parameters, CancellationToken? cancellationToken = null);
     }
 }

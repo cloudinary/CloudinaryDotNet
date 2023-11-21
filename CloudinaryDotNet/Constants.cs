@@ -118,5 +118,8 @@
 
         /// <summary> User groups resource of account api.</summary>
         public const string USER_GROUPS = "user_groups";
+
+        /// <summary> Access keys resource of account api.</summary>
+        public const string ACCESS_KEYS = "access_keys";
     }
 }
