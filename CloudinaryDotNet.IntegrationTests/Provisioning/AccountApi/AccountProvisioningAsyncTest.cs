@@ -126,5 +126,45 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning.AccountApi
 
             Assert.NotNull(foundGroup);
         }
+
+        [Test, RetryWithDelay]
+        public async Task TestListAccessKeys()
+        {
+            var result = await AccountProvisioning.ListAccessKeysAsync(new ListAccessKeysParams(m_cloudId1));
+
+            Assert.LessOrEqual(1, result.Total);
+            Assert.LessOrEqual(1, result.AccessKeys.Length);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestGenerateAccessKey()
+        {
+            var result = await AccountProvisioning.GenerateAccessKeyAsync(new GenerateAccessKeyParams(m_cloudId1)
+            {
+                Name = "test_key",
+                Enabled = false,
+            });
+
+            Assert.AreEqual("test_key", result.Name);
+            Assert.AreEqual(false, result.Enabled);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestUpdateAccessKey()
+        {
+            var accessKeyResult = await AccountProvisioning.ListAccessKeysAsync(new ListAccessKeysParams(m_cloudId1));
+            var accessKey = accessKeyResult.AccessKeys.FirstOrDefault();
+
+            Assert.NotNull(accessKey);
+
+            var result = await AccountProvisioning.UpdateAccessKeyAsync(new UpdateAccessKeyParams(m_cloudId1, accessKey.ApiKey)
+            {
+                Name = "updated_key",
+                Enabled = true,
+            });
+
+            Assert.AreEqual("updated_key", result.Name);
+            Assert.AreEqual(true, result.Enabled);
+        }
     }
 }
