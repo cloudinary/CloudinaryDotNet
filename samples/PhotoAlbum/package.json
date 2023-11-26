@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "cloudinary-jquery-file-upload": "^2.11.3"
+    "cloudinary-jquery-file-upload": "^2.13.0"
   }
 }
