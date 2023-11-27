@@ -10,9 +10,47 @@
     public class AccountProvisioning : IAccountProvisioning
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="AccountProvisioning"/> class.
+        /// </summary>
+        public AccountProvisioning()
+            : this(new ProvisioningApiAccount())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountProvisioning"/> class.
+        /// </summary>
+        /// <param name="cloudinaryAccountUrl">Cloudinary Account URL.</param>
+        public AccountProvisioning(string cloudinaryAccountUrl)
+        {
+            ProvisioningApi = new ProvisioningApi(cloudinaryAccountUrl);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountProvisioning"/> class.
+        /// </summary>
+        /// <param name="provisioningApiAccount">ProvisioningApiAccount.</param>
+        public AccountProvisioning(ProvisioningApiAccount provisioningApiAccount)
+        {
+            ProvisioningApi = new ProvisioningApi(provisioningApiAccount);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountProvisioning"/> class.
+        /// Parameterized constructor.
+        /// </summary>
+        /// <param name="accountId">Account id.</param>
+        /// <param name="provisioningApiKey">Provisioning API key.</param>
+        /// <param name="provisioningApiSecret">Provisioning API secret.</param>
+        public AccountProvisioning(string accountId, string provisioningApiKey, string provisioningApiSecret)
+            : this(new ProvisioningApiAccount(accountId, provisioningApiKey, provisioningApiSecret))
+        {
+        }
+
+        /// <summary>
         /// Gets Provisioning API object that used by this instance.
         /// </summary>
-        public ProvisioningApi ProvisioningApi { get; } = new ProvisioningApi();
+        public ProvisioningApi ProvisioningApi { get; }
 
         /// <summary>
         /// Retrieves the details of the specified sub-account.

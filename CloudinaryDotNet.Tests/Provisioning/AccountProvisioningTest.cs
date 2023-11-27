@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace CloudinaryDotNet.Tests.Provisioning
 {
-    public class ProvisioningApiAccountTest
+    public class AccountProvisioningTest
     {
         private const string AccountId = "7e57acc00-0123-4567-890a-bcdef0123456";
         private const string ProvisioningApiKey = "01234567890123456789";
@@ -29,13 +29,41 @@ namespace CloudinaryDotNet.Tests.Provisioning
         [Test]
         public void TestProvisioningApiAccountSetters()
         {
-            var acc = new ProvisioningApiAccount();
-
-            acc.AccountId = AccountId;
-            acc.ProvisioningApiKey = ProvisioningApiKey;
-            acc.ProvisioningApiSecret = ProvisioningApiSecret;
+            var acc = new ProvisioningApiAccount
+            {
+                AccountId = AccountId,
+                ProvisioningApiKey = ProvisioningApiKey,
+                ProvisioningApiSecret = ProvisioningApiSecret
+            };
 
             AssertAccount(acc);
+        }
+
+        [Test]
+        public void TestAccountProvisioningFromUrl()
+        {
+            var ap = new AccountProvisioning(accountUrl);
+
+            AssertAccount(ap.ProvisioningApi.ProvisioningApiAccount);
+        }
+
+        [Test]
+        public void TestAccountProvisioningFromParams()
+        {
+            var ap = new AccountProvisioning(AccountId, ProvisioningApiKey, ProvisioningApiSecret);
+
+            AssertAccount(ap.ProvisioningApi.ProvisioningApiAccount);
+        }
+
+        [Test]
+        public void TestAccountProvisioningFromProvisioningApiAccount()
+        {
+
+            var acc = new ProvisioningApiAccount(accountUrl);
+
+            var ap = new AccountProvisioning(acc);
+
+            AssertAccount(ap.ProvisioningApi.ProvisioningApiAccount);
         }
 
         private void AssertAccount(ProvisioningApiAccount account)
