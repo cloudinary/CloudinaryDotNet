@@ -13,8 +13,38 @@ namespace CloudinaryDotNet.Provisioning
         /// Initializes a new instance of the <see cref="ProvisioningApi"/> class.
         /// </summary>
         public ProvisioningApi()
+            : this(new ProvisioningApiAccount())
         {
-            ProvisioningApiAccount = new ProvisioningApiAccount();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProvisioningApi"/> class.
+        /// </summary>
+        /// <param name="cloudinaryAccountUrl">Cloudinary Account URL.</param>
+        public ProvisioningApi(string cloudinaryAccountUrl)
+         : this(new ProvisioningApiAccount(cloudinaryAccountUrl))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProvisioningApi"/> class.
+        /// </summary>
+        /// <param name="provisioningApiAccount">ProvisioningApiAccount.</param>
+        public ProvisioningApi(ProvisioningApiAccount provisioningApiAccount)
+        {
+            ProvisioningApiAccount = provisioningApiAccount;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProvisioningApi"/> class.
+        /// Parameterized constructor.
+        /// </summary>
+        /// <param name="accountId">Account id.</param>
+        /// <param name="provisioningApiKey">Provisioning API key.</param>
+        /// <param name="provisioningApiSecret">Provisioning API secret.</param>
+        public ProvisioningApi(string accountId, string provisioningApiKey, string provisioningApiSecret)
+            : this(new ProvisioningApiAccount(accountId, provisioningApiKey, provisioningApiSecret))
+        {
         }
 
         /// <summary>
