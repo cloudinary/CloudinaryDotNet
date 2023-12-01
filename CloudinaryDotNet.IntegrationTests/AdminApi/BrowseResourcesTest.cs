@@ -391,6 +391,22 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
         }
 
         [Test, RetryWithDelay]
+        public void TestListResourcesFields()
+        {
+            var result = m_cloudinary.ListResources(new ListResourcesParams
+            {
+                Fields = new[] { "tags", "secure_url"}
+            });
+
+            Assert.GreaterOrEqual(result.Resources.Count(), 1, result.Error?.Message);
+
+
+            Assert.IsNotEmpty(result.Resources[0].AssetId);
+            Assert.IsNotNull(result.Resources[0].SecureUrl);
+            Assert.IsNull(result.Resources[0].Url);
+        }
+
+        [Test, RetryWithDelay]
         public async Task TestListResourcesByTagAsync()
         {
             // should allow listing resources by tag

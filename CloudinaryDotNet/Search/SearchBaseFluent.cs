@@ -19,6 +19,7 @@
         private List<Dictionary<string, object>> sortByParam;
         private List<string> aggregateParam;
         private List<string> withFieldParam;
+        private List<string> fieldsParam;
         private Dictionary<string, object> searchParams;
 
         /// <summary>
@@ -32,6 +33,7 @@
             sortByParam = new List<Dictionary<string, object>>();
             aggregateParam = new List<string>();
             withFieldParam = new List<string>();
+            fieldsParam = new List<string>();
         }
 
         /// <summary>
@@ -104,6 +106,28 @@
         }
 
         /// <summary>
+        /// The name of the asset attribute to keep for each asset in the response.
+        /// </summary>
+        /// <param name="field">The name of field.</param>
+        /// <returns>The search provider with additional asset attribute defined.</returns>
+        public T Fields(string field)
+        {
+            fieldsParam.Add(field);
+            return (T)this;
+        }
+
+        /// <summary>
+        /// The list of the names of the asset attributes to keep for each asset in the response.
+        /// </summary>
+        /// <param name="fields">The names of fields.</param>
+        /// <returns>The search provider with additional asset attribute defined.</returns>
+        public T Fields(IEnumerable<string> fields)
+        {
+            fieldsParam.AddRange(fields);
+            return (T)this;
+        }
+
+        /// <summary>
         /// Set sort parameter. If this parameter is not provided then the results are sorted by descending
         /// creation date. Valid sort directions are 'asc' or 'desc'.
         /// </summary>
@@ -124,11 +148,16 @@
         /// <returns>Search parameters as dictionary.</returns>
         public Dictionary<string, object> ToQuery()
         {
-            Dictionary<string, object> queryParams = new Dictionary<string, object>(searchParams);
+            var queryParams = new Dictionary<string, object>(searchParams);
 
             if (withFieldParam.Count > 0)
             {
                 queryParams.Add("with_field", withFieldParam.Distinct());
+            }
+
+            if (fieldsParam.Count > 0)
+            {
+                queryParams.Add("fields", fieldsParam.Distinct());
             }
 
             if (sortByParam.Count > 0)
