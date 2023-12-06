@@ -1,4 +1,19 @@
 
+1.24.0 / 2023-12-06
+=============
+
+New functionality
+-----------------
+
+  * Add support for `Fields` parameter in Search and Admin APIs
+  * Add `AccountProvisioning` constructors
+  * Add support for access keys management in Account Provisioning API
+
+Other Changes
+-------------
+
+  * Fix SearchApi tests on some environments
+
 1.23.0 / 2023-11-06
 =============
 
