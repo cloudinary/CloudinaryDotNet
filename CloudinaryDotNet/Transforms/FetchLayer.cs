@@ -47,18 +47,7 @@
                 throw new ArgumentException("Must supply url.");
             }
 
-            return UrlEncode(m_url);
-        }
-
-        /// <summary>
-        /// Prepare text for Overlay.
-        /// </summary>
-        private static string UrlEncode(string url)
-        {
-            // Microsoft.IdentityModel.Tokens
-            // return Base64UrlEncoder.Encode(StringToEncode);
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(url);
-            return System.Convert.ToBase64String(plainTextBytes);
+            return Utils.EncodeUrlSafe(m_url);
         }
     }
 }

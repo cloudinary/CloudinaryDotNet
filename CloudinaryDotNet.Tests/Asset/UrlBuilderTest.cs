@@ -459,15 +459,11 @@ namespace CloudinaryDotNet.Tests.Asset
         [Test]
         public void TestFetchLayerUrl()
         {
-            //image for overlay
-            //http://image.com/img/seatrade_supplier_logo.jpg
-
-            //fetch image
-            //http://image.com/files/8813/5551/7470/cruise-ship.png
-
-            var transformation = new Transformation().Overlay(new FetchLayer().Url("http://image.com/img/seatrade_supplier_logo.jpg"));
+            var transformation = new Transformation().Overlay(new FetchLayer().Url("https://www.test.com/test/JE01118-YGP900_1_lar.jpg?version=432023"));
             var uri = m_api.UrlImgFetch.Transform(transformation).BuildUrl("http://image.com/files/8813/5551/7470/cruise-ship.png");
-            Assert.AreEqual(TestConstants.DefaultImageFetchPath + "l_fetch:aHR0cDovL2ltYWdlLmNvbS9pbWcvc2VhdHJhZGVfc3VwcGxpZXJfbG9nby5qcGc=/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
+            Assert.AreEqual(TestConstants.DefaultImageFetchPath +
+                            "l_fetch:aHR0cHM6Ly93d3cudGVzdC5jb20vdGVzdC9KRTAxMTE4LVlHUDkwMF8xX2xhci5qcGc_dmVyc2lvbj00MzIwMjM=" +
+                            "/http://image.com/files/8813/5551/7470/cruise-ship.png", uri);
         }
 
         [Test]
