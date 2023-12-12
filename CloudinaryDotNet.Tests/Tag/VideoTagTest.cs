@@ -115,6 +115,23 @@ namespace CloudinaryDotNet.Tests.Tag
         }
 
         [Test]
+        public void TestVideoTagWithDefaultSourcesUseFetchFormat()
+        {
+            const string movie = SOURCE_MOVIE + ".mp4";
+            var expectedTag =
+                $"<video poster=\'{TestConstants.DefaultVideoUpPath}f_jpg/{movie}\'>" +
+                $"<source src=\'{TestConstants.DefaultVideoUpPath}f_mp4,vc_h265/{movie}\' type=\'video/mp4; codecs=hev1\'>" +
+                $"<source src=\'{TestConstants.DefaultVideoUpPath}f_webm,vc_vp9/{movie}\' type=\'video/webm; codecs=vp9\'>" +
+                $"<source src=\'{TestConstants.DefaultVideoUpPath}f_mp4,vc_auto/{movie}\' type=\'video/mp4\'>" +
+                $"<source src=\'{TestConstants.DefaultVideoUpPath}f_webm,vc_auto/{movie}\' type=\'video/webm\'>" +
+                "</video>";
+
+            var actualTag = m_api.UrlVideoUp.VideoSources(Url.DefaultVideoSources).UseFetchFormat().BuildVideoTag(movie);
+
+            Assert.AreEqual(expectedTag, actualTag);
+        }
+
+        [Test]
         public void TestVideoTagWithCustomSources()
         {
             var customSources = new[]
