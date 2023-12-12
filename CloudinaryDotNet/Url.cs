@@ -132,6 +132,11 @@
         protected bool m_forceVersion;
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use fetch format instead of file extension.
+        /// </summary>
+        protected bool m_useFetchFormat;
+
+        /// <summary>
         /// Custom domain for your URL.
         /// </summary>
         protected string m_cName;
@@ -440,6 +445,17 @@
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use fetch format instead of file extension.
+        /// </summary>
+        /// <param name="useFetchFormat">Whether to use fetch format.</param>
+        /// <returns>The delivery URL with file with use fetch format property set.</returns>
+        public Url UseFetchFormat(bool useFetchFormat = true)
+        {
+            m_useFetchFormat = useFetchFormat;
+            return this;
+        }
+
+        /// <summary>
         /// Set private CDN prefix for the Url.
         /// </summary>
         /// <param name="privateCdn">The prefix of private CDN.</param>
@@ -730,7 +746,10 @@
                 dict = new StringDictionary();
             }
 
-            source = VIDEO_EXTENSION_RE.Replace(source, string.Empty, 1);
+            if (!m_useFetchFormat)
+            {
+                source = VIDEO_EXTENSION_RE.Replace(source, string.Empty, 1);
+            }
 
             if (string.IsNullOrEmpty(m_resourceType))
             {
@@ -844,7 +863,7 @@
                 return source;
             }
 
-            if (m_action == "fetch" && !string.IsNullOrEmpty(FormatValue))
+            if ((m_action == "fetch" && !string.IsNullOrEmpty(FormatValue)) || m_useFetchFormat)
             {
                 Transformation.FetchFormat(FormatValue);
                 FormatValue = null;
@@ -1190,7 +1209,8 @@
             Transformation transformation = null)
         {
             var sourceUrl = Clone();
-            MergeUrlTransformation(sourceUrl, transformation);
+            var internalTransformation = transformation?.Clone();
+            MergeUrlTransformation(sourceUrl, internalTransformation);
 
             if (m_sourceTransforms != null)
             {
@@ -1201,7 +1221,7 @@
                 }
             }
 
-            var src = sourceUrl.Format(sourceType).BuildUrl(source);
+            var src = sourceUrl.Format(sourceType).UseFetchFormat(m_useFetchFormat).BuildUrl(source);
 
             return $"<source src='{src}' type='{VideoMimeType(sourceType, codecs)}'>";
         }
@@ -1216,18 +1236,18 @@
             }
             else if (m_posterTransformation != null)
             {
-                posterUrl = Clone().Format("jpg").Transform(m_posterTransformation.Clone()).BuildUrl(source);
+                posterUrl = Clone().Format("jpg").UseFetchFormat(m_useFetchFormat).Transform(m_posterTransformation.Clone()).BuildUrl(source);
             }
             else if (m_posterSource != null)
             {
                 if (!string.IsNullOrEmpty(m_posterSource))
                 {
-                    posterUrl = Clone().Format("jpg").BuildUrl(m_posterSource);
+                    posterUrl = Clone().Format("jpg").UseFetchFormat(m_useFetchFormat).BuildUrl(m_posterSource);
                 }
             }
             else
             {
-                posterUrl = Clone().Format("jpg").BuildUrl(source);
+                posterUrl = Clone().Format("jpg").UseFetchFormat(m_useFetchFormat).BuildUrl(source);
             }
 
             return posterUrl;
