@@ -314,14 +314,24 @@
         }
 
         /// <summary>
-        /// Add action to the URL.
+        /// Set action of the URL.
         /// </summary>
         /// <param name="action">The action.</param>
-        /// <returns>The delivery URL with action applied.</returns>
+        /// <returns>The delivery/API URL with action applied.</returns>
         public Url Action(string action)
         {
             m_action = action;
             return this;
+        }
+
+        /// <summary>
+        /// Set delivery type of the asset URL.
+        /// </summary>
+        /// <param name="deliveryType">The delivery type of the asset.</param>
+        /// <returns>The delivery URL with delivery type applied.</returns>
+        public Url Type(string deliveryType)
+        {
+            return Action(deliveryType);
         }
 
         /// <summary>
