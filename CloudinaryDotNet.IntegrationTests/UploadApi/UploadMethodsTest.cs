@@ -518,7 +518,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var expectedUrl = uploadresponse.SecureUrl.OriginalString;
 
-            var computedUrl = m_cloudinary.Api.UrlImgUp.Action("authenticated").Version(uploadresponse.Version).Secure(true).Signed(true).BuildUrl(publicId + ".jpg");
+            var computedUrl = m_cloudinary.Api.UrlImgUp.Type("authenticated").Version(uploadresponse.Version).Secure(true).Signed(true).BuildUrl(publicId + ".jpg");
 
             Assert.AreEqual(expectedUrl, computedUrl);
 

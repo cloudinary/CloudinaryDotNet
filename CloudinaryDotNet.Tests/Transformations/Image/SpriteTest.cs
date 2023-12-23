@@ -29,10 +29,10 @@ namespace CloudinaryDotNet.Tests.Transformations.Image
         {
             // should build urls to get sprite css and picture by tag (with transformations and prefix)
 
-            var uri = m_api.UrlImgUp.Action("sprite").BuildUrl("teslistresourcesbytag1.png");
+            var uri = m_api.UrlImgUp.Type("sprite").BuildUrl("teslistresourcesbytag1.png");
             Assert.AreEqual(TestConstants.DefaultRootPath + "image/sprite/teslistresourcesbytag1.png", uri);
 
-            uri = m_api.UrlImgUp.Action("sprite").BuildUrl("teslistresourcesbytag1.css");
+            uri = m_api.UrlImgUp.Type("sprite").BuildUrl("teslistresourcesbytag1.css");
             Assert.AreEqual(TestConstants.DefaultRootPath + "image/sprite/teslistresourcesbytag1.css", uri);
 
             uri = m_api.ApiUrlImgUpV.CloudinaryAddr("http://api.cloudinary.com").Action("sprite").BuildUrl();
@@ -44,7 +44,7 @@ namespace CloudinaryDotNet.Tests.Transformations.Image
         {
             // should build urls to get sprite css and picture by tag with prefix
 
-            string uri = m_api.UrlImgUp.Action("sprite").Add("p_home_thing_").BuildUrl("logo.css");
+            string uri = m_api.UrlImgUp.Type("sprite").Add("p_home_thing_").BuildUrl("logo.css");
             Assert.AreEqual(TestConstants.DefaultRootPath + "image/sprite/p_home_thing_/logo.css", uri);
         }
 
