@@ -49,6 +49,16 @@
         public string FilenameOverride { get; set; }
 
         /// <summary>
+        /// Gets or sets upload timestamp.
+        /// </summary>
+        public DateTime Timestamp { get; set; }
+
+        /// <summary>
+        /// Gets or sets upload signature.
+        /// </summary>
+        public string Signature { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -82,6 +92,12 @@
             AddParam(dict, "public_id_prefix", PublicIdPrefix);
             AddParam(dict, "type", Type);
             AddParam(dict, "filename_override", FilenameOverride);
+            if (Timestamp != DateTime.MinValue)
+            {
+                AddParam(dict, "timestamp", Utils.ToUnixTimeSeconds(Timestamp));
+            }
+
+            AddParam(dict, "signature", Signature);
 
             if (Backup.HasValue)
             {
