@@ -182,8 +182,16 @@
         /// <param name="parameters">Cloudinary upload parameters.</param>
         internal void FinalizeUploadParameters(IDictionary<string, object> parameters)
         {
-            parameters.Add("timestamp", Utils.UnixTimeNowSeconds());
-            parameters.Add("signature", SignParameters(parameters));
+            if (!parameters.ContainsKey("timestamp"))
+            {
+                parameters.Add("timestamp", Utils.UnixTimeNowSeconds());
+            }
+
+            if (!parameters.ContainsKey("signature"))
+            {
+                parameters.Add("signature", SignParameters(parameters));
+            }
+
             parameters.Add("api_key", Account.ApiKey);
         }
 
