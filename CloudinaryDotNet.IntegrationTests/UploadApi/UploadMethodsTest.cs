@@ -23,6 +23,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         private const string MODERATION_WEBPURIFY = "webpurify";
         private const string TEST_REMOTE_IMG = "http://cloudinary.com/images/old_logo.png";
         private const string TEST_REMOTE_VIDEO = "http://res.cloudinary.com/demo/video/upload/v1496743637/dog.mp4";
+        private const int TEST_CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB
 
         private Transformation m_implicitTransformation;
 
@@ -546,6 +547,37 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             }
         }
 
+        private class NonSeekableStream : MemoryStream
+        {
+            public NonSeekableStream(byte[] buffer) : base(buffer) { }
+
+            public override bool CanSeek => false;
+
+            public override long Seek(long offset, SeekOrigin loc) => throw new NotSupportedException();
+
+            public override long Length => throw new NotSupportedException();
+        }
+
+        [Test, RetryWithDelay]
+        public void TestUploadLargeNonSeekableStream()
+        {
+            byte[] bytes = File.ReadAllBytes(m_testLargeImagePath);
+            const string streamed = "stream_non_seekable";
+
+            using (var memoryStream = new NonSeekableStream(bytes))
+            {
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(streamed, memoryStream),
+                    Tags = $"{m_apiTag},{streamed}"
+                };
+
+                var result = m_cloudinary.UploadLarge(uploadParams, TEST_CHUNK_SIZE);
+
+                AssertUploadLarge(result, bytes.Length);
+            }
+        }
+
         [Test, RetryWithDelay]
         public void TestUploadLargeRawFiles()
         {
@@ -555,7 +587,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadParams = GetUploadLargeRawParams(largeFilePath);
 
-            var result = m_cloudinary.UploadLarge(uploadParams, 5 * 1024 * 1024);
+            var result = m_cloudinary.UploadLarge(uploadParams, TEST_CHUNK_SIZE);
 
             AssertUploadLarge(result, largeFileLength);
         }
@@ -569,7 +601,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadParams = GetUploadLargeRawParams(largeFilePath);
 
-            var result = await m_cloudinary.UploadLargeAsync(uploadParams, 5 * 1024 * 1024);
+            var result = await m_cloudinary.UploadLargeAsync(uploadParams, TEST_CHUNK_SIZE);
 
             AssertUploadLarge(result, largeFileLength);
         }
@@ -599,7 +631,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             {
                 File = new FileDescription(largeFilePath),
                 Tags = m_apiTag
-            }, 5 * 1024 * 1024);
+            }, TEST_CHUNK_SIZE);
 
             Assert.AreEqual(fileLength, result.Bytes, result.Error?.Message);
         }
@@ -617,7 +649,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 Tags = m_apiTag
             };
 
-            var result = await m_cloudinary.UploadLargeAsync(uploadParams, 5 * 1024 * 1024);
+            var result = await m_cloudinary.UploadLargeAsync(uploadParams, TEST_CHUNK_SIZE);
 
             AssertUploadLarge(result, largeFileLength);
 
@@ -679,7 +711,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             {
                 File = new FileDescription(TEST_REMOTE_VIDEO),
                 Tags = m_apiTag
-            }, 5 * 1024 * 1024);
+            }, TEST_CHUNK_SIZE);
 
             Assert.AreEqual(result.StatusCode, HttpStatusCode.OK, result.Error?.Message);
             Assert.AreEqual(result.Format, FILE_FORMAT_MP4);

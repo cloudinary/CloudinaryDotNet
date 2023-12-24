@@ -969,7 +969,10 @@ namespace CloudinaryDotNet
             var fileDescription = internalParams.Parameters.File;
             var fileLength = fileDescription.GetFileLength();
             var startOffset = fileDescription.BytesSent;
-            var endOffset = startOffset + Math.Min(internalParams.BufferSize, fileLength - startOffset) - 1;
+            var buffSize = fileLength > 0
+                ? Math.Min(internalParams.BufferSize, fileLength - startOffset)
+                : internalParams.BufferSize;
+            var endOffset = startOffset + buffSize - 1;
 
             internalParams.Headers["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
         }
