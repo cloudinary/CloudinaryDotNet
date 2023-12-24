@@ -342,6 +342,18 @@
         private static bool IsContentRange(Dictionary<string, string> extraHeaders) =>
             extraHeaders != null && extraHeaders.ContainsKey("Content-Range");
 
+        private static void UpdateContentRange(IDictionary<string, string> extraHeaders, FileDescription file)
+        {
+            if (!file.Eof || file.GetFileLength() > 0)
+            {
+                return; // no need to update the header, all good.
+            }
+
+            var startOffset = file.BytesSent - file.CurrChunkSize;
+
+            extraHeaders["Content-Range"] = $"bytes {startOffset}-{file.BytesSent - 1}/{file.BytesSent}";
+        }
+
         private static Stream GetFileStream(FileDescription file) =>
             file.Stream ?? File.OpenRead(file.FilePath);
 
@@ -385,7 +397,11 @@
             var memStream = new MemoryStream();
             var writer = new StreamWriter(memStream) { AutoFlush = true };
 
-            stream.Seek(file.BytesSent, SeekOrigin.Begin);
+            if (stream.CanSeek)
+            {
+                stream.Seek(file.BytesSent, SeekOrigin.Begin);
+            }
+
             return writer;
         }
 
@@ -446,6 +462,7 @@
                             // Unfortunately we don't have ByteRangeStreamContent here,
                             // let's create another stream from the original one
                             stream = await GetRangeFromFileAsync(file, stream, cancellationToken).ConfigureAwait(false);
+                            UpdateContentRange(extraHeaders, file);
                         }
 
                         SetStreamContent(param.Key, file, stream, content);
@@ -492,6 +509,7 @@
                             // Unfortunately we don't have ByteRangeStreamContent here,
                             // let's create another stream from the original one
                             stream = GetRangeFromFile(file, stream);
+                            UpdateContentRange(extraHeaders, file);
                         }
 
                         SetStreamContent(param.Key, file, stream, content);
@@ -594,14 +612,26 @@
         private async Task<Stream> GetRangeFromFileAsync(FileDescription file, Stream stream, CancellationToken? cancellationToken = null)
         {
             var writer = SetStreamToStartAndCreateWriter(file, stream);
-            file.BytesSent += await ReadBytesAsync(writer, stream, file.BufferLength, cancellationToken).ConfigureAwait(false);
+            file.CurrChunkSize = await ReadBytesAsync(writer, stream, file.BufferLength, cancellationToken).ConfigureAwait(false);
+            file.BytesSent += file.CurrChunkSize;
+            if (file.CurrChunkSize < file.BufferLength)
+            {
+                file.Eof = true; // last chunk
+            }
+
             return WriterStreamFromBegin(writer);
         }
 
         private Stream GetRangeFromFile(FileDescription file, Stream stream)
         {
             var writer = SetStreamToStartAndCreateWriter(file, stream);
-            file.BytesSent += ReadBytes(writer, stream, file.BufferLength);
+            file.CurrChunkSize = ReadBytes(writer, stream, file.BufferLength);
+            file.BytesSent += file.CurrChunkSize;
+            if (file.CurrChunkSize < file.BufferLength)
+            {
+                file.Eof = true; // last chunk
+            }
+
             return WriterStreamFromBegin(writer);
         }
 

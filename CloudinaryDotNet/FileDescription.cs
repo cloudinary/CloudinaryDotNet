@@ -18,6 +18,13 @@
         internal long BytesSent;
 
         /// <summary>
+        /// Current chunk size.
+        /// </summary>
+        internal long CurrChunkSize;
+
+        private bool isEof;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FileDescription"/> class.
         /// Constructor to upload file from stream.
         /// </summary>
@@ -75,9 +82,13 @@
         public bool IsRemote { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the pointer is at the end of file.
+        /// Gets or sets a value indicating whether the pointer is at the end of file.
         /// </summary>
-        internal bool Eof => BytesSent == GetFileLength();
+        internal bool Eof
+        {
+            get => isEof ? isEof : GetFileLength() != -1 && BytesSent == GetFileLength();
+            set => isEof = value;
+        }
 
         /// <summary>
         /// Get file length.
@@ -85,7 +96,17 @@
         /// <returns>The length of file.</returns>
         internal long GetFileLength()
         {
-            return Stream?.Length ?? new FileInfo(FilePath).Length;
+            if (Stream == null)
+            {
+                return new FileInfo(FilePath).Length;
+            }
+
+            if (Stream?.CanSeek ?? false)
+            {
+                return Stream?.Length ?? -1;
+            }
+
+            return -1; // unknown length
         }
 
         /// <summary>
