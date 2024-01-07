@@ -1,4 +1,21 @@
 
+1.25.0 / 2024-01-07
+===================
+
+New functionality
+-----------------
+
+  * Add support for `OAuth` in Api calls
+  * Add support for uploading non-seekable streams
+  * Add support for `Signature` and `Timestamp` in `UploadParams`
+  * Add support for delivery `Type` setter in URL
+  * Add support for `UseFetchFormat` parameter to `BuildVideoTag`
+
+Other Changes
+-------------
+
+  * Fix special characters encoding in `FetchLayer`
+
 1.24.0 / 2023-12-06
 =============
 
