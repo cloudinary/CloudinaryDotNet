@@ -224,7 +224,7 @@
 
             for (int i = 0; i < count; i++)
             {
-                pairs[i] = string.Concat(keys[i], "=", values[i]);
+                pairs[i] = string.Concat(keys[i], "=", Uri.EscapeDataString(values[i]));
             }
 
             Query = string.Join("&", pairs);

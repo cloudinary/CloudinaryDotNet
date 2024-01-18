@@ -536,14 +536,15 @@ namespace CloudinaryDotNet.Tests.Asset
         {
             var cloudinary = new Cloudinary("cloudinary://a:b@test123");
             var expiresAt = Utils.UnixTimeNowSeconds() + 7200;
-            const string testPublicId = "zihltjwsyczm700kqj1z";
+            const string testPublicId = "test/ecp/ij4fg5zpgsnkezxa3bxq;";
+            const string encodedTestPublicId = "test%2Fecp%2Fij4fg5zpgsnkezxa3bxq%3B";
 
             var urlPrivateImage = cloudinary.DownloadPrivate(testPublicId, expiresAt: expiresAt);
-            var rgImage = Regex.IsMatch(urlPrivateImage, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=a&expires_at=" + expiresAt + @"&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}");
+            var rgImage = Regex.IsMatch(urlPrivateImage, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=a&expires_at=" + expiresAt + "&public_id=" + encodedTestPublicId + @"&signature=\w{40}&timestamp=\d{10}");
             Assert.True(rgImage);
 
             var urlPrivateVideo = cloudinary.DownloadPrivate(testPublicId, expiresAt: expiresAt, resourceType: "video");
-            var rgVideo = Regex.IsMatch(urlPrivateVideo, @"https://api\.cloudinary\.com/v1_1/[^/]*/video/download\?api_key=a&expires_at=" + expiresAt + @"&public_id=zihltjwsyczm700kqj1z&signature=\w{40}&timestamp=\d{10}");
+            var rgVideo = Regex.IsMatch(urlPrivateVideo, @"https://api\.cloudinary\.com/v1_1/[^/]*/video/download\?api_key=a&expires_at=" + expiresAt + "&public_id=" + encodedTestPublicId + @"&signature=\w{40}&timestamp=\d{10}");
             Assert.True(rgVideo);
         }
 
