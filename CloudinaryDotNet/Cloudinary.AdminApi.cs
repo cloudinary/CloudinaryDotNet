@@ -2100,7 +2100,7 @@ namespace CloudinaryDotNet
                 url,
                 null,
                 cancellationToken);
-         }
+        }
 
         /// <summary>
         /// Deletes transformation by name.
