@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -65,13 +66,13 @@ namespace CloudinaryDotNet.Tests.AdminApi
             Assert.Positive(result.Success.Count);
             Assert.AreEqual("success", result.Success[0].Message);
             Assert.AreEqual("success_ids", result.Success[0].Code);
-            Assert.AreEqual(TestIds[1], result.Success[0].Asset);
+            Assert.AreEqual(TestIds?[1], result.Success[0].Asset);
             Assert.AreEqual(200, result.Success[0].Status);
 
             Assert.Positive(result.Failed.Count);
             Assert.AreEqual("resource does not exist", result.Failed[0].Message);
             Assert.AreEqual("non_existing_ids", result.Failed[0].Code);
-            Assert.AreEqual(TestIds[0], result.Failed[0].Asset);
+            Assert.AreEqual(TestIds?[0], result.Failed[0].Asset);
             Assert.AreEqual(404, result.Failed[0].Status);
         }
 
@@ -95,13 +96,13 @@ namespace CloudinaryDotNet.Tests.AdminApi
             Assert.Positive(result.Success.Count);
             Assert.AreEqual("success", result.Success[0].Message);
             Assert.AreEqual("success_ids", result.Success[0].Code);
-            Assert.AreEqual(TestAssetIds[1], result.Success[0].Asset);
+            Assert.AreEqual(TestAssetIds?[1], result.Success[0].Asset);
             Assert.AreEqual(200, result.Success[0].Status);
 
             Assert.Positive(result.Failed.Count);
             Assert.AreEqual("resource does not exist", result.Failed[0].Message);
             Assert.AreEqual("non_existing_ids", result.Failed[0].Code);
-            Assert.AreEqual(TestAssetIds[0], result.Failed[0].Asset);
+            Assert.AreEqual(TestAssetIds?[0], result.Failed[0].Asset);
             Assert.AreEqual(404, result.Failed[0].Status);
         }
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Provides a custom constructor for uniform resource identifiers (URIs) and modifies URIs
@@ -173,6 +174,17 @@
             return Uri.AbsoluteUri;
         }
 
+        /// <summary>
+        /// Returns a string that represents the current Url with encoded parameter values.
+        /// </summary>
+        /// <returns>A string that represents the URL with encoded parameter values.</returns>
+        public string ToEncodedString()
+        {
+            BuildQueryString(true);
+
+            return Uri.AbsoluteUri;
+        }
+
         private void PopulateQueryString()
         {
             string query = Query;
@@ -200,7 +212,7 @@
             }
         }
 
-        private void BuildQueryString()
+        private void BuildQueryString(bool encodeValue = false)
         {
             if (queryString == null)
             {
@@ -215,19 +227,7 @@
                 return;
             }
 
-            string[] keys = new string[count];
-            string[] values = new string[count];
-            string[] pairs = new string[count];
-
-            queryString.Keys.CopyTo(keys, 0);
-            queryString.Values.CopyTo(values, 0);
-
-            for (int i = 0; i < count; i++)
-            {
-                pairs[i] = string.Concat(keys[i], "=", values[i]);
-            }
-
-            Query = string.Join("&", pairs);
+            Query = string.Join("&", queryString.Select(kvp => $"{kvp.Key}={(encodeValue ? Utils.SmartEscape(kvp.Value) : kvp.Value)}"));
         }
     }
 }
