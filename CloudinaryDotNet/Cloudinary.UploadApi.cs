@@ -1069,7 +1069,7 @@ namespace CloudinaryDotNet
         {
             m_api.FinalizeUploadParameters(parameters);
             builder.SetParameters(parameters);
-            return builder.ToString();
+            return builder.ToEncodedString();
         }
 
         /// <summary>

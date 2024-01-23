@@ -537,7 +537,7 @@ namespace CloudinaryDotNet.Tests.Asset
             var cloudinary = new Cloudinary("cloudinary://a:b@test123");
             var expiresAt = Utils.UnixTimeNowSeconds() + 7200;
             const string testPublicId = "test/ecp/ij4fg5zpgsnkezxa3bxq;";
-            const string encodedTestPublicId = "test%2Fecp%2Fij4fg5zpgsnkezxa3bxq%3B";
+            const string encodedTestPublicId = "test/ecp/ij4fg5zpgsnkezxa3bxq%3B";
 
             var urlPrivateImage = cloudinary.DownloadPrivate(testPublicId, expiresAt: expiresAt);
             var rgImage = Regex.IsMatch(urlPrivateImage, @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=a&expires_at=" + expiresAt + "&public_id=" + encodedTestPublicId + @"&signature=\w{40}&timestamp=\d{10}");

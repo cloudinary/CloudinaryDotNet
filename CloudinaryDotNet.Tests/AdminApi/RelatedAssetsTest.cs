@@ -120,8 +120,7 @@ namespace CloudinaryDotNet.Tests.AdminApi
             cloudinary.AssertHttpCall(
                 SystemHttp.HttpMethod.Delete,
                 "resources/related_assets/image/upload/" + TestConstants.TestPublicId,
-                 $"?assets_to_unrelate[]={Uri.EscapeDataString(TestIds[0])}" +
-                 $"&assets_to_unrelate[]={Uri.EscapeDataString(TestIds[1])}"
+                 $"?assets_to_unrelate[]={TestIds[0]}&assets_to_unrelate[]={TestIds[1]}"
                 );
 
             Assert.NotNull(result);

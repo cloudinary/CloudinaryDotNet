@@ -103,6 +103,23 @@
         }
 
         /// <summary>
+        /// Escapes characters in the input string based on the specified unsafe pattern.
+        /// </summary>
+        /// <param name="input">The input string to be escaped.</param>
+        /// <param name="unsafePattern">The regular expression pattern for identifying unsafe characters (default: "([^a-zA-Z0-9_.\\-/:]+)").</param>
+        /// <returns>The input string with unsafe characters replaced by their percent-encoded representation.</returns>
+        internal static string SmartEscape(string input, string unsafePattern = "([^a-zA-Z0-9_.\\-/:]+)")
+        {
+            var unsafeRegex = new Regex(unsafePattern);
+            return unsafeRegex.Replace(input, m =>
+            {
+                var bytes = Encoding.UTF8.GetBytes(m.Value);
+                var hex = BitConverter.ToString(bytes).Replace("-", "%");
+                return "%" + hex;
+            });
+        }
+
+        /// <summary>
         /// Computes the hash value for the specified string, using default hashing algorithm.
         /// </summary>
         /// <param name="s"> The input to compute the hash code for.</param>
