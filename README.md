@@ -32,9 +32,9 @@ For the complete documentation, see the [.NET SDK Guide](https://cloudinary.com/
 
 ## Version Support
 
-| SDK Version | .NET Framework 4.5.2 - 4.8 | .NET Standard 1.3 and up | .NET Core | .NET 5 | .NET 6 |
-|-------------|----------------------------|--------------------------|-----------|--------|--------|
-| 1.x         | v                          | v                        | v         | v      | v      |
+| SDK Version | .NET Framework 4.5.2 - 4.8 | .NET Standard 1.3 and up | .NET Core | .NET 5 - 8 |
+|-------------|----------------------------|--------------------------|-----------|------------|
+| 1.x         | ✔                          | ✔                        | ✔         | ✔          |
 
 ## Installation
 CloudinaryDotNet is available as NuGet package [CloudinaryDotNet](https://nuget.org/packages/CloudinaryDotNet)
