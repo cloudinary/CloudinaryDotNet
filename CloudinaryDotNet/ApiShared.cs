@@ -391,7 +391,7 @@
         public static string GetCloudinaryParam<T>(T e)
         {
             Type eType = typeof(T);
-            FieldInfo fi = eType.GetField(e.ToString());
+            FieldInfo fi = eType.GetRuntimeField(e.ToString());
             EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
                 typeof(EnumMemberAttribute), false);
 
@@ -412,7 +412,7 @@
         public static T ParseCloudinaryParam<T>(string s)
         {
             Type eType = typeof(T);
-            foreach (var fi in eType.GetFields())
+            foreach (var fi in eType.GetRuntimeFields())
             {
                 EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
                     typeof(EnumMemberAttribute), false);

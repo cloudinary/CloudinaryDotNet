@@ -6,7 +6,6 @@
     using System.Globalization;
     using System.Linq;
     using System.Text;
-    using System.Text.Encodings.Web;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -1277,7 +1276,7 @@
             }
             else
             {
-                var targetSource = isSignedAndUnicode ? UrlEncoder.Default.Encode(source) : source;
+                var targetSource = isSignedAndUnicode ? Utils.Encode(source) : source;
 
                 src = new CSource(Encode(Decode(targetSource)));
 
