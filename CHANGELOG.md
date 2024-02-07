@@ -1,4 +1,10 @@
 
+1.25.1 / 2024-02-07
+=============
+
+  * Fix vulnerable dependencies
+  * Fix URL encoding in `DownloadPrivate`
+
 1.25.0 / 2024-01-07
 ===================
 
