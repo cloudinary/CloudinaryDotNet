@@ -98,7 +98,7 @@ namespace CloudinaryDotNet.Tests.Transformations.Image
             {
                 var expected = layerTest.Value;
                 var actual = layerTest.Key.ToString();
-                Assert.IsTrue(expected.Equals(actual, StringComparison.CurrentCultureIgnoreCase));
+                StringAssert.AreEqualIgnoringCase(expected, actual);
             }
         }
 

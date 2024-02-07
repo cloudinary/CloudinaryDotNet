@@ -6,9 +6,9 @@
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Net;
     using System.Security.Cryptography;
     using System.Text;
-    using System.Text.Encodings.Web;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -78,7 +78,9 @@
         /// <returns>Encoded string.</returns>
         internal static string Encode(string value)
         {
-            return UrlEncoder.Default.Encode(value);
+            // Convert to lowercase hex for backwards compatibility.
+            var reg = new Regex(@"%[A-F0-9]{2}");
+            return reg.Replace(Uri.EscapeDataString(value), m => m.Value.ToLowerInvariant());
         }
 
         /// <summary>
