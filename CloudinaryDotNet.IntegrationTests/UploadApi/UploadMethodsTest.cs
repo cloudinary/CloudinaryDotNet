@@ -260,7 +260,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.AreEqual(MODERATION_MANUAL, uploadResult.Moderation[0].Kind);
             Assert.AreEqual(ModerationStatus.Pending, uploadResult.Moderation[0].Status);
 
-            var getResult = m_cloudinary.GetResource(uploadResult.PublicId);
+            var getResult = m_cloudinary.GetResourceByAssetId(uploadResult.AssetId);
 
             Assert.NotNull(getResult);
             Assert.NotNull(getResult.Moderation, getResult.Error?.Message);
