@@ -561,7 +561,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         [Test, RetryWithDelay]
         public void TestUploadLargeNonSeekableStream()
         {
-            byte[] bytes = File.ReadAllBytes(m_testLargeImagePath);
+            var bytes = File.ReadAllBytes(m_testLargeImagePath);
             const string streamed = "stream_non_seekable";
 
             using (var memoryStream = new NonSeekableStream(bytes))
@@ -617,6 +617,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         private void AssertUploadLarge(RawUploadResult result, int fileLength)
         {
+            Assert.NotNull(result);
             Assert.AreEqual(fileLength, result.Bytes, result.Error?.Message);
         }
 
@@ -655,6 +656,123 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             Assert.AreEqual("image", result.ResourceType);
         }
+
+        [Test, RetryWithDelay]
+        public void TestUploadChunkSingleStream()
+        {
+            var largeFilePath = m_testLargeImagePath;
+            var largeFileLength = (int)new FileInfo(largeFilePath).Length;
+
+            ImageUploadResult result = null;
+
+            using (var currChunk = new MemoryStream())
+            {
+                var uploadParams =  new ImageUploadParams()
+                {
+                    File = new FileDescription($"ImageFromChunks_{GetTaggedRandomValue()}", currChunk),
+                    Tags = m_apiTag
+                };
+
+                var buffer = new byte[TEST_CHUNK_SIZE];
+
+                using (var source = File.Open(largeFilePath, FileMode.Open))
+                {
+
+                    int read;
+                    while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        currChunk.Write(buffer, 0, read);
+
+                        // Need to specify whether the chunk is the last one in order to finish the upload.
+                        uploadParams.File.LastChunk = read != TEST_CHUNK_SIZE;
+
+                        result = m_cloudinary.UploadChunk(uploadParams);
+                    }
+                }
+            }
+
+            AssertUploadLarge(result, largeFileLength);
+            Assert.AreEqual("image", result?.ResourceType);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestUploadChunkMultipleStreamsAsync()
+        {
+            var largeFilePath = m_testLargeImagePath;
+            var largeFileLength = (int)new FileInfo(largeFilePath).Length;
+
+            ImageUploadResult result = null;
+
+            var uploadParams =  new ImageUploadParams()
+            {
+                // File path will be ignored, since we use streams.
+                File = new FileDescription($"ImageFromMultipleChunks_{GetTaggedRandomValue()}", ""),
+                Tags = m_apiTag
+            };
+
+            var buffer = new byte[TEST_CHUNK_SIZE];
+
+            using (var source = File.Open(largeFilePath, FileMode.Open))
+            {
+                int read;
+                while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    using (var currChunk = new MemoryStream())
+                    {
+                        currChunk.Write(buffer, 0, read);
+                        // Set current chunk
+                        uploadParams.File.Stream = currChunk;
+                        // Need to specify whether the chunk is the last one in order to finish the upload.
+                        uploadParams.File.LastChunk = read != TEST_CHUNK_SIZE;
+
+                        result = await m_cloudinary.UploadChunkAsync(uploadParams);
+                    }
+                }
+            }
+
+            AssertUploadLarge(result, largeFileLength);
+            Assert.AreEqual("image", result?.ResourceType);
+        }
+
+        [Test, RetryWithDelay]
+        public void TestUploadChunkMultipleFileParts()
+        {
+            var largeFilePath = m_testLargeImagePath;
+            var largeFileLength = (int)new FileInfo(largeFilePath).Length;
+
+            ImageUploadResult result = null;
+
+            var fileChunks = SplitFile(largeFilePath, TEST_CHUNK_SIZE);
+
+            var uploadParams =  new ImageUploadParams()
+            {
+                File = new FileDescription($"ImageFromFileChunks_{GetTaggedRandomValue()}", fileChunks.FirstOrDefault()),
+                Tags = m_apiTag
+            };
+            try
+            {
+                foreach (var chunk in fileChunks)
+                {
+                    // Set file path of the current chunk.
+                    uploadParams.File.FilePath = chunk;
+                    // Need to specify whether the chunk is the last one in order to finish the upload.
+                    uploadParams.File.LastChunk = fileChunks.IndexOf(chunk) == fileChunks.Count - 1;
+
+                    result = m_cloudinary.UploadChunk(uploadParams);
+                }
+            }
+            finally
+            {
+                foreach (var chunk in fileChunks)
+                {
+                    File.Delete(chunk);
+                }
+            }
+
+            AssertUploadLarge(result, largeFileLength);
+            Assert.AreEqual("image", result?.ResourceType);
+        }
+
         /// <summary>
         /// Test access control rules
         /// </summary>

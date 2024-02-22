@@ -8,14 +8,29 @@
     public class FileDescription
     {
         /// <summary>
-        /// Maximum size of a single chunk of data to be uploaded.
+        /// Indicates whether the file/stream content represents the last chunk of a large file.
         /// </summary>
-        internal int BufferLength = int.MaxValue;
+        public bool LastChunk;
 
         /// <summary>
-        /// Byte sent.
+        /// Indicates whether the file/stream content represents a chunk of a large file.
         /// </summary>
-        internal long BytesSent;
+        internal bool Chunked;
+
+        /// <summary>
+        /// Maximum size of a single chunk of data to be uploaded.
+        /// </summary>
+        internal int BufferSize = int.MaxValue;
+
+        /// <summary>
+        /// Current position (offset) in file (full file).
+        /// </summary>
+        internal long CurrPos;
+
+        /// <summary>
+        /// Current position (offset) in the current chunk.
+        /// </summary>
+        internal long CurrChunkPos;
 
         /// <summary>
         /// Current chunk size.
@@ -23,6 +38,10 @@
         internal long CurrChunkSize;
 
         private bool isEof;
+
+        private Stream stream;
+
+        private string filePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileDescription"/> class.
@@ -62,9 +81,17 @@
         }
 
         /// <summary>
-        /// Gets stream to upload.
+        /// Gets or sets stream to upload.
         /// </summary>
-        public Stream Stream { get; }
+        public Stream Stream
+        {
+            get => stream;
+            set
+            {
+                stream = value;
+                CurrChunkPos = 0;
+            }
+        }
 
         /// <summary>
         /// Gets or sets name of the file to upload.
@@ -72,9 +99,17 @@
         public string FileName { get; set; }
 
         /// <summary>
-        /// Gets filesystem path to the file to upload.
+        /// Gets or sets filesystem path to the file to upload.
         /// </summary>
-        public string FilePath { get; }
+        public string FilePath
+        {
+            get => filePath;
+            set
+            {
+                filePath = value;
+                CurrChunkPos = 0;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether it is remote (by URL) or local file.
@@ -86,7 +121,7 @@
         /// </summary>
         internal bool Eof
         {
-            get => isEof ? isEof : GetFileLength() != -1 && BytesSent == GetFileLength();
+            get => isEof ? isEof : GetFileLength() != -1 && CurrPos == GetFileLength();
             set => isEof = value;
         }
 
@@ -96,6 +131,11 @@
         /// <returns>The length of file.</returns>
         internal long GetFileLength()
         {
+            if (Chunked)
+            {
+                return -1; // unknown length
+            }
+
             if (Stream == null)
             {
                 return new FileInfo(FilePath).Length;
@@ -115,8 +155,20 @@
         /// <param name="bufferSize">(Optional) Size of the buffer.</param>
         internal void Reset(int bufferSize = int.MaxValue)
         {
-            BufferLength = bufferSize;
-            BytesSent = 0;
+            BufferSize = bufferSize;
+            CurrPos = 0;
+            CurrChunkPos = 0;
+            LastChunk = false;
+        }
+
+        /// <summary>
+        /// Shift current position by an offset value.
+        /// </summary>
+        /// <param name="offset">The offset to apply.</param>
+        internal void ShiftCurrPos(long offset)
+        {
+            CurrPos += offset;
+            CurrChunkPos += offset;
         }
     }
 }

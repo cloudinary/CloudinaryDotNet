@@ -8,9 +8,6 @@
         /// <summary>
         /// Gets get the type of video asset for upload.
         /// </summary>
-        public override ResourceType ResourceType
-        {
-            get { return Actions.ResourceType.Video; }
-        }
+        public override ResourceType ResourceType => ResourceType.Video;
     }
 }

@@ -87,7 +87,7 @@ namespace CloudinaryDotNet
             FileDescription fileDescription,
             CancellationToken? cancellationToken = null)
         {
-            var uri = GetUploadUrl(resourceType);
+            var uri = m_api.GetUploadUrl(resourceType);
 
             fileDescription.Reset();
 
@@ -119,13 +119,12 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of the raw file uploading.</returns>
         public Task<RawUploadResult> UploadAsync(RawUploadParams parameters, string type = "auto", CancellationToken? cancellationToken = null)
         {
-            string uri = m_api.ApiUrlImgUpV.ResourceType(type).BuildUrl();
-
+            CheckUploadParameters(parameters);
             parameters.File.Reset();
 
             return CallUploadApiAsync<RawUploadResult>(
                 HttpMethod.POST,
-                uri,
+                GetUploadUrl(parameters),
                 parameters,
                 cancellationToken);
         }
@@ -138,7 +137,7 @@ namespace CloudinaryDotNet
         /// <returns>Parsed result of the raw file uploading.</returns>
         public RawUploadResult Upload(RawUploadParams parameters, string type = "auto")
         {
-            return UploadAsync(parameters, type, null).GetAwaiter().GetResult();
+            return UploadAsync(parameters, type).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -292,14 +291,7 @@ namespace CloudinaryDotNet
         [Obsolete("Use UploadLarge(parameters, bufferSize) instead.")]
         public UploadResult UploadLarge(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE, bool isRaw = false)
         {
-            if (isRaw)
-            {
-                return UploadLarge<RawUploadResult>(parameters, bufferSize);
-            }
-            else
-            {
-                return UploadLarge<ImageUploadResult>(parameters, bufferSize);
-            }
+            return isRaw ? UploadLarge<RawUploadResult>(parameters, bufferSize) : UploadLarge<ImageUploadResult>(parameters, bufferSize);
         }
 
         /// <summary>
@@ -323,19 +315,13 @@ namespace CloudinaryDotNet
                 return await UploadAsync<T>(parameters).ConfigureAwait(false);
             }
 
-            var internalParams = new UploadLargeParams(parameters, bufferSize, m_api);
+            parameters.File.Reset(bufferSize != 0 ? bufferSize : DEFAULT_CHUNK_SIZE);
+
             T result = null;
 
             while (!parameters.File.Eof)
             {
-                UpdateContentRange(internalParams);
-                result = await CallUploadApiAsync<T>(
-                    HttpMethod.POST,
-                    internalParams.Url,
-                    parameters,
-                    cancellationToken,
-                    internalParams.Headers).ConfigureAwait(false);
-                CheckUploadResult(result);
+                result = await UploadChunkAsync<T>(parameters, cancellationToken).ConfigureAwait(false);
             }
 
             return result;
@@ -352,6 +338,127 @@ namespace CloudinaryDotNet
             where T : UploadResult, new()
         {
             return UploadLargeAsync<T>(parameters, bufferSize).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Uploads a single chunk of a file to Cloudinary asynchronously.
+        /// </summary>
+        /// <typeparam name="T">The type of result of upload.</typeparam>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public async Task<T> UploadChunkAsync<T>(
+            BasicRawUploadParams parameters,
+            CancellationToken? cancellationToken = null)
+            where T : UploadResult, new()
+        {
+            CheckUploadParameters(parameters);
+
+            if (string.IsNullOrEmpty(parameters.UniqueUploadId))
+            {
+                // The first chunk
+                parameters.UniqueUploadId = Utils.RandomPublicId();
+            }
+
+            // Mark upload as chunked in order to set appropriate content range header.
+            parameters.File.Chunked = true;
+
+            var headers = new Dictionary<string, string>
+            {
+                ["X-Unique-Upload-Id"] = parameters.UniqueUploadId,
+            };
+
+            var result = await CallUploadApiAsync<T>(
+                HttpMethod.POST,
+                GetUploadUrl(parameters),
+                parameters,
+                cancellationToken,
+                headers).ConfigureAwait(false);
+
+            CheckUploadResult(result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Uploads a single chunk of a file to Cloudinary.
+        /// </summary>
+        /// <typeparam name="T">The type of result of upload.</typeparam>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public T UploadChunk<T>(BasicRawUploadParams parameters)
+            where T : UploadResult, new()
+        {
+            return UploadChunkAsync<T>(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Uploads a single chunk of a raw file to Cloudinary asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public Task<RawUploadResult> UploadChunkAsync(
+            RawUploadParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            return UploadChunkAsync<RawUploadResult>(parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Uploads a single chunk of an image file to Cloudinary asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public Task<ImageUploadResult> UploadChunkAsync(
+            ImageUploadParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            return UploadChunkAsync<ImageUploadResult>(parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Uploads a single chunk of a video file to Cloudinary asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public Task<VideoUploadResult> UploadChunkAsync(
+            VideoUploadParams parameters,
+            CancellationToken? cancellationToken = null)
+        {
+            return UploadChunkAsync<VideoUploadResult>(parameters, cancellationToken);
+        }
+
+        /// <summary>
+        /// Uploads a single chunk of a raw file to Cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public RawUploadResult UploadChunk(RawUploadParams parameters)
+        {
+            return UploadChunk<RawUploadResult>(parameters);
+        }
+
+        /// <summary>
+        /// Uploads a single chunk of an image file to Cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public ImageUploadResult UploadChunk(ImageUploadParams parameters)
+        {
+            return UploadChunk<ImageUploadResult>(parameters);
+        }
+
+        /// <summary>
+        /// Uploads a single chunk of a video file to Cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public VideoUploadResult UploadChunk(VideoUploadParams parameters)
+        {
+            return UploadChunk<VideoUploadResult>(parameters);
         }
 
         /// <summary>
@@ -943,12 +1050,14 @@ namespace CloudinaryDotNet
         private static void CheckUploadResult<T>(T result)
             where T : UploadResult, new()
         {
-            if (result.StatusCode != HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.OK)
             {
-                var error = result.Error != null ? result.Error.Message : "Unknown error";
-                throw new Exception(
-                    $"An error has occured while uploading file (status code: {result.StatusCode}). {error}");
+                return;
             }
+
+            var error = result.Error != null ? result.Error.Message : "Unknown error";
+            throw new Exception(
+                $"An error has occurred while uploading file (status code: {result.StatusCode}). {error}");
         }
 
         private static void CheckUploadParameters(BasicRawUploadParams parameters)
@@ -962,19 +1071,6 @@ namespace CloudinaryDotNet
             {
                 throw new ArgumentException("Parameters.File parameter should be defined");
             }
-        }
-
-        private static void UpdateContentRange(UploadLargeParams internalParams)
-        {
-            var fileDescription = internalParams.Parameters.File;
-            var fileLength = fileDescription.GetFileLength();
-            var startOffset = fileDescription.BytesSent;
-            var buffSize = fileLength > 0
-                ? Math.Min(internalParams.BufferSize, fileLength - startOffset)
-                : internalParams.BufferSize;
-            var endOffset = startOffset + buffSize - 1;
-
-            internalParams.Headers["Content-Range"] = $"bytes {startOffset}-{endOffset}/{fileLength}";
         }
 
         private Task<T> CallUploadApiAsync<T>(
@@ -1006,33 +1102,12 @@ namespace CloudinaryDotNet
                 cancellationToken);
         }
 
-        private string GetUploadUrl(string resourceType)
-        {
-            return GetApiUrlV().Action(Constants.ACTION_NAME_UPLOAD).ResourceType(resourceType).BuildUrl();
-        }
-
         private string GetRenameUrl(RenameParams parameters) =>
             m_api
                 .ApiUrlImgUpV
                 .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
                 .Action("rename")
                 .BuildUrl();
-
-        private string CheckUploadParametersAndGetUploadUrl(BasicRawUploadParams parameters)
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentNullException(nameof(parameters), "Upload parameters should be defined");
-            }
-
-            string uri = GetApiUrlV()
-                .Action(Constants.ACTION_NAME_UPLOAD)
-                .ResourceType(ApiShared.GetCloudinaryParam(parameters.ResourceType))
-                .BuildUrl();
-
-            parameters.File.Reset();
-            return uri;
-        }
 
         /// <summary>
         /// Uploads a resource to Cloudinary.
@@ -1055,14 +1130,21 @@ namespace CloudinaryDotNet
         private Task<T> UploadAsync<T>(BasicRawUploadParams parameters, CancellationToken? cancellationToken = null)
             where T : UploadResult, new()
         {
-            var uri = CheckUploadParametersAndGetUploadUrl(parameters);
+            CheckUploadParameters(parameters);
+
+            parameters.File.Reset();
 
             return CallUploadApiAsync<T>(
                 HttpMethod.POST,
-                uri,
+                GetUploadUrl(parameters),
                 parameters,
                 cancellationToken,
                 null);
+        }
+
+        private string GetUploadUrl(BasicRawUploadParams parameters)
+        {
+            return m_api.GetUploadUrl(ApiShared.GetCloudinaryParam(parameters.ResourceType));
         }
 
         private string GetDownloadUrl(UrlBuilder builder, IDictionary<string, object> parameters)
@@ -1070,78 +1152,6 @@ namespace CloudinaryDotNet
             m_api.FinalizeUploadParameters(parameters);
             builder.SetParameters(parameters);
             return builder.ToEncodedString();
-        }
-
-        /// <summary>
-        /// Upload large file parameters.
-        /// </summary>
-        internal class UploadLargeParams
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CloudinaryDotNet.Cloudinary.UploadLargeParams"/> class.
-            /// </summary>
-            /// <param name="parameters">Basic raw upload parameters.</param>
-            /// <param name="bufferSize">Buffer size.</param>
-            /// <param name="api">Technological layer to work with cloudinary API.</param>
-            public UploadLargeParams(BasicRawUploadParams parameters, int bufferSize, Api api)
-            {
-                parameters.File.Reset(bufferSize);
-                Parameters = parameters;
-                Url = GetUploadUrl(parameters, api);
-                BufferSize = bufferSize != 0 ? bufferSize : DEFAULT_CHUNK_SIZE;
-            }
-
-            /// <summary>
-            /// Gets buffer size.
-            /// </summary>
-            public int BufferSize { get; }
-
-            /// <summary>
-            /// Gets url.
-            /// </summary>
-            public string Url { get; }
-
-            /// <summary>
-            /// Gets basic raw upload parameters.
-            /// </summary>
-            public BasicRawUploadParams Parameters { get; }
-
-            /// <summary>
-            /// Gets request headers.
-            /// </summary>
-            public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>
-            {
-                ["X-Unique-Upload-Id"] = RandomPublicId(),
-            };
-
-            /// <summary>
-            /// Generate random PublicId.
-            /// </summary>
-            /// <returns>Randomly generated PublicId.</returns>
-            private static string RandomPublicId()
-            {
-                var buffer = new byte[8];
-                new Random().NextBytes(buffer);
-                return string.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
-            }
-
-            /// <summary>
-            /// A convenient method for uploading an image before testing.
-            /// </summary>
-            /// <param name="parameters">Parameters of type BasicRawUploadParams.</param>
-            /// <param name="mApi">Action to set custom upload parameters.</param>
-            /// <returns>The upload url.</returns>
-            private static string GetUploadUrl(BasicRawUploadParams parameters, Api mApi)
-            {
-                var url = mApi.ApiUrlImgUpV;
-                var name = Enum.GetName(typeof(ResourceType), parameters.ResourceType);
-                if (name != null)
-                {
-                    url.ResourceType(name.ToLowerInvariant());
-                }
-
-                return url.BuildUrl();
-            }
         }
     }
 }

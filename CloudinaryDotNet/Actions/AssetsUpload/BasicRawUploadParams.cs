@@ -59,6 +59,11 @@
         public string Signature { get; set; }
 
         /// <summary>
+        /// Gets or sets unique upload ID.
+        /// </summary>
+        public string UniqueUploadId { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()

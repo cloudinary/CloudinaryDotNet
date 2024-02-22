@@ -340,22 +340,25 @@
             (method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null;
 
         private static bool IsContentRange(Dictionary<string, string> extraHeaders) =>
-            extraHeaders != null && extraHeaders.ContainsKey("Content-Range");
+            extraHeaders != null && extraHeaders.ContainsKey("X-Unique-Upload-Id");
 
-        private static void UpdateContentRange(IDictionary<string, string> extraHeaders, FileDescription file)
+        private static void SetContentRange(IDictionary<string, string> extraHeaders, FileDescription file)
         {
-            if (!file.Eof || file.GetFileLength() > 0)
+            var startOffset = file.CurrPos - file.CurrChunkSize;
+            long endOffset = -1;
+            if (file.GetFileLength() > 0)
             {
-                return; // no need to update the header, all good.
+                endOffset = file.GetFileLength();
+            }
+            else if (file.Eof)
+            {
+                endOffset = file.CurrPos;
             }
 
-            var startOffset = file.BytesSent - file.CurrChunkSize;
-
-            extraHeaders["Content-Range"] = $"bytes {startOffset}-{file.BytesSent - 1}/{file.BytesSent}";
+            extraHeaders["Content-Range"] = $"bytes {startOffset}-{file.CurrPos - 1}/{endOffset}";
         }
 
-        private static Stream GetFileStream(FileDescription file) =>
-            file.Stream ?? File.OpenRead(file.FilePath);
+        private static Stream GetFileStream(FileDescription file) => file.Stream ?? File.OpenRead(file.FilePath);
 
         private static void SetStreamContent(string fieldName, FileDescription file, Stream stream, MultipartFormDataContent content)
         {
@@ -399,7 +402,7 @@
 
             if (stream.CanSeek)
             {
-                stream.Seek(file.BytesSent, SeekOrigin.Begin);
+                stream.Seek(file.CurrChunkPos, SeekOrigin.Begin);
             }
 
             return writer;
@@ -450,7 +453,7 @@
             {
                 switch (param.Value)
                 {
-                    case FileDescription file when file.IsRemote:
+                    case FileDescription { IsRemote: true } file:
                         SetContentForRemoteFile(param.Key, file, content);
                         break;
                     case FileDescription file:
@@ -462,7 +465,8 @@
                             // Unfortunately we don't have ByteRangeStreamContent here,
                             // let's create another stream from the original one
                             stream = await GetRangeFromFileAsync(file, stream, cancellationToken).ConfigureAwait(false);
-                            UpdateContentRange(extraHeaders, file);
+
+                            SetContentRange(extraHeaders, file);
                         }
 
                         SetStreamContent(param.Key, file, stream, content);
@@ -509,7 +513,7 @@
                             // Unfortunately we don't have ByteRangeStreamContent here,
                             // let's create another stream from the original one
                             stream = GetRangeFromFile(file, stream);
-                            UpdateContentRange(extraHeaders, file);
+                            SetContentRange(extraHeaders, file);
                         }
 
                         SetStreamContent(param.Key, file, stream, content);
@@ -618,9 +622,9 @@
         private async Task<Stream> GetRangeFromFileAsync(FileDescription file, Stream stream, CancellationToken? cancellationToken = null)
         {
             var writer = SetStreamToStartAndCreateWriter(file, stream);
-            file.CurrChunkSize = await ReadBytesAsync(writer, stream, file.BufferLength, cancellationToken).ConfigureAwait(false);
-            file.BytesSent += file.CurrChunkSize;
-            if (file.CurrChunkSize < file.BufferLength)
+            file.CurrChunkSize = await ReadBytesAsync(writer, stream, file.BufferSize, cancellationToken).ConfigureAwait(false);
+            file.ShiftCurrPos(file.CurrChunkSize);
+            if ((file.BufferSize != int.MaxValue && file.CurrChunkSize < file.BufferSize) || file.LastChunk)
             {
                 file.Eof = true; // last chunk
             }
@@ -631,9 +635,9 @@
         private Stream GetRangeFromFile(FileDescription file, Stream stream)
         {
             var writer = SetStreamToStartAndCreateWriter(file, stream);
-            file.CurrChunkSize = ReadBytes(writer, stream, file.BufferLength);
-            file.BytesSent += file.CurrChunkSize;
-            if (file.CurrChunkSize < file.BufferLength)
+            file.CurrChunkSize = ReadBytes(writer, stream, file.BufferSize);
+            file.ShiftCurrPos(file.CurrChunkSize);
+            if ((file.BufferSize != int.MaxValue && file.CurrChunkSize < file.BufferSize) || file.LastChunk)
             {
                 file.Eof = true; // last chunk
             }

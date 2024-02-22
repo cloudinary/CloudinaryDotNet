@@ -6,7 +6,6 @@
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Net;
     using System.Security.Cryptography;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -160,6 +159,17 @@
             }
 
             return signature.ToString();
+        }
+
+        /// <summary>
+        /// Generate random PublicId.
+        /// </summary>
+        /// <returns>Randomly generated PublicId.</returns>
+        internal static string RandomPublicId()
+        {
+            var buffer = new byte[8];
+            new Random().NextBytes(buffer);
+            return string.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
         }
 
         /// <summary>

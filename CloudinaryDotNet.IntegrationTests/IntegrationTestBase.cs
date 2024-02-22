@@ -180,7 +180,7 @@ namespace CloudinaryDotNet.IntegrationTests
             SaveEmbeddedToDisk(assembly, TEST_PDF, m_testPdfPath);
         }
 
-        private void SaveEmbeddedToDisk(Assembly assembly, string sourcePath, string destPath)
+        private static void SaveEmbeddedToDisk(Assembly assembly, string sourcePath, string destPath)
         {
             try
             {
@@ -204,6 +204,34 @@ namespace CloudinaryDotNet.IntegrationTests
             {
 
             }
+        }
+
+
+        protected List<string> SplitFile(string sourceFile, int chunkSize)
+        {
+            var chunks = new List<string>();
+
+            var baseName = Path.GetFileNameWithoutExtension(sourceFile);
+            var extension = Path.GetExtension(sourceFile);
+            var buffer = new byte[chunkSize];
+            using (var fs = new FileStream(sourceFile, FileMode.Open, FileAccess.Read))
+            {
+                int read;
+                var currChunkNum = 0;
+                while ((read = fs.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    var path = $"{Path.GetDirectoryName(sourceFile)}/{baseName}.{currChunkNum}{extension}.tmp";
+                    using (var outputFile = new FileStream(path, FileMode.Create, FileAccess.Write))
+                    {
+                        outputFile.Write(buffer, 0, read);
+                    }
+
+                    chunks.Add(path);
+                    currChunkNum++;
+                }
+            }
+
+            return chunks;
         }
 
         /// <summary>

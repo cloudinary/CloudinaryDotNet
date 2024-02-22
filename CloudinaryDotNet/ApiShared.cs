@@ -390,10 +390,8 @@
         /// <returns>Cloudinary-compatible parameter.</returns>
         public static string GetCloudinaryParam<T>(T e)
         {
-            Type eType = typeof(T);
-            FieldInfo fi = eType.GetRuntimeField(e.ToString());
-            EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
-                typeof(EnumMemberAttribute), false);
+            var fi = typeof(T).GetRuntimeField(e.ToString());
+            var attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(typeof(EnumMemberAttribute), false);
 
             if (attrs.Length == 0)
             {
