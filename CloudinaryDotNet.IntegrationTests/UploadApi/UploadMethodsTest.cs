@@ -677,7 +677,6 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
                 using (var source = File.Open(largeFilePath, FileMode.Open))
                 {
-
                     int read;
                     while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
                     {
@@ -765,7 +764,14 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             {
                 foreach (var chunk in fileChunks)
                 {
-                    File.Delete(chunk);
+                    try
+                    {
+                        File.Delete(chunk);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
             }
 
