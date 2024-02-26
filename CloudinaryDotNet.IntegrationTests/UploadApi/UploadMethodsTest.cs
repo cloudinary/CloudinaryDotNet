@@ -762,7 +762,14 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 uploadParams.File.Dispose();
                 foreach (var chunk in fileChunks)
                 {
-                    File.Delete(chunk);
+                    try
+                    {
+                        File.Delete(chunk);
+                    }
+                    catch (IOException)
+                    {
+                        // nothing to do
+                    }
                 }
             }
 
@@ -800,7 +807,14 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 uploadParams.File.Dispose();
                 foreach (var chunk in fileChunks)
                 {
-                    File.Delete(chunk);
+                    try
+                    {
+                        File.Delete(chunk);
+                    }
+                    catch (IOException)
+                    {
+                        // nothing to do
+                    }
                 }
             }
 
