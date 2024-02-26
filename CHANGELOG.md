@@ -1,4 +1,11 @@
 
+1.26.0 / 2024-02-26
+=============
+
+New functionality
+-----------------
+  * Add support for `UploadChunk` and parallel uploads in Upload Api
+
 1.25.1 / 2024-02-07
 =============
 
