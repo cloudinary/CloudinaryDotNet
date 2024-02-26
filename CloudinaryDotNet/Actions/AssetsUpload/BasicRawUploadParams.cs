@@ -59,6 +59,11 @@
         public string Signature { get; set; }
 
         /// <summary>
+        /// Gets or sets unique upload ID.
+        /// </summary>
+        public string UniqueUploadId { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -68,7 +73,7 @@
                 throw new ArgumentException("File must be specified in UploadParams!");
             }
 
-            if (!File.IsRemote && File.Stream == null && string.IsNullOrEmpty(File.FilePath))
+            if (!File.Chunked && !File.IsRemote && File.Stream == null && string.IsNullOrEmpty(File.FilePath))
             {
                 throw new ArgumentException("File is not ready!");
             }

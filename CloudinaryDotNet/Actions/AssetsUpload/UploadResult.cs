@@ -103,6 +103,12 @@
         public JToken MetadataFields { get; set; }
 
         /// <summary>
+        /// Gets or sets a status that is returned when passing 'Async' argument set to 'true' to the server.
+        /// </summary>
+        [DataMember(Name = "status")]
+        public string Status { get; set; }
+
+        /// <summary>
         /// Gets or sets upload hook execution status.
         /// </summary>
         [DataMember(Name = "hook_execution")]

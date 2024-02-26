@@ -26,12 +26,6 @@
         public List<ResponsiveBreakpointList> ResponsiveBreakpoints { get; set; }
 
         /// <summary>
-        /// Gets or sets a status that is returned when passing 'Async' argument set to 'true' to the server.
-        /// </summary>
-        [DataMember(Name = "status")]
-        public string Status { get; set; }
-
-        /// <summary>
         /// Gets or sets any requested information from executing one of the Cloudinary Add-ons on the media asset.
         /// </summary>
         [DataMember(Name = "info")]

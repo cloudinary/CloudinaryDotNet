@@ -390,10 +390,8 @@
         /// <returns>Cloudinary-compatible parameter.</returns>
         public static string GetCloudinaryParam<T>(T e)
         {
-            Type eType = typeof(T);
-            FieldInfo fi = eType.GetRuntimeField(e.ToString());
-            EnumMemberAttribute[] attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(
-                typeof(EnumMemberAttribute), false);
+            var fi = typeof(T).GetRuntimeField(e.ToString());
+            var attrs = (EnumMemberAttribute[])fi.GetCustomAttributes(typeof(EnumMemberAttribute), false);
 
             if (attrs.Length == 0)
             {
@@ -442,6 +440,7 @@
         /// <param name="extraHeaders">Headers to add to the request.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Instance of the parsed response from the cloudinary API.</returns>
+        [Obsolete("Passing FileDescription to CallAndParseAsync is deprecated.")]
         public async Task<T> CallAndParseAsync<T>(
             HttpMethod method,
             string url,
@@ -451,16 +450,14 @@
             CancellationToken? cancellationToken = null)
             where T : BaseResult, new()
         {
-            using (var response = await CallAsync(
+            using var response = await CallAsync(
                 method,
                 url,
                 parameters,
                 file,
                 extraHeaders,
-                cancellationToken).ConfigureAwait(false))
-            {
-                return await ParseAsync<T>(response).ConfigureAwait(false);
-            }
+                cancellationToken).ConfigureAwait(false);
+            return await ParseAsync<T>(response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -481,15 +478,13 @@
             CancellationToken? cancellationToken = null)
             where T : BaseResult, new()
         {
-            using (var response = await CallAsync(
-                       method,
-                       url,
-                       parameters,
-                       extraHeaders,
-                       cancellationToken).ConfigureAwait(false))
-            {
-                return await ParseAsync<T>(response).ConfigureAwait(false);
-            }
+            using var response = await CallAsync(
+                method,
+                url,
+                parameters,
+                extraHeaders,
+                cancellationToken).ConfigureAwait(false);
+            return await ParseAsync<T>(response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -580,17 +575,15 @@
             Dictionary<string, string> extraHeaders = null,
             CancellationToken? cancellationToken = null)
         {
-            using (var request =
-                   await PrepareRequestBodyAsync(
-                       requestBuilder(PrepareRequestUrl(method, url, parameters)),
-                       method,
-                       parameters,
-                       extraHeaders,
-                       cancellationToken).ConfigureAwait(false))
-            {
-                var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
-                return await Client.SendAsync(request, httpCancellationToken).ConfigureAwait(false);
-            }
+            using var request =
+                await PrepareRequestBodyAsync(
+                    requestBuilder(PrepareRequestUrl(method, url, parameters)),
+                    method,
+                    parameters,
+                    extraHeaders,
+                    cancellationToken).ConfigureAwait(false);
+            var httpCancellationToken = cancellationToken ?? GetDefaultCancellationToken();
+            return await Client.SendAsync(request, httpCancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -628,17 +621,7 @@
             SortedDictionary<string, object> parameters,
             Dictionary<string, string> extraHeaders = null)
         {
-            using (var request = requestBuilder(PrepareRequestUrl(method, url, parameters)))
-            {
-                PrepareRequestBody(request, method, parameters, extraHeaders);
-
-                var cancellationToken = GetDefaultCancellationToken();
-
-                return Client
-                    .SendAsync(request, cancellationToken)
-                    .GetAwaiter()
-                    .GetResult();
-            }
+            return CallAsync(method, url, parameters, extraHeaders).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -660,12 +643,9 @@
         /// <returns>JSON representation of upload parameters.</returns>
         public string PrepareUploadParams(IDictionary<string, object> parameters)
         {
-            if (parameters == null)
-            {
-                parameters = new SortedDictionary<string, object>();
-            }
+            parameters ??= new SortedDictionary<string, object>();
 
-            if (!(parameters is SortedDictionary<string, object>))
+            if (parameters is not SortedDictionary<string, object>)
             {
                 parameters = new SortedDictionary<string, object>(parameters);
             }
