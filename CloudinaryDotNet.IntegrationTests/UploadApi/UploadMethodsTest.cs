@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
+using CloudinaryDotNet.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -159,7 +161,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.AreEqual(TEST_PDF_PAGES_COUNT, uploadResult.Pages);
         }
 
-        [Test, RetryWithDelay]
+        [Test]
         public void TestUploadLocalImageTimeout()
         {
             const int TIMEOUT = 1000;
@@ -593,7 +595,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         }
 
         [Test, RetryWithDelay]
-        public async Task TestUploadLargeRawFilesAsync()
+        public async Task TestUploadLargeRawFilesAsyncInParallel()
         {
             // support asynchronous uploading large raw files
             var largeFilePath = m_testLargeImagePath;
@@ -601,7 +603,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadParams = GetUploadLargeRawParams(largeFilePath);
 
-            var result = await m_cloudinary.UploadLargeAsync(uploadParams, TEST_CHUNK_SIZE);
+            var result = await m_cloudinary.UploadLargeAsync<RawUploadResult>(uploadParams, TEST_CHUNK_SIZE, 2);
 
             AssertUploadLarge(result, largeFileLength);
         }
@@ -680,6 +682,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                     int read;
                     while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
                     {
+                        currChunk.Seek(0, SeekOrigin.End);
                         currChunk.Write(buffer, 0, read);
 
                         // Need to specify whether the chunk is the last one in order to finish the upload.
@@ -695,7 +698,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         }
 
         [Test, RetryWithDelay]
-        public async Task TestUploadChunkMultipleStreamsAsync()
+        public async Task TestUploadChunkMultipleStreamsCustomOffsetAsync()
         {
             var largeFilePath = m_testLargeImagePath;
             var largeFileLength = (int)new FileInfo(largeFilePath).Length;
@@ -705,7 +708,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var uploadParams =  new ImageUploadParams()
             {
                 // File path will be ignored, since we use streams.
-                File = new FileDescription($"ImageFromMultipleChunks_{GetTaggedRandomValue()}", ""),
+                File = new FileDescription($"ImageFromMultipleChunks_{GetTaggedRandomValue()}", true),
                 Tags = m_apiTag
             };
 
@@ -716,16 +719,11 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 int read;
                 while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    using (var currChunk = new MemoryStream())
-                    {
-                        currChunk.Write(buffer, 0, read);
-                        // Set current chunk
-                        uploadParams.File.Stream = currChunk;
-                        // Need to specify whether the chunk is the last one in order to finish the upload.
-                        uploadParams.File.LastChunk = read != TEST_CHUNK_SIZE;
+                    var currChunk = new MemoryStream(buffer);
+                    // Set current chunk
+                    uploadParams.File.AddChunk(currChunk, source.Position - read, read, read != TEST_CHUNK_SIZE);
 
-                        result = await m_cloudinary.UploadChunkAsync(uploadParams);
-                    }
+                    result = await m_cloudinary.UploadChunkAsync(uploadParams);
                 }
             }
 
@@ -745,17 +743,16 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadParams =  new ImageUploadParams()
             {
-                File = new FileDescription($"ImageFromFileChunks_{GetTaggedRandomValue()}", fileChunks.FirstOrDefault()),
-                Tags = m_apiTag
+                File = new FileDescription($"ImageFromFileChunks_{GetTaggedRandomValue()}", true),
+                Tags = m_apiTag,
             };
             try
             {
                 foreach (var chunk in fileChunks)
                 {
                     // Set file path of the current chunk.
-                    uploadParams.File.FilePath = chunk;
+                    uploadParams.File.AddChunk(chunk, fileChunks.IndexOf(chunk) == fileChunks.Count - 1);
                     // Need to specify whether the chunk is the last one in order to finish the upload.
-                    uploadParams.File.LastChunk = fileChunks.IndexOf(chunk) == fileChunks.Count - 1;
 
                     result = m_cloudinary.UploadChunk(uploadParams);
                 }
@@ -777,6 +774,52 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             AssertUploadLarge(result, largeFileLength);
             Assert.AreEqual("image", result?.ResourceType);
+        }
+
+        [Test, RetryWithDelay]
+        public void TestUploadChunkMultipleFilePartsInParallel()
+        {
+            var largeFilePath = m_testLargeImagePath;
+            var largeFileLength = (int)new FileInfo(largeFilePath).Length;
+
+            var fileChunks = SplitFile(largeFilePath, TEST_CHUNK_SIZE);
+
+            var uploadParams =  new RawUploadParams()
+            {
+                File = new FileDescription($"ImageFromFileChunks_{GetTaggedRandomValue()}", true),
+                Tags = m_apiTag
+            };
+
+            var resultCollection = new ConcurrentBag<RawUploadResult>();
+
+            uploadParams.File.AddChunks(fileChunks);
+
+            try
+            {
+                Parallel.For(0, fileChunks.Count, new ParallelOptions { MaxDegreeOfParallelism = 2 },chunkNum =>
+                {
+                    resultCollection.Add(m_cloudinary.UploadChunk(uploadParams));
+                });
+            }
+            finally
+            {
+                foreach (var chunk in fileChunks)
+                {
+                    try
+                    {
+                        File.Delete(chunk);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+            }
+
+            var uploadResult = resultCollection.FirstOrDefault(r => r.AssetId != null);
+
+            AssertUploadLarge(uploadResult, largeFileLength);
+            Assert.AreEqual("raw", uploadResult?.ResourceType);
         }
 
         /// <summary>

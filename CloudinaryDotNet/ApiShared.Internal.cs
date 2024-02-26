@@ -213,10 +213,7 @@
         /// <returns>Unsigned cloudinary parameters with upload preset included.</returns>
         protected static SortedDictionary<string, object> BuildUnsignedUploadParams(string preset, SortedDictionary<string, object> parameters = null)
         {
-            if (parameters == null)
-            {
-                parameters = new SortedDictionary<string, object>();
-            }
+            parameters ??= new SortedDictionary<string, object>();
 
             parameters.Add("upload_preset", preset);
             parameters.Add("unsigned", true);
@@ -284,17 +281,13 @@
         {
             try
             {
-                using (var streamReader = new StreamReader(s))
-                {
-                    using (var jsonReader = new JsonTextReader(streamReader))
-                    {
-                        var jsonObj = JToken.Load(jsonReader);
-                        var result = jsonObj.ToObject<T>();
-                        result.JsonObj = jsonObj;
+                using var streamReader = new StreamReader(s);
+                using var jsonReader = new JsonTextReader(streamReader);
+                var jsonObj = JToken.Load(jsonReader);
+                var result = jsonObj.ToObject<T>();
+                result.JsonObj = jsonObj;
 
-                        return result;
-                    }
-                }
+                return result;
             }
             catch (JsonException jex)
             {
@@ -342,24 +335,6 @@
         private static bool IsContentRange(Dictionary<string, string> extraHeaders) =>
             extraHeaders != null && extraHeaders.ContainsKey("X-Unique-Upload-Id");
 
-        private static void SetContentRange(IDictionary<string, string> extraHeaders, FileDescription file)
-        {
-            var startOffset = file.CurrPos - file.CurrChunkSize;
-            long endOffset = -1;
-            if (file.GetFileLength() > 0)
-            {
-                endOffset = file.GetFileLength();
-            }
-            else if (file.Eof)
-            {
-                endOffset = file.CurrPos;
-            }
-
-            extraHeaders["Content-Range"] = $"bytes {startOffset}-{file.CurrPos - 1}/{endOffset}";
-        }
-
-        private static Stream GetFileStream(FileDescription file) => file.Stream ?? File.OpenRead(file.FilePath);
-
         private static void SetStreamContent(string fieldName, FileDescription file, Stream stream, MultipartFormDataContent content)
         {
             var streamContent = new StreamContent(stream);
@@ -387,26 +362,6 @@
             extraHeaders != null &&
             extraHeaders.TryGetValue(Constants.HEADER_CONTENT_TYPE, out var value) &&
             value == Constants.CONTENT_TYPE_APPLICATION_JSON;
-
-        private static Stream WriterStreamFromBegin(StreamWriter writer)
-        {
-            var stream = writer.BaseStream;
-            stream.Seek(0, SeekOrigin.Begin);
-            return stream;
-        }
-
-        private static StreamWriter SetStreamToStartAndCreateWriter(FileDescription file, Stream stream)
-        {
-            var memStream = new MemoryStream();
-            var writer = new StreamWriter(memStream) { AutoFlush = true };
-
-            if (stream.CanSeek)
-            {
-                stream.Seek(file.CurrChunkPos, SeekOrigin.Begin);
-            }
-
-            return writer;
-        }
 
         private static void SetHeadersAndContent(HttpRequestMessage request, Dictionary<string, string> extraHeaders, HttpContent content)
         {
@@ -443,7 +398,7 @@
             }
         }
 
-        private async Task<HttpContent> CreateMultipartContentAsync(
+        private static async Task<HttpContent> CreateMultipartContentAsync(
             SortedDictionary<string, object> parameters,
             Dictionary<string, string> extraHeaders = null,
             CancellationToken? cancellationToken = null)
@@ -458,15 +413,18 @@
                         break;
                     case FileDescription file:
                     {
-                        var stream = GetFileStream(file);
-
+                        Stream stream;
                         if (IsContentRange(extraHeaders))
                         {
-                            // Unfortunately we don't have ByteRangeStreamContent here,
-                            // let's create another stream from the original one
-                            stream = await GetRangeFromFileAsync(file, stream, cancellationToken).ConfigureAwait(false);
+                            var chunk = await file.GetNextChunkAsync(cancellationToken).ConfigureAwait(false);
 
-                            SetContentRange(extraHeaders, file);
+                            stream = chunk.Chunk;
+
+                            extraHeaders!["Content-Range"] = $"bytes {chunk.StartByte}-{chunk.EndByte}/{chunk.TotalBytes}";
+                        }
+                        else
+                        {
+                            stream = file.GetFileStream();
                         }
 
                         SetStreamContent(param.Key, file, stream, content);
@@ -492,7 +450,7 @@
             return content;
         }
 
-        private HttpContent CreateMultipartContent(
+        private static HttpContent CreateMultipartContent(
             SortedDictionary<string, object> parameters,
             Dictionary<string, string> extraHeaders = null)
         {
@@ -501,19 +459,20 @@
             {
                 switch (param.Value)
                 {
-                    case FileDescription file when file.IsRemote:
+                    case FileDescription { IsRemote: true } file:
                         SetContentForRemoteFile(param.Key, file, content);
                         break;
                     case FileDescription file:
                     {
-                        var stream = GetFileStream(file);
+                        var stream = file.GetFileStream();
 
                         if (IsContentRange(extraHeaders))
                         {
-                            // Unfortunately we don't have ByteRangeStreamContent here,
-                            // let's create another stream from the original one
-                            stream = GetRangeFromFile(file, stream);
-                            SetContentRange(extraHeaders, file);
+                            var chunk = file.GetNextChunkAsync().GetAwaiter().GetResult();
+
+                            stream = chunk.Chunk;
+
+                            extraHeaders!["Content-Range"] = $"bytes {chunk.StartByte}-{chunk.EndByte}/{chunk.TotalBytes}";
                         }
 
                         SetStreamContent(param.Key, file, stream, content);
@@ -617,65 +576,6 @@
                 : CreateMultipartContent(parameters, extraHeaders);
 
             SetHeadersAndContent(request, extraHeaders, content);
-        }
-
-        private async Task<Stream> GetRangeFromFileAsync(FileDescription file, Stream stream, CancellationToken? cancellationToken = null)
-        {
-            var writer = SetStreamToStartAndCreateWriter(file, stream);
-            file.CurrChunkSize = await ReadBytesAsync(writer, stream, file.BufferSize, cancellationToken).ConfigureAwait(false);
-            file.ShiftCurrPos(file.CurrChunkSize);
-            if ((file.BufferSize != int.MaxValue && file.CurrChunkSize < file.BufferSize) || file.LastChunk)
-            {
-                file.Eof = true; // last chunk
-            }
-
-            return WriterStreamFromBegin(writer);
-        }
-
-        private Stream GetRangeFromFile(FileDescription file, Stream stream)
-        {
-            var writer = SetStreamToStartAndCreateWriter(file, stream);
-            file.CurrChunkSize = ReadBytes(writer, stream, file.BufferSize);
-            file.ShiftCurrPos(file.CurrChunkSize);
-            if ((file.BufferSize != int.MaxValue && file.CurrChunkSize < file.BufferSize) || file.LastChunk)
-            {
-                file.Eof = true; // last chunk
-            }
-
-            return WriterStreamFromBegin(writer);
-        }
-
-        private async Task<int> ReadBytesAsync(StreamWriter writer, Stream stream, int length, CancellationToken? cancellationToken = null)
-        {
-            int bytesSent = 0;
-            byte[] buf = new byte[ChunkSize];
-            int toSend;
-            int cnt;
-            var token = cancellationToken ?? CancellationToken.None;
-            while ((toSend = length - bytesSent) > 0
-                && (cnt = await stream.ReadAsync(buf, 0, toSend > buf.Length ? buf.Length : toSend, token).ConfigureAwait(false)) > 0)
-            {
-                await writer.BaseStream.WriteAsync(buf, 0, cnt, token).ConfigureAwait(false);
-                bytesSent += cnt;
-            }
-
-            return bytesSent;
-        }
-
-        private int ReadBytes(StreamWriter writer, Stream stream, int length)
-        {
-            int bytesSent = 0;
-            byte[] buf = new byte[ChunkSize];
-            int toSend;
-            int cnt;
-            while ((toSend = length - bytesSent) > 0
-                && (cnt = stream.Read(buf, 0, toSend > buf.Length ? buf.Length : toSend)) > 0)
-            {
-                writer.BaseStream.Write(buf, 0, cnt);
-                bytesSent += cnt;
-            }
-
-            return bytesSent;
         }
     }
 }

@@ -485,13 +485,13 @@ namespace CloudinaryDotNet.Tests.Asset
         [Test]
         public void TestAgentPlatformHeaders()
         {
-            var request = new HttpRequestMessage { RequestUri = new Uri("http://dummy.com") };
+            var request = new HttpRequestMessage { RequestUri = new Uri("https://dummy.com") };
             m_api.UserPlatform = "Test/1.0";
 
-            m_api.PrepareRequestBody(
+            m_api.PrepareRequestBodyAsync(
                 request,
                 HttpMethod.GET,
-                new SortedDictionary<string, object>());
+                new SortedDictionary<string, object>()).GetAwaiter().GetResult();
 
             //Can't test the result, so we just verify the UserAgent parameter is sent to the server
             StringAssert.AreEqualIgnoringCase($"{m_api.UserPlatform} {ApiShared.USER_AGENT}",

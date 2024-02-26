@@ -1,6 +1,7 @@
 namespace CloudinaryDotNet
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -30,6 +31,11 @@ namespace CloudinaryDotNet
         /// Default chunk (buffer) size for upload large files.
         /// </summary>
         protected const int DEFAULT_CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB
+
+        /// <summary>
+        /// Default number of concurrent uploads for upload large files.
+        /// </summary>
+        protected const int DEFAULT_CONCURRENT_UPLOADS = 1;
 
         /// <summary>
         /// Uploads an image file to Cloudinary asynchronously.
@@ -308,6 +314,25 @@ namespace CloudinaryDotNet
             CancellationToken? cancellationToken = null)
             where T : UploadResult, new()
         {
+            return await UploadLargeAsync<T>(parameters, bufferSize, DEFAULT_CONCURRENT_UPLOADS, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Uploads large resources to Cloudinary by dividing it to chunks asynchronously.
+        /// </summary>
+        /// <typeparam name="T">The type of result of upload.</typeparam>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
+        /// <param name="maxConcurrentUploads">Maximum number of concurrent uploads.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        public async Task<T> UploadLargeAsync<T>(
+            BasicRawUploadParams parameters,
+            int bufferSize = DEFAULT_CHUNK_SIZE,
+            int maxConcurrentUploads = DEFAULT_CONCURRENT_UPLOADS,
+            CancellationToken? cancellationToken = null)
+            where T : UploadResult, new()
+        {
             CheckUploadParameters(parameters);
 
             if (parameters.File.IsRemote)
@@ -319,10 +344,30 @@ namespace CloudinaryDotNet
 
             T result = null;
 
-            while (!parameters.File.Eof)
+            #if NETSTANDARD1_3 // No Parallel.For in this old version.
+            maxConcurrentUploads = 1;
+            #endif
+
+            if (maxConcurrentUploads == 1 || parameters.File.GetNumOfChunks() < 2)
             {
-                result = await UploadChunkAsync<T>(parameters, cancellationToken).ConfigureAwait(false);
+                while (!parameters.File.Eof)
+                {
+                    result = await UploadChunkAsync<T>(parameters, cancellationToken).ConfigureAwait(false);
+                }
             }
+            #if !NETSTANDARD1_3
+            else
+            {
+                var resultCollection = new ConcurrentBag<T>();
+
+                Parallel.For(0, parameters.File.GetNumOfChunks(), new ParallelOptions { MaxDegreeOfParallelism = maxConcurrentUploads }, _ =>
+                {
+                    resultCollection.Add(UploadChunk<T>(parameters));
+                });
+
+                result = resultCollection.LastOrDefault(r => r.AssetId != null || r.Status == "pending");
+            }
+            #endif
 
             return result;
         }
@@ -337,7 +382,7 @@ namespace CloudinaryDotNet
         public T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = DEFAULT_CHUNK_SIZE)
             where T : UploadResult, new()
         {
-            return UploadLargeAsync<T>(parameters, bufferSize).GetAwaiter().GetResult();
+            return UploadLargeAsync<T>(parameters, bufferSize, null).GetAwaiter().GetResult();
         }
 
         /// <summary>

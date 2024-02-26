@@ -224,6 +224,94 @@ namespace CloudinaryDotNet
         T UploadLarge<T>(BasicRawUploadParams parameters, int bufferSize = 0)
             where T : UploadResult, new();
 
+                /// <summary>
+        /// Uploads large resources to Cloudinary by dividing it to chunks asynchronously.
+        /// </summary>
+        /// <typeparam name="T">The type of result of upload.</typeparam>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="bufferSize">Chunk (buffer) size (20 MB by default).</param>
+        /// <param name="maxConcurrentUploads">Maximum number of concurrent uploads.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        Task<T> UploadLargeAsync<T>(
+            BasicRawUploadParams parameters,
+            int bufferSize = 0,
+            int maxConcurrentUploads = 1,
+            CancellationToken? cancellationToken = null)
+            where T : UploadResult, new();
+
+        /// <summary>
+        /// Uploads a single chunk of a file to Cloudinary asynchronously.
+        /// </summary>
+        /// <typeparam name="T">The type of result of upload.</typeparam>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        Task<T> UploadChunkAsync<T>(
+            BasicRawUploadParams parameters,
+            CancellationToken? cancellationToken = null)
+            where T : UploadResult, new();
+
+        /// <summary>
+        /// Uploads a single chunk of a raw file to Cloudinary asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        Task<RawUploadResult> UploadChunkAsync(
+            RawUploadParams parameters,
+            CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Uploads a single chunk of an image file to Cloudinary asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        Task<ImageUploadResult> UploadChunkAsync(
+            ImageUploadParams parameters,
+            CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Uploads a single chunk of a video file to Cloudinary asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        Task<VideoUploadResult> UploadChunkAsync(
+            VideoUploadParams parameters,
+            CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Uploads a single chunk of a file to Cloudinary.
+        /// </summary>
+        /// <typeparam name="T">The type of result of upload.</typeparam>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        T UploadChunk<T>(BasicRawUploadParams parameters)
+            where T : UploadResult, new();
+
+        /// <summary>
+        /// Uploads a single chunk of a raw file to Cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        RawUploadResult UploadChunk(RawUploadParams parameters);
+
+        /// <summary>
+        /// Uploads a single chunk of an image file to Cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        ImageUploadResult UploadChunk(ImageUploadParams parameters);
+
+        /// <summary>
+        /// Uploads a single chunk of a video file to Cloudinary.
+        /// </summary>
+        /// <param name="parameters">Parameters of file uploading.</param>
+        /// <returns>Parsed result of uploading.</returns>
+        VideoUploadResult UploadChunk(VideoUploadParams parameters);
+
         /// <summary>
         /// Changes public identifier of a file asynchronously.
         /// </summary>

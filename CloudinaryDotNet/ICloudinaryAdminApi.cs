@@ -12,6 +12,19 @@ namespace CloudinaryDotNet
     public interface ICloudinaryAdminApi
     {
         /// <summary>
+        /// Tests the reachability of the Cloudinary API.
+        /// </summary>
+        /// <returns>Ping result.</returns>
+        PingResult Ping();
+
+        /// <summary>
+        /// Tests the reachability of the Cloudinary API asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Ping result.</returns>
+        Task<PingResult> PingAsync(CancellationToken? cancellationToken = null);
+
+        /// <summary>
         /// Create a new streaming profile asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of streaming profile creating.</param>
