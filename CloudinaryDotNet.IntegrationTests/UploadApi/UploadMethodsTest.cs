@@ -161,7 +161,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             Assert.AreEqual(TEST_PDF_PAGES_COUNT, uploadResult.Pages);
         }
 
-        [Test]
+        [Test, RetryWithDelay]
         public void TestUploadLocalImageTimeout()
         {
             const int TIMEOUT = 1000;
@@ -739,7 +739,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             ImageUploadResult result = null;
 
-            var fileChunks = SplitFile(largeFilePath, TEST_CHUNK_SIZE);
+            var fileChunks = SplitFile(largeFilePath, TEST_CHUNK_SIZE, "multiple");
 
             var uploadParams =  new ImageUploadParams()
             {
@@ -783,7 +783,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             var largeFilePath = m_testLargeImagePath;
             var largeFileLength = (int)new FileInfo(largeFilePath).Length;
 
-            var fileChunks = SplitFile(largeFilePath, TEST_CHUNK_SIZE);
+            var fileChunks = SplitFile(largeFilePath, TEST_CHUNK_SIZE, "multiple_parallel");
 
             var uploadParams =  new RawUploadParams()
             {

@@ -207,7 +207,7 @@ namespace CloudinaryDotNet.IntegrationTests
         }
 
 
-        protected List<string> SplitFile(string sourceFile, int chunkSize)
+        protected List<string> SplitFile(string sourceFile, int chunkSize, string suffix = "")
         {
             var chunks = new List<string>();
 
@@ -220,7 +220,7 @@ namespace CloudinaryDotNet.IntegrationTests
                 var currChunkNum = 0;
                 while ((read = fs.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    var path = $"{Path.GetDirectoryName(sourceFile)}/{baseName}.{currChunkNum}{extension}.tmp";
+                    var path = $"{Path.GetDirectoryName(sourceFile)}/{baseName}.{currChunkNum}{suffix}{extension}.tmp";
                     using (var outputFile = new FileStream(path, FileMode.Create, FileAccess.Write))
                     {
                         outputFile.Write(buffer, 0, read);
