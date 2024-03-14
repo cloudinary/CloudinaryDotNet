@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using CloudinaryDotNet.Actions;
 using NUnit.Framework;
@@ -505,6 +506,18 @@ namespace CloudinaryDotNet.IntegrationTests
             if (!string.IsNullOrEmpty(suffix))
                 label = $"{label}_{suffix}";
             return label;
+        }
+
+        protected static string GetFileMd5Sum(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
         }
 
         [OneTimeTearDown]

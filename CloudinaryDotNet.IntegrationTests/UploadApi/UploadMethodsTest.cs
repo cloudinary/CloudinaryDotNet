@@ -40,6 +40,9 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         protected string m_implicitTransformationText;
 
+        protected string m_largeFileEtag;
+        protected int m_largeFileLength;
+
         public override void Initialize()
         {
             base.Initialize();
@@ -52,6 +55,9 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 m_transformationAr25, m_transformationAr69,
                 m_transformationAr30, m_transformationAr12,
                 m_eagerTransformation);
+
+            m_largeFileEtag = GetFileMd5Sum(m_testLargeImagePath);
+            m_largeFileLength = (int)new FileInfo(m_testLargeImagePath).Length;
         }
 
         [Test, RetryWithDelay]
@@ -576,7 +582,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
                 var result = m_cloudinary.UploadLarge(uploadParams, TEST_CHUNK_SIZE);
 
-                AssertUploadLarge(result, bytes.Length);
+                AssertUploadLarge(result);
             }
         }
 
@@ -585,13 +591,12 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         {
             // support uploading large raw files
             var largeFilePath = m_testLargeImagePath;
-            int largeFileLength = (int)new FileInfo(largeFilePath).Length;
 
             var uploadParams = GetUploadLargeRawParams(largeFilePath);
 
             var result = m_cloudinary.UploadLarge(uploadParams, TEST_CHUNK_SIZE);
 
-            AssertUploadLarge(result, largeFileLength);
+            AssertUploadLarge(result);
         }
 
         [Test, RetryWithDelay]
@@ -599,13 +604,12 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         {
             // support asynchronous uploading large raw files
             var largeFilePath = m_testLargeImagePath;
-            int largeFileLength = (int)new FileInfo(largeFilePath).Length;
 
             var uploadParams = GetUploadLargeRawParams(largeFilePath);
 
             var result = await m_cloudinary.UploadLargeAsync<RawUploadResult>(uploadParams, TEST_CHUNK_SIZE, 2);
 
-            AssertUploadLarge(result, largeFileLength);
+            AssertUploadLarge(result);
         }
 
         private RawUploadParams GetUploadLargeRawParams(string path)
@@ -617,44 +621,46 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             };
         }
 
-        private void AssertUploadLarge(RawUploadResult result, int fileLength)
+        private void AssertUploadLarge(RawUploadResult result, int fileLength = 0, string etag = null)
         {
+            if (fileLength == 0)
+            {
+                fileLength = m_largeFileLength;
+            }
+            if (etag == null)
+            {
+                etag = m_largeFileEtag;
+            }
             Assert.NotNull(result);
             Assert.AreEqual(fileLength, result.Bytes, result.Error?.Message);
+            Assert.AreEqual(etag, result.Etag, result.Error?.Message);
         }
 
         [Test, RetryWithDelay]
         public void TestUploadLarge()
         {
             // support uploading large image
-
-            var largeFilePath = m_testLargeImagePath;
-            int fileLength = (int)new FileInfo(largeFilePath).Length;
             var result = m_cloudinary.UploadLarge(new ImageUploadParams()
             {
-                File = new FileDescription(largeFilePath),
+                File = new FileDescription(m_testLargeImagePath),
                 Tags = m_apiTag
             }, TEST_CHUNK_SIZE);
 
-            Assert.AreEqual(fileLength, result.Bytes, result.Error?.Message);
+            AssertUploadLarge(result);
         }
 
         [Test, RetryWithDelay]
         public async Task TestUploadLargeAutoFilesAsync()
         {
-            // support asynchronous uploading large raw files
-            var largeFilePath = m_testLargeImagePath;
-            int largeFileLength = (int)new FileInfo(largeFilePath).Length;
-
             var uploadParams =  new AutoUploadParams()
             {
-                File = new FileDescription(largeFilePath),
+                File = new FileDescription(m_testLargeImagePath),
                 Tags = m_apiTag
             };
 
             var result = await m_cloudinary.UploadLargeAsync(uploadParams, TEST_CHUNK_SIZE);
 
-            AssertUploadLarge(result, largeFileLength);
+            AssertUploadLarge(result);
 
             Assert.AreEqual("image", result.ResourceType);
         }
@@ -662,9 +668,6 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         [Test, RetryWithDelay]
         public void TestUploadChunkSingleStream()
         {
-            var largeFilePath = m_testLargeImagePath;
-            var largeFileLength = (int)new FileInfo(largeFilePath).Length;
-
             ImageUploadResult result = null;
 
             using (var currChunk = new MemoryStream())
@@ -677,7 +680,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
                 var buffer = new byte[TEST_CHUNK_SIZE];
 
-                using (var source = File.Open(largeFilePath, FileMode.Open))
+                using (var source = File.Open(m_testLargeImagePath, FileMode.Open))
                 {
                     int read;
                     while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
@@ -693,16 +696,13 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 }
             }
 
-            AssertUploadLarge(result, largeFileLength);
+            AssertUploadLarge(result);
             Assert.AreEqual("image", result?.ResourceType);
         }
 
         [Test, RetryWithDelay]
         public async Task TestUploadChunkMultipleStreamsCustomOffsetAsync()
         {
-            var largeFilePath = m_testLargeImagePath;
-            var largeFileLength = (int)new FileInfo(largeFilePath).Length;
-
             ImageUploadResult result = null;
 
             var uploadParams =  new ImageUploadParams()
@@ -714,7 +714,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var buffer = new byte[TEST_CHUNK_SIZE];
 
-            using (var source = File.Open(largeFilePath, FileMode.Open))
+            using (var source = File.Open(m_testLargeImagePath, FileMode.Open))
             {
                 int read;
                 while ((read = source.Read(buffer, 0, buffer.Length)) > 0)
@@ -727,19 +727,16 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 }
             }
 
-            AssertUploadLarge(result, largeFileLength);
+            AssertUploadLarge(result);
             Assert.AreEqual("image", result?.ResourceType);
         }
 
         [Test, RetryWithDelay]
         public void TestUploadChunkMultipleFileParts()
         {
-            var largeFilePath = m_testLargeImagePath;
-            var largeFileLength = (int)new FileInfo(largeFilePath).Length;
-
             ImageUploadResult result = null;
 
-            var fileChunks = SplitFile(largeFilePath, TEST_CHUNK_SIZE, "multiple");
+            var fileChunks = SplitFile(m_testLargeImagePath, TEST_CHUNK_SIZE, "multiple");
 
             var uploadParams =  new ImageUploadParams()
             {
@@ -773,17 +770,14 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 }
             }
 
-            AssertUploadLarge(result, largeFileLength);
+            AssertUploadLarge(result);
             Assert.AreEqual("image", result?.ResourceType);
         }
 
         [Test, RetryWithDelay]
         public void TestUploadChunkMultipleFilePartsInParallel()
         {
-            var largeFilePath = m_testLargeImagePath;
-            var largeFileLength = (int)new FileInfo(largeFilePath).Length;
-
-            var fileChunks = SplitFile(largeFilePath, TEST_CHUNK_SIZE, "multiple_parallel");
+            var fileChunks = SplitFile(m_testLargeImagePath, TEST_CHUNK_SIZE, "multiple_parallel");
 
             var uploadParams =  new RawUploadParams()
             {
@@ -820,7 +814,7 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadResult = resultCollection.FirstOrDefault(r => r.AssetId != null);
 
-            AssertUploadLarge(uploadResult, largeFileLength);
+            AssertUploadLarge(uploadResult);
             Assert.AreEqual("raw", uploadResult?.ResourceType);
         }
 
