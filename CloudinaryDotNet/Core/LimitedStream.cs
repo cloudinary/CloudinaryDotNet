@@ -12,6 +12,7 @@ namespace CloudinaryDotNet.Core
         private readonly Stream originalStream;
         private long remainingBytes;
         private long startOffset;
+        private long currOffset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LimitedStream"/> class.
@@ -24,7 +25,7 @@ namespace CloudinaryDotNet.Core
         {
             originalStream = stream ?? throw new ArgumentNullException(nameof(stream));
             remainingBytes = maxBytes;
-            startOffset = offset;
+            startOffset = currOffset = offset;
 
             if (!stream.CanSeek)
             {
@@ -64,9 +65,11 @@ namespace CloudinaryDotNet.Core
         public override int Read(byte[] buffer, int offset, int count)
         {
             // make sure stream is not moved around.
-            originalStream.Seek(startOffset, SeekOrigin.Begin);
+            originalStream.Seek(currOffset, SeekOrigin.Begin);
 
             var bytesRead = originalStream.Read(buffer, offset, (int)Math.Min(count, remainingBytes));
+
+            currOffset += bytesRead;
             remainingBytes -= bytesRead;
 
             return bytesRead;
