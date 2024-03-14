@@ -1,4 +1,9 @@
 
+1.26.1 / 2024-03-14
+===================
+
+  * Fix `UploadLarge` breaking large files on upload
+
 1.26.0 / 2024-02-26
 =============
 
