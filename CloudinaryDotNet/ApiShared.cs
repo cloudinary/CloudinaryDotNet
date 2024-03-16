@@ -148,7 +148,7 @@
         protected string m_apiAddr = "https://" + ADDR_API;
 
         private readonly Func<string, HttpRequestMessage> requestBuilder =
-            (url) => new HttpRequestMessage { RequestUri = new Uri(url) };
+            url => new HttpRequestMessage { RequestUri = new Uri(url) };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiShared"/> class.
@@ -576,7 +576,7 @@
             CancellationToken? cancellationToken = null)
         {
             using var request =
-                await PrepareRequestBodyAsync(
+                await PrepareRequestAsync(
                     requestBuilder(PrepareRequestUrl(method, url, parameters)),
                     method,
                     parameters,

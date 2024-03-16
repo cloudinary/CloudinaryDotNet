@@ -13,6 +13,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using CloudinaryDotNet.Actions;
+    using CloudinaryDotNet.Core;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Linq;
@@ -32,10 +33,8 @@
         internal static async Task<T> ParseAsync<T>(HttpResponseMessage response)
             where T : BaseResult
         {
-            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-            {
-                return CreateResult<T>(response, stream);
-            }
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return CreateResult<T>(response, stream);
         }
 
         /// <summary>
@@ -47,10 +46,8 @@
         internal static T Parse<T>(HttpResponseMessage response)
             where T : BaseResult
         {
-            using (var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult())
-            {
-                return CreateResult<T>(response, stream);
-            }
+            using var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+            return CreateResult<T>(response, stream);
         }
 
         /// <summary>
@@ -128,14 +125,15 @@
         /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Prepared HTTP request.</returns>
-        internal async Task<HttpRequestMessage> PrepareRequestBodyAsync(
+        internal async Task<HttpRequestMessage> PrepareRequestAsync(
             HttpRequestMessage request,
             HttpMethod method,
             SortedDictionary<string, object> parameters,
             Dictionary<string, string> extraHeaders = null,
             CancellationToken? cancellationToken = null)
         {
-            PrePrepareRequestBody(request, method, extraHeaders);
+            SetHttpMethod(method, request);
+            SetRequestHeaders(request, extraHeaders);
 
             if (!ShouldPrepareContent(method, parameters))
             {
@@ -144,34 +142,8 @@
 
             SetChunkedEncoding(request);
 
-            await PrepareRequestContentAsync(request, parameters, extraHeaders, cancellationToken)
+            await SetRequestContentAsync(request, parameters, extraHeaders, cancellationToken)
                 .ConfigureAwait(false);
-
-            return request;
-        }
-
-        /// <summary>
-        /// Prepares request body to be sent on custom call to Cloudinary API.
-        /// </summary>
-        /// <param name="request">HTTP request to alter.</param>
-        /// <param name="method">HTTP method of call.</param>
-        /// <param name="parameters">Dictionary of call parameters.</param>
-        /// <param name="extraHeaders">(Optional) Headers to add to the request.</param>
-        /// <returns>Prepared HTTP request.</returns>
-        internal HttpRequestMessage PrepareRequestBody(
-            HttpRequestMessage request,
-            HttpMethod method,
-            SortedDictionary<string, object> parameters,
-            Dictionary<string, string> extraHeaders = null)
-        {
-            PrePrepareRequestBody(request, method, extraHeaders);
-
-            if (ShouldPrepareContent(method, parameters))
-            {
-                SetChunkedEncoding(request);
-
-                PrepareRequestContent(request, parameters, extraHeaders);
-            }
 
             return request;
         }
@@ -303,8 +275,8 @@
                 return;
             }
 
-            response?.Headers
-                .Where(_ => _.Key.StartsWith("X-FeatureRateLimit", StringComparison.OrdinalIgnoreCase))
+            response.Headers
+                .Where(p => p.Key.StartsWith("X-FeatureRateLimit", StringComparison.OrdinalIgnoreCase))
                 .ToList()
                 .ForEach(header =>
                 {
@@ -330,9 +302,9 @@
         }
 
         private static bool ShouldPrepareContent(HttpMethod method, object parameters) =>
-            (method == HttpMethod.POST || method == HttpMethod.PUT) && parameters != null;
+            method is HttpMethod.POST or HttpMethod.PUT && parameters != null;
 
-        private static bool IsContentRange(Dictionary<string, string> extraHeaders) =>
+        private static bool IsChunkedUpload(Dictionary<string, string> extraHeaders) =>
             extraHeaders != null && extraHeaders.ContainsKey("X-Unique-Upload-Id");
 
         private static void SetStreamContent(string fieldName, FileDescription file, Stream stream, MultipartFormDataContent content)
@@ -355,26 +327,18 @@
             content.Add(strContent);
         }
 
-        private static StringContent CreateStringContent(SortedDictionary<string, object> parameters) =>
-            new StringContent(ParamsToJson(parameters), Encoding.UTF8, Constants.CONTENT_TYPE_APPLICATION_JSON);
+        private static void SetChunkContent(ChunkData chunk, MultipartFormDataContent content)
+        {
+            content.Headers.TryAddWithoutValidation("Content-Range", $"bytes {chunk.StartByte}-{chunk.EndByte}/{chunk.TotalBytes}");
+        }
 
-        private static bool IsStringContent(Dictionary<string, string> extraHeaders) =>
+        private static StringContent CreateJsonContent(SortedDictionary<string, object> parameters) =>
+            new (ParamsToJson(parameters), Encoding.UTF8, Constants.CONTENT_TYPE_APPLICATION_JSON);
+
+        private static bool IsJsonContent(IReadOnlyDictionary<string, string> extraHeaders) =>
             extraHeaders != null &&
             extraHeaders.TryGetValue(Constants.HEADER_CONTENT_TYPE, out var value) &&
             value == Constants.CONTENT_TYPE_APPLICATION_JSON;
-
-        private static void SetHeadersAndContent(HttpRequestMessage request, Dictionary<string, string> extraHeaders, HttpContent content)
-        {
-            if (extraHeaders != null)
-            {
-                foreach (var header in extraHeaders)
-                {
-                    content.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                }
-            }
-
-            request.Content = content;
-        }
 
         private static void SetHttpMethod(HttpMethod method, HttpRequestMessage req)
         {
@@ -414,65 +378,18 @@
                     case FileDescription file:
                     {
                         Stream stream;
-                        if (IsContentRange(extraHeaders))
+
+                        if (IsChunkedUpload(extraHeaders))
                         {
                             var chunk = await file.GetNextChunkAsync(cancellationToken).ConfigureAwait(false);
 
-                            stream = chunk.Chunk;
+                            SetChunkContent(chunk, content);
 
-                            extraHeaders!["Content-Range"] = $"bytes {chunk.StartByte}-{chunk.EndByte}/{chunk.TotalBytes}";
+                            stream = chunk.Chunk;
                         }
                         else
                         {
                             stream = file.GetFileStream();
-                        }
-
-                        SetStreamContent(param.Key, file, stream, content);
-                        break;
-                    }
-
-                    case IEnumerable<string> value:
-                    {
-                        foreach (var item in value)
-                        {
-                            content.Add(new StringContent(item), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", string.Concat(param.Key, "[]")));
-                        }
-
-                        break;
-                    }
-
-                    default:
-                        content.Add(new StringContent(param.Value.ToString()), string.Format(CultureInfo.InvariantCulture, "\"{0}\"", param.Key));
-                        break;
-                }
-            }
-
-            return content;
-        }
-
-        private static HttpContent CreateMultipartContent(
-            SortedDictionary<string, object> parameters,
-            Dictionary<string, string> extraHeaders = null)
-        {
-            var content = new MultipartFormDataContent(HTTP_BOUNDARY);
-            foreach (var param in parameters.Where(param => param.Value != null))
-            {
-                switch (param.Value)
-                {
-                    case FileDescription { IsRemote: true } file:
-                        SetContentForRemoteFile(param.Key, file, content);
-                        break;
-                    case FileDescription file:
-                    {
-                        var stream = file.GetFileStream();
-
-                        if (IsContentRange(extraHeaders))
-                        {
-                            var chunk = file.GetNextChunkAsync().GetAwaiter().GetResult();
-
-                            stream = chunk.Chunk;
-
-                            extraHeaders!["Content-Range"] = $"bytes {chunk.StartByte}-{chunk.EndByte}/{chunk.TotalBytes}";
                         }
 
                         SetStreamContent(param.Key, file, stream, content);
@@ -518,13 +435,10 @@
                 : new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(GetApiCredentials())));
         }
 
-        private void PrePrepareRequestBody(
+        private void SetRequestHeaders(
             HttpRequestMessage request,
-            HttpMethod method,
-            Dictionary<string, string> extraHeaders)
+            Dictionary<string, string> headers)
         {
-            SetHttpMethod(method, request);
-
             // Add platform information to the USER_AGENT header
             // This is intended for platform information and not individual applications!
             var userPlatform = string.IsNullOrEmpty(UserPlatform)
@@ -534,22 +448,24 @@
 
             request.Headers.Authorization = GetAuthorizationHeaderValue();
 
-            if (extraHeaders != null)
+            if (headers == null)
             {
-                if (extraHeaders.ContainsKey("Accept"))
+                return;
+            }
+
+            foreach (var header in headers)
+            {
+                if (header.Key == "Accept")
                 {
-                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(extraHeaders["Accept"]));
-                    extraHeaders.Remove("Accept");
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(headers["Accept"]));
+                    continue;
                 }
 
-                foreach (var header in extraHeaders)
-                {
-                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                }
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
         }
 
-        private async Task PrepareRequestContentAsync(
+        private async Task SetRequestContentAsync(
             HttpRequestMessage request,
             SortedDictionary<string, object> parameters,
             Dictionary<string, string> extraHeaders = null,
@@ -557,25 +473,11 @@
         {
             HandleUnsignedParameters(parameters);
 
-            var content = IsStringContent(extraHeaders)
-                ? CreateStringContent(parameters)
+            var content = IsJsonContent(extraHeaders)
+                ? CreateJsonContent(parameters)
                 : await CreateMultipartContentAsync(parameters, extraHeaders, cancellationToken).ConfigureAwait(false);
 
-            SetHeadersAndContent(request, extraHeaders, content);
-        }
-
-        private void PrepareRequestContent(
-            HttpRequestMessage request,
-            SortedDictionary<string, object> parameters,
-            Dictionary<string, string> extraHeaders = null)
-        {
-            HandleUnsignedParameters(parameters);
-
-            var content = IsStringContent(extraHeaders)
-                ? CreateStringContent(parameters)
-                : CreateMultipartContent(parameters, extraHeaders);
-
-            SetHeadersAndContent(request, extraHeaders, content);
+            request.Content = content;
         }
     }
 }
