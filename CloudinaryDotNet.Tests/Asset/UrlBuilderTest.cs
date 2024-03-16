@@ -488,7 +488,7 @@ namespace CloudinaryDotNet.Tests.Asset
             var request = new HttpRequestMessage { RequestUri = new Uri("https://dummy.com") };
             m_api.UserPlatform = "Test/1.0";
 
-            m_api.PrepareRequestBodyAsync(
+            m_api.PrepareRequestAsync(
                 request,
                 HttpMethod.GET,
                 new SortedDictionary<string, object>()).GetAwaiter().GetResult();

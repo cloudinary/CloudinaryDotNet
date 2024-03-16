@@ -46,6 +46,8 @@
 
         private readonly Mutex mutex = new ();
 
+        private readonly object chunkLock = new ();
+
         private Stream fileStream;
 
         private string filePath;
@@ -244,7 +246,10 @@
         /// <param name="last"> Indicates whether the chunk represents the last chunk of a large file.</param>
         public void AddChunk(Stream chunkStream, long startByte, long chunkSize, bool last = false)
         {
-            chunks ??= new BlockingCollection<ChunkData>();
+            lock (chunkLock)
+            {
+                chunks ??= new BlockingCollection<ChunkData>();
+            }
 
             CurrPos = startByte + chunkSize;
 

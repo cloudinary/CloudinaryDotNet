@@ -38,10 +38,7 @@
         /// <summary>
         /// Gets the 'raw' type of file you are uploading.
         /// </summary>
-        public virtual ResourceType ResourceType
-        {
-            get { return Actions.ResourceType.Raw; }
-        }
+        public virtual ResourceType ResourceType => ResourceType.Raw;
 
         /// <summary>
         /// Gets or sets file name to override an original file name.

@@ -37,6 +37,8 @@ namespace CloudinaryDotNet
         /// </summary>
         protected const int DEFAULT_CONCURRENT_UPLOADS = 1;
 
+        private readonly object chunkLock = new ();
+
         /// <summary>
         /// Uploads an image file to Cloudinary asynchronously.
         /// </summary>
@@ -402,7 +404,13 @@ namespace CloudinaryDotNet
             if (string.IsNullOrEmpty(parameters.UniqueUploadId))
             {
                 // The first chunk
-                parameters.UniqueUploadId = Utils.RandomPublicId();
+                lock (chunkLock)
+                {
+                    if (string.IsNullOrEmpty(parameters.UniqueUploadId))
+                    {
+                        parameters.UniqueUploadId = Utils.RandomPublicId();
+                    }
+                }
             }
 
             // Mark upload as chunked in order to set appropriate content range header.
