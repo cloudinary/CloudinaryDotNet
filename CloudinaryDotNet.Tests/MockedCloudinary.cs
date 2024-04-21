@@ -60,14 +60,19 @@ namespace CloudinaryDotNet.Tests
         /// <param name="httpMethod">Expected HTTP method type.</param>
         /// <param name="localPath">Expected local part of the called Uri.</param>
         /// <param name="query">Query parameters</param>
-        public void AssertHttpCall(System.Net.Http.HttpMethod httpMethod, string localPath, string query = "")
+        /// <param name="apiVersion">The version of the API.</param>
+        public void AssertHttpCall(
+            System.Net.Http.HttpMethod httpMethod,
+            string localPath,
+            string query = "",
+            string apiVersion = "v1_1")
         {
             HandlerMock.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),
                 ItExpr.Is<HttpRequestMessage>(req =>
                     req.Method == httpMethod &&
-                    req.RequestUri.LocalPath == $"/v1_1/{CloudName}/{localPath}" &&
+                    req.RequestUri.LocalPath == $"/{apiVersion}/{CloudName}/{localPath}" &&
                     req.RequestUri.Query == query
                 ),
                 ItExpr.IsAny<CancellationToken>()

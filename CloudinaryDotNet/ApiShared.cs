@@ -250,101 +250,69 @@
         /// <summary>
         /// Gets default URL for working with resources.
         /// </summary>
-        public Url Url
-        {
-            get
-            {
-                return new Url(Account.Cloud, this as ISignProvider)
-                    .CSubDomain(CSubDomain)
-                    .Shorten(ShortenUrl)
-                    .PrivateCdn(UsePrivateCdn)
-                    .Secure(Secure)
-                    .ForceVersion(ForceVersion)
-                    .SecureDistribution(PrivateCdn);
-            }
-        }
+        public Url Url =>
+            new Url(Account.Cloud, this as ISignProvider)
+                .CSubDomain(CSubDomain)
+                .Shorten(ShortenUrl)
+                .PrivateCdn(UsePrivateCdn)
+                .Secure(Secure)
+                .ForceVersion(ForceVersion)
+                .SecureDistribution(PrivateCdn);
 
         /// <summary>
         /// Gets default URL for working with uploaded images.
         /// </summary>
-        public Url UrlImgUp
-        {
-            get
-            {
-                return Url
-                    .ResourceType(Constants.RESOURCE_TYPE_IMAGE)
-                    .Action(Constants.ACTION_NAME_UPLOAD)
-                    .UseRootPath(UseRootPath)
-                    .Suffix(Suffix);
-            }
-        }
+        public Url UrlImgUp =>
+            Url
+                .ResourceType(Constants.RESOURCE_TYPE_IMAGE)
+                .Action(Constants.ACTION_NAME_UPLOAD)
+                .UseRootPath(UseRootPath)
+                .Suffix(Suffix);
 
         /// <summary>
         /// Gets default URL for working with fetched images.
         /// </summary>
-        public Url UrlImgFetch
-        {
-            get
-            {
-                return Url
-                    .ResourceType(Constants.RESOURCE_TYPE_IMAGE)
-                    .Action(Constants.ACTION_NAME_FETCH)
-                    .UseRootPath(UseRootPath)
-                    .Suffix(Suffix);
-            }
-        }
+        public Url UrlImgFetch =>
+            Url
+                .ResourceType(Constants.RESOURCE_TYPE_IMAGE)
+                .Action(Constants.ACTION_NAME_FETCH)
+                .UseRootPath(UseRootPath)
+                .Suffix(Suffix);
 
         /// <summary>
         /// Gets default URL for working with uploaded videos.
         /// </summary>
-        public Url UrlVideoUp
-        {
-            get
-            {
-                return Url
-                    .ResourceType(Constants.RESOURCE_TYPE_VIDEO)
-                    .Action(Constants.ACTION_NAME_UPLOAD)
-                    .UseRootPath(UseRootPath)
-                    .Suffix(Suffix);
-            }
-        }
+        public Url UrlVideoUp =>
+            Url
+                .ResourceType(Constants.RESOURCE_TYPE_VIDEO)
+                .Action(Constants.ACTION_NAME_UPLOAD)
+                .UseRootPath(UseRootPath)
+                .Suffix(Suffix);
 
         /// <summary>
         /// Gets default cloudinary API URL.
         /// </summary>
-        public Url ApiUrl
-        {
-            get
-            {
-                return Url.
-                    CloudinaryAddr(m_apiAddr);
-            }
-        }
+        public Url ApiUrl =>
+            Url.
+                CloudinaryAddr(m_apiAddr);
 
         /// <summary>
         /// Gets default cloudinary API URL for uploading images.
         /// </summary>
-        public Url ApiUrlImgUp
-        {
-            get
-            {
-                return ApiUrl.
-                    Action(Constants.ACTION_NAME_UPLOAD).
-                    ResourceType(Constants.RESOURCE_TYPE_IMAGE);
-            }
-        }
+        public Url ApiUrlImgUp =>
+            ApiUrl.
+                Action(Constants.ACTION_NAME_UPLOAD).
+                ResourceType(Constants.RESOURCE_TYPE_IMAGE);
 
         /// <summary>
         /// Gets default cloudinary API URL with version.
         /// </summary>
-        public Url ApiUrlV
-        {
-            get
-            {
-                return ApiUrl.
-                    ApiVersion(API_VERSION);
-            }
-        }
+        public Url ApiUrlV => ApiUrl.ApiVersion(API_VERSION);
+
+        /// <summary>
+        /// Gets default cloudinary API URL with version.
+        /// </summary>
+        public Url ApiUrlV2 => ApiUrl.ApiVersion("v2");
 
         /// <summary>
         /// Gets default cloudinary API URL for streaming profiles.
@@ -359,28 +327,18 @@
         /// <summary>
         /// Gets default cloudinary API URL for uploading images with version.
         /// </summary>
-        public Url ApiUrlImgUpV
-        {
-            get
-            {
-                return ApiUrlV.
-                    Action(Constants.ACTION_NAME_UPLOAD).
-                    ResourceType(Constants.RESOURCE_TYPE_IMAGE);
-            }
-        }
+        public Url ApiUrlImgUpV =>
+            ApiUrlV.
+                Action(Constants.ACTION_NAME_UPLOAD).
+                ResourceType(Constants.RESOURCE_TYPE_IMAGE);
 
         /// <summary>
         /// Gets default cloudinary API URL for uploading video resources with version.
         /// </summary>
-        public Url ApiUrlVideoUpV
-        {
-            get
-            {
-                return ApiUrlV.
-                    Action(Constants.ACTION_NAME_UPLOAD).
-                    ResourceType(Constants.RESOURCE_TYPE_VIDEO);
-            }
-        }
+        public Url ApiUrlVideoUpV =>
+            ApiUrlV.
+                Action(Constants.ACTION_NAME_UPLOAD).
+                ResourceType(Constants.RESOURCE_TYPE_VIDEO);
 
         /// <summary>
         /// Gets cloudinary parameter from enumeration.
