@@ -188,6 +188,20 @@
         }
 
         /// <summary>
+        /// Add nested parameters to the dictionary.
+        /// </summary>
+        /// <param name="dict">The dictionary.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="parameters">The parameters.</param>
+        protected static void AddParam(SortedDictionary<string, object> dict, string key, BaseParams parameters)
+        {
+            if (parameters != null)
+            {
+                dict.Add(key, parameters.ToParamsDictionary());
+            }
+        }
+
+        /// <summary>
         /// Add a coordinate object (plain string or Rectangle or List of Rectangles or FaceCoordinates)
         /// to the dictionary.
         /// </summary>

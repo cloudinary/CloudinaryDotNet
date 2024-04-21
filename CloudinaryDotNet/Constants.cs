@@ -121,5 +121,14 @@
 
         /// <summary> Access keys resource of account api.</summary>
         public const string ACCESS_KEYS = "access_keys";
+
+        /// <summary> Analysis api endpoint.</summary>
+        public const string ANALYSIS = "analysis";
+
+        /// <summary> Analyze api endpoint.</summary>
+        public const string ANALYZE = "analyze";
+
+        /// <summary> URI analysis api endpoint.</summary>
+        public const string URI = "uri";
     }
 }
