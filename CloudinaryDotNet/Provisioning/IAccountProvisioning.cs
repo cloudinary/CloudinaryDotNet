@@ -327,5 +327,20 @@ namespace CloudinaryDotNet.Provisioning
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>Parsed information about updated access key.</returns>
         Task<AccessKeyResult> UpdateAccessKeyAsync(UpdateAccessKeyParams parameters, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Deletes access key.
+        /// </summary>
+        /// <param name="parameters">Parameters to delete access key.</param>
+        /// <returns>Access key deletion result.</returns>
+        public DelAccessKeyResult DeleteAccessKey(DelAccessKeyParams parameters);
+
+        /// <summary>
+        /// Deletes access key asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to delete access key.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Access key deletion result.</returns>
+        public Task<DelAccessKeyResult> DeleteAccessKeyAsync(DelAccessKeyParams parameters, CancellationToken? cancellationToken = null);
     }
 }

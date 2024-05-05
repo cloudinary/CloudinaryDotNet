@@ -119,11 +119,12 @@ namespace CloudinaryDotNet.Tests.AdminApi
 
             cloudinary.AssertHttpCall(
                 SystemHttp.HttpMethod.Delete,
-                "resources/related_assets/image/upload/" + TestConstants.TestPublicId,
-                 $"?assets_to_unrelate[]={TestIds[0]}&assets_to_unrelate[]={TestIds[1]}"
+                "resources/related_assets/image/upload/" + TestConstants.TestPublicId
                 );
 
             Assert.NotNull(result);
+
+            Assert.AreEqual(TestIds, cloudinary.RequestJson()["assets_to_unrelate"]?.Values<string>());
 
             Assert.Positive(result.Success.Count);
             Assert.AreEqual("success", result.Success[0].Message);
@@ -151,11 +152,12 @@ namespace CloudinaryDotNet.Tests.AdminApi
 
             cloudinary.AssertHttpCall(
                 SystemHttp.HttpMethod.Delete,
-                "resources/related_assets/" + TestConstants.TestAssetId,
-                $"?assets_to_unrelate[]={TestAssetIds[0]}&assets_to_unrelate[]={TestAssetIds[1]}"
+                "resources/related_assets/" + TestConstants.TestAssetId
                 );
 
             Assert.NotNull(result);
+
+            Assert.AreEqual(TestAssetIds, cloudinary.RequestJson()["assets_to_unrelate"]?.Values<string>());
 
             Assert.Positive(result.Success.Count);
             Assert.AreEqual("success", result.Success[0].Message);

@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace CloudinaryDotNet.IntegrationTests.Provisioning
 {
     [TestFixture]
-    public class ProvisioningIntegrationTestBase
+    public class ProvisioningIntegrationTestBase : IntegrationTestBase
     {
         protected long m_timestampSuffix;
         protected string m_userName1;

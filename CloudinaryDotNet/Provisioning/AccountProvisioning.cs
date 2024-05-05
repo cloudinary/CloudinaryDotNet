@@ -555,6 +555,29 @@
             return CallAccountApiAsync<AccessKeyResult>(HttpMethod.PUT, url, cancellationToken, parameters);
         }
 
+        /// <summary>
+        /// Deletes access key.
+        /// </summary>
+        /// <param name="parameters">Parameters to delete access key.</param>
+        /// <returns>Access key deletion result.</returns>
+        public DelAccessKeyResult DeleteAccessKey(DelAccessKeyParams parameters)
+        {
+            var url = GetAccessKeysUrl(parameters.SubAccountId, parameters.ApiKey);
+            return CallAccountApi<DelAccessKeyResult>(HttpMethod.DELETE, url, parameters);
+        }
+
+        /// <summary>
+        /// Deletes access key asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters to delete access key.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Access key deletion result.</returns>
+        public Task<DelAccessKeyResult> DeleteAccessKeyAsync(DelAccessKeyParams parameters, CancellationToken? cancellationToken = null)
+        {
+            var url = GetAccessKeysUrl(parameters.SubAccountId, parameters.ApiKey);
+            return CallAccountApiAsync<DelAccessKeyResult>(HttpMethod.DELETE, url, cancellationToken, parameters);
+        }
+
         private static string UrlWithOptionalParameters(Url baseUrl, params string[] urlParameters)
         {
             foreach (var urlParameter in urlParameters)
@@ -589,12 +612,7 @@
         private T CallAccountApi<T>(HttpMethod httpMethod, string url, BaseParams parameters = null)
             where T : BaseResult, new()
         {
-            if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-            {
-                return ProvisioningApi.CallAccountApi<T>(httpMethod, url, parameters, Utils.PrepareJsonHeaders());
-            }
-
-            return ProvisioningApi.CallAccountApi<T>(httpMethod, url, parameters, null);
+            return ProvisioningApi.CallAccountApi<T>(httpMethod, url, parameters, httpMethod is HttpMethod.POST or HttpMethod.PUT or HttpMethod.DELETE ? Utils.PrepareJsonHeaders() : null);
         }
 
         private Task<T> CallAccountApiAsync<T>(
@@ -604,12 +622,7 @@
             BaseParams parameters = null)
             where T : BaseResult, new()
         {
-            if (httpMethod == HttpMethod.POST || httpMethod == HttpMethod.PUT)
-            {
-                return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, Utils.PrepareJsonHeaders(), cancellationToken);
-            }
-
-            return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, null, cancellationToken);
+            return ProvisioningApi.CallAccountApiAsync<T>(httpMethod, url, parameters, httpMethod is HttpMethod.POST or HttpMethod.PUT or HttpMethod.DELETE ? Utils.PrepareJsonHeaders() : null, cancellationToken);
         }
 
         private string GetSubAccountsUrl(string subAccountId = null)
