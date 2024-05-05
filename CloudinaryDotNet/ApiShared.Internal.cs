@@ -302,7 +302,7 @@
         }
 
         private static bool ShouldPrepareContent(HttpMethod method, object parameters) =>
-            method is HttpMethod.POST or HttpMethod.PUT && parameters != null;
+            method is HttpMethod.POST or HttpMethod.PUT or HttpMethod.DELETE && parameters != null;
 
         private static bool IsChunkedUpload(Dictionary<string, string> extraHeaders) =>
             extraHeaders != null && extraHeaders.ContainsKey("X-Unique-Upload-Id");

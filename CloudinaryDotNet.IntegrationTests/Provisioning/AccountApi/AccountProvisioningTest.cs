@@ -255,5 +255,26 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning.AccountApi
             Assert.AreEqual("updated_key", result.Name);
             Assert.AreEqual(true, result.Enabled);
         }
+
+        [Test, RetryWithDelay]
+        public void TestDeleteAccessKey()
+        {
+            var testKeyToDelete = GetTaggedRandomValue() + "_test_key_to_delete_by_name";
+            var accessKey = AccountProvisioning.GenerateAccessKey(new GenerateAccessKeyParams(m_cloudId1)
+            {
+                Name = testKeyToDelete
+            });
+
+            Assert.NotNull(accessKey);
+            Assert.IsNotEmpty(accessKey.ApiKey);
+            Assert.AreEqual(testKeyToDelete, accessKey.Name);
+
+            var result = AccountProvisioning.DeleteAccessKey(new DelAccessKeyParams(m_cloudId1)
+            {
+                Name = accessKey.Name
+            });
+
+            Assert.AreEqual("ok", result.Message);
+        }
     }
 }

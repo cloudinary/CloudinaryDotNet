@@ -83,9 +83,7 @@ namespace CloudinaryDotNet.Provisioning
             ValidateAccountApiCredentials();
             parameters?.Check();
 
-            var callParams = (method == HttpMethod.PUT || method == HttpMethod.POST)
-                ? parameters?.ToParamsDictionary()
-                : null;
+            var callParams = method is HttpMethod.PUT or HttpMethod.POST or HttpMethod.DELETE ? parameters?.ToParamsDictionary() : null;
 
             return CallAndParseAsync<T>(
                 method,
@@ -113,7 +111,7 @@ namespace CloudinaryDotNet.Provisioning
             return CallAndParse<T>(
                 method,
                 url,
-                (method == HttpMethod.PUT || method == HttpMethod.POST) ? parameters?.ToParamsDictionary() : null,
+                method is HttpMethod.PUT or HttpMethod.POST or HttpMethod.DELETE ? parameters?.ToParamsDictionary() : null,
                 extraHeaders);
         }
 
