@@ -5,14 +5,94 @@
     ViewData["Title"] = "PhotoAlbum - Upload page";
 }
 
-<!-- A standard form for sending the image data to your server -->
-<div id="backend_upload">
-    <h1>Upload through your server</h1>
+<div id="backend_upload" class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center mb-4">Upload through your server</h1>
 
-    <form method="Post" enctype="multipart/form-data">
-        <input id="fileupload" type="file" name="images" multiple accept="image/gif, image/jpeg, image/png">
-        <input type="submit" value="Upload">
-    </form>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="Post" enctype="multipart/form-data" class="form-group">
+                        <div class="mb-3">
+                            <label for="fileupload" class="form-label">Select Images</label>
+                            <input id="fileupload" type="file" class="form-control" name="images" multiple accept="image/gif, image/jpeg, image/png">
+                        </div>
+
+                        <div class="d-grid">
+                            <input type="submit" value="Upload" class="btn btn-primary btn-block">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a asp-page="Index" class="btn btn-link">Back to list...</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            @Html.Raw(Model.RenderedMarkdown)
+        </div>
+    </div>
+
+    <!-- Documentation Section -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Server-side Upload Documentation</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <strong>Server-side upload</strong><br />
+                        You can upload images, videos, or any other raw file to Cloudinary from your .NET code. 
+                        Uploading is done over HTTPS using a secure protocol based on your product environment's <code>api_key</code> and <code>api_secret</code> parameters.
+                    </p>
+                    <p>
+                        <strong>.NET image upload</strong><br />
+                        The following C# method uploads an image to the cloud:
+                    </p>
+
+                    <pre><code class="language-csharp">
+public ImageUploadResult Upload(ImageUploadParams parameters);
+                    </code></pre>
+
+                    <p>
+                        The <code>ImageUploadParams</code> class sets an image to upload with additional parameters 
+                        and <code>ImageUploadResult</code> class provides the deserialized server response.
+                    </p>
+                    <p>
+                        For example, uploading a local image file named <strong>'my_image.jpg'</strong>:
+                    </p>
+
+                    <p><strong>In C#:</strong></p>
+                    <pre><code class="language-csharp">
+var uploadParams = new ImageUploadParams()
+{
+    File = new FileDescription('filename.jpg")
+};
+var uploadResult = cloudinary.Upload(uploadParams);
+                    </code></pre>
+
+                    <p><strong>In VB.NET:</strong></p>
+                    <pre><code class="language-vbnet">
+Dim uploadParams = New ImageUploadParams
+uploadParams.File = New FileDescription("c:\my_image.jpg")
+Dim uploadResult = m_cloudinary.Upload(uploadParams)
+                    </code></pre>
+
+                    <p>
+                        For a full list of the Upload method parameters, see the 
+                        <a href="https://cloudinary.com/documentation/dotnet_image_and_video_upload#server_side_upload" target="_blank">upload method in the Upload API reference</a>.
+                    </p>
+
+                    <p>
+                        <strong>Note:</strong> If you need to override the default signing mechanism and supply your own signature for the upload, 
+                        you can also pass the <code>signature</code> and <code>timestamp</code> parameters.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<a asp-page="Index" class="back_link">Back to list...</a>
