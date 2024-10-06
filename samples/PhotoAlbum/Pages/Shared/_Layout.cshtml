@@ -4,34 +4,175 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    <link rel="stylesheet" media="all" href="~/css/site.css" />
-    <link rel="icon" href="@Cloudinary.Api.UrlImgUp.Action("fetch").Transform(new Transformation().Effect("sepia")).BuildUrl("http://cloudinary.com/favicon.png")" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+
+    <style>
+        /* Sidebar styling */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        #sidebar {
+            height: 100vh;
+            background-color: #6f42c1; /* Bootstrap purple */
+            color: white;
+            padding-top: 20px;
+            position: fixed;
+            width: 250px;
+            top: 0;
+            left: 0;
+        }
+
+            #sidebar .nav-link {
+                color: white;
+            }
+
+                #sidebar .nav-link:hover {
+                    background-color: #563d7c;
+                }
+
+        /* Content area adjusts for sidebar */
+        #content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Content Area */
+        .content {
+            margin-left: 250px; /* Leave space for the sidebar */
+            margin-top: 60px; /* Leave space for the navbar */
+            padding: 20px;
+            height: calc(100% - 60px); /* Full height minus the navbar */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+            background-color: #f8f9fa; /* Light background for content */
+        }
+
+        /* Header Styling */
+        #header {
+            position: fixed;
+            top: 0;
+            left: 250px; /* Offset for sidebar */
+            right: 0;
+            height: 60px;
+            background-color: #563d7c; /* Darker purple for the header */
+            color: white;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000; /* Ensure it stays on top */
+        }
+
+            #header a {
+                color: white;
+                text-decoration: none;
+                padding: 0 15px;
+            }
+
+                #header a:hover {
+                    color: #ddd;
+                }
+
+        /* Adjust content for the header */
+        #main-content {
+            margin-top: 60px; /* Offset for header */
+        }
+
+        /* Footer Styling */
+        #footer {
+            background-color: #6f42c1; /* Matching the sidebar purple */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            left: 250px; /* Match with sidebar */
+        }
+
+            #footer a {
+                color: #fff;
+                text-decoration: none;
+            }
+
+                #footer a:hover {
+                    color: #ddd;
+                }
+    </style>
 </head>
 <body>
-    <div id="logo">
-        <!-- This will render the image fetched from a remote HTTP URL using Cloudinary -->
-        @Html.Raw(Cloudinary.Api.UrlImgUp.Signed(true).Secure().Action("fetch").BuildImageTag("http://cloudinary.com/images/logo.png"))
+    <!-- Sidebar Navigation -->
+<nav id="sidebar" class="d-flex flex-column" style="height: 100vh;">
+    <a class="navbar-brand text-center" href="/" style="color: white;">PhotoAlbum</a>
+    
+    <!-- Navigation Links -->
+    <ul class="nav flex-column flex-grow-1">
+        <li class="nav-item">
+            <a class="nav-link" asp-page="/Index">Home</a>
+        </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-page="Upload">Add photo...</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-page="UploadDirectly" asp-route-type="signed">Add photo (direct upload)...</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-page="UploadDirectly" asp-route-type="unsigned">Add photo (direct unsigned upload)...</a>
+            </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-page="/Contact">Contact</a>
+        </li>
+
+    </ul>
+
+    <!-- Footer Text in Sidebar -->
+    <div class="text-center mb-3" style="color: white;">
+        <p>Made with <span style="color: red;">♥</span> by 
+            <a href="https://cloudinary.com" target="_blank" style="color: white; text-decoration: none;">Cloudinary</a>
+        </p>
+    </div>
+</nav>
+
+
+
+
+    <!-- Header Section -->
+    <header id="header">
+        <div class="header-left">
+            <a href="/">PhotoAlbum</a> <!-- Brand/Logo -->
+        </div>
+        <div class="header-right">
+            <a href="/Profile">Profile</a>
+            <a href="/Notifications">Notifications</a>
+            <a href="/Settings">Settings</a>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <!-- Main Content Area -->
+    <div class="content">
+        @RenderBody()
     </div>
 
-    <div id="posterframe">
-        <!-- This will render the fetched Facebook profile picture using Cloudinary according to the
-             requested transformations -->
-        @Html.Raw(Cloudinary.Api.UrlImgUp.Action("facebook").Format("png")
-            .Transform(new Transformation()
-            .Width(95)
-            .Height(95)
-            .Crop("thumb")
-            .Gravity("face")
-            .Effect("sepia")
-            .Radius(20)
-            .Chain() // apply current stack of transformations before processing next
-            .Angle(10))
-            .BuildImageTag("officialchucknorrispage"))
-    </div>
-
-    @RenderBody()
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <!-- Optional Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
     @RenderSection("Scripts", required: false)
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"
+            integrity="sha384-b4gt1jrGC7Jh4AgP3ZR6g6UpYIjB77nSxv8MAB8ftfFx4AJeMlK6Roi58i8oaA"
+            crossorigin="anonymous"></script>
 </body>
 </html>
