@@ -1024,6 +1024,35 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Gets the Cloudinary account configuration details asynchronously.
+        /// </summary>
+        /// <param name="configParams">(Optional) Parameters for the configuration request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The configuration details of your Cloudinary account.</returns>
+        public Task<ConfigResult> GetConfigAsync(ConfigParams configParams = null, CancellationToken? cancellationToken = null)
+        {
+            var url = GetApiUrlV()
+                .Add("config")
+                .BuildUrl();
+
+            return CallAdminApiAsync<ConfigResult>(
+                HttpMethod.GET,
+                url,
+                configParams,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets the Cloudinary account configuration details.
+        /// </summary>
+        /// <param name="configParams">(Optional) Parameters for the configuration request.</param>
+        /// <returns>The configuration details of the Cloudinary account.</returns>
+        public ConfigResult GetConfig(ConfigParams configParams = null)
+        {
+            return GetConfigAsync(configParams).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
         /// Gets the Cloudinary account usage details asynchronously.
         /// </summary>
         /// <param name="date">(Optional) The date for the usage report. Must be within the last 3 months.</param>
