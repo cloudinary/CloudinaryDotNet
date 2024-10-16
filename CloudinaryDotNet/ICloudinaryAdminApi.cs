@@ -25,6 +25,21 @@ namespace CloudinaryDotNet
         Task<PingResult> PingAsync(CancellationToken? cancellationToken = null);
 
         /// <summary>
+        /// Gets the Cloudinary account configuration details asynchronously.
+        /// </summary>
+        /// <param name="configParams">(Optional) Parameters for the configuration request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The configuration details of your Cloudinary account.</returns>
+        Task<ConfigResult> GetConfigAsync(ConfigParams configParams = null, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Gets the Cloudinary account configuration details.
+        /// </summary>
+        /// <param name="configParams">(Optional) Parameters for the configuration request.</param>
+        /// <returns>The configuration details of the Cloudinary account.</returns>
+        ConfigResult GetConfig(ConfigParams configParams = null);
+
+        /// <summary>
         /// Create a new streaming profile asynchronously.
         /// </summary>
         /// <param name="parameters">Parameters of streaming profile creating.</param>
@@ -1107,6 +1122,21 @@ namespace CloudinaryDotNet
         /// <param name="parameters">Parameters of the request of transformation details.</param>
         /// <returns>Parsed details of a single transformation.</returns>
         GetTransformResult GetTransform(GetTransformParams parameters);
+
+        /// <summary>
+        ///  Analyzes an asset with the requested analysis type asynchronously.
+        /// </summary>
+        /// <param name="parameters">Parameters of analysis.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Detailed analysis information.</returns>
+        Task<AnalyzeResult> AnalyzeAsync(AnalyzeParams parameters, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        ///  Analyzes an asset with the requested analysis type.
+        /// </summary>
+        /// <param name="parameters">Parameters of analysis.</param>
+        /// <returns>Detailed analysis information .</returns>
+        AnalyzeResult Analyze(AnalyzeParams parameters);
 
         /// <summary>
         /// Updates details of an existing resource asynchronously.
