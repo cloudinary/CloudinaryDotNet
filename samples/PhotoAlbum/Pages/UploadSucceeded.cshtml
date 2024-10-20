@@ -5,25 +5,41 @@
     ViewBag.Title = "Upload succeeded!";
 }
 
-<br />
-<h1>Your photo has been uploaded successfully!</h1>
-<h2>Upload details:</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 text-success mb-4">Your photo has been uploaded successfully!</h1>
+            <h2 class="h4 mb-4">Upload details:</h2>
 
-@foreach (var item in Model.Items)
-{
-    <table class='info'>
-        @foreach (var (key, value) in item)
-        {
-            <tr>
-                <td>@key</td>
-                <td>@value</td>
-            </tr>
-        }
-    </table>
-    <br />
+            @foreach (var item in Model.Items)
+            {
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                                @foreach (var (key, value) in item)
+                                {
+                                    <tr>
+                                        <th scope="row" class="text-start">@key</th>
+                                        <td class="text-start">@value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
 
-    @Html.Raw(Cloudinary.Api.UrlImgUp.Format("jpg").Transform(new Transformation().Height(150).Width(150).Crop("fill"))
-    .BuildImageTag(item["public_id"], new StringDictionary("class=thumbnail inline")))
-}
+                        <div class="text-center">
+                            @Html.Raw(Cloudinary.Api.UrlImgUp.Format("jpg")
+                                     .Transform(new Transformation().Height(150).Width(150).Crop("fill"))
+                                     .BuildImageTag(item["public_id"], new StringDictionary("class=thumbnail inline")))
+                        </div>
+                    </div>
+                </div>
+            }
 
-<a asp-page="Index" class="back_link">Back to list...</a>
+            <div class="mt-4">
+                <a asp-page="Index" class="btn btn-primary">Back to list...</a>
+            </div>
+        </div>
+    </div>
+</div>
+

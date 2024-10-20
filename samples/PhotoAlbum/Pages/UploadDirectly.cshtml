@@ -8,32 +8,49 @@
 <!-- A form for direct uploading using a jQuery plug-in.
           The BuildUploadForm method generates the required HTML and JavaScript to
           allow uploading directly from the browser to your Cloudinary account -->
-<div id="direct_upload">
-    <h1>Direct upload from the browser</h1>
-    <form>
-        @Html.AntiForgeryToken()
+<div id="direct_upload" class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="text-center mb-4">Direct Upload from the Browser</h1>
 
-        @if (Model.DirectUploadType == DirectUploadType.Signed)
-        {
-            @Html.Raw(Cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object> { { "tags", UploadDirectlyModel.Tags } }, new Dictionary<string, string> { { "multiple", "true" } }))
-        }
-        else
-        {
-            @Html.Raw(Cloudinary.Api.BuildUnsignedUploadForm("test-field", Model.Preset, "image", new SortedDictionary<string, object> { { "tags", UploadDirectlyModel.Tags } }, new Dictionary<string, string> { { "multiple", "true" } }))
-        }
-    </form>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form class="form-group">
+                        @Html.AntiForgeryToken()
 
-    <!-- status box -->
-    <div class="status">
-        <h2>Status</h2>
-        <span class="status_value">Idle</span>
-    </div>
+                        <div class="mb-3">
+                            @if (Model.DirectUploadType == DirectUploadType.Signed)
+                            {
+                                @Html.Raw(Cloudinary.Api.BuildUploadForm("test-field", "auto", new SortedDictionary<string, object> { { "tags", UploadDirectlyModel.Tags } }, new Dictionary<string, string> { { "multiple", "true" } }))
+                            }
+                            else
+                            {
+                                @Html.Raw(Cloudinary.Api.BuildUnsignedUploadForm("test-field", Model.Preset, "image", new SortedDictionary<string, object> { { "tags", UploadDirectlyModel.Tags } }, new Dictionary<string, string> { { "multiple", "true" } }))
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-    <div class="uploaded_info_holder">
+            <!-- Status box -->
+            <div class="card mt-4 shadow-sm">
+                <div class="card-body text-center">
+                    <h2>Status</h2>
+                    <span class="status_value fs-4 text-muted">Idle</span>
+                </div>
+            </div>
+
+            <!-- Uploaded info -->
+            <div class="uploaded_info_holder mt-4"></div>
+
+            <!-- Back to list -->
+            <div class="text-center mt-4">
+                <a asp-page="Index" class="btn btn-link">Back to list...</a>
+            </div>
+        </div>
     </div>
 </div>
 
-<a asp-page="Index" class="back_link">Back to list...</a>
 
 @section Scripts{
     @Html.Raw(Cloudinary.GetCloudinaryJsConfig(dir: "js"))
