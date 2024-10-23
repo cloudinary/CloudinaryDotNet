@@ -18,6 +18,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
         private const string NON_EXISTING_FOLDER = "non_existing_folder";
         private const string TEST_SUB_FOLDER = "test_sub_folder";
+        private const string TEST_RENAME_FOLDER = "test_rename_folder";
 
         [SetUp]
         public void SetUp()
@@ -256,6 +257,24 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             var createFolderResult = await m_cloudinary.CreateFolderAsync(folder);
 
             AssertCreateFolderResult(createFolderResult);
+        }
+
+        [Test, IgnoreFeature("dynamic_folders"), RetryWithDelay]
+        public void TestRenameFolder()
+        {
+            var fromFolder  = GetUniqueFolder();
+            var toFolder  = GetUniqueFolder(TEST_RENAME_FOLDER);
+
+            var createFolderResult = m_cloudinary.CreateFolder(fromFolder);
+
+            AssertCreateFolderResult(createFolderResult);
+
+            var renameFolderResult = m_cloudinary.RenameFolder(fromFolder, toFolder);
+
+            Assert.NotNull(renameFolderResult);
+            Assert.IsNull(renameFolderResult.Error);
+            Assert.AreEqual(fromFolder, renameFolderResult.From.Path);
+            Assert.AreEqual(toFolder, renameFolderResult.To.Path);
         }
 
         [TestCase(""), RetryWithDelay]

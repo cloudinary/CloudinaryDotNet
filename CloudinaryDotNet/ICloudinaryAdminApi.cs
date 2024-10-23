@@ -903,6 +903,23 @@ namespace CloudinaryDotNet
         Task<CreateFolderResult> CreateFolderAsync(string folder, CancellationToken? cancellationToken = null);
 
         /// <summary>
+        /// Renames an existing asset folder.
+        /// </summary>
+        /// <param name="fromPath">The full path of the existing folder.</param>
+        /// <param name="toPath">The full path of the new folder.</param>
+        /// <returns>Parsed result of folder rename operation.</returns>
+        public RenameFolderResult RenameFolder(string fromPath, string toPath);
+
+        /// <summary>
+        /// Renames an existing asset folder asynchronously.
+        /// </summary>
+        /// <param name="fromPath">The full path of the existing folder.</param>
+        /// <param name="toPath">The full path of the new folder.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>Parsed result of folder creation.</returns>
+        public Task<RenameFolderResult> RenameFolderAsync(string fromPath, string toPath, CancellationToken? cancellationToken = null);
+
+        /// <summary>
         /// Creates the upload preset.
         /// Upload presets allow you to define the default behavior for your uploads, instead of
         /// receiving these as parameters during the upload request itself. Upload presets have

@@ -27,7 +27,7 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning
         protected static bool Skipped;
 
         [OneTimeSetUp]
-        public void Initialize()
+        public override void Initialize()
         {
             AccountProvisioning = new AccountProvisioning();
 
@@ -66,7 +66,7 @@ namespace CloudinaryDotNet.IntegrationTests.Provisioning
         }
 
         [OneTimeTearDown]
-        public void Cleanup()
+        public override void Cleanup()
         {
             if (Skipped)
             {
