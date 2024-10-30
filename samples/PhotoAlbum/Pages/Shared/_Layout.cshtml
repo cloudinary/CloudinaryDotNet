@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-
+    @RenderSection("styles", required: false)
 
     <style>
         /* Sidebar styling */
@@ -132,7 +132,7 @@
                 <a class="nav-link" asp-page="UploadDirectly" asp-route-type="unsigned">Add photo (direct unsigned upload)...</a>
             </li>
         <li class="nav-item">
-            <a class="nav-link" asp-page="/Contact">Contact</a>
+            <a class="nav-link" asp-page="/MyPhotos">My Photos</a>
         </li>
 
     </ul>
@@ -153,11 +153,7 @@
         <div class="header-left">
             <a href="/">PhotoAlbum</a> <!-- Brand/Logo -->
         </div>
-        <div class="header-right">
-            <a href="/Profile">Profile</a>
-            <a href="/Notifications">Notifications</a>
-            <a href="/Settings">Settings</a>
-        </div>
+       
     </header>
 
     <!-- Page Content -->

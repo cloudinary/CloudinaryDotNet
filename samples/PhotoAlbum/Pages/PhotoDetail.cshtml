@@ -1,0 +1,50 @@
+﻿@page "/MyPhotos/{id}"
+@model PhotoAlbum.Pages.PhotoDetailModel
+
+@{
+    ViewData["Title"] = "Photo Detail";
+}
+
+
+<div class="container mt-5">
+    <h1>Photo Details</h1>
+    
+    @if (Model.Photo == null)
+    {
+        <p>Photo not found.</p>
+    }
+    else
+    {
+        <div class="photo-detail">
+            <h2>@Model.Photo.PublicId</h2>
+            @Html.Raw(Cloudinary.Api.UrlImgUp.Format(Model.Photo.Format)
+                .Transform(new Transformation().Width(500).Crop("fit"))
+                .BuildImageTag(Model.Photo.PublicId, new StringDictionary("class=photo-large")))
+
+            <h3>Transformations</h3>
+            <div class="transformations">
+                <table>
+                    <tr>
+                        @foreach (var url in Model.TransformedUrls)
+                        {
+                            <td>
+                                <div class="thumbnail-holder">
+                                    <a target="_blank" href="@url.BuildUrl(Model.Photo.PublicId)">
+                                        @Html.Raw(url.BuildImageTag(Model.Photo.PublicId, new StringDictionary("class=thumbnail inline")))
+                                    </a>
+                                </div>
+                                <table class="info">
+                                    <tr><td>Format:</td><td>@url.FormatValue</td></tr>
+                                    @foreach (var (key, value) in url.Transformation.Params)
+                                    {
+                                        <tr><td>@key:</td><td>@value</td></tr>
+                                    }
+                                </table>
+                            </td>
+                        }
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+</div>
