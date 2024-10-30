@@ -4,16 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace PhotoAlbum.Pages
 {
     public class PhotoDetailModel : PageModel
     {
         private readonly Cloudinary _cloudinary;
+        private readonly IConfiguration _configuration;
 
-        public PhotoDetailModel(Cloudinary cloudinary)
+
+        public PhotoDetailModel(Cloudinary cloudinary, IConfiguration configuration)
         {
             _cloudinary = cloudinary;
+            _configuration = configuration;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -21,6 +25,7 @@ namespace PhotoAlbum.Pages
 
         public ImageData Photo { get; set; }
         public List<Url> TransformedUrls { get; set; }
+        public string CloudName => _configuration["AccountSettings:CloudName"];
 
         public async Task<IActionResult> OnGetAsync()
         {
