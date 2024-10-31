@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Markdig;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,6 +12,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PhotoAlbum.Data;
 using UploadResult = PhotoAlbum.Data.UploadResult;
+using Markdig;
+
 
 namespace PhotoAlbum.Pages
 {
@@ -20,6 +23,9 @@ namespace PhotoAlbum.Pages
 
         private readonly Cloudinary _cloudinary;
         private readonly PhotosDbContext _context;
+        public string RenderedMarkdown { get; private set; }
+
+
 
         public UploadModel(
             Cloudinary cloudinary,
@@ -32,6 +38,7 @@ namespace PhotoAlbum.Pages
 
         public void OnGet()
         {
+           
         }
 
         public async Task<IActionResult> OnPostAsync(IFormFile[] images)
@@ -89,6 +96,12 @@ namespace PhotoAlbum.Pages
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return RedirectToPage("UploadSucceeded");
+        }
+
+        private string RenderMarkdownToHtml(string markdown)
+        {
+            // Use Markdig to convert Markdown to HTML
+            return Markdown.ToHtml(markdown);
         }
     }
 }

@@ -15,7 +15,8 @@ namespace PhotoAlbum.Pages
 {
     public class UploadDirectlyModel : PageModel
     {
-        private const string FolderName = "preset_folder";
+
+
         private readonly Cloudinary _cloudinary;
         private readonly PhotosDbContext _context;
         public const string Tags = "direct_PhotoAlbum";
@@ -42,8 +43,7 @@ namespace PhotoAlbum.Pages
             await _cloudinary.CreateUploadPresetAsync(new UploadPresetParams
             {
                 Name = Preset,
-                Unsigned = true,
-                Folder = FolderName
+                Unsigned = true
             }).ConfigureAwait(false);
         }
 

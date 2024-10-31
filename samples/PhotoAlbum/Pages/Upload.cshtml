@@ -5,14 +5,36 @@
     ViewData["Title"] = "PhotoAlbum - Upload page";
 }
 
-<!-- A standard form for sending the image data to your server -->
-<div id="backend_upload">
-    <h1>Upload through your server</h1>
+<div id="backend_upload" class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center mb-4">Upload through your server</h1>
 
-    <form method="Post" enctype="multipart/form-data">
-        <input id="fileupload" type="file" name="images" multiple accept="image/gif, image/jpeg, image/png">
-        <input type="submit" value="Upload">
-    </form>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="Post" enctype="multipart/form-data" class="form-group">
+                        <div class="mb-3">
+                            <label for="fileupload" class="form-label">Select Images</label>
+                            <input id="fileupload" type="file" class="form-control" name="images" multiple accept="image/gif, image/jpeg, image/png">
+                        </div>
+
+                        <div class="d-grid">
+                            <input type="submit" value="Upload" class="btn btn-primary btn-block">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a asp-page="Index" class="btn btn-link">Back to list...</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            @Html.Raw(Model.RenderedMarkdown)
+        </div>
+    </div>
+
+   
 </div>
-
-<a asp-page="Index" class="back_link">Back to list...</a>

@@ -1,0 +1,106 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "PhotoAlbum - Main page";
+}
+
+<div class="container mt-5">
+    <!-- Welcome Section -->
+
+    <div class="card-body text-center" style="font-size: 1.5rem; line-height: 1.8;">
+        <h1 class="card-title" style="font-size: 3rem; line-height: 1.2;">My Photos!</h1>
+
+
+       
+    </div>
+
+ 
+
+    
+    
+</div>
+
+
+
+<div class="container mt-5">
+    <h1 class="text-center mb-5" style="font-size: 2.5rem;">My Photo Gallery</h1>
+
+    <div class="photos d-flex flex-wrap justify-content-center">
+        @if (Model.Photos.Count == 0)
+        {
+            <p class="text-muted">No photos were uploaded yet.</p>
+        }
+        else
+        {
+            foreach (var img in Model.Photos)
+            {
+                <div class="photo-card card m-3" style="width: 200px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                    <!-- Image Thumbnail -->
+                    <a href="@Cloudinary.Api.UrlImgUp.Format("jpg").BuildUrl(img.PublicId)" target="_blank">
+                        @Html.Raw(Cloudinary.Api.UrlImgUp.Format("jpg").Transform(new Transformation().Height(200).Width(200).Crop("fill")).BuildImageTag(img.PublicId, new StringDictionary("class=card-img-top")))
+                    </a>
+
+                    <!-- Card Body -->
+                    <div class="card-body text-center">
+                        <!-- Photo ID or Title -->
+                        <h5 class="card-title text-truncate" style="font-size: 1rem;">@img.PublicId</h5>
+
+                        <!-- View Details Button -->
+                        <a href="/MyPhotos/@(img.PublicId.Split('/').Last())" class="btn btn-primary btn-sm mb-2" style="width: 100%;">View Details</a>
+
+                        <!-- Direct Link to Full Image -->
+                        <a href="@Cloudinary.Api.UrlImgUp.Format(img.Format).BuildUrl(img.PublicId)" target="_blank" class="btn btn-outline-secondary btn-sm" style="width: 100%;">Open Full Image</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section styles
+{
+    <style>
+        /* Container styling */
+        .photos {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Photo Card Styling */
+        .photo-card {
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .photo-card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            }
+
+        /* Card title styling */
+        .card-title {
+            margin-bottom: 0.75rem;
+            color: #333;
+        }
+
+        /* Button spacing */
+        .card-body .btn {
+            margin-top: 0.25rem;
+        }
+    </style>
+}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('.toggle_info').click(function () {
+                $(this).closest('.photo').toggleClass('show_more_info');
+                return false;
+            });
+        });
+    </script>
+}
