@@ -1,4 +1,22 @@
 
+1.27.0 / 2024-12-16
+=============
+
+New functionality
+-----------------
+
+  * Add support for `RenameFolder` Admin API
+  * Add support for `GetConfig` Admin API
+  * Add support for `DeleteAccessKey` in Provisioning API
+  * Add support for `Analyze` API
+
+Other Changes
+-------------
+
+  * Upgrade `cloudinary-jquery-file-upload`
+  * Fix epoch time conversion discrepancy
+  * Upgrade sample project to .NET 8
+
 1.26.2 / 2024-03-16
 ===================
 
