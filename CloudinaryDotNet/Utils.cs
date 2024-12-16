@@ -35,7 +35,7 @@
         /// <returns>Epoch time in seconds.</returns>
         internal static long ToUnixTimeSeconds(DateTime date)
         {
-            return Convert.ToInt64((date.ToUniversalTime() - Epoch).TotalSeconds);
+            return Convert.ToInt64(Math.Floor((date.ToUniversalTime() - Epoch).TotalSeconds));
         }
 
         /// <summary>
