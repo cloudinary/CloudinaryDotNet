@@ -343,6 +343,10 @@ namespace CloudinaryDotNet
             }
 
             parameters.File.Reset(bufferSize != 0 ? bufferSize : DEFAULT_CHUNK_SIZE);
+            if (string.IsNullOrEmpty(parameters.UniqueUploadId))
+            {
+                parameters.UniqueUploadId = Utils.RandomPublicId();
+            }
 
             T result = null;
 
