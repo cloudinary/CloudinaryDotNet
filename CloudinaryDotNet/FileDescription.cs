@@ -150,8 +150,16 @@
             {
                 filePath = value;
                 IsRemote = Utils.IsRemoteFile(filePath);
-                FileName = IsRemote ? filePath : Path.GetFileName(filePath);
-                FileSize = GetFileLength();
+                if (IsRemote)
+                {
+                    FileName = filePath;
+                }
+                else
+                {
+                    FileName = Path.GetFileName(filePath);
+                    FileSize = GetFileLength();
+                }
+
                 Reset();
             }
         }
