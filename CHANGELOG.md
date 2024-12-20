@@ -1,4 +1,9 @@
 
+1.27.1 / 2024-12-20
+=============
+
+  * Fix race condition in `UploadLarge` with parallel upload
+
 1.27.0 / 2024-12-16
 =============
 
