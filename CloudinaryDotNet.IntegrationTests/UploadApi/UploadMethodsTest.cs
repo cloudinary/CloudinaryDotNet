@@ -40,8 +40,8 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
         protected string m_implicitTransformationText;
 
-        protected string m_largeFileEtag;
-        protected int m_largeFileLength;
+        protected string m_largeImageEtag;
+        protected int m_largeImageLength;
 
         public override void Initialize()
         {
@@ -56,8 +56,8 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
                 m_transformationAr30, m_transformationAr12,
                 m_eagerTransformation);
 
-            m_largeFileEtag = GetFileMd5Sum(m_testLargeImagePath);
-            m_largeFileLength = (int)new FileInfo(m_testLargeImagePath).Length;
+            m_largeImageEtag = GetFileMd5Sum(m_testLargeImagePath);
+            m_largeImageLength = GetFileSize(m_testLargeImagePath);
         }
 
         [Test, RetryWithDelay]
@@ -607,9 +607,19 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
 
             var uploadParams = GetUploadLargeRawParams(largeFilePath);
 
-            var result = await m_cloudinary.UploadLargeAsync<RawUploadResult>(uploadParams, TEST_CHUNK_SIZE, 2);
+            var result = await m_cloudinary.UploadLargeAsync<RawUploadResult>(uploadParams, TEST_CHUNK_SIZE, 4);
 
             AssertUploadLarge(result);
+        }
+
+        [Test, RetryWithDelay]
+        public async Task TestUploadLargeRawFileEvenChunksAsyncInParallel()
+        {
+            var uploadParams = GetUploadLargeRawParams(m_testLargeFilePath);
+
+            var result = await m_cloudinary.UploadLargeAsync<RawUploadResult>(uploadParams, TEST_CHUNK_SIZE, 4);
+
+            AssertUploadLarge(result, GetFileSize(m_testLargeFilePath),GetFileMd5Sum(m_testLargeFilePath));
         }
 
         private RawUploadParams GetUploadLargeRawParams(string path)
@@ -625,11 +635,11 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         {
             if (fileLength == 0)
             {
-                fileLength = m_largeFileLength;
+                fileLength = m_largeImageLength;
             }
             if (etag == null)
             {
-                etag = m_largeFileEtag;
+                etag = m_largeImageEtag;
             }
             Assert.NotNull(result);
             Assert.AreEqual(fileLength, result.Bytes, result.Error?.Message);

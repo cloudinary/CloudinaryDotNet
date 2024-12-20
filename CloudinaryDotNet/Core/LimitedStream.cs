@@ -9,6 +9,7 @@ namespace CloudinaryDotNet.Core
     /// </summary>
     internal class LimitedStream : Stream
     {
+        private readonly object streamLock;
         private readonly Stream originalStream;
         private long remainingBytes;
         private long startOffset;
@@ -21,11 +22,13 @@ namespace CloudinaryDotNet.Core
         /// <param name="offset">The offset from which to start reading in the underlying stream.
         ///                      We ignore it for non-seekable streams.</param>
         /// <param name="maxBytes">Maximum bytes to read.</param>
-        public LimitedStream(Stream stream, long offset, long maxBytes)
+        /// <param name="streamLockObj">Stream lock object.</param>
+        public LimitedStream(Stream stream, long offset, long maxBytes, object streamLockObj = null)
         {
             originalStream = stream ?? throw new ArgumentNullException(nameof(stream));
             remainingBytes = maxBytes;
             startOffset = currOffset = offset;
+            streamLock = streamLockObj;
 
             if (!stream.CanSeek)
             {
@@ -64,15 +67,16 @@ namespace CloudinaryDotNet.Core
         /// <inheritdoc/>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            // make sure stream is not moved around.
-            originalStream.Seek(currOffset, SeekOrigin.Begin);
+            lock (streamLock)
+            {
+                // make sure stream is not moved around.
+                originalStream.Seek(currOffset, SeekOrigin.Begin);
+                var bytesRead = originalStream.Read(buffer, offset, (int)Math.Min(count, remainingBytes));
+                currOffset += bytesRead;
+                remainingBytes -= bytesRead;
 
-            var bytesRead = originalStream.Read(buffer, offset, (int)Math.Min(count, remainingBytes));
-
-            currOffset += bytesRead;
-            remainingBytes -= bytesRead;
-
-            return bytesRead;
+                return bytesRead;
+            }
         }
 
         /// <inheritdoc/>

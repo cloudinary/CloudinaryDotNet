@@ -48,6 +48,8 @@
 
         private readonly object chunkLock = new ();
 
+        private readonly object streamLock = new ();
+
         private Stream fileStream;
 
         private string filePath;
@@ -149,7 +151,7 @@
                 filePath = value;
                 IsRemote = Utils.IsRemoteFile(filePath);
                 FileName = IsRemote ? filePath : Path.GetFileName(filePath);
-
+                FileSize = GetFileLength();
                 Reset();
             }
         }
@@ -258,7 +260,7 @@
                 FileSize = CurrPos;
             }
 
-            var limitedStream = new LimitedStream(chunkStream, 0, chunkSize);
+            var limitedStream = new LimitedStream(chunkStream, 0, chunkSize, streamLock);
             var chunk = new ChunkData(limitedStream, startByte, CurrPos - 1, FileSize)
             {
                 LastChunk = last,
@@ -296,8 +298,8 @@
                 {
                     // Create a limited stream over the stream and return it.
                     CurrChunkSize = Math.Min(BufferSize, chunkStream.Length - CurrPos);
-                    resultingStream = new LimitedStream(chunkStream, CurrPos, CurrChunkSize);
-                    if (CurrChunkSize < BufferSize && BufferSize != UnlimitedBuffer)
+                    resultingStream = new LimitedStream(chunkStream, CurrPos, CurrChunkSize, streamLock);
+                    if ((CurrChunkSize < BufferSize && BufferSize != UnlimitedBuffer) || CurrPos + CurrChunkSize == FileSize)
                     {
                         LastChunk = true;
                     }

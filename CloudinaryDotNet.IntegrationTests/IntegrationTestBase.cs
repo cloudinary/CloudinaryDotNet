@@ -22,6 +22,7 @@ namespace CloudinaryDotNet.IntegrationTests
         protected string m_testImagePath;
         protected string m_testUnicodeImagePath;
         protected string m_testLargeImagePath;
+        protected string m_testLargeFilePath;
         protected string m_testVideoPath;
         protected string m_testPdfPath;
         protected string m_testIconPath;
@@ -39,6 +40,7 @@ namespace CloudinaryDotNet.IntegrationTests
         protected const string TEST_UNICODE_IMAGE_NAME = "TestüniNämeLögö";
         protected const string TEST_UNICODE_IMAGE = "TestüniNämeLögö.jpg";
         protected const string TEST_LARGEIMAGE = "TestLargeImage.jpg";
+        protected const string TEST_LARGEFILE = "TestLargeFile.txt";
         protected const string TEST_PDF = "multipage.pdf";
         protected const string TEST_FAVICON = "favicon.ico";
 
@@ -163,19 +165,21 @@ namespace CloudinaryDotNet.IntegrationTests
 
         private void SaveTestResources(Assembly assembly)
         {
-            string filePrefix = Path.GetDirectoryName(assembly.Location);
-            string testName = GetType().Name;
+            var filePrefix = Path.GetDirectoryName(assembly.Location) ?? "";
+            var testName = GetType().Name;
 
             m_testVideoPath = Path.Combine(filePrefix, testName, TEST_MOVIE);
             m_testImagePath = Path.Combine(filePrefix, testName, TEST_IMAGE);
             m_testUnicodeImagePath = Path.Combine(filePrefix, testName, TEST_UNICODE_IMAGE);
             m_testLargeImagePath = Path.Combine(filePrefix, testName, TEST_LARGEIMAGE);
+            m_testLargeFilePath = Path.Combine(filePrefix, testName, TEST_LARGEFILE);
             m_testPdfPath = Path.Combine(filePrefix, testName, TEST_PDF);
             m_testIconPath = Path.Combine(filePrefix, testName, TEST_FAVICON);
 
             SaveEmbeddedToDisk(assembly, TEST_IMAGE, m_testImagePath);
             SaveEmbeddedToDisk(assembly, TEST_IMAGE, m_testUnicodeImagePath);
             SaveEmbeddedToDisk(assembly, TEST_LARGEIMAGE, m_testLargeImagePath);
+            PopulateLargeFile(m_testLargeFilePath, 20971520);
             SaveEmbeddedToDisk(assembly, TEST_MOVIE, m_testVideoPath);
             SaveEmbeddedToDisk(assembly, TEST_FAVICON, m_testIconPath);
             SaveEmbeddedToDisk(assembly, TEST_PDF, m_testPdfPath);
@@ -195,20 +199,66 @@ namespace CloudinaryDotNet.IntegrationTests
                     Directory.CreateDirectory(directoryName);
                 }
 
-                Stream stream = assembly.GetManifestResourceStream(resName);
-                using (FileStream fileStream = new FileStream(destPath, FileMode.CreateNew))
+                var stream = assembly.GetManifestResourceStream(resName);
+                using (var fileStream = new FileStream(destPath, FileMode.CreateNew))
                 {
                     stream.CopyTo(fileStream);
                 }
             }
             catch
             {
+                // ignored
+            }
+        }
 
+        private static void PopulateLargeFile(string filePath, long size, int chunkSize = 4096)
+        {
+            if (File.Exists(filePath))
+            {
+                return;
+            }
+
+            // Write the initial binary data
+            var initialData = new byte[]
+            {
+                0x42, 0x4D, 0x4A, 0xB9, 0x59, 0x00, 0x00, 0x00, 0x00, 0x00, 0x8A, 0x00, 0x00, 0x00, 0x7C, 0x00,
+                0x00, 0x00, 0x78, 0x05, 0x00, 0x00, 0x78, 0x05, 0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0xC0, 0xB8, 0x59, 0x00, 0x61, 0x0F, 0x00, 0x00, 0x61, 0x0F, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0xFF, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0xFF, 0x42, 0x47, 0x52, 0x73, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x54, 0xB8, 0x1E, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x66, 0x66, 0xFC,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC4, 0xF5, 0x28, 0xFF, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+            };
+
+            using (var fileStream = new FileStream(filePath, FileMode.CreateNew))
+            {
+                fileStream.Write(initialData, 0, initialData.Length);
+
+                // Calculate the remaining size to fill
+                var remainingSize = size - fileStream.Length;
+
+                var buffer = new byte[chunkSize];
+
+                // Fill the buffer with 0xFF
+                for (var i = 0; i < buffer.Length; i++)
+                {
+                    buffer[i] = 0xFF;
+                }
+
+                // Write chunks until the file reaches the specified size
+                while (remainingSize > 0)
+                {
+                    var currChunkSize = (int)Math.Min(remainingSize, chunkSize);
+                    fileStream.Write(buffer, 0, currChunkSize);
+                    remainingSize -= currChunkSize;
+                }
             }
         }
 
 
-        protected List<string> SplitFile(string sourceFile, int chunkSize, string suffix = "")
+        protected static List<string> SplitFile(string sourceFile, int chunkSize, string suffix = "")
         {
             var chunks = new List<string>();
 
@@ -518,6 +568,11 @@ namespace CloudinaryDotNet.IntegrationTests
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
             }
+        }
+
+        protected static int GetFileSize(string filename)
+        {
+            return (int)new FileInfo(filename).Length;
         }
 
         [OneTimeTearDown]
