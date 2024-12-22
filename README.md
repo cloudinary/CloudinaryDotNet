@@ -1,4 +1,6 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/vdx8o03ethg5opt4?svg=true)](https://ci.appveyor.com/project/Cloudinary/cloudinarydotnet) [![NuGet Badge](https://buildstats.info/nuget/CloudinaryDotNet)](https://www.nuget.org/packages/CloudinaryDotNet/)
+[![Build status](https://ci.appveyor.com/api/projects/status/vdx8o03ethg5opt4?svg=true)](https://ci.appveyor.com/project/Cloudinary/cloudinarydotnet)
+[![NuGet Badge](https://img.shields.io/nuget/v/CloudinaryDotNet)](https://www.nuget.org/packages/CloudinaryDotNet/)
+![NuGet Downloads](https://img.shields.io/nuget/dt/CloudinaryDotNet)
 
 Cloudinary .NET SDK
 ==================
@@ -32,7 +34,7 @@ For the complete documentation, see the [.NET SDK Guide](https://cloudinary.com/
 
 ## Version Support
 
-| SDK Version | .NET Framework 4.5.2 - 4.8 | .NET Standard 1.3 and up | .NET Core | .NET 5 - 8 |
+| SDK Version | .NET Framework 4.5.2 - 4.8 | .NET Standard 1.3 and up | .NET Core | .NET 5 - 9 |
 |-------------|----------------------------|--------------------------|-----------|------------|
 | 1.x         | ✔                          | ✔                        | ✔         | ✔          |
 
