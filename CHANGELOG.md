@@ -1,4 +1,9 @@
 
+1.27.2 / 2025-01-23
+=============
+
+  * Fix boolean value parsing in API responses
+
 1.27.1 / 2024-12-20
 =============
 
