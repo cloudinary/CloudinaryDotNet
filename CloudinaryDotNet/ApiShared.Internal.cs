@@ -256,7 +256,9 @@
                 using var streamReader = new StreamReader(s);
                 using var jsonReader = new JsonTextReader(streamReader);
                 var jsonObj = JToken.Load(jsonReader);
-                var result = jsonObj.ToObject<T>();
+                var serializer = new JsonSerializer();
+                serializer.Converters.Add(new SafeBooleanConverter());
+                var result = jsonObj.ToObject<T>(serializer);
                 result.JsonObj = jsonObj;
 
                 return result;
