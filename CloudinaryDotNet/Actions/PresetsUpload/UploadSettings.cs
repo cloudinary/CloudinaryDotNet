@@ -248,6 +248,7 @@
         /// <summary>
         /// Gets or sets a value indicating whether indicates whether the upload preset is used for live streaming. Default: false.
         /// </summary>
+        [JsonConverter(typeof(SafeBooleanConverter))]
         [DataMember(Name = "live")]
         public bool Live { get; set; }
     }
