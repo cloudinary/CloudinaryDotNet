@@ -39,6 +39,35 @@ namespace CloudinaryDotNet.Tests
             Assert.AreEqual(OnSuccessStr, result.Presets.First().OnSuccess);
         }
 
+        [Test]
+        public void TestListUploadPresetsBooleanValues()
+        {
+            const string responseStr = @"
+            {
+              ""presets"": [
+                { ""name"": ""int-str"", ""settings"": { ""overwrite"": ""1"" } },
+                { ""name"": ""bool"", ""settings"": { ""overwrite"": true } },
+                { ""name"": ""bool-str"", ""settings"": { ""overwrite"": ""true"" } },
+                { ""name"": ""bool-str-false"", ""settings"": { ""overwrite"": ""false"" } },
+                { ""name"": ""empty"", ""settings"": { ""overwrite"": """" } },
+                { ""name"": ""default"", ""settings"": { ""no_overwrite"": true } },
+              ]
+            }";
+
+            var localCloudinaryMock = new MockedCloudinary(responseStr);
+
+            var result = localCloudinaryMock.ListUploadPresets();
+
+            localCloudinaryMock.AssertHttpCall(SystemHttp.HttpMethod.Get, uploadPresetsRootUrl);
+
+            Assert.IsTrue(result.Presets.First().Settings.Overwrite);
+            Assert.IsTrue(result.Presets[1].Settings.Overwrite);
+            Assert.IsTrue(result.Presets[2].Settings.Overwrite);
+            Assert.IsFalse(result.Presets[3].Settings.Overwrite);
+            Assert.IsNull(result.Presets[4].Settings.Overwrite);
+            Assert.IsNull(result.Presets[5].Settings.Overwrite);
+        }
+
         [TestCase("x-featureratelimit-limit", 123)]
         [TestCase("X-FeatureRateLimit-Limit", 123)]
         public void TestFeatureRateLimitLimitHeader(string headerName, long headerValue)
@@ -47,7 +76,7 @@ namespace CloudinaryDotNet.Tests
             var headers = message.Headers;
 
             headers.Add(headerName, headerValue.ToString());
-            
+
             var localCloudinaryMock = new MockedCloudinary(httpResponseHeaders: headers);
 
             var result = localCloudinaryMock.ListUploadPresets();
