@@ -39,48 +39,70 @@
             object existingValue,
             JsonSerializer serializer)
         {
-            // If the token is null or empty, return false
+            // We'll parse everything into a 'bool?' and decide how to return
+            // based on whether the target is bool or bool?.
+            bool? parsedValue = null;
+
             if (reader.TokenType == JsonToken.Null ||
                 (reader.Value is string strVal && string.IsNullOrWhiteSpace(strVal)))
             {
-                return false;
+                parsedValue = null;
             }
 
-            // Handle Boolean token directly
-            if (reader is { TokenType: JsonToken.Boolean, Value: bool boolValue })
+            // Handle Boolean token directly: e.g., true or false
+            else if (reader is { TokenType: JsonToken.Boolean, Value: bool boolValue })
             {
-                return boolValue;
+                parsedValue = boolValue;
             }
 
-            // Handle numeric "0" or "1"
-            if (reader is { TokenType: JsonToken.Integer, Value: not null })
+            // Handle integer "0" or "1"
+            else if (reader is { TokenType: JsonToken.Integer, Value: not null })
             {
                 var intValue = Convert.ToInt64(reader.Value, CultureInfo.InvariantCulture);
-                return intValue == 1;
+                parsedValue = intValue == 1;
             }
 
             // Handle string values: "0", "1", "true", "false", etc.
-            if (reader is { TokenType: JsonToken.String, Value: string stringValue })
+            else if (reader is { TokenType: JsonToken.String, Value: string stringValue })
             {
                 switch (stringValue)
                 {
                     case "0":
-                        return false;
+                        parsedValue = false;
+                        break;
                     case "1":
-                        return true;
-                }
+                        parsedValue = true;
+                        break;
+                    default:
+                        if (bool.TryParse(stringValue, out var boolFromString))
+                        {
+                            parsedValue = boolFromString;
+                        }
+                        else
+                        {
+                            throw new JsonSerializationException(
+                                $"Unable to parse \"{stringValue}\" as a boolean value.");
+                        }
 
-                if (bool.TryParse(stringValue, out var parsedBool))
-                {
-                    return parsedBool;
+                        break;
                 }
-
+            }
+            else
+            {
+                // Unexpected token => throw
                 throw new JsonSerializationException(
-                    $"Unable to parse \"{stringValue}\" as a boolean value.");
+                    $"Unexpected token {reader.TokenType} when parsing a boolean.");
             }
 
-            throw new JsonSerializationException(
-                $"Unexpected token {reader.TokenType} when parsing a boolean.");
+            // If we're targeting bool? => return the parsedValue (can be null or bool).
+            // If we're targeting bool => return false if parsedValue is null, else the bool value.
+            if (objectType == typeof(bool?))
+            {
+                return parsedValue;
+            }
+
+            // objectType == typeof(bool)
+            return parsedValue ?? false;
         }
 
         /// <summary>

@@ -47,7 +47,9 @@ namespace CloudinaryDotNet.Tests
               ""presets"": [
                 { ""name"": ""int-str"", ""settings"": { ""overwrite"": ""1"" } },
                 { ""name"": ""bool"", ""settings"": { ""overwrite"": true } },
-                { ""name"": ""bool-str"", ""settings"": { ""overwrite"": ""true"" } }
+                { ""name"": ""bool-str"", ""settings"": { ""overwrite"": ""true"" } },
+                { ""name"": ""empty"", ""settings"": { ""overwrite"": """" } },
+                { ""name"": ""default"", ""settings"": { ""no_overwrite"": true } },
               ]
             }";
 
@@ -60,6 +62,8 @@ namespace CloudinaryDotNet.Tests
             Assert.IsTrue(result.Presets.First().Settings.Overwrite);
             Assert.IsTrue(result.Presets[1].Settings.Overwrite);
             Assert.IsTrue(result.Presets[2].Settings.Overwrite);
+            Assert.IsNull(result.Presets[3].Settings.Overwrite);
+            Assert.IsNull(result.Presets[4].Settings.Overwrite);
         }
 
         [TestCase("x-featureratelimit-limit", 123)]
