@@ -856,18 +856,9 @@
                 throw new ArgumentException("cloudName must be specified!");
             }
 
-            if (source == null)
-            {
-                source = m_source;
-            }
+            source ??= m_source ?? string.Empty;
 
-            if (source == null)
-            {
-                source = string.Empty;
-            }
-
-            if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*") &&
-                (m_action == "upload" || m_action == "asset"))
+            if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*") && m_action is "upload" or "asset")
             {
                 return source;
             }
@@ -878,12 +869,11 @@
                 FormatValue = null;
             }
 
-            string transformationStr = Transformation.Generate();
+            var transformationStr = Transformation.Generate();
 
             var src = UpdateSource(source);
 
-            bool sharedDomain;
-            var prefix = GetPrefix(src.Source, out sharedDomain);
+            var prefix = GetPrefix(src.Source, out var sharedDomain);
 
             List<string> urlParts = new List<string>(new string[] { prefix });
             if (!string.IsNullOrEmpty(m_apiVersion))
@@ -1264,42 +1254,36 @@
 
         private CSource UpdateSource(string source)
         {
-            CSource src = null;
-
-            var tmpSource = Regex.Replace(source, @"[^\u0000-\u007F]+", string.Empty);
-
-            bool isSignedAndUnicode = (m_signed && ((tmpSource != source) || tmpSource.Contains("%"))) ? true : false;
-
             if (Regex.IsMatch(source.ToLowerInvariant(), "^https?:/.*"))
             {
-                src = new CSource(Encode(source));
+               return new CSource(Encode(source));
             }
-            else
+
+            var isSignedAndUnicode = m_signed && (source.Any(c => c > 127) || source.Contains("%"));
+
+            var targetSource = isSignedAndUnicode ? Utils.Encode(source) : source;
+
+            var src = new CSource(Encode(Decode(targetSource)));
+
+            if (isSignedAndUnicode)
             {
-                var targetSource = isSignedAndUnicode ? Utils.Encode(source) : source;
+                // Signature calculation to be in line with backend logic for mixed Ansii and Unicode publicID + authenticated
+                src.SourceToSign = Uri.UnescapeDataString(source);
+            }
 
-                src = new CSource(Encode(Decode(targetSource)));
-
-                if (!string.IsNullOrEmpty(m_suffix))
+            if (!string.IsNullOrEmpty(m_suffix))
+            {
+                if (Regex.IsMatch(m_suffix, "[\\./]"))
                 {
-                    if (Regex.IsMatch(m_suffix, "[\\./]"))
-                    {
-                        throw new ArgumentException("Suffix should not include . or /!");
-                    }
-
-                    src.Source += "/" + m_suffix;
+                    throw new ArgumentException("Suffix should not include . or /!");
                 }
 
-                if (!string.IsNullOrEmpty(FormatValue))
-                {
-                    src += "." + FormatValue;
-                }
+                src.Source += "/" + m_suffix;
+            }
 
-                if (isSignedAndUnicode)
-                {
-                    // Signature calculation to be in line with backend logic for mixed Ansii and Unicode publicID + authenticated
-                    src.SourceToSign = System.Uri.UnescapeDataString(source);
-                }
+            if (!string.IsNullOrEmpty(FormatValue))
+            {
+                src += "." + FormatValue;
             }
 
             return src;
