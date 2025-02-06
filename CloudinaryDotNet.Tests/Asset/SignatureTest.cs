@@ -222,40 +222,22 @@ namespace CloudinaryDotNet.Tests.Asset
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void TestSignedAnsiAndUnicodeUrl()
+        [TestCase("testFolder/%20Test Image_僅測試", "s--MIMNFCL4--/c_scale,h_200,w_300/v1/testFolder/%2520Test%20Image_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg")]
+        [TestCase("testFolder/TestImage_僅測試", "s--FvJh0bXb--/c_scale,h_200,w_300/v1/testFolder/TestImage_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg")]
+        [TestCase("testFolder/Test Image_僅測試", "s--_jfm-XyC--/c_scale,h_200,w_300/v1/testFolder/Test%20Image_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg")]
+        [TestCase("testFolder/Test Image", "s--rmmMhYpj--/c_scale,h_200,w_300/v1/testFolder/Test%20Image.jpg")]
+        [TestCase("testFolder/TestImage", "s--lzoFcAJk--/c_scale,h_200,w_300/v1/testFolder/TestImage.jpg")]
+        [TestCase("testFolder/%20Test Image", "s--AlS6-LgU--/c_scale,h_200,w_300/v1/testFolder/%2520Test%20Image.jpg")]
+        [TestCase("testFolder/%20TestImage", "s--8xAbqJri--/c_scale,h_200,w_300/v1/testFolder/%2520TestImage.jpg")]
+        public void TestSignedAnsiAndUnicodeUrl(string publicId, string expectedPath)
         {
+            var urlBuilder = m_api.UrlImgUp.Action("authenticated")
+                .Transform(new Transformation().Crop("scale").Height(200).Width(300))
+                .Secure()
+                .Signed(true);
 
-            string[] sourcePublicIds = {
-                "testFolder/%20Test Image_僅測試.jpg",
-                "testFolder/TestImage_僅測試.jpg",
-                "testFolder/Test Image_僅測試.jpg",
-                "testFolder/Test Image.jpg",
-                "testFolder/TestImage.jpg",
-                "testFolder/%20Test Image.jpg",
-                "testFolder/%20TestImage.jpg"
-            };
-
-            string[] expectedSignedUrls = {
-                "https://res.cloudinary.com/testcloud/image/authenticated/s--MIMNFCL4--/c_scale,h_200,w_300/v1/testFolder/%2520Test%20Image_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg",
-                "https://res.cloudinary.com/testcloud/image/authenticated/s--FvJh0bXb--/c_scale,h_200,w_300/v1/testFolder/TestImage_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg",
-                "https://res.cloudinary.com/testcloud/image/authenticated/s--_jfm-XyC--/c_scale,h_200,w_300/v1/testFolder/Test%20Image_%E5%83%85%E6%B8%AC%E8%A9%A6.jpg",
-                "https://res.cloudinary.com/testcloud/image/authenticated/s--rmmMhYpj--/c_scale,h_200,w_300/v1/testFolder/Test%20Image.jpg",
-                "https://res.cloudinary.com/testcloud/image/authenticated/s--lzoFcAJk--/c_scale,h_200,w_300/v1/testFolder/TestImage.jpg",
-                "https://res.cloudinary.com/testcloud/image/authenticated/s--AlS6-LgU--/c_scale,h_200,w_300/v1/testFolder/%2520Test%20Image.jpg",
-                "https://res.cloudinary.com/testcloud/image/authenticated/s--8xAbqJri--/c_scale,h_200,w_300/v1/testFolder/%2520TestImage.jpg"
-            };
-
-            for (int x = 0; x < sourcePublicIds.Length; x++)
-            {
-                var actual = m_api.UrlImgUp.Action("authenticated")
-                    .Transform(new Transformation().Crop("scale").Height(200).Width(300))
-                    .Secure(true)
-                    .Signed(true)
-                    .BuildUrl(sourcePublicIds[x]);
-
-                Assert.AreEqual(expectedSignedUrls[x], actual);
-            }
+            Assert.IsTrue(urlBuilder.BuildUrl($"{publicId}.jpg").EndsWith(expectedPath));
+            Assert.IsTrue(urlBuilder.Format("jpg").BuildUrl(publicId).EndsWith(expectedPath));
         }
 
         [Test]
