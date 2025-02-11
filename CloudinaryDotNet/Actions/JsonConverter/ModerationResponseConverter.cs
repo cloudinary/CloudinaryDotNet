@@ -27,9 +27,19 @@
             object existingValue,
             JsonSerializer serializer)
         {
-            return reader.TokenType == JsonToken.StartObject
-                ? serializer.Deserialize(reader, objectType)
-                : null;
+            switch (reader.TokenType)
+            {
+                case JsonToken.Null:
+                    return null;
+                case JsonToken.StartArray:
+                    return new ModerationResponse { ModerationLabels = serializer.Deserialize<ModerationLabel[]>(reader) };
+                case JsonToken.StartObject:
+                    return serializer.Deserialize<ModerationResponse>(reader);
+                default:
+                    // If we hit something else, skip or return null
+                    reader.Skip();
+                    return null;
+            }
         }
 
         /// <summary>

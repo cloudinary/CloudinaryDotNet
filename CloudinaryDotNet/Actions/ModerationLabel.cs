@@ -16,6 +16,12 @@
         public float Confidence;
 
         /// <summary>
+        /// Public ID of the duplicate asset.
+        /// </summary>
+        [DataMember(Name = "public_id")]
+        public string PublicId;
+
+        /// <summary>
         /// Name of the offensive content category.
         /// </summary>
         [DataMember(Name = "name")]
