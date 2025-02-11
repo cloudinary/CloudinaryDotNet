@@ -10,7 +10,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>CloudinaryDotNet</RootNamespace>
     <Authors>Cloudinary</Authors>
-    <Version>1.27.3</Version>
+    <Version>1.27.4</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Official client library for easily integrating with the Cloudinary service</Description>
     <PackageTags>Image Video Responsive Web Utility CDN Performance Resize Crop Rotate Quality Watermark Gif Jpg Jpeg Bitmap PNG Tiff Webp Webm mp4 avi Filter Effect</PackageTags>
