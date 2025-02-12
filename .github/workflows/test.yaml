@@ -33,7 +33,21 @@ jobs:
         with:
           nuget-version: '5.x'
 
-      # 4. Restore Dependencies
+      # 4. Set MSBuild Path (for .NET Framework)
+      - name: Set MSBuild Path
+        if: contains(matrix.framework, 'v')
+        shell: pwsh
+        run: |
+          Write-Host "🔧 Setting MSBuild path for .NET Framework..."
+          $msbuildPath = &"C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
+          if (-not $msbuildPath) {
+              Write-Error "❌ MSBuild not found!"
+              exit 1
+          }
+          Write-Host "✅ MSBuild found at: $msbuildPath"
+          echo "MSBUILD_PATH=$msbuildPath" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8
+
+      # 5. Restore Dependencies
       - name: Restore Dependencies
         shell: pwsh
         run: |
@@ -41,20 +55,20 @@ jobs:
           if ("${{ matrix.framework }}" -notlike "v*") { dotnet restore }
           if ("${{ matrix.framework }}" -like "v*") { nuget.exe restore CloudinaryDotNet.sln }
 
-      # 5. Build Solution
+      # 6. Build Solution
       - name: Build Solution
         shell: pwsh
         run: |
           Write-Host "⚒️ Building for: ${{ matrix.framework }}"
           if ("${{ matrix.framework }}" -notlike "v*") { dotnet build --configuration Release --no-restore }
-          if ("${{ matrix.framework }}" -like "v*") { msbuild CloudinaryDotNet.sln /p:Configuration=Release /p:TargetFrameworkVersion=${{ matrix.framework }} }
+          if ("${{ matrix.framework }}" -like "v*") { & $env:MSBUILD_PATH CloudinaryDotNet.sln /p:Configuration=Release /p:TargetFrameworkVersion=${{ matrix.framework }} }
 
-      # 6. Run before_build.ps1
+      # 7. Run before_build.ps1
       - name: Run before_build.ps1
         shell: pwsh
         run: . ./before_build.ps1
 
-      # 7. Run Unit Tests
+      # 8. Run Unit Tests
       - name: Run Unit Tests
         shell: pwsh
         run: |
@@ -62,7 +76,7 @@ jobs:
           if ("${{ matrix.framework }}" -notlike "v*") { dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" --configuration Release --no-build }
           if ("${{ matrix.framework }}" -like "v*") { vstest.console.exe "./CloudinaryDotNet.Tests/bin/Release/${{ matrix.framework }}/CloudinaryDotNet.Tests.dll" /Framework:${{ matrix.framework }} }
 
-      # 8. Run Integration Tests
+      # 9. Run Integration Tests
       - name: Run Integration Tests
         shell: pwsh
         run: |
