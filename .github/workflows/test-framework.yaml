@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         framework-version:
-          - net481
-          - net452
+          - v4.8.1
+          - v4.5.2
     steps:
       # 1. Checkout repository
       - name: Checkout Code
@@ -31,8 +31,13 @@ jobs:
 
       # 5. Build the Solution
       - name: Build Solution for ${{ matrix.framework-version }}
+        shell: pwsh
         run: |
-          msbuild CloudinaryDotNet.sln /p:Configuration=Release /p:TargetFrameworkVersion=${{ matrix.framework-version }}
+          Write-Host "⚒️ Building for: ${{ matrix.framework-version }}"
+
+          msbuild CloudinaryDotNet.sln `
+            /p:Configuration=Release `
+            /p:TargetFrameworkVersion=${{ matrix.framework-version }}
 
       # 6. Run before_build.ps1
       - name: Run Before Build
@@ -41,10 +46,20 @@ jobs:
 
       # 7. Run Unit Tests
       - name: Run Unit Tests for ${{ matrix.framework-version }}
+        shell: pwsh
         run: |
-          vstest.console.exe "./CloudinaryDotNet.Tests/bin/Release/${{ matrix.framework-version }}/CloudinaryDotNet.Tests.dll" /Framework:${{ matrix.framework-version }}
+          Write-Host "🧪 Running Unit Tests for: ${{ matrix.framework-version }}"
+
+          vstest.console.exe `
+            "./CloudinaryDotNet.Tests/bin/Release/${{ matrix.framework-version }}/CloudinaryDotNet.Tests.dll" `
+            /Framework:${{ matrix.framework-version }}
 
       # 8. Run Integration Tests
       - name: Run Integration Tests for ${{ matrix.framework-version }}
+        shell: pwsh
         run: |
-          vstest.console.exe "./CloudinaryDotNet.IntegrationTests/bin/Release/${{ matrix.framework-version }}/CloudinaryDotNet.IntegrationTests.dll" /Framework:${{ matrix.framework-version }}
+          Write-Host "🧪 Running Integration Tests for: ${{ matrix.framework-version }}"
+
+          vstest.console.exe `
+            "./CloudinaryDotNet.IntegrationTests/bin/Release/${{ matrix.framework-version }}/CloudinaryDotNet.IntegrationTests.dll" `
+            /Framework:${{ matrix.framework-version }}
