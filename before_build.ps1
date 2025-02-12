@@ -1,7 +1,7 @@
 Write-Host "Setting up appsettings.json for tests"
 
-$strConfigSource = "$env:APPVEYOR_BUILD_FOLDER\CloudinaryDotNet.IntegrationTests\appsettings.json.sample"
-$strConfigDest = "$env:APPVEYOR_BUILD_FOLDER\CloudinaryDotNet.IntegrationTests\appsettings.json"      
+$strConfigSource = "CloudinaryDotNet.IntegrationTests\appsettings.json.sample"
+$strConfigDest = "CloudinaryDotNet.IntegrationTests\appsettings.json"
 $apiEndpoint = "https://sub-account-testing.cloudinary.com/create_sub_account"
 
 $postParams = @{
