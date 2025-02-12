@@ -158,8 +158,8 @@ namespace CloudinaryDotNet.IntegrationTests
         {
             var assembly = typeof(IntegrationTestBase).Assembly;
             var result = assembly.GetName().Name.Replace('.', '_');
-            var appveyorJobId = Environment.GetEnvironmentVariable("APPVEYOR_JOB_ID");
-            result += $"{appveyorJobId}_{new Random().Next(100000, 999999).ToString()}";
+            var githubRunId = Environment.GetEnvironmentVariable("GITHUB_RUN_ID") ?? "local";
+            result += $"{githubRunId}_{new Random().Next(100000, 999999)}";
             return result;
         }
 

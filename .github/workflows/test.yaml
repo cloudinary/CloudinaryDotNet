@@ -1,88 +1,41 @@
 name: .NET Test 🚀
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: windows-latest
-
     strategy:
       matrix:
-        framework:
-          - 9.0.x
-          - 8.0.x
-          - v4.8.1
-          - v4.5.2
-
+        dotnet-version:
+        - 9.0.x
+        - 8.0.x
     steps:
-      # 1. Checkout repository
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      # 2. Setup .NET SDK (for .NET Core / Modern .NET)
-      - name: Setup .NET SDK
-        if: "!startsWith(matrix.framework, 'v')"
-        uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ matrix.framework }}
+          dotnet-version: ${{ matrix.dotnet-version }}
 
-      # 3. Install NuGet CLI (for .NET Framework)
-      - name: Install NuGet CLI
-        if: startsWith(matrix.framework, 'v')
-        uses: NuGet/setup-nuget@v2
-        with:
-          nuget-version: '5.x'
-
-      # 4. Add MSBuild to PATH (for .NET Framework)
-      - name: Add MSBuild to PATH
-        if: contains(matrix.framework, 'v')
-        uses: microsoft/setup-msbuild@v2
-
-      # 5. Restore Dependencies
       - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Before Build
+        shell: pwsh
+        run: ./before_build.ps1
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Unit Tests
         shell: pwsh
         run: |
-          Write-Host "🔄 Restoring dependencies for: ${{ matrix.framework }}"
-          if ("${{ matrix.framework }}" -notlike "v*") { dotnet restore }
-          if ("${{ matrix.framework }}" -like "v*") { nuget.exe restore CloudinaryDotNet.sln }
+          dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" `
+            --configuration Release `
+            --no-build
 
-      # 6. Build Solution
-      - name: Build Solution
+      - name: Integration Tests
         shell: pwsh
         run: |
-          Write-Host "⚒️ Building for: ${{ matrix.framework }}"
-          if ("${{ matrix.framework }}" -notlike "v*") { 
-            dotnet build --configuration Release --no-restore 
-          }
-          if ("${{ matrix.framework }}" -like "v*") { 
-            msbuild CloudinaryDotNet.sln /p:Configuration=Release /p:TargetFrameworkVersion=${{ matrix.framework }} 
-          }
-
-      # 7. Run before_build.ps1
-      - name: Run before_build.ps1
-        shell: pwsh
-        run: . ./before_build.ps1
-
-      # 8. Run Unit Tests
-      - name: Run Unit Tests
-        shell: pwsh
-        run: |
-          Write-Host "🧪 Running Unit Tests for: ${{ matrix.framework }}"
-          if ("${{ matrix.framework }}" -notlike "v*") { 
-            dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" --configuration Release --no-build 
-          }
-          if ("${{ matrix.framework }}" -like "v*") { 
-            vstest.console.exe "./CloudinaryDotNet.Tests/bin/Release/${{ matrix.framework }}/CloudinaryDotNet.Tests.dll" /Framework:${{ matrix.framework }} 
-          }
-
-      # 9. Run Integration Tests
-      - name: Run Integration Tests
-        shell: pwsh
-        run: |
-          Write-Host "🧪 Running Integration Tests for: ${{ matrix.framework }}"
-          if ("${{ matrix.framework }}" -notlike "v*") {
-            dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" --configuration Release --no-build 
-          }
-          if ("${{ matrix.framework }}" -like "v*") {
-            vstest.console.exe "./CloudinaryDotNet.IntegrationTests/bin/Release/${{ matrix.framework }}/CloudinaryDotNet.IntegrationTests.dll" /Framework:${{ matrix.framework }} 
-          }
+          dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" `
+            --configuration Release `
+            --no-build
