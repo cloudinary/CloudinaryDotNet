@@ -1,0 +1,50 @@
+name: .NET Framework Test 🚀
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        framework-version:
+          - net481
+          - net452
+    steps:
+      # 1. Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Install NuGet CLI
+      - name: Install NuGet CLI
+        uses: NuGet/setup-nuget@v2
+        with:
+          nuget-version: '5.x'
+
+      # 3. Setup MSBuild
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      # 4. Restore Dependencies
+      - name: Restore Dependencies
+        run: nuget restore CloudinaryDotNet.sln
+
+      # 5. Build the Solution
+      - name: Build Solution for ${{ matrix.framework-version }}
+        run: |
+          msbuild CloudinaryDotNet.sln /p:Configuration=Release /p:TargetFrameworkVersion=${{ matrix.framework-version }}
+
+      # 6. Run before_build.ps1
+      - name: Run Before Build
+        shell: pwsh
+        run: . ./before_build.ps1
+
+      # 7. Run Unit Tests
+      - name: Run Unit Tests for ${{ matrix.framework-version }}
+        run: |
+          vstest.console.exe "./CloudinaryDotNet.Tests/bin/Release/${{ matrix.framework-version }}/CloudinaryDotNet.Tests.dll" /Framework:${{ matrix.framework-version }}
+
+      # 8. Run Integration Tests
+      - name: Run Integration Tests for ${{ matrix.framework-version }}
+        run: |
+          vstest.console.exe "./CloudinaryDotNet.IntegrationTests/bin/Release/${{ matrix.framework-version }}/CloudinaryDotNet.IntegrationTests.dll" /Framework:${{ matrix.framework-version }}
