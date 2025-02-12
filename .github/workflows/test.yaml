@@ -23,15 +23,17 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Unit Tests
+        shell: pwsh
         run: |
-          dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" \
-            --configuration Release \
-            --no-build \
+          dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" `
+            --configuration Release `
+            --no-build `
             --logger:"trx"
 
       - name: Integration Tests
+        shell: pwsh
         run: |
-          dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" \
-            --configuration Release \
-            --no-build \
+          dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" `
+            --configuration Release `
+            --no-build `
             --logger:"trx"
