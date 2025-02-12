@@ -1,0 +1,38 @@
+name: .NET Test 🚀
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+          cache: true
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Before Build
+        shell: pwsh
+        run: ./before_build.ps1
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Unit Tests
+        run: |
+          dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" \
+            --configuration Release \
+            --no-build \
+            --logger:"trx"
+
+      - name: Integration Tests
+        run: |
+          dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" \
+            --configuration Release \
+            --no-build \
+            --logger:"trx"
