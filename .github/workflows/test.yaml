@@ -9,9 +9,8 @@ jobs:
     strategy:
       matrix:
         framework:
-          - net9.0
-          - net8.0
-          - net481
+          - 9.0.x
+          - 8.0.x
           - net452
 
     steps:
@@ -21,7 +20,7 @@ jobs:
 
       # 2. Setup .NET SDK (for .NET Core / Modern .NET)
       - name: Setup .NET SDK
-        if: startsWith(matrix.framework, 'net') && !startsWith(matrix.framework, 'net4')
+        if: "!startsWith(matrix.framework, 'net')"
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.framework }}
@@ -38,16 +37,16 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "🔄 Restoring dependencies for: ${{ matrix.framework }}"
-          if ("${{ matrix.framework }}" -match "net[5-9]+") { dotnet restore }
-          if ("${{ matrix.framework }}" -match "net[1-4]\d+") { nuget.exe restore CloudinaryDotNet.sln }
+          if (!startsWith("${{ matrix.framework }}", "net")) { dotnet restore }
+          if (startsWith("${{ matrix.framework }}", "net")) { nuget.exe restore CloudinaryDotNet.sln }
 
       # 5. Build Solution
       - name: Build Solution
         shell: pwsh
         run: |
           Write-Host "⚒️ Building for: ${{ matrix.framework }}"
-          if ("${{ matrix.framework }}" -match "net[5-9]+") { dotnet build --configuration Release --no-restore }
-          if ("${{ matrix.framework }}" -match "net[1-4]\d+") { msbuild CloudinaryDotNet.sln /p:Configuration=Release }
+          if (!startsWith("${{ matrix.framework }}", "net")) { dotnet build --configuration Release --no-restore }
+          if (startsWith("${{ matrix.framework }}", "net")) { msbuild CloudinaryDotNet.sln /p:Configuration=Release }
 
       # 6. Run before_build.ps1
       - name: Run before_build.ps1
@@ -59,13 +58,13 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "🧪 Running Unit Tests for: ${{ matrix.framework }}"
-          if ("${{ matrix.framework }}" -match "net[5-9]+") { dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" --configuration Release --no-build }
-          if ("${{ matrix.framework }}" -match "net[1-4]\d+") { vstest.console.exe "./CloudinaryDotNet.Tests/bin/Release/${{ matrix.framework }}/CloudinaryDotNet.Tests.dll" }
+          if (!startsWith("${{ matrix.framework }}", "net")) { dotnet test "./CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj" --configuration Release --no-build }
+          if (startsWith("${{ matrix.framework }}", "net")) { vstest.console.exe "./CloudinaryDotNet.Tests/bin/Release/${{ matrix.framework }}/CloudinaryDotNet.Tests.dll" }
 
       # 8. Run Integration Tests
       - name: Run Integration Tests
         shell: pwsh
         run: |
           Write-Host "🧪 Running Integration Tests for: ${{ matrix.framework }}"
-          if ("${{ matrix.framework }}" -match "net[5-9]+") { dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" --configuration Release --no-build }
-          if ("${{ matrix.framework }}" -match "net[1-4]\d+") { vstest.console.exe "./CloudinaryDotNet.IntegrationTests/bin/Release/${{ matrix.framework }}/CloudinaryDotNet.IntegrationTests.dll" }
+          if (!startsWith("${{ matrix.framework }}", "net")) { dotnet test "./CloudinaryDotNet.IntegrationTests/CloudinaryDotNet.IntegrationTests.csproj" --configuration Release --no-build }
+          if (startsWith("${{ matrix.framework }}", "net")) { vstest.console.exe "./CloudinaryDotNet.IntegrationTests/bin/Release/${{ matrix.framework }}/CloudinaryDotNet.IntegrationTests.dll" }
