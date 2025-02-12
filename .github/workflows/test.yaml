@@ -10,7 +10,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          cache: true
+          dotnet-version: '8.0.x'
+          cache: 'nuget'
 
       - name: Restore Dependencies
         run: dotnet restore
