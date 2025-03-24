@@ -1,6 +1,7 @@
 ﻿namespace CloudinaryDotNet.Actions
 {
     using System;
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
     using Newtonsoft.Json.Linq;
 
@@ -107,6 +108,24 @@
         /// </summary>
         [DataMember(Name = "status")]
         public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the array of data received from moderation service.
+        /// </summary>
+        [DataMember(Name = "moderation")]
+        public List<Moderation> Moderation { get; set; }
+
+        /// <summary>
+        /// Gets or sets type of moderation service: "manual", "webpurify", "aws_rek", or "metascan".
+        /// </summary>
+        [DataMember(Name = "moderation_kind")]
+        public string ModerationKind { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current moderation status and details if any.
+        /// </summary>
+        [DataMember(Name = "moderation_status")]
+        public ModerationStatus? ModerationStatus { get; set; }
 
         /// <summary>
         /// Gets or sets upload hook execution status.

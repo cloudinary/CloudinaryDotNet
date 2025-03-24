@@ -193,6 +193,18 @@
         public List<Moderation> Moderation { get; set; }
 
         /// <summary>
+        /// Gets or sets type of moderation service: "manual", "webpurify", "aws_rek", or "metascan".
+        /// </summary>
+        [DataMember(Name = "moderation_kind")]
+        public string ModerationKind { get; set; }
+
+        /// <summary>
+        /// Gets or sets moderation status of asset.
+        /// </summary>
+        [DataMember(Name = "moderation_status")]
+        public ModerationStatus? ModerationStatus { get; set; }
+
+        /// <summary>
         /// Gets or sets a key-value pairs of context associated with the resource.
         /// </summary>
         [DataMember(Name = "context")]

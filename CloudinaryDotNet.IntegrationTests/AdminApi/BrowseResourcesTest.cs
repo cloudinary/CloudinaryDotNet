@@ -61,13 +61,22 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.True(approved.Resources.Count(r => r.PublicId == uploadResults[1].PublicId) == 0, approved.Error?.Message);
             Assert.True(approved.Resources.Count(r => r.PublicId == uploadResults[2].PublicId) == 0, approved.Error?.Message);
 
+            Assert.True(approved.Resources.First().ModerationKind == MODERATION_MANUAL, approved.Error?.Message);
+            Assert.True(approved.Resources.First().ModerationStatus == ModerationStatus.Approved, approved.Error?.Message);
+
             Assert.True(rejected.Resources.Count(r => r.PublicId == uploadResults[0].PublicId) == 0, rejected.Error?.Message);
             Assert.True(rejected.Resources.Count(r => r.PublicId == uploadResults[1].PublicId) > 0, rejected.Error?.Message);
             Assert.True(rejected.Resources.Count(r => r.PublicId == uploadResults[2].PublicId) == 0, rejected.Error?.Message);
 
+            Assert.True(rejected.Resources.First().ModerationKind == MODERATION_MANUAL, approved.Error?.Message);
+            Assert.True(rejected.Resources.First().ModerationStatus == ModerationStatus.Rejected, approved.Error?.Message);
+
             Assert.True(pending.Resources.Count(r => r.PublicId == uploadResults[0].PublicId) == 0, pending.Error?.Message);
             Assert.True(pending.Resources.Count(r => r.PublicId == uploadResults[1].PublicId) == 0, pending.Error?.Message);
             Assert.True(pending.Resources.Count(r => r.PublicId == uploadResults[2].PublicId) > 0, pending.Error?.Message);
+
+            Assert.True(pending.Resources.First().ModerationKind == MODERATION_MANUAL, approved.Error?.Message);
+            Assert.True(pending.Resources.First().ModerationStatus == ModerationStatus.Pending, approved.Error?.Message);
         }
 
         [Test, Ignore("test needs to be re-written with mocking - it fails when there are many resources")]
@@ -224,8 +233,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.IsTrue(
                 result
                     .Resources
-                    .Where(res => (res.Context == null ? false : res.Context["custom"]["context"].ToString() == "abc"))
-                    .Count() > 0, result.Error?.Message);
+                    .Count(res => (res.Context == null ? false : res.Context["custom"]["context"].ToString() == "abc")) > 0, result.Error?.Message);
         }
 
         private async Task<string> UploadTestResource(string publicId)
@@ -300,7 +308,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
 
             Assert.NotNull(result);
             Assert.AreEqual(2, result.Resources.Length, "expected to find {0} but got {1}", new Object[] { publicIds.Aggregate((current, next) => current + ", " + next), result.Resources.Select(r => r.PublicId).Aggregate((current, next) => current + ", " + next) });
-            Assert.True(result.Resources.Where(r => r.Context != null).Count() == 2);
+            Assert.AreEqual(2, result.Resources.Count(r => r.Context != null));
         }
 
         [Test, RetryWithDelay]

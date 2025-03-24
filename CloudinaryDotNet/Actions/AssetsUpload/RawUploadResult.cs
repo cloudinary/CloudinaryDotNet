@@ -29,12 +29,6 @@
         public string ResourceType { get; set; }
 
         /// <summary>
-        /// Gets or sets the array of data received from moderation service.
-        /// </summary>
-        [DataMember(Name = "moderation")]
-        public List<Moderation> Moderation { get; set; }
-
-        /// <summary>
         /// Gets or sets date when the asset was uploaded.
         /// </summary>
         [DataMember(Name = "created_at")]

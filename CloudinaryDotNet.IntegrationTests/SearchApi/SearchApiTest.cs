@@ -56,11 +56,14 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
                 {
                     m_singleResourcePublicId = publicId;
                     uploadParams.Context = new StringDictionary { { "some key", "some value" } };
+                    uploadParams.Moderation = "manual";
                 }
                 m_publicIdsSorted[i] = publicId;
                 var r = m_cloudinary.Upload(uploadParams);
                 m_assetIds.Add(publicId, r.AssetId);
             }
+
+            m_cloudinary.UpdateResource(m_singleResourcePublicId, ModerationStatus.Approved);
 
             Array.Sort(m_publicIdsSorted);
             m_expressionPublicId = $"public_id: {m_publicIdsSorted[0]}";
@@ -73,8 +76,18 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
         public void TestSearchByAssetId(string key)
         {
             var result = m_cloudinary.Search().Expression($"{key}{m_assetIds[m_singleResourcePublicId]}").Execute();
-            Assert.AreEqual(1, result.Resources.Count());
+            Assert.AreEqual(1, result.Resources.Count);
             Assert.AreEqual(m_singleResourcePublicId, result.Resources.First().PublicId);
+        }
+
+        [Test, RetryWithDelay]
+        public void TestSearchByModerationStatus()
+        {
+            var result = m_cloudinary.Search().Expression("moderation_status=approved").Execute();
+            Assert.GreaterOrEqual(result.Resources.Count, 1);
+            Assert.AreEqual(m_singleResourcePublicId, result.Resources.First().PublicId);
+            Assert.AreEqual(result.Resources.First().ModerationKind, "manual");
+            Assert.AreEqual(result.Resources.First().ModerationStatus, ModerationStatus.Approved);
         }
 
         [Test, RetryWithDelay]
