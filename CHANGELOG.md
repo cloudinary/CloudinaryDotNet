@@ -1,4 +1,9 @@
 
+1.27.5 / 2025-03-24
+=============
+
+  * Fix missing `ModerationKind` and `ModerationStatus` fields
+
 1.27.4 / 2025-02-12
 =============
 

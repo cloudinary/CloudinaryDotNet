@@ -8,6 +8,6 @@ namespace CloudinaryDotNet
         /// <summary>
         /// Gets full version number of Cloudinary .NET SDK.
         /// </summary>
-        public static string Full => "1.27.4";
+        public static string Full => "1.27.5";
     }
 }
