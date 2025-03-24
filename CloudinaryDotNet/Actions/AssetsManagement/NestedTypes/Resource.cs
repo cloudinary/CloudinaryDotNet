@@ -64,12 +64,6 @@
         public bool? Backup { get; set; }
 
         /// <summary>
-        /// Gets or sets the current moderation status and details if any.
-        /// </summary>
-        [DataMember(Name = "moderation_status")]
-        public ModerationStatus? ModerationStatus { get; set; }
-
-        /// <summary>
         /// Gets or sets the key-value pairs of general textual context metadata attached to the media asset.
         /// </summary>
         [DataMember(Name = "context")]
