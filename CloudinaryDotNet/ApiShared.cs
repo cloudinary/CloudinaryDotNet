@@ -658,6 +658,10 @@
                            var value = pair.Value is IEnumerable<string>
                                ? string.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
                                : pair.Value.ToString();
+
+                           // URL encode & characters in values to prevent parameter smuggling
+                           value = value.Replace("&", "%26");
+
                            return string.Format(CultureInfo.InvariantCulture, "{0}={1}", pair.Key, value);
                        })
                 .ToArray()));

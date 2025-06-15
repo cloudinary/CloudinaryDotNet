@@ -74,6 +74,50 @@ namespace CloudinaryDotNet.Tests.Asset
             Assert.AreEqual("45ddaa4fa01f0c2826f32f669d2e4514faf275fe6df053f1a150e7beae58a3bd", api.SignParameters(parameters));
         }
 
+        /// <summary>
+        /// Should prevent parameter smuggling via & characters in parameter values.
+        /// </summary>
+        [Test]
+        public void TestApiSignRequestPreventsParameterSmuggling()
+        {
+            const string testCloudName = "dn6ot3ged";
+            const string testSecret = "hdcixPpR2iKERPwqvH6sHdK9cyac";
+            
+            // Test with notification_url containing & characters
+            var paramsWithAmpersand = new SortedDictionary<string, object>
+            {
+                { "cloud_name", testCloudName },
+                { "timestamp", 1568810420 },
+                { "notification_url", "https://fake.com/callback?a=1&tags=hello,world" }
+            };
+
+            var api = new Api($"cloudinary://key:{testSecret}@test123");
+            var signatureWithAmpersand = api.SignParameters(paramsWithAmpersand);
+
+            // Test that attempting to smuggle parameters by splitting the notification_url fails
+            var paramsSmugggled = new SortedDictionary<string, object>
+            {
+                { "cloud_name", testCloudName },
+                { "timestamp", 1568810420 },
+                { "notification_url", "https://fake.com/callback?a=1" },
+                { "tags", "hello,world" }  // This would be smuggled if & encoding didn't work
+            };
+
+            var signatureSmugggled = api.SignParameters(paramsSmugggled);
+
+            // The signatures should be different, proving that parameter smuggling is prevented
+            Assert.AreNotEqual(signatureWithAmpersand, signatureSmugggled,
+                            "Signatures should be different to prevent parameter smuggling");
+
+            // Verify the expected signature for the properly encoded case
+            const string expectedSignature = "4fdf465dd89451cc1ed8ec5b3e314e8a51695704";
+            Assert.AreEqual(expectedSignature, signatureWithAmpersand);
+
+            // Verify the expected signature for the smuggled parameters case
+            const string expectedSmuggledSignature = "7b4e3a539ff1fa6e6700c41b3a2ee77586a025f9";
+            Assert.AreEqual(expectedSmuggledSignature, signatureSmugggled);
+        }
+
         [Test]
         public void TestSignParameters()
         {
