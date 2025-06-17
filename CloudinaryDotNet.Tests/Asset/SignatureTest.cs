@@ -82,7 +82,7 @@ namespace CloudinaryDotNet.Tests.Asset
         {
             const string testCloudName = "dn6ot3ged";
             const string testSecret = "hdcixPpR2iKERPwqvH6sHdK9cyac";
-            
+
             // Test with notification_url containing & characters
             var paramsWithAmpersand = new SortedDictionary<string, object>
             {
@@ -308,6 +308,54 @@ namespace CloudinaryDotNet.Tests.Asset
             var longUrl = api.UrlImgUp.Signed(true).LongUrlSignature(true).BuildUrl("sample.jpg");
             const string expectedLongUrl = "http://res.cloudinary.com/test123/image/upload/s--2hbrSMPOjj5BJ4xV7SgFbRDevFaQNUFf--/sample.jpg";
             Assert.AreEqual(expectedLongUrl, longUrl);
+        }
+
+        /// <summary>
+        /// Should apply the configured signature version.
+        /// </summary>
+        [Test]
+        public void TestConfiguredSignatureVersionIsApplied()
+        {
+            var api = new Api("cloudinary://key:hdcixPpR2iKERPwqvH6sHdK9cyac@test123");
+            var params1 = new SortedDictionary<string, object>
+            {
+                { "cloud_name", "dn6ot3ged" },
+                { "timestamp", 1568810420 },
+                { "notification_url", "https://fake.com/callback?a=1&tags=hello,world" }
+            };
+
+            // Test version 1 (no encoding)
+            api.SignatureVersion = 1;
+            var signatureV1 = api.SignParameters(params1);
+
+            // Test version 2 (with encoding)
+            api.SignatureVersion = 2;
+            var signatureV2 = api.SignParameters(params1);
+
+            // Should be different
+            Assert.AreNotEqual(signatureV1, signatureV2);
+
+            // Version 2 should match expected signature from smuggling test
+            Assert.AreEqual("4fdf465dd89451cc1ed8ec5b3e314e8a51695704", signatureV2);
+        }
+
+        /// <summary>
+        /// Should apply the configured signature version.
+        /// </summary>
+        [Test]
+        public void TestSignatureVersionAffectsVerification()
+        {
+            const string testSecret = "hdcixPpR2iKERPwqvH6sHdK9cyac";
+            var api = new Api($"cloudinary://key:{testSecret}@test123");
+
+            // VerifyApiResponseSignature should use version 1
+            var publicIdWithAmpersand = "callback?a=1&tags=hello,world";
+            var version = "1568810420";
+
+            var v1Signature = api.SignParameters(new SortedDictionary<string, object> { { "public_id", publicIdWithAmpersand }, { "version", version } }, 1);
+
+            // API defaults to v2 but verify should still use v1
+            Assert.IsTrue(api.VerifyApiResponseSignature(publicIdWithAmpersand, version, v1Signature));
         }
     }
 }
