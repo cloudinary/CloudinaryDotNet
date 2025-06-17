@@ -143,6 +143,11 @@
         public SignatureAlgorithm SignatureAlgorithm = SignatureAlgorithm.SHA1;
 
         /// <summary>
+        /// Signature version (1 or 2). Version 2 URL encodes '&amp;' characters in parameter values to prevent parameter smuggling.
+        /// </summary>
+        public int SignatureVersion = 2;
+
+        /// <summary>
         /// URL of the cloudinary API.
         /// </summary>
         protected string m_apiAddr = "https://" + ADDR_API;
@@ -650,6 +655,17 @@
         /// <returns>Signature of parameters.</returns>
         public string SignParameters(IDictionary<string, object> parameters)
         {
+            return SignParameters(parameters, SignatureVersion);
+        }
+
+        /// <summary>
+        /// Calculates signature of parameters, based on agreed signature algorithm.
+        /// </summary>
+        /// <param name="parameters">Parameters to sign.</param>
+        /// <param name="signatureVersion">Signature version (1 or 2).</param>
+        /// <returns>Signature of parameters.</returns>
+        public string SignParameters(IDictionary<string, object> parameters, int signatureVersion)
+        {
             List<string> excludedSignatureKeys = new List<string>(new string[] { "resource_type", "file", "api_key" });
             StringBuilder signBase = new StringBuilder(string.Join("&", parameters.
                                                                    Where(pair => pair.Value != null && !excludedSignatureKeys.Any(s => pair.Key.Equals(s, StringComparison.Ordinal)))
@@ -658,6 +674,13 @@
                            var value = pair.Value is IEnumerable<string>
                                ? string.Join(",", ((IEnumerable<string>)pair.Value).ToArray())
                                : pair.Value.ToString();
+
+                           // Version 2: URL encode & characters in values to prevent parameter smuggling
+                           if (signatureVersion >= 2)
+                           {
+                               value = value.Replace("&", "%26");
+                           }
+
                            return string.Format(CultureInfo.InvariantCulture, "{0}={1}", pair.Key, value);
                        })
                 .ToArray()));
@@ -715,7 +738,7 @@
                 { "public_id", publicId },
                 { "version", version },
             };
-            var signedParameters = SignParameters(parametersToSign);
+            var signedParameters = SignParameters(parametersToSign, 1);
 
             return signature.Equals(signedParameters, StringComparison.Ordinal);
         }
