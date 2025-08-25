@@ -1,4 +1,9 @@
 
+1.27.7 / 2025-08-25
+===================
+
+  * Fix async synchronization issue with `GetNextChunkAsync` in FileDescription 
+
 1.27.6 / 2025-06-17
 ===================
 
