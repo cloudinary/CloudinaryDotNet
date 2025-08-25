@@ -44,7 +44,7 @@
 
         private const int UnlimitedBuffer = int.MaxValue;
 
-        private readonly Mutex mutex = new ();
+        private readonly SemaphoreSlim semaphoreSlim = new (1, 1);
 
         private readonly object chunkLock = new ();
 
@@ -290,7 +290,7 @@
         public async Task<ChunkData> GetNextChunkAsync(CancellationToken? cancellationToken = null)
         {
             // lock this section, so we don't send the same chunk multiple times.
-            mutex.WaitOne();
+            await semaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
                 Stream resultingStream;
@@ -338,7 +338,7 @@
             }
             finally
             {
-                mutex.ReleaseMutex();
+                semaphoreSlim.Release();
             }
         }
 
@@ -426,7 +426,7 @@
                 chunks?.Dispose();
                 chunks = null;
 
-                mutex.Dispose();
+                semaphoreSlim.Dispose();
             }
 
             disposedValue = true;
