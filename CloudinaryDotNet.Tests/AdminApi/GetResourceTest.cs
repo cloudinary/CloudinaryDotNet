@@ -66,6 +66,42 @@ namespace CloudinaryDotNet.Tests.AdminApi
             }
         ";
 
+        // OCR response with successful data array
+        private const string SuccessfulOcrResponse = @"
+        {
+          ""asset_id"": ""8abd06560fc75b3bbe80299b988035b0"",
+          ""public_id"": ""ocr_test_id"",
+          ""format"": ""jpg"",
+          ""info"": {
+            ""ocr"": {
+              ""adv_ocr"": {
+                ""status"": ""complete"",
+                ""data"": [
+                  {}
+                ]
+              }
+            }
+          }
+        }
+        ";
+
+        // OCR response with failed string error
+        private const string FailedOcrResponse = @"
+        {
+          ""asset_id"": ""8abd06560fc75b3bbe80299b988035b0"",
+          ""public_id"": ""ocr_failed_test_id"",
+          ""format"": ""jpg"",
+          ""info"": {
+            ""ocr"": {
+              ""adv_ocr"": {
+                ""status"": ""failed"",
+                ""data"": ""Failed to process request""
+              }
+            }
+          }
+        }
+        ";
+
         [Test]
         public void TestGetResourceModerationResponse_WithLabels()
         {
@@ -114,6 +150,39 @@ namespace CloudinaryDotNet.Tests.AdminApi
             Assert.IsNotEmpty(firstModeration.Response.ModerationLabels);
             Assert.AreEqual("duplicate_id", firstModeration.Response.ModerationLabels[0].PublicId);
             Assert.AreEqual(1.0f, firstModeration.Response.ModerationLabels[0].Confidence);
+        }
+
+        [Test]
+        public void TestGetResourceAdvOcr_WithSuccessfulData()
+        {
+            var localCloudinaryMock = new MockedCloudinary(SuccessfulOcrResponse);
+            var result = localCloudinaryMock.GetResource("ocr_test_id");
+
+            Assert.NotNull(result);
+            Assert.AreEqual("ocr_test_id", result.PublicId);
+            Assert.NotNull(result.Info);
+            Assert.NotNull(result.Info.Ocr);
+            Assert.NotNull(result.Info.Ocr.AdvOcr);
+            Assert.AreEqual("complete", result.Info.Ocr.AdvOcr.Status);
+            Assert.NotNull(result.Info.Ocr.AdvOcr.Data);
+            Assert.AreEqual(1, result.Info.Ocr.AdvOcr.Data.Count);
+            Assert.IsNull(result.Info.Ocr.AdvOcr.ErrorMessage);
+        }
+
+        [Test]
+        public void TestGetResourceAdvOcr_WithFailedString()
+        {
+            var localCloudinaryMock = new MockedCloudinary(FailedOcrResponse);
+            var result = localCloudinaryMock.GetResource("ocr_failed_test_id");
+
+            Assert.NotNull(result);
+            Assert.AreEqual("ocr_failed_test_id", result.PublicId);
+            Assert.NotNull(result.Info);
+            Assert.NotNull(result.Info.Ocr);
+            Assert.NotNull(result.Info.Ocr.AdvOcr);
+            Assert.AreEqual("failed", result.Info.Ocr.AdvOcr.Status);
+            Assert.IsNull(result.Info.Ocr.AdvOcr.Data);
+            Assert.AreEqual("Failed to process request", result.Info.Ocr.AdvOcr.ErrorMessage);
         }
     }
 }
