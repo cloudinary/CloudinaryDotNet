@@ -17,6 +17,12 @@
         Pending,
 
         /// <summary>
+        /// Moderation has been queued for processing.
+        /// </summary>
+        [EnumMember(Value = "queued")]
+        Queued,
+
+        /// <summary>
         /// Asset was rejected by moderation service.
         /// </summary>
         [EnumMember(Value = "rejected")]
@@ -33,6 +39,12 @@
         /// </summary>
         [EnumMember(Value = "overridden")]
         Overridden,
+
+        /// <summary>
+        /// Moderation process was aborted.
+        /// </summary>
+        [EnumMember(Value = "aborted")]
+        Aborted,
     }
 
     /// <summary>
