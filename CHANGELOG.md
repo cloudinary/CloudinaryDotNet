@@ -1,4 +1,9 @@
 
+1.27.9 / 2025-11-25
+=============
+
+  * Add `Queued` and `Aborted` moderation statuses
+
 1.27.8 / 2025-10-05
 =============
 
