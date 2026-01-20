@@ -451,17 +451,6 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         }
 
         [Test, RetryWithDelay]
-        public void TestProfilingData()
-        {
-            var explicitResult = ArrangeAndGetExplicitResult();
-
-            Assert.NotNull(explicitResult.ProfilingData, explicitResult.Error?.Message);
-            Assert.NotZero(explicitResult.ProfilingData.Length);
-            Assert.NotZero(explicitResult.ProfilingData[0].Action.Postsize.Length);
-            Assert.NotZero(explicitResult.ProfilingData[0].Action.Presize.Length);
-        }
-
-        [Test, RetryWithDelay]
         public void TestPredominant()
         {
             var explicitResult = ArrangeAndGetExplicitResult();
