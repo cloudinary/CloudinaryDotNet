@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -556,6 +556,7 @@ namespace CloudinaryDotNet.IntegrationTests.AdminApi
             Assert.IsNotNull(getResult);
             Assert.AreEqual(publicId, getResult.PublicId, getResult.Error?.Message);
             Assert.NotNull(getResult.ImageMetadata);
+            Assert.IsNotEmpty(getResult.OriginalFilename);
         }
 
         [Test, RetryWithDelay]

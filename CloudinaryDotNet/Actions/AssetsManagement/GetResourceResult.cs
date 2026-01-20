@@ -1,4 +1,4 @@
-﻿namespace CloudinaryDotNet.Actions
+namespace CloudinaryDotNet.Actions
 {
     using System;
     using System.Collections.Generic;
@@ -289,6 +289,13 @@
         /// </summary>
         [DataMember(Name = "display_name")]
         public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the media asset when originally uploaded. Relevant when delivering assets
+        /// as attachments (setting the flag transformation parameter to attachment).
+        /// </summary>
+        [DataMember(Name = "original_filename")]
+        public string OriginalFilename { get; set; }
 
         /// <summary>
         /// Gets or sets list of asset versions.
