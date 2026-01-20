@@ -1,4 +1,12 @@
 
+1.28.0 / 2026-01-20
+===================
+
+New functionality
+-----------------
+
+  * Add support for `OriginalFilename` in `GetResourceResult`
+
 1.27.9 / 2025-11-25
 =============
 
