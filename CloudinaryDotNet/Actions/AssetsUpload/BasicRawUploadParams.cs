@@ -61,6 +61,20 @@
         public string UniqueUploadId { get; set; }
 
         /// <summary>
+        /// Gets or sets the 1-based part number for this chunk in explicit-order chunked uploads.
+        /// When set, the SDK sends the X-Upload-Part-Number header and skips Content-Range,
+        /// allowing chunks of uneven sizes. Requires <see cref="UniqueUploadId"/>.
+        /// </summary>
+        public int? PartNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total number of parts for this upload. Required when
+        /// <see cref="PartNumber"/> is set; must be the same value on every chunk for the
+        /// same upload.
+        /// </summary>
+        public int? TotalParts { get; set; }
+
+        /// <summary>
         /// Validate object model.
         /// </summary>
         public override void Check()
@@ -78,6 +92,31 @@
             if (string.IsNullOrEmpty(File.FileName))
             {
                 throw new ArgumentException("File name must be specified in UploadParams!");
+            }
+
+            if (PartNumber.HasValue && string.IsNullOrEmpty(UniqueUploadId))
+            {
+                throw new ArgumentException("UniqueUploadId is required when PartNumber is set.");
+            }
+
+            if (TotalParts.HasValue && !PartNumber.HasValue)
+            {
+                throw new ArgumentException("PartNumber is required when TotalParts is set.");
+            }
+
+            if (PartNumber.HasValue && PartNumber.Value < 1)
+            {
+                throw new ArgumentException("PartNumber must be >= 1.");
+            }
+
+            if (TotalParts.HasValue && (TotalParts.Value < 1 || TotalParts.Value > 10000))
+            {
+                throw new ArgumentException("TotalParts must be between 1 and 10000.");
+            }
+
+            if (PartNumber.HasValue && TotalParts.HasValue && PartNumber.Value > TotalParts.Value)
+            {
+                throw new ArgumentException("PartNumber cannot exceed TotalParts.");
             }
         }
 
