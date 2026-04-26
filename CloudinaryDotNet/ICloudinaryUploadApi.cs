@@ -601,5 +601,22 @@ namespace CloudinaryDotNet
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>The public id of the generated slideshow.</returns>
         Task<CreateSlideshowResult> CreateSlideshowAsync(CreateSlideshowParams parameters, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Combines and remuxes a list of remote video chunks into a single MP4 asset.
+        /// The combine/remux runs asynchronously on the server; the final upload result is delivered via notification URL.
+        /// </summary>
+        /// <param name="parameters">Parameters of the combine/remux request.</param>
+        /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
+        CombineRemuxResult CombineRemux(CombineRemuxParams parameters);
+
+        /// <summary>
+        /// Combines and remuxes a list of remote video chunks into a single MP4 asset asynchronously.
+        /// The combine/remux runs asynchronously on the server; the final upload result is delivered via notification URL.
+        /// </summary>
+        /// <param name="parameters">Parameters of the combine/remux request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
+        Task<CombineRemuxResult> CombineRemuxAsync(CombineRemuxParams parameters, CancellationToken? cancellationToken = null);
     }
 }
