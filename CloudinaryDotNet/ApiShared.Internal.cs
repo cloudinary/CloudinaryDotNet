@@ -432,9 +432,22 @@
 
         private AuthenticationHeaderValue GetAuthorizationHeaderValue()
         {
-            return !string.IsNullOrEmpty(Account.OAuthToken)
-                ? new AuthenticationHeaderValue("Bearer", Account.OAuthToken)
-                : new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(GetApiCredentials())));
+            if (!string.IsNullOrEmpty(Account.OAuthToken))
+            {
+                return new AuthenticationHeaderValue("Bearer", Account.OAuthToken);
+            }
+
+            // Skip the Authorization header when no credentials are configured
+            // (e.g. unsigned uploads created with an Account that has no key/secret).
+            var credentials = GetApiCredentials();
+            if (string.IsNullOrEmpty(credentials) || credentials == ":")
+            {
+                return null;
+            }
+
+            return new AuthenticationHeaderValue(
+                "Basic",
+                Convert.ToBase64String(Encoding.ASCII.GetBytes(credentials)));
         }
 
         private void SetRequestHeaders(
@@ -448,7 +461,10 @@
                 : string.Format(CultureInfo.InvariantCulture, "{0} {1}", UserPlatform, USER_AGENT);
             request.Headers.Add("User-Agent", userPlatform);
 
-            request.Headers.Authorization = GetAuthorizationHeaderValue();
+            if (GetAuthorizationHeaderValue() is { } authorization)
+            {
+                request.Headers.Authorization = authorization;
+            }
 
             if (headers == null)
             {
