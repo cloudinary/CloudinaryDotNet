@@ -1085,6 +1085,37 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Combines and remuxes a list of remote video chunks into a single MP4 asset.
+        /// The combine/remux runs asynchronously on the server; supply <see cref="RawUploadParams.NotificationUrl"/>
+        /// (or rely on the account's global notification URL) to be notified when the resulting upload completes.
+        /// </summary>
+        /// <param name="parameters">Parameters of the combine/remux request.</param>
+        /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
+        public CombineRemuxResult CombineRemux(CombineRemuxParams parameters)
+        {
+            return CombineRemuxAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Combines and remuxes a list of remote video chunks into a single MP4 asset asynchronously.
+        /// The combine/remux runs asynchronously on the server; supply <see cref="RawUploadParams.NotificationUrl"/>
+        /// (or rely on the account's global notification URL) to be notified when the resulting upload completes.
+        /// </summary>
+        /// <param name="parameters">Parameters of the combine/remux request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
+        public Task<CombineRemuxResult> CombineRemuxAsync(CombineRemuxParams parameters, CancellationToken? cancellationToken = null)
+        {
+            string uri = m_api.ApiUrlVideoUpV.Action("combine_remux").BuildUrl();
+
+            return CallUploadApiAsync<CombineRemuxResult>(
+                HttpMethod.POST,
+                uri,
+                parameters,
+                cancellationToken);
+        }
+
+        /// <summary>
         /// Generates an image of a given textual string.
         /// </summary>
         /// <param name="parameters">Parameters of generating an image of a given textual string.</param>
