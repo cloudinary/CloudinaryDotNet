@@ -103,6 +103,23 @@ namespace CloudinaryDotNet.Tests
             Assert.IsTrue(m_mockedCloudinary.HttpRequestContent.Contains("upload_preset"));
         }
 
+        [Test]
+        public async Task TestUnsignedUploadHasNoAuthorizationHeader()
+        {
+            InitCloudinaryApi(null, null);
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(Path.GetTempFileName()),
+                Unsigned = true,
+                UploadPreset = "api_test_upload_preset"
+            };
+
+            await m_mockedCloudinary.UploadAsync(uploadParams);
+
+            Assert.IsNull(m_mockedCloudinary.HttpRequestHeaders.Authorization);
+        }
+
         private void InitCloudinaryApi()
         {
             m_mockedCloudinary = new MockedCloudinary(account: new Account(m_cloudName, m_oauthToken));
