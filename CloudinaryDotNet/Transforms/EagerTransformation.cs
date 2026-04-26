@@ -43,6 +43,37 @@
         public string Format { get; set; }
 
         /// <summary>
+        /// Implicitly converts a raw transformation string into an <see cref="EagerTransformation"/>.
+        /// The value is stored verbatim via <see cref="Transformation.RawTransformation(string)"/>.
+        /// Returns <c>null</c> when <paramref name="value"/> is <c>null</c>.
+        /// </summary>
+        /// <remarks>
+        /// User-defined conversion operators are not inherited in C#, so this operator is required
+        /// separately from the one on <see cref="Transformation"/>.
+        /// </remarks>
+        /// <param name="value">A raw URL transformation string.</param>
+        public static implicit operator EagerTransformation(string value) => FromString(value);
+
+        /// <summary>
+        /// Creates an <see cref="EagerTransformation"/> from a raw transformation string. The value
+        /// is stored verbatim via <see cref="Transformation.RawTransformation(string)"/>; returns
+        /// <c>null</c> when <paramref name="value"/> is <c>null</c>.
+        /// </summary>
+        /// <param name="value">A raw URL transformation string.</param>
+        /// <returns>A new <see cref="EagerTransformation"/> wrapping <paramref name="value"/>, or <c>null</c>.</returns>
+        public static new EagerTransformation FromString(string value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var t = new EagerTransformation();
+            t.RawTransformation(value);
+            return t;
+        }
+
+        /// <summary>
         /// Set file format for the transformation.
         /// </summary>
         /// <param name="format">The file format to set.</param>

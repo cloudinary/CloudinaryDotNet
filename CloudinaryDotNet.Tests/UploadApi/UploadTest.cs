@@ -72,5 +72,45 @@ namespace CloudinaryDotNet.Tests.UploadApi
                 StringAssert.Contains(expected, cloudinary.HttpRequestContent);
             }
         }
+
+        [Test]
+        public void TestUploadAcceptsRawTransformationString()
+        {
+            var cloudinary = new MockedCloudinary();
+
+            var iuParams = new ImageUploadParams
+            {
+                File = new FileDescription(TestConstants.TestRemoteImg),
+                Transformation = "w_200,c_fill",
+            };
+
+            cloudinary.Upload(iuParams);
+
+            cloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "image/upload");
+            StringAssert.Contains("transformation", cloudinary.HttpRequestContent);
+            StringAssert.Contains("w_200,c_fill", cloudinary.HttpRequestContent);
+        }
+
+        [Test]
+        public void TestUploadAcceptsRawTransformationStringInEagerTransforms()
+        {
+            var cloudinary = new MockedCloudinary();
+
+            var iuParams = new ImageUploadParams
+            {
+                File = new FileDescription(TestConstants.TestRemoteImg),
+                EagerTransforms = new List<Transformation>
+                {
+                    "w_200,c_fill",
+                    "w_400,c_scale",
+                },
+            };
+
+            cloudinary.Upload(iuParams);
+
+            cloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "image/upload");
+            StringAssert.Contains("eager", cloudinary.HttpRequestContent);
+            StringAssert.Contains("w_200,c_fill|w_400,c_scale", cloudinary.HttpRequestContent);
+        }
     }
 }
