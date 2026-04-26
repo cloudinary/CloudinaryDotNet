@@ -503,6 +503,8 @@ namespace CloudinaryDotNet
         /// <param name="type">The type (optional).</param>
         /// <param name="expiresAt">The date (UNIX time in seconds) for the URL expiration. (optional).</param>
         /// <param name="resourceType">Resource type (image, video or raw) of files to include in the archive (optional).</param>
+        /// <param name="transformation">A transformation to apply to the asset before downloading. Accepts either a raw transformation string or a <see cref="Transformation"/> instance (optional).</param>
+        /// <param name="targetFilename">The desired filename for the downloaded file (optional).</param>
         /// <returns>Download URL.</returns>
         /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
         string DownloadPrivate(
@@ -511,7 +513,9 @@ namespace CloudinaryDotNet
             string format = "",
             string type = "",
             long? expiresAt = null,
-            string resourceType = "image");
+            string resourceType = "image",
+            TransformationParam transformation = null,
+            string targetFilename = null);
 
         /// <summary>
         /// Eagerly generate sprites asynchronously.
