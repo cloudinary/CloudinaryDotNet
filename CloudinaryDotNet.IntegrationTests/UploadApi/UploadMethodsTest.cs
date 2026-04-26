@@ -416,6 +416,24 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
         }
 
         [Test, RetryWithDelay]
+        public void TestUploadAcceptsRawTransformationStrings()
+        {
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(m_testImagePath),
+                Transformation = "a_45",
+                EagerTransforms = new List<Transformation> { m_simpleTransformationAsString },
+                Tags = m_apiTag,
+            };
+
+            var result = m_cloudinary.Upload(uploadParams);
+
+            Assert.NotNull(result.Eager, result.Error?.Message);
+            Assert.IsTrue(result.Eager.Length >= 1);
+            StringAssert.Contains(m_simpleTransformationAsString, result.Eager[0].Url.AbsoluteUri);
+        }
+
+        [Test, RetryWithDelay]
         public void TestUploadLocalImageUseFilename()
         {
             ImageUploadParams uploadParams = new ImageUploadParams()

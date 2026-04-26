@@ -213,6 +213,25 @@
         }
 
         /// <summary>
+        /// Implicitly converts a raw transformation string into a <see cref="Transformation"/>.
+        /// The value is stored verbatim via <see cref="RawTransformation(string)"/> and emitted
+        /// by <see cref="Generate()"/>, so URL syntax like <c>"w_200,c_fill"</c> round-trips unchanged.
+        /// Returns <c>null</c> when <paramref name="value"/> is <c>null</c>.
+        /// </summary>
+        /// <param name="value">A raw URL transformation string.</param>
+        public static implicit operator Transformation(string value) => FromString(value);
+
+        /// <summary>
+        /// Creates a <see cref="Transformation"/> from a raw transformation string. The value is
+        /// stored verbatim via <see cref="RawTransformation(string)"/>; returns <c>null</c> when
+        /// <paramref name="value"/> is <c>null</c>.
+        /// </summary>
+        /// <param name="value">A raw URL transformation string.</param>
+        /// <returns>A new <see cref="Transformation"/> wrapping <paramref name="value"/>, or <c>null</c>.</returns>
+        public static Transformation FromString(string value) =>
+            value == null ? null : new Transformation().RawTransformation(value);
+
+        /// <summary>
         /// Chain transformation.
         /// </summary>
         /// <returns>A transformation for chaining.</returns>
