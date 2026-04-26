@@ -405,7 +405,10 @@ namespace CloudinaryDotNet
         {
             CheckUploadParameters(parameters);
 
-            if (string.IsNullOrEmpty(parameters.UniqueUploadId))
+            // In explicit-order mode the caller must supply UniqueUploadId so all chunks
+            // share the same id; auto-generating here would produce a fresh id per call and
+            // silently break the upload. Let Check() raise a clear error instead.
+            if (string.IsNullOrEmpty(parameters.UniqueUploadId) && !parameters.PartNumber.HasValue)
             {
                 // The first chunk
                 lock (chunkLock)
@@ -424,6 +427,18 @@ namespace CloudinaryDotNet
             {
                 ["X-Unique-Upload-Id"] = parameters.UniqueUploadId,
             };
+
+            if (parameters.PartNumber.HasValue)
+            {
+                headers["X-Upload-Part-Number"] =
+                    parameters.PartNumber.Value.ToString(CultureInfo.InvariantCulture);
+            }
+
+            if (parameters.TotalParts.HasValue)
+            {
+                headers["X-Upload-Total-Parts"] =
+                    parameters.TotalParts.Value.ToString(CultureInfo.InvariantCulture);
+            }
 
             var result = await CallUploadApiAsync<T>(
                 HttpMethod.POST,

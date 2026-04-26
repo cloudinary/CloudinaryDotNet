@@ -309,6 +309,9 @@
         private static bool IsChunkedUpload(Dictionary<string, string> extraHeaders) =>
             extraHeaders != null && extraHeaders.ContainsKey("X-Unique-Upload-Id");
 
+        private static bool IsExplicitOrderChunkedUpload(Dictionary<string, string> extraHeaders) =>
+            extraHeaders != null && extraHeaders.ContainsKey("X-Upload-Part-Number");
+
         private static void SetStreamContent(string fieldName, FileDescription file, Stream stream, MultipartFormDataContent content)
         {
             var streamContent = new StreamContent(stream);
@@ -385,7 +388,10 @@
                         {
                             var chunk = await file.GetNextChunkAsync(cancellationToken).ConfigureAwait(false);
 
-                            SetChunkContent(chunk, content);
+                            if (!IsExplicitOrderChunkedUpload(extraHeaders))
+                            {
+                                SetChunkContent(chunk, content);
+                            }
 
                             stream = chunk.Chunk;
                         }
