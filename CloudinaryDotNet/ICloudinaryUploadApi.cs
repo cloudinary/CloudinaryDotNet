@@ -503,7 +503,7 @@ namespace CloudinaryDotNet
         /// <param name="type">The type (optional).</param>
         /// <param name="expiresAt">The date (UNIX time in seconds) for the URL expiration. (optional).</param>
         /// <param name="resourceType">Resource type (image, video or raw) of files to include in the archive (optional).</param>
-        /// <param name="transformation">A transformation to apply to the asset before downloading. Accepts either a raw transformation string or a <see cref="Transformation"/> instance (optional).</param>
+        /// <param name="transformation">A transformation to apply to the asset before downloading. Accepts either a <see cref="Transformation"/> instance or a raw transformation string (e.g. "w_200,h_200,c_fill") via implicit conversion (optional).</param>
         /// <param name="targetFilename">The desired filename for the downloaded file (optional).</param>
         /// <returns>Download URL.</returns>
         /// <exception cref="System.ArgumentException">publicId can't be null.</exception>
@@ -514,7 +514,7 @@ namespace CloudinaryDotNet
             string type = "",
             long? expiresAt = null,
             string resourceType = "image",
-            TransformationParam transformation = null,
+            Transformation transformation = null,
             string targetFilename = null);
 
         /// <summary>
