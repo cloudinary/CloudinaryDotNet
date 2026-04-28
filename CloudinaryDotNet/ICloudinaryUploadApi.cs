@@ -603,20 +603,20 @@ namespace CloudinaryDotNet
         Task<CreateSlideshowResult> CreateSlideshowAsync(CreateSlideshowParams parameters, CancellationToken? cancellationToken = null);
 
         /// <summary>
-        /// Combines and remuxes a list of remote video chunks into a single MP4 asset.
-        /// The combine/remux runs asynchronously on the server; the final upload result is delivered via notification URL.
+        /// Concatenates a list of remote video segments into a single MP4 asset (the server remuxes them without re-encoding).
+        /// Runs asynchronously on the server; the final upload result is delivered via notification URL.
         /// </summary>
-        /// <param name="parameters">Parameters of the combine/remux request.</param>
+        /// <param name="parameters">Parameters of the video concat request.</param>
         /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
-        CombineRemuxResult CombineRemux(CombineRemuxParams parameters);
+        ConcatVideoResult ConcatVideo(ConcatVideoParams parameters);
 
         /// <summary>
-        /// Combines and remuxes a list of remote video chunks into a single MP4 asset asynchronously.
-        /// The combine/remux runs asynchronously on the server; the final upload result is delivered via notification URL.
+        /// Concatenates a list of remote video segments into a single MP4 asset (the server remuxes them without re-encoding) asynchronously.
+        /// Runs asynchronously on the server; the final upload result is delivered via notification URL.
         /// </summary>
-        /// <param name="parameters">Parameters of the combine/remux request.</param>
+        /// <param name="parameters">Parameters of the video concat request.</param>
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
-        Task<CombineRemuxResult> CombineRemuxAsync(CombineRemuxParams parameters, CancellationToken? cancellationToken = null);
+        Task<ConcatVideoResult> ConcatVideoAsync(ConcatVideoParams parameters, CancellationToken? cancellationToken = null);
     }
 }

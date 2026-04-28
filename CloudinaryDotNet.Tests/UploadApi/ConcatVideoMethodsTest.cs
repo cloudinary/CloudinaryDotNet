@@ -6,36 +6,36 @@ using SystemHttp = System.Net.Http;
 
 namespace CloudinaryDotNet.Tests.UploadApi
 {
-    public class CombineRemuxMethodsTest
+    public class ConcatVideoMethodsTest
     {
         [Test]
-        public void TestCombineRemuxSendsUrlsAndOptionalParams()
+        public void TestConcatVideoSendsUrlsAndOptionalParams()
         {
             var cloudinary = new MockedCloudinary();
 
-            var prms = new CombineRemuxParams
+            var prms = new ConcatVideoParams
             {
                 Urls = new List<string>
                 {
-                    "https://example.com/chunks/0.ts",
-                    "https://example.com/chunks/1.ts",
+                    "https://example.com/segments/0.ts",
+                    "https://example.com/segments/1.ts",
                 },
-                PublicId = "my_combined_video",
+                PublicId = "my_concatenated_video",
                 NotificationUrl = "https://example.com/hook",
                 UploadPreset = "test_preset",
                 Overwrite = true,
                 Tags = "a,b",
             };
 
-            cloudinary.CombineRemux(prms);
+            cloudinary.ConcatVideo(prms);
 
-            cloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "video/combine_remux");
+            cloudinary.AssertHttpCall(SystemHttp.HttpMethod.Post, "video/concat");
 
             foreach (var expected in new List<string>
             {
-                "https://example.com/chunks/0.ts",
-                "https://example.com/chunks/1.ts",
-                "my_combined_video",
+                "https://example.com/segments/0.ts",
+                "https://example.com/segments/1.ts",
+                "my_concatenated_video",
                 "https://example.com/hook",
                 "test_preset",
             })
@@ -46,34 +46,34 @@ namespace CloudinaryDotNet.Tests.UploadApi
             // urls is sent as urls[] (multipart array convention).
             StringAssert.Contains("urls[]", cloudinary.HttpRequestContent);
 
-            // file should never appear since combine_remux ignores it.
+            // file should never appear since concat ignores it.
             StringAssert.DoesNotContain("name=\"file\"", cloudinary.HttpRequestContent);
         }
 
         [Test]
-        public void TestCombineRemuxThrowsOnEmptyUrls()
+        public void TestConcatVideoThrowsOnEmptyUrls()
         {
-            Assert.Throws<ArgumentException>(() => new CombineRemuxParams { Urls = new List<string>() }.Check());
-            Assert.Throws<ArgumentException>(() => new CombineRemuxParams { Urls = null }.Check());
+            Assert.Throws<ArgumentException>(() => new ConcatVideoParams { Urls = new List<string>() }.Check());
+            Assert.Throws<ArgumentException>(() => new ConcatVideoParams { Urls = null }.Check());
         }
 
         [Test]
-        public void TestCombineRemuxThrowsOnBlankEntry()
+        public void TestConcatVideoThrowsOnBlankEntry()
         {
-            var prms = new CombineRemuxParams { Urls = new List<string> { "https://x", "  " } };
+            var prms = new ConcatVideoParams { Urls = new List<string> { "https://x", "  " } };
             Assert.Throws<ArgumentException>(() => prms.Check());
         }
 
         [Test]
-        public void TestCombineRemuxThrowsWhenExceedingMaxUrls()
+        public void TestConcatVideoThrowsWhenExceedingMaxUrls()
         {
             var urls = new List<string>();
-            for (var i = 0; i <= CombineRemuxParams.MaxUrls; i++)
+            for (var i = 0; i <= ConcatVideoParams.MaxUrls; i++)
             {
                 urls.Add($"https://example.com/{i}.ts");
             }
 
-            Assert.Throws<ArgumentException>(() => new CombineRemuxParams { Urls = urls }.Check());
+            Assert.Throws<ArgumentException>(() => new ConcatVideoParams { Urls = urls }.Check());
         }
     }
 }
