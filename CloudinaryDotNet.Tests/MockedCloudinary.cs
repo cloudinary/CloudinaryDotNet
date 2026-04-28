@@ -16,6 +16,7 @@ namespace CloudinaryDotNet.Tests
         public string HttpRequestContent;
         private const string CloudName = "test123";
         public HttpRequestHeaders HttpRequestHeaders;
+        public HttpContentHeaders HttpContentHeaders;
 
         public MockedCloudinary(string responseStr = "{}", HttpResponseHeaders httpResponseHeaders = null, Account account = null)
             : base(account ?? new Account(CloudName, "key", "secret"))
@@ -49,6 +50,7 @@ namespace CloudinaryDotNet.Tests
                             .GetAwaiter()
                             .GetResult();
                         HttpRequestHeaders = httpRequestMessage.Headers;
+                        HttpContentHeaders = httpRequestMessage.Content?.Headers;
                     })
                 .ReturnsAsync(httpResponseMessage);
             Api.Client = new HttpClient(HandlerMock.Object);

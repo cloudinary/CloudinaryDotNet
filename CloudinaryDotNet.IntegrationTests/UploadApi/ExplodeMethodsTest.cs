@@ -60,6 +60,21 @@ namespace CloudinaryDotNet.IntegrationTests.UploadApi
             AssertExplodeStatus(result);
         }
 
+        [Test, RetryWithDelay]
+        public void TestExplodeAcceptsRawTransformationString()
+        {
+            var uploadResult = UploadTestImageResource((uploadParams) =>
+            {
+                uploadParams.File = new FileDescription(m_testPdfPath);
+            });
+
+            var explodeParams = new ExplodeParams(uploadResult.PublicId, "pg_all");
+
+            var result = m_cloudinary.Explode(explodeParams);
+
+            AssertExplodeStatus(result);
+        }
+
         private ExplodeParams CreateExplodeParams(string publicId, Transformation transformation)
         {
             return new ExplodeParams(publicId, transformation);

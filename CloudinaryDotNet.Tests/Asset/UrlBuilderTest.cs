@@ -645,5 +645,13 @@ namespace CloudinaryDotNet.Tests.Asset
             Assert.AreEqual(expected, buildUrl(l => l.TextStyle("$style")));
             Assert.AreEqual(expected, buildUrl(l => l.TextStyle(new Expression("$style"))));
         }
+
+        [Test]
+        public void TestUrlTransformAcceptsRawTransformationString()
+        {
+            var url = m_api.UrlImgUp.Transform("w_200,c_fill").BuildUrl("sample");
+
+            Assert.AreEqual(TestConstants.DefaultImageUpPath + "w_200,c_fill/sample", url);
+        }
     }
 }

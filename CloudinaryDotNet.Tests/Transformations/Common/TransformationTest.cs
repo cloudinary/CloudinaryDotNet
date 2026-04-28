@@ -185,5 +185,98 @@ namespace CloudinaryDotNet.Tests.Transformations.Common
             const string expected = "$aheight_300,$mywidth_100/h_3_mul_ih_add_$aheight,w_3_add_$mywidth_mul_3_add_4_div_2_mul_iw_mul_$mywidth";
             Assert.AreEqual(expected, transformation.Generate());
         }
+
+        [Test]
+        public void TestImplicitStringConversionNullReturnsNull()
+        {
+            Transformation t = (string)null;
+
+            Assert.IsNull(t);
+        }
+
+        [Test]
+        public void TestImplicitStringConversionEmptyString()
+        {
+            Transformation t = string.Empty;
+
+            Assert.IsNotNull(t);
+            Assert.AreEqual(string.Empty, t.Generate());
+        }
+
+        [Test]
+        public void TestImplicitStringConversionRawUrlRoundTrip()
+        {
+            Transformation t = "w_200,c_fill";
+
+            Assert.AreEqual("w_200,c_fill", t.Generate());
+        }
+
+        [Test]
+        public void TestImplicitStringConversionBase64FetchLayerRoundTrip()
+        {
+            const string fetchLayer = "l_video:fetch:aHR0cHM6Ly9kZW1vLXJlcy5jbG91ZGluYXJ5LmNvbS92aWRlb3MvZG9nLm1wNA==";
+            Transformation t = fetchLayer;
+
+            Assert.AreEqual(fetchLayer, t.Generate());
+        }
+
+        [Test]
+        public void TestImplicitStringConversionAppendsAfterFluentCalls()
+        {
+            Transformation t = "w_200";
+            t.Crop("fill");
+
+            Assert.AreEqual("c_fill,w_200", t.Generate());
+        }
+
+        [Test]
+        public void TestImplicitStringConversionToStringMatchesGenerate()
+        {
+            Transformation t = "w_200,c_fill";
+
+            Assert.AreEqual(t.Generate(), t.ToString());
+        }
+
+        [Test]
+        public void TestFromStringMatchesImplicitOperator()
+        {
+            Transformation viaOperator = "w_200,c_fill";
+            var viaFactory = Transformation.FromString("w_200,c_fill");
+
+            Assert.AreEqual(viaOperator.Generate(), viaFactory.Generate());
+        }
+
+        [Test]
+        public void TestEagerImplicitStringConversionNullReturnsNull()
+        {
+            EagerTransformation t = (string)null;
+
+            Assert.IsNull(t);
+        }
+
+        [Test]
+        public void TestEagerImplicitStringConversionRawUrlRoundTrip()
+        {
+            EagerTransformation t = "w_200,c_fill";
+
+            Assert.AreEqual("w_200,c_fill", t.Generate());
+        }
+
+        [Test]
+        public void TestEagerImplicitStringConversionTypeIdentity()
+        {
+            EagerTransformation t = "w_200";
+
+            Assert.IsInstanceOf<EagerTransformation>(t);
+        }
+
+        [Test]
+        public void TestEagerImplicitStringConversionFormatStillWorks()
+        {
+            EagerTransformation t = "w_200,c_fill";
+            t.SetFormat("png");
+
+            Assert.AreEqual("w_200,c_fill/png", t.Generate());
+        }
     }
 }
