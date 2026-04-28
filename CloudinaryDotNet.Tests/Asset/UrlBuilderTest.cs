@@ -549,6 +549,48 @@ namespace CloudinaryDotNet.Tests.Asset
         }
 
         [Test]
+        public void TestDownloadPrivateWithTransformationString()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123");
+            const string testPublicId = "sample";
+
+            var url = cloudinary.DownloadPrivate(testPublicId, transformation: "w_200,h_200,c_fill");
+            var decodedUrl = Uri.UnescapeDataString(url);
+
+            Assert.IsTrue(Regex.IsMatch(
+                decodedUrl,
+                @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=a&public_id=" + testPublicId + @"&signature=\w{40}&timestamp=\d{10}&transformation=w_200,h_200,c_fill"));
+        }
+
+        [Test]
+        public void TestDownloadPrivateWithTransformationObject()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123");
+            const string testPublicId = "sample";
+            var transformation = new Transformation().Crop("scale").Width(300);
+
+            var url = cloudinary.DownloadPrivate(testPublicId, transformation: transformation);
+            var decodedUrl = Uri.UnescapeDataString(url);
+
+            Assert.IsTrue(Regex.IsMatch(
+                decodedUrl,
+                @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=a&public_id=" + testPublicId + @"&signature=\w{40}&timestamp=\d{10}&transformation=c_scale,w_300"));
+        }
+
+        [Test]
+        public void TestDownloadPrivateWithTargetFilename()
+        {
+            var cloudinary = new Cloudinary("cloudinary://a:b@test123");
+            const string testPublicId = "sample";
+
+            var url = cloudinary.DownloadPrivate(testPublicId, targetFilename: "my_file.jpg");
+
+            Assert.IsTrue(Regex.IsMatch(
+                url,
+                @"https://api\.cloudinary\.com/v1_1/[^/]*/image/download\?api_key=a&public_id=" + testPublicId + @"&signature=\w{40}&target_filename=my_file\.jpg&timestamp=\d{10}"));
+        }
+
+        [Test]
         public void TestDownloadZip()
         {
             var cloudinary = new Cloudinary("cloudinary://a:b@test123");
