@@ -1,4 +1,20 @@
 
+1.29.0  / 2026-04-29
+=============
+
+New functionality
+-----------------
+
+  * Add support for `ConcatVideo` Upload API
+  * Add support for `transformation` and `targetFilename` in `DownloadPrivate`
+  * Allow raw transformation strings via implicit conversion
+  * Add support for uploading uneven chunks
+
+Other Changes
+-------------
+
+  * Fix `Authorization` header when no API credentials are configured
+
 1.28.0 / 2026-01-20
 ===================
 
@@ -20,7 +36,7 @@ New functionality
 1.27.7 / 2025-08-25
 ===================
 
-  * Fix async synchronization issue with `GetNextChunkAsync` in FileDescription 
+  * Fix async synchronization issue with `GetNextChunkAsync` in FileDescription
 
 1.27.6 / 2025-06-17
 ===================
@@ -314,7 +330,7 @@ New functionality
 -----------------
 
   * Add support for `TargetPublicId` in `DownloadArchiveUrl`
-  
+
 Other Changes
 -------------
 
@@ -333,7 +349,7 @@ New functionality
   * Add `DownloadFolder` helper
   * Add support for `Date` in `Usage` Admin API
   * Add enhanced quality scores to `QualityAnalysis` result
-  
+
 Other Changes
 -------------
 
@@ -422,16 +438,16 @@ New functionality
   * Add `Named` parameter to `GetTransformResult`
   * Add `VerifyApiResponseSignature` and `VerifyNotificationSignature` functions
   * Add XML documentation
-  
+
  Other Changes
  -------------
- 
+
   * Fix typo in `QualityOverride` parameter name
   * Fix `acl` and `url` escaping in `AuthToken` generation
   * Fix project types for VS for Mac
   * Extract integration tests into separate assembly
   * Fix `build.ps1` script
- 
+
 1.8.0 / 2019-04-23
 ==================
 
@@ -564,9 +580,9 @@ Other Changes
 1.2.0 / 2018-03-15
 ==================
 
-New functionality        
------------------        
-                         
+New functionality
+-----------------
+
   * Add `AccessControl` parameter to Update and Upload
 
 Other Changes
@@ -625,11 +641,11 @@ Other Changes
   * Added lock files.
   * project structure rebuild to support netcore platform
   * Implemented custom configuration section for cloudinary settings.
-  
+
 1.0.31 / 2017-05-04
 ===================
 
-  * Code structure refactored to support both .net classic and net core support  
+  * Code structure refactored to support both .net classic and net core support
   * Added .net core support in separate project
   * General code between .net core and .net classic versions moved to shared scope
   * Added base classes with common functionality for Cloudinary and Api objects
@@ -637,8 +653,8 @@ Other Changes
   * Removed using of IHTMLString type
   * Added tests projects for both .net classic and .net core versions
   * Test project for .net classic adopted for working with shared code scope
-  * General code cleanup, removed unused constructors and other code improvements    
-  
+  * General code cleanup, removed unused constructors and other code improvements
+
 
 1.0.30 / 2017-05-04
 ===================
@@ -722,5 +738,3 @@ Other Changes
 * Extracted setup for UploadMapping test into designated file.
 * removed twitter dependencies due to twitter API limits
 * Add random number to public ID of upload test
-
-
