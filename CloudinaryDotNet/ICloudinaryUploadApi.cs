@@ -605,5 +605,22 @@ namespace CloudinaryDotNet
         /// <param name="cancellationToken">(Optional) Cancellation token.</param>
         /// <returns>The public id of the generated slideshow.</returns>
         Task<CreateSlideshowResult> CreateSlideshowAsync(CreateSlideshowParams parameters, CancellationToken? cancellationToken = null);
+
+        /// <summary>
+        /// Concatenates a list of remote video segments into a single MP4 asset (the server remuxes them without re-encoding).
+        /// Runs asynchronously on the server; the final upload result is delivered via notification URL.
+        /// </summary>
+        /// <param name="parameters">Parameters of the video concat request.</param>
+        /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
+        ConcatVideoResult ConcatVideo(ConcatVideoParams parameters);
+
+        /// <summary>
+        /// Concatenates a list of remote video segments into a single MP4 asset (the server remuxes them without re-encoding) asynchronously.
+        /// Runs asynchronously on the server; the final upload result is delivered via notification URL.
+        /// </summary>
+        /// <param name="parameters">Parameters of the video concat request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
+        Task<ConcatVideoResult> ConcatVideoAsync(ConcatVideoParams parameters, CancellationToken? cancellationToken = null);
     }
 }

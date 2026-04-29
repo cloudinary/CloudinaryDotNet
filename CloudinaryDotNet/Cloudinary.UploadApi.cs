@@ -1114,6 +1114,37 @@ namespace CloudinaryDotNet
         }
 
         /// <summary>
+        /// Concatenates a list of remote video segments into a single MP4 asset (the server remuxes them without re-encoding).
+        /// Runs asynchronously on the server; supply <see cref="RawUploadParams.NotificationUrl"/>
+        /// (or rely on the account's global notification URL) to be notified when the resulting upload completes.
+        /// </summary>
+        /// <param name="parameters">Parameters of the video concat request.</param>
+        /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
+        public ConcatVideoResult ConcatVideo(ConcatVideoParams parameters)
+        {
+            return ConcatVideoAsync(parameters).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Concatenates a list of remote video segments into a single MP4 asset (the server remuxes them without re-encoding) asynchronously.
+        /// Runs asynchronously on the server; supply <see cref="RawUploadParams.NotificationUrl"/>
+        /// (or rely on the account's global notification URL) to be notified when the resulting upload completes.
+        /// </summary>
+        /// <param name="parameters">Parameters of the video concat request.</param>
+        /// <param name="cancellationToken">(Optional) Cancellation token.</param>
+        /// <returns>The acceptance receipt from the server (status, unique upload ID, etc.).</returns>
+        public Task<ConcatVideoResult> ConcatVideoAsync(ConcatVideoParams parameters, CancellationToken? cancellationToken = null)
+        {
+            string uri = m_api.ApiUrlVideoUpV.Action("concat").BuildUrl();
+
+            return CallUploadApiAsync<ConcatVideoResult>(
+                HttpMethod.POST,
+                uri,
+                parameters,
+                cancellationToken);
+        }
+
+        /// <summary>
         /// Generates an image of a given textual string.
         /// </summary>
         /// <param name="parameters">Parameters of generating an image of a given textual string.</param>
