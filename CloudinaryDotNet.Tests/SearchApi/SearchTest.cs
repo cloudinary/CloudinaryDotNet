@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using CloudinaryDotNet.Actions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
@@ -103,6 +105,86 @@ namespace CloudinaryDotNet.Tests.SearchApi
                 .Execute();
 
             AssertCorrectRequest(_cloudinary.HttpRequestContent);
+        }
+
+        [Test]
+        public void TestCreatedByAllFieldsDeserialize()
+        {
+            const string accessKey  = "123456789012345";
+            const string customId   = "user@example.com";
+            const string externalId = "abc123def456ghi789jkl012mno345";
+
+            var responseJson = JsonConvert.SerializeObject(new
+            {
+                total_count = 1,
+                time = 24,
+                resources = new[]
+                {
+                    new
+                    {
+                        asset_id     = "aabbccddeeff00112233445566778899",
+                        public_id    = "sample_user_upload",
+                        resource_type = "image",
+                        type         = "upload",
+                        created_at   = "2026-05-10T12:40:00+00:00",
+                        status       = "active",
+                        created_by   = new { access_key = accessKey, custom_id = customId,  external_id = externalId },
+                        uploaded_by  = new { access_key = accessKey, custom_id = customId,  external_id = externalId },
+                    }
+                }
+            });
+
+            var cloudinary = new MockedCloudinary(responseJson);
+            var result = cloudinary.Search().Execute();
+
+            Assert.AreEqual(1, result.Resources.Count);
+            var resource = result.Resources.First();
+
+            Assert.IsNotNull(resource.CreatedBy,  "CreatedBy should not be null");
+            Assert.AreEqual(accessKey,  resource.CreatedBy.AccessKey);
+            Assert.AreEqual(customId,   resource.CreatedBy.CustomId);
+            Assert.AreEqual(externalId, resource.CreatedBy.ExternalId);
+
+            Assert.IsNotNull(resource.UploadedBy,  "UploadedBy should not be null");
+            Assert.AreEqual(accessKey,  resource.UploadedBy.AccessKey);
+            Assert.AreEqual(customId,   resource.UploadedBy.CustomId);
+            Assert.AreEqual(externalId, resource.UploadedBy.ExternalId);
+        }
+
+        [Test]
+        public void TestCreatedByAccessKeyOnlyDeserializes()
+        {
+            const string accessKey = "987654321098765";
+
+            var responseJson = JsonConvert.SerializeObject(new
+            {
+                total_count = 1,
+                time = 10,
+                resources = new[]
+                {
+                    new
+                    {
+                        asset_id      = "ffeeddccbbaa99887766554433221100",
+                        public_id     = "sample_api_key_upload",
+                        resource_type = "image",
+                        type          = "upload",
+                        created_at    = "2026-05-05T01:12:51+00:00",
+                        status        = "active",
+                        created_by    = new { access_key = accessKey },
+                        uploaded_by   = new { access_key = accessKey },
+                    }
+                }
+            });
+
+            var cloudinary = new MockedCloudinary(responseJson);
+            var result = cloudinary.Search().Execute();
+
+            var resource = result.Resources.First();
+
+            Assert.IsNotNull(resource.CreatedBy);
+            Assert.AreEqual(accessKey, resource.CreatedBy.AccessKey);
+            Assert.IsNull(resource.CreatedBy.CustomId,   "CustomId should be null for API-key uploads");
+            Assert.IsNull(resource.CreatedBy.ExternalId, "ExternalId should be null for API-key uploads");
         }
 
         private static void AssertCorrectRequest(string request)
