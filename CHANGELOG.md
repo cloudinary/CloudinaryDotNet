@@ -1,4 +1,9 @@
 
+1.29.1 / 2026-05-10
+=============
+
+  * Fix `CustomId` and `ExternalId` not deserialized in Search API `created_by`/`uploaded_by`
+
 1.29.0  / 2026-04-29
 =============
 
