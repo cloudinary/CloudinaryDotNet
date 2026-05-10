@@ -142,7 +142,9 @@ namespace CloudinaryDotNet.IntegrationTests.SearchApi
             Assert.Null(result.Resources[0].AccessControl);
             Assert.NotNull(result.Resources[0].Etag);
             Assert.NotNull(result.Resources[0].UploadedBy);
+            Assert.IsNotEmpty(result.Resources[0].UploadedBy.AccessKey);
             Assert.NotNull(result.Resources[0].CreatedBy);
+            Assert.IsNotEmpty(result.Resources[0].CreatedBy.AccessKey);
         }
 
         [Test, RetryWithDelay]
