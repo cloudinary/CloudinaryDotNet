@@ -17,7 +17,7 @@ namespace CloudinaryDotNet.Actions
         /// <summary>
         /// Maximum number of URLs accepted per request.
         /// </summary>
-        public const int MaxUrls = 256;
+        public const int MaxUrls = 512;
 
         /// <summary>
         /// Gets or sets the ordered list of HTTP(S) URLs of the video segments to concatenate, in playback order.
