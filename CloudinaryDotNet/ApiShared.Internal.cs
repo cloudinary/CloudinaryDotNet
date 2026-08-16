@@ -258,6 +258,7 @@
                 var jsonObj = JToken.Load(jsonReader);
                 var serializer = new JsonSerializer();
                 serializer.Converters.Add(new SafeBooleanConverter());
+                serializer.Converters.Add(new SafeIntConverter());
                 var result = jsonObj.ToObject<T>(serializer);
                 result.JsonObj = jsonObj;
 
