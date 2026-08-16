@@ -1,4 +1,9 @@
 
+1.29.3 / 2026-08-16
+===================
+
+  * Handle unsigned 32-bit wrap-around in integer response fields
+
 1.29.2 / 2026-06-11
 =============
 
