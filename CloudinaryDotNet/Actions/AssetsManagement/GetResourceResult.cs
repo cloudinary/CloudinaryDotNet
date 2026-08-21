@@ -251,7 +251,7 @@ namespace CloudinaryDotNet.Actions
         /// Gets or sets the number of pages in the asset: included if the asset has multiple pages (e.g., PDF or animated GIF).
         /// </summary>
         [DataMember(Name = "pages")]
-        public int Pages { get; set; }
+        public long Pages { get; set; }
 
         /// <summary>
         /// Gets or sets the accessibility mode of the media asset: public, or authenticated.

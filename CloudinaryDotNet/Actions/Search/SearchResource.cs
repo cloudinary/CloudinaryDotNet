@@ -160,7 +160,7 @@
         /// Gets or sets the number of pages in the image, if the image has multiple pages.
         /// </summary>
         [DataMember(Name = "pages")]
-        public int Pages { get; set; }
+        public long Pages { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP URL for accessing the media asset.
