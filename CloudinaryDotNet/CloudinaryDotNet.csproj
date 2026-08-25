@@ -58,5 +58,6 @@
   <ItemGroup>
     <None Include=".\CloudinaryIcon.png" Pack="true" PackagePath="\" />
     <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\docs\**\*.md" Pack="true" PackagePath="docs\" />
   </ItemGroup>
 </Project>

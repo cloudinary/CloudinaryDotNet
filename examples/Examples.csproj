@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Runnable examples for the bundled docs in ../docs/.
+    Deliberately NOT part of CloudinaryDotnet.sln and not packed into the NuGet package.
+    Targets a modern runtime for readability; the SDK itself supports net452 upward.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CloudinaryExamples</AssemblyName>
+    <RootNamespace>CloudinaryDotNet.Examples</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CloudinaryDotNet\CloudinaryDotNet.csproj" />
+  </ItemGroup>
+
+</Project>
