@@ -1,6 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/vdx8o03ethg5opt4?svg=true)](https://ci.appveyor.com/project/Cloudinary/cloudinarydotnet)
 [![NuGet Badge](https://img.shields.io/nuget/v/CloudinaryDotNet)](https://www.nuget.org/packages/CloudinaryDotNet/)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/CloudinaryDotNet)
+[![License](https://img.shields.io/github/license/cloudinary/CloudinaryDotNet)](LICENSE)
 
 Cloudinary .NET SDK
 ==================
@@ -20,6 +21,15 @@ For the complete documentation, see the [.NET SDK Guide](https://cloudinary.com/
 - [Usage](#usage)
     - [Setup](#Setup)
     - [Transform and Optimize Assets](#Transform-and-Optimize-Assets)
+    - [Upload](#Upload)
+    - [Error handling](#Error-handling)
+    - [Code Samples](#Code-Samples)
+- [Documentation for AI coding agents](#documentation-for-ai-coding-agents)
+- [Contributions](#contributions)
+- [Get Help](#get-help)
+- [About Cloudinary](#about-cloudinary)
+- [Additional Resources](#additional-resources)
+- [Licence](#licence)
 
 
 ## Key Features
@@ -46,6 +56,11 @@ Install using Package Manager:
 PM> Install-Package CloudinaryDotNet
 ```
 
+Or using the .NET CLI:
+```bash
+dotnet add package CloudinaryDotNet
+```
+
 # Usage
 
 ### Setup
@@ -53,8 +68,11 @@ PM> Install-Package CloudinaryDotNet
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 
-var cloudinary = new Cloudinary();
+var cloudinary = new Cloudinary();   // reads the CLOUDINARY_URL environment variable
+cloudinary.Api.Secure = true;        // generate https:// URLs
 ```
+
+Note that `Api.Secure` defaults to `false`, so set it unless you specifically want `http://` URLs.
 
 ### Transform and Optimize Assets
 - [See full documentation](https://cloudinary.com/documentation/dotnet_image_manipulation).
@@ -75,19 +93,62 @@ var uploadParams = new ImageUploadParams()
 var uploadResult = cloudinary.Upload(uploadParams);
 ```
 
+### Error handling
+
+Cloudinary API errors are **returned, not thrown**. Check `Error` on every result:
+
+```csharp
+var uploadResult = await cloudinary.UploadAsync(uploadParams);
+
+if (uploadResult.Error != null)
+{
+    Console.Error.WriteLine($"Upload failed ({(int)uploadResult.StatusCode}): {uploadResult.Error.Message}");
+    return;
+}
+
+Console.WriteLine(uploadResult.SecureUrl);
+```
+
+A `try`/`catch` around an API call will not catch a Cloudinary error — only configuration
+and argument problems throw. See [docs/troubleshoot-errors.md](docs/troubleshoot-errors.md).
+
 ### Code Samples
 
-You can find our simple and ready-to-use samples projects, along with documentations in the [samples folder](https://github.com/cloudinary/CloudinaryDotNet/tree/master/samples). 
+You can find our simple and ready-to-use samples projects, along with documentations in the [samples folder](https://github.com/cloudinary/CloudinaryDotNet/tree/master/samples).
 
 Please consult with the [README file](https://github.com/cloudinary/CloudinaryDotNet/blob/master/samples/README.md), for usage and explanations.
 
+Task-focused runnable examples live in [`examples/`](examples/README.md).
 
 ### Security options
 - [See full documentation](https://cloudinary.com/documentation/solution_overview#security).
+- To report a vulnerability, see [SECURITY.md](SECURITY.md).
+
+## Documentation for AI coding agents
+
+This package ships task documentation **inside the NuGet package**, so it always matches the
+version you have installed. If you are an AI coding agent — or you use one — point it there
+rather than at training data, which is frequently out of date for this SDK.
+
+Locate the installed copy:
+
+```bash
+ROOT=$(dotnet nuget locals global-packages --list | awk '{print $2}')
+ls "$ROOT"/cloudinarydotnet/*/docs
+```
+
+The same pages are browsable here: [`docs/`](docs/README.md) — covering configuration,
+upload, chunked video upload, signed browser uploads, image and video delivery, search and
+asset management, moderation, structured metadata, ASP.NET Core integration, and
+troubleshooting.
+
+Agents contributing to this repository should read [AGENTS.md](AGENTS.md) instead.
 
 ## Contributions
-- Ensure tests run locally
-- Open a PR and ensure Travis tests pass
+- Ensure tests run locally (`dotnet test CloudinaryDotNet.Tests/CloudinaryDotNet.Tests.csproj -c Release -f net8.0`)
+- Open a PR and ensure the CI build passes
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 
 ## Get Help
